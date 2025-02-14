@@ -1,16 +1,12 @@
-<div class="relative left-1/4 top-0 mt-8 z-10 flex w-1/2 max-h-16 items-center justify-start rounded-xl gap-4">
-    <img src="/images/logo.png" class="h-14 w-14  cursor-pointer"/>
-    <p class="text-5xl text-white cursor-pointer font-bold">Last Hearth</p>
-</div>
-
+<app-header/>
 <div class="pt-8 flex flex-col justify-center items-center">
-    <div class="h-dvh w-1/2 flex">
+    <div class="h-auto w-1/2 flex">
         <div class="flex flex-col">
             <div class="flex gap-2 ml-">
                 <button class="nav-button">ГЛАВНАЯ</button>
                 <button class="nav-button">ПРАВИЛА</button>
             </div>
-            <div class="flex h-dvh gap-3">
+            <div class="flex h-full gap-3">
                 <div class="main-panel h-full min-w-[80%] flex flex-col gap-6">
                     <div class="relative">
                         <tui-carousel
@@ -27,6 +23,8 @@
                         <div class="absolute inset-0 bg-white/5 backdrop-blur-xs z-10 p-8"></div>
                     </div>
                     <app-news-card [title]="news[0].title" [description]="news[0].description" class="-mt-6"></app-news-card>
+                    <app-news-card [title]="news[1].title" [description]="news[1].description"></app-news-card>
+                    <app-news-card [title]="news[1].title" [description]="news[1].description"></app-news-card>
                     <app-news-card [title]="news[1].title" [description]="news[1].description"></app-news-card>
                 </div>
                 <div class="info-panel size-full flex flex-col items-center">
