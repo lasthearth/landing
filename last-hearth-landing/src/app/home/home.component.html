@@ -1,0 +1,16 @@
+<div class="relative">
+    <tui-carousel
+    [(index)]="carouselIndex" [duration]="3000"
+    class="size-full">
+        @for (item of images; track $index) {
+            <img
+                *tuiItem
+                [src]="item"
+                class="h-[400px] object-cover object-center"
+            />
+        }
+    </tui-carousel>
+    <div class="absolute inset-0 bg-white/5 backdrop-blur-xs z-10 p-8"></div>
+</div>
+<app-news-card [title]="news[0].title" [description]="news[0].description" class="-mt-6"></app-news-card>
+<app-news-card [title]="news[1].title" [description]="news[1].description"></app-news-card>

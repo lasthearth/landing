@@ -1,34 +1,28 @@
-<app-header/>
+@let online =  online$ | async;
+
 <div class="pt-8 flex flex-col justify-center items-center">
-    <div class="h-auto w-1/2 flex">
-        <div class="flex flex-col">
+    <app-header class="w-[60%] mb-8"/>
+    <div class="h-auto w-[60%] flex">
+        <div class="flex flex-col w-full">
             <div class="flex gap-2 ml-">
-                <button class="nav-button">ГЛАВНАЯ</button>
-                <button class="nav-button">ПРАВИЛА</button>
+                <a class="nav-button" [routerLink]="['/home']">ГЛАВНАЯ</a>
+                <a [routerLink]="['/home/rules']" class="nav-button">ПРАВИЛА</a>
             </div>
-            <div class="flex h-full gap-3">
-                <div class="main-panel h-full min-w-[80%] flex flex-col gap-6">
-                    <div class="relative">
-                        <tui-carousel
-                        [(index)]="carouselIndex" [duration]="3000"
-                        class="size-full">
-                            @for (item of images; track $index) {
-                                <img
-                                    *tuiItem
-                                    [src]="item"
-                                    class="h-[400px] object-cover object-center"
-                                />
-                            }
-                        </tui-carousel>
-                        <div class="absolute inset-0 bg-white/5 backdrop-blur-xs z-10 p-8"></div>
-                    </div>
-                    <app-news-card [title]="news[0].title" [description]="news[0].description" class="-mt-6"></app-news-card>
-                    <app-news-card [title]="news[1].title" [description]="news[1].description"></app-news-card>
-                    <app-news-card [title]="news[1].title" [description]="news[1].description"></app-news-card>
-                    <app-news-card [title]="news[1].title" [description]="news[1].description"></app-news-card>
+            <div class="flex h-full gap-3 w-full">
+                <div class="main-panel h-full w-[80%] min-w-[75%]">
+                    <router-outlet />
                 </div>
-                <div class="info-panel size-full flex flex-col items-center">
-                    <p class="text-base text-white">Мониторинг сервера:</p>
+                <div class="info-panel size-full min-w-70 w-70 flex flex-col items-center">
+                    <p class="text-2xl text-white">Мониторинг сервера:</p>
+                    <div class="flex mt-12 items-center justify-center gap-4">
+                        <div class="rounded-full h-12 w-12 bg-transparent border-4 border-dashed border-green-500 flex justify-center items-center">
+                            <p class="text-base text-white">{{ online }}</p>
+                        </div>
+                        <div class="flex flex-col gap-1 border-b-2 border-blue-500 pb-2 pr-4 items-start justify-start border-dashed">
+                            <p class="text-neutral-300 text-base font-bold">Сервер #1</p>
+                            <p class="text-neutral-300 text-xs">Игроков {{ online }} из 60</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,27 +1,19 @@
-import { Component, inject } from '@angular/core';
-import {TuiCarousel} from '@taiga-ui/kit';
-import { NewsCardComponent } from '../news/news-card/news-card.component';
+import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from '../layout/header/header.component';
-import { NewsService } from '../services/news.service';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { ServerInformationService } from '../services/server-information.service';
+import { AsyncPipe } from '@angular/common';
+import { map } from 'rxjs';
 
 @Component({
     standalone: true,
     selector: 'app-landing',
-    imports: [TuiCarousel, NewsCardComponent, HeaderComponent],
+    imports: [HeaderComponent, RouterOutlet, RouterLink, AsyncPipe],
     templateUrl: './landing.component.html',
     styleUrl: './landing.component.less'
 })
-export class LandingComponent  {
-    protected carouselIndex: number = 0;
+export class LandingComponent {
+    private readonly serverInformationService = inject(ServerInformationService);
 
-    private readonly imagesPath: string = '/images/screenshots/';
-
-    protected readonly images: string[] = [
-        `${this.imagesPath}screen_1.png`,
-        `${this.imagesPath}screen_2.png`,
-        `${this.imagesPath}screen_3.png`,
-        `${this.imagesPath}screen_4.png`
-    ];
-
-    protected readonly news = inject(NewsService).news;
+    protected online$ = this.serverInformationService.getOnlinePlayersCount().pipe(map((info) => info.count));
 }
