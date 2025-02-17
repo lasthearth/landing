@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "vite",
+    "build": "ng build --prod",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -50,6 +50,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.5.2",
     "tailwindcss": "^4.0.6",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "vite": "^6.1.0"
   }
 }
