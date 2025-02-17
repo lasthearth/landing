@@ -1,13 +1,15 @@
 <div class="p-8 flex gap-4 items-start justify-between h-full">
     <div class="h-full flex flex-col w-fit gap-4 justify-center items-start">
         <img src="/images/screenshots/screen_1.png" class="max-w-52 max-h-52 min-h-52 min-w-52 object-cover rounded-full"/>
-        <div class="bg-[#b8c76d] px-2 py-0.5 rounded-xl self-center">
-            <p class="text-black text-xs text-nowrap">14.02.25 - 21:35</p>
-        </div>
     </div>
     <div class="p-2 flex flex-col gap-2">
-        <p class="text-white text-2xl">{{ title() }}</p>
-        <p class="text-white text-base font-light" [innerHtml]="description()"></p>
+        <p class="text-[#3f3c34] text-2xl">{{ title() }}</p>
+        <p class="text-[#3f3c34] text-base font-light" [innerHtml]="description()"></p>
     </div>
-    <a class="relative self-end text-blue-400 text-base">Подробнее</a>
+    <div class="flex flex-col justify-between h-full">
+        <div class="relative bg-[#945a32] px-2 py-1 rounded-xl">
+            <p class="text-white text-xs text-nowrap">14.02.25 - 21:35</p>
+        </div>
+        <a class="relative text-[#3f3c34] font-bold text-base">Подробнее</a>
+    </div>
 </div>

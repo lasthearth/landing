@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ServerInformationService {
 
-    private baseUrl = 'http://85.28.47.225:6969/v1';
+    private baseUrl = 'https://api.lasthearth.ru/v1';
 
     private readonly http: HttpClient = inject(HttpClient);
 

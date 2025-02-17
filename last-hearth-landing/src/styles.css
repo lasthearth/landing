@@ -2,7 +2,7 @@
 
 html body {
     @apply !text-base;
-    font-family: 'Ubuntu' !important;
+    font-family: "Advent Pro", serif !important;
     font-optical-sizing: auto;
 }
 
@@ -12,4 +12,13 @@ a {
     text-decoration-thickness: 1px;
     text-underline-offset: 6px;
     cursor: pointer;
+}
+
+.old-paper-background {
+    background-color: #e8dfc8;
+    background-image: url('/old-paper.jpg'), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }

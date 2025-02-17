@@ -24,4 +24,15 @@ export class RulesComponent  {
     protected isKills: boolean = false;
     protected isProtectors: boolean = false;
     protected isColonization: boolean = false;
+    protected isRaid: boolean = false;
+    protected isRaid2: boolean = false;
+    protected isRaid3: boolean = false;
+    protected isRaid4: boolean = false;
+    protected isWar: boolean = false;
+    protected isSpy: boolean = false;
+    protected isDefendBuildings: boolean = false;
+    protected isBreakDifficultBuildings: boolean = false;
+    protected isRight: boolean = false;
+    protected isAdditions: boolean = false;
+    protected isTerminology: boolean = false;
 }
