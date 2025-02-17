@@ -4,9 +4,9 @@
     <app-header class="w-[60%] mb-8"/>
     <div class="h-auto w-[60%] flex">
         <div class="flex flex-col w-full">
-            <div class="flex gap-2 ml-">
-                <a class="nav-button" [routerLink]="['/home']" [ngClass]="{'!bg-[#e2d7bb] !text-[#3f3c34] !font-bold !text-base': select === 'home'}" (click)="select = 'home'">ГЛАВНАЯ</a>
-                <a [routerLink]="['/rules']" class="nav-button" [ngClass]="{'!bg-[#e2d7bb] !text-[#3f3c34] !font-bold !text-base': select === 'rules'}" (click)="select = 'rules'">ПРАВИЛА</a>
+            <div class="flex gap-4 w-[80%] mb-4">
+                <a class="nav-button rounded-lg !p-2.5" [routerLink]="['/home']" [ngClass]="{'!bg-[#e2d7bb] !text-[#3f3c34] !font-bold !text-sm': select === 'home'}" (click)="select = 'home'"><tui-icon icon="@tui.house"/></a>
+                <button [routerLink]="['/rules']" class="nav-button rounded-lg p-2.5 px-4 justify-center items-center text-base" [ngClass]="{'!bg-[#e2d7bb] !text-[#3f3c34] !font-bold !text-base': select === 'rules'}" (click)="select = 'rules'">ПРАВИЛА</button>
             </div>
             <div class="flex h-full gap-3 w-full mb-10">
                 <div class="main-panel h-full w-[80%] min-w-[75%]">

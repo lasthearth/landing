@@ -4,11 +4,12 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { ServerInformationService } from '../services/server-information.service';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { map } from 'rxjs';
+import { TuiIcon } from '@taiga-ui/core';
 
 @Component({
     standalone: true,
     selector: 'app-landing',
-    imports: [HeaderComponent, RouterOutlet, RouterLink, AsyncPipe, NgClass],
+    imports: [HeaderComponent, RouterOutlet, RouterLink, AsyncPipe, NgClass, TuiIcon],
     templateUrl: './landing.component.html',
     styleUrl: './landing.component.less'
 })
