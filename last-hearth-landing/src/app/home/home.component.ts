@@ -1,9 +1,12 @@
 import { Component, inject } from '@angular/core';
+import { TuiCarousel } from '@taiga-ui/kit';
+import { NewsCardComponent } from '../news/news-card/news-card.component';
 import { NewsService } from '../services/news.service';
 
 @Component({
     standalone: true,
     selector: 'app-home',
+    imports: [TuiCarousel, NewsCardComponent],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
 })
