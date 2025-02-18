@@ -1,12 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TuiCarousel } from '@taiga-ui/kit';
-import { NewsCardComponent } from '../news/news-card/news-card.component';
 import { NewsService } from '../services/news.service';
 
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent],
+    imports: [TuiCarousel],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
 })
@@ -22,9 +21,5 @@ export class HomeComponent  {
         `${this.imagesPath}screen_4.png`
     ];
 
-    protected readonly news: Array<{
-        id: number;
-        title: string;
-        description: string;
-    }> = [];
+    protected readonly news = inject(NewsService).news;
 }
