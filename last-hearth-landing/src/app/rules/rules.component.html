@@ -381,4 +381,60 @@
             </div>
         </tui-expand>
     </div>
+
+    <!-- 9. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isDefendBuildings = !isDefendBuildings">
+            <p class="text-2xl text-[#3f3c34] font-bold">9. Защита построек</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isDefendBuildings}" class="text-[#3f3c34] transition-all"/>
+        </div>
+        <tui-expand [expanded]="isDefendBuildings">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-8"><span class="font-bold">9.1</span> Запрещено использовать приваты типа Claim. За использование таковых администрация в праве выдать бан после предупреждения.</p>
+                <p class="text-xl pl-8"><span class="font-bold">9.2</span> Приваты осуществляются только за счет укрепления построек с помощью отвеса и угольника, а также запирания сундуков и дверей с помощью замков.</p>
+                <p class="text-xl pl-8"><span class="font-bold">9.3</span> Исключением являются приваты полученные при помощи купленных привилегий в разделе.</p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 10. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isBreakDifficultBuildings= !isBreakDifficultBuildings">
+            <p class="text-2xl text-[#3f3c34] font-bold">10. Ломание построек сложного типа</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isBreakDifficultBuildings}" class="text-[#3f3c34] transition-all"/>
+        </div>
+        <tui-expand [expanded]="isBreakDifficultBuildings">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-8"><span class="font-bold">10.1</span> Запрещено ломать и поджигать постройки сложного типа. Под сложным типом понимаются постройки, в которых использовался чизел в каком-либо объеме. Однако, есть ряд исключений:</p>
+                <p class="text-xl pl-16"><span class="font-bold">•</span> Двери в таких постройках, либо не чизельный блок, если двери отсутствуют вовсе, либо если блок закрывает доступ к сундуку и нет никаких иных вариантов к нему добраться.</p>
+                <p class="text-xl pl-16"><span class="font-bold">•</span> Постройки, относящиеся к оборонительным укреплениям. К таковым могут относиться: стены, башни и прочие укрепления, а также постройки, которые администрация при проверке может счесть оборонительными укреплениями. За исключением оговорок примененных в п.7.3.</p>
+                <p class="text-xl pl-16"><span class="font-bold">•</span> Разрушение таковых построек допускается вследствие штурма-осады с использованием правил специальных пунктов.</p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 11. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRight= !isRight">
+            <p class="text-2xl text-[#3f3c34] font-bold">11. Право редактирования правил</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isRight}" class="text-[#3f3c34] transition-all"/>
+        </div>
+        <tui-expand [expanded]="isRight">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-8"><span class="font-bold">11.1</span> Администрация оставляет за собой право на редакцию правил при необходимости, так как игра меняется, меняются ситуации. Помните, написать за раз универсально и емко – можно, однако это совсем не гарант того, что оно будет работать хорошо на деле. Поэтому всегда остается пространства для маневра. Правила создаются для комфортной, честной и справедливой игры. Правила создаются, проходя через опыт, притирку и анализ.</p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 12. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isAdditions= !isAdditions">
+            <p class="text-2xl text-[#3f3c34] font-bold">12. Дополнения</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isAdditions}" class="text-[#3f3c34] transition-all"/>
+        </div>
+        <tui-expand [expanded]="isAdditions">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-8"><span class="font-bold">12.1</span> Корона - далекая, недостижимая столица государства, в котором происходит весь игровой процесс.</p>
+                <p class="text-xl pl-8"><span class="font-bold">12.2</span> Рынки короны - специальные торгоматы для продажи/покупки товаров короны за валюту короны.</p>
+                <p class="text-xl pl-8"><span class="font-bold">12.3</span> Запрещено оскорбление администрации в любых его проявлениях. Соблюдайте вежливость, и та же вежливость вернется к вам. В случае нарушения, администрация в праве выдать мут на подумать. В случае злостного нарушения – бан.</p>
+                <p class="text-xl pl-8"><span class="font-bold">12.4</span> Для людей с титулом запрещено приватить любые оборонительные постройки и входы в них. Так же запрещается приват монумента. Запрещено хранение более 30% ресурсов селения в сундуках привата (хранение ресурсов, которыми владеет сам игрок с титулом неограниченно).</p>
+            </div>
+        </tui-expand>
+    </div>
 </div>
