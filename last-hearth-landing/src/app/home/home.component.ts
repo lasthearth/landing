@@ -22,5 +22,9 @@ export class HomeComponent  {
         `${this.imagesPath}screen_4.png`
     ];
 
-    protected readonly news = inject(NewsService).news;
+    protected readonly news: Array<{
+        id: number;
+        title: string;
+        description: string;
+    }> = [];
 }
