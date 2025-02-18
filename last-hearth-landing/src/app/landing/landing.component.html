@@ -1,18 +1,29 @@
 @let online =  online$ | async;
 
 <div class="pt-8 flex flex-col justify-center items-center">
-    <app-header class="w-[60%] mb-8"/>
-    <div class="h-auto w-[60%] flex">
+    <app-header class="w-[90%] xl:w-[60%] mb-8"/>
+    <div class="h-auto w-[90%] xl:w-[60%] flex">
         <div class="flex flex-col w-full">
-            <div class="flex gap-4 w-[80%] mb-4">
+            <div class="flex gap-4 w-full lg:w-[80%] mb-4">
                 <a class="nav-button rounded-lg !p-2.5" [routerLink]="['/home']" [ngClass]="{'!bg-[#e2d7bb] !text-[#3f3c34] !font-bold !text-sm': select === 'home'}" (click)="select = 'home'"><tui-icon icon="@tui.house"/></a>
                 <button [routerLink]="['/rules']" class="nav-button rounded-lg p-2.5 px-4 justify-center items-center text-base" [ngClass]="{'!bg-[#e2d7bb] !text-[#3f3c34] !font-bold !text-base': select === 'rules'}" (click)="select = 'rules'">ПРАВИЛА</button>
             </div>
             <div class="flex h-full gap-3 w-full mb-10">
-                <div class="main-panel h-full w-[80%] min-w-[75%]">
+                <div class="main-panel h-full w-full lg:w-[80%] min-w-[75%]">
+                    <div class="info-panel !rounded-none h-10 w-full flex items-center lg:hidden justify-start">
+                        <p class="text-2xl text-[#3f3c34]">Мониторинг сервера:</p>
+                        <div class="flex items-center justify-center gap-3">
+                            <div class="rounded-full ml-4 h-8 w-8 bg-transparent border-4 border-dashed border-[#3f3c34] flex justify-center items-center">
+                                <p class="text-base text-[#3f3c34]">{{ online }}</p>
+                            </div>
+                            <div class="flex flex-col items-start justify-center border-dashed">
+                                <p class="text-[#3f3c34] text-base">Игроков {{ online }} из 60</p>
+                            </div>
+                        </div>
+                    </div>
                     <router-outlet />
                 </div>
-                <div class="info-panel size-full min-w-70 w-70 flex flex-col items-center">
+                <div class="info-panel hidden size-full min-w-60 xl:min-w-70 max-w-70 lg:flex flex-col items-center">
                     <p class="text-2xl text-[#3f3c34]">Мониторинг сервера:</p>
                     <div class="flex mt-12 items-center justify-center gap-8">
                         <div class="rounded-full h-12 w-12 bg-transparent border-4 border-dashed border-[#3f3c34] flex justify-center items-center">
