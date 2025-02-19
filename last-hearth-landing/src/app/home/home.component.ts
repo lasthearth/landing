@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { TuiCarousel } from '@taiga-ui/kit';
 import { NewsCardComponent } from '../news/news-card/news-card.component';
 import { NewsService } from '../services/news.service';
+import { NgClass } from '@angular/common';
 
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent],
+    imports: [TuiCarousel, NewsCardComponent, NgClass],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
 })

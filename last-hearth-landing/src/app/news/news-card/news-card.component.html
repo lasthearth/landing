@@ -3,12 +3,12 @@
         <img src="/images/screenshots/screen_1.png" class="max-w-52 max-h-52 min-h-52 min-w-52 object-cover rounded-full"/>
     </div>
     <div class="p-0.5 sm:p-2 flex flex-col gap-2">
-        <p class="text-lh-primary text-xl sm:text-2xl">{{ title() }}</p>
-        <p class="text-lh-primary text-base font-light" [innerHtml]="description()"></p>
+        <p class="text-lh-primary text-xl sm:text-2xl">{{ news().title }}</p>
+        <p class="text-lh-primary text-base font-light" [innerHtml]="news().description"></p>
     </div>
     <div class="flex sm:flex-col justify-between gap-4 items-end sm:items-start sm:gap-0 h-full">
         <div class="relative bg-[#945a32] h-fit px-2 py-1 rounded-xl">
-            <p class="text-white text-xs text-nowrap">14.02.25 - 21:35</p>
+            <p class="text-white text-xs text-nowrap"> {{ news().date}} </p>
         </div>
         <a class="relative text-lh-primary font-bold text-base">Подробнее</a>
     </div>

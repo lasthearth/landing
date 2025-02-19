@@ -1,4 +1,5 @@
 import { Component, input, InputSignal } from '@angular/core';
+import { INews } from '../interfaces/i-news';
 
 @Component({
   standalone: true,
@@ -7,7 +8,5 @@ import { Component, input, InputSignal } from '@angular/core';
   styleUrl: './news-card.component.less'
 })
 export class NewsCardComponent {
-  public title: InputSignal<string> = input.required();
-
-  public description: InputSignal<string> = input.required();
+  public news: InputSignal<INews> = input.required();
 }
