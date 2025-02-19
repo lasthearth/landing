@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+    --color-lh-primary: #3f3c34;
+    --color-lh-primary-2: #31302b;
+}
+
 html body {
     @apply !text-base;
     font-family: "Advent Pro", serif !important;

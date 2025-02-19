@@ -1,20 +1,20 @@
-# Editor configuration, see https://editorconfig.org
+# EditorConfig is awesome: https://editorconfig.org
+
 root = true
 
+# Настройки для всех файлов
 [*]
-charset = utf-8
-end_of_line = lf
-indent_size = 4
 indent_style = space
-insert_final_newline = true
-trim_trailing_whitespace = true
-max_line_length = 180
-tab_width = 4
-
-[*.md]
-max_line_length = off
-trim_trailing_whitespace = false
-
-[{*.yml,*.yaml}]
 indent_size = 2
-tab_width = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Настройки для HTML файлов
+[*.{html,htm}]
+max_line_length = 120
+indent_style = space
+indent_size = 2
+html_attribute_quotemark = double
+html_indent_inner_html = true
