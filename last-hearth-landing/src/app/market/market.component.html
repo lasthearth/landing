@@ -1,0 +1,60 @@
+<div class="text-lh-primary flex flex-col gap-6 p-6">
+    <p class="text-4xl font-bold">Рынок Короны</p>
+    <!-- Основная информация -->
+    <div>
+        <p class="text-2xl text-lh-primary font-bold">Валюта и политика рынка Короны</p>
+        <p class="text-xl pl-4">
+            Текст с основной информацией про монеты, ценообразование, возможность инфляции, виды рынков, открытие
+            доступов к ним, а также про возможность запросов на выставление товаров.
+        </p>
+    </div>
+
+    @for (item of data; track $index) {
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="item.isOpen = !item.isOpen">
+            <p class="text-2xl text-lh-primary font-bold">{{ $index + 1 }}. {{ item.name }}</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': item.isOpen }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="item.isOpen">
+            <!-- Пункт с таблицей покупок -->
+
+            @for (item of item.purchaseSale; track $index) {
+            <div class="flex flex-col gap-2 text-lh-primary shadow-2xs">
+                <div class="cursor-pointer flex justify-between pl-5" (click)="item.isOpen = !item.isOpen">
+                    <p class="text-xl font-bold flex">{{ item.type }}</p>
+                    <tui-icon
+                        icon="@tui.chevron-down"
+                        [ngClass]="{ '!rotate-180': item.isOpen }"
+                        class="text-lh-primary transition-all"
+                    />
+                </div>
+                <tui-expand [expanded]="item.isOpen">
+                    <table class="w-full border border-collapse">
+                        <tr>
+                            <th class="border w-1/3 text-xl font-bold">Изображение</th>
+                            <th class="border w-1/3 text-xl font-bold">Товар</th>
+                            <th class="border w-1/3 text-xl font-bold">Валюта</th>
+                        </tr>
+                        <tr *ngFor="let item of item.items">
+                            <td class="border text-xl">
+                                <img src="{{ item.image }}" class="w-32 justify-self-center p-2" />
+                            </td>
+                            <td class="border text-xl w-1/3 text-center">
+                                {{ item.name }}
+                            </td>
+                            <td class="border text-xl w-1/3 text-center">
+                                {{ item.currency }}
+                            </td>
+                        </tr>
+                    </table>
+                </tui-expand>
+            </div>
+            }
+        </tui-expand>
+    </div>
+    }
+</div>
