@@ -1,18 +1,20 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { TuiExpand, TuiIcon } from '@taiga-ui/core';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { TuiExpand, TuiIcon } from "@taiga-ui/core";
 
 @Component({
     standalone: true,
-    selector: 'app-rules',
+    selector: "app-rules",
     imports: [TuiExpand, TuiIcon, CommonModule],
-    templateUrl: './rules.component.html',
-    styleUrl: './rules.component.less'
+    templateUrl: "./rules.component.html",
+    styleUrl: "./rules.component.less",
 })
-export class RulesComponent  {
+export class RulesComponent {
     protected isBase: boolean = false;
     protected isPlayersType: boolean = false;
     protected isSinglePlayers: boolean = false;
+    protected isSinglePlayersWithoutSign: boolean = false;
+    protected isSinglePlayersWithSign: boolean = false;
     protected isCommons: boolean = false;
     protected isCities: boolean = false;
     protected isRegion: boolean = false;

@@ -4,23 +4,66 @@
     <!-- 1. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isBase = !isBase">
-            <p class="text-2xl text-lh-primary font-bold">1. Основы</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isBase}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">1. Основы</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isBase }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isBase">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-4"><span class="font-bold">1.1</span> Эти правила действуют на всех игроков и участников нашего сервера.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.2</span> Играя и вступая на наш сервер, вы соглашаетесь со всеми правилами проекта.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.3</span> Незнание правил не освобождает вас от ответственности. Администрация проекта оставляет за собой право дополнить.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.4</span> Администрация проекта оставляет за собой право дополнить или отредактировать правила.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.5</span> Все игроки обязаны самостоятельно отслеживать изменения в правилах.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.6</span> Запрещается устраивать поджоги построек игроков в любом виде и при любых условиях.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.7</span> Запрещается спамить (застраивать, разливать или ломать ландшафт) блоками, водой и лавой вблизи построек или зарегистрированных территорий игроков.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.8</span> Запрещается разрушать постройки игроков за исключением случаев описанных правилами.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.9</span> Запрещается разливать лаву в любом месте и в любом виде.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.10</span> Запрещается взрыв построек игроков, за исключением описанным в п. 6.3, п. 7.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.11</span> Запрещается использовать любые программы, баги или методы игры, дающие вам нечестное преимущество.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.12</span> Запрещается Использовать лазейки в правилах и абьюзы в игре.</p>
-                <p class="text-xl pl-4"><span class="font-bold">1.13</span> Запрещается дестабилизировать сервер, вносить раздор и провокационные темы.</p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.1</span> Эти правила действуют на всех игроков и участников нашего
+                    сервера.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.2</span> Играя и вступая на наш сервер, вы соглашаетесь со всеми правилами
+                    проекта.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.3</span> Незнание правил не освобождает вас от ответственности.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.4</span> Администрация проекта оставляет за собой право дополнять или
+                    редактировать правила.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.5</span> Все игроки обязаны самостоятельно отслеживать изменения в
+                    правилах.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.6</span> Запрещается устраивать поджоги построек игроков в любом виде и
+                    при любых условиях.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.7</span> Запрещается спамить блоками, водой или лавой (массовое размещение
+                    блоков, воды или лавы без цели, либо с целью затруднить игровой процесс другим участникам сервера)
+                    вблизи построек или зарегистрированных территорий игроков.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.8</span> Запрещено разрушать сооружения, возведенные другими игроками на
+                    их зарегистрированных территориях, за исключением случаев, прямо предусмотренных настоящими
+                    правилами, таких как: совершение краж, проведение набегов или ведение военных действий.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.9</span> Запрещается использование лавы в любых формах и при любых
+                    обстоятельствах.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.10</span> Запрещено использование любых программ, эксплойтов, багов или
+                    иных методов, предоставляющих несправедливое преимущество в игровом процессе.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.11</span> Запрещается использование лазеек и пробелов в настоящих
+                    правилах, а также эксплуатация игровых механизмов с целью получения несправедливого преимущества или
+                    нарушения баланса игры.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.12</span> Запрещены действия, направленные на дестабилизацию работы
+                    сервера, а также распространение провокационных тем, разжигание конфликтов или создание раздора в
+                    голосовых и текстовых каналах Discord-сервера и внутриигровых чатах.
+                </p>
             </div>
         </tui-expand>
     </div>
@@ -28,221 +71,619 @@
     <!-- 2. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isPlayersType = !isPlayersType">
-            <p class="text-2xl text-lh-primary font-bold">2. Типы игроков и образований</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isPlayersType}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">2. Типы игроков и образований</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isPlayersType }"
+                class="text-lh-primary transition-all"
+            />
         </div>
-            <tui-expand [expanded]="isPlayersType">
-                <div class="flex flex-col gap-2">
-                    <p class="text-xl pl-4 font-bold">2.1 Игроки сервера делятся на:</p>
-                    <div class="flex flex-col gap-4">
-                        <div class="shadow-2xs">
-                            <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isSinglePlayers = !isSinglePlayers">
-                                <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">2.1.1 Одиночки, пары, группы.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isSinglePlayers}" class="text-lh-primary transition-all"/>
-                            </div>
-                            <tui-expand [expanded]="isSinglePlayers">
-                                <p class="text-xl pl-16">Игроки которые не имеют регистрации своего селения/образования.</p>
-                            </tui-expand>
+        <tui-expand [expanded]="isPlayersType">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4 font-bold">2.1 Игроки сервера делятся на:</p>
+                <div class="flex flex-col gap-4">
+                    <div class="shadow-2xs">
+                        <div
+                            class="flex w-full justify-between gap-2 cursor-pointer"
+                            (click)="isSinglePlayers = !isSinglePlayers"
+                        >
+                            <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">
+                                2.1.1 Одиночки, пары, группы.
+                            </p>
+                            <tui-icon
+                                icon="@tui.chevron-down"
+                                [ngClass]="{ '!rotate-180': isSinglePlayers }"
+                                class="text-lh-primary transition-all"
+                            />
                         </div>
-
-                        <div class="shadow-2xs">
-                            <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isCommons = !isCommons">
-                                <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">2.1.2 Община.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isCommons}" class="text-lh-primary transition-all"/>
+                        <tui-expand [expanded]="isSinglePlayers">
+                            <p class="text-xl pl-16">
+                                Игроки, не зарегистрировавшие селение или образование, относятся к одной из следующих
+                                категорий:
+                            </p>
+                            <div
+                                class="flex w-full justify-between gap-2 cursor-pointer"
+                                (click)="isSinglePlayersWithoutSign = !isSinglePlayersWithoutSign"
+                            >
+                                <p class="text-xl pl-16 text-lh-primary font-bold">
+                                    2.1.1.1 Игроки без зарегистрированного места проживания.
+                                </p>
+                                <tui-icon
+                                    icon="@tui.chevron-down"
+                                    [ngClass]="{ '!rotate-180': isSinglePlayersWithoutSign }"
+                                    class="text-lh-primary transition-all"
+                                />
                             </div>
-                            <tui-expand [expanded]="isCommons">
+                            <tui-expand [expanded]="isSinglePlayersWithoutSign">
                                 <div class="flex flex-col gap-2">
-                                    <p class="text-xl pl-16">Игроки количеством от 5-ти человек, имеющие необходимую регистрацию своего селения/образования в специальном канале и выполняющие все требования приведенные ниже.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
-                                    <p class="text-xl pl-20">• Поддержание единого стиля селения.</p>
-                                    <p class="text-xl pl-20">• Оформленный центр селения. (Колодец/малая площадь/и т.п.)</p>
-                                    <p class="text-xl pl-20">• Не менее 2-х жилых хижин.</p>
-                                    <p class="text-xl pl-20">• Не менее 5-ти игроков.</p>
-                                    <p class="text-xl pl-20">• Поля или мельница или загон с животными.</p>
-                                    <p class="text-xl pl-20">• Тропы, соединяющие все постройки селения.</p>
-                                    <p class="text-xl pl-20">• Монумент. (Вычизленный столб 1х1х3 (ш,д,в))</p>
-                                    <p class="text-xl pl-20">• Дальность расположения от спавна не более, чем в 3000 блоков. (По конфигурации карты, может быть изменено)</p>
-                                    <p class="text-xl pl-20">• Держание ответа за взятый политический курс. При основании общины, ее глава обязан в канал #дипломатия сообщить свои намерения - свой политический курс. (Условно, если община, сообщила официально, что она мирная и придерживается нейтралитета, то она обязана этому следовать. Если же община хочет воевать/грабить/воровать, то она официально должна сообщить об изменении курса, то есть, что впредь она не собирается выполнять все предыдущие мирные соглашения и обещания. Если официально будет сообщен один курс, а действия будут ему ровно противоположные, то община может быть расформирована администрацией, а убытки нанесенные ей во время нарушения возмещены всем потерпевшим. Кроме этого, все союзы и пакты должны быть заключены официально и в канале #дипломатия, иначе же они будут являться недействительными.)</p>
-                                    <p class="text-xl pl-20">• Статья регистрации в специальном канале дискорда.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
-                                    <p class="text-xl pl-20">• Возможность объявлять набег.</p>
-                                    <p class="text-xl pl-20">• Доступ к дополнительным рынкам на спавне.</p>
-                                    <p class="text-xl pl-20">• Смена профессии за денежную сумму в университете у короны 1 раз в реальную неделю.</p>
-                                    <p class="text-xl pl-20">• Возможность взятия под протекторат максимум одной маленькой деревушки, населением не более 3-х человек.</p>
+                                    <p class="text-xl pl-20 text-lh-primary font-bold">Требования к образованию:</p>
+                                    <p class="text-xl pl-24">• Отсутствуют.</p>
+                                    <p class="text-xl pl-20 text-lh-primary font-bold">Преимущества:</p>
+                                    <p class="text-xl pl-24">
+                                        • Данные игроки не получают никаких преимуществ и никаких защит.
+                                    </p>
                                 </div>
                             </tui-expand>
-                        </div>
-
-                        <div class="shadow-2xs">
-                            <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isCities = !isCities">
-                                <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">2.1.3 Город.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isCities}" class="text-lh-primary transition-all"/>
+                            <div
+                                class="flex w-full justify-between gap-2 cursor-pointer"
+                                (click)="isSinglePlayersWithSign = !isSinglePlayersWithSign"
+                            >
+                                <p class="text-xl pl-16 text-lh-primary font-bold">
+                                    2.1.1.2 Игроки с зарегистрированным местом проживания.
+                                </p>
+                                <tui-icon
+                                    icon="@tui.chevron-down"
+                                    [ngClass]="{ '!rotate-180': isSinglePlayersWithSign }"
+                                    class="text-lh-primary transition-all"
+                                />
                             </div>
-                            <tui-expand [expanded]="isCities">
+                            <tui-expand [expanded]="isSinglePlayersWithSign">
                                 <div class="flex flex-col gap-2">
-                                    <p class="text-xl pl-16">Игроки количеством от 7-и человек, имеющие необходимую регистрацию своего селения/образования и выполняющие все требования приведенные ниже.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
-                                    <p class="text-xl pl-20">• Пройденная и сохраненная стадия образования “Община”.</p>
-                                    <p class="text-xl pl-20">• Переделанный монумент под размеры 3х3х1 (постамент) + из центра вверх 1х1х3 (без учета блока на который ставится столбик).</p>
-                                    <p class="text-xl pl-20">• Дорожная инфраструктура до спавна или обустроенные порты до спавна (с буйками по пути каждые ~100 блоков).</p>
-                                    <p class="text-xl pl-20">• Главное здание города (Ратуша/Крепость/Дом наместника и т.д.).</p>
-                                    <p class="text-xl pl-20">• Не менее 7-и игроков.</p>
-                                    <p class="text-xl pl-20">• Не менее 2-х производственных зданий.</p>
-                                    <p class="text-xl pl-20">• 1 Религиозное здание.</p>
-                                    <p class="text-xl pl-20">• Обязательное выполнение заданий (ивентов) от короны. (Не менее 1 задания в 2 реальных недели, при условии, что задания есть/либо назначены)</p>
-                                    <p class="text-xl pl-20">• Уплата денежных податей короне раз в реальную неделю.</p>
-                                    <p class="text-xl pl-20">• Переоформленная статья регистрации селения в дискорде.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
-                                    <p class="text-xl pl-20">• 4 торговца в своем городе (2 рандомных и 2 на выбор).</p>
-                                    <p class="text-xl pl-20">• Возможность объявлять набег.</p>
-                                    <p class="text-xl pl-20">• Возможность объявлении войны, при систематическом игнорировании дипломатических объявлений/запросов в специальном канале #дипломатия.</p>
-                                    <p class="text-xl pl-20">• Смена профессии при наличии университета собственного/либо за денежную сумму в университете у короны.</p>
-                                    <p class="text-xl pl-20">• Доступ к дополнительным рынкам на спавне.</p>
-                                    <p class="text-xl pl-20">• Возможность взятия под протекторат максимум трех селений, населением каждой не более 3-х человек.</p>
+                                    <p class="text-xl pl-20 text-lh-primary font-bold">Требования к образованию:</p>
+                                    <p class="text-xl pl-24">• Наличие места проживания.</p>
+                                    <p class="text-xl pl-24">
+                                        • Размещение информационной таблички с указанием имени (имен) игроков на видном
+                                        месте этой территории
+                                    </p>
+                                    <p class="text-xl pl-20 text-lh-primary font-bold">Преимущества:</p>
+                                    <p class="text-xl pl-24">
+                                        • Распространение на игроков данной категории правил, регулирующих воровство.
+                                    </p>
                                 </div>
                             </tui-expand>
-                        </div>
+                        </tui-expand>
+                    </div>
 
-                        <div class="shadow-2xs">
-                            <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRegion = !isRegion">
-                                <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">2.1.4 Региональная провинция.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isRegion}" class="text-lh-primary transition-all"/>
-                            </div>
-                            <tui-expand [expanded]="isRegion">
-                                <div class="flex flex-col gap-2">
-                                    <p class="text-xl pl-16">Игроки количеством от 10-ти человек, имеющие необходимую регистрацию своего селения/образования и выполняющие все требования приведенные ниже.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
-                                    <p class="text-xl pl-20">• Пройденная и сохраненная стадия образования “Город”.</p>
-                                    <p class="text-xl pl-20">• Свод законов.</p>
-                                    <p class="text-xl pl-20">• Переделанный монумент под размеры 3х3х2 (постамент) + из центра вверх 1х1х4 (без учета блока на который ставится столбик).</p>
-                                    <p class="text-xl pl-20">• Наместник (Он же правитель).</p>
-                                    <p class="text-xl pl-20">• Не менее 10-ти игроков.</p>
-                                    <p class="text-xl pl-20">• От 7-и домов для горожан.</p>
-                                    <p class="text-xl pl-20">• Не менее 4-х производственных зданий.</p>
-                                    <p class="text-xl pl-20">• Минимум 1 здание типа арена/колизей/ипподром</p>
-                                    <p class="text-xl pl-20">• Минимум 1 библиотека с не менее чем 5-ю книгами о лоре провинции игроков. (1 книга 1-2 страницы).</p>
-                                    <p class="text-xl pl-20">• Минимум 1 таверна или гостевой дом.</p>
-                                    <p class="text-xl pl-20">• Центральная площадь - рынок с действующими прилавками - торгоматами в валюте короны.</p>
-                                    <p class="text-xl pl-20">• Казармы/Конюшни.</p>
-                                    <p class="text-xl pl-20">• Переоформленная статья регистрации селения в дискорде.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
-                                    <p class="text-xl pl-20">• Дополнительно 6 торговцев на выбор.</p>
-                                    <p class="text-xl pl-20">• Доступ ко всем рынкам короны, кроме уникальных.</p>
-                                    <p class="text-xl pl-20">• Возможность объявить войну.</p>
-                                    <p class="text-xl pl-20">• Возможность выдавать 1 поручение каждому городу от имени короны раз в 1 реальную неделю.</p>
-                                    <p class="text-xl pl-20">• Неограниченное количество селение под протекторатом.</p>
-                                </div>
-                            </tui-expand>
+                    <div class="shadow-2xs">
+                        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isCommons = !isCommons">
+                            <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">2.1.2 Община.</p>
+                            <tui-icon
+                                icon="@tui.chevron-down"
+                                [ngClass]="{ '!rotate-180': isCommons }"
+                                class="text-lh-primary transition-all"
+                            />
                         </div>
+                        <tui-expand [expanded]="isCommons">
+                            <div class="flex flex-col gap-2">
+                                <p class="text-xl pl-16">
+                                    Община — это образование, состоящее из 5 и более игроков, зарегистрированное в
+                                    специальном канале Discord и соответствующее следующим требованиям:
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
+                                <p class="text-xl pl-20">• Поддержание единого архитектурного стиля селения.</p>
+                                <p class="text-xl pl-20">
+                                    • Наличие оформленного центра (например, колодец, малая площадь и т.п.).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Обустроенные границы селения, данные преимуществом, пограничными столбиками или
+                                    буйками (на воде) (размерами не менее 1х1х2 (ш,д,в)), отличными от окружающего их
+                                    ландшафта, на расстоянии не более 20 блоков друг от друга.
+                                </p>
+                                <p class="text-xl pl-20">• Не менее 2-х жилых хижин.</p>
+                                <p class="text-xl pl-20">• Не менее 5-ти игроков.</p>
+                                <p class="text-xl pl-20">• Наличие полей, мельницы или загона с животными.</p>
+                                <p class="text-xl pl-20">• Тропы, соединяющие все постройки селения.</p>
+                                <p class="text-xl pl-20">• Установка монумента (вычизленный столб 1х1х3 (ш,д,в)).</p>
+                                <p class="text-xl pl-20">
+                                    • Селение должно находиться не далее 3000 блоков от спавна (расстояние может быть
+                                    изменено в зависимости от конфигурации карты).
+                                </p>
+                                <p class="text-xl pl-20">• Держание ответа за взятый политический курс.</p>
 
-                        <div class="shadow-2xs">
-                            <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isMerchantGuild1 = !isMerchantGuild1">
-                                <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">2.1.5 Гильдия торговцев I уровня.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isMerchantGuild1}" class="text-lh-primary transition-all"/>
+                                <p class="text-xl pl-24">
+                                    ◦ При основании общины, ее глава обязан заявить политический курс в канале
+                                    #дипломатия.
+                                </p>
+                                <p class="text-xl pl-24">
+                                    ◦ Если официально будет сообщен один курс, а действия будут ему ровно
+                                    противоположные, то община может быть расформирована администрацией, а убытки,
+                                    нанесенные ею во время нарушения, возмещены всем потерпевшим. (Например, если община
+                                    официально заявила, что она мирная и придерживается нейтралитета, то она обязана
+                                    следовать этому курсу. Если же община хочет воевать/грабить/воровать, то она
+                                    официально должна сообщить об изменении курса, то есть, что впредь она не собирается
+                                    выполнять все предыдущие мирные соглашения и обещания.)
+                                </p>
+                                <p class="text-xl pl-24">
+                                    ◦ Кроме этого, все союзы и пакты должны быть заключены официально и в канале
+                                    #дипломатия, иначе они будут являться недействительными.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Публикация статьи о регистрации общины в специальном канале Discord.
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
+                                <p class="text-xl pl-20">
+                                    • Защита на территории селения от действий других игроков (п.3), в радиусе 100
+                                    блоков от монумента. За исключением состояний: воровство, набег, война.
+                                </p>
+                                <p class="text-xl pl-20">• Возможность объявлять набеги.</p>
+                                <p class="text-xl pl-20">• Доступ к дополнительным рынкам на спавне.</p>
+                                <p class="text-xl pl-20">
+                                    • Смена профессии за игровую валюту в университете у короны (1 раз в реальную
+                                    неделю).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность взятия под протекторат максимум одной маленькой деревушки, населением
+                                    не более 3-х человек.
+                                </p>
                             </div>
-                            <tui-expand [expanded]="isMerchantGuild1">
-                                <div class="flex flex-col gap-2">
-                                    <p class="text-xl pl-16">Игроки количеством не более 3-х человек, имеющие необходимую регистрацию и выполняющие все требования приведенные ниже.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
-                                    <p class="text-xl pl-20">• Построенное главное здание гильдии, не менее 2-х этажей.</p>
-                                    <p class="text-xl pl-20">• Малая рыночная площадь неподалеку от главного здания.</p>
-                                    <p class="text-xl pl-20">• Составленный документ торговли. (Описывает то, что вы продаете/собираетесь продавать и регулирует ваши цены на продукцию. Все цены должны быть в валюте короны).</p>
-                                    <p class="text-xl pl-20">• Выполнение запрета о невмешательстве в военные действия и грабежи.</p>
-                                    <p class="text-xl pl-20">• Плата налога Короне в размере N монет каждые реальные три дня.</p>
-                                    <p class="text-xl pl-20">• Наличие минимум одного оформленного торгового поста в общине/городе/провинции.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
-                                    <p class="text-xl pl-20">• Предоставление на выбор 4-х торговцев.</p>
-                                    <p class="text-xl pl-20">• Доступ к уникальным рынкам короны на спавне.</p>
-                                    <p class="text-xl pl-20">• Предоставление первоначального инвестиционного взноса от короны в размере N монет.</p>
-                                    <p class="text-xl pl-20">• Возможность выдавать 1 поручение каждому городу от имени короны раз в 1 реальную неделю.</p>
-                                    <p class="text-xl pl-20">• Возможность получить протекторат от короны за N монет.</p>
-                                </div>
-                            </tui-expand>
-                        </div>
+                        </tui-expand>
+                    </div>
 
-                        <div class="shadow-2xs">
-                            <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isMerchantGuild2 = !isMerchantGuild2">
-                                <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">2.1.6 Гильдия торговцев 2 уровня.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isMerchantGuild2}" class="text-lh-primary transition-all"/>
-                            </div>
-                            <tui-expand [expanded]="isMerchantGuild2">
-                                <div class="flex flex-col gap-2">
-                                    <p class="text-xl pl-16">Игроки количеством не более 6-ти человек, имеющие необходимую регистрацию и выполняющие все требования приведенные ниже</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
-                                    <p class="text-xl pl-20">• Пройденная и сохраненная стадия Гильдия торговцев I уровня.</p>
-                                    <p class="text-xl pl-20">• Построенное здание Торговые ряды, которое должно вмещать в себя не менее 6-ти мест торговли от самой гильдии и не менее 4-х мест торговли для других гильдий и образований, а также 1-место для торговцев от короны.</p>
-                                    <p class="text-xl pl-20">• Благоустроенные (3 блока шириной минимум и огороженные отмосткой) и проведенные дороги между всеми постройками гильдии.</p>
-                                    <p class="text-xl pl-20">• Не менее 2-х выполненных заданий от Короны.</p>
-                                    <p class="text-xl pl-20">• Возможность предоставления кредитования образованиям любого уровня.</p>
-                                    <p class="text-xl pl-20">• Плата налога Короне в размере N монет каждые реальные три дня.</p>
-                                    <p class="text-xl pl-20">• Наличие минимум трех оформленных торговых постов в общине/городе/провинции, один из которых в городе/провинции.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
-                                    <p class="text-xl pl-20">• Предоставление на выбор дополнительных 6-ти торговцев.</p>
-                                    <p class="text-xl pl-20">• Предоставление доступа ко всем рынкам короны, включая уникальные.</p>
-                                    <p class="text-xl pl-20">• Предоставление возможности выдавать 2 здания каждому образованию в реальную неделю от имени короны, после согласования.</p>
-                                    <p class="text-xl pl-20">• Возможность получения кредитов от короны либо финансового, либо товарного типа.</p>
-                                    <p class="text-xl pl-20">• Возможность смены класса в университетах короны 1 раз в реальную неделю для 1 человека за плату.</p>
-                                    <p class="text-xl pl-20">• Возможность раз в игровой год предлагать товар для скупки Короне.</p>
-                                </div>
-                            </tui-expand>
+                    <div class="shadow-2xs">
+                        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isCities = !isCities">
+                            <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">2.1.3 Город.</p>
+                            <tui-icon
+                                icon="@tui.chevron-down"
+                                [ngClass]="{ '!rotate-180': isCities }"
+                                class="text-lh-primary transition-all"
+                            />
                         </div>
+                        <tui-expand [expanded]="isCities">
+                            <div class="flex flex-col gap-2">
+                                <p class="text-xl pl-16">
+                                    Город — это образование, состоящее из 7 и более игроков, зарегистрированное в
+                                    специальном канале Discord и соответствующее следующим требованиям:
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
+                                <p class="text-xl pl-20">• Успешное прохождение и сохранение стадии "Община".</p>
+                                <p class="text-xl pl-20">
+                                    • Изменение расположения обустроенных границ, согласно новым преимуществам.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Переделанный монумент под размеры 3х3х1 (ш,д,в) (постамент) с центральным столбом
+                                    1x1x3 (ш,д,в) (без учета блока основания).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Дорожная инфраструктура, соединяющая город со спавном, или обустроенные порты с
+                                    буйками, размещенными каждые ~100 блоков.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Наличие ратуши, крепости, дома наместника или аналогичного сооружения - главного
+                                    здания города.
+                                </p>
+                                <p class="text-xl pl-20">• Не менее 7-и игроков.</p>
+                                <p class="text-xl pl-20">
+                                    • Не менее 2 зданий, предназначенных для производства (например, кузница, мастерская
+                                    и т.д.).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Наличие хотя бы одного религиозного сооружения (например, церковь, храм и т.д.).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Обязательное выполнение заданий (ивентов) от короны не реже 1 раза в 2 реальные
+                                    недели (при наличии доступных заданий).
+                                </p>
+                                <p class="text-xl pl-20">• Уплата денежных податей короне раз в реальную неделю.</p>
+                                <p class="text-xl pl-20">• Переоформление статьи регистрации селения в дискорде.</p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
+                                <p class="text-xl pl-20">
+                                    • Защита на территории города от действий других игроков (п.3), в радиусе 220 блоков
+                                    от монумента. За исключением состояний: воровство, набег, война.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность размещения 4 торговцев в городе (2 случайных и 2 на выбор).
+                                </p>
+                                <p class="text-xl pl-20">• Возможность объявлять набеги.</p>
+                                <p class="text-xl pl-20">
+                                    • Возможность объявления войны в случае систематического игнорирования
+                                    дипломатических запросов или объявлений в канале #дипломатия.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Бесплатная смена профессии при наличии собственного университета (1 раз в реальную
+                                    неделю).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Платная смена профессии в университете у короны (1 раз в реальную неделю).
+                                </p>
+                                <p class="text-xl pl-20">• Доступ к дополнительным рынкам на спавне.</p>
+                                <p class="text-xl pl-20">
+                                    • Возможность взятия под протекторат максимум трех селений, суммарное население
+                                    которых не превышает 12 человек.
+                                </p>
+                            </div>
+                        </tui-expand>
+                    </div>
 
-                        <div class="shadow-2xs">
-                            <div class="flex w-full justify-between gap-2 cursor-pointer font-bold" (click)="isMercenaryGuild1 = !isMercenaryGuild1">
-                                <p class="text-xl pl-8 text-lh-primary">2.1.7 Гильдия наёмников I уровня.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isMercenaryGuild1}" class="text-lh-primary transition-all"/>
-                            </div>
-                            <tui-expand [expanded]="isMercenaryGuild1">
-                                <div class="flex flex-col gap-2">
-                                    <p class="text-xl pl-16">Игроки количеством не менее 2-х человек, имеющие необходимую регистрацию и выполняющие все требования приведенные ниже.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
-                                    <p class="text-xl pl-20">• Отсутствие (запрет) каких-либо сложных производственных цепочек и любой автоматизации.</p>
-                                    <p class="text-xl pl-20">• Ограничение по постройкам - не более 2-х построек. (Для основания, постройки уже должны быть готовы)</p>
-                                    <p class="text-xl pl-20">• Выполнение заказов на военные действия и хранение конфиденциальности. (Прямая обязанность)</p>
-                                    <p class="text-xl pl-20">• Выполнение заказов исключительно в валюте короны.</p>
-                                    <p class="text-xl pl-20">• Отказ от собственных военных или воровских действия, придерживание исключительно действия посредством заказов.</p>
-                                    <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
-                                    <p class="text-xl pl-20">• Единовременное безвозмездное военное снабжение от короны (Включая вапити и корабли).</p>
-                                    <p class="text-xl pl-20">• Периодическое получение оплачиваемых тайных заказов от короны.</p>
-                                    <p class="text-xl pl-20">• Единовременное финансовое снабжение от короны в небольшом размере.</p>
-                                    <p class="text-xl pl-20">• Возможность бесплатной смены класса в университетах короны раз в 2 реальных недели для каждого члена гильдии.</p>
-                                    <p class="text-xl pl-20">• Возможность оплачиваемой смены класса в университетах короны раз в 1 реальную неделю для каждого члена гильдии.</p>
-                                    <p class="text-xl pl-20">• Право забирать не менее 30% добычи от любого полученного заказа.</p>
-                                    <p class="text-xl pl-20">• Возможность получения протектората от короны за N количество монет в неделю.</p>
-                                </div>
-                            </tui-expand>
+                    <div class="shadow-2xs">
+                        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRegion = !isRegion">
+                            <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">
+                                2.1.4 Региональная провинция.
+                            </p>
+                            <tui-icon
+                                icon="@tui.chevron-down"
+                                [ngClass]="{ '!rotate-180': isRegion }"
+                                class="text-lh-primary transition-all"
+                            />
                         </div>
+                        <tui-expand [expanded]="isRegion">
+                            <div class="flex flex-col gap-2">
+                                <p class="text-xl pl-16">
+                                    Региональная провинция — это образование, состоящее из 10 и более игроков,
+                                    зарегистрированное в специальном канале Discord и соответствующее следующим
+                                    требованиям:
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
+                                <p class="text-xl pl-20">• Успешное прохождение и сохранение стадии "Город".</p>
+                                <p class="text-xl pl-20">
+                                    • Изменение расположения обустроенных границ, согласно новым преимуществам.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Наличие официального свода законов, регулирующих жизнь провинции.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Переделанный монумент под размеры 3х3х2 (ш,д,в) (постамент) с центральным столбом
+                                    1х1х4 (ш,д,в) (без учета блока основания).
+                                </p>
+                                <p class="text-xl pl-20">• Назначение наместника (правителя) провинции.</p>
+                                <p class="text-xl pl-20">• Не менее 10-ти игроков.</p>
+                                <p class="text-xl pl-20">• Не менее 7 домов для горожан.</p>
+                                <p class="text-xl pl-20">• Не менее 4 зданий, предназначенных для производства.</p>
+                                <p class="text-xl pl-20">
+                                    • Наличие минимум 1 здания типа арена, колизей или ипподром.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Минимум 1 библиотека с не менее чем 5-ю книгами о лоре провинции игроков. (1 книга
+                                    1-2 страницы).
+                                </p>
+                                <p class="text-xl pl-20">• Наличие минимум 1 таверны или гостевого дома.</p>
+                                <p class="text-xl pl-20">
+                                    • Центральная площадь - рынок с действующими прилавками (торгоматами), использующими
+                                    валюту короны.
+                                </p>
+                                <p class="text-xl pl-20">• Наличие казарм или конюшен.</p>
+                                <p class="text-xl pl-20">
+                                    • Переоформление статьи о регистрации провинции в специальном канале Discord.
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
+                                <p class="text-xl pl-20">
+                                    • Защита на территории провинции от действий других игроков (п.3), в радиусе 450
+                                    блоков от монумента. За исключением состояний: воровство, набег, война.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность размещения дополнительно 6 торговцев на выбор.
+                                </p>
+                                <p class="text-xl pl-20">• Доступ ко всем рынкам короны, за исключением уникальных.</p>
+                                <p class="text-xl pl-20">• Возможность объявить войну.</p>
+                                <p class="text-xl pl-20">
+                                    • Право выдавать 1 поручение от имени короны каждому городу раз в реальную неделю.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность взять под протекторат неограниченное количество селений.
+                                </p>
+                            </div>
+                        </tui-expand>
+                    </div>
+
+                    <div class="shadow-2xs">
+                        <div
+                            class="flex w-full justify-between gap-2 cursor-pointer"
+                            (click)="isMerchantGuild1 = !isMerchantGuild1"
+                        >
+                            <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">
+                                2.1.5 Гильдия торговцев I уровня.
+                            </p>
+                            <tui-icon
+                                icon="@tui.chevron-down"
+                                [ngClass]="{ '!rotate-180': isMerchantGuild1 }"
+                                class="text-lh-primary transition-all"
+                            />
+                        </div>
+                        <tui-expand [expanded]="isMerchantGuild1">
+                            <div class="flex flex-col gap-2">
+                                <p class="text-xl pl-16">
+                                    Гильдия торговцев 1 уровня — это объединение не более 3 игроков, зарегистрированное
+                                    в специальном канале Discord и соответствующее следующим требованиям:
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
+                                <p class="text-xl pl-20">
+                                    • Обустроенные границы территории гильдии, данные преимуществом, пограничными
+                                    столбиками или буйками (на воде) (размерами не менее 1х1х2 (ш,д,в)), отличными от
+                                    окружающего их ландшафта, на расстоянии не более 20 блоков друг от друга.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Наличие построенного главного здания гильдии высотой не менее 2 этажей.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Обустройство малой рыночной площади вблизи главного здания.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Наличие составленного документа, регулирующего торговую деятельность (описание
+                                    товаров/услуг, цены в валюте короны).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Соблюдение запрета на участие в военных действиях и грабежах.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Уплата налога Короне в размере N монет каждые 3 реальных дня.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Наличие минимум одного оформленного торгового поста в общине, городе или
+                                    провинции.
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
+                                <p class="text-xl pl-20">
+                                    • Защита на территории гильдии от действий других игроков (п.3), в радиусе 80 блоков
+                                    от монумента. За исключением состояний: воровство, набег, война.
+                                </p>
+                                <p class="text-xl pl-20">• Возможность размещения 4 торговцев на выбор.</p>
+                                <p class="text-xl pl-20">• Доступ к уникальным рынкам короны на спавне.</p>
+                                <p class="text-xl pl-20">
+                                    • Получение первоначального инвестиционного взноса от короны в размере N монет.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Право выдавать 1 поручение от имени Короны каждому городу раз в реальную неделю.
+                                </p>
+                                <p class="text-xl pl-20">• Возможность получения протектората от Короны за N монет.</p>
+                            </div>
+                        </tui-expand>
+                    </div>
+
+                    <div class="shadow-2xs">
+                        <div
+                            class="flex w-full justify-between gap-2 cursor-pointer"
+                            (click)="isMerchantGuild2 = !isMerchantGuild2"
+                        >
+                            <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">
+                                2.1.6 Гильдия торговцев 2 уровня.
+                            </p>
+                            <tui-icon
+                                icon="@tui.chevron-down"
+                                [ngClass]="{ '!rotate-180': isMerchantGuild2 }"
+                                class="text-lh-primary transition-all"
+                            />
+                        </div>
+                        <tui-expand [expanded]="isMerchantGuild2">
+                            <div class="flex flex-col gap-2">
+                                <p class="text-xl pl-16">
+                                    Гильдия торговцев 2 уровня — это объединение не более 6 игроков, зарегистрированное
+                                    в специальном канале Discord и соответствующее следующим требованиям:
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
+                                <p class="text-xl pl-20">
+                                    • Успешное прохождение и сохранение стадии "Гильдия торговцев 1 уровня".
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Изменение расположения обустроенных границ, согласно новым преимуществам.
+                                </p>
+                                <p class="text-xl pl-20">• Постройка здания "Торговые ряды", включающего:</p>
+                                <p class="text-xl pl-24">◦ Не менее 6 торговых мест для гильдии.</p>
+                                <p class="text-xl pl-24">
+                                    ◦ Не менее 4 торговых мест для других гильдий и образований.
+                                </p>
+                                <p class="text-xl pl-24">◦ 1 торговое место для торговцев от короны.</p>
+                                <p class="text-xl pl-20">
+                                    • Благоустроенные дороги шириной не менее 3 блоков с огороженной отмосткой,
+                                    соединяющие все постройки гильдии.
+                                </p>
+                                <p class="text-xl pl-20">• Наличие построенного фонтана на площади.</p>
+                                <p class="text-xl pl-20">• Не менее 2-х выполненных заданий от Короны.</p>
+                                <p class="text-xl pl-20">
+                                    • Возможность предоставления кредитов образованиям любого уровня.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Уплата налога Короне в размере N монет каждые 3 реальных дня.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Наличие минимум 3 оформленных торговых постов в общинах, городах или провинциях,
+                                    включая обязательный пост в городе или провинции.
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
+                                <p class="text-xl pl-20">
+                                    • Защита на территории гильдии от действий других игроков (п.3), в радиусе 100
+                                    блоков от монумента. За исключением состояний: воровство, набег, война.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность размещения дополнительно 6 торговцев на выбор.
+                                </p>
+                                <p class="text-xl pl-20">• Доступ ко всем рынкам Короны, включая уникальные.</p>
+                                <p class="text-xl pl-20">
+                                    • Право выдавать 2 поручения от имени Короны каждому образованию в реальную неделю
+                                    (после согласования с представителем Короны).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность получения кредитов от короны (финансовых или товарных).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность смены класса в университетах короны 1 раз в реальную неделю для 1
+                                    игрока за плату.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Право предлагать товары для скупки Короне 1 раз в игровой год.
+                                </p>
+                            </div>
+                        </tui-expand>
+                    </div>
+
+                    <div class="shadow-2xs">
+                        <div
+                            class="flex w-full justify-between gap-2 cursor-pointer font-bold"
+                            (click)="isMercenaryGuild1 = !isMercenaryGuild1"
+                        >
+                            <p class="text-xl pl-8 text-lh-primary">2.1.7 Гильдия наёмников I уровня.</p>
+                            <tui-icon
+                                icon="@tui.chevron-down"
+                                [ngClass]="{ '!rotate-180': isMercenaryGuild1 }"
+                                class="text-lh-primary transition-all"
+                            />
+                        </div>
+                        <tui-expand [expanded]="isMercenaryGuild1">
+                            <div class="flex flex-col gap-2">
+                                <p class="text-xl pl-16">
+                                    Гильдия наёмников 1 уровня — это объединение не менее 2 игроков, зарегистрированное
+                                    в специальном канале Discord и соответствующее следующим требованиям:
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Требования к образованию:</p>
+                                <p class="text-xl pl-20">
+                                    • Обустроенные границы территории гильдии, данные преимуществом, пограничными
+                                    столбиками или буйками (на воде) (размерами не менее 1х1х2 (ш,д,в)), отличными от
+                                    окружающего их ландшафта, на расстоянии не более 20 блоков друг от друга.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Запрет на использование сложных производственных цепочек и любой автоматизации.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Не более 2 построек (постройки должны быть готовы к моменту основания гильдии).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Обязанность выполнения заказов на военные действия и соблюдение
+                                    конфиденциальностив отношении заказов.
+                                </p>
+                                <p class="text-xl pl-20">• Выполнение заказов исключительно за валюту Короны.</p>
+                                <p class="text-xl pl-20">
+                                    • Отказ от самостоятельных военных или воровских действий. Все действия
+                                    осуществляются исключительно через заказы.
+                                </p>
+                                <p class="text-xl pl-16 text-lh-primary font-bold">Преимущества:</p>
+                                <p class="text-xl pl-20">
+                                    • Защита на территории гильдии от действий других игроков (п.3), в радиусе 50 блоков
+                                    от монумента. За исключением состояний: воровство, набег, война.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Единовременное безвозмездное военное снабжение от Короны (включая вапити и
+                                    корабли).
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Периодическое получение оплачиваемых тайных заказов от Короны.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Единовременное финансовое снабжение от Короны в небольшом размере.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность бесплатной смены класса в университетах короны раз в 2 реальных недели
+                                    для каждого члена гильдии.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность оплачиваемой смены класса в университетах короны раз в 1 реальную
+                                    неделю для каждого члена гильдии.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Право забирать не менее 30% добычи от любого полученного заказа.
+                                </p>
+                                <p class="text-xl pl-20">
+                                    • Возможность получения протектората от Короны за еженедельную плату в размере N
+                                    монет.
+                                </p>
+                            </div>
+                        </tui-expand>
                     </div>
                 </div>
-            </tui-expand>
+            </div>
+        </tui-expand>
     </div>
 
     <!-- 3. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isPlayersActions = !isPlayersActions">
-            <p class="text-2xl text-lh-primary font-bold">3. Действия игроков</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isPlayersActions}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">3. Действия игроков</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isPlayersActions }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isPlayersActions">
             <div class="flex flex-col gap-4">
                 <div class="shadow-2xs">
                     <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isTheft = !isTheft">
-                        <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">3.1 Воровство.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isTheft}" class="text-lh-primary transition-all"/>
+                        <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">3.1 Воровство.</p>
+                        <tui-icon
+                            icon="@tui.chevron-down"
+                            [ngClass]="{ '!rotate-180': isTheft }"
+                            class="text-lh-primary transition-all"
+                        />
                     </div>
                     <tui-expand [expanded]="isTheft">
                         <div class="flex flex-col gap-2">
-                            <p class="text-xl pl-16"><span class="font-bold">3.1.1</span> Под ограблением, понимается проникновение строго до 2-х человек на территорию ограбляемого и попытка кражи ресурсов. Данное действие должно производиться строго по определенным правилам.</p>
-                            <p class="text-xl pl-16 text-lh-primary font-bold"><span class="font-bold">3.1.2</span> Вор имеет право:</p>
-                            <p class="text-xl pl-20">• Разбивать и открывать категорически только двери и сундуки. (а также все производные от сундуков)</p>
-                            <p class="text-xl pl-20">• Пытаться отбиваться от защитников в случае его обнаружения и получения первого урона в целях отступления, но не инициировать нападение первым.</p>
-                            <p class="text-xl pl-16 text-lh-primary font-bold"><span class="font-bold">3.1.4</span> Вор обязан:</p>
-                            <p class="text-xl pl-20">• Производить грабеж только тогда, когда на территории цели есть человек в сети (для одиночек, пар, групп, гильдий - 1 человек, для всех остальных минимум 2).</p>
-                            <p class="text-xl pl-20">• Для одиночек и пар и всех не зарегистрированных селений - на месте вашего проживания должно стоять табличка с надписью дом или вашим ником. Если такой таблички нет, вас могу ограбить как угодно и когда угодно.</p>
-                            <p class="text-xl pl-20">• Для одиночек и пар и всех не зарегистрированных селений, территорией считать местность от таблички радиусом 150 блоков в каждую сторону.</p>
+                            <p class="text-xl pl-16">
+                                <span class="font-bold">3.1.1</span> Ограбление — это скрытное проникновение не более 2
+                                игроков на территорию другого игрока или образования с целью кражи ресурсов. Данное
+                                действие должно осуществляться строго в соответствии с установленными правилами.
+                            </p>
+                            <p class="text-xl pl-16 text-lh-primary font-bold">
+                                <span class="font-bold">3.1.2</span> Вор имеет право:
+                            </p>
+                            <p class="text-xl pl-20">• Разбивать и открывать категорически только:</p>
+                            <p class="text-xl pl-24">
+                                ◦ Разбивать двери (не являющиеся воротами - см. терминологию) и люки. Открывание
+                                незапертых ворот разрешено.
+                            </p>
+                            <p class="text-xl pl-24">
+                                ◦ Окна (в виде стекла, заборов и иных проявлений, которые можно считать окнами в
+                                строении).
+                            </p>
+                            <p class="text-xl pl-24">
+                                ◦ Сундуки, ящики, сосуды, бочки, корзинки, глыбы камня (из мода "Карьер").
+                            </p>
+                            <p class="text-xl pl-20">• Угонять любые транспортные средства.</p>
+                            <p class="text-xl pl-20">• Размещать исключительно веревочные лестницы.</p>
+                            <p class="text-xl pl-20">
+                                • Во время грабежа вор может быть защищен исключительно кожаной или стеганой броней.
+                                Наличие брони не является обязательным.
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Вор может защищаться исключительно в случае обнаружения и получения первого урона, но
+                                не имеет права инициировать нападение первым, а также вести преследование жертвы.
+                            </p>
+                            <p class="text-xl pl-16 text-lh-primary font-bold">
+                                <span class="font-bold">3.1.4</span> Вор обязан:
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Совершать грабеж одной и той же цели не чаще, чем 1 раз в реальный час.
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Совершать грабеж исключительно при нахождении потенциальной цели в сети (для одиночек,
+                                пар, групп, гильдий - 1 человек в сети; для остальных типов селений - минимум 2 игрока в
+                                сети). Территориальное нахождение цели при проведении грабежа не имеет значения.
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Вор имеет право доводить до конца уже начатый грабеж, если в процессе цель вышла из
+                                сети.
+                            </p>
                         </div>
                     </tui-expand>
                 </div>
 
-
                 <div class="shadow-2xs">
                     <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isKills = !isKills">
-                        <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">3.2 Убийства.</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isKills}" class="text-lh-primary transition-all"/>
+                        <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">3.2 Убийства.</p>
+                        <tui-icon
+                            icon="@tui.chevron-down"
+                            [ngClass]="{ '!rotate-180': isKills }"
+                            class="text-lh-primary transition-all"
+                        />
                     </div>
                     <tui-expand [expanded]="isKills">
                         <div class="flex flex-col gap-2">
-                            <p class="text-xl pl-16"><span class="font-bold">3.2.1</span> Игроки категорий (одиночки, пары, группы), (гильдии) могут быть убиты, где угодно, как угодно, когда угодно и кем угодно. Однако следует помнить, что если вы убиваете - вы не можете красть, так как не попадаете под правила воровства.</p>
-                            <p class="text-xl pl-16"><span class="font-bold">3.2.2</span> Игроки категорий (община, город, региональная провинция) могут быть убиты, где угодно, как угодно, когда угодно и кем угодно, кроме своей территории и в радиусе 50/150/300 блоков от ее границ соответственно. Не действует в случаях состояния набег и война.</p>
+                            <p class="text-xl pl-16">
+                                <span class="font-bold">3.2.1</span> Игроки категорий одиночки, пары, группы - могут
+                                быть убиты, где угодно, как угодно, когда угодно и кем угодно.
+                            </p>
+                            <p class="text-xl pl-16">
+                                <span class="font-bold">3.2.2</span> Игроки категорий община, город, региональная
+                                провинция, гильдия - могут быть убиты, где угодно, как угодно, когда угодно и кем
+                                угодно, кроме своей территории, данной преимуществом. Не действует в случаях состояния
+                                набег и война (в случаях кражи убийство допускается согласно правилам ограбления).
+                            </p>
                         </div>
                     </tui-expand>
                 </div>
@@ -253,13 +694,29 @@
     <!-- 4. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isProtectors = !isProtectors">
-            <p class="text-2xl text-lh-primary font-bold">4. Протекторат</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isProtectors}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">4. Протекторат</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isProtectors }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isProtectors">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">4.1</span> Одиночки, пары, группы, общины, города и гильдии могут претендовать на протекторат со стороны городов или региональных провинций, а также короны.</p>
-                <p class="text-xl pl-8"><span class="font-bold">4.2</span> Протектор – вправе требовать на свое усмотрение выполнение обязательств за предоставляемый протекторат, а также обязан в случаях агрессии вступиться за свой протекторат и выполнить ряд иных обязанностей, в которые входит:</p>
-                <p class="text-xl pl-16">• Возмещение не менее 50% убытков, защищаемому от его потерь в следствии его убийства/разграбления агрессором.</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">4.1</span> Одиночки, пары, группы, общины, города и гильдии могут
+                    претендовать на протекторат со стороны городов или региональных провинций, а также Короны.
+                    Протекторат Короны доступен исключительно гильдиям.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">4.2</span> Протектор вправе требовать на свое усмотрение выполнение
+                    обязательств за предоставляемый протекторат, а также обязан в случаях агрессии вступиться за свой
+                    протекторат и выполнить ряд иных обязанностей, в которые входит:
+                </p>
+                <p class="text-xl pl-16">
+                    • Возмещение не менее 50% убытков, защищаемому от его потерь в следствии его убийства/разграбления
+                    агрессором.
+                </p>
                 <p class="text-xl pl-16">• Проведение расследования и суда с целью выяснения виновных в содеянном.</p>
                 <p class="text-xl pl-16">• Решение мелких споров и неурядиц.</p>
             </div>
@@ -269,17 +726,33 @@
     <!-- 5. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isColonization = !isColonization">
-            <p class="text-2xl text-lh-primary font-bold">5. Колонизация</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isColonization}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">5. Колонизация</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isColonization }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isColonization">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">5.1</span>  Колонизация - процесс основания новых поселений и/или фортов/аванпостов помимо основного города.<br/>Для проведения колонизации необходимо:</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">5.1</span> Колонизация - процесс основания новых поселений и/или
+                    фортов/аванпостов помимо основного города.<br />Для проведения колонизации необходимо:
+                </p>
                 <p class="text-xl pl-16">• Иметь статус селения не ниже Региональной провинции.</p>
                 <p class="text-xl pl-16">• Иметь дополнительный отдельный рег. в специальном канале.</p>
-                <p class="text-xl pl-16">• Селение колонизаторов должно иметь статус не меньше общины/либо полноценный форт/замок.</p>
+                <p class="text-xl pl-16">
+                    • Селение колонизаторов должно иметь статус не меньше общины/либо полноценный форт/замок.
+                </p>
                 <p class="text-xl pl-16">• Колонизация земель разрешена 1 раз в 7 реальных дней.</p>
                 <p class="text-xl pl-16">• Колонизация невозможна во время ведения войны.</p>
-                <p class="text-xl pl-16">• Если колонизированная территория находится на другом острове или континенте, то она должна иметь порт.</p>
+                <p class="text-xl pl-16">
+                    • Если колонизированная территория находится на другом острове или континенте, то она должна иметь
+                    порт.
+                </p>
+                <p class="text-xl pl-16">
+                    • Территория колонии имеет защищенную правилами территорию радиусом 100 блоков.
+                </p>
             </div>
         </tui-expand>
     </div>
@@ -287,69 +760,191 @@
     <!-- 6. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRaid = !isRaid">
-            <p class="text-2xl text-lh-primary font-bold">6. Состояние набег</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isRaid}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">6. Состояние набег</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isRaid }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isRaid">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">6.1</span> ”Набег” - состояние, когда общины, гильдии, города либо региональные провинции, собираются украсть ресурсы у другого образования, путем проникновения на территорию и разрушения сундуков для получения ресурсов из них.<br/>Состояние “набег” должно проходить по определенным правилам, которые описаны в п. 6.2.</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">6.1</span> ”Набег” - состояние, когда общины, гильдии, города либо
+                    региональные провинции, собираются украсть ресурсы у другого образования, путем проникновения на
+                    территорию и разрушения сундуков для получения ресурсов из них.<br />Состояние “набег” должно
+                    проходить по определенным правилам, которые описаны в п. 6.2.
+                </p>
 
                 <div class="shadow-2xs">
                     <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRaid3 = !isRaid3">
-                        <p class="text-xl pl-8 text-lh-primary"><span class="font-bold">6.2</span> “Набег” должен быть объявлен другому образованию заранее (не менее чем за 30 минут до свершения, которые будут отсчитываться с момента объявления в чате дискорд). Объявление должно быть передано людям образования в чате игры и в чате дискорда. Объявление должно соблюдать следующие принципы:</p>
-                        <tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isRaid3}" class="text-lh-primary transition-all"/>
+                        <p class="text-xl pl-8 text-lh-primary">
+                            <span class="font-bold">6.2</span> “Набег” должен быть объявлен другому образованию заранее
+                            (не менее чем за 20 минут до свершения, которые будут отсчитываться с момента объявления в
+                            чате дискорд). Объявление должно быть передано людям образования в чате игры и в чате
+                            дискорда. Объявление должно соблюдать следующие принципы:
+                        </p>
+                        <tui-icon
+                            icon="@tui.chevron-down"
+                            [ngClass]="{ '!rotate-180': isRaid3 }"
+                            class="text-lh-primary transition-all"
+                        />
                     </div>
                     <tui-expand [expanded]="isRaid3">
                         <div class="flex flex-col gap-2">
-                            <p class="text-xl pl-16">• Сообщение о готовящемся “набеге” поданное либо в официальном стиле, либо в стиле намека (который нельзя истолковать иначе);</p>
-                            <p class="text-xl pl-16">• Время возможности совершить “набег” не должно превышать 3-х часов реального времени после совершения объявления за исключением ночи по МСК (с 22:30 и по 8:00 утра “набег” запрещается);</p>
-                            <p class="text-xl pl-16">• “Набег” может совершаться только в том случае, если хотя бы два игрока из образования, на которое он планируется, находится онлайн.</p>
-                            <p class="text-xl pl-16">• Более подробные правила боевых действий во время набега описаны в п.6.3 и п.6.4.</p>
+                            <p class="text-xl pl-16">
+                                • Сообщение о готовящемся “набеге” поданное либо в официальном стиле, либо в стиле
+                                намека (который нельзя истолковать иначе);
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Время возможности совершить “набег” не должно превышать 3-х часов реального времени
+                                после совершения объявления за исключением ночи по МСК (с 22:30 и по 8:00 утра “набег”
+                                запрещается);
+                            </p>
+                            <p class="text-xl pl-16">
+                                • “Набег” может совершаться только в том случае, если хотя бы два игрока из образования,
+                                на которое он планируется, находится онлайн.
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Более подробные правила боевых действий во время набега описаны в п.6.3 и п.6.4.
+                            </p>
                         </div>
                     </tui-expand>
                 </div>
 
                 <div class="shadow-2xs">
                     <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRaid2 = !isRaid2">
-                        <p class="text-xl pl-8 text-lh-primary"><span class="font-bold">6.3</span> Правила ведения боевых действий во время состояния “набег” для стороны защищающихся:</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isRaid2}" class="text-lh-primary transition-all"/>
+                        <p class="text-xl pl-8 text-lh-primary">
+                            <span class="font-bold">6.3</span> Правила ведения боевых действий во время состояния
+                            “набег” для стороны защищающихся:
+                        </p>
+                        <tui-icon
+                            icon="@tui.chevron-down"
+                            [ngClass]="{ '!rotate-180': isRaid2 }"
+                            class="text-lh-primary transition-all"
+                        />
                     </div>
                     <tui-expand [expanded]="isRaid2">
                         <div class="flex flex-col gap-2">
-                            <p class="text-xl pl-16">• После объявления набега, запрещается выход из игры с целью сохранить и спрятать ресурсы внутри инвентаря игрока.</p>
-                            <p class="text-xl pl-16">• Запрещается прятать ресурсы в места, которые допускают «обуз» защиты и никоем образом не предполагают хранение в них ресурсов. Например: закапывать сундуки и сосуды под землю наглухо; замуровывать в стены наглухо; и т.д. К хранилищам ресурсов должен быть доступ прямой видимости.</p>
-                            <p class="text-xl pl-16">• Запрещается ставить любые блоки позволяющие создать преимущество во время набега, когда противник находится уже вблизи 50 блоков, за исключением:</p>
-                            <p class="text-xl pl-20">• Специально вычизленных баррикад размером, не превышающим 2 блока в высоту.</p>
-                            <p class="text-xl pl-20">• Сыпучих материалов, которые можно размещать, только осыпая сверху с заранее подготовленных точек.</p>
-                            <p class="text-xl pl-20">• Баррикад, которые предусмотрены самой игрой или модами (колья и т.д.).</p>
-                            <p class="text-xl pl-16">• Запрещается деспавн ресурсов как обороняющейся стороне, так и атакующей.</p>
-                            <p class="text-xl pl-16">• Запрещается выставление подряд более 8 укрепленных дверей (под “подряд” подразумевается оборонительный коридор).</p>
-                            <p class="text-xl pl-16">• Запрещается рытье рвов глубиной более 64 блоков и шириной более 12 блоков.</p>
-                            <p class="text-xl pl-16">• Запрещается установка рвов друг за другом более 3-х раз подряд.</p>
-                            <p class="text-xl pl-16">• Запрещается прятать ресурсы в объектах торговли. (торгоматы/кассы и т.п.)</p>
+                            <p class="text-xl pl-16">
+                                • После объявления набега, запрещается выход из игры с целью сохранить и спрятать
+                                ресурсы внутри инвентаря игрока.
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Запрещается прятать ресурсы в места, которые допускают «обход» защиты и никоем образом
+                                не предполагают хранение в них ресурсов. Например: закапывать сундуки и сосуды под землю
+                                наглухо; замуровывать в стены наглухо; и т.д. К хранилищам ресурсов должен быть доступ
+                                прямой видимости.
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Запрещается ставить любые блоки позволяющие создать преимущество во время набега,
+                                когда противник находится уже вблизи 50 блоков, за исключением:
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Специально вычизленных баррикад размером, не превышающим 2 блока в высоту.
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Сыпучих материалов, которые можно размещать, только осыпая сверху с заранее
+                                подготовленных точек.
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Баррикад, которые предусмотрены самой игрой или модами (колья и т.д.).
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Запрещается деспавн ресурсов как обороняющейся стороне, так и атакующей.
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Запрещается выставление подряд более 8 укрепленных дверей (под “подряд”
+                                подразумевается оборонительный коридор).
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Запрещается рытье рвов глубиной более 64 блоков и шириной более 12 блоков.
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Запрещается установка рвов друг за другом более 3-х раз подряд.
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Запрещается прятать ресурсы в объектах торговли. (торгоматы/кассы и т.п.)
+                            </p>
                         </div>
                     </tui-expand>
                 </div>
 
                 <div class="shadow-2xs">
                     <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRaid4 = !isRaid4">
-                        <p class="text-xl pl-8 text-lh-primary"><span class="font-bold">6.4</span> Правила ведения боевых действий во время состояния “набег” для стороны атакующих:</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isRaid4}" class="text-lh-primary transition-all"/>
+                        <p class="text-xl pl-8 text-lh-primary">
+                            <span class="font-bold">6.4</span> Правила ведения боевых действий во время состояния
+                            “набег” для стороны атакующих:
+                        </p>
+                        <tui-icon
+                            icon="@tui.chevron-down"
+                            [ngClass]="{ '!rotate-180': isRaid4 }"
+                            class="text-lh-primary transition-all"
+                        />
                     </div>
                     <tui-expand [expanded]="isRaid4">
                         <div class="flex flex-col gap-2">
-                            <p class="text-xl pl-16">• Атакующим запрещается установка любых блоков во время нападения, за исключением:</p>
-                            <p class="text-xl pl-20">• Деревянных лестниц (на строения являющимися оборонными и рукотворными, не превышающие в высоту 12-ти блоков.), при этом нельзя ставить деревянные лестницы находясь в воде.</p>
-                            <p class="text-xl pl-20">• Специально вычизленных осадных машин и сооружений, которые можно ставить только вне помещения. Например: осадный щит, за которым могут укрываться стрелки (непереносимое, ставится один раз и не двигается); таран, под крышей которого можно прятаться от стрелков противника и выносить ворота. Все такие сооружения должны быть похожи на сооружения в реальном мире.</p>
-                            <p class="text-xl pl-20">• Сыпучих материалов с целью засыпания рвов (только песок/гравий). Преодоление таких препятствий посредством установки блоков земли, или подъем наверх таким же способом – строго запрещено, так как попадает под «запрет установки любых блоков во время нападения».</p>
+                            <p class="text-xl pl-16">
+                                • Атакующим запрещается установка любых блоков во время нападения, за исключением:
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Деревянных лестниц (на строения являющимися оборонными и рукотворными, не превышающие
+                                в высоту 12-ти блоков.), при этом нельзя ставить деревянные лестницы находясь в воде, а
+                                также ставить лестницу "навесу", подставляя ее под себя и не прикрепляя к боковой
+                                поверхности.
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Специально вычизленных осадных машин и сооружений, которые можно ставить только вне
+                                помещения. Например: осадный щит, за которым могут укрываться стрелки (непереносимое,
+                                ставится один раз и не двигается); таран, под крышей которого можно прятаться от
+                                стрелков противника и выносить ворота. Все такие сооружения должны быть похожи на
+                                сооружения в реальном мире.
+                            </p>
+                            <p class="text-xl pl-20">
+                                • Сыпучих материалов с целью засыпания рвов (только песок/гравий). Преодоление таких
+                                препятствий посредством установки блоков земли, или подъем наверх таким же способом –
+                                строго запрещено, так как попадает под «запрет установки любых блоков во время
+                                нападения».
+                            </p>
                             <p class="text-xl pl-20">• Сундуков и сосудов.</p>
-                            <p class="text-xl pl-16">• Следует помнить, что для атакующих запрещено использование планера.</p>
+                            <p class="text-xl pl-16">
+                                • Следует помнить, что для атакующих запрещено использование планера.
+                            </p>
                             <p class="text-xl pl-16">• Запрещено ломать всё, кроме:</p>
-                            <p class="text-xl pl-16">• Дверей и любых их проявлений. Ломание ворот (Ворота - двери 3-и и более блоков в ширину и не менее 3-х в высоту) может происходить только при наличии около них тарана, стоящего не более чем в 1 блоке от них. Если для развертывания тарана нет суши - допускается его наличие в сундуке на корабле на таком же расстоянии до ворот (корабль двигать нельзя).</p>
-                            <p class="text-xl pl-16">• Крепостных стен (подразумеваются внешние стены огораживающие основные постройки).</p>
+                            <p class="text-xl pl-16">
+                                • Дверей и любых их проявлений. Ломание ворот (Ворота - двери 3-и и более блоков в
+                                ширину и не менее 3-х в высоту) может происходить только при наличии около них тарана,
+                                стоящего не более чем в 8 блоках от них. Если для развертывания тарана нет суши -
+                                допускается его наличие в сундуке на корабле, на таком же расстоянии до ворот (корабль
+                                двигать нельзя).
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Крепостных стен (подразумеваются внешние стены огораживающие основные постройки).
+                            </p>
                             <p class="text-xl pl-20">• Крепостные стены разрешается ломать только в местах пролома.</p>
-                            <p class="text-xl pl-24">• Места пролома - это места, выбранные атакующими для разрушения и не превышающие своим размером площадь 3х3 блока. Такие места ограничены количеством наличия у атакующих осадных машин типа требушет. Вычизленные требушеты должны быть скинуты администрации заранее и одобрены. При атаке требушет должен быть развернут не более чем в 30 блоков от места пролома. Если для развертывания требушета нет суши - допускается его наличие в сундуке на корабле на таком же расстоянии до места пролома (корабль двигать нельзя).</p>
-                            <p class="text-xl pl-16">• Установленных защитниками баррикад и насыпей в виде песка и гравия.</p>
-                            <p class="text-xl pl-16">• Сундуков, сосудов, ящиков и прочих элементов хранения (в том числе разрешается ломать сыродутные печи и саркофаги с целью получения ресурсов, находящихся внутри них.)</p>
-                            <p class="text-xl pl-16">• Запрещается использование бомб и взрывчатки (вероятно временное решение).</p>
-                            <p class="text-xl pl-16">• Запрещается грабить лут, который представляет из себя элементы промышленности, например: генераторы, аккумуляторы, моторы, ветряки, наковальни и прочее, если они поставлены, а не находятся внутри сосудов/сундуков. Такой лут можно получить только во время ведения войны.</p>
+                            <p class="text-xl pl-24">
+                                • Места пролома - это места, выбранные атакующими для разрушения и не превышающие своим
+                                размером площадь 3х3 блока. Такие места ограничены количеством наличия у атакующих
+                                осадных машин типа требушет. Вычизленные требушеты должны быть скинуты администрации
+                                заранее и одобрены. При атаке требушет должен быть развернут не более чем в 30 блоках от
+                                места пролома. Если для развертывания требушета нет суши - допускается его наличие в
+                                сундуке на корабле на таком же расстоянии до места пролома (корабль двигать нельзя).
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Установленных защитниками баррикад и насыпей в виде песка и гравия.
+                            </p>
+                            <p class="text-xl pl-16">
+                                • Сундуков, сосудов, ящиков и прочих элементов хранения (в том числе разрешается ломать
+                                сыродутные печи и саркофаги с целью получения ресурсов, находящихся внутри них, при
+                                условии возвращения саркофага на место).
+                            </p>
+                            <p class="text-xl pl-16">• Запрещается использование бомб и взрывчатки.</p>
+                            <p class="text-xl pl-16">
+                                • Запрещается грабить лут, который представляет из себя элементы промышленности,
+                                например: генераторы, аккумуляторы, моторы, ветряки, наковальни и прочее, если они
+                                поставлены, а не находятся внутри сосудов/сундуков. Такой лут можно получить только во
+                                время ведения войны.
+                            </p>
                         </div>
                     </tui-expand>
                 </div>
@@ -360,17 +955,39 @@
     <!-- 7. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isWar = !isWar">
-            <p class="text-2xl text-lh-primary font-bold">7. Состояние война</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isWar}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">7. Состояние война</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isWar }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isWar">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">7.1</span> “Война” - состояние, когда игроки одного государства начинают воевать с игроками другого образования (община, вольный город, государство).<br/>Правила войны все еще находятся в разработке и пока включают:</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">7.1</span> “Война” - состояние, когда игроки одного государства начинают
+                    воевать с игроками другого образования (община, вольный город, государство).<br />Правила войны все
+                    еще находятся в разработке и пока включают:
+                </p>
                 <p class="text-xl pl-16">• Все правила ведения боевых действий как и в случае набега.</p>
                 <p class="text-xl pl-16">• Для объявления войны необходимо:</p>
-                <p class="text-xl pl-20">• Предъявить свои конкретные требования и причины тем на кого вы собираетесь напасть (не нужно делать в случае ответа на явную агрессию)</p>
-                <p class="text-xl pl-20">• После предъявления требований у стороны защиты есть 1 час реального времени чтобы либо согласиться, либо отвергнуть требования. По истечению этого часа, либо после отказа от выполнения требований, государство агрессор в праве начинать военные действия.</p>
-                <p class="text-xl pl-20">• Если же сторона защиты приняла условия, то она обязана их выполнить в течении 12 часов реального времени, и военные действия против нее не разрешаются.</p>
-                <p class="text-xl pl-20">• После окончания войны любым из путей, на государство, начавшее войну, накладывается кул-даун в размере 3 реальных суток.</p>
+                <p class="text-xl pl-20">
+                    • Предъявить свои конкретные требования и причины тем на кого вы собираетесь напасть (не нужно
+                    делать в случае ответа на явную агрессию).
+                </p>
+                <p class="text-xl pl-20">
+                    • После предъявления требований у стороны защиты есть 1 час реального времени чтобы либо
+                    согласиться, либо отвергнуть требования. По истечению этого часа, либо после отказа от выполнения
+                    требований, государство агрессор в праве начинать военные действия.
+                </p>
+                <p class="text-xl pl-20">
+                    • Если же сторона защиты приняла условия, то она обязана их выполнить в течении 12 часов реального
+                    времени, и военные действия против нее не разрешаются.
+                </p>
+                <p class="text-xl pl-20">
+                    • После окончания войны любым из путей, на государство, начавшее войну, накладывается кул-даун в
+                    размере 3 реальных суток.
+                </p>
             </div>
         </tui-expand>
     </div>
@@ -378,15 +995,34 @@
     <!-- 8. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isSpy = !isSpy">
-            <p class="text-2xl text-lh-primary font-bold">8. Шпионы</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isSpy}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">8. Шпионы</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isSpy }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isSpy">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">8.1</span> Шпионы - люди внедренные в чужие селения для выполнения агентурных действий.</p>
-                <p class="text-xl pl-8"><span class="font-bold">8.2</span> Шпион может украсть у поселения в которое он внедрен ресурсы, но соблюдая: Правила воровства (При этом в сети и на территории должен находиться как минимум 1 человек (член общины) не являющийся шпионом).</p>
-                <p class="text-xl pl-8"><span class="font-bold">8.3</span> Шпион может открыть ворота во время осады при ведении войны или набега.</p>
-                <p class="text-xl pl-8"><span class="font-bold">8.4</span> Шпион может передавать любую разведывательную информацию.</p>
-                <p class="text-xl pl-8"><span class="font-bold">8.5</span> Любые иные действия шпиона являются - запрещенными.</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">8.1</span> Шпионы - люди внедренные в чужие селения для выполнения
+                    агентурных действий.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">8.2</span> Шпион может украсть у поселения в которое он внедрен ресурсы, но
+                    соблюдая: Правила воровства (При этом в сети и на территории должен находиться как минимум 1 человек
+                    (член общины) не являющийся шпионом).
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">8.3</span> Шпион может открыть ворота во время осады при ведении войны или
+                    набега.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">8.4</span> Шпион может передавать любую разведывательную информацию.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">8.5</span> Любые иные действия шпиона являются - запрещенными.
+                </p>
             </div>
         </tui-expand>
     </div>
@@ -394,55 +1030,133 @@
     <!-- 9. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isDefendBuildings = !isDefendBuildings">
-            <p class="text-2xl text-lh-primary font-bold">9. Защита построек</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isDefendBuildings}" class="text-lh-primary transition-all"/>
+            <p class="text-2xl text-lh-primary font-bold">9. Защита построек</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isDefendBuildings }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isDefendBuildings">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">9.1</span> Запрещено использовать приваты типа Claim. За использование таковых администрация в праве выдать бан после предупреждения.</p>
-                <p class="text-xl pl-8"><span class="font-bold">9.2</span> Приваты осуществляются только за счет укрепления построек с помощью отвеса и угольника, а также запирания сундуков и дверей с помощью замков.</p>
-                <p class="text-xl pl-8"><span class="font-bold">9.3</span> Исключением являются приваты полученные при помощи купленных привилегий в разделе.</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">9.1</span> Запрещено использовать приваты типа Claim. За использование
+                    таковых администрация в праве выдать бан после предупреждения.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">9.2</span> Приваты осуществляются только за счет укрепления построек с
+                    помощью отвеса и угольника, а также запирания сундуков, дверей и окон с помощью замков.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">9.3</span> Исключением являются приваты полученные при помощи купленных
+                    привилегий в разделе #титулы.
+                </p>
             </div>
         </tui-expand>
     </div>
 
     <!-- 10. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isBreakDifficultBuildings= !isBreakDifficultBuildings">
-            <p class="text-2xl text-lh-primary font-bold">10. Ломание построек сложного типа</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isBreakDifficultBuildings}" class="text-lh-primary transition-all"/>
+        <div
+            class="flex w-full justify-between gap-2 cursor-pointer"
+            (click)="isBreakDifficultBuildings = !isBreakDifficultBuildings"
+        >
+            <p class="text-2xl text-lh-primary font-bold">10. Ломание построек сложного типа</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isBreakDifficultBuildings }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isBreakDifficultBuildings">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">10.1</span> Запрещено ломать и поджигать постройки сложного типа. Под сложным типом понимаются постройки, в которых использовался чизел в каком-либо объеме. Однако, есть ряд исключений:</p>
-                <p class="text-xl pl-16"><span class="font-bold">•</span> Двери в таких постройках, либо не чизельный блок, если двери отсутствуют вовсе, либо если блок закрывает доступ к сундуку и нет никаких иных вариантов к нему добраться.</p>
-                <p class="text-xl pl-16"><span class="font-bold">•</span> Постройки, относящиеся к оборонительным укреплениям. К таковым могут относиться: стены, башни и прочие укрепления, а также постройки, которые администрация при проверке может счесть оборонительными укреплениями. За исключением оговорок примененных в п.6.4.</p>
-                <p class="text-xl pl-16"><span class="font-bold">•</span> Разрушение таковых построек допускается вследствие штурма-осады с использованием правил специальных пунктов.</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">10.1</span> Запрещено ломать и поджигать постройки сложного типа. Под
+                    сложным типом понимаются постройки, в которых использовался чизел в каком-либо объеме. Однако, есть
+                    ряд исключений:
+                </p>
+                <p class="text-xl pl-16">
+                    <span class="font-bold">•</span> Двери, окна в таких постройках, либо не чизленный блок, если двери
+                    отсутствуют вовсе, либо если блок закрывает доступ к сундуку и нет никаких иных вариантов к нему
+                    добраться.
+                </p>
+                <p class="text-xl pl-16">
+                    <span class="font-bold">•</span> Постройки, относящиеся к оборонительным укреплениям. К таковым
+                    могут относиться: стены, башни и прочие укрепления, а также постройки, которые администрация при
+                    проверке может счесть оборонительными укреплениями. За исключением оговорок примененных в п.6.4.
+                </p>
+                <p class="text-xl pl-16">
+                    <span class="font-bold">•</span> Разрушение таковых построек допускается вследствие штурма-осады с
+                    использованием правил специальных пунктов.
+                </p>
             </div>
         </tui-expand>
     </div>
 
     <!-- 11. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRight= !isRight">
-            <p class="text-2xl text-lh-primary font-bold">11. Право редактирования правил</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isRight}" class="text-lh-primary transition-all"/>
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRight = !isRight">
+            <p class="text-2xl text-lh-primary font-bold">11. Право редактирования правил</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isRight }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isRight">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">11.1</span> Администрация оставляет за собой право на редакцию правил при необходимости, так как игра меняется, меняются ситуации. Помните, написать за раз универсально и емко – можно, однако это совсем не гарант того, что оно будет работать хорошо на деле. Поэтому всегда остается пространства для маневра. Правила создаются для комфортной, честной и справедливой игры. Правила создаются, проходя через опыт, притирку и анализ.</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">11.1</span> Администрация оставляет за собой право на редакцию правил при
+                    необходимости, так как игра меняется, меняются ситуации. Помните, написать за раз универсально и
+                    емко – можно, однако это совсем не гарант того, что оно будет работать хорошо на деле. Поэтому
+                    всегда остается пространства для маневра. Правила создаются для комфортной, честной и справедливой
+                    игры. Правила создаются, проходя через опыт, притирку и анализ.
+                </p>
             </div>
         </tui-expand>
     </div>
 
     <!-- 12. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isAdditions= !isAdditions">
-            <p class="text-2xl text-lh-primary font-bold">12. Дополнения</p><tui-icon icon="@tui.chevron-down" [ngClass]="{'!rotate-180': isAdditions}" class="text-lh-primary transition-all"/>
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isAdditions = !isAdditions">
+            <p class="text-2xl text-lh-primary font-bold">12. Дополнения и терминология</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isAdditions }"
+                class="text-lh-primary transition-all"
+            />
         </div>
         <tui-expand [expanded]="isAdditions">
             <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8"><span class="font-bold">12.1</span> Корона - далекая, недостижимая столица государства, в котором происходит весь игровой процесс.</p>
-                <p class="text-xl pl-8"><span class="font-bold">12.2</span> Рынки короны - специальные торгоматы для продажи/покупки товаров короны за валюту короны.</p>
-                <p class="text-xl pl-8"><span class="font-bold">12.3</span> Запрещено оскорбление администрации в любых его проявлениях. Соблюдайте вежливость, и та же вежливость вернется к вам. В случае нарушения, администрация в праве выдать мут на подумать. В случае злостного нарушения – бан.</p>
-                <p class="text-xl pl-8"><span class="font-bold">12.4</span> Для людей с титулом запрещено приватить любые оборонительные постройки и входы в них, а так же входы в любые помещения. Так же запрещается приват монумента. Запрещено хранение более 30% имеющихся ресурсов селения/или игрока если он соло, внутри привата.</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">12.1</span> Корона - далекая, недостижимая столица государства, в котором
+                    происходит весь игровой процесс.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">12.2</span> Рынки короны - специальные торгоматы для продажи/покупки товаров
+                    короны за валюту короны.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">12.3</span> Территория образований, защищенная правилами - территория,
+                    ограниченнная радиусом N блоков от монумента, согласно преимуществу типа образованя и имеющая
+                    обустроенные границы, согласно требованиям.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">12.4</span> Территория на которую претендует образование - территория, не
+                    защищенная правилами, указанная и обозначенная границами на карте при регистрации образования ее
+                    главой. Данная территория сохраняет запрет установки блоков игроками, не входящими в это
+                    образование.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">12.5</span> Запрещено оскорбление администрации в любых его проявлениях.
+                    Соблюдайте вежливость, и та же вежливость вернется к вам. В случае нарушения, администрация в праве
+                    выдать мут на подумать. В случае злостного нарушения – бан.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">12.6</span> Для людей с титулом запрещено приватить любые оборонительные
+                    постройки и входы в них, а так же входы в любые помещения. Так же запрещается приват монумента.
+                    Запрещено хранение более 30% имеющихся ресурсов селения/или игрока если он соло, внутри привата.
+                </p>
             </div>
         </tui-expand>
     </div>
