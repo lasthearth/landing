@@ -4,6 +4,7 @@ import { NewsDetailedComponent } from './news/news-detailed/news-detailed.compon
 import { RulesComponent } from './rules/rules.component';
 import { HomeComponent } from './home/home.component';
 import { TitlesComponent } from './titles/titles.component';
+import { MarketComponent } from './market/market.component';
 
 export const routes: Routes = [
     {
@@ -13,7 +14,8 @@ export const routes: Routes = [
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'rules', component: RulesComponent },
-            { path: 'titles', component: TitlesComponent }
+            { path: 'titles', component: TitlesComponent },
+            { path: 'market', component: MarketComponent }
         ]
     },
 ]

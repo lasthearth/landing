@@ -5,7 +5,7 @@ root = true
 # Настройки для всех файлов
 [*]
 indent_style = space
-indent_size = 2
+indent_size = 4
 end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
@@ -15,6 +15,6 @@ insert_final_newline = true
 [*.{html,htm}]
 max_line_length = 120
 indent_style = space
-indent_size = 2
+indent_size = 4
 html_attribute_quotemark = double
 html_indent_inner_html = true
