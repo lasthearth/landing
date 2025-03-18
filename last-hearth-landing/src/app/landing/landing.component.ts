@@ -9,7 +9,7 @@ import {
 } from "@angular/router";
 import { ServerInformationService } from "../services/server-information.service";
 import { AsyncPipe, NgClass, NgTemplateOutlet } from "@angular/common";
-import { filter, map } from "rxjs";
+import { filter, map, tap } from "rxjs";
 import { TuiIcon } from "@taiga-ui/core";
 import { RouteKeys } from "../routes/enums/route-keys";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -40,10 +40,13 @@ export class LandingComponent {
 
     private readonly destroyRef = inject(DestroyRef);
 
-    protected online$ = this.serverInformationService
-        .getOnlinePlayersCount()
+    protected readonly online$ = this.serverInformationService
+        .getOnlinePlayersCount$()
         .pipe(map((info) => info.count));
 
+    protected readonly time$ = this.serverInformationService
+        .getTime$()
+        .pipe(map((info) => info.formatted_time));
     protected select = "home";
 
     public constructor() {
