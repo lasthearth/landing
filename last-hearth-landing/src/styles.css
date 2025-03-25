@@ -27,3 +27,9 @@ a {
     justify-content: center;
     padding: 20px;
 }
+
+.progress {
+    &[data-size='s'] {
+        color: #e2d7bb;
+    }
+}

@@ -1,12 +1,10 @@
-@let online = online$ | async; @let time = time$ | async;
-
-<div class="pt-8 flex flex-col justify-center items-center px-4 sm:px-0">
-    <app-header class="w-full lg:w-[60%] mb-8" />
+<div class="pt-0 lg:pt-8 flex flex-col justify-center items-center lg:gap-8">
+    <app-header class="w-full mb-8 lg:w-[60%]" />
 
     <div class="h-auto w-full lg:w-[60%] flex">
-        <div class="flex flex-col w-full">
+        <div class="flex flex-col items-center w-full">
             <!-- Блок навигации -->
-            <div class="flex gap-2 justify-center md:justify-start md:gap-4 w-full lg:w-[80%] mb-4">
+            <div class="flex gap-2 justify-center md:justify-start md:gap-4 w-full mb-4">
                 <a
                     (click)="select = 'home'"
                     class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
@@ -31,54 +29,13 @@
                 >
                     РЫНОК
                 </button>
-                <!-- <button [routerLink]="['/titles']" (click)="select = 'titles'" class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer  bg-lh-primary-2 rounded-lg py-2.5 px-4" [ngClass]="{'!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'titles'}">
-                  ТИТУЛЫ
-                </button>
-                <button [routerLink]="['/titles']" (click)="select = 'settlements'" class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer  bg-lh-primary-2 rounded-lg py-2.5 px-4" [ngClass]="{'!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'settlements'}">
-                  ПОСЕЛЕНИЯ
-                </button>
-                <button [routerLink]="['/titles']" (click)="select = 'wiki'" class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer  bg-lh-primary-2 rounded-lg py-2.5 px-4" [ngClass]="{'!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'wiki'}">
-                  WIKI
-                </button> -->
             </div>
 
-            <!-- Блок основной и мониторинговой панелей -->
-            <div class="flex size-full gap-3 mb-10">
-                <!-- Основная панель -->
-                <div class="main-panel h-full w-full lg:w-[80%] min-w-[75%]">
-                    <div class="lg:hidden">
-                        <ng-container [ngTemplateOutlet]="monitoring"></ng-container>
-                    </div>
-
+            <div class="flex size-full justify-center gap-3 mb-10">
+                <div class="main-panel h-full w-full">
                     <router-outlet />
-                </div>
-
-                <div class="hidden lg:block">
-                    <ng-container [ngTemplateOutlet]="monitoring"></ng-container>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Панель мониторинга -->
-<!-- TODO:  [TASK:#14]-->
-<ng-template #monitoring>
-    <div
-        class="info-panel gap-4 p-4 lg:rounded-e-2xl w-full h-14 lg:size-full lg:min-w-70 lg:w-70 flex lg:flex-col items-center"
-    >
-        <p class="hidden sm:block lg:text-2xl text-base text-lh-primary">Мониторинг сервера:</p>
-        <div class="flex lg:mt-12 items-center justify-center gap-8">
-            <div
-                class="rounded-full h-8 w-8 ml-4 lg:h-12 lg:w-12 lg:ml-0 bg-transparent border-4 border-dashed border-[#3f3c34] flex justify-center items-center"
-            >
-                <p class="text-base text-lh-primary">{{ online }}</p>
-            </div>
-            <div class="flex flex-col gap-0 lg:gap-0.5 items-start justify-center">
-                <p class="text-lh-primary text-sm font-bold uppercase">Сервер #1</p>
-                <p class="text-lh-primary text-xs">Игроков {{ online }} из 60</p>
-            </div>
-        </div>
-        <p class="text-base text-lh-primary">{{ time }}</p>
-    </div>
-</ng-template>

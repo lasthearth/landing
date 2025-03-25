@@ -1,7 +1,31 @@
-<div class="mt-8 z-10 flex w-1/2 max-h-16 items-center justify-start rounded-xl gap-1 sm:gap-4">
-    <div class="relative size-20 rounded-full flex items-center justify-center">
-        <div class="absolute inset-0 bg-white/10 backdrop-blur-lg scale-70 sm:scale-100 rounded-full"></div>
-        <img src="/images/logo.png" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14 cursor-pointer"/>
+@let online = online$ | async;
+
+<div class="flex justify-between px-4 sm:px-0">
+    <div class="mt-8 z-10 flex w-fit h-[4.5rem] sm:h-[5rem] items-center justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+        <div class="rounded-2xl gap-4 flex items-center p-4 sm:py-3 sm:pl-3 sm:pr-4">
+            <img src="/images/logo.png" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14 cursor-pointer"/>
+            <p class="hidden sm:block text-2xl sm:text-5xl text-white cursor-pointer font-[500] text-nowrap">Last Hearth</p>
+        </div>
     </div>
-    <p class="text-2xl sm:text-5xl text-white cursor-pointer font-bold text-nowrap">Last Hearth</p>
+
+    <div class="mt-8 z-10 pt-3 flex h-[4.5rem] sm:h-[5rem] flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+        <div class="flex w-full px-4 gap-4 justify-center items-center">
+            <div class="flex gap-0.5 items-center">
+                <p class="text-3xl sm:text-5xl text-white">{{ online }}</p>
+                <p class="text-xs sm:text-sm text-white opacity-70">/</p>
+                <p class="text-xs sm:text-sm text-white opacity-70">50</p>
+            </div>
+            <div class="text-white">
+                <p class="text-base sm:text-2xl opacity-90 leading-6">Игроков</p>
+                <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{time$ | async}}</p>
+            </div>
+        </div>
+        <progress
+            max="50"
+            size="s"
+            tuiProgressBar
+            [value]="online"
+            class="progress "
+        ></progress>
+    </div>
 </div>

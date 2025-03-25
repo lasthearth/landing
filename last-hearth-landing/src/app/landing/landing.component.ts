@@ -30,23 +30,12 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     styleUrl: "./landing.component.less",
 })
 export class LandingComponent {
-    private readonly serverInformationService = inject(
-        ServerInformationService
-    );
-
     private readonly activatedRoute = inject(ActivatedRoute);
 
     private readonly router = inject(Router);
 
     private readonly destroyRef = inject(DestroyRef);
 
-    protected readonly online$ = this.serverInformationService
-        .getOnlinePlayersCount$()
-        .pipe(map((info) => info.count));
-
-    protected readonly time$ = this.serverInformationService
-        .getTime$()
-        .pipe(map((info) => info.formatted_time));
     protected select = "home";
 
     public constructor() {
