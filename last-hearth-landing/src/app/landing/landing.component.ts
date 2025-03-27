@@ -13,6 +13,7 @@ import { filter, map, tap } from "rxjs";
 import { TuiIcon } from "@taiga-ui/core";
 import { RouteKeys } from "../routes/enums/route-keys";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { UserService } from "../services/user.service";
 
 @Component({
     standalone: true,
@@ -21,10 +22,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
         HeaderComponent,
         RouterOutlet,
         RouterLink,
-        AsyncPipe,
         NgClass,
         TuiIcon,
-        NgTemplateOutlet,
+        AsyncPipe
     ],
     templateUrl: "./landing.component.html",
     styleUrl: "./landing.component.less",
@@ -35,6 +35,8 @@ export class LandingComponent {
     private readonly router = inject(Router);
 
     private readonly destroyRef = inject(DestroyRef);
+
+    protected readonly userService = inject(UserService);
 
     protected select = "home";
 
@@ -70,5 +72,13 @@ export class LandingComponent {
                     }
                 }
             });
+    }
+
+    protected signIn(): void {
+        this.userService.signIn();
+    }
+
+    protected signOut(): void {
+        this.userService.signOut();
     }
 }

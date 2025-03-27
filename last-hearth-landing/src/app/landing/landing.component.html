@@ -4,35 +4,43 @@
     <div class="h-auto w-full lg:w-[60%] flex">
         <div class="flex flex-col items-center w-full">
             <!-- Блок навигации -->
-            <div class="flex gap-2 justify-center md:justify-start md:gap-4 w-full mb-4">
-                <a
+            <div class="flex gap-2 justify-center md:justify-between md:gap-4 w-full mb-4">
+                <div class="flex gap-2">
+                    <a
                     (click)="select = 'home'"
                     class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
                     [routerLink]="['/home']"
                     [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'home' }"
-                >
-                    <tui-icon icon="@tui.house" />
-                </a>
-                <button
-                    [routerLink]="['/rules']"
-                    (click)="select = 'rules'"
-                    class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                    [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'rules' }"
-                >
-                    ПРАВИЛА
-                </button>
-                <button
-                    [routerLink]="['/market']"
-                    (click)="select = 'market'"
-                    class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                    [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'market' }"
-                >
-                    РЫНОК
-                </button>
+                    >
+                        <tui-icon icon="@tui.house" />
+                    </a>
+                    <button
+                        [routerLink]="['/rules']"
+                        (click)="select = 'rules'"
+                        class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+                        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'rules' }"
+                    >
+                        ПРАВИЛА
+                    </button>
+                    <button
+                        [routerLink]="['/market']"
+                        (click)="select = 'market'"
+                        class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+                        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'market' }"
+                    >
+                        РЫНОК
+                    </button>
+                </div>
+                    <a
+                        (click)="userService.authState ? signOut() : signIn()"
+                        class="nav-button text-white font-bold md:tracking-wider cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
+                    >
+                        <tui-icon [icon]="userService.authState ? '@tui.log-out' : '@tui.log-in'"/>
+                    </a>
             </div>
 
             <div class="flex size-full justify-center gap-3 mb-10">
-                <div class="main-panel h-full w-full">
+                <div class="main-panel size-full">
                     <router-outlet />
                 </div>
             </div>

@@ -8,24 +8,38 @@
         </div>
     </div>
 
-    <div class="mt-8 z-10 pt-3 flex h-[4.5rem] sm:h-[5rem] flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-        <div class="flex w-full px-4 gap-4 justify-center items-center">
-            <div class="flex gap-0.5 items-center">
-                <p class="text-3xl sm:text-5xl text-white">{{ online }}</p>
-                <p class="text-xs sm:text-sm text-white opacity-70">/</p>
-                <p class="text-xs sm:text-sm text-white opacity-70">50</p>
+    <div class="flex gap-4 items-center">
+        @if(userService.authState) {
+            <div class="mt-8 z-10 flex w-fit h-[4.5rem] sm:h-[5rem] items-center justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+                <div class="rounded-2xl gap-1 pl-3.5 pr-3 flex items-center">
+                    <p class="text-2xl text-white">{{userService.userName}}</p>
+                    @if(userService.userImage){
+                        <img [src]="userService.userImage" class="relative ml-2 rounded-lg z-10 h-12 w-12 sm:h-18 sm:w-18 cursor-pointer border-neutral-300 border-2"/>
+                    }@else {
+                        <tui-icon icon="@tui.square-user-round" class="relative rounded-lg z-10 cursor-pointer !text-6xl text-white"/>
+                    }
+                </div>
             </div>
-            <div class="text-white">
-                <p class="text-base sm:text-2xl opacity-90 leading-6">Игроков</p>
-                <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{time$ | async}}</p>
+        }
+        <div class="mt-8 z-10 pt-3 flex h-[4.5rem] sm:h-[5rem] flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+            <div class="flex w-full px-4 gap-4 justify-center items-center">
+                <div class="flex gap-0.5 items-center">
+                    <p class="text-3xl sm:text-5xl text-white">{{ online }}</p>
+                    <p class="text-xs sm:text-sm text-white opacity-70">/</p>
+                    <p class="text-xs sm:text-sm text-white opacity-70">50</p>
+                </div>
+                <div class="text-white">
+                    <p class="text-base sm:text-2xl opacity-90 leading-6">Игроков</p>
+                    <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{time$ | async}}</p>
+                </div>
             </div>
+            <progress
+                max="50"
+                size="s"
+                tuiProgressBar
+                [value]="online"
+                class="progress "
+            ></progress>
         </div>
-        <progress
-            max="50"
-            size="s"
-            tuiProgressBar
-            [value]="online"
-            class="progress "
-        ></progress>
     </div>
 </div>

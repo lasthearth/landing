@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^19.1.0",
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/router": "^19.1.0",
+    "@logto/js": "^5.0.3",
     "@taiga-ui/addon-charts": "^4.24.0",
     "@taiga-ui/addon-commerce": "^4.24.0",
     "@taiga-ui/addon-doc": "^4.24.0",
@@ -32,6 +33,7 @@
     "@taiga-ui/layout": "^4.24.0",
     "@tailwindcss/postcss": "^4.0.6",
     "@tailwindcss/vite": "^4.0.6",
+    "angular-auth-oidc-client": "^19.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
