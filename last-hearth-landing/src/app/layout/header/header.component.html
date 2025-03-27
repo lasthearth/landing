@@ -24,13 +24,13 @@
         <div class="mt-8 z-10 pt-3 flex h-[4.5rem] sm:h-[5rem] flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
             <div class="flex w-full px-4 gap-4 justify-center items-center">
                 <div class="flex gap-0.5 items-center">
-                    <p class="text-3xl sm:text-5xl text-white">{{ online }}</p>
+                    <p class="text-3xl sm:text-5xl text-white">{{ online?.count }}</p>
                     <p class="text-xs sm:text-sm text-white opacity-70">/</p>
-                    <p class="text-xs sm:text-sm text-white opacity-70">50</p>
+                    <p class="text-xs sm:text-sm text-white opacity-70">{{ online?.max }}</p>
                 </div>
                 <div class="text-white">
                     <p class="text-base sm:text-2xl opacity-90 leading-6">Игроков</p>
-                    <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{time$ | async}}</p>
+                    <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time$ | async }}</p>
                 </div>
             </div>
             <progress

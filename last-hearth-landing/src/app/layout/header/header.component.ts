@@ -21,7 +21,7 @@ export class HeaderComponent {
 
     protected readonly online$ = this.serverInformationService
         .getOnlinePlayersCount$()
-        .pipe(map((info) => info.count));
+        .pipe(map((info) => info));
 
     protected readonly time$ = this.serverInformationService
         .getTime$()

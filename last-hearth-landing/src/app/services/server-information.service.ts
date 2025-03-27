@@ -10,8 +10,8 @@ export class ServerInformationService {
 
     private readonly http: HttpClient = inject(HttpClient);
 
-    public getOnlinePlayersCount$(): Observable<{ count: number }> {
-        return this.http.get<{ count: number }>(
+    public getOnlinePlayersCount$(): Observable<{ count: number, max: number }> {
+        return this.http.get<{ count: number, max: number }>(
             `${this.baseUrl}/players/count`
         );
     }
