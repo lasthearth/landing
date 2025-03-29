@@ -2,14 +2,14 @@ import { Component, inject } from '@angular/core';
 import { TuiProgress } from '@taiga-ui/kit';
 import { map } from 'rxjs';
 import { ServerInformationService } from '../../services/server-information.service';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { TuiIcon } from '@taiga-ui/core';
 
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [TuiProgress, AsyncPipe, TuiIcon],
+    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass],
     templateUrl: './header.component.html',
 })
 export class HeaderComponent {
