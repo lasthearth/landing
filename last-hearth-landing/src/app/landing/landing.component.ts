@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject } from "@angular/core";
+import { Component, DestroyRef, inject } from "@angular/core";
 import { HeaderComponent } from "../layout/header/header.component";
 import {
     ActivatedRoute,
@@ -7,7 +7,6 @@ import {
     RouterLink,
     RouterOutlet,
 } from "@angular/router";
-import { ServerInformationService } from "../services/server-information.service";
 import { AsyncPipe, NgClass, NgTemplateOutlet } from "@angular/common";
 import { filter, map, tap } from "rxjs";
 import { TuiIcon } from "@taiga-ui/core";
@@ -23,8 +22,7 @@ import { UserService } from "../services/user.service";
         RouterOutlet,
         RouterLink,
         NgClass,
-        TuiIcon,
-        AsyncPipe
+        TuiIcon
     ],
     templateUrl: "./landing.component.html",
     styleUrl: "./landing.component.less",
@@ -37,8 +35,6 @@ export class LandingComponent {
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly userService = inject(UserService);
-
-    private readonly cdr = inject(ChangeDetectorRef);
 
     protected select = "home";
 
@@ -81,9 +77,5 @@ export class LandingComponent {
 
     protected signIn(): void {
         this.userService.signIn();
-    }
-
-    protected signOut(): void {
-        this.userService.signOut();
     }
 }
