@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from "@angular/core";
+import { ChangeDetectorRef, Component, DestroyRef, inject } from "@angular/core";
 import { HeaderComponent } from "../layout/header/header.component";
 import {
     ActivatedRoute,
@@ -38,6 +38,8 @@ export class LandingComponent {
 
     protected readonly userService = inject(UserService);
 
+    private readonly cdr = inject(ChangeDetectorRef);
+
     protected select = "home";
 
     public constructor() {
@@ -65,6 +67,9 @@ export class LandingComponent {
                             break;
                         case RouteKeys.market:
                             this.select = "market";
+                            break;
+                        case RouteKeys.profile:
+                            this.select = "profile";
                             break;
                         default:
                             this.select = "home";

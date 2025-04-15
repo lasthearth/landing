@@ -16,7 +16,6 @@
                     </a>
                     <button
                         [routerLink]="['/rules']"
-                        (click)="select = 'rules'"
                         class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
                         [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'rules' }"
                     >
@@ -24,19 +23,21 @@
                     </button>
                     <button
                         [routerLink]="['/market']"
-                        (click)="select = 'market'"
                         class="nav-button md:min-w-20 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
                         [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'market' }"
                     >
                         РЫНОК
                     </button>
                 </div>
-                    <a
-                        (click)="userService.authState ? signOut() : signIn()"
-                        class="nav-button text-white font-bold md:tracking-wider cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
+                    <button
+                        tuiIconButton
+                        (click)="userService.isAuthorize() ? '' : signIn()"
+                        [routerLink]="userService.isAuthorize() ? ['/profile'] : ''"
+                        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'profile' }"
+                        class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
                     >
-                        <tui-icon [icon]="userService.authState ? '@tui.log-out' : '@tui.log-in'"/>
-                    </a>
+                        <tui-icon [icon]="userService.isAuthorize() ? '@tui.user' : '@tui.log-in'"/>
+                    </button>
             </div>
 
             <div class="flex size-full justify-center gap-3 mb-10">

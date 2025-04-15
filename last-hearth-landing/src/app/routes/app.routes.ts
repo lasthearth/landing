@@ -5,6 +5,7 @@ import { HomeComponent } from "../home/home.component";
 import { TitlesComponent } from "../titles/titles.component";
 import { MarketComponent } from "../market/market.component";
 import { RouteKeys } from "./enums/route-keys";
+import { ProfileComponent } from "../profile/profile.component";
 
 export const routes: Routes = [
     {
@@ -31,6 +32,11 @@ export const routes: Routes = [
                 component: MarketComponent,
                 data: { route_keys: RouteKeys.market },
             },
+            {
+                path: "profile",
+                component: ProfileComponent,
+                data: { route_keys: RouteKeys.profile },
+            }
         ],
     },
 ];

@@ -1,0 +1,74 @@
+@let leaderBoard = (leaderBoard$ | async)?.entries;
+<div class="text-lh-primary items-start flex flex-col gap-4 p-6">
+    <div class="flex gap-4">
+        <div class="flex flex-col gap-2">
+            <img [src]="userData.image" class="rounded-2xl"/>
+            <button
+            (click)="signOut()"
+            class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+            >
+                ВЫЙТИ
+            </button>
+        </div>
+        <div>
+            <p class="text-4xl">{{userData.name}}</p>
+            <p class="text-2xl">Игрок</p>
+        </div>
+    </div>
+    <p class="text-2xl">Статистика:</p>
+    @if(leaderBoard){
+        <table
+            tuiTable
+            [columns]="getNames(leaderBoard)"
+            class="table w-full"
+        >
+            <thead>
+                <tr tuiThGroup>
+                    <th
+                        tuiTh
+                        [resizable]="true"
+                    >
+                        Ник
+                    </th>
+                    <th tuiTh><button (click)="getDeaths()" class="cursor-pointer">Смерти</button></th>
+                    <th tuiTh><button (click)="getKills()" class="cursor-pointer">Убийства</button></th>
+                    <th tuiTh><button (click)="getHoursPlayed()" class="cursor-pointer">Часы</button></th>
+                </tr>
+            </thead>
+            <tbody
+                tuiTbody
+                [data]="leaderBoard"
+            >
+                <tr
+                    *ngFor="let item of leaderBoard"
+                    tuiTr
+                >
+                    <th
+                        *tuiCell="'name'"
+                        tuiTd
+                    >
+                        {{ item.name }}
+                    </th>
+                    <th
+                        *tuiCell="'deaths'"
+                        tuiTd
+                    >
+                        {{ item.deaths }}
+                    </th>
+                    <th
+                        *tuiCell="'kills'"
+                        tuiTd
+                    >
+                        {{ item.kills }}
+                    </th>
+                    <th
+                        *tuiCell="'hours_played'"
+                        tuiTd
+                    >
+                        {{ item.hours_played }}
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>

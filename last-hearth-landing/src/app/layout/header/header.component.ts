@@ -26,5 +26,4 @@ export class HeaderComponent {
     protected readonly time$ = this.serverInformationService
         .getTime$()
         .pipe(map((info) => info.formatted_time));
-    protected select = "home";
 }

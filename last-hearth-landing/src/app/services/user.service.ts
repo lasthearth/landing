@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { IUser } from './interface/i-user';
 
 @Injectable({
     providedIn: 'root'
@@ -7,7 +8,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 export class UserService {
     private oidcSecurityService: OidcSecurityService = inject(OidcSecurityService);
 
-    public authState: boolean = false;
+    private authState: boolean = false;
 
     public userImage!: string;
 
@@ -29,5 +30,16 @@ export class UserService {
 
     public signOut(): void {
         this.oidcSecurityService.logoff().subscribe();
+    }
+
+    public isAuthorize(): boolean {
+        return this.authState;
+    }
+
+    public getUserData(): IUser {
+        return {
+            name: this.userName,
+            image: this.userImage
+        }
     }
 }

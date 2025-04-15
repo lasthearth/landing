@@ -1,6 +1,8 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { LeaderBoardType } from "./enums/leader-board-type";
+import { ILeaderBoard } from "./interface/i-leader-board";
 
 @Injectable({
     providedIn: "root",
@@ -20,6 +22,14 @@ export class ServerInformationService {
     public getTime$(): Observable<{ formatted_time: string }> {
         return this.http.get<{ formatted_time: string }>(
             `${this.baseUrl}/time`
+        );
+    }
+
+    public getLeaderBoard(type: LeaderBoardType = 0): Observable<{ entries: Array<ILeaderBoard> }> {
+        const params = new HttpParams().set('filter', type.toString());
+
+        return this.http.get<{ entries: Array<ILeaderBoard> }>(
+            `${this.baseUrl}/leaderboard`, { params }
         );
     }
 }

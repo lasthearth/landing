@@ -4,4 +4,6 @@ export enum RouteKeys {
     rules,
 
     market,
+
+    profile,
 }
