@@ -1,16 +1,21 @@
 <div class="size-full rounded-xl border border-neutral-400 p-4 flex flex-col gap-2">
-    <div class="flex flex-col">
+    <div class="flex gap-2">
+        <tui-icon icon="@tui.user" />
         <p class="text-xl">Игровой ник:</p>
         <p class="text-xl font-bold">{{data().user_game_name}}</p>
     </div>
     <hr class="w-full h-0.5" />
     @for (item of data().answers; track $index) {
     <div class="flex flex-col">
-        <p class="text-xl">Вопрос {{ $index + 1 }}: {{ item.question }}</p>
-        <p class="text-xl">Ответ: {{ item.answer }}</p>
+        <p class="text-xl"><tui-icon icon="@tui.message-circle-question" />: {{ item.question }}</p>
+        <p class="text-xl break-words"><b>Ответ:</b> {{ item.answer }}</p>
     </div>
     <hr class="w-full h-0.5" />
     }
+    <div class="flex gap-2">
+        <p class="text-xl">Способы связи с игроком:</p>
+        <p class="text-xl font-bold">{{data().contacts}}</p>
+    </div>
     <button
         (click)="approve()"
         class="text-white font-bold cursor-pointer mt-2 self-end bg-green-600 rounded-lg py-2.5 px-4 hover:bg-green-700 active:bg-green-400"

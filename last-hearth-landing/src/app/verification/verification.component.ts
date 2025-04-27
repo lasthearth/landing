@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { TuiDialogContext, TuiError, TuiLabel } from '@taiga-ui/core';
+import { TuiAlertService, TuiDialogContext, TuiError, TuiLabel } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputPhoneModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ServerInformationService } from '../services/server-information.service';
@@ -31,6 +31,8 @@ export class VerificationComponent {
         question5: new FormControl<string | null>(null, [Validators.required]),
         answer5: new FormControl<string | null>(null, [Validators.required]),
     });
+
+    private readonly alerts = inject(TuiAlertService);
 
     private readonly serverInfoService = inject(ServerInformationService);
 
@@ -86,6 +88,9 @@ export class VerificationComponent {
             ]
         } as IVerifyData
         this.serverInfoService.postVerifyUser(data).subscribe();
+        this.alerts
+            .open('', { label: 'Анкета отправлена на модерацию!', appearance: 'positive', })
+            .subscribe();
         this.context.$implicit.complete();
     })).subscribe();
 }
