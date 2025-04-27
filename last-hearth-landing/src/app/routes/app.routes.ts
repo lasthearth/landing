@@ -6,6 +6,8 @@ import { TitlesComponent } from "../titles/titles.component";
 import { MarketComponent } from "../market/market.component";
 import { RouteKeys } from "./enums/route-keys";
 import { ProfileComponent } from "../profile/profile.component";
+import { AdminComponent } from "../admin/admin.component";
+import { adminGuard } from "../guards/admin.guard";
 
 export const routes: Routes = [
     {
@@ -36,6 +38,12 @@ export const routes: Routes = [
                 path: "profile",
                 component: ProfileComponent,
                 data: { route_keys: RouteKeys.profile },
+            },
+            {
+                path: "admin",
+                component: AdminComponent,
+                canActivate: [adminGuard],
+                data: { route_keys: RouteKeys.admin },
             }
         ],
     },

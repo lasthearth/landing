@@ -33,3 +33,11 @@ a {
         color: #e2d7bb;
     }
 }
+
+tui-dialog {
+    .t-content {
+        background-color: #e2d7bb !important;
+        background-image: url('/image_1.png') !important;
+        background-repeat: repeat !important;
+    }
+}

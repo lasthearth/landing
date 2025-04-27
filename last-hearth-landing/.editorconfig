@@ -1,20 +1,79 @@
-# EditorConfig is awesome: https://editorconfig.org
-
 root = true
 
-# Настройки для всех файлов
+# Общие настройки для всех файлов
 [*]
+charset = utf-8
+end_of_line = lf
 indent_style = space
 indent_size = 4
-end_of_line = lf
-charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
-
-# Настройки для HTML файлов
-[*.{html,htm}]
 max_line_length = 120
-indent_style = space
-indent_size = 4
-html_attribute_quotemark = double
+
+# Языки разметки
+[*.{html,htm}]
+html_wrap_attributes = auto
+html_wrap_attributes_indent_size = 4
+html_indent_attributes = true
+html_experimental_self_closing_tags = true
+html_attribute_sort = none
 html_indent_inner_html = true
+html_indent_style = space
+html_indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false  # Для совместимости с Markdown
+hard_tabs = false
+
+# Стили
+[*.{css,scss,less}]
+indent_size = 4
+css_hex_notation = lower
+css_property_colon_after = space
+
+# JavaScript/TypeScript
+[*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}]
+indent_size = 4
+quote_type = single
+jsx_quote_type = double
+semicolon = true
+
+# JSON
+[*.json]
+indent_size = 4
+quote_type = double
+json_array_bracket_spacing = false
+json_object_bracket_spacing = false
+
+# XML
+[*.xml]
+xml_attribute_quotemark = double
+xml_self_closing_tag_space = true
+xml_indent_style = space
+xml_indent_size = 4
+
+# Python
+[*.py]
+indent_size = 4
+max_line_length = 88  # PEP8 compatible
+quote_type = single
+
+# PHP
+[*.php]
+indent_size = 4
+php_quote_type = single
+php_brace_style = psr-2
+
+# Docker
+[Dockerfile]
+indent_size = 4
+indent_style = space
+
+# Git
+[.git{attributes,ignore,modules}]
+indent_style = tab
+indent_size = unset
+
+# GitHub
+[.github/**/*.yml]
+indent_size = 4

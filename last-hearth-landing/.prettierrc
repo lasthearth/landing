@@ -1,0 +1,17 @@
+{
+    "printWidth": 120,
+    "htmlWhitespaceSensitivity": "css",
+    "bracketSameLine": false,
+    "htmlFormatWrapAttributes": "auto",
+    "htmlSortAttributes": "none",
+    "arrowParens": "avoid",
+    "overrides": [
+        {
+            "files": "*.html",
+            "options": {
+                "parser": "html",
+                "attributePerLine": 3
+            }
+        }
+    ]
+}

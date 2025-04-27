@@ -67,6 +67,9 @@ export class LandingComponent {
                         case RouteKeys.profile:
                             this.select = "profile";
                             break;
+                        case RouteKeys.admin:
+                            this.select = "admin";
+                            break;
                         default:
                             this.select = "home";
                             break;
@@ -77,5 +80,9 @@ export class LandingComponent {
 
     protected signIn(): void {
         this.userService.signIn();
+    }
+
+    protected isAdmin() {
+        return this.userService.isAuthorize() && this.userService.roles.includes('admin');
     }
 }

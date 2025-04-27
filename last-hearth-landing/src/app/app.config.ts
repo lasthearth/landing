@@ -7,6 +7,7 @@ import { provideAuth } from 'angular-auth-oidc-client';
 
 import { routes } from "./routes/app.routes";
 import { provideHttpClient, withFetch } from "@angular/common/http";
+import { TUI_VALIDATION_ERRORS } from "@taiga-ui/kit";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -18,11 +19,20 @@ export const appConfig: ApplicationConfig = {
             config: buildAngularAuthConfig({
                 endpoint: 'https://logto.lasthearth.ru/',
                 appId: 'u9k3c8kap0lyhhs0o5jn1',
-                redirectUri: 'https://lasthearth.ru/home',
-                postLogoutRedirectUri: 'https://lasthearth.ru/home',
-                scopes: ['openid', 'profile', 'email', 'roles'],
+                redirectUri: 'http://localhost:4200/home',
+                postLogoutRedirectUri: 'http://localhost:4200/home',
+                scopes: ['openid', 'profile', 'email', 'roles', 'question:create', 'user:verify'],
+                resource: 'https://api.lasthearth.ru',
             }),
         }),
         NG_EVENT_PLUGINS,
+        {
+            provide: TUI_VALIDATION_ERRORS,
+            useValue: {
+                required: 'Вы не заполнили обязательное поле.',
+                serverResponse: (errors: string[]) => errors.join('\r\n'),
+                minlength: ({ requiredLength }: { requiredLength: string }) => `Минимальное количество символов должно быть ${requiredLength}.`,
+            },
+        },
     ],
 };

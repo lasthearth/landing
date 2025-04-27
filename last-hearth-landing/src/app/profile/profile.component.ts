@@ -1,16 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { IUser } from '../services/interface/i-user';
 import { ServerInformationService } from '../services/server-information.service';
-import { AsyncPipe, NgFor } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { ILeaderBoard } from '../services/interface/i-leader-board';
 import { startWith, Subject, switchMap } from 'rxjs';
 import { LeaderBoardType } from '../services/enums/leader-board-type';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { PolymorpheusComponent, type PolymorpheusContent } from '@taiga-ui/polymorpheus';
+import { VerificationComponent } from '../verification/verification.component';
 
 @Component({
     standalone: true,
-    imports: [AsyncPipe, TuiTable, NgFor],
+    imports: [AsyncPipe, TuiTable, NgFor, TuiIcon, NgIf],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.less',
@@ -19,6 +22,10 @@ export class ProfileComponent {
     private readonly userService = inject(UserService);
 
     protected readonly userData: IUser = this.userService.getUserData();
+
+    private readonly dialogs = inject(TuiDialogService);
+
+    protected selectedTh: 'deaths' | 'kills' | 'hours' = 'deaths';
 
     protected signOut(): void {
         this.userService.signOut();
@@ -41,13 +48,32 @@ export class ProfileComponent {
 
     protected getDeaths() {
         this.filterSubject$.next(LeaderBoardType.deaths);
+        this.selectedTh = 'deaths';
     }
 
     protected getHoursPlayed() {
         this.filterSubject$.next(LeaderBoardType.hoursPlayed);
+        this.selectedTh = 'hours';
     }
 
     protected getKills() {
         this.filterSubject$.next(LeaderBoardType.kills);
+        this.selectedTh = 'kills';
+    }
+
+    protected getRoleName() {
+        if (this.userService.roles.includes('admin')) {
+            return 'Администратор'
+        }
+
+        if (this.userService.roles.includes('player')) {
+            return 'Игрок'
+        }
+
+        return 'Неверифицирован'
+    }
+
+    protected verification() {
+        this.dialogs.open(new PolymorpheusComponent(VerificationComponent), { size: 'auto' }).subscribe();
     }
 }

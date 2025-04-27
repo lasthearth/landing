@@ -1,10 +1,10 @@
 export interface INews {
-  title: string;
+    title: string;
 
-  description: string;
+    description: string;
 
-  image?: string;
+    image?: string;
 
-  // Временно.
-  date: string;
+    // Временно.
+    date: string;
 }
