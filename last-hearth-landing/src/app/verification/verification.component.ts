@@ -9,7 +9,7 @@ import { filter, Observable, Subject, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { IVerifyData } from '../services/interface/i-verify-data';
 import { UserService } from '../services/user.service';
-	import {TuiTextarea} from '@taiga-ui/kit';
+import { TuiTextarea } from '@taiga-ui/kit';
 
 @Component({
     selector: 'app-verification',
