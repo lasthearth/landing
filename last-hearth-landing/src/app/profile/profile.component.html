@@ -1,4 +1,3 @@
-@let leaderBoard = (leaderBoard$ | async)?.entries;
 <div class="text-lh-primary items-start flex flex-col gap-4 p-6">
     <div class="flex gap-4 items-end">
         <div class="flex flex-col gap-2">
@@ -17,6 +16,10 @@
         <div class="flex flex-col gap-2">
             <p class="text-4xl">{{userData.name}}</p>
             <p [class.!text-red-500]="getRoleName() === 'Неверифицирован'" class="text-2xl">{{getRoleName()}}</p>
+            @let code = code$ | async; @let status = status$ | async;
+            <p *ngIf="status?.status === 'approved'" class="text-2xl">
+                Ваш код для авторизации в игре: <b>{{code?.code}}</b>
+            </p>
             <button
                 *ngIf="getRoleName() === 'Неверифицирован'"
                 (click)="verification()"
@@ -27,44 +30,24 @@
         </div>
     </div>
     @if(getRoleName() !== 'Неверифицирован') {
-    <p class="text-2xl">Статистика:</p>
-    @if(leaderBoard){
-    <table tuiTable [columns]="getNames(leaderBoard)" class="table w-full">
-        <thead>
-            <tr tuiThGroup>
-                <th tuiTh [resizable]="true">Ник</th>
-                <th tuiTh>
-                    <button (click)="getDeaths()" class="cursor-pointer">
-                        Смерти
-                        <tui-icon *ngIf="selectedTh === 'deaths'" icon="@tui.filter" class="!text-sm ml-1 mb-0.5" />
-                    </button>
-                </th>
-                <th tuiTh>
-                    <button (click)="getKills()" class="cursor-pointer">
-                        Убийства<tui-icon
-                            *ngIf="selectedTh === 'kills'"
-                            icon="@tui.filter"
-                            class="!text-sm ml-1 mb-0.5"
-                        />
-                    </button>
-                </th>
-                <th tuiTh>
-                    <button (click)="getHoursPlayed()" class="cursor-pointer">
-                        Часы<tui-icon *ngIf="selectedTh === 'hours'" icon="@tui.filter" class="!text-sm ml-1 mb-0.5" />
-                    </button>
-                </th>
-            </tr>
-        </thead>
-        <tbody tuiTbody [data]="leaderBoard">
-            <tr *ngFor="let item of leaderBoard" tuiTr>
-                <th *tuiCell="'name'" tuiTd>{{ item.name }}</th>
-                <th *tuiCell="'deaths'" tuiTd>{{ item.deaths }}</th>
-                <th *tuiCell="'kills'" tuiTd>{{ item.kills }}</th>
-                <th *tuiCell="'hours_played'" tuiTd>{{ item.hours_played }}</th>
-            </tr>
-        </tbody>
-    </table>
-    } } @else {
+    <div class="flex gap-2 mt-8">
+        <button
+            [routerLink]="['/profile/how-play']"
+            [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-base': select === 'how-play' }"
+            class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+        >
+            Как зайти
+        </button>
+        <button
+            [routerLink]="['/profile/stats']"
+            [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-base': select === 'stats' }"
+            class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+        >
+            Статистика
+        </button>
+    </div>
+    <router-outlet />
+    } @else {
     <p class="text-2xl">
         Что бы начать пользоваться сайтом и узнать как попасть на сервер, необходимо пройти верификацию.
     </p>

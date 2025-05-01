@@ -1,0 +1,39 @@
+@let leaderBoard = (leaderBoard$ | async)?.entries;
+
+<p class="text-2xl">Статистика:</p>
+
+@if(leaderBoard === null) {
+<tui-loader />
+} @if(leaderBoard){
+<table tuiTable [columns]="getNames(leaderBoard)" class="table w-full">
+    <thead>
+        <tr tuiThGroup>
+            <th tuiTh [resizable]="true">Ник</th>
+            <th tuiTh>
+                <button (click)="getDeaths()" class="cursor-pointer">
+                    Смерти
+                    <tui-icon *ngIf="selectedTh === 'deaths'" icon="@tui.filter" class="!text-sm ml-1 mb-0.5" />
+                </button>
+            </th>
+            <th tuiTh>
+                <button (click)="getKills()" class="cursor-pointer">
+                    Убийства<tui-icon *ngIf="selectedTh === 'kills'" icon="@tui.filter" class="!text-sm ml-1 mb-0.5" />
+                </button>
+            </th>
+            <th tuiTh>
+                <button (click)="getHoursPlayed()" class="cursor-pointer">
+                    Часы<tui-icon *ngIf="selectedTh === 'hours'" icon="@tui.filter" class="!text-sm ml-1 mb-0.5" />
+                </button>
+            </th>
+        </tr>
+    </thead>
+    <tbody tuiTbody [data]="leaderBoard">
+        <tr *ngFor="let item of leaderBoard" tuiTr>
+            <th *tuiCell="'name'" tuiTd>{{ item.name }}</th>
+            <th *tuiCell="'deaths'" tuiTd>{{ item.deaths }}</th>
+            <th *tuiCell="'kills'" tuiTd>{{ item.kills }}</th>
+            <th *tuiCell="'hours_played'" tuiTd>{{ item.hours_played }}</th>
+        </tr>
+    </tbody>
+</table>
+}

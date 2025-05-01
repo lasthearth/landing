@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { TuiAlertService, TuiDialogContext, TuiError, TuiLabel } from '@taiga-ui/core';
+import { TuiAlertService, TuiDialogContext, TuiError, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputPhoneModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { ServerInformationService } from '../services/server-information.service';
@@ -9,10 +9,11 @@ import { filter, Observable, Subject, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { IVerifyData } from '../services/interface/i-verify-data';
 import { UserService } from '../services/user.service';
+	import {TuiTextarea} from '@taiga-ui/kit';
 
 @Component({
     selector: 'app-verification',
-    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiTextareaModule, TuiInputModule, TuiFieldErrorPipe, AsyncPipe, TuiLabel, TuiTextfieldControllerModule],
+    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiTextareaModule, TuiInputModule, TuiFieldErrorPipe, AsyncPipe, TuiLabel, TuiTextfieldControllerModule, TuiTextarea, TuiTextfield],
     templateUrl: './verification.component.html',
     styleUrl: './verification.component.less'
 })

@@ -85,4 +85,24 @@ export class ServerInformationService {
         });
         return this.http.post<{ verify_request: IVerifyData }>(`${this.baseUrl}/rules/verification-request`, { user_id: userId }, { headers: headers });
     }
+
+    public getCode() {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.userService.accessToken}`
+        });
+        return this.http.get<{ code: string }>(
+            `${this.baseUrl}/user/verify/code`, { headers: headers }
+        );
+    }
+
+    public getStatus() {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.userService.accessToken}`
+        });
+        return this.http.get<{ status: string }>(
+            `${this.baseUrl}/user/verify/status`, { headers: headers }
+        );
+    }
 }

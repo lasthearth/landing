@@ -8,6 +8,8 @@ import { RouteKeys } from "./enums/route-keys";
 import { ProfileComponent } from "../profile/profile.component";
 import { AdminComponent } from "../admin/admin.component";
 import { adminGuard } from "../guards/admin.guard";
+import { StatisticsComponent } from "../profile/statistics/statistics.component";
+import { HowPlayComponent } from "../profile/how-play/how-play.component";
 
 export const routes: Routes = [
     {
@@ -38,6 +40,19 @@ export const routes: Routes = [
                 path: "profile",
                 component: ProfileComponent,
                 data: { route_keys: RouteKeys.profile },
+                children: [
+                    { path: "", redirectTo: "stats", pathMatch: "full" },
+                    {
+                        path: "stats",
+                        component: StatisticsComponent,
+                        data: { route_keys: RouteKeys.stats },
+                    },
+                    {
+                        path: "how-play",
+                        component: HowPlayComponent,
+                        data: { route_keys: RouteKeys.howPlay },
+                    }
+                ],
             },
             {
                 path: "admin",

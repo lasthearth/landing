@@ -10,6 +10,7 @@ import { TuiExpand, TuiIcon } from "@taiga-ui/core";
     styleUrl: "./rules.component.less",
 })
 export class RulesComponent {
+    protected isTerminology: boolean = false;
     protected isBase: boolean = false;
     protected isPlayersType: boolean = false;
     protected isSinglePlayers: boolean = false;

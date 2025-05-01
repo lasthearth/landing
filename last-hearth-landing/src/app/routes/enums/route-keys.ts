@@ -8,4 +8,8 @@ export enum RouteKeys {
     profile,
 
     admin,
+
+    stats,
+
+    howPlay,
 }

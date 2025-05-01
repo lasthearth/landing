@@ -1,64 +1,71 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { IUser } from '../services/interface/i-user';
-import { ServerInformationService } from '../services/server-information.service';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { TuiTable } from '@taiga-ui/addon-table';
-import { ILeaderBoard } from '../services/interface/i-leader-board';
-import { startWith, Subject, switchMap } from 'rxjs';
-import { LeaderBoardType } from '../services/enums/leader-board-type';
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { PolymorpheusComponent, type PolymorpheusContent } from '@taiga-ui/polymorpheus';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { VerificationComponent } from '../verification/verification.component';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
+import { RouteKeys } from '../routes/enums/route-keys';
+import { ServerInformationService } from '../services/server-information.service';
 
 @Component({
     standalone: true,
-    imports: [AsyncPipe, TuiTable, NgFor, TuiIcon, NgIf],
+    imports: [TuiIcon, NgIf, RouterOutlet, RouterLink, NgClass, AsyncPipe],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
-    styleUrl: './profile.component.less',
 })
 export class ProfileComponent {
     private readonly userService = inject(UserService);
 
+    protected select = "stats";
+
     protected readonly userData: IUser = this.userService.getUserData();
+
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly dialogs = inject(TuiDialogService);
 
-    protected selectedTh: 'deaths' | 'kills' | 'hours' = 'deaths';
+    private readonly router = inject(Router);
+
+    private readonly activatedRoute = inject(ActivatedRoute);
+
+    protected readonly code$ = inject(ServerInformationService).getCode();
+
+    protected readonly status$ = inject(ServerInformationService).getStatus();
+
+    public constructor() {
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => {
+                let route = this.activatedRoute;
+
+                while (route.firstChild) {
+                    route = route.firstChild;
+                }
+
+                const routeKey = route.snapshot.data["route_keys"];
+
+                if (routeKey) {
+                    switch (routeKey) {
+                        case RouteKeys.stats:
+                            this.select = "stats";
+                            break;
+                        case RouteKeys.howPlay:
+                            this.select = "how-play";
+                            break;
+                    }
+                }
+            });
+    }
 
     protected signOut(): void {
         this.userService.signOut();
-    }
-
-    private serverInfoService = inject(ServerInformationService);
-
-    private readonly filterSubject$ = new Subject<LeaderBoardType>();
-
-    protected leaderBoard$ = this.filterSubject$.pipe(
-        startWith(0),
-        switchMap(filter =>
-            this.serverInfoService.getLeaderBoard(filter)
-        )
-    );
-
-    protected getNames(test: Array<ILeaderBoard>): string[] {
-        return Object.keys(test[0])
-    }
-
-    protected getDeaths() {
-        this.filterSubject$.next(LeaderBoardType.deaths);
-        this.selectedTh = 'deaths';
-    }
-
-    protected getHoursPlayed() {
-        this.filterSubject$.next(LeaderBoardType.hoursPlayed);
-        this.selectedTh = 'hours';
-    }
-
-    protected getKills() {
-        this.filterSubject$.next(LeaderBoardType.kills);
-        this.selectedTh = 'kills';
     }
 
     protected getRoleName() {
@@ -74,6 +81,6 @@ export class ProfileComponent {
     }
 
     protected verification() {
-        this.dialogs.open(new PolymorpheusComponent(VerificationComponent), { size: 'auto' }).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(VerificationComponent), { size: 'l' }).subscribe();
     }
 }

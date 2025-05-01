@@ -67,11 +67,14 @@ export class LandingComponent {
                         case RouteKeys.profile:
                             this.select = "profile";
                             break;
+                        case RouteKeys.stats:
+                            this.select = "profile";
+                            break;
+                        case RouteKeys.howPlay:
+                            this.select = "profile";
+                            break;
                         case RouteKeys.admin:
                             this.select = "admin";
-                            break;
-                        default:
-                            this.select = "home";
                             break;
                     }
                 }
