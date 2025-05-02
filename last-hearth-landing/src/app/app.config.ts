@@ -9,6 +9,21 @@ import { routes } from "./routes/app.routes";
 import { provideHttpClient, withFetch } from "@angular/common/http";
 import { TUI_VALIDATION_ERRORS } from "@taiga-ui/kit";
 
+function getConfig() {
+    const config = buildAngularAuthConfig({
+        endpoint: 'https://logto.lasthearth.ru/',
+        appId: 'u9k3c8kap0lyhhs0o5jn1',
+        redirectUri: 'https://lasthearth.ru/home',
+        postLogoutRedirectUri: 'https://lasthearth.ru/home',
+        scopes: ['openid', 'profile', 'email', 'roles', 'question:create', 'user:verify'],
+        resource: 'https://api.lasthearth.ru',
+    });
+
+    config.ignoreNonceAfterRefresh = true;
+
+    return config;
+}
+
 export const appConfig: ApplicationConfig = {
     providers: [
         provideAnimations(),
@@ -16,14 +31,7 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes),
         provideHttpClient(withFetch()),
         provideAuth({
-            config: buildAngularAuthConfig({
-                endpoint: 'https://logto.lasthearth.ru/',
-                appId: 'u9k3c8kap0lyhhs0o5jn1',
-                redirectUri: 'https://lasthearth.ru/home',
-                postLogoutRedirectUri: 'https://lasthearth.ru/home',
-                scopes: ['openid', 'profile', 'email', 'roles', 'question:create', 'user:verify'],
-                resource: 'https://api.lasthearth.ru',
-            }),
+            config: getConfig(),
         }),
         NG_EVENT_PLUGINS,
         {
