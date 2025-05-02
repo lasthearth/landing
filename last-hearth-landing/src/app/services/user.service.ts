@@ -3,7 +3,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { IUser } from './interface/i-user';
 import { jwtDecode } from "jwt-decode";
 import { IJwtTokenLh } from './interface/i-jwt-token-lh';
-import { BehaviorSubject, combineLatest, filter, first, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, filter, first, of, tap } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 
 @Injectable({
@@ -36,6 +36,9 @@ export class UserService {
                         this.accessToken = accessToken;
                         const decoded = jwtDecode<IJwtTokenLh>(idToken);
                         this.roles = decoded.roles ?? [];
+                    }), catchError((e) => {
+                        console.error('Я упаль:', e);
+                        return of(null);
                     }), first()
                 ).subscribe();
             }
