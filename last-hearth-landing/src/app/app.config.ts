@@ -20,6 +20,7 @@ function getConfig() {
     });
 
     config.ignoreNonceAfterRefresh = true;
+    config.silentRenew = false;
 
     return config;
 }
