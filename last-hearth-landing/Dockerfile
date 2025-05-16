@@ -1,11 +1,12 @@
-FROM node:alpine
-
+#STAGE 1
+FROM node:20.15-alpine AS build
 WORKDIR /usr/src/app
-
-COPY . /usr/src/app
-
-RUN npm install -g @angular/cli
-
+COPY package.json package-lock.json ./
 RUN npm install
+COPY . .
+RUN npm run build
 
-CMD ["ng", "serve", "--host", "0.0.0.0", "--disable-host-check"]
+#STAGE 2
+FROM nginx:1.17.1-alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /usr/src/app/dist/last-hearth-landing /usr/share/nginx/html
