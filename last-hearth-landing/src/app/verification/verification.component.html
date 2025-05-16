@@ -2,6 +2,7 @@
 <div class="!p-6 bg-transparent flex flex-col gap-4">
     <p class="text-2xl">Запрос на верификацию</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2">
+        <p class="text-red-700">Используйте ваш настоящий игровой ник в Vintage Story*</p>
         <label tuiLabel>
             <tui-input formControlName="gameName" tuiTextfieldSize="s"> Игровой ник </tui-input>
             <tui-error formControlName="gameName" [error]="[] | tuiFieldError | async" />
@@ -86,6 +87,8 @@
         >
             Отправить запрос
         </button>
+
+
     </form>
 </div>
 }

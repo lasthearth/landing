@@ -64,7 +64,7 @@ export class ServerInformationService {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.userService.accessToken}`
         });
-        return this.http.post<{ verify_request: IVerifyData }>(`${this.baseUrl}/user/verify`, data, { headers: headers });
+        return this.http.post<{ verify_request: IVerifyData }>(`${this.baseUrl}/verification`, data, { headers: headers });
     }
 
     public getVerifyRequests(): Observable<IVerifyRequest[]> {
@@ -74,7 +74,7 @@ export class ServerInformationService {
         });
 
         return this.http.get<{ requests: Array<IVerifyRequest> }>(
-            `${this.baseUrl}/rules/verification-requests`, { headers: headers }
+            `${this.baseUrl}/verifications`, { headers: headers }
         ).pipe(map((data) => data.requests));
     }
 
@@ -83,7 +83,15 @@ export class ServerInformationService {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.userService.accessToken}`
         });
-        return this.http.post<{ verify_request: IVerifyData }>(`${this.baseUrl}/rules/verification-request`, { user_id: userId }, { headers: headers });
+        return this.http.post(`${this.baseUrl}/verification/${userId}/approve`, {}, { headers: headers });
+    }
+
+    public postVerifyDeny(userId: string, rejectReason: string) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.userService.accessToken}`
+        });
+        return this.http.post<{ rejection_reason: string }>(`${this.baseUrl}/verification/${userId}/reject`, { rejection_reason: rejectReason }, { headers: headers });
     }
 
     public getCode() {
@@ -96,13 +104,17 @@ export class ServerInformationService {
         );
     }
 
-    public getStatus() {
+    public getDetails() {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.userService.accessToken}`
         });
-        return this.http.get<{ status: string }>(
-            `${this.baseUrl}/user/verify/status`, { headers: headers }
+        return this.http.get<{
+            id: string,
+            status: string,
+            rejection_reason: string
+        }>(
+            `${this.baseUrl}/verification/details`, { headers: headers }
         );
     }
 }

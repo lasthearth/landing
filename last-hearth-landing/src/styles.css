@@ -36,6 +36,9 @@ a {
 
 tui-dialog {
     .t-content {
+        @apply !text-base;
+        font-family: "Advent Pro", serif !important;
+        font-optical-sizing: auto;
         background-color: #e2d7bb !important;
         background-image: url("/image_1.png") !important;
         background-repeat: repeat !important;

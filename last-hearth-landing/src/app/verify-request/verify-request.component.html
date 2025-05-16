@@ -16,10 +16,19 @@
         <p class="text-xl">Способы связи с игроком:</p>
         <p class="text-xl font-bold">{{data().contacts}}</p>
     </div>
-    <button
-        (click)="approve()"
-        class="text-white font-bold cursor-pointer mt-2 self-end bg-green-600 rounded-lg py-2.5 px-4 hover:bg-green-700 active:bg-green-400"
-    >
-        ОДОБРИТЬ
-    </button>
+
+    <div class="flex gap-4 justify-end">
+        <button
+            (click)="reject()"
+            class="text-white font-bold cursor-pointer mt-2 self-end bg-red-600 rounded-lg py-2.5 px-4 hover:bg-red-700 active:bg-red-400"
+        >
+            ОТКЛОНИТЬ
+        </button>
+        <button
+            (click)="approve()"
+            class="text-white font-bold cursor-pointer mt-2 self-end bg-green-600 rounded-lg py-2.5 px-4 hover:bg-green-700 active:bg-green-400"
+        >
+            ОДОБРИТЬ
+        </button>
+    </div>
 </div>

@@ -63,7 +63,7 @@ export class VerificationComponent {
     private readonly request$ = this.onSubmit.pipe(filter(() => this.form.valid), tap(() => {
         const data = {
             user_name: this.userService.userName,
-            user_game_name: this.form.controls.gameName.value,
+            user_game_name: this.form.controls.gameName.value?.trim(),
             contacts: this.form.controls.contacts.value,
             answers: [
                 {

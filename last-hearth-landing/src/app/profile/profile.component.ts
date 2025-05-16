@@ -34,7 +34,7 @@ export class ProfileComponent {
 
     protected readonly code$ = inject(ServerInformationService).getCode();
 
-    protected readonly status$ = inject(ServerInformationService).getStatus();
+    protected readonly details$ = inject(ServerInformationService).getDetails();
 
     public constructor() {
         this.router.events
