@@ -1,16 +1,16 @@
 <div
-    [style.backgroundImage]="news().image ? 'url('+ news().image +')' : 'url(/images/screenshots/screen_1.png)'"
+    [style.backgroundImage]="data().image ? 'url('+ data().image +')' : 'url(/images/screenshots/screen_1.png)'"
     class="p-4 sm:p-8 flex sm:flex-row flex-col gap-4 items-start justify-between bg-center bg-cover h-full rounded-xl"
 >
     <div
         class="relative max-w-full lg:max-w-[60%] p-0.5 sm:p-2 flex flex-col gap-2 before:backdrop-blur-xl before:absolute before:size-full before:rounded-xl z-10 before:-z-40"
     >
-        <p class="text-neutral-50 text-xl sm:text-2xl mx-4 my-1">{{ news().title }}</p>
-        <p class="text-neutral-50 text-base font-light mx-4" [innerHtml]="news().description"></p>
+        <p class="text-neutral-50 text-xl sm:text-2xl mx-4 my-1">{{ data().title }}</p>
+        <p class="text-neutral-50 text-base font-light mx-4" [innerHtml]="data().description"></p>
     </div>
     <div class="flex sm:flex-col justify-between gap-4 items-end sm:items-start sm:gap-0 h-full">
         <div class="relative bg-[#945a32] h-fit px-2 py-1 rounded-xl">
-            <p class="text-white text-xs text-nowrap">{{ news().date}}</p>
+            <p class="text-white text-xs text-nowrap">{{ data().date}}</p>
         </div>
     </div>
 </div>

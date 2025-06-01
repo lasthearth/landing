@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from "@angular/core";
 import { HeaderComponent } from "../layout/header/header.component";
 import {
     ActivatedRoute,
@@ -7,13 +7,16 @@ import {
     RouterLink,
     RouterOutlet,
 } from "@angular/router";
-import { AsyncPipe, NgClass, NgTemplateOutlet } from "@angular/common";
-import { filter, map, tap } from "rxjs";
+import { NgClass } from "@angular/common";
+import { filter } from "rxjs";
 import { TuiIcon } from "@taiga-ui/core";
 import { RouteKeys } from "../routes/enums/route-keys";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { UserService } from "../services/user.service";
 
+/**
+ * Компонент лендинга.
+ */
 @Component({
     standalone: true,
     selector: "app-landing",
@@ -26,18 +29,37 @@ import { UserService } from "../services/user.service";
     ],
     templateUrl: "./landing.component.html",
     styleUrl: "./landing.component.less",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent {
-    private readonly activatedRoute = inject(ActivatedRoute);
+    /**
+     * Объект с информацией о текущем роуте.
+     */
+    private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
-    private readonly router = inject(Router);
+    /**
+     * Сервис навигации.
+     */
+    private readonly router: Router = inject(Router);
 
-    private readonly destroyRef = inject(DestroyRef);
+    /**
+    * Ссылка уничтожения на компонент.
+    */
+    private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
-    protected readonly userService = inject(UserService);
+    /**
+     * Сервис данных о пользователе.
+     */
+    protected readonly userService: UserService = inject(UserService);
 
-    protected select = "home";
+    /**
+     * Активная страница.
+     */
+    protected select: string = "home";
 
+    /**
+     * Инициализирует компонент класса {@link LandingComponent}
+     */
     public constructor() {
         this.router.events
             .pipe(
@@ -81,11 +103,17 @@ export class LandingComponent {
             });
     }
 
+    /**
+     * Авторизация пользователя.
+     */
     protected signIn(): void {
         this.userService.signIn();
     }
 
-    protected isAdmin() {
+    /**
+     * Возвращает признак, является ли пользователь администратором.
+     */
+    protected isAdmin(): boolean {
         return this.userService.isAuthorize() && this.userService.roles.includes('admin');
     }
 }
