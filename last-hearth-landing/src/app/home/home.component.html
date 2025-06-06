@@ -5,8 +5,8 @@
         }
     </tui-carousel>
 </div>
-<div class="flex flex-wrap items-center gap-7 px-10 py-10">
+<div class="flex flex-wrap items-center gap-7 p-10">
     @for (item of news; track $index; let first = $first) {
-    <app-news-card [news]="item" class="!h-auto lg:!h-[280px]"></app-news-card>
+    <app-news-card [data]="item" class="!h-auto lg:!h-[280px]" />
     }
 </div>

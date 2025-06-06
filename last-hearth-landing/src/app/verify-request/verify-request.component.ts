@@ -2,8 +2,8 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { IVerifyRequest } from './../services/interface/i-verify-request';
 import { Component, inject, input, InputSignal } from '@angular/core';
-import { ApproveComponent } from '../approve/approve.component';
-import { RejectComponent } from '../reject/reject.component';
+import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
+import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 
 @Component({
     selector: 'app-verify-request',
@@ -16,10 +16,10 @@ export class VerifyRequestComponent {
     public data: InputSignal<IVerifyRequest> = input.required<IVerifyRequest>();
 
     protected approve() {
-        this.dialogService.open(new PolymorpheusComponent(ApproveComponent), { size: 'auto', data: this.data().user_id }).subscribe();
+        this.dialogService.open(new PolymorpheusComponent(ConfirmApproveComponent), { size: 'auto', data: this.data().user_id }).subscribe();
     }
 
     protected reject() {
-        this.dialogService.open(new PolymorpheusComponent(RejectComponent), { size: 'l', data: this.data().user_id }).subscribe();
+        this.dialogService.open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: this.data().user_id }).subscribe();
     }
 }

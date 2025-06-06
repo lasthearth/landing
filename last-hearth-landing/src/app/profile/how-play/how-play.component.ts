@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+/**
+ * Компонент страницы "Как зайти".
+ */
 @Component({
+  standalone: true,
   selector: 'app-how-play',
   templateUrl: './how-play.component.html',
-  styleUrls: ['./how-play.component.css']
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HowPlayComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-}
+export class HowPlayComponent { }
