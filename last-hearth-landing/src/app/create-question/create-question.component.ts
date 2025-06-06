@@ -45,7 +45,7 @@ export class CreateQuestionComponent {
     /**
      * {@link Subject} события отправки формы.
      */
-    public readonly onSubmit: Subject<void> = new Subject<void>();
+    protected readonly onSubmit: Subject<void> = new Subject<void>();
 
     /**
      * Инициализирует компонент класса {@link CreateQuestionComponent}

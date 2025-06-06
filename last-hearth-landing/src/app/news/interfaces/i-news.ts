@@ -18,7 +18,7 @@ export interface INews {
     image?: string;
 
     /**
-     * Дата новости.
+     * Дата публикации новости.
      */
     date: string;
 }
