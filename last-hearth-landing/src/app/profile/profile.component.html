@@ -1,31 +1,42 @@
 <div class="text-lh-primary items-start flex flex-col gap-4 p-6">
     <div class="flex gap-4 items-end">
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1">
             @if(userData.image) {
-            <img [src]="userData.image" class="rounded-2xl" />
+            <div
+                class="flex rounded-2xl justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:opacity-80"
+                (click)="triggerFileInput()"
+            >
+                <img [src]="userData.image" class="rounded-2xl rounded-b-sm max-w-32 max-h-32" />
+            </div>
             } @else {
-            <tui-icon icon="@tui.user" class="!text-6xl !self-center" />
+            <div
+                class="flex rounded-2xl justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:opacity-80"
+                (click)="triggerFileInput()"
+            >
+                <tui-icon icon="@tui.user" class="!text-6xl !self-center" />
+            </div>
             }
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
             <button
                 (click)="signOut()"
-                class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+                class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-red-800 rounded-t-sm rounded-lg py-2.5 px-4"
             >
                 ВЫЙТИ
             </button>
         </div>
         <div class="flex flex-col gap-2">
-            <p class="text-4xl">{{userData.name}}</p>
+            <p class="text-4xl font-semibold">{{userData.name}}</p>
             <p [class.!text-red-500]="getRoleName() === 'Неверифицирован'" class="text-2xl">{{getRoleName()}}</p>
             @let code = code$ | async; @let details = details$ | async;
             <p *ngIf="details?.status === 'approved' || details?.status === 'verified'" class="text-2xl">
-                Ваш код для авторизации в игре: <b>{{code?.code}}</b>
+                Код авторизации в игре: <b>{{code?.code}}</b>
             </p>
             <p *ngIf="details?.status === 'pending'" class="text-2xl">Ваша анкета отправлена. Ожидайте проверки.</p>
             <p *ngIf="details?.status === 'rejected'" class="text-2xl">
                 Вашу анкету отклонили. Причина: {{details?.rejection_reason}}
             </p>
             <button
-                *ngIf="details?.status == 'rejected' || !details"
+                *ngIf="getRoleName() === 'Неверифицирован' && (details?.status == 'rejected' || !details)"
                 (click)="verification()"
                 class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
             >
@@ -33,21 +44,37 @@
             </button>
         </div>
     </div>
-    @if(getRoleName() !== 'Неверифицирован') {
-    <div class="flex gap-2 mt-8">
+    @if(getRoleName() !== 'Неверифицирован' || (details?.status === 'approved' || details?.status === 'verified')) {
+    <hr class="w-full h-px mt-10 bg-lh-primary" />
+    <div class="flex gap-2 mt-4">
         <button
             [routerLink]="['/profile/how-play']"
             [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-base': select === 'how-play' }"
             class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
         >
-            Как зайти
+            Играть
         </button>
         <button
             [routerLink]="['/profile/stats']"
             [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-base': select === 'stats' }"
-            class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+            class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
         >
-            Статистика
+            <tui-icon icon="@tui.chart-no-axes-combined" />
+        </button>
+        <button
+            [routerLink]="['/profile/settlement']"
+            [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-sm': select === 'settlement' }"
+            class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
+        >
+            <tui-icon icon="@tui.castle" />
+        </button>
+        <button
+            [routerLink]="isAdmin() ? ['/profile/admin'] : ''"
+            [class.!hidden]="!isAdmin()"
+            [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-sm': select === 'admin' }"
+            class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
+        >
+            <tui-icon icon="@tui.shield" />
         </button>
     </div>
     <router-outlet />

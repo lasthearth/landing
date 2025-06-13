@@ -12,4 +12,8 @@ export enum RouteKeys {
     stats,
 
     howPlay,
+
+    startGame,
+
+    settlement
 }

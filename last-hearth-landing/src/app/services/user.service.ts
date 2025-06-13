@@ -3,8 +3,9 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { IUser } from './interface/i-user';
 import { jwtDecode } from "jwt-decode";
 import { IJwtTokenLh } from './interface/i-jwt-token-lh';
-import { BehaviorSubject, catchError, combineLatest, filter, first, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, filter, first, Observable, of, switchMap, tap } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -22,46 +23,20 @@ export class UserService {
 
     public accessToken!: string;
 
+    private baseUrl = "https://api.lasthearth.ru/v1";
+
+    private readonly http: HttpClient = inject(HttpClient);
+
     constructor() {
-        // this.oidcSecurityService.checkAuth().pipe(tap((authenticate) => {
-        //     if (authenticate) {
-        //         this.authState = authenticate.isAuthenticated;
-        //         this.userImage = authenticate.userData?.picture;
-        //         this.userName = authenticate.userData?.username;
-        //         combineLatest([
-        //             this.oidcSecurityService.getIdToken(),
-        //             this.oidcSecurityService.getAccessToken(),
-        //         ]).pipe(
-        //             tap(([idToken, accessToken]) => {
-        //                 this.accessToken = accessToken;
-        //                 const decoded = jwtDecode<IJwtTokenLh>(idToken);
-        //                 this.roles = decoded.roles ?? [];
-        //             }), catchError((e) => {
-        //                 console.error('Я упаль:', e);
-        //                 return of(null);
-        //             }), first()
-        //         ).subscribe();
-        //     }
-        // })).subscribe();
-
-        console.log('[Auth] Проверка авторизации началась');
-
         this.oidcSecurityService.checkAuth().pipe(
-            tap(authResult => {
-                console.log('[Auth] Результат авторизации:', authResult);
-            }),
             switchMap(authResult => {
                 if (!authResult.isAuthenticated) {
-                    console.warn('[Auth] Пользователь не аутентифицирован');
                     return of(null);
                 }
 
                 this.authState = true;
                 this.userImage = authResult.userData?.picture;
                 this.userName = authResult.userData?.username;
-                console.log('[Auth] Пользователь аутентифицирован');
-                console.log('[Auth] Имя пользователя:', this.userName);
-                console.log('[Auth] Аватар пользователя:', this.userImage);
 
                 return combineLatest([
                     this.oidcSecurityService.getIdToken(),
@@ -69,16 +44,11 @@ export class UserService {
                 ]).pipe(
                     first(),
                     tap(([idToken, accessToken]) => {
-                        console.log('[Auth] Получены токены');
-                        console.log('[Auth] AccessToken:', accessToken);
-                        console.log('[Auth] IdToken:', idToken);
-
                         this.accessToken = accessToken;
 
                         try {
                             const decoded = jwtDecode<IJwtTokenLh>(idToken);
                             this.roles = decoded.roles ?? [];
-                            console.log('[Auth] Роли пользователя:', this.roles);
                         } catch (decodeError) {
                             console.error('[Auth] Ошибка декодирования ID токена:', decodeError);
                         }
@@ -90,7 +60,6 @@ export class UserService {
                 );
             }),
             catchError(authError => {
-                console.error('[Auth] Ошибка при проверке авторизации:', authError);
                 return of(null);
             }),
             first()
@@ -114,5 +83,18 @@ export class UserService {
             name: this.userName,
             image: this.userImage
         }
+    }
+
+    public setProfileImage$(base64Image: string): Observable<{ avatar: string }> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.accessToken}`
+        });
+
+        return this.http.post<{ avatar: string }>(
+            `${this.baseUrl}/user/avatar`,
+            { avatar: base64Image },
+            { headers }
+        );
     }
 }

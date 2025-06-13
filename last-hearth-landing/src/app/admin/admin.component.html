@@ -1,6 +1,6 @@
 @let veriverificationRequests = verificationRequests$ | async;
 
-<div class="p-6">
+<div>
     <button
         (click)="openCreateQuestionDialog()"
         class="text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
@@ -9,7 +9,10 @@
     </button>
 
     <div class="mt-8 flex flex-col gap-4">
-        <p class="text-2xl">{{veriverificationRequests === null || veriverificationRequests?.length === 0 ? 'Анкеты отсутствуют' : 'Анкеты на рассмотрении:'}}</p>
+        <p class="text-2xl">
+            {{veriverificationRequests === null || veriverificationRequests?.length === 0 ? 'Анкеты отсутствуют...' :
+            'Анкеты на рассмотрении:'}}
+        </p>
         @for (item of veriverificationRequests; track $index) { <app-verify-request [data]="item" /> }
     </div>
 </div>
