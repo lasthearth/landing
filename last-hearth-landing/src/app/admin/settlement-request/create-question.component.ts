@@ -4,10 +4,10 @@ import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } 
 import { TuiDialogContext, TuiError, TuiLabel } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiTextareaModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { ServerInformationService } from '../services/server-information.service';
 import { Subject, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ServerInformationService } from '../../services/server-information.service';
 
 /**
  * Компонент создания вопроса для верификации.
@@ -36,7 +36,7 @@ export class CreateQuestionComponent {
     * Ссылка уничтожения на компонент.
     */
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
-    
+
     /**
      * Контекст открытого диалогового окна.
      */
@@ -53,12 +53,12 @@ export class CreateQuestionComponent {
     public constructor() {
         this.onSubmit.pipe(
             tap(() => {
-            const qu = this.form.controls.question.value;
+                const qu = this.form.controls.question.value;
                 if (qu !== null) {
                     this.serverInfoService.postQuestion(qu).subscribe();
                     this.context.$implicit.complete();
                 }
-            }), 
+            }),
             takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 }

@@ -1,0 +1,42 @@
+<div class="size-full rounded-xl border border-neutral-400 p-4 flex flex-col gap-2">
+    <p class="text-xl"><span class="font-semibold">Тип:</span> {{data().type === 'CAMP' ? 'Лагерь' : 'Неизвестно'}}</p>
+    <p class="text-xl"><span class="font-semibold">Наименование:</span> {{data().name}}</p>
+    <p class="text-xl"><span class="font-semibold">Описание:</span> {{data().description}}</p>
+    <p class="text-xl"><span class="font-semibold">Дипломатический курс:</span> {{data().diplomacy}}</p>
+    @for (item of data().attachments; track $index) {
+    <div class="flex flex-col gap-2">
+        <p class="text-xl"><span class="font-semibold">{{item.desc}}:</span></p>
+        <div
+            (click)="show(item.url, item.desc)"
+            class="relative cursor-pointer hover:scale-[101%] transition-all hover:shadow-xl shadow-md duration-500 aspect-video rounded-2xl overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-gray-500/20 before:to-gray-800/10 before:backdrop-blur-md before:content-[''] before:opacity-60 before:z-0 before:rounded-2xl before:border before:border-white/5"
+        >
+            <img [src]="item.url" class="relative z-10 w-full h-full object-contain object-center" />
+        </div>
+    </div>
+    }
+
+    <div class="flex gap-4 justify-end">
+        <button
+            (click)="reject()"
+            class="text-white font-bold cursor-pointer mt-2 self-end bg-red-600 rounded-lg py-2.5 px-4 hover:bg-red-700 active:bg-red-400"
+        >
+            ОТКЛОНИТЬ
+        </button>
+        <button
+            (click)="approve()"
+            class="text-white font-bold cursor-pointer mt-2 self-end bg-green-600 rounded-lg py-2.5 px-4 hover:bg-green-700 active:bg-green-400"
+        >
+            ОДОБРИТЬ
+        </button>
+    </div>
+</div>
+
+<ng-template #preview let-preview>
+    <tui-preview [rotatable]="true">
+        <tui-preview-title>{{ previewDesc }}</tui-preview-title>
+        <img *polymorpheusOutlet="previewContent as src" alt="preview" [src]="src" />
+        <button iconStart="@tui.x" tuiIconButton tuiPreviewAction type="button" (click)="preview.complete()">
+            Close
+        </button>
+    </tui-preview>
+</ng-template>

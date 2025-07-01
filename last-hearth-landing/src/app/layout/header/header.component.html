@@ -1,4 +1,4 @@
-@let online = online$ | async;
+@let online = online$ | async; @let time = time$ | async;
 
 <div class="flex justify-center sm:justify-between px-4 sm:px-0">
     <div
@@ -21,16 +21,22 @@
         >
             <div class="flex w-full px-4 gap-4 justify-center items-center">
                 <div class="flex gap-0.5 items-center">
-                    <p class="text-3xl sm:text-5xl text-white">{{ online?.count }}</p>
+                    <p class="text-3xl sm:text-5xl text-white">{{ online?.count ? online?.count : '-' }}</p>
                     <p class="text-xs sm:text-sm text-white opacity-70">/</p>
-                    <p class="text-xs sm:text-sm text-white opacity-70">{{ online?.max }}</p>
+                    <p class="text-xs sm:text-sm text-white opacity-70">{{ online?.max ? online?.max : '-' }}</p>
                 </div>
                 <div class="text-white">
                     <p class="text-base sm:text-2xl opacity-90 leading-6">Игроков</p>
-                    <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time$ | async }}</p>
+                    <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time ? time : '-' }}</p>
                 </div>
             </div>
-            <progress [max]="online?.max" size="s" tuiProgressBar [value]="online?.count" class="progress"></progress>
+            <progress
+                [max]="online?.max ? online?.max : 0"
+                size="s"
+                tuiProgressBar
+                [value]="online?.count ? online?.count : 0"
+                class="progress"
+            ></progress>
         </div>
         @if(userService.isAuthorize()) {
         <div
@@ -41,7 +47,7 @@
                 @if(userService.userImage){
                 <img
                     [src]="userService.userImage"
-                    alt = "Аватар пользователя"
+                    alt="Аватар пользователя"
                     class="relative ml-2 rounded-lg z-10 h-12 w-12 sm:h-18 sm:w-18 border-neutral-300 border-2"
                 />
                 }@else {

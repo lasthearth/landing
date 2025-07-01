@@ -1,6 +1,7 @@
 import { TuiRoot } from "@taiga-ui/core";
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LayoutComponent } from './layout/layout.component';
+import { SeoService } from "./services/seo.service";
 
 @Component({
     standalone: true,
@@ -10,4 +11,5 @@ import { LayoutComponent } from './layout/layout.component';
     styleUrl: './app.component.less'
 })
 export class AppComponent {
+    private readonly seoService: SeoService = inject(SeoService);
 }

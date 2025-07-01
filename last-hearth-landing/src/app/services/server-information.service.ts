@@ -6,6 +6,8 @@ import { LeaderBoardType } from "./enums/leader-board-type";
 import { ILeaderBoard } from "./interface/i-leader-board";
 import { IVerifyData } from './interface/i-verify-data';
 import { IVerifyRequest } from './interface/i-verify-request';
+import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement';
+import { IRequestSettlement } from '../settlements/interfaces/i-request-settlement';
 
 @Injectable({
     providedIn: "root",
@@ -76,6 +78,17 @@ export class ServerInformationService {
         return this.http.get<{ requests: Array<IVerifyRequest> }>(
             `${this.baseUrl}/verifications`, { headers: headers }
         ).pipe(map((data) => data.requests));
+    }
+
+    public getSettlementsRequests$(): Observable<IRequestSettlement[]> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.userService.accessToken}`
+        });
+
+        return this.http.get<{ settlements: Array<IRequestSettlement> }>(
+            `${this.baseUrl}/settlements/pending`, { headers: headers }
+        ).pipe(map((data) => data.settlements));
     }
 
     public postVerifySuccess(userId: string) {

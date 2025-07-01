@@ -6,16 +6,11 @@
 }
 
 html body {
-    @apply !text-base;
     font-family: "Advent Pro", serif !important;
     font-optical-sizing: auto;
 }
 
 a {
-    /* text-decoration-line: underline;
-    text-decoration-style: dashed;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 6px; */
     cursor: pointer;
 }
 

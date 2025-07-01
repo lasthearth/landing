@@ -7,12 +7,13 @@ import {
     RouterLink,
     RouterOutlet,
 } from "@angular/router";
-import { NgClass } from "@angular/common";
+import { AsyncPipe, NgClass } from "@angular/common";
 import { filter } from "rxjs";
 import { TuiIcon } from "@taiga-ui/core";
 import { RouteKeys } from "../routes/enums/route-keys";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { UserService } from "../services/user.service";
+import { ServerInformationService } from "../services/server-information.service";
 
 /**
  * Компонент лендинга.
@@ -25,7 +26,7 @@ import { UserService } from "../services/user.service";
         RouterOutlet,
         RouterLink,
         NgClass,
-        TuiIcon
+        TuiIcon,
     ],
     templateUrl: "./landing.component.html",
     styleUrl: "./landing.component.less",
@@ -87,16 +88,14 @@ export class LandingComponent {
                             this.select = "market";
                             break;
                         case RouteKeys.profile:
-                            this.select = "profile";
-                            break;
-                        case RouteKeys.stats:
-                            this.select = "profile";
-                            break;
                         case RouteKeys.howPlay:
+                        case RouteKeys.stats:
+                        case RouteKeys.admin:
+                        case RouteKeys.settlement:
                             this.select = "profile";
                             break;
-                        case RouteKeys.admin:
-                            this.select = "admin";
+                        case RouteKeys.startGame:
+                            this.select = "startGame";
                             break;
                     }
                 }
@@ -108,12 +107,5 @@ export class LandingComponent {
      */
     protected signIn(): void {
         this.userService.signIn();
-    }
-
-    /**
-     * Возвращает признак, является ли пользователь администратором.
-     */
-    protected isAdmin(): boolean {
-        return this.userService.isAuthorize() && this.userService.roles.includes('admin');
     }
 }

@@ -10,6 +10,9 @@ import { AdminComponent } from "../admin/admin.component";
 import { adminGuard } from "../guards/admin.guard";
 import { StatisticsComponent } from "../profile/statistics/statistics.component";
 import { HowPlayComponent } from "../profile/how-play/how-play.component";
+import { StartGameComponent } from "../start-game/start-game.component";
+import { userGuard } from "../guards/user.guard";
+import { SettlementComponent } from "../settlements/settlement/settlement.component";
 
 export const routes: Routes = [
     {
@@ -39,9 +42,10 @@ export const routes: Routes = [
             {
                 path: "profile",
                 component: ProfileComponent,
+                canActivate: [userGuard],
                 data: { route_keys: RouteKeys.profile },
                 children: [
-                    { path: "", redirectTo: "stats", pathMatch: "full" },
+                    { path: "", redirectTo: "how-play", pathMatch: "full" },
                     {
                         path: "stats",
                         component: StatisticsComponent,
@@ -51,14 +55,24 @@ export const routes: Routes = [
                         path: "how-play",
                         component: HowPlayComponent,
                         data: { route_keys: RouteKeys.howPlay },
-                    }
+                    },
+                    {
+                        path: "settlement",
+                        component: SettlementComponent,
+                        data: { route_keys: RouteKeys.settlement },
+                    },
+                    {
+                        path: "admin",
+                        component: AdminComponent,
+                        canActivate: [adminGuard],
+                        data: { route_keys: RouteKeys.admin },
+                    },
                 ],
             },
             {
-                path: "admin",
-                component: AdminComponent,
-                canActivate: [adminGuard],
-                data: { route_keys: RouteKeys.admin },
+                path: "start-game",
+                component: StartGameComponent,
+                data: { route_keys: RouteKeys.startGame },
             }
         ],
     },
