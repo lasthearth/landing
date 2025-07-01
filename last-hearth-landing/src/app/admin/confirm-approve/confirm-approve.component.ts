@@ -1,7 +1,7 @@
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { TuiAlertService, TuiDialogContext } from '@taiga-ui/core';
-import { ServerInformationService } from '../services/server-information.service';
+import { ServerInformationService } from '../../services/server-information.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, tap, throwError } from 'rxjs';
 

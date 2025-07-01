@@ -88,12 +88,10 @@ export class LandingComponent {
                             this.select = "market";
                             break;
                         case RouteKeys.profile:
-                            this.select = "profile";
-                            break;
-                        case RouteKeys.stats:
-                            this.select = "profile";
-                            break;
                         case RouteKeys.howPlay:
+                        case RouteKeys.stats:
+                        case RouteKeys.admin:
+                        case RouteKeys.settlement:
                             this.select = "profile";
                             break;
                         case RouteKeys.startGame:

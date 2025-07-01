@@ -12,7 +12,7 @@ import { StatisticsComponent } from "../profile/statistics/statistics.component"
 import { HowPlayComponent } from "../profile/how-play/how-play.component";
 import { StartGameComponent } from "../start-game/start-game.component";
 import { userGuard } from "../guards/user.guard";
-import { SettlementComponent } from "../../settlements/settlement/settlement.component";
+import { SettlementComponent } from "../settlements/settlement/settlement.component";
 
 export const routes: Routes = [
     {

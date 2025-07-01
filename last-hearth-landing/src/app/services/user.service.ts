@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { ChangeDetectorRef, inject, Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { IUser } from './interface/i-user';
 import { jwtDecode } from "jwt-decode";
@@ -6,6 +6,7 @@ import { IJwtTokenLh } from './interface/i-jwt-token-lh';
 import { BehaviorSubject, catchError, combineLatest, filter, first, Observable, of, switchMap, tap } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement';
 
 @Injectable({
     providedIn: 'root'
@@ -94,6 +95,19 @@ export class UserService {
         return this.http.post<{ avatar: string }>(
             `${this.baseUrl}/user/avatar`,
             { avatar: base64Image },
+            { headers }
+        );
+    }
+
+    public requestSettlement$(settlement: ICreateSettlement): Observable<ICreateSettlement> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.accessToken}`
+        });
+
+        return this.http.post<ICreateSettlement>(
+            `${this.baseUrl}/settlements`,
+            settlement,
             { headers }
         );
     }

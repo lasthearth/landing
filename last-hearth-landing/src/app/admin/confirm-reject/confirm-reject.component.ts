@@ -5,9 +5,9 @@ import { TuiAlertService, TuiDialogContext, TuiError, TuiLabel, TuiTextfield } f
 import { TuiFieldErrorPipe, TuiTextarea } from '@taiga-ui/kit';
 import { TuiTextareaModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { Subject, Subscription, catchError, filter, tap, throwError } from 'rxjs';
-import { ServerInformationService } from '../services/server-information.service';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ServerInformationService } from '../../services/server-information.service';
 
 /**
  * Компонент подтверждения отклонения.

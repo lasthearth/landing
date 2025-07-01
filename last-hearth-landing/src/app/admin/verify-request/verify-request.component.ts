@@ -1,9 +1,9 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { IVerifyRequest } from './../services/interface/i-verify-request';
 import { Component, inject, input, InputSignal } from '@angular/core';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
+import { IVerifyRequest } from '../../services/interface/i-verify-request';
 
 @Component({
     selector: 'app-verify-request',
