@@ -37,4 +37,5 @@ export class RulesComponent {
     protected isBreakDifficultBuildings: boolean = false;
     protected isRight: boolean = false;
     protected isAdditions: boolean = false;
+    protected isDonations: boolean = false;
 }
