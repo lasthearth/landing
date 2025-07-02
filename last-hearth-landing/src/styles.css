@@ -39,3 +39,13 @@ tui-dialog {
         background-repeat: repeat !important;
     }
 }
+
+.main-panel {
+    background-color: #e2d7bb;
+    background-image: url("/image_1.png");
+    background-repeat: repeat;
+    -webkit-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 0px 0px 16px 16px;
+}
