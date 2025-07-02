@@ -3,7 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { IVerifyRequest } from '../../services/interface/i-verify-request';
 import { IRequestSettlement } from '../../settlements/interfaces/i-request-settlement';
 import { TuiAlertService, TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet, PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
+import {
+    PolymorpheusComponent,
+    PolymorpheusContent,
+    PolymorpheusOutlet,
+    PolymorpheusTemplate,
+} from '@taiga-ui/polymorpheus';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 import { TuiSwipe } from '@taiga-ui/cdk/directives/swipe';
@@ -14,7 +19,6 @@ import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
     selector: 'app-settlement-request',
     imports: [PolymorpheusOutlet, PolymorpheusTemplate, TuiButton, TuiPreview, TuiSwipe],
     templateUrl: './settlement-request.component.html',
-    styleUrl: './settlement-request.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementRequestComponent {
@@ -25,11 +29,18 @@ export class SettlementRequestComponent {
     private readonly dialogService = inject(TuiDialogService);
 
     protected approve() {
-        this.dialogService.open(new PolymorpheusComponent(ConfirmApproveComponent), { size: 'auto', data: this.data().leader.user_id }).subscribe();
+        this.dialogService
+            .open(new PolymorpheusComponent(ConfirmApproveComponent), {
+                size: 'auto',
+                data: this.data().leader.user_id,
+            })
+            .subscribe();
     }
 
     protected reject() {
-        this.dialogService.open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: this.data().leader.user_id }).subscribe();
+        this.dialogService
+            .open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: this.data().leader.user_id })
+            .subscribe();
     }
 
     private readonly previewService = inject(TuiPreviewDialogService);

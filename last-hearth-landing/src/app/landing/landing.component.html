@@ -1,67 +1,9 @@
-<div class="pt-0 xl:pt-8 flex flex-col justify-center items-center xl:gap-8">
-    <app-header class="w-full mb-8 xl:w-[50%]" />
-
+<div class="flex flex-col justify-center items-center xl:gap-8">
     <div class="h-auto w-full xl:w-[50%] flex">
-        <div class="flex flex-col items-center w-full">
-            <!-- Блок навигации -->
-            <div class="flex gap-2 justify-center xl:justify-between md:gap-4 w-full mb-4">
-                <div class="flex gap-2">
-                    <a
-                        (click)="select = 'home'"
-                        class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
-                        [routerLink]="['/home']"
-                        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'home' }"
-                    >
-                        <tui-icon icon="@tui.house" />
-                    </a>
-                    <button
-                        [routerLink]="['/start-game']"
-                        class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'startGame' }"
-                    >
-                        <tui-icon icon="@tui.gamepad-2" />
-                        <span class="hidden md:block">НАЧАТЬ ИГРУ</span>
-                    </button>
-                    <button
-                        [routerLink]="['/rules']"
-                        class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'rules' }"
-                    >
-                        <tui-icon icon="@tui.file-text" />
-                        <span class="hidden md:block">ПРАВИЛА</span>
-                    </button>
-                </div>
-                <div class="flex flex-row gap-2">
-                    <button
-                        (click)="userService.isAuthorize() ? '' : signIn()"
-                        [routerLink]="userService.isAuthorize() ? ['/profile'] : ''"
-                        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'profile' }"
-                        class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
-                    >
-                        <tui-icon [icon]="userService.isAuthorize() ? '@tui.user' : '@tui.log-in'" />
-                    </button>
-                    <a
-                        class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
-                        href="https://boosty.to/lisov"
-                        target="_blank"
-                    >
-                        <img src="/images/Boosty.svg" />
-                    </a>
-                    <a
-                        class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
-                        href="https://discord.gg/FZb7SGrSFy"
-                        target="_blank"
-                    >
-                        <img src="/images/discord.svg" class="h-6 w-6" />
-                    </a>
-                </div>
-            </div>
-
             <div class="flex size-full justify-center gap-3 mb-10">
                 <div class="main-panel size-full">
                     <router-outlet />
                 </div>
-            </div>
         </div>
     </div>
 </div>

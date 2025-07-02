@@ -6,7 +6,7 @@ import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { IVerifyRequest } from '../services/interface/i-verify-request';
 import { VerifyRequestComponent } from './verify-request/verify-request.component';
-import { CreateQuestionComponent } from './settlement-request/create-question.component';
+import { CreateQuestionComponent } from './create-question/create-question.component';
 import { SettlementRequestComponent } from './settlement-request/settlement-request.component';
 
 /**

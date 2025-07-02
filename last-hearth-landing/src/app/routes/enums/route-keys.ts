@@ -15,5 +15,7 @@ export enum RouteKeys {
 
     startGame,
 
-    settlement
+    settlement,
+
+    privacyPolicy,
 }

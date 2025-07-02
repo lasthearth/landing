@@ -1,0 +1,282 @@
+<div class="text-lh-primary flex flex-col gap-6 p-6">
+    <p class="text-4xl font-bold">Политика конфиденциальности</p>
+    <!-- 1. Общие положения -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isBase = !isBase">
+            <p class="text-2xl text-lh-primary font-bold">1. Общие положения</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isBase }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isBase">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.1</span> Настоящая политика обработки персональных данных составлена в
+                    соответствии с требованиями Федерального закона от 27.07.2006. №152-ФЗ «О персональных данных» и
+                    определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных
+                    данных, предпринимаемые ресурсом, размещенных в сети Интернет по адресу
+                    <a
+                        href="https://lasthearth.ru"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                        >https://lasthearth.ru</a
+                    >
+                    (далее – Сайт).
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.2</span> Использование настоящего Сайта означает безоговорочное согласие
+                    пользователя с настоящей Политикой и указанными в ней условиями обработки его персональной
+                    информации. В случае несогласия с этими условиями пользователь должен воздержаться от использования
+                    данного ресурса.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+    <!-- 2. Персональная информация Пользователя -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div
+            class="flex w-full justify-between gap-2 cursor-pointer"
+            (click)="isPersonalInformation = !isPersonalInformation"
+        >
+            <p class="text-2xl text-lh-primary font-bold">
+                2. Персональная информация Пользователя, которую получает и обрабатывает Сайт
+            </p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isPersonalInformation }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isPersonalInformation">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">2.1</span> В рамках настоящей Политики под «персональной информацией
+                    пользователя» понимаются:
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">2.1.1</span> Персональная информация, которую Пользователь предоставляет о
+                    себе самостоятельно при оставлении заявок, редактировании данных профиля, регистрации (создании
+                    учётной записи) или в ином процессе использования сайта.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">2.1.2</span> Данные, которые автоматически передаются Сайтом в процессе его
+                    использования с помощью установленного на устройстве Пользователя программного обеспечения, в том
+                    числе IP-адрес, информация из cookie, информация о браузере Пользователя (или иной программе, с
+                    помощью которой осуществляется доступ к сайту), время доступа, адрес запрашиваемой страницы.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">2.1.3</span> Идентификационные файлы cookies для хранения как вашей личной,
+                    так и общей информации. «Cookies» представляют собой небольшие текстовые файлы, которые могут
+                    использоваться сайтом для опознавания повторных посетителей, упрощения доступа и использования
+                    посетителем сайта, а также отслеживания сайтом обращений посетителей и сбора общей информации для
+                    улучшения содержания. Пользуясь сайтом, вы выражаете свое согласие на использование cookies.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">2.1.4</span> Данные, которые предоставляются Сайту дополнительно, в целях
+                    осуществления представления доступа Пользователю к сервисам и/или предоставления иных ценностей для
+                    Пользователя Сайта, в соответствии с деятельностью настоящего ресурса (например, при восстановлении
+                    аккаунта доступа к утерянному аккаунту):
+                </p>
+                <p class="text-xl pl-16"><span class="font-bold">•</span>Имя и фамилия</p>
+                <p class="text-xl pl-16"><span class="font-bold">•</span>IP-адрес</p>
+                <p class="text-xl pl-16"><span class="font-bold">•</span>Адрес электронной почты</p>
+                <p class="text-xl pl-16"><span class="font-bold">•</span>Ссылки на аккаунты в социальных сетях</p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">2.2</span> Настоящая Политика применима только к Сайту и не контролирует и
+                    не несет ответственность за сайты третьих лиц, на которые Пользователь может перейти по ссылкам,
+                    доступным на Сайте. На таких сайтах у Пользователя может собираться или запрашиваться иная
+                    персональная информация, а также могут совершаться иные действия.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">2.3</span> Сайт не проверяет достоверность персональной информации,
+                    предоставляемой Пользователями, и не осуществляет контроль за их дееспособностью. Однако Сайт
+                    исходит из того, что Пользователь предоставляет достоверную и достаточную персональную информацию по
+                    вопросам, предлагаемым в формах настоящего ресурса, и поддерживает эту информацию в актуальном
+                    состоянии.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+    <!-- 3. Цели сбора и обратобки персональной информации Пользователей -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isPurposes = !isPurposes">
+            <p class="text-2xl text-lh-primary font-bold">
+                3. Цели сбора и обработки персональной информации Пользователей
+            </p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isPurposes }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isPurposes">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">3.1</span> Сайт собирает и хранит только те персональные данные, которые
+                    необходимы в целях осуществления предоставления Пользователю сервисов и/или предоставления иных
+                    ценностей для Пользователя Сайта, в соответствии с деятельностью настоящего ресурса.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">3.2</span> Персональную информацию Пользователя можно использовать в
+                    следующих целях:
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">3.2.1</span> Идентификация стороны в рамках соглашений и договоров с сайтом.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">3.2.2</span> Предоставление Пользователю персонализированных услуг и
+                    сервисов, а так же иных ценностей (например, восстановление доступа к аккаунту).
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">3.2.3</span> Связь с Пользователем, в том числе направление уведомлений,
+                    запросов и информации, касающихся использования сайта, а также обработка запросов и заявок от
+                    Пользователя.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">3.2.4</span> Улучшение качества сайта, удобства его использования,
+                    разработка новых сервисов и предложений для Пользователей.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+    <!-- 4. Правовые основания обработки персональных данных -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isLegalGrounds = !isLegalGrounds">
+            <p class="text-2xl text-lh-primary font-bold">4. Правовые основания обработки персональных данных</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isLegalGrounds }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isLegalGrounds">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">4.1</span> Сайт обрабатывает персональные данные Пользователя только в
+                    случае их заполнения и/или отправки Пользователем самостоятельно через специальные формы,
+                    расположенные на сайте.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">4.2</span> Заполняя соответствующие формы и/или отправляя свои персональные
+                    данные на сайт, Пользователь выражает свое согласие с данной Политикой.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">4.3</span> При обработке персональных данных Пользователей Сайт
+                    руководствуется Федеральным законом РФ «О персональных данных».
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+    <!-- 5. Порядок сбора, хренения, передачи и других видов обработки персональных данных -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isProcedure = !isProcedure">
+            <p class="text-2xl text-lh-primary font-bold">
+                5. Порядок сбора, хранения, передачи и других видов обработки персональных данных
+            </p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isProcedure }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isProcedure">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">5.1</span> Сайт хранит персональную информацию Пользователей в соответствии
+                    с внутренними регламентами конкретных сервисов.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">5.2</span> В отношении персональной информации Пользователя сохраняется ее
+                    конфиденциальность, кроме случаев добровольного предоставления Пользователем информации о себе для
+                    общего доступа неограниченному кругу лиц.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">5.3</span> Сайт вправе передать персональную информацию Пользователя третьим
+                    лицам в следующих случаях:
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">5.3.1</span> Пользователь выразил свое согласие на такие действия, путем
+                    согласия выразившегося в предоставлении таких данных.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">5.3.2</span> Передача необходима в рамках использования Пользователем Сайта,
+                    либо для предоставления сервиса и/или услуги.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">5.3.3</span> Передача предусмотрена Российским или иным применимым
+                    законодательством в рамках установленной законодательством процедуры.
+                </p>
+
+                <p class="text-xl pl-8">
+                    <span class="font-bold">5.3.4</span> В целях обеспечения возможности защиты прав и законных
+                    интересов Сайта или третьих лиц в случаях, когда Пользователь нарушает пользовательское соглашение.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">5.4</span> В случае выявления неточностей в персональных данных,
+                    Пользователь может актуализировать их самостоятельно, путем направления уведомления на адрес
+                    электронной почты lisovfox2002&#64;gmail.com с пометкой «Актуализация персональных данных».
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+    <!-- 6. Меры, применяемые для защиты персональных данных Пользователей -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div
+            class="flex w-full justify-between gap-2 cursor-pointer"
+            (click)="isSecurityMeasures = !isSecurityMeasures"
+        >
+            <p class="text-2xl text-lh-primary font-bold">
+                6. Меры, применяемые для защиты персональных данных Пользователей
+            </p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isSecurityMeasures }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isSecurityMeasures">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">6.1</span> Сайт принимает необходимые и достаточные организационные и
+                    технические меры для защиты персональной информации Пользователя от неправомерного или случайного
+                    доступа, уничтожения, изменения, блокирования, копирования, распространения, а также от иных
+                    неправомерных действий с ней третьих лиц.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+    <!-- 7. Заключительные положения политики -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isFinalProvisions = !isFinalProvisions">
+            <p class="text-2xl text-lh-primary font-bold">7. Заключительные положения Политики</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isFinalProvisions }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isFinalProvisions">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">7.1</span> Пользователь может получить любые разъяснения по интересующим
+                    вопросам, касающимся обработки его персональных данных, обратившись к администрации Сайта с помощью
+                    электронной почты lisovfox2002&#64;gmail.com.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">7.2</span> В данном документе будут отражены любые изменения политики
+                    обработки персональных данных Сайтом. Политика действует бессрочно до замены ее новой версией.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">7.3</span> Актуальная версия Политики в свободном доступе расположена в сети
+                    Интернет по адресу
+                    <a
+                        href="https://lasthearth.ru/privacy-policy"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                        >https://lasthearth.ru/privacy-policy</a
+                    >.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+</div>
