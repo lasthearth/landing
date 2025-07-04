@@ -8,7 +8,7 @@
                 На нашем сервере используется собственная система авторизации игроков. Что бы начать играть у нас,
                 сначала
                 <a
-                    class="text-blue-400 font-bold border-dashed border-b"
+                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
                     [routerLink]="userService.isAuthorize() ? ['/profile'] : ['/start-game']"
                     (click)="userService.isAuthorize() ? '' : signIn()"
                 >
@@ -26,18 +26,27 @@
             <p class="text-lh-primary text-base">
                 Для безопасной и комфортной игры все игроки проходят верификацию — отвечают на короткую анкету. Это
                 помогает убедиться, что вы ознакомлены с
-                <a class="text-blue-400 font-bold border-dashed border-b" [routerLink]="['/rules']"> правилами </a>
+                <a
+                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                    [routerLink]="['/rules']"
+                >
+                    правилами
+                </a>
                 и не создадите проблем другим игрокам.<br />В анкете вам <b>потребуется игровой ник</b>, поэтому не
                 забудьте скачать игру с
                 <a
-                    class="text-blue-400 font-bold border-dashed border-b"
+                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
                     href="https://www.vintagestory.at/store/category/1-game-account-game-servers/"
                     target="_blank"
                 >
                     официального сайта
                 </a>
                 (рекомендуется) или временно попробовать на
-                <a class="text-blue-400 font-bold border-dashed border-b" href="https://fplay.su/" target="_blank">
+                <a
+                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                    href="https://fplay.su/"
+                    target="_blank"
+                >
                     fplay.su
                 </a>
                 (рекомендуем приобрести лицензию) и настроить ваш аккаунт.

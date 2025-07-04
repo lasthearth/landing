@@ -15,7 +15,17 @@ import { ServerInformationService } from '../../services/server-information.serv
 @Component({
     standalone: true,
     selector: 'app-create-question',
-    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiTextareaModule, TuiInputModule, TuiFieldErrorPipe, AsyncPipe, TuiLabel, TuiTextfieldControllerModule],
+    imports: [
+        TuiError,
+        ReactiveFormsModule,
+        FormsModule,
+        TuiTextareaModule,
+        TuiInputModule,
+        TuiFieldErrorPipe,
+        AsyncPipe,
+        TuiLabel,
+        TuiTextfieldControllerModule,
+    ],
     templateUrl: './create-question.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -33,8 +43,8 @@ export class CreateQuestionComponent {
     private readonly serverInfoService: ServerInformationService = inject(ServerInformationService);
 
     /**
-    * Ссылка уничтожения на компонент.
-    */
+     * Ссылка уничтожения на компонент.
+     */
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
     /**
@@ -51,14 +61,17 @@ export class CreateQuestionComponent {
      * Инициализирует компонент класса {@link CreateQuestionComponent}
      */
     public constructor() {
-        this.onSubmit.pipe(
-            tap(() => {
-                const qu = this.form.controls.question.value;
-                if (qu !== null) {
-                    this.serverInfoService.postQuestion(qu).subscribe();
-                    this.context.$implicit.complete();
-                }
-            }),
-            takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.onSubmit
+            .pipe(
+                tap(() => {
+                    const qu = this.form.controls.question.value;
+                    if (qu !== null) {
+                        this.serverInfoService.postQuestion(qu).subscribe();
+                        this.context.$implicit.complete();
+                    }
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 }
