@@ -6,6 +6,13 @@ import { Injectable } from '@angular/core';
 export class NewsService {
     public readonly news = [
         {
+            title: 'Старт летнего сезона',
+            date: '04.07.25 - 13:00',
+            image: '/images/news_1.png',
+            description:
+                'Уже сегодня, в 15:00 по МСК произойдет вайп и начнется новый сезон! Начнется новый этап развития. Удачи все выжить, путники!',
+        },
+        {
             title: 'Запуск нового сезона',
             date: '01.05.25 - 18:00',
             image: '/2.png',
