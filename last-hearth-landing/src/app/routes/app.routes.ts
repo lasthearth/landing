@@ -14,6 +14,11 @@ import { StartGameComponent } from '../start-game/start-game.component';
 import { userGuard } from '../guards/user.guard';
 import { SettlementComponent } from '../settlements/settlement/settlement.component';
 import { PrivacyPolicyComponent } from '../privacy-policy/privacy-policy.component';
+import { KnightTitleComponent } from '../titles/knight/knight-title/knight-title.component';
+import { BaronTitleComponent } from '../titles/baron/baron-title/baron-title.component';
+import { GraphTitleComponent } from '../titles/graph/graph-title/graph-title.component';
+import { DukeTitleComponent } from '../titles/duke/duke-title/duke-title.component';
+import { PublicOfferComponent } from '../public-offer/public-offer/public-offer.component';
 
 export const routes: Routes = [
     {
@@ -30,10 +35,6 @@ export const routes: Routes = [
                 path: 'rules',
                 component: RulesComponent,
                 data: { route_keys: RouteKeys.rules },
-            },
-            {
-                path: 'titles',
-                component: TitlesComponent,
             },
             {
                 path: 'market',
@@ -76,9 +77,42 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.startGame },
             },
             {
+                path: 'titles',
+                component: TitlesComponent,
+                data: { route_keys: RouteKeys.titles },
+                children: [
+                    { path: '', redirectTo: 'knight', pathMatch: 'full' },
+                    {
+                        path: 'knight',
+                        component: KnightTitleComponent,
+                        data: { route_keys: RouteKeys.knight },
+                    },
+                    {
+                        path: 'baron',
+                        component: BaronTitleComponent,
+                        data: { route_keys: RouteKeys.baron },
+                    },
+                    {
+                        path: 'graph',
+                        component: GraphTitleComponent,
+                        data: { route_keys: RouteKeys.graph },
+                    },
+                    {
+                        path: 'duke',
+                        component: DukeTitleComponent,
+                        data: { route_keys: RouteKeys.duke },
+                    },
+                ],
+            },
+            {
                 path: 'privacy-policy',
                 component: PrivacyPolicyComponent,
                 data: { route_keys: RouteKeys.privacyPolicy },
+            },
+            {
+                path: 'public-offer',
+                component: PublicOfferComponent,
+                data: { route_keys: RouteKeys.publicOffer },
             },
         ],
     },

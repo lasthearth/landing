@@ -17,5 +17,17 @@ export enum RouteKeys {
 
     settlement,
 
+    titles,
+
     privacyPolicy,
+
+    knight,
+
+    baron,
+
+    graph,
+
+    duke,
+
+    publicOffer,
 }

@@ -1,0 +1,309 @@
+<div class="text-lh-primary flex flex-col gap-6 p-6">
+    <p class="text-4xl font-bold">
+        ДОГОВОР ПУБЛИЧНОЙ ОФЕРТЫ О ПРЕДОСТАВЛЕНИИ ДОПОЛНИТЕЛЬНОГО ФУНКЦИОНАЛА В ИГРОВОМ ПРОЕКТЕ LAST HEARTH
+    </p>
+    <p class="text-xl pl-4">
+        Настоящий документ является официальным предложением (публичной офертой) в соответствии со статьей 435 и пунктом
+        2 статьи 437 Гражданского кодекса РФ, а также в рамках Федерального закона от 27.11.2018 № 422-ФЗ "О проведении
+        эксперимента по установлению специального налогового режима "Налог на профессиональный доход"".
+    </p>
+    <!-- 1. Термины и определения -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isTerms = !isTerms">
+            <p class="text-2xl text-lh-primary font-bold">1. Термины и определения</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isTerms }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isTerms">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.1</span> "Проект" — многопользовательский игровой сервер "Last Hearth" по
+                    игре Vintage Story, размещённый на домене
+                    <a
+                        href="https://lasthearth.ru"
+                        target="_blank"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                        >https://lasthearth.ru</a
+                    >
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.2</span> "Исполнитель" — физическое лицо, зарегистрированное в качестве
+                    самозанятого гражданина Российской Федерации, оказывающее Пользователям доступ к дополнительному
+                    функционалу сервера в ответ на добровольные пожертвования.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.3</span> "Пользователь" — дееспособное физическое лицо, принявшее условия
+                    настоящей Оферты.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.4</span> "Дополнительный функционал" — внутриигровые возможности, титулы,
+                    ресурсы и декоративные элементы, предоставляемые Пользователю в рамках Проекта в ответ на
+                    добровольное пожертвование.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">1.5</span> "Boosty" — внешняя платформа приёма пожертвований (
+                    <a
+                        href="https://boosty.to"
+                        target="_blank"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                        >https://boosty.to</a
+                    >), через которую Пользователь может осуществлять добровольную поддержку Проекта.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 2. Общие положения -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div
+            class="flex w-full justify-between gap-2 cursor-pointer"
+            (click)="isGeneralProvisions = !isGeneralProvisions"
+        >
+            <p class="text-2xl text-lh-primary font-bold">2. Общие положения</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isGeneralProvisions }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isGeneralProvisions">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">2.1</span> Исполнитель публикует настоящий Договор-оферту, который является
+                    публичным предложением о заключении соглашения на условиях, изложенных ниже.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">2.2</span> Факт осуществления Пользователем пожертвования в пользу
+                    Исполнителя через платформу Boosty или иным способом, указанным на сайте
+                    <a
+                        href="https://lasthearth.ru"
+                        target="_blank"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                        >https://lasthearth.ru</a
+                    >, является акцептом настоящей оферты.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">2.3</span> Привилегии и внутриигровые функции, получаемые Пользователем, не
+                    являются товаром или услугой в смысле законодательства о защите прав потребителей и не подлежат
+                    возврату или обмену.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">2.4</span> Все перечисления Пользователя являются добровольными
+                    пожертвованиями и рассматриваются как вознаграждение за право временного доступа к дополнительному
+                    функционалу.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 3. Права и обязанности сторон -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div
+            class="flex w-full justify-between gap-2 cursor-pointer"
+            (click)="isRightsAndObligations = !isRightsAndObligations"
+        >
+            <p class="text-2xl text-lh-primary font-bold">3. Права и обязанности сторон</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isRightsAndObligations }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isRightsAndObligations">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4"><span class="font-bold">3.1</span> Исполнитель обязуется:</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">•</span> Обеспечить Пользователю предоставление выбранного функционала в
+                    течение 3 рабочих дней с момента поступления пожертвования.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">•</span> Не передавать третьим лицам персональные данные Пользователя, за
+                    исключением случаев, предусмотренных законодательством РФ.
+                </p>
+                <p class="text-xl pl-4"><span class="font-bold">3.2</span> Исполнитель вправе:</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">•</span> Изменять настоящую Оферту в одностороннем порядке, публикуя
+                    обновлённый текст на сайте.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">•</span> Приостанавливать или ограничивать доступ к дополнительному
+                    функционалу при нарушении Пользователем правил сервера.
+                </p>
+                <p class="text-xl pl-4"><span class="font-bold">3.3</span> Пользователь обязуется:</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">•</span> Ознакомиться с настоящей Офертой, Правилами сервера и другими
+                    регламентами перед перечислением пожертвования.
+                </p>
+                <p class="text-xl pl-8"><span class="font-bold">•</span> Указывать достоверные контактные данные.</p>
+                <p class="text-xl pl-4"><span class="font-bold">3.4</span> Пользователь вправе:</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">•</span> Получить доступ к дополнительному функционалу, соответствующему
+                    объему пожертвования, как описано на сайте
+                    <a
+                        href="https://lasthearth.ru"
+                        target="_blank"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                        >https://lasthearth.ru</a
+                    >.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 4. Ответственность сторон -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isResponsibility = !isResponsibility">
+            <p class="text-2xl text-lh-primary font-bold">4. Ответственность сторон</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isResponsibility }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isResponsibility">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">4.1</span> Стороны несут ответственность в соответствии с действующим
+                    законодательством РФ.
+                </p>
+                <p class="text-xl pl-4"><span class="font-bold">4.2</span> Исполнитель не несёт ответственности за:</p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">•</span> Перебои в доступе к Проекту, вызванные действиями хостинга,
+                    стороннего ПО или форс-мажорными обстоятельствами.
+                </p>
+                <p class="text-xl pl-8">
+                    <span class="font-bold">•</span> Неоправданные ожидания Пользователя относительно качества или
+                    объема функционала.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">4.3</span> Пользователь несёт ответственность за предоставление
+                    недостоверной информации.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">4.4</span> В случае технической ошибки, позволившей получить функционал без
+                    пожертвования, Пользователь обязуется сообщить об этом Исполнителю и устранить последствия, либо
+                    произвести соответствующее пожертвование.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 5. Условия возврата -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isTermsOfReturn = !isTermsOfReturn">
+            <p class="text-2xl text-lh-primary font-bold">5. Условия возврата</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isTermsOfReturn }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isTermsOfReturn">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">5.1</span> Возврат пожертвований не осуществляется, за исключением случаев
+                    полной технической невозможности исполнения обязательств по вине Исполнителя.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 6. Персональные данные -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isPersonalData = !isPersonalData">
+            <p class="text-2xl text-lh-primary font-bold">6. Персональные данные</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isPersonalData }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isPersonalData">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">6.1</span> Пользователь предоставляет согласие на обработку своих
+                    персональных данных (ник, email и др.) исключительно для исполнения настоящего договора.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">6.2</span> Обработка данных осуществляется в соответствии с ФЗ №152-ФЗ "О
+                    персональных данных".
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 7. Применимое законодательство и разрешение споров -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isLegislation = !isLegislation">
+            <p class="text-2xl text-lh-primary font-bold">7. Применимое законодательство и разрешение споров</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isLegislation }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isLegislation">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">7.1</span> Все споры и разногласия разрешаются путем переговоров, при
+                    невозможности — в судебном порядке по месту регистрации Исполнителя.
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">7.2</span> К отношениям сторон применяется право Российской Федерации.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 8. Реквизиты Исполнителя -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRequisites = !isRequisites">
+            <p class="text-2xl text-lh-primary font-bold">8. Реквизиты Исполнителя</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ '!rotate-180': isRequisites }"
+                class="text-lh-primary transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isRequisites">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl pl-4">
+                    <span class="font-bold">8.1</span>
+                    Сайт проекта
+                    <a
+                        href="https://lasthearth.ru"
+                        target="_blank"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                    >
+                        https://lasthearth.ru</a
+                    >
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">8.2</span>
+                    Email
+                    <a
+                        href="mailto:lisovfox2002@gmail.ru"
+                        target="_blank"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                    >
+                        lisovfox2002&#64;gmail.ru</a
+                    >
+                </p>
+                <p class="text-xl pl-4">
+                    <span class="font-bold">8.2</span>
+                    Boosty
+                    <a
+                        href="https://boosty.to/lisov"
+                        target="_blank"
+                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                    >
+                        https://boosty.to/lisov</a
+                    >
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+</div>

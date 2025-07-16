@@ -117,6 +117,16 @@ export class HeaderComponent {
                         case RouteKeys.privacyPolicy:
                             this.select = 'privacyPolicy';
                             break;
+                        case RouteKeys.publicOffer:
+                            this.select = 'publicOffer';
+                            break;
+                        case RouteKeys.titles:
+                        case RouteKeys.baron:
+                        case RouteKeys.duke:
+                        case RouteKeys.graph:
+                        case RouteKeys.knight:
+                            this.select = 'titles';
+                            break;
                     }
                     this.cdr.markForCheck();
                 }
