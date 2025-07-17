@@ -1,6 +1,7 @@
-import { DOCUMENT } from "@angular/common";
-import { Injectable, inject, Renderer2, RendererFactory2 } from "@angular/core";
-import { Title, Meta } from "@angular/platform-browser";
+import { DOCUMENT } from '@angular/common';
+import { Injectable, inject, Renderer2, RendererFactory2 } from '@angular/core';
+import { Title, Meta } from '@angular/platform-browser';
+import { ISeoData } from './interface/i-seo-data';
 
 /**
  * Сервис по работе с SEO данными приложения.
@@ -36,43 +37,35 @@ export class SeoService {
      */
     constructor(rendererFactory2: RendererFactory2) {
         this.renderer = rendererFactory2.createRenderer(null, null);
-
-        this.meta.updateTag({ name: 'description', content: 'Last Hearth - сервер по игре Vintage story' });
-        this.meta.updateTag({ name: 'keywords', content: 'Vintage story Minecraft рп сервер Last Hearth' });
     }
 
-    // /**
-    //  * Устанавливает SEO параметры
-    //  *
-    //  * @param seoData Данные для SEO
-    //  */
-    // setSeoTags(seoData: ISeoData): void {
-    //     this.title.setTitle(seoData.title);
-    //     this.meta.updateTag({ property: 'og:title', content: seoData.title });
+    public setSeoTags(seoData: ISeoData): void {
+        this.title.setTitle(seoData.title);
+        this.meta.updateTag({ property: 'og:title', content: seoData.title });
 
-    //     this.meta.updateTag({ name: 'description', content: seoData.description });
-    //     this.meta.updateTag({ property: 'og:description', content: seoData.description });
+        this.meta.updateTag({ name: 'description', content: seoData.description });
+        this.meta.updateTag({ property: 'og:description', content: seoData.description });
 
-    //     this.meta.updateTag({ name: 'keywords', content: seoData.keywords });
+        this.meta.updateTag({ name: 'keywords', content: seoData.keywords });
 
-    //     this.meta.updateTag({ property: 'og:url', content: seoData.url });
+        if (seoData.url) {
+            this.meta.updateTag({ property: 'og:url', content: seoData.url });
+        }
 
-    //     if (seoData.canonicalUrl) {
-    //         try {
-    //             const canonicalLink = this.renderer.selectRootElement('link[rel="canonical"]', true) as HTMLLinkElement;
+        if (seoData.robots) {
+            this.meta.updateTag({ name: 'robots', content: seoData.robots });
+        }
 
-    //             this.renderer.setAttribute(canonicalLink, 'href', seoData.canonicalUrl);
-    //         } catch {
-    //             const link = this.renderer.createElement('link') as HTMLLinkElement;
+        if (seoData.type) {
+            this.meta.updateTag({ property: 'og:type', content: seoData.type });
+        }
 
-    //             this.renderer.setAttribute(link, 'rel', 'canonical');
-    //             this.renderer.setAttribute(link, 'href', seoData.canonicalUrl);
-    //             this.renderer.appendChild(this.document.head, link);
-    //         }
-    //     }
+        if (seoData.siteName) {
+            this.meta.updateTag({ property: 'og:site_name', content: seoData.siteName });
+        }
 
-    //     if (seoData.image) {
-    //         this.meta.updateTag({ property: 'og:image', content: seoData.image });
-    //     }
-    // }
+        if (seoData.locale) {
+            this.meta.updateTag({ property: 'og:locale', content: seoData.locale });
+        }
+    }
 }
