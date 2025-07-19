@@ -1,12 +1,10 @@
+@let settlement = settlementService.getSettlementInfo(userService.userId) | async;
+
 <div class="flex flex-col gap-4">
-    <p class="text-lh-primary text-2xl font-bold">Вы не владеете и не состоите в поселении...</p>
+    <p class="text-lh-primary text-2xl font-bold">
+        {{settlement ? settlement.name : 'Вы не владеете и не состоите в поселении...'}}
+    </p>
     <div class="flex gap-4">
-        <!-- <button
-            (click)="joinSettlement()"
-            class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4 border hover:bg-[#e2d7bb] hover:text-lh-primary hover:font-bold text-base"
-        >
-            Вступить
-        </button> -->
         <button
             (click)="createSettlement()"
             class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4 border hover:bg-[#e2d7bb] hover:text-lh-primary hover:font-bold text-base"

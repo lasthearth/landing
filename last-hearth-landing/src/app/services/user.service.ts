@@ -20,6 +20,8 @@ export class UserService {
 
     public userName!: string;
 
+    public userId!: string;
+
     public roles: string[] = [];
 
     public accessToken!: string;
@@ -49,6 +51,7 @@ export class UserService {
 
                         try {
                             const decoded = jwtDecode<IJwtTokenLh>(idToken);
+                            this.userId = decoded.sub ?? '';
                             this.roles = decoded.roles ?? [];
                         } catch (decodeError) {
                             console.error('[Auth] Ошибка декодирования ID токена:', decodeError);
@@ -95,19 +98,6 @@ export class UserService {
         return this.http.post<{ avatar: string }>(
             `${this.baseUrl}/user/avatar`,
             { avatar: base64Image },
-            { headers }
-        );
-    }
-
-    public requestSettlement$(settlement: ICreateSettlement): Observable<ICreateSettlement> {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.accessToken}`
-        });
-
-        return this.http.post<ICreateSettlement>(
-            `${this.baseUrl}/settlements`,
-            settlement,
             { headers }
         );
     }

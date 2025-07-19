@@ -8,6 +8,7 @@ import { IVerifyRequest } from '../services/interface/i-verify-request';
 import { VerifyRequestComponent } from './verify-request/verify-request.component';
 import { CreateQuestionComponent } from './create-question/create-question.component';
 import { SettlementRequestComponent } from './settlement-request/settlement-request.component';
+import { SettlementService } from '../services/settlement.service';
 
 /**
  * Компонент страницы администратора.
@@ -37,9 +38,14 @@ export class AdminComponent {
     protected readonly verificationRequests$: Observable<IVerifyRequest[]> = this.serverInfo.getVerifyRequests();
 
     /**
+     * Сервис поселений.
+     */
+    private readonly settlementService: SettlementService = inject(SettlementService);
+
+    /**
      * {@link Observable} Списка запросов верификации.
      */
-    protected readonly settlementsRequests$ = this.serverInfo.getSettlementsRequests$();
+    protected readonly settlementsRequests$ = this.settlementService.getSettlementsRequests$();
 
     /**
      * Открывает диалог создания вопроса.

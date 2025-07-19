@@ -9,6 +9,7 @@ import { finalize, forkJoin, map, Observable, of, Subject, switchMap, tap, timer
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ICreateSettlement } from '../interfaces/i-create-settlement';
 import { UserService } from '../../services/user.service';
+import { SettlementService } from '../../services/settlement.service';
 
 type FileKey =
     | 'map'
@@ -92,6 +93,8 @@ export class CreateSettlementComponent {
 
     private readonly us = inject(UserService);
 
+    private readonly settlementService = inject(SettlementService);
+
     /**
      * Инициализирует компонент класса {@link }
      */
@@ -135,7 +138,7 @@ export class CreateSettlementComponent {
             }),
             tap(request => {
                 console.log(request);
-                this.us.requestSettlement$(request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+                this.settlementService.postRequestSettlement$(request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
             }),
             takeUntilDestroyed(this.destroyRef)
         ).subscribe();

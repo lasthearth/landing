@@ -70,6 +70,7 @@
             >
                 <tui-icon icon="@tui.house" />
             </a>
+            @if(!userService.isAuthorize()) {
             <button
                 [routerLink]="['/start-game']"
                 class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
@@ -78,6 +79,7 @@
                 <tui-icon icon="@tui.gamepad-2" />
                 <span class="hidden md:block">НАЧАТЬ ИГРУ</span>
             </button>
+            }
             <button
                 [routerLink]="['/rules']"
                 class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
