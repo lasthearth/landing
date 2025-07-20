@@ -16,10 +16,10 @@ export class VerifyRequestComponent {
     public data: InputSignal<IVerifyRequest> = input.required<IVerifyRequest>();
 
     protected approve() {
-        this.dialogService.open(new PolymorpheusComponent(ConfirmApproveComponent), { size: 'auto', data: this.data().user_id }).subscribe();
+        this.dialogService.open(new PolymorpheusComponent(ConfirmApproveComponent), { size: 'auto', data: { userId: this.data().user_id } }).subscribe();
     }
 
     protected reject() {
-        this.dialogService.open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: this.data().user_id }).subscribe();
+        this.dialogService.open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: { userId: this.data().user_id } }).subscribe();
     }
 }
