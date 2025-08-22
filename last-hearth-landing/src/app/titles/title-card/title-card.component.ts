@@ -23,7 +23,7 @@ import { RouteKeys } from '../../routes/enums/route-keys';
 })
 export class TitleCardComponent {
     /**
-     * Данные новости.
+     * Данные титула или набора.
      */
     public data: InputSignal<ITitles> = input.required();
 
@@ -86,6 +86,15 @@ export class TitleCardComponent {
                             break;
                         case RouteKeys.duke:
                             this.select = 'duke';
+                            break;
+                        case RouteKeys.builder:
+                            this.select = 'builder';
+                            break;
+                        case RouteKeys.explorer:
+                            this.select = 'explorer';
+                            break;
+                        case RouteKeys.warrior:
+                            this.select = 'warrior';
                             break;
                     }
                     this.cdr.markForCheck();

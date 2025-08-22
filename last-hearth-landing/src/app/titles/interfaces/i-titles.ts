@@ -13,6 +13,11 @@ export interface ITitles {
     price: string;
 
     /**
+     * Тип титула.
+     */
+    type: string;
+
+    /**
      * Изображение титула.
      */
     image?: string;

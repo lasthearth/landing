@@ -9,27 +9,53 @@ export class TitlesService {
     public readonly titles: ITitles[] = [
         {
             title: 'Рыцарь',
+            type: 'Титул',
             image: '/images/knight.jpg',
             price: '350 р/мес.',
             path: 'knight',
         },
         {
             title: 'Барон',
+            type: 'Титул',
             image: '/images/baron.jpg',
             price: '900 р/мес.',
             path: 'baron',
         },
         {
             title: 'Граф',
+            type: 'Титул',
             image: '/images/graf.jpg',
             price: '1800 р/мес.',
             path: 'graph',
         },
         {
             title: 'Великий герцог',
+            type: 'Титул',
             image: '/images/duke.jpg',
             price: '6000 р/мес.',
             path: 'duke',
+        },
+
+        {
+            title: 'Исследователь',
+            type: 'Набор',
+            image: '/images/explorer.jpg',
+            price: '500 р/мес.',
+            path: 'explorer',
+        },
+        {
+            title: 'Воин',
+            type: 'Набор',
+            image: '/images/warrior.jpg',
+            price: '700 р/мес.',
+            path: 'warrior',
+        },
+        {
+            title: 'Строитель',
+            type: 'Набор',
+            image: '/images/builder.jpg',
+            price: '700 р/мес.',
+            path: 'builder',
         },
     ];
 
@@ -342,6 +368,180 @@ export class TitlesService {
             title: 'Купчая вольного',
             image: '/images/title-items/freedom.png',
             count: '1',
+        },
+    ];
+
+    public readonly builderGameItems: IGameItemCard[] = [
+        {
+            title: 'Кожаный рюкзак',
+            image: '/images/title-items/leather-backpack.png',
+            count: '1',
+        },
+        {
+            title: 'Железный молот',
+            image: '/images/title-items/iron-hammer.png',
+            count: '1',
+        },
+        {
+            title: 'Железный топор',
+            image: '/images/title-items/iron-axe.png',
+            count: '1',
+        },
+        {
+            title: 'Кирка из черной бронзы',
+            image: '/images/title-items/black-pickaxe.png',
+            count: '1',
+        },
+        {
+            title: 'Железная пила',
+            image: '/images/title-items/iron-saw.png',
+            count: '1',
+        },
+        {
+            title: 'Железное зубило',
+            image: '/images/title-items/iron-chisel.png',
+            count: '1',
+        },
+        {
+            title: 'Стальной пантограф',
+            image: '/images/title-items/steel-pantograph.png',
+            count: '1',
+        },
+        {
+            title: 'Стальные клинья',
+            image: '/images/title-items/steel-wedges.png',
+            count: '14',
+        },
+        {
+            title: 'Стальное клиновое зубило',
+            image: '/images/title-items/steel-wedge-chisel.png',
+            count: '1',
+        },
+        {
+            title: 'Стальное чистовое зубило',
+            image: '/images/title-items/steel-finishing-chisel.png',
+            count: '1',
+        },
+        {
+            title: 'Строительный раствор',
+            image: '/images/title-items/building-mortar.png',
+            count: '384',
+        },
+    ];
+
+    public readonly explorerGameItems: IGameItemCard[] = [
+        {
+            title: 'Кожаный рюкзак',
+            image: '/images/title-items/leather-backpack.png',
+            count: '2',
+        },
+        {
+            title: 'Рюкзак из прочной кожи',
+            image: '/images/title-items/durable-leather-backpack.png',
+            count: '2',
+        },
+        {
+            title: 'Карта',
+            image: '/images/title-items/map.png',
+            count: '1',
+        },
+        {
+            title: 'Серебяный секстант',
+            image: '/images/title-items/sextant.png',
+            count: '1',
+        },
+        {
+            title: 'Серебряный компас',
+            image: '/images/title-items/compas.png',
+            count: '1',
+        },
+        {
+            title: 'Кувшин',
+            image: '/images/title-items/leather-backpack.png',
+            count: '1',
+        },
+        {
+            title: 'Железный нож',
+            image: '/images/title-items/iron-knife.png',
+            count: '1',
+        },
+        {
+            title: 'Железный сакс',
+            image: '/images/title-items/iron-sax.png',
+            count: '1',
+        },
+        {
+            title: 'Деревянная лестница',
+            image: '/images/title-items/wooden-staircase.png',
+            count: '128',
+        },
+        {
+            title: 'Керамический кувшин',
+            image: '/images/title-items/jug.png',
+            count: '1',
+        },
+        {
+            title: 'Пемикан',
+            image: '/images/title-items/pemmican.png',
+            count: '64',
+        },
+    ];
+
+    public readonly warriorGameItems: IGameItemCard[] = [
+        {
+            title: 'Кожаный рюкзак',
+            image: '/images/title-items/leather-backpack.png',
+            count: '1',
+        },
+        {
+            title: 'Пернач',
+            image: '/images/title-items/pernach.png',
+            count: '1',
+        },
+        {
+            title: 'Щит',
+            image: '/images/title-items/shield-2.png',
+            count: '1',
+        },
+        {
+            title: 'Чешуйчатый стальной шлем',
+            image: '/images/title-items/scaly-helmet.png',
+            count: '1',
+        },
+        {
+            title: 'Чешуйчатый стальной нагрудник',
+            image: '/images/title-items/scaly-breastplate.png',
+            count: '1',
+        },
+        {
+            title: 'Чешуйчатые стальные поножи',
+            image: '/images/title-items/scaly-greaves.png',
+            count: '1',
+        },
+        {
+            title: 'Арбалет с лебедкой',
+            image: '/images/title-items/crossbow-with-winch.png',
+            count: '1',
+        },
+        {
+            title: 'Лебедка',
+            image: '/images/title-items/winch.png',
+            count: '1',
+        },
+        {
+            title: 'Стальной болт',
+            image: '/images/title-items/steel-bolt.png',
+            count: '12',
+        },
+        {
+            title: 'Бинт',
+            image: '/images/title-items/bandage.png',
+            count: '16',
+        },
+        {
+            title: 'Пеммикан',
+            image: '/images/title-items/pemmican.png',
+            count: '64',
         },
     ];
 }

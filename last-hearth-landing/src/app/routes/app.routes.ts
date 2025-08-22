@@ -19,6 +19,9 @@ import { BaronTitleComponent } from '../titles/baron/baron-title/baron-title.com
 import { GraphTitleComponent } from '../titles/graph/graph-title/graph-title.component';
 import { DukeTitleComponent } from '../titles/duke/duke-title/duke-title.component';
 import { PublicOfferComponent } from '../public-offer/public-offer/public-offer.component';
+import { BuilderTitleComponent } from '../titles/builder/builder-title/builder-title.component';
+import { ExplorerTitleComponent } from '../titles/explorer/explorer-title/explorer-title.component';
+import { WarriorTitleComponent } from '../titles/warrior/warrior-title/warrior-title.component';
 
 export const routes: Routes = [
     {
@@ -101,6 +104,21 @@ export const routes: Routes = [
                         path: 'duke',
                         component: DukeTitleComponent,
                         data: { route_keys: RouteKeys.duke },
+                    },
+                    {
+                        path: 'builder',
+                        component: BuilderTitleComponent,
+                        data: { route_keys: RouteKeys.builder },
+                    },
+                    {
+                        path: 'explorer',
+                        component: ExplorerTitleComponent,
+                        data: { route_keys: RouteKeys.explorer },
+                    },
+                    {
+                        path: 'warrior',
+                        component: WarriorTitleComponent,
+                        data: { route_keys: RouteKeys.warrior },
                     },
                 ],
             },

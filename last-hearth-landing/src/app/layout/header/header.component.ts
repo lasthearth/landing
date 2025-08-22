@@ -125,6 +125,9 @@ export class HeaderComponent {
                         case RouteKeys.duke:
                         case RouteKeys.graph:
                         case RouteKeys.knight:
+                        case RouteKeys.builder:
+                        case RouteKeys.warrior:
+                        case RouteKeys.explorer:
                             this.select = 'titles';
                             break;
                     }

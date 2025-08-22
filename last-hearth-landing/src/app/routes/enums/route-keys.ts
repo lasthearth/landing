@@ -30,4 +30,10 @@ export enum RouteKeys {
     duke,
 
     publicOffer,
+
+    builder,
+
+    explorer,
+
+    warrior,
 }
