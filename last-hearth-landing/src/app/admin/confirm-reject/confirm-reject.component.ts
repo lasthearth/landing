@@ -8,6 +8,7 @@ import { Subject, Subscription, catchError, filter, tap, throwError } from 'rxjs
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ServerInformationService } from '../../services/server-information.service';
+import { SettlementService } from '../../services/settlement.service';
 
 /**
  * Компонент подтверждения отклонения.
@@ -38,9 +39,14 @@ export class ConfirmRejectComponent {
     private readonly serverInfoService: ServerInformationService = inject(ServerInformationService);
 
     /**
+     * Сервис поселений.
+     */
+    private readonly settlementService: SettlementService = inject(SettlementService);
+
+    /**
      * Контекст открытого диалогового окна.
      */
-    protected readonly context: TuiDialogContext<void, string> = inject<TuiDialogContext<void, string>>(POLYMORPHEUS_CONTEXT);
+    protected readonly context: TuiDialogContext<void, { userId: string, isSettlement: boolean }> = inject<TuiDialogContext<void, { userId: string, isSettlement: boolean }>>(POLYMORPHEUS_CONTEXT);
 
     /**
      * Сервис уведомлений.
@@ -61,21 +67,40 @@ export class ConfirmRejectComponent {
             tap(() => {
                 const reason = this.form.controls.reason.value ?? '';
 
-                this.serverInfoService.postVerifyDeny(this.context.data, reason).pipe(
-                    catchError((error) => {
-                        this.alertService
-                            .open('', { label: 'Произошла непредвиденная ошибка.', appearance: 'negative', })
-                            .subscribe();
-                        return throwError(() => error)
-                    }),
-                    tap(() => {
-                        this.alertService
-                            .open('', { label: 'Анкета отклонена!', appearance: 'positive', })
-                            .subscribe();
-                        this.context.$implicit.complete();
-                    }),
-                    takeUntilDestroyed(this.destroyRef))
-                    .subscribe();
+                if (this.context.data.isSettlement) {
+                    this.settlementService.postVerifySettlementReject(this.context.data.userId, reason).pipe(
+                        catchError((error) => {
+                            this.alertService
+                                .open('', { label: 'Произошла непредвиденная ошибка.', appearance: 'negative', })
+                                .subscribe();
+                            return throwError(() => error)
+                        }),
+                        tap(() => {
+                            this.alertService
+                                .open('', { label: 'Анкета отклонена!', appearance: 'positive', })
+                                .subscribe();
+                            this.context.$implicit.complete();
+                        }),
+                        takeUntilDestroyed(this.destroyRef))
+                        .subscribe();
+                }
+                else {
+                    this.serverInfoService.postVerifyDeny(this.context.data.userId, reason).pipe(
+                        catchError((error) => {
+                            this.alertService
+                                .open('', { label: 'Произошла непредвиденная ошибка.', appearance: 'negative', })
+                                .subscribe();
+                            return throwError(() => error)
+                        }),
+                        tap(() => {
+                            this.alertService
+                                .open('', { label: 'Анкета отклонена!', appearance: 'positive', })
+                                .subscribe();
+                            this.context.$implicit.complete();
+                        }),
+                        takeUntilDestroyed(this.destroyRef))
+                        .subscribe();
+                }
             }),
             takeUntilDestroyed(this.destroyRef))
             .subscribe();

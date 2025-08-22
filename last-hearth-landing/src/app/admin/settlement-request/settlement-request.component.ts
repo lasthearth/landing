@@ -32,14 +32,14 @@ export class SettlementRequestComponent {
         this.dialogService
             .open(new PolymorpheusComponent(ConfirmApproveComponent), {
                 size: 'auto',
-                data: this.data().leader.user_id,
+                data: { userId: this.data().id, isSettlement: true },
             })
             .subscribe();
     }
 
     protected reject() {
         this.dialogService
-            .open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: this.data().leader.user_id })
+            .open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: { userId: this.data().id, isSettlement: true }, })
             .subscribe();
     }
 

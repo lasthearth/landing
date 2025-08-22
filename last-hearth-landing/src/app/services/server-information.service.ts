@@ -80,17 +80,6 @@ export class ServerInformationService {
         ).pipe(map((data) => data.requests));
     }
 
-    public getSettlementsRequests$(): Observable<IRequestSettlement[]> {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.userService.accessToken}`
-        });
-
-        return this.http.get<{ settlements: Array<IRequestSettlement> }>(
-            `${this.baseUrl}/settlements/pending`, { headers: headers }
-        ).pipe(map((data) => data.settlements));
-    }
-
     public postVerifySuccess(userId: string) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
@@ -129,5 +118,12 @@ export class ServerInformationService {
         }>(
             `${this.baseUrl}/verification/details`, { headers: headers }
         );
+    }
+
+    public getHeaders() {
+        return new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.userService.accessToken}`
+        });
     }
 }
