@@ -456,11 +456,6 @@ export class TitlesService {
             count: '1',
         },
         {
-            title: 'Кувшин',
-            image: '/images/title-items/leather-backpack.png',
-            count: '1',
-        },
-        {
             title: 'Железный нож',
             image: '/images/title-items/iron-knife.png',
             count: '1',
