@@ -27,10 +27,7 @@
         <div class="flex flex-col gap-2">
             <p class="text-4xl font-semibold">{{userData.name}}</p>
             <p [class.!text-red-500]="getRoleName() === 'Неверифицирован'" class="text-2xl">{{getRoleName()}}</p>
-            @let code = code$ | async; @let details = details$ | async;
-            <p *ngIf="details?.status === 'approved' || details?.status === 'verified'" class="text-2xl">
-                Код авторизации в игре: <b>{{code?.code}}</b>
-            </p>
+            @let details = details$ | async;
             <p *ngIf="details?.status === 'pending'" class="text-2xl">Ваша анкета отправлена. Ожидайте проверки.</p>
             <p *ngIf="details?.status === 'rejected'" class="text-2xl">
                 Вашу анкету отклонили. Причина: {{details?.rejection_reason}}
