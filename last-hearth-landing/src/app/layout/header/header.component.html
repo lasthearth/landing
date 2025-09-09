@@ -1,4 +1,4 @@
-@let online = online$ | async; @let time = time$ | async;
+@let online = online$ | async; @let time = time$ | async; @let isAuth = userService.authState$ | async;
 <div class="flex flex-col xl:gap-24 gap-8">
     <div class="flex justify-center sm:justify-between px-4 sm:px-0">
         <!-- Логотип -->
@@ -8,7 +8,7 @@
             <div class="rounded-2xl gap-4 flex items-center p-4 sm:py-3 sm:pl-3 sm:pr-4">
                 <img src="/images/logo.png" alt="Логотип сервера" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14" />
                 <p
-                    [ngClass]="{'!hidden 2xl:!block': userService.isAuthorize()}"
+                    [ngClass]="{'!hidden 2xl:!block': isAuth}"
                     class="hidden sm:block text-2xl sm:text-5xl text-white font-[500] text-nowrap"
                 >
                     Last Hearth
@@ -39,7 +39,7 @@
                     class="progress"
                 ></progress>
             </div>
-            @if(userService.isAuthorize()) {
+            @if(isAuth) {
             <div
                 class="mt-8 z-10 flex w-fit h-[5rem] items-center justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
             >
@@ -70,7 +70,7 @@
             >
                 <tui-icon icon="@tui.house" />
             </a>
-            @if(!userService.isAuthorize()) {
+            @if(!isAuth) {
             <button
                 [routerLink]="['/start-game']"
                 class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
@@ -99,12 +99,12 @@
         </div>
         <div class="flex flex-row gap-2">
             <button
-                (click)="userService.isAuthorize() ? '' : signIn()"
-                [routerLink]="userService.isAuthorize() ? ['/profile'] : ''"
+                (click)="isAuth ? '' : signIn()"
+                [routerLink]="isAuth ? ['/profile'] : ''"
                 [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'profile' }"
                 class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
             >
-                <tui-icon [icon]="userService.isAuthorize() ? '@tui.user' : '@tui.log-in'" />
+                <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
             </button>
         </div>
     </div>

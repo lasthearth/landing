@@ -17,9 +17,9 @@ import { ServerInformationService } from '../services/server-information.service
     templateUrl: './profile.component.html',
 })
 export class ProfileComponent implements OnInit {
-    private readonly userService = inject(UserService);
+    protected readonly userService = inject(UserService);
 
-    protected select = "how-play";
+    protected select = 'how-play';
 
     protected readonly userData: IUser = this.userService.getUserData();
 
@@ -42,9 +42,9 @@ export class ProfileComponent implements OnInit {
     ngOnInit() {
         this.router.events
             .pipe(
-                filter((event) => event instanceof NavigationEnd),
+                filter(event => event instanceof NavigationEnd),
                 takeUntilDestroyed(this.destroyRef),
-                startWith("how-play")
+                startWith('how-play'),
             )
             .subscribe(() => {
                 let route = this.activatedRoute;
@@ -53,21 +53,21 @@ export class ProfileComponent implements OnInit {
                     route = route.firstChild;
                 }
 
-                const routeKey = route.snapshot.data["route_keys"];
+                const routeKey = route.snapshot.data['route_keys'];
 
                 if (routeKey) {
                     switch (routeKey) {
                         case RouteKeys.stats:
-                            this.select = "stats";
+                            this.select = 'stats';
                             break;
                         case RouteKeys.howPlay:
-                            this.select = "how-play";
+                            this.select = 'how-play';
                             break;
                         case RouteKeys.admin:
-                            this.select = "admin";
+                            this.select = 'admin';
                             break;
                         case RouteKeys.settlement:
-                            this.select = "settlement";
+                            this.select = 'settlement';
                             break;
                     }
                 }
@@ -82,14 +82,14 @@ export class ProfileComponent implements OnInit {
 
     protected getRoleName() {
         if (this.userService.roles.includes('admin')) {
-            return 'Администратор'
+            return 'Администратор';
         }
 
         if (this.userService.roles.includes('player')) {
-            return 'Игрок'
+            return 'Игрок';
         }
 
-        return 'Неверифицирован'
+        return 'Неверифицирован';
     }
 
     protected verification() {
@@ -97,10 +97,10 @@ export class ProfileComponent implements OnInit {
     }
 
     /**
-    * Возвращает признак, является ли пользователь администратором.
-    */
+     * Возвращает признак, является ли пользователь администратором.
+     */
     protected isAdmin(): boolean {
-        return this.userService.isAuthorize() && this.userService.roles.includes('admin');
+        return this.userService.roles.includes('admin');
     }
 
     triggerFileInput() {
@@ -118,8 +118,8 @@ export class ProfileComponent implements OnInit {
                 const base64 = (reader.result as string).split(',')[1]; // убираем data:image/png;base64,
 
                 this.userService.setProfileImage$(base64).subscribe({
-                    next: (res) => console.log('Uploaded:', res),
-                    error: (err) => console.error('Error:', err)
+                    next: res => console.log('Uploaded:', res),
+                    error: err => console.error('Error:', err),
                 });
             };
 

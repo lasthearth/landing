@@ -65,8 +65,9 @@
         >
             <tui-icon icon="@tui.castle" />
         </button>
+        @let isAuth = userService.authState$ | async;
         <button
-            [routerLink]="isAdmin() ? ['/profile/admin'] : ''"
+            [routerLink]="isAuth && isAdmin() ? ['/profile/admin'] : ''"
             [class.!hidden]="!isAdmin()"
             [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-sm': select === 'admin' }"
             class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"

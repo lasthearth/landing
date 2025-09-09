@@ -1,7 +1,7 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import { TuiDialogContext, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiFileLike, TuiFiles, TuiSelect, TuiTooltip } from '@taiga-ui/kit';
 import { LInputComponent } from '../../components/l-input/l-input.component';
 import { RouterLink } from '@angular/router';
@@ -10,28 +10,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ICreateSettlement } from '../interfaces/i-create-settlement';
 import { UserService } from '../../services/user.service';
 import { SettlementService } from '../../services/settlement.service';
+import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
-type FileKey =
-    | 'map'
-    | 'monument'
-    | 'frontier'
-    | 'fireplace'
-    | 'home'
-    | 'warehouse';
+type FileKey = 'map' | 'monument' | 'frontier' | 'fireplace' | 'home' | 'warehouse';
 
 @Component({
     standalone: true,
     selector: 'app-create-settlement',
-    imports: [
-        LInputComponent,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterLink,
-        NgFor,
-        AsyncPipe,
-        NgIf,
-        TuiFiles
-    ],
+    imports: [LInputComponent, FormsModule, ReactiveFormsModule, RouterLink, NgFor, AsyncPipe, NgIf, TuiFiles],
     templateUrl: './create-settlement.component.html',
     styleUrl: './create-settlement.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,19 +26,12 @@ export class CreateSettlementComponent {
     name = '';
     selectedUser: { id: number; name: string } | null = null;
     users = [
-        'Мы имеем намерение придерживаться нейтралитета и не вступать в конфликты, если того не просит наш официальный союзник, договор, или ситуация в которой нам необходимо защищаться',
-        'Мы имеем намерение вести свои дела как хотим. Если вы хотите уверенности в чем-то, вы можете попытаться договориться с нами при помощи дипломатии. В ином случае, мы оставляем за собой право на любые действия.',
-        'Мы своенравны и наши намерения - не ваше дело. Мы не любим дипломатию, мы любим кровь.'
+        'Мы стремимся к миру и сотрудничеству. Наше поселение открыто для честной торговли и дипломатии. Мы никогда не нападем первыми, но всегда готовы к защите.',
+        'Мы храним нейтралитет и суверенитет. Мы имеем намерение не вступать в конфликты, если того не просит наш официальный союзник, договор, или ситуация в которой нам необходимо защищаться',
+        'Право сильного — единственный закон, который мы признаем. Мы не ведем переговоров, мы диктуем условия. Слабый будет служить, сильный — устоит. Вы предупреждены.',
     ];
 
-    protected readonly fileFields: FileKey[] = [
-        'map',
-        'monument',
-        'frontier',
-        'fireplace',
-        'home',
-        'warehouse',
-    ];
+    protected readonly fileFields: FileKey[] = ['map', 'monument', 'frontier', 'fireplace', 'home', 'warehouse'];
 
     protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
@@ -68,30 +47,38 @@ export class CreateSettlementComponent {
         warehouse: new FormControl<File | null>(null, Validators.required),
     });
 
-    protected readonly fileStatus = this.fileFields.reduce((acc, key) => {
-        acc.loading[key] = new Subject<File | null>();
-        acc.failed[key] = new Subject<File | null>();
-        acc.loaded[key] = this.form.controls[key].valueChanges.pipe(
-            switchMap(file => this.processFile(file, acc.loading[key], acc.failed[key]))
-        );
-        return acc;
-    }, {
-        loading: {} as Record<FileKey, Subject<File | null>>,
-        failed: {} as Record<FileKey, Subject<File | null>>,
-        loaded: {} as Record<FileKey, Observable<File | null>>,
-    });
+    protected readonly fileStatus = this.fileFields.reduce(
+        (acc, key) => {
+            acc.loading[key] = new Subject<File | null>();
+            acc.failed[key] = new Subject<File | null>();
+            acc.loaded[key] = this.form.controls[key].valueChanges.pipe(
+                switchMap(file => this.processFile(file, acc.loading[key], acc.failed[key])),
+            );
+            return acc;
+        },
+        {
+            loading: {} as Record<FileKey, Subject<File | null>>,
+            failed: {} as Record<FileKey, Subject<File | null>>,
+            loaded: {} as Record<FileKey, Observable<File | null>>,
+        },
+    );
 
     /**
-         * {@link Subject} события отправки формы.
-         */
+     * {@link Subject} события отправки формы.
+     */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
     /**
-        * Ссылка уничтожения на компонент.
-        */
+     * Ссылка уничтожения на компонент.
+     */
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
     private readonly us = inject(UserService);
+
+    /**
+     * Контекст открытого диалогового окна.
+     */
+    private readonly context: TuiDialogContext = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
 
     private readonly settlementService = inject(SettlementService);
 
@@ -99,49 +86,56 @@ export class CreateSettlementComponent {
      * Инициализирует компонент класса {@link }
      */
     public constructor() {
-        this.onSubmit.pipe(
-            switchMap(() => {
-                const values = this.form.value;
+        this.onSubmit
+            .pipe(
+                switchMap(() => {
+                    const values = this.form.value;
 
-                // Собираем массив Observable<string> для всех файлов
-                const base64Files$: Observable<string | null>[] = this.fileFields.map(key => {
-                    const file = values[key];
-                    if (file) {
-                        return this.convertTuiFileLikeToBase64(file);
-                    }
-                    return of(null);
-                });
+                    // Собираем массив Observable<string> для всех файлов
+                    const base64Files$: Observable<string | null>[] = this.fileFields.map(key => {
+                        const file = values[key];
+                        if (file) {
+                            return this.convertTuiFileLikeToBase64(file);
+                        }
+                        return of(null);
+                    });
 
-                // Ждём когда все base64 загрузятся
-                return forkJoin(base64Files$).pipe(
-                    map(base64Files => {
-                        const attachments = this.fileFields.map((key, i) => ({
-                            data: base64Files[i] ?? '',
-                            description: this.getLabelForKey(key)
-                        }));
+                    // Ждём когда все base64 загрузятся
+                    return forkJoin(base64Files$).pipe(
+                        map(base64Files => {
+                            const attachments = this.fileFields.map((key, i) => ({
+                                data: base64Files[i] ?? '',
+                                description: this.getLabelForKey(key),
+                            }));
 
-                        const request: ICreateSettlement = {
-                            type: 1,
-                            name: values.name ?? '',
-                            description: values.description ?? '',
-                            diplomacy: values.diplomacy ?? '',
-                            coordinates: {
-                                x: values.x ?? 0,
-                                y: values.z ?? 0,
-                            },
-                            attachments,
-                        };
+                            const request: ICreateSettlement = {
+                                type: 1,
+                                name: values.name ?? '',
+                                description: values.description ?? '',
+                                diplomacy: values.diplomacy ?? '',
+                                coordinates: {
+                                    x: values.x ?? 0,
+                                    y: values.z ?? 0,
+                                },
+                                attachments,
+                            };
 
-                        return request;
-                    })
-                );
-            }),
-            tap(request => {
-                console.log(request);
-                this.settlementService.postRequestSettlement$(request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
-            }),
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe();
+                            return request;
+                        }),
+                    );
+                }),
+                tap(request => {
+                    console.log(request);
+                    this.settlementService
+                        .postRequestSettlement$(request)
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(() => {
+                            this.context.$implicit.complete();
+                        });
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     protected removeFile(controlName: FileKey): void {
@@ -207,5 +201,4 @@ export class CreateSettlementComponent {
             reader.readAsDataURL(file);
         });
     }
-
 }
