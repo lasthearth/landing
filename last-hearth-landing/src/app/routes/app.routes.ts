@@ -22,6 +22,7 @@ import { PublicOfferComponent } from '../public-offer/public-offer/public-offer.
 import { BuilderTitleComponent } from '../titles/builder/builder-title/builder-title.component';
 import { ExplorerTitleComponent } from '../titles/explorer/explorer-title/explorer-title.component';
 import { WarriorTitleComponent } from '../titles/warrior/warrior-title/warrior-title.component';
+import { FaqComponent } from '../faq/faq.component';
 
 export const routes: Routes = [
     {
@@ -131,6 +132,11 @@ export const routes: Routes = [
                 path: 'public-offer',
                 component: PublicOfferComponent,
                 data: { route_keys: RouteKeys.publicOffer },
+            },
+            {
+                path: 'faq',
+                component: FaqComponent,
+                data: { route_keys: RouteKeys.faq },
             },
         ],
     },

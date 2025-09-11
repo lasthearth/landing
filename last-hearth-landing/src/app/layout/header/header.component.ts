@@ -130,6 +130,9 @@ export class HeaderComponent {
                         case RouteKeys.explorer:
                             this.select = 'titles';
                             break;
+                        case RouteKeys.faq:
+                            this.select = 'faq';
+                            break;
                     }
                     this.cdr.markForCheck();
                 }

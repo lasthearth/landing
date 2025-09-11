@@ -1,3 +1,4 @@
+@let isAuth = userService.authState$ | async;
 <div class="p-6 flex flex-col gap-10">
     <p class="text-4xl font-bold text-lh-primary">Начать игру</p>
     <div class="flex gap-10 items-start">
@@ -9,8 +10,8 @@
                 сначала
                 <a
                     class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                    [routerLink]="userService.isAuthorize() ? ['/profile'] : ['/start-game']"
-                    (click)="userService.isAuthorize() ? '' : signIn()"
+                    [routerLink]="isAuth ? ['/profile'] : ['/start-game']"
+                    (click)="isAuth ? '' : signIn()"
                 >
                     создайте аккаунт
                 </a>

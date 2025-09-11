@@ -36,4 +36,6 @@ export enum RouteKeys {
     explorer,
 
     warrior,
+
+    faq,
 }
