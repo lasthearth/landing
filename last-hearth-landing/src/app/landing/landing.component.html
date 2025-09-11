@@ -1,9 +1,20 @@
-<div class="flex flex-col justify-center items-center xl:gap-8">
-    <div class="h-auto w-full xl:w-[50%] flex">
+<div class="xl:overflow-x-hidden">
+    <div class="flex justify-center xl:justify-start items-center xl:ml-[25%] xl:w-full">
+        <div class="h-auto w-full xl:w-[50%] flex">
             <div class="flex size-full justify-center gap-3 mb-10">
                 <div class="main-panel size-full">
                     <router-outlet />
                 </div>
+            </div>
         </div>
+
+        @let currentRouteKey = currentRouteKey$ | async; @if(currentRouteKey === 6 || currentRouteKey === 4 ||
+        currentRouteKey === 8 || currentRouteKey === 5) {
+        <div
+            class="bg-lh-primary-2 flex justify-center p-3 z-20 w-full xl:w-fit absolute xl:static bottom-0 xl:bg-transparent xl:block xl:ml-4 self-start"
+        >
+            <app-profile-navigation />
+        </div>
+        }
     </div>
 </div>

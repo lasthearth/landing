@@ -43,38 +43,6 @@
     </div>
     @if(getRoleName() !== 'Неверифицирован' || (details?.status === 'approved' || details?.status === 'verified')) {
     <hr class="w-full h-px mt-10 bg-lh-primary" />
-    <div class="flex gap-2 mt-4">
-        <button
-            [routerLink]="['/profile/how-play']"
-            [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-base': select === 'how-play' }"
-            class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-        >
-            Играть
-        </button>
-        <button
-            [routerLink]="['/profile/stats']"
-            [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-base': select === 'stats' }"
-            class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
-        >
-            <tui-icon icon="@tui.chart-no-axes-combined" />
-        </button>
-        <button
-            [routerLink]="['/profile/settlement']"
-            [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-sm': select === 'settlement' }"
-            class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
-        >
-            <tui-icon icon="@tui.castle" />
-        </button>
-        @let isAuth = userService.authState$ | async;
-        <button
-            [routerLink]="isAuth && isAdmin() ? ['/profile/admin'] : ''"
-            [class.!hidden]="!isAdmin()"
-            [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary border !font-bold !text-sm': select === 'admin' }"
-            class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
-        >
-            <tui-icon icon="@tui.shield" />
-        </button>
-    </div>
     <router-outlet />
     } @else {
     <p class="text-2xl">

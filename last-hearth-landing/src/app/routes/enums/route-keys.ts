@@ -1,41 +1,41 @@
 export enum RouteKeys {
-    home,
+    home = 0,
 
-    rules,
+    rules = 1,
 
-    market,
+    market = 2,
 
-    profile,
+    profile = 3,
 
-    admin,
+    admin = 4,
 
-    stats,
+    stats = 5,
 
-    howPlay,
+    howPlay = 6,
 
-    startGame,
+    startGame = 7,
 
-    settlement,
+    settlement = 8,
 
-    titles,
+    titles = 9,
 
-    privacyPolicy,
+    privacyPolicy = 10,
 
-    knight,
+    knight = 11,
 
-    baron,
+    baron = 12,
 
-    graph,
+    graph = 13,
 
-    duke,
+    duke = 14,
 
-    publicOffer,
+    publicOffer = 15,
 
-    builder,
+    builder = 16,
 
-    explorer,
+    explorer = 17,
 
-    warrior,
+    warrior = 18,
 
-    faq,
+    faq = 19,
 }
