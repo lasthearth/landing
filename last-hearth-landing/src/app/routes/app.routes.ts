@@ -3,7 +3,6 @@ import { LandingComponent } from '../landing/landing.component';
 import { RulesComponent } from '../rules/rules.component';
 import { HomeComponent } from '../home/home.component';
 import { TitlesComponent } from '../titles/titles.component';
-import { MarketComponent } from '../market/market.component';
 import { RouteKeys } from './enums/route-keys';
 import { ProfileComponent } from '../profile/profile.component';
 import { AdminComponent } from '../admin/admin.component';
@@ -39,11 +38,6 @@ export const routes: Routes = [
                 path: 'rules',
                 component: RulesComponent,
                 data: { route_keys: RouteKeys.rules },
-            },
-            {
-                path: 'market',
-                component: MarketComponent,
-                data: { route_keys: RouteKeys.market },
             },
             {
                 path: 'profile',

@@ -15,11 +15,11 @@
             <tui-icon icon="@tui.chevron-right" />
         </button>
     </div>
-    <tui-pagination size="s" [length]="titles.length-1" [(index)]="index" class="mt-2" />
+    <tui-pagination size="s" [length]="titles.length-2" [(index)]="index" class="mt-2" />
     <router-outlet />
     <button
         (click)="howBuyTitle()"
-        class="text-white transition-all self-center duration-300 font-bold cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#ff7920] rounded-lg py-2.5 px-4"
+        class="text-white transition-all self-center duration-300 font-bold cursor-pointer bg-[rgb(148,90,50)] hover:bg-lh-accent-1 rounded-lg py-2.5 px-4"
     >
         Приобрести
     </button>

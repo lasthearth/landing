@@ -1,5 +1,5 @@
 <div
-    [style.backgroundImage]="data().image ? 'url('+ data().image +')' : 'url(/images/screenshots/screen_1.png)'"
+    [style.backgroundImage]="data().image ? 'url('+ data().image +')' : 'url(/images/screenshots/screen_1.webp)'"
     class="p-4 sm:p-8 flex sm:flex-row flex-col gap-4 items-start justify-between bg-center bg-cover h-full rounded-xl"
 >
     <div
@@ -9,7 +9,7 @@
         <p class="text-neutral-50 text-base font-light mx-4" [innerHtml]="data().description"></p>
     </div>
     <div class="flex sm:flex-col justify-between gap-4 items-end sm:items-start sm:gap-0 h-full">
-        <div class="relative bg-[#945a32] h-fit px-2 py-1 rounded-xl">
+        <div class="relative bg-lh-accent-2 h-fit px-2 py-1 rounded-xl">
             <p class="text-white text-xs text-nowrap">{{ data().date}}</p>
         </div>
     </div>
