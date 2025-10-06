@@ -3,13 +3,13 @@
     <div class="flex justify-center sm:justify-between px-4 sm:px-0">
         <!-- Логотип -->
         <div
-            class="hidden mt-8 z-10 sm:flex w-fit h-[4.5rem] sm:h-[5rem] items-center justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+            class="hidden mt-8 z-10 sm:flex w-fit h-18 sm:h-20 items-center justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
         >
             <div class="rounded-2xl gap-4 flex items-center p-4 sm:py-3 sm:pl-3 sm:pr-4">
                 <img src="/images/logo.png" alt="Логотип сервера" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14" />
                 <p
-                    [ngClass]="{'!hidden 2xl:!block': isAuth}"
-                    class="hidden sm:block text-2xl sm:text-5xl text-white font-[500] text-nowrap"
+                    [ngClass]="{'hidden! 2xl:block!': isAuth}"
+                    class="hidden sm:block text-2xl sm:text-5xl text-white font-medium text-nowrap"
                 >
                     Last Hearth
                 </p>
@@ -18,7 +18,7 @@
         <!-- Табло информации о сервере -->
         <div class="flex gap-2 sm:gap-4 items-center">
             <div
-                class="mt-8 z-10 pt-1.5 sm:pt-3 flex h-[5rem] flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                class="mt-8 z-10 pt-1.5 sm:pt-3 flex h-20 flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
             >
                 <div class="flex w-full px-4 gap-4 justify-center items-center">
                     <div class="flex gap-0.5 items-center">
@@ -41,7 +41,7 @@
             </div>
             @if(isAuth) {
             <div
-                class="mt-8 z-10 flex w-fit h-[5rem] items-center justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                class="mt-8 z-10 flex w-fit h-20 items-center justify-start rounded-lg backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
             >
                 <div class="rounded-2xl gap-1 px-1 sm:px-3 flex items-center">
                     <p class="text-sm sm:text-2xl text-white">{{userService.userName}}</p>
@@ -52,7 +52,7 @@
                         class="relative ml-2 rounded-lg z-10 h-12 w-12 sm:h-18 sm:w-18 border-neutral-300 border-2"
                     />
                     }@else {
-                    <tui-icon icon="@tui.square-user-round" class="relative rounded-lg z-10 !text-6xl text-white" />
+                    <tui-icon icon="@tui.square-user-round" class="relative rounded-lg z-10 text-6xl! text-white" />
                     }
                 </div>
             </div>
@@ -66,7 +66,7 @@
                 (click)="select = 'home'"
                 class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
                 [routerLink]="['/home']"
-                [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'home' }"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'home' }"
             >
                 <tui-icon icon="@tui.house" />
             </a>
@@ -74,7 +74,7 @@
             <button
                 [routerLink]="['/start-game']"
                 class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'startGame' }"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'startGame' }"
             >
                 <tui-icon icon="@tui.gamepad-2" />
                 <span class="hidden md:block">НАЧАТЬ ИГРУ</span>
@@ -83,7 +83,7 @@
             <button
                 [routerLink]="['/rules']"
                 class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'rules' }"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'rules' }"
             >
                 <tui-icon icon="@tui.file-text" />
                 <span class="hidden md:block">ПРАВИЛА</span>
@@ -91,7 +91,7 @@
             <button
                 [routerLink]="['/titles']"
                 class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'titles' }"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'titles' }"
             >
                 <tui-icon icon="@tui.store" />
                 <span class="hidden md:block">МАГАЗИН</span>
@@ -99,7 +99,7 @@
             <button
                 [routerLink]="['/faq']"
                 class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'faq' }"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'faq' }"
             >
                 <tui-icon icon="@tui.info" />
                 <span class="hidden md:block">FAQ</span>
@@ -109,8 +109,8 @@
             <button
                 (click)="isAuth ? '' : signIn()"
                 [routerLink]="isAuth ? ['/profile'] : ''"
-                [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'profile' }"
-                class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !w-11"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'profile' }"
+                class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 w-11!"
             >
                 <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
             </button>

@@ -42,7 +42,7 @@
                 <ng-template tuiInputFilesContent>
                     <span class="text-gray-600">Добавить изображение...</span>
                 </ng-template>
-                <input accept="image/*" tuiInputFiles [formControl]="form.controls[key]" class="!border-lh-primary" />
+                <input accept="image/*" tuiInputFiles [formControl]="form.controls[key]" class="border-lh-primary!" />
             </label>
 
             <tui-files class="tui-space_top-1">
@@ -69,7 +69,7 @@
         </div>
         <button
             type="submit"
-            class="text-white !text-sm cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-2 disabled:text-gray-300 disabled:bg-lh-primary"
+            class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-2 disabled:text-gray-300 disabled:bg-lh-primary"
         >
             Основать
         </button>

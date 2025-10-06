@@ -1,8 +1,8 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-    --color-lh-primary: #3f3c34;
-    --color-lh-primary-2: #31302b;
+  --color-lh-primary: #3f3c34;
+  --color-lh-primary-2: #31302b;
 }
 
 html body {
@@ -31,7 +31,7 @@ a {
 
 tui-dialog {
     .t-content {
-        @apply !text-base;
+        @apply text-base!;
         font-family: "Advent Pro", serif !important;
         font-optical-sizing: auto;
         background-color: #e2d7bb !important;

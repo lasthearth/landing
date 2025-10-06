@@ -1,5 +1,5 @@
 <div class="relative">
-    <tui-carousel [(index)]="carouselIndex" [duration]="4000" class="!h-auto">
+    <tui-carousel [(index)]="carouselIndex" [duration]="4000" class="h-auto!">
         @for (item of images; track $index) {
         <img *tuiItem [src]="item" class="h-full md:h-[500px] object-cover object-center" />
         }
@@ -8,6 +8,6 @@
 </div>
 <div class="flex flex-wrap items-center gap-7 pt-0 p-10">
     @for (item of news; track $index; let first = $first) {
-    <app-news-card [data]="item" class="!h-auto lg:!h-[280px]" />
+    <app-news-card [data]="item" class="h-auto! lg:h-[280px]!" />
     }
 </div>

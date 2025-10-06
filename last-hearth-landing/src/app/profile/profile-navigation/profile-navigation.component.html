@@ -1,22 +1,22 @@
-<div class="flex xl:flex-col gap-2 !z-[300]">
+<div class="flex xl:flex-col gap-2 z-300!">
     <button
         [routerLink]="['/profile/how-play']"
-        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'how-play' }"
-        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !size-11"
+        [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'how-play' }"
+        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
     >
         <tui-icon icon="@tui.gamepad" />
     </button>
     <button
         [routerLink]="['/profile/stats']"
-        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-base': select === 'stats' }"
-        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !size-11"
+        [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'stats' }"
+        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
     >
         <tui-icon icon="@tui.chart-no-axes-combined" />
     </button>
     <button
         [routerLink]="['/profile/settlement']"
-        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'settlement' }"
-        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !size-11"
+        [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'settlement' }"
+        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
     >
         <tui-icon icon="@tui.castle" />
     </button>
@@ -24,8 +24,8 @@
     <button
         [routerLink]="isAuth && isAdmin() ? ['/profile/admin'] : ''"
         [class.!hidden]="!isAdmin()"
-        [ngClass]="{ '!bg-[#e2d7bb] !text-lh-primary !font-bold !text-sm': select === 'admin' }"
-        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 !size-11"
+        [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'admin' }"
+        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
     >
         <tui-icon icon="@tui.shield" />
     </button>

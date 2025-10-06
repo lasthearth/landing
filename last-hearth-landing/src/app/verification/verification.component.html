@@ -1,5 +1,5 @@
 @let questions = questions$ | async; @if(questions !== null) {
-<div class="!p-6 bg-transparent flex flex-col gap-4">
+<div class="p-6! bg-transparent flex flex-col gap-4">
     <p class="text-2xl">Запрос на верификацию</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2">
         <p class="text-red-700">Используйте ваш настоящий игровой ник в Vintage Story*</p>
@@ -18,7 +18,7 @@
                     placeholder="Ответ на вопрос"
                     [formControl]="form.controls.answer1"
                     tuiTextarea
-                    class="!bg-transparent !z-20"
+                    class="bg-transparent! z-20!"
                 ></textarea>
             </tui-textfield>
             <tui-error formControlName="answer1" [error]="[] | tuiFieldError | async" />
@@ -31,7 +31,7 @@
                         placeholder="Ответ на вопрос"
                         [formControl]="form.controls.answer2"
                         tuiTextarea
-                        class="!bg-transparent !z-20"
+                        class="bg-transparent! z-20!"
                     ></textarea>
                 </tui-textfield>
                 <tui-error formControlName="answer2" [error]="[] | tuiFieldError | async" />
@@ -45,7 +45,7 @@
                         placeholder="Ответ на вопрос"
                         [formControl]="form.controls.answer3"
                         tuiTextarea
-                        class="!bg-transparent !z-20"
+                        class="bg-transparent! z-20!"
                     ></textarea>
                 </tui-textfield>
                 <tui-error formControlName="answer3" [error]="[] | tuiFieldError | async" />
@@ -59,7 +59,7 @@
                         placeholder="Ответ на вопрос"
                         [formControl]="form.controls.answer4"
                         tuiTextarea
-                        class="!bg-transparent !z-20"
+                        class="bg-transparent! z-20!"
                     ></textarea>
                 </tui-textfield>
                 <tui-error formControlName="answer4" [error]="[] | tuiFieldError | async" />
@@ -73,7 +73,7 @@
                         placeholder="Ответ на вопрос"
                         [formControl]="form.controls.answer5"
                         tuiTextarea
-                        class="!bg-transparent !z-20"
+                        class="bg-transparent! z-20!"
                     ></textarea>
                 </tui-textfield>
                 <tui-error formControlName="answer5" [error]="[] | tuiFieldError | async" />
@@ -83,7 +83,7 @@
         <button
             [disabled]="!form.valid"
             type="submit"
-            class="text-white !text-sm cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-4 disabled:text-gray-300 disabled:bg-lh-primary"
+            class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-4 disabled:text-gray-300 disabled:bg-lh-primary"
         >
             Отправить запрос
         </button>

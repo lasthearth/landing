@@ -8,7 +8,7 @@
         <p class="text-xl"><span class="font-semibold">{{item.desc}}:</span></p>
         <div
             (click)="show(item.url, item.desc)"
-            class="relative cursor-pointer hover:scale-[101%] transition-all hover:shadow-xl shadow-md duration-500 aspect-video rounded-2xl overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-gray-500/20 before:to-gray-800/10 before:backdrop-blur-md before:content-[''] before:opacity-60 before:z-0 before:rounded-2xl before:border before:border-white/5"
+            class="relative cursor-pointer hover:scale-[101%] transition-all hover:shadow-xl shadow-md duration-500 aspect-video rounded-2xl overflow-hidden before:absolute before:inset-0 before:bg-linear-to-br before:from-gray-500/20 before:to-gray-800/10 before:backdrop-blur-md before:content-[''] before:opacity-60 before:z-0 before:rounded-2xl before:border before:border-white/5"
         >
             <img [src]="item.url" class="relative z-10 w-full h-full object-contain object-center" />
         </div>

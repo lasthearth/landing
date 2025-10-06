@@ -33,8 +33,8 @@
         "@taiga-ui/icons": "^4.40.0",
         "@taiga-ui/kit": "^4.40.0",
         "@taiga-ui/layout": "^4.40.0",
-        "@tailwindcss/postcss": "^4.0.6",
-        "@tailwindcss/vite": "^4.0.6",
+        "@tailwindcss/postcss": "^4.1.14",
+        "@tailwindcss/vite": "^4.1.14",
         "angular-auth-oidc-client": "^19.0.0",
         "jwt-decode": "^4.0.0",
         "rxjs": "~7.8.0",
@@ -55,7 +55,7 @@
         "karma-jasmine-html-reporter": "~2.1.0",
         "postcss": "^8.5.2",
         "prettier": "^3.5.3",
-        "tailwindcss": "^4.0.6",
+        "tailwindcss": "^4.1.14",
         "typescript": "~5.7.2",
         "vite": "^6.1.0"
     }

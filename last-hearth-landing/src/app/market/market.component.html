@@ -22,7 +22,7 @@
             <p class="text-2xl text-lh-primary font-bold">{{ $index + 1 }}. {{ item.name }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
-                [ngClass]="{ '!rotate-180': item.isOpen }"
+                [ngClass]="{ 'rotate-180!': item.isOpen }"
                 class="text-lh-primary transition-all"
             />
         </div>
@@ -35,7 +35,7 @@
                     <p class="text-xl font-bold flex">{{ item.type }}</p>
                     <tui-icon
                         icon="@tui.chevron-down"
-                        [ngClass]="{ '!rotate-180': item.isOpen }"
+                        [ngClass]="{ 'rotate-180!': item.isOpen }"
                         class="text-lh-primary transition-all"
                     />
                 </div>

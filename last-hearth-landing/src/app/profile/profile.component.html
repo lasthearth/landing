@@ -13,7 +13,7 @@
                 class="flex rounded-2xl justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                 (click)="triggerFileInput()"
             >
-                <tui-icon icon="@tui.user" class="!text-6xl !self-center" />
+                <tui-icon icon="@tui.user" class="text-6xl! self-center!" />
             </div>
             }
             <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
@@ -26,7 +26,7 @@
         </div>
         <div class="flex flex-col gap-2">
             <p class="text-4xl font-semibold">{{userData.name}}</p>
-            <p [class.!text-red-500]="getRoleName() === 'Неверифицирован'" class="text-2xl">{{getRoleName()}}</p>
+            <p [class.text-red-500!]="getRoleName() === 'Неверифицирован'" class="text-2xl">{{getRoleName()}}</p>
             @let details = details$ | async;
             <p *ngIf="details?.status === 'pending'" class="text-2xl">Ваша анкета отправлена. Ожидайте проверки.</p>
             <p *ngIf="details?.status === 'rejected'" class="text-2xl">
