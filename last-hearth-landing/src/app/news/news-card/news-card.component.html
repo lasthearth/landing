@@ -1,7 +1,13 @@
 <div
-    [style.backgroundImage]="data().image ? 'url('+ data().image +')' : 'url(/images/screenshots/screen_1.png)'"
-    class="transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
+    [style.backgroundImage]="data().image ? 'url('+ data().image +')' : 'url(/images/screenshots/screen_1.webp)'"
+    class="p-4 sm:p-8 flex sm:flex-row flex-col gap-4 items-start justify-between bg-center bg-cover h-full rounded-xl"
 >
+    <div
+        class="relative max-w-full lg:max-w-[60%] p-0.5 sm:p-2 flex flex-col gap-2 before:backdrop-blur-2xl before:absolute before:size-full before:rounded-xl z-10 before:-z-40"
+    >
+        <p class="text-neutral-50 text-xl sm:text-2xl mx-4 my-1">{{ data().title }}</p>
+        <p class="text-neutral-50 text-base font-light mx-4" [innerHtml]="data().description"></p>
+    </div>
     <div class="flex sm:flex-col justify-between gap-4 items-end sm:items-start sm:gap-0 h-full">
         <div class="p-8 z-20 flex gap-12 items-center justify-between w-full">
             <div

@@ -108,9 +108,6 @@ export class HeaderComponent {
                         case RouteKeys.rules:
                             this.select = 'rules';
                             break;
-                        case RouteKeys.market:
-                            this.select = 'market';
-                            break;
                         case RouteKeys.profile:
                         case RouteKeys.howPlay:
                         case RouteKeys.stats:

@@ -29,13 +29,13 @@ export class HomeComponent {
      * Массив элементов карусели.
      */
     protected readonly images: string[] = [
-        `${this.imagesPath}screen_0.jpg`,
-        `${this.imagesPath}screen_5.jpg`,
-        `${this.imagesPath}screen_6.jpg`,
-        `${this.imagesPath}screen_7.jpg`,
-        `${this.imagesPath}screen_8.jpg`,
-        `${this.imagesPath}screen_9.jpg`,
-        `${this.imagesPath}screen_10.jpg`,
+        `${this.imagesPath}screen_0.webp`,
+        `${this.imagesPath}screen_5.webp`,
+        `${this.imagesPath}screen_6.webp`,
+        `${this.imagesPath}screen_7.webp`,
+        `${this.imagesPath}screen_8.webp`,
+        `${this.imagesPath}screen_9.webp`,
+        `${this.imagesPath}screen_10.webp`,
     ];
 
     /**

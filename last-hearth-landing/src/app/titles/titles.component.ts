@@ -87,10 +87,8 @@ export class TitlesComponent {
                             this.index = 3;
                             break;
                         case RouteKeys.warrior:
-                            this.index = 4;
-                            break;
                         case RouteKeys.builder:
-                            this.index = 5;
+                            this.index = 4;
                             break;
                     }
                     this.cdr.markForCheck();
@@ -99,7 +97,7 @@ export class TitlesComponent {
     }
 
     protected nextCard() {
-        if (this.index === this.titles.length - 2) {
+        if (this.index === this.titles.length - 3) {
             this.index = 0;
         } else {
             this.index += 1;
@@ -108,7 +106,7 @@ export class TitlesComponent {
 
     protected prevCard() {
         if (this.index === 0) {
-            this.index = this.titles.length - 2;
+            this.index = this.titles.length - 3;
         } else {
             this.index -= 1;
         }
