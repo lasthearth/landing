@@ -8,7 +8,6 @@ import { INews } from '../interfaces/i-news';
     standalone: true,
     selector: 'app-news-card',
     templateUrl: './news-card.component.html',
-    styleUrl: './news-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewsCardComponent {

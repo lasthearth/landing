@@ -877,45 +877,50 @@
                         </div>
                     </tui-expand>
                 </div>
+
+                <div class="shadow-2xs">
+                    <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isSpy = !isSpy">
+                        <p class="text-xl pl-8 text-lh-primary cursor-pointer font-bold">3.3 Шпионаж.</p>
+                        <tui-icon
+                            icon="@tui.chevron-down"
+                            [ngClass]="{ 'rotate-180!': isSpy }"
+                            class="text-lh-primary transition-all"
+                        />
+                    </div>
+                    <tui-expand [expanded]="isSpy">
+                        <div class="flex flex-col gap-2">
+                            <p class="text-xl pl-16">
+                                <span class="font-bold">3.3.1</span> Шпионы - люди внедренные в чужие селения для
+                                выполнения агентурных действий.
+                            </p>
+                            <p class="text-xl pl-16">
+                                <span class="font-bold">3.3.2</span> Шпион может украсть у поселения в которое он
+                                внедрен ресурсы, но соблюдая: Правила воровства (При этом в сети и на территории должен
+                                находиться как минимум 1 человек (член общины) не являющийся шпионом).
+                            </p>
+                            <p class="text-xl pl-16">
+                                <span class="font-bold">3.3.3</span> Шпион может открыть ворота во время осады при
+                                ведении войны или набега. Подразумеваются только первые, внешние ворота. Открытие ворот
+                                кроме них - запрещено.
+                            </p>
+                            <p class="text-xl pl-16">
+                                <span class="font-bold">3.3.4</span> Шпион может передавать любую разведывательную
+                                информацию.
+                            </p>
+                            <p class="text-xl pl-16">
+                                <span class="font-bold">3.3.5</span> Любые иные действия шпиона являются - запрещенными.
+                            </p>
+                        </div>
+                    </tui-expand>
+                </div>
             </div>
         </tui-expand>
     </div>
 
     <!-- 4. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isProtectors = !isProtectors">
-            <p class="text-2xl text-lh-primary font-bold">4. Протекторат</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isProtectors }"
-                class="text-lh-primary transition-all"
-            />
-        </div>
-        <tui-expand [expanded]="isProtectors">
-            <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8">
-                    <span class="font-bold">4.1</span> Хутора, Лагеря, Деревни и Поселки могут претендовать на
-                    протекторат со стороны Городов или Региональных провинций.
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">4.2</span> Протектор вправе требовать на свое усмотрение выполнение
-                    обязательств за предоставляемый протекторат, а также обязан в случаях агрессии вступиться за свой
-                    протекторат и выполнить ряд иных обязанностей, в которые входит:
-                </p>
-                <p class="text-xl pl-16">
-                    • Возмещение не менее 50% убытков, защищаемому от его потерь в следствии его убийства/разграбления
-                    агрессором.
-                </p>
-                <p class="text-xl pl-16">• Проведение расследования и суда с целью выяснения виновных в содеянном.</p>
-                <p class="text-xl pl-16">• Решение мелких споров и неурядиц.</p>
-            </div>
-        </tui-expand>
-    </div>
-
-    <!-- 5. -->
-    <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isColonization = !isColonization">
-            <p class="text-2xl text-lh-primary font-bold">5. Колонизация</p>
+            <p class="text-2xl text-lh-primary font-bold">4. Колонизация</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isColonization }"
@@ -925,7 +930,7 @@
         <tui-expand [expanded]="isColonization">
             <div class="flex flex-col gap-2">
                 <p class="text-xl pl-8">
-                    <span class="font-bold">5.1</span> Колонизация - процесс основания новых поселений помимо основного.
+                    <span class="font-bold">4.1</span> Колонизация - процесс основания новых поселений помимо основного.
                     Колония считается неотъемлемой частью основного селения, не смотря на ее местоположение. При
                     объявлении набега или войны учитывается общая численность игроков входящих в основное селение и
                     колонии принадлежащие ему.<br />Для проведения колонизации необходимо:
@@ -952,10 +957,10 @@
         </tui-expand>
     </div>
 
-    <!-- 6. -->
+    <!-- 5. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRaid = !isRaid">
-            <p class="text-2xl text-lh-primary font-bold">6. Состояние набег</p>
+            <p class="text-2xl text-lh-primary font-bold">5. Состояние набег</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRaid }"
@@ -965,7 +970,7 @@
         <tui-expand [expanded]="isRaid">
             <div class="flex flex-col gap-2">
                 <p class="text-xl pl-8">
-                    <span class="font-bold">6.1</span> ”Набег” - состояние, когда игроки, собираются украсть ресурсы у
+                    <span class="font-bold">5.1</span> ”Набег” - состояние, когда игроки, собираются украсть ресурсы у
                     других игроков, путем проникновения на территорию и разрушения хранилищ для получения ресурсов из
                     них.<br />Состояние “набег” должно проходить по определенным правилам, которые описаны ниже.
                 </p>
@@ -973,7 +978,7 @@
                 <div class="shadow-2xs">
                     <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRaid3 = !isRaid3">
                         <p class="text-xl pl-8 text-lh-primary">
-                            <span class="font-bold">6.2</span> “Набег” должен быть объявлен другому селению заранее (не
+                            <span class="font-bold">5.2</span> “Набег” должен быть объявлен другому селению заранее (не
                             менее чем за 20 минут до свершения, которые будут отсчитываться с момента объявления в чате
                             "Дипломатия" в дискорд). Объявление должно быть передано людям образования используя не
                             менее двух тегов игроков селения, на которое будет совершено нападение. Объявление должно
@@ -1011,7 +1016,7 @@
                 <div class="shadow-2xs">
                     <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRaid2 = !isRaid2">
                         <p class="text-xl pl-8 text-lh-primary">
-                            <span class="font-bold">6.3</span> Правила ведения боевых действий во время состояния
+                            <span class="font-bold">5.3</span> Правила ведения боевых действий во время состояния
                             “набег” для стороны защищающихся:
                         </p>
                         <tui-icon
@@ -1099,7 +1104,7 @@
                 <div class="shadow-2xs">
                     <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRaid4 = !isRaid4">
                         <p class="text-xl pl-8 text-lh-primary">
-                            <span class="font-bold">6.4</span> Правила ведения боевых действий во время состояния
+                            <span class="font-bold">5.4</span> Правила ведения боевых действий во время состояния
                             “набег” для стороны атакующих:
                         </p>
                         <tui-icon
@@ -1200,10 +1205,10 @@
         </tui-expand>
     </div>
 
-    <!-- 7. -->
+    <!-- 6. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isWar = !isWar">
-            <p class="text-2xl text-lh-primary font-bold">7. Состояние война</p>
+            <p class="text-2xl text-lh-primary font-bold">6. Состояние война</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isWar }"
@@ -1213,7 +1218,7 @@
         <tui-expand [expanded]="isWar">
             <div class="flex flex-col gap-2">
                 <p class="text-xl pl-8">
-                    <span class="font-bold">7.1</span> “Война” - состояние, когда игроки одного селения начинают воевать
+                    <span class="font-bold">6.1</span> “Война” - состояние, когда игроки одного селения начинают воевать
                     с игроками другого селения.<br />Правила войны все еще находятся в разработке и пока включают:
                 </p>
                 <p class="text-xl pl-16">• Все правила ведения боевых действий как и в случае набега.</p>
@@ -1247,45 +1252,10 @@
         </tui-expand>
     </div>
 
-    <!-- 8. -->
-    <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isSpy = !isSpy">
-            <p class="text-2xl text-lh-primary font-bold">8. Шпионы</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isSpy }"
-                class="text-lh-primary transition-all"
-            />
-        </div>
-        <tui-expand [expanded]="isSpy">
-            <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8">
-                    <span class="font-bold">8.1</span> Шпионы - люди внедренные в чужие селения для выполнения
-                    агентурных действий.
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">8.2</span> Шпион может украсть у поселения в которое он внедрен ресурсы, но
-                    соблюдая: Правила воровства (При этом в сети и на территории должен находиться как минимум 1 человек
-                    (член общины) не являющийся шпионом).
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">8.3</span> Шпион может открыть ворота во время осады при ведении войны или
-                    набега. Подразумеваются только первые, внешние ворота. Открытие ворот кроме них - запрещено.
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">8.4</span> Шпион может передавать любую разведывательную информацию.
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">8.5</span> Любые иные действия шпиона являются - запрещенными.
-                </p>
-            </div>
-        </tui-expand>
-    </div>
-
-    <!-- 9. -->
+    <!-- 7. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isDefendBuildings = !isDefendBuildings">
-            <p class="text-2xl text-lh-primary font-bold">9. Защита построек</p>
+            <p class="text-2xl text-lh-primary font-bold">7. Защита построек</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isDefendBuildings }"
@@ -1295,10 +1265,10 @@
         <tui-expand [expanded]="isDefendBuildings">
             <div class="flex flex-col gap-2">
                 <p class="text-xl pl-8">
-                    <span class="font-bold">9.1</span> Запрещено использовать приваты типа Claim.
+                    <span class="font-bold">7.1</span> Запрещено использовать приваты типа Claim.
                 </p>
                 <p class="text-xl pl-8">
-                    <span class="font-bold">9.2</span> Исключением для использования Claim-приватов является привилегия
+                    <span class="font-bold">7.2</span> Исключением для использования Claim-приватов является привилегия
                     -титул. Для хуторов разрешается приватить исключительно дом титулованного игрока. Для всех селений
                     уровнями выше, разрешен приват исключительно до восьми одиночных сундуков. Приватить иное или в
                     большем количестве - запрещается. Если игрок не состоит ни в одном селении, он имеет право
@@ -1306,145 +1276,8 @@
                     других селений.
                 </p>
                 <p class="text-xl pl-8">
-                    <span class="font-bold">9.3</span> Приваты осуществляются только за счет укрепления построек с
+                    <span class="font-bold">7.3</span> Приваты осуществляются только за счет укрепления построек с
                     помощью отвеса и угольника, а также запирания сундуков, дверей и окон с помощью замков.
-                </p>
-            </div>
-        </tui-expand>
-    </div>
-
-    <!-- 10. -->
-    <div class="flex flex-col gap-2 shadow-2xs">
-        <div
-            class="flex w-full justify-between gap-2 cursor-pointer"
-            (click)="isBreakDifficultBuildings = !isBreakDifficultBuildings"
-        >
-            <p class="text-2xl text-lh-primary font-bold">10. Ломание построек сложного типа</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isBreakDifficultBuildings }"
-                class="text-lh-primary transition-all"
-            />
-        </div>
-        <tui-expand [expanded]="isBreakDifficultBuildings">
-            <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8">
-                    <span class="font-bold">10.1</span> Запрещено ломать постройки сложного типа. Под сложным типом
-                    понимаются постройки, в которых использовался чизел в каком-либо объеме. Однако, есть ряд
-                    исключений:
-                </p>
-                <p class="text-xl pl-16">
-                    <span class="font-bold">•</span> Двери, окна в таких постройках, либо блок, если двери и окна
-                    отсутствуют вовсе, либо если блок закрывает доступ к сундуку и нет никаких иных вариантов к нему
-                    добраться.
-                </p>
-                <p class="text-xl pl-16">
-                    <span class="font-bold">•</span> Постройки, относящиеся к оборонительным укреплениям. К таковым
-                    могут относиться: стены, башни и прочие укрепления, а также постройки, которые администрация при
-                    проверке может счесть оборонительными укреплениями. За исключением оговорок примененных в п.6.4.
-                </p>
-                <p class="text-xl pl-16">
-                    <span class="font-bold">•</span> Разрушение таковых построек допускается вследствие штурма-осады с
-                    использованием правил специальных пунктов.
-                </p>
-                <p class="text-xl pl-16">
-                    <span class="font-bold">•</span> Разрушение в следствии требований после победы в войне.
-                </p>
-            </div>
-        </tui-expand>
-    </div>
-
-    <!-- 11. -->
-    <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRight = !isRight">
-            <p class="text-2xl text-lh-primary font-bold">11. Право редактирования правил</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isRight }"
-                class="text-lh-primary transition-all"
-            />
-        </div>
-        <tui-expand [expanded]="isRight">
-            <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8">
-                    <span class="font-bold">11.1</span> Администрация оставляет за собой право на редакцию правил при
-                    необходимости, так как игра меняется, меняются ситуации. Помните, написать за раз универсально и
-                    емко – можно, однако это совсем не гарант того, что оно будет работать хорошо на деле. Поэтому
-                    всегда остается пространства для маневра. Правила создаются для комфортной, честной и справедливой
-                    игры. Правила создаются, проходя через опыт, притирку и анализ.
-                </p>
-            </div>
-        </tui-expand>
-    </div>
-
-    <!-- 12. -->
-    <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isAdditions = !isAdditions">
-            <p class="text-2xl text-lh-primary font-bold">12. Дополнения</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isAdditions }"
-                class="text-lh-primary transition-all"
-            />
-        </div>
-        <tui-expand [expanded]="isAdditions">
-            <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8">
-                    <span class="font-bold">12.1</span> Запрещено оскорбление любого участника проекта в любых его
-                    проявлениях. Соблюдайте вежливость, и та же вежливость вернется к вам. В случае нарушения,
-                    администрация в праве выдать мут на подумать. В случае злостного нарушения – бан.
-                </p>
-            </div>
-        </tui-expand>
-    </div>
-
-    <!-- 13. -->
-    <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isDonations = !isDonations">
-            <p class="text-2xl text-lh-primary font-bold">13. Положение о пожертвованиях</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isDonations }"
-                class="text-lh-primary transition-all"
-            />
-        </div>
-        <tui-expand [expanded]="isDonations">
-            <div class="flex flex-col gap-2">
-                <p class="text-xl pl-8">
-                    <span class="font-bold">13.1</span> Пожертвования, осуществляемые Пользователями в пользу
-                    Администрации игрового проекта Last Hearth через сторонние платформы (включая, но не ограничиваясь
-                    Boosty.to и Donation Alerts), представляют собой добровольные безвозмездные перечисления денежных
-                    средств, направленные на развитие и техническую поддержку игрового сервера. Такие перечисления
-                    регулируются положениями статьи 582 Гражданского кодекса Российской Федерации как пожертвования и не
-                    являются платой за оказание услуг или предоставление товаров.
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">13.2</span> Пожертвования не подлежат возврату, за исключением случаев,
-                    прямо предусмотренных законодательством Российской Федерации (например, при ошибочном списании по
-                    технической вине платёжной платформы).
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">13.3</span> Совершая пожертвование, Пользователь подтверждает, что:
-                </p>
-                <p class="text-xl pl-16"><span class="font-bold">•</span> действует добровольно и осознанно;</p>
-                <p class="text-xl pl-16">
-                    <span class="font-bold">•</span> ознакомлен и полностью согласен с настоящими условиями;
-                </p>
-                <p class="text-xl pl-16">
-                    <span class="font-bold">•</span> не имеет и не будет предъявлять имущественных или правовых
-                    претензий к Администрации;
-                </p>
-                <p class="text-xl pl-16">
-                    <span class="font-bold">•</span> не расценивает пожертвование как оплату товара, услуги или права.
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">13.4</span> Настоящий документ и вся информация, размещённая на данном
-                    ресурсе, не являются публичной офертой в смысле статьи 437, часть 2, Гражданского кодекса Российской
-                    Федерации.
-                </p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">13.5</span> Администрация оставляет за собой право в одностороннем порядке
-                    изменять настоящее Положение в любой момент без предварительного уведомления.
                 </p>
             </div>
         </tui-expand>

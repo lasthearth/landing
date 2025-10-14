@@ -1,4 +1,5 @@
-@let online = online$ | async; @let time = time$ | async; @let isAuth = userService.authState$ | async;
+@let online = online$ | async; @let time = time$ | async; @let isAuth = userService.authState$ | async; @let invitations
+= invitations$ | async; @let userVerifications = userVerifications$ | async;
 <div class="flex flex-col xl:gap-24 gap-8">
     <div class="flex justify-center sm:justify-between px-4 sm:px-0">
         <!-- Логотип -->
@@ -73,11 +74,12 @@
             @if(!isAuth) {
             <button
                 [routerLink]="['/start-game']"
-                class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+                class="nav-button relative w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'startGame' }"
             >
                 <tui-icon icon="@tui.gamepad-2" />
                 <span class="hidden md:block">НАЧАТЬ ИГРУ</span>
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110"> </tui-pulse>
             </button>
             }
             <button
@@ -89,14 +91,6 @@
                 <span class="hidden md:block">ПРАВИЛА</span>
             </button>
             <button
-                [routerLink]="['/titles']"
-                class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'titles' }"
-            >
-                <tui-icon icon="@tui.store" />
-                <span class="hidden md:block">МАГАЗИН</span>
-            </button>
-            <button
                 [routerLink]="['/faq']"
                 class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'faq' }"
@@ -104,15 +98,38 @@
                 <tui-icon icon="@tui.info" />
                 <span class="hidden md:block">FAQ</span>
             </button>
+            @if(isAuth) {
+            <button
+                [routerLink]="['/settlements']"
+                class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'settlements' }"
+            >
+                <tui-icon icon="@tui.tent" />
+                <span class="hidden md:block">СЕЛЕНИЯ</span>
+            </button>
+            }
+            <button
+                [routerLink]="['/titles']"
+                class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'titles' }"
+            >
+                <tui-icon icon="@tui.store" />
+                <span class="hidden md:block">МАГАЗИН</span>
+            </button>
         </div>
         <div class="flex flex-row gap-2">
             <button
                 (click)="isAuth ? '' : signIn()"
                 [routerLink]="isAuth ? ['/profile'] : ''"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'profile' }"
-                class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 w-11!"
+                class="relative nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 w-11!"
             >
                 <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
+                <tui-pulse
+                    *ngIf="invitations?.invitations?.length || userVerifications?.length && isAdmin()"
+                    tuiHintAppearance="floating"
+                    class="!absolute !top-0.5 !right-0.5 !scale-110"
+                />
             </button>
         </div>
     </div>

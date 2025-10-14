@@ -16,6 +16,16 @@
         font-size: 14px;
     }
 
+    textarea {
+        width: 100%;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        background: transparent;
+    }
+
     &.select-mode {
         cursor: pointer;
         user-select: none;

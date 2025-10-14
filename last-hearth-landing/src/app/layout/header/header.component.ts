@@ -6,15 +6,16 @@ import {
     inject,
     KeyValueDiffers,
 } from '@angular/core';
-import { TuiProgress } from '@taiga-ui/kit';
+import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { filter, map, Observable } from 'rxjs';
 import { ServerInformationService } from '../../services/server-information.service';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { TuiIcon } from '@taiga-ui/core';
 import { RouterOutlet, RouterLink, ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouteKeys } from '../../routes/enums/route-keys';
+import { NotificationService } from '../../services/notification.service';
 
 /**
  * Компонент заголовка.
@@ -22,7 +23,7 @@ import { RouteKeys } from '../../routes/enums/route-keys';
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterOutlet, RouterLink, NgClass, TuiIcon],
+    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterOutlet, RouterLink, NgClass, TuiIcon, TuiPulse, NgIf],
     templateUrl: './header.component.html',
     styleUrl: './header.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +68,12 @@ export class HeaderComponent {
      * Ссылка уничтожения на компонент.
      */
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
+
+    private readonly notificationService = inject(NotificationService);
+
+    protected readonly invitations$ = this.notificationService.invitations$;
+
+    protected readonly userVerifications$ = this.notificationService.userVerifications$;
 
     /**
      * Активная страница.
@@ -133,6 +140,9 @@ export class HeaderComponent {
                         case RouteKeys.faq:
                             this.select = 'faq';
                             break;
+                        case RouteKeys.settlements:
+                            this.select = 'settlements';
+                            break;
                     }
                     this.cdr.markForCheck();
                 }
@@ -144,5 +154,12 @@ export class HeaderComponent {
      */
     protected signIn(): void {
         this.userService.signIn();
+    }
+
+    /**
+     * Возвращает признак, является ли пользователь администратором.
+     */
+    protected isAdmin(): boolean {
+        return this.userService.roles.includes('admin');
     }
 }

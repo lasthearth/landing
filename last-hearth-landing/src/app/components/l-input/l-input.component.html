@@ -8,6 +8,14 @@
         (input)="onInputChange($event)"
     />
 
+    <textarea
+        *ngIf="type() === 'textarea'"
+        [placeholder]="placeholder()"
+        [value]="displayedValue"
+        [disabled]="disabled"
+        (input)="onInputChange($event)"
+    ></textarea>
+
     @if(type() === 'select') {
     <div class="flex justify-between">
         <div class="select-display" [class.text-[#8c8784]]="!displayedValue" [class.text-sm]="!displayedValue">

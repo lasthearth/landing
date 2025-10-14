@@ -7,6 +7,7 @@ import { BehaviorSubject, catchError, combineLatest, filter, first, Observable, 
 import { NavigationEnd, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement';
+import { ServerInformationService } from './server-information.service';
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +25,7 @@ export class UserService {
 
     public accessToken!: string;
 
-    private baseUrl = 'https://api.lasthearth.ru/v1';
+    private baseUrl = 'https://apiprev.lasthearth.ru/v1';
 
     private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -97,5 +98,36 @@ export class UserService {
         });
 
         return this.http.post<{ avatar: string }>(`${this.baseUrl}/user/avatar`, { avatar: base64Image }, { headers });
+    }
+
+    public getInvitations$() {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.accessToken}`
+        });
+        return this.http
+            .get<{
+                invitations: { id: string, user_id: string, settlement_id: string }[];
+            }>(`${this.baseUrl}/users/${this.userId}/settlements/invitations`, { headers })
+            .pipe();
+    }
+
+    public getPlayer$(userId: string) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.accessToken}`
+        });
+        return this.http
+            .get<{
+                user_id: string,
+                user_game_name: string,
+                avatar: {
+                    original: string,
+                    x96: string,
+                    x48: string
+
+                };
+            }>(`${this.baseUrl}/user/${userId}`, { headers })
+            .pipe();
     }
 }

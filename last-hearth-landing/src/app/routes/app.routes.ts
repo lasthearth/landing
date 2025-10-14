@@ -23,6 +23,7 @@ import { BuilderTitleComponent } from '../titles/builder/builder-title/builder-t
 import { ExplorerTitleComponent } from '../titles/explorer/explorer-title/explorer-title.component';
 import { WarriorTitleComponent } from '../titles/warrior/warrior-title/warrior-title.component';
 import { FaqComponent } from '../faq/faq.component';
+import { SettlementsComponent } from '../settlements/settlements.component';
 
 export const routes: Routes = [
     {
@@ -137,6 +138,12 @@ export const routes: Routes = [
                 path: 'faq',
                 component: FaqComponent,
                 data: { route_keys: RouteKeys.faq },
+            },
+            {
+                path: 'settlements',
+                canActivate: [userGuard],
+                component: SettlementsComponent,
+                data: { route_keys: RouteKeys.settlements },
             },
         ],
     },

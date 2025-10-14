@@ -6,15 +6,19 @@ import { UserService } from '../../services/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, startWith } from 'rxjs';
 import { RouteKeys } from '../../routes/enums/route-keys';
+import { TuiPulse } from '@taiga-ui/kit';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
     selector: 'app-profile-navigation',
     templateUrl: './profile-navigation.component.html',
     styleUrl: './profile-navigation.component.css',
-    imports: [CommonModule, RouterLink, TuiIcon, AsyncPipe],
+    imports: [CommonModule, RouterLink, TuiIcon, AsyncPipe, TuiPulse],
 })
 export class ProfileNavigationComponent implements OnInit {
     protected readonly userService = inject(UserService);
+
+    private readonly notificationService = inject(NotificationService);
 
     protected select = 'how-play';
 
@@ -25,6 +29,10 @@ export class ProfileNavigationComponent implements OnInit {
     private readonly router = inject(Router);
 
     private readonly activatedRoute = inject(ActivatedRoute);
+
+    protected readonly invitations$ = this.notificationService.invitations$;
+
+    protected readonly userVerifications$ = this.notificationService.userVerifications$;
 
     /**
      * Возвращает признак, является ли пользователь администратором.

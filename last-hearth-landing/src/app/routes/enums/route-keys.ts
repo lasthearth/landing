@@ -38,4 +38,6 @@ export enum RouteKeys {
     warrior = 18,
 
     faq = 19,
+
+    settlements = 20,
 }

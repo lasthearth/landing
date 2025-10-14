@@ -1,0 +1,11 @@
+@let settlements = settlements$ | async;
+
+<div class="text-lh-primary flex flex-col gap-6 p-6">
+    <p class="text-4xl font-bold">Список поселений игроков</p>
+
+    <div class="flex flex-wrap justify-center items-stretch gap-8 pt-0">
+        @for (item of settlements; track $index) {
+        <app-settlement-card [data]="item" class="card" />
+        }
+    </div>
+</div>

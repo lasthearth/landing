@@ -3,12 +3,13 @@ import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { ServerInformationService } from '../services/server-information.service';
 import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
+import { merge, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IVerifyRequest } from '../services/interface/i-verify-request';
 import { VerifyRequestComponent } from './verify-request/verify-request.component';
 import { CreateQuestionComponent } from './create-question/create-question.component';
 import { SettlementRequestComponent } from './settlement-request/settlement-request.component';
 import { SettlementService } from '../services/settlement.service';
+import { NotificationService } from '../services/notification.service';
 
 /**
  * Компонент страницы администратора.
@@ -32,10 +33,18 @@ export class AdminComponent {
      */
     private readonly serverInfo: ServerInformationService = inject(ServerInformationService);
 
+    private readonly verificationsUpdate$: Subject<void> = new Subject<void>();
+
+    private readonly notificationService = inject(NotificationService);
+
     /**
      * {@link Observable} Списка запросов верификации.
      */
-    protected readonly verificationRequests$: Observable<IVerifyRequest[]> = this.serverInfo.getVerifyRequests();
+    protected readonly verificationRequests$: Observable<IVerifyRequest[]> = merge(
+        this.verificationsUpdate$.pipe(startWith(null)),
+    ).pipe(
+        switchMap(() => this.serverInfo.getVerifyRequests())
+    );
 
     /**
      * Сервис поселений.
@@ -52,5 +61,10 @@ export class AdminComponent {
      */
     protected openCreateQuestionDialog(): void {
         this.dialogs.open(new PolymorpheusComponent(CreateQuestionComponent)).subscribe();
+    }
+
+    protected dataUpdate(): void {
+        this.verificationsUpdate$.next();
+        this.notificationService.updateAllNotification$.next();
     }
 }

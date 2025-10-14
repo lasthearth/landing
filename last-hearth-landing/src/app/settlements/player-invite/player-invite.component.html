@@ -1,0 +1,26 @@
+@let players = players$ | async;
+
+<div class="flex flex-col gap-8">
+    <p class="text-3xl font-semibold text-lh-primary">Пригласите игрока в ваше поселение</p>
+    <div class="flex flex-col gap-1">
+        <p class="text-xl">Ник игрока на сервере</p>
+        <l-input placeholder="Введите ник игрока на сервере..." [formControl]="playerNickControl" />
+    </div>
+    <div class="flex flex-col gap-2 mt-4">
+        <span *ngIf="!players" class="text-3xl self-center text-[#bdb093] font-bold uppercase">Начните искать...</span>
+        @for (item of players?.users; track $index) {
+        <div class="w-full justify-between flex">
+            <div class="flex gap-2 items-center w-full">
+                <tui-avatar size="s" [src]="item.avatar.original" />
+                <span>{{item.user_game_name}}</span>
+            </div>
+            <button
+                (click)="playerInvite(item.user_id)"
+                class="text-white transition-all text-nowrap duration-300 cursor-pointer bg-lh-primary-2 rounded-lg py-1 px-2 border hover:bg-[#e2d7bb] hover:text-lh-primary hover:font-bold text-sm"
+            >
+                Пригласить игрока
+            </button>
+        </div>
+        }
+    </div>
+</div>

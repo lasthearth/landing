@@ -13,14 +13,14 @@ function getConfig() {
     const config = buildAngularAuthConfig({
         endpoint: 'https://logto.lasthearth.ru/',
         appId: 'u9k3c8kap0lyhhs0o5jn1',
-        redirectUri: 'https://lasthearth.ru/home',
-        postLogoutRedirectUri: 'https://lasthearth.ru/home',
+        redirectUri: 'http://localhost:4200/home',
+        postLogoutRedirectUri: 'http://localhost:4200/home',
         scopes: ['openid', 'profile', 'email', 'roles', 'question:create', 'user:verify', 'settlements:manage'],
         resource: 'https://api.lasthearth.ru',
     });
 
     config.ignoreNonceAfterRefresh = true;
-    config.silentRenew = false;
+    config.silentRenew = true;
 
     return config;
 }

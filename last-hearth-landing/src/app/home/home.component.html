@@ -8,6 +8,6 @@
 </div>
 <div class="flex flex-wrap items-center gap-7 pt-0 p-10">
     @for (item of news; track $index; let first = $first) {
-    <app-news-card [data]="item" class="h-auto! lg:h-[280px]!" />
+    <app-news-card [data]="item" class="!h-auto w-full" />
     }
 </div>

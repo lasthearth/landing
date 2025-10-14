@@ -12,7 +12,7 @@ import { UserService } from '../../services/user.service';
 import { SettlementService } from '../../services/settlement.service';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
-type FileKey = 'map' | 'monument' | 'frontier' | 'fireplace' | 'home' | 'warehouse';
+type FileKey = 'map' | 'monument' | 'fireplace' | 'warehouse' | 'beds' | 'preview';
 
 @Component({
     standalone: true,
@@ -25,13 +25,13 @@ type FileKey = 'map' | 'monument' | 'frontier' | 'fireplace' | 'home' | 'warehou
 export class CreateSettlementComponent {
     name = '';
     selectedUser: { id: number; name: string } | null = null;
-    users = [
-        'Мы стремимся к миру и сотрудничеству. Наше поселение открыто для честной торговли и дипломатии. Мы никогда не нападем первыми, но всегда готовы к защите.',
-        'Мы храним нейтралитет и суверенитет. Мы имеем намерение не вступать в конфликты, если того не просит наш официальный союзник, договор, или ситуация в которой нам необходимо защищаться',
-        'Право сильного — единственный закон, который мы признаем. Мы не ведем переговоров, мы диктуем условия. Слабый будет служить, сильный — устоит. Вы предупреждены.',
+    diplomacy = [
+        'Миролюбивый',
+        'Нейтральный',
+        'Агрессивный',
     ];
 
-    protected readonly fileFields: FileKey[] = ['map', 'monument', 'frontier', 'fireplace', 'home', 'warehouse'];
+    protected readonly fileFields: FileKey[] = ['preview', 'map', 'monument', 'fireplace', 'warehouse', 'beds'];
 
     protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
@@ -39,12 +39,12 @@ export class CreateSettlementComponent {
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
+        preview: new FormControl<File | null>(null, Validators.required),
         map: new FormControl<File | null>(null, Validators.required),
         monument: new FormControl<File | null>(null, Validators.required),
-        frontier: new FormControl<File | null>(null, Validators.required),
         fireplace: new FormControl<File | null>(null, Validators.required),
-        home: new FormControl<File | null>(null, Validators.required),
         warehouse: new FormControl<File | null>(null, Validators.required),
+        beds: new FormControl<File | null>(null, Validators.required),
     });
 
     protected readonly fileStatus = this.fileFields.reduce(
@@ -72,8 +72,6 @@ export class CreateSettlementComponent {
      * Ссылка уничтожения на компонент.
      */
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
-
-    private readonly us = inject(UserService);
 
     /**
      * Контекст открытого диалогового окна.
@@ -176,10 +174,10 @@ export class CreateSettlementComponent {
         return {
             map: 'Вид с карты',
             monument: 'Ваш монумент',
-            frontier: 'Пограничные столбики',
             fireplace: 'Место костра',
-            home: 'Землянка/Навес',
             warehouse: 'Склад',
+            beds: 'Кровати 3 шт.',
+            preview: 'Заглавное изображение вашего селения',
         }[key];
     }
 

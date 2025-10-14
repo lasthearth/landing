@@ -1,6 +1,6 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { Component, inject, input, InputSignal } from '@angular/core';
+import { Component, inject, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 import { IVerifyRequest } from '../../services/interface/i-verify-request';
@@ -15,11 +15,21 @@ export class VerifyRequestComponent {
 
     public data: InputSignal<IVerifyRequest> = input.required<IVerifyRequest>();
 
+    public requestWasWatched: OutputEmitterRef<void> = output();
+
     protected approve() {
-        this.dialogService.open(new PolymorpheusComponent(ConfirmApproveComponent), { size: 'auto', data: { userId: this.data().user_id } }).subscribe();
+        this.dialogService.open(new PolymorpheusComponent(ConfirmApproveComponent), { size: 'auto', data: { userId: this.data().user_id } }).subscribe({
+            complete: () => {
+                this.requestWasWatched.emit();
+            },
+        });
     }
 
     protected reject() {
-        this.dialogService.open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: { userId: this.data().user_id } }).subscribe();
+        this.dialogService.open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: { userId: this.data().user_id } }).subscribe({
+            complete: () => {
+                this.requestWasWatched.emit();
+            },
+        });
     }
 }

@@ -1,8 +1,11 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@plugin "daisyui";
 
 @theme {
-  --color-lh-primary: #3f3c34;
-  --color-lh-primary-2: #31302b;
+    --color-lh-primary: #3f3c34;
+    --color-lh-primary-2: #31302b;
+    --color-lh-accent-1: #ff7920;
+    --color-lh-accent-2: #945a32;
 }
 
 html body {
@@ -48,4 +51,8 @@ tui-dialog {
     -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 16px 16px;
+}
+
+tui-pulse {
+    color: #ff7920 !important;
 }
