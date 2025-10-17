@@ -1,11 +1,17 @@
 @import "tailwindcss";
-@plugin "daisyui";
+
+:root {
+    --lh-primary: #3f3c34;
+    --lh-primary-2: #31302b;
+    --lh-accent: #ff7920;
+    --lh-accent-2: #945a32;
+}
 
 @theme {
-    --color-lh-primary: #3f3c34;
-    --color-lh-primary-2: #31302b;
-    --color-lh-accent-1: #ff7920;
-    --color-lh-accent-2: #945a32;
+    --color-lh-primary: var(--lh-primary);
+    --color-lh-primary-2: var(--lh-primary-2);
+    --color-lh-accent: var(--lh-accent);
+    --color-lh-accent-2: var(--lh-accent-2);
 }
 
 html body {
