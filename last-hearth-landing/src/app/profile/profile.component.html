@@ -1,31 +1,27 @@
+@let userName = userGameName$ | async;
 <div class="text-lh-primary items-start flex flex-col gap-4 p-6">
     <div class="flex gap-4 items-end">
         <div class="flex flex-col gap-1">
             @if(userData.image) {
-            <div
-                class="flex rounded-2xl justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:opacity-80"
-                (click)="triggerFileInput()"
-            >
+            <div class="flex rounded-2xl justify-center items-center">
                 <img [src]="userData.image" class="rounded-2xl rounded-b-sm max-w-32 max-h-32" />
             </div>
             } @else {
-            <div
-                class="flex rounded-2xl justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                (click)="triggerFileInput()"
-            >
+            <div class="flex rounded-2xl justify-center items-center">
                 <tui-icon icon="@tui.user" class="text-6xl! self-center!" />
             </div>
             }
             <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
             <button
-                (click)="signOut()"
-                class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-red-800 rounded-t-sm rounded-lg py-2.5 px-4"
+                (click)="triggerFileInput()"
+                class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary rounded-t-sm rounded-lg py-2.5 px-4"
             >
-                ВЫЙТИ
+                ИЗМЕНИТЬ ФОТО
             </button>
         </div>
         <div class="flex flex-col gap-2">
             <p class="text-4xl font-semibold">{{userData.name}}</p>
+            <p *ngIf="userName" class="text-3xl font-semibold">[{{userName}}]</p>
             <p [class.text-red-500!]="getRoleName() === 'Неверифицирован'" class="text-2xl">{{getRoleName()}}</p>
             @let details = details$ | async;
             <p *ngIf="details?.status === 'pending'" class="text-2xl">Ваша анкета отправлена. Ожидайте проверки.</p>

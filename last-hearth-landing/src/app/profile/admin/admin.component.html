@@ -1,0 +1,63 @@
+@let veriverificationRequests = verificationRequests$ | async; @let requestExist = veriverificationRequests === null ||
+veriverificationRequests?.length === 0; @let settlements = settlementsRequests$ | async; @let settlementsRequest =
+settlements === null || settlements?.length === 0;
+
+<div class="w-full flex flex-col gap-3 lg:gap-6">
+    <p class="text-3xl lg:text-4xl font-bold">Кабинет администратора</p>
+    <!-- <div class="flex gap-4">
+        <button
+            (click)="openCreateQuestionDialog()"
+            class="text-white self-start font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+        >
+            Создать вопрос
+        </button>
+        <button
+            (click)="openCreateQuestionDialog()"
+            class="text-white self-start font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+        >
+            Опубликовать новость
+        </button>
+    </div> -->
+
+    <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 !font-semibold !w-full content-tabs">
+        <button tuiTab type="button">
+            <p class="relative lg:px-3">
+                Анкеты игроков
+                <tui-pulse
+                    *ngIf="!requestExist"
+                    tuiHintAppearance="floating"
+                    class="!absolute !top-0.5 !right-0.5 !scale-110"
+                />
+            </p>
+        </button>
+        <button tuiTab type="button">
+            <p class="relative lg:px-3">
+                Анкеты селений
+                <tui-pulse
+                    *ngIf="!settlementsRequest"
+                    tuiHintAppearance="floating"
+                    class="!absolute !top-0.5 !right-0.5 !scale-110"
+                />
+            </p>
+        </button>
+        <button tuiTab type="button">Создать вопрос</button>
+        <button tuiTab type="button">Создать новость</button>
+    </tui-tabs>
+
+    <div class="mt-2 flex flex-col gap-4">
+        @switch (activeItemIndex) { @case (0) {
+        <p *ngIf="requestExist" class="text-2xl my-6 uppercase font-bold text-[#bdb093] self-center">
+            Анкеты игроков отсутствуют...
+        </p>
+        @for (item of veriverificationRequests; track $index) {
+        <app-player-verify-request [data]="item" (requestWasWatched)="dataUpdate()" /> } } @case (1) {
+        <p *ngIf="settlementsRequest" class="text-2xl my-6 uppercase font-bold text-[#bdb093] self-center">
+            Анкеты селений отсутствуют...
+        </p>
+        @for (item of settlements; track $index) { <app-settlement-verification-request [data]="item" /> }} @case (2) {
+        <app-create-question-form />
+        } @case (3) {
+        <p class="text-2xl my-6 uppercase font-bold text-[#bdb093] self-center">В разработке...</p>
+        }}
+    </div>
+</div>

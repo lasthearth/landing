@@ -154,6 +154,13 @@ export class HeaderComponent {
     }
 
     /**
+     * Выход из аккаунта
+     */
+    protected signOut(): void {
+        this.userService.signOut();
+    }
+
+    /**
      * Возвращает признак, является ли пользователь администратором.
      */
     protected isAdmin(): boolean {

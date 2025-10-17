@@ -1,16 +1,15 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiDialogContext, TuiIcon, TuiTextfield } from '@taiga-ui/core';
-import { TuiChevron, TuiDataListWrapper, TuiFileLike, TuiFiles, TuiSelect, TuiTooltip } from '@taiga-ui/kit';
-import { LInputComponent } from '../../components/l-input/l-input.component';
+import { TuiDialogContext } from '@taiga-ui/core';
+import { TuiFiles } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 import { finalize, forkJoin, map, Observable, of, Subject, switchMap, tap, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ICreateSettlement } from '../interfaces/i-create-settlement';
-import { UserService } from '../../services/user.service';
-import { SettlementService } from '../../services/settlement.service';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
+import { LInputComponent } from '@app/components/l-input/l-input.component';
+import { SettlementService } from '@app/services/settlement.service';
+import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
 
 type FileKey = 'map' | 'monument' | 'fireplace' | 'warehouse' | 'beds' | 'preview';
 
@@ -18,11 +17,11 @@ type FileKey = 'map' | 'monument' | 'fireplace' | 'warehouse' | 'beds' | 'previe
     standalone: true,
     selector: 'app-create-settlement',
     imports: [LInputComponent, FormsModule, ReactiveFormsModule, RouterLink, NgFor, AsyncPipe, NgIf, TuiFiles],
-    templateUrl: './create-settlement.component.html',
-    styleUrl: './create-settlement.component.css',
+    templateUrl: './create-settlement-from.component.html',
+    styleUrl: './create-settlement-from.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateSettlementComponent {
+export class CreateSettlementFormComponent {
     name = '';
     selectedUser: { id: number; name: string } | null = null;
     diplomacy = [

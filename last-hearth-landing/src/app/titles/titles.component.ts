@@ -2,9 +2,8 @@ import { ChangeDetectorRef, Component, DestroyRef, inject, input, InputSignal } 
 import { TitleCardComponent } from './title-card/title-card.component';
 import { TitlesService } from '../services/titles.service';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { TuiButton, TuiDialogService, TuiIcon, TuiIcons } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { VerificationComponent } from '../verification/verification.component';
 import { HowToBuyComponent } from './how-to-buy/how-to-buy/how-to-buy.component';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { ITitles } from './interfaces/i-titles';

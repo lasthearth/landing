@@ -2,7 +2,7 @@
     <div class="flex gap-2">
         <tui-icon icon="@tui.user" />
         <p class="text-xl">Игровой ник:</p>
-        <p class="text-xl font-bold">{{data().user_game_name}}</p>
+        <p class="text-xl font-bold">{{ data().user_game_name }}</p>
     </div>
     <hr class="w-full h-0.5" />
     @for (item of data().answers; track $index) {
@@ -14,19 +14,19 @@
     }
     <div class="flex gap-2">
         <p class="text-xl">Способы связи с игроком:</p>
-        <p class="text-xl font-bold">{{data().contacts}}</p>
+        <p class="text-xl font-bold">{{ data().contacts }}</p>
     </div>
 
     <div class="flex gap-4 justify-end">
         <button
             (click)="reject()"
-            class="text-white font-bold cursor-pointer mt-2 self-end bg-red-600 rounded-lg py-2.5 px-4 hover:bg-red-700 active:bg-red-400"
+            class="text-white font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active"
         >
             ОТКЛОНИТЬ
         </button>
         <button
             (click)="approve()"
-            class="text-white font-bold cursor-pointer mt-2 self-end bg-green-600 rounded-lg py-2.5 px-4 hover:bg-green-700 active:bg-green-400"
+            class="text-white font-bold cursor-pointer mt-2 self-end bg-lh-success rounded-lg py-2.5 px-4 hover:bg-lh-success-hover active:bg-lh-success-active"
         >
             ОДОБРИТЬ
         </button>

@@ -5,7 +5,7 @@ import { HomeComponent } from '../home/home.component';
 import { TitlesComponent } from '../titles/titles.component';
 import { RouteKeys } from './enums/route-keys';
 import { ProfileComponent } from '../profile/profile.component';
-import { AdminComponent } from '../admin/admin.component';
+import { AdminComponent } from '../profile/admin/admin.component';
 import { adminGuard } from '../guards/admin.guard';
 import { StatisticsComponent } from '../profile/statistics/statistics.component';
 import { HowPlayComponent } from '../profile/how-play/how-play.component';

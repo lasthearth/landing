@@ -1,5 +1,5 @@
 <div class="size-full rounded-xl border border-neutral-400 p-4 flex flex-col gap-2">
-    <p class="text-xl"><span class="font-semibold">Тип:</span> {{data().type === 'CAMP' ? 'Лагерь' : 'Неизвестно'}}</p>
+    <p class="text-xl"><span class="font-semibold">Тип:</span> {{ getSettlementType(data().type) }}</p>
     <p class="text-xl"><span class="font-semibold">Наименование:</span> {{data().name}}</p>
     <p class="text-xl"><span class="font-semibold">Описание:</span> {{data().description}}</p>
     <p class="text-xl"><span class="font-semibold">Дипломатический курс:</span> {{data().diplomacy}}</p>
@@ -18,13 +18,13 @@
     <div class="flex gap-4 justify-end">
         <button
             (click)="reject()"
-            class="text-white font-bold cursor-pointer mt-2 self-end bg-red-600 rounded-lg py-2.5 px-4 hover:bg-red-700 active:bg-red-400"
+            class="text-white font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active"
         >
             ОТКЛОНИТЬ
         </button>
         <button
             (click)="approve()"
-            class="text-white font-bold cursor-pointer mt-2 self-end bg-green-600 rounded-lg py-2.5 px-4 hover:bg-green-700 active:bg-green-400"
+            class="text-white font-bold cursor-pointer mt-2 self-end bg-lh-success rounded-lg py-2.5 px-4 hover:bg-lh-success-hover active:bg-lh-success-active"
         >
             ОДОБРИТЬ
         </button>

@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { CreateSettlementComponent } from '../create-settlement/create-settlement.component';
 import { SettlementService } from '../../services/settlement.service';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { UserService } from '../../services/user.service';
@@ -10,6 +9,7 @@ import { SettlementCardComponent } from '../settlement-card/settlement-card.comp
 import { ISettlement } from '../interfaces/i-settlement';
 import { NotificationService } from '../../services/notification.service';
 import { map, mergeMap, Observable, share, shareReplay, Subject, switchMap, tap } from 'rxjs';
+import { CreateSettlementFormComponent } from '@app/profile/create-settlement-from/create-settlement-from.component';
 
 @Component({
     standalone: true,
@@ -67,7 +67,7 @@ export class SettlementComponent {
     protected leader!: string;
 
     protected createSettlement(): void {
-        this.dialogs.open(new PolymorpheusComponent(CreateSettlementComponent)).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(CreateSettlementFormComponent)).subscribe();
     }
 
     protected getSettlementTypeByKey(key: string | undefined) {

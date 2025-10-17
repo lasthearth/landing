@@ -1,13 +1,14 @@
 import { UserService } from './user.service';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
+import { map, Observable, tap } from "rxjs";
 import { LeaderBoardType } from "./enums/leader-board-type";
 import { ILeaderBoard } from "./interface/i-leader-board";
 import { IVerifyData } from './interface/i-verify-data';
 import { IVerifyRequest } from './interface/i-verify-request';
 import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement';
 import { IRequestSettlement } from '../settlements/interfaces/i-request-settlement';
+import { IVerificationQuestion } from './interface/i-verification-question';
 
 @Injectable({
     providedIn: "root",
@@ -48,7 +49,7 @@ export class ServerInformationService {
         return this.http.post<{ question: string }>(`${this.baseUrl}/rules/question`, { question: question }, { headers: headers });
     }
 
-    public getQuestions() {
+    public getQuestions$(): Observable<IVerificationQuestion[]> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.userService.accessToken}`
@@ -56,9 +57,9 @@ export class ServerInformationService {
 
         const params = new HttpParams().set('count', 5);
 
-        return this.http.get<{ questions: Array<{ id: string, question: string }> }>(
+        return this.http.get<{ questions: Array<IVerificationQuestion> }>(
             `${this.baseUrl}/rules/questions`, { params, headers: headers }
-        );
+        ).pipe(map((data) => data.questions));
     }
 
     public postVerifyUser(data: IVerifyData) {

@@ -114,4 +114,12 @@ export class SettlementService {
                 users: any[];
             }>(`${this.baseUrl}/settlements/invitations/${invitationId}:accept`, {}, { headers: this.serverInfoService.getHeaders() });
     }
+
+    public getSettlementTypeByKey(key: string | undefined) {
+        switch (key) {
+            case 'CAMP':
+            default:
+                return 'Лагерь';
+        }
+    }
 }

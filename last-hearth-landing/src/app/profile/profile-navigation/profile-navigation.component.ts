@@ -12,7 +12,6 @@ import { NotificationService } from '../../services/notification.service';
 @Component({
     selector: 'app-profile-navigation',
     templateUrl: './profile-navigation.component.html',
-    styleUrl: './profile-navigation.component.css',
     imports: [CommonModule, RouterLink, TuiIcon, AsyncPipe, TuiPulse],
 })
 export class ProfileNavigationComponent implements OnInit {

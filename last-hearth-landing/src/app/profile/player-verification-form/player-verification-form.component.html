@@ -2,7 +2,7 @@
 <div class="p-6! bg-transparent flex flex-col gap-4">
     <p class="text-2xl">Запрос на верификацию</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2">
-        <p class="text-red-700">Используйте ваш настоящий игровой ник в Vintage Story*</p>
+        <p class="text-lh-danger">Используйте ваш настоящий игровой ник в Vintage Story*</p>
         <label tuiLabel>
             <tui-input formControlName="gameName" tuiTextfieldSize="s"> Игровой ник </tui-input>
             <tui-error formControlName="gameName" [error]="[] | tuiFieldError | async" />
@@ -12,7 +12,7 @@
             <tui-error formControlName="contacts" [error]="[] | tuiFieldError | async" />
         </label>
         <div class="flex flex-col gap-1 mt-4">
-            <p>{{questions.questions[0].question}}</p>
+            <p>{{questions[0].question}}</p>
             <tui-textfield [tuiTextfieldCleaner]="false">
                 <textarea
                     placeholder="Ответ на вопрос"
@@ -24,7 +24,7 @@
             <tui-error formControlName="answer1" [error]="[] | tuiFieldError | async" />
         </div>
         <div class="flex flex-col gap-1">
-            <p>{{questions.questions[1].question}}</p>
+            <p>{{questions[1].question}}</p>
             <label tuiLabel>
                 <tui-textfield [tuiTextfieldCleaner]="false">
                     <textarea
@@ -38,7 +38,7 @@
             </label>
         </div>
         <div class="flex flex-col gap-1">
-            <p>{{questions.questions[2].question}}</p>
+            <p>{{questions[2].question}}</p>
             <label tuiLabel>
                 <tui-textfield [tuiTextfieldCleaner]="false">
                     <textarea
@@ -52,7 +52,7 @@
             </label>
         </div>
         <div class="flex flex-col gap-1">
-            <p>{{questions.questions[3].question}}</p>
+            <p>{{questions[3].question}}</p>
             <label tuiLabel>
                 <tui-textfield [tuiTextfieldCleaner]="false">
                     <textarea
@@ -66,7 +66,7 @@
             </label>
         </div>
         <div class="flex flex-col gap-1">
-            <p>{{questions.questions[4].question}}</p>
+            <p>{{questions[4].question}}</p>
             <label tuiLabel>
                 <tui-textfield [tuiTextfieldCleaner]="false">
                     <textarea
@@ -83,12 +83,10 @@
         <button
             [disabled]="!form.valid"
             type="submit"
-            class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-4 disabled:text-gray-300 disabled:bg-lh-primary"
+            class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-4 disabled:text-lh-disabled disabled:bg-lh-primary"
         >
             Отправить запрос
         </button>
-
-
     </form>
 </div>
 }

@@ -4,9 +4,10 @@ import { IUser } from '../services/interface/i-user';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { VerificationComponent } from '../verification/verification.component';
 import { RouterOutlet } from '@angular/router';
 import { ServerInformationService } from '../services/server-information.service';
+import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
+import { map } from 'rxjs';
 @Component({
     standalone: true,
     imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe],
@@ -16,8 +17,6 @@ import { ServerInformationService } from '../services/server-information.service
 export class ProfileComponent {
     protected readonly userService = inject(UserService);
 
-    protected select = 'how-play';
-
     protected readonly userData: IUser = this.userService.getUserData();
 
     private readonly dialogs = inject(TuiDialogService);
@@ -26,11 +25,9 @@ export class ProfileComponent {
 
     protected readonly details$ = inject(ServerInformationService).getDetails();
 
-    @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+    protected readonly userGameName$ = this.userService.getPlayer$(this.userService.userId).pipe(map((data) => data.user_game_name));
 
-    protected signOut(): void {
-        this.userService.signOut();
-    }
+    @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
     protected getRoleName() {
         if (this.userService.roles.includes('admin')) {
@@ -45,7 +42,7 @@ export class ProfileComponent {
     }
 
     protected verification() {
-        this.dialogs.open(new PolymorpheusComponent(VerificationComponent), { size: 'l' }).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(PlayerVerificationFormComponent), { size: 'l' }).subscribe();
     }
 
     triggerFileInput() {

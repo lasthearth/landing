@@ -7,14 +7,16 @@ import { TuiTextareaModule, TuiInputModule, TuiTextfieldControllerModule } from 
 import { Subject, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ServerInformationService } from '../../services/server-information.service';
+import { ServerInformationService } from '@services/server-information.service';
+import { RequestStatusService } from '@app/services/request-status.service';
+import { LInputComponent } from '@app/components/l-input/l-input.component';
 
 /**
  * Компонент создания вопроса для верификации.
  */
 @Component({
     standalone: true,
-    selector: 'app-create-question',
+    selector: 'app-create-question-form',
     imports: [
         TuiError,
         ReactiveFormsModule,
@@ -25,11 +27,12 @@ import { ServerInformationService } from '../../services/server-information.serv
         AsyncPipe,
         TuiLabel,
         TuiTextfieldControllerModule,
+        LInputComponent
     ],
-    templateUrl: './create-question.component.html',
+    templateUrl: './create-question-from.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateQuestionComponent {
+export class CreateQuestionFormComponent {
     /**
      * Форма создания вопроса.
      */
@@ -48,9 +51,9 @@ export class CreateQuestionComponent {
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
     /**
-     * Контекст открытого диалогового окна.
+     * Сервис уведомлений.
      */
-    private readonly context: TuiDialogContext = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
+    private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
 
     /**
      * {@link Subject} события отправки формы.
@@ -58,16 +61,19 @@ export class CreateQuestionComponent {
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
     /**
-     * Инициализирует компонент класса {@link CreateQuestionComponent}
+     * Инициализирует компонент класса {@link CreateQuestionFormComponent}
      */
     public constructor() {
         this.onSubmit
             .pipe(
                 tap(() => {
-                    const qu = this.form.controls.question.value;
-                    if (qu !== null) {
-                        this.serverInfoService.postQuestion(qu).subscribe();
-                        this.context.$implicit.complete();
+                    const question = this.form.controls.question.value;
+                    if (question !== null) {
+                        this.serverInfoService.postQuestion(question).pipe(
+                            this.requestStatusService.handleError(),
+                            this.requestStatusService.handleSuccess('Вопрос создан!'),
+                            takeUntilDestroyed(this.destroyRef))
+                            .subscribe();
                     }
                 }),
                 takeUntilDestroyed(this.destroyRef),
