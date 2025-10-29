@@ -1,11 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { TuiDialogContext, TuiError, TuiLabel } from '@taiga-ui/core';
+import { TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { TuiTextareaModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { Subject, tap } from 'rxjs';
-import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ServerInformationService } from '@services/server-information.service';
 import { RequestStatusService } from '@app/services/request-status.service';
@@ -21,11 +20,8 @@ import { LInputComponent } from '@app/components/l-input/l-input.component';
         TuiError,
         ReactiveFormsModule,
         FormsModule,
-        TuiTextareaModule,
-        TuiInputModule,
         TuiFieldErrorPipe,
         AsyncPipe,
-        TuiLabel,
         TuiTextfieldControllerModule,
         LInputComponent
     ],

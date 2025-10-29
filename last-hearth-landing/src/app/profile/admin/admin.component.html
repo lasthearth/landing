@@ -4,21 +4,6 @@ settlements === null || settlements?.length === 0;
 
 <div class="w-full flex flex-col gap-3 lg:gap-6">
     <p class="text-3xl lg:text-4xl font-bold">Кабинет администратора</p>
-    <!-- <div class="flex gap-4">
-        <button
-            (click)="openCreateQuestionDialog()"
-            class="text-white self-start font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-        >
-            Создать вопрос
-        </button>
-        <button
-            (click)="openCreateQuestionDialog()"
-            class="text-white self-start font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-        >
-            Опубликовать новость
-        </button>
-    </div> -->
-
     <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 !font-semibold !w-full content-tabs">
         <button tuiTab type="button">
             <p class="relative lg:px-3">

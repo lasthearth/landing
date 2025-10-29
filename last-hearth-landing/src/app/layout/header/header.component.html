@@ -144,11 +144,6 @@
                 class="relative nav-button bg-red-800! text-neutral-300 font-bold cursor-pointer hover:!bg-lh-danger-hover rounded-tr-lg rounded-br-lg p-1 w-[32px]!"
             >
                 <tui-icon icon="@tui.log-out" />
-                <tui-pulse
-                    *ngIf="invitations?.invitations?.length || userVerifications?.length && isAdmin()"
-                    tuiHintAppearance="floating"
-                    class="!absolute !top-0.5 !right-0.5 !scale-110"
-                />
             </button>
         </div>
     </div>

@@ -23,8 +23,13 @@ import { ExplorerTitleComponent } from '../titles/explorer/explorer-title/explor
 import { WarriorTitleComponent } from '../titles/warrior/warrior-title/warrior-title.component';
 import { FaqComponent } from '../faq/faq.component';
 import { SettlementsComponent } from '../settlements/settlements.component';
+import { WelcomeComponent } from '@app/welcome/welcome.component';
 
 export const routes: Routes = [
+    {
+        path: 'welcome',
+        component: WelcomeComponent
+    },
     {
         path: '',
         component: LandingComponent,

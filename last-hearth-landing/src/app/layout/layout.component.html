@@ -1,3 +1,6 @@
+@let isAuth = userAuth$ | async;
+<app-welcome *ngIf="!isAuth" [class.scroll]="test" (onScroll)="test = true" class="absolute welcome z-[100]" />
+
 <div>
     <div class="flex justify-center">
         <app-header class="w-full xl:w-[50%]" />

@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TuiDialogService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { ServerInformationService } from '../../services/server-information.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { merge, Observable, startWith, Subject, switchMap } from 'rxjs';
+import { Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IVerifyRequest } from '../../services/interface/i-verify-request';
 import { SettlementService } from '../../services/settlement.service';
 import { NotificationService } from '../../services/notification.service';
@@ -24,11 +22,6 @@ import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminComponent {
-    /**
-     * Сервис диалогов.
-     */
-    private readonly dialogs: TuiDialogService = inject(TuiDialogService);
-
     /**
      * Сервис информации о сервере.
      */

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { NewsCardComponent } from '../news/news-card/news-card.component';
 import { NewsService } from '../services/news.service';
+import { TuiIcon } from '@taiga-ui/core';
 
 /**
  * Компонент главной страницы.
@@ -9,7 +10,7 @@ import { NewsService } from '../services/news.service';
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, TuiPagination],
+    imports: [TuiCarousel, NewsCardComponent, TuiPagination, TuiIcon],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,23 +24,35 @@ export class HomeComponent {
     /**
      * Путь до элементов карусели.
      */
-    private readonly imagesPath: string = '/images/screenshots/';
+    private readonly imagesPath: string = '/landing-carousel';
 
     /**
      * Массив элементов карусели.
      */
-    protected readonly images: string[] = [
-        `${this.imagesPath}screen_0.webp`,
-        `${this.imagesPath}screen_5.webp`,
-        `${this.imagesPath}screen_6.webp`,
-        `${this.imagesPath}screen_7.webp`,
-        `${this.imagesPath}screen_8.webp`,
-        `${this.imagesPath}screen_9.webp`,
-        `${this.imagesPath}screen_10.webp`,
+    protected readonly images = [
+        { image: `${this.imagesPath}/1.jpg`, isLight: false, header: 'Last Hearth', body: 'Проект где вы можете воплотить свои мечты' },
+        { image: `${this.imagesPath}/5.jpg`, isLight: true, header: 'Огромный мир', body: 'Исследуйте бескрайний мир и изучайте его красоты<br>Карта 256.000 блоков диаметром' },
+        { image: `${this.imagesPath}/2.jpg`, isLight: true, header: 'Поселения', body: 'Создавайте свои города и империи<br>Воюйте, торгуйте и ведите дипломатию' },
+        { image: `${this.imagesPath}/3.jpg`, isLight: true, header: 'Осады', body: 'Захватывайте крепости и замки<br>Штурмуйте стены и разбивайте ворота' },
+        { image: `${this.imagesPath}/4.jpg`, isLight: false, header: 'Нет приватов', body: 'На сервере отсутствуют приваты<br>Игровой процесс приближен к реальности' },
+        { image: `${this.imagesPath}/6.jpg`, isLight: true, header: 'Навигация', body: 'Скрафтите средства навигации, чтобы получить карту и координаты<br>Ориентирование в мире - важный аспект' },
+        { image: `${this.imagesPath}/7.jpg`, isLight: true, header: 'Моды', body: 'Мы постоянно разрабатываем собственные моды<br>Все это делает игру у нас уникальной' },
+        { image: `${this.imagesPath}/8.jpg`, isLight: true, header: 'Система правил', body: 'Продвинутая система правил<br>Собственная система логов дает гарантию их выполнения' },
     ];
 
     /**
      * Список новостей.
      */
     protected readonly news = inject(NewsService).news;
+
+    protected navigate(direction: number): void {
+        debugger;
+        if (direction > 0) {
+            this.carouselIndex = this.carouselIndex === this.images.length - 1 ? 0 : this.carouselIndex + 1;
+        }
+
+        if (direction < 0) {
+            this.carouselIndex = this.carouselIndex === 0 ? this.images.length - 1 : this.carouselIndex - 1;
+        }
+    }
 }

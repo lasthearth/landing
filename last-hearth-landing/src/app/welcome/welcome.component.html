@@ -1,0 +1,51 @@
+<div class="size-full relative">
+    <video
+        #videoPlayer
+        loop
+        muted
+        playsinline
+        class="size-full object-cover blur-xs brightness-80"
+        (click)="videoPlayer.paused ? videoPlayer.play() : videoPlayer.pause()"
+    >
+        <source [src]="videoUrl" type="video/mp4" />
+        Ваш браузер не поддерживает элемент <code>video</code>
+    </video>
+
+    <div
+        class="absolute backdrop-blur-md test flex flex-col justify-center items-center left-1/2 top-[40%] lg:top-[45%] backdrop-brightness-85 -translate-x-1/2 -translate-y-1/2 text-center text-white w-auto lg:w-auto rounded-4xl px-8 lg:px-12 pb-12 pt-12 lg:pt-24"
+    >
+        <h2 class="text-5xl xl:text-8xl 2xl:text-[136px] font-bold mb-4 uppercase !text-shadow-lg">Last Hearth</h2>
+
+        <p class="text-2xl lg:text-5xl font-semibold mt-2 !text-shadow-lg">VINTAGE STORY СЕРВЕР</p>
+
+        <div
+            class="mt-12 lg:mt-20 w-full flex flex-col lg:flex-row gap-8 justify-center lg:justify-between items-start px-0 lg:px-12"
+        >
+            <div class="flex flex-row lg:flex-col gap-3 px-2 justify-center items-center">
+                <tui-icon icon="@tui.skull" class="!text-5xl text-white" />
+                <p class="text-sm lg:text-xl !text-shadow-lg min-w-48 max-w-72">
+                    Сервер с хардкорной сложностью, для истинных любителей выживания
+                </p>
+            </div>
+            <div class="flex flex-row lg:flex-col gap-3 px-2 justify-center items-center">
+                <tui-icon icon="@tui.swords" class="!text-5xl text-white" />
+                <p class="text-sm lg:text-xl !text-shadow-lg text-wrap break-words min-w-48 max-w-72">
+                    Политический сервер с дипломатией, войнами, торговлей и интригами
+                </p>
+            </div>
+            <div class="flex flex-row lg:flex-col gap-3 px-2 justify-center items-center">
+                <tui-icon icon="@tui.users" class="!text-5xl text-white" />
+                <p class="text-sm lg:text-xl !text-shadow-lg min-w-48 max-w-72">
+                    Одно из крупнейших коммьюнити по Vintage Story в СНГ
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <button
+        (click)="test()"
+        class="w-14 h-24 border border-neutral-500 rounded-full z-20 absolute left-1/2 -translate-x-1/2 bottom-20 cursor-pointer hover: shadow-2xl animate-bounce backdrop-blur-md"
+    >
+        <tui-icon icon="@tui.chevrons-down" class="!text-5xl text-white" />
+    </button>
+</div>

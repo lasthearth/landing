@@ -1,6 +1,7 @@
 @let settlement = settlementInfo | async; @let invite = notifications$ | async;
 
 <div class="flex flex-col gap-8">
+    <p class="text-3xl lg:text-4xl font-bold">Ваше селение</p>
     @if(invite?.invitations?.length) { @for (item of invite?.invitations; track $index) {
     <div class="self-center flex flex-col gap-3 items-center">
         <p class="text-3xl font-semibold">
@@ -22,8 +23,10 @@
         </div>
     </div>
     } } @else { @if(settlement === null) {
-    <p class="text-lh-primary text-4xl font-bold">Вы не владеете и не состоите в поселении...</p>
-    <div class="flex gap-4">
+    <p class="text-2xl my-6 uppercase font-bold text-[#bdb093] self-center">
+        Вы не владеете и не состоите в поселении...
+    </p>
+    <div class="flex justify-center w-full gap-4">
         <button
             (click)="createSettlement()"
             class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4 border hover:bg-[#e2d7bb] hover:text-lh-primary hover:font-bold text-base"

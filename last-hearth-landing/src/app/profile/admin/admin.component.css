@@ -2,23 +2,3 @@
     display: block;
     width: 100%;
 }
-
-tui-tabs {
-    font-family: "Advent Pro", serif !important;
-    font-optical-sizing: auto;
-}
-
-tui-tabs.content-tabs {
-    align-items: stretch;
-    width: 100%;
-
-    button[tuiTab] {
-        white-space: normal;
-        flex: 1 1 0%;
-        word-break: break-word;
-        justify-content: center;
-        padding-inline: 0.5rem;
-        text-align: center;
-        --tui-tab-margin: 0px !important;
-    }
-}

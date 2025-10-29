@@ -1,6 +1,6 @@
 @let userName = userGameName$ | async;
 <div class="text-lh-primary items-start flex flex-col gap-4 p-6">
-    <div class="flex gap-4 items-end">
+    <div class="flex gap-4 items-end mb-8">
         <div class="flex flex-col gap-1">
             @if(userData.image) {
             <div class="flex rounded-2xl justify-center items-center">
@@ -38,7 +38,6 @@
         </div>
     </div>
     @if(getRoleName() !== 'Неверифицирован' || (details?.status === 'approved' || details?.status === 'verified')) {
-    <hr class="w-full h-px mt-10 bg-lh-primary" />
     <router-outlet />
     } @else {
     <p class="text-2xl">

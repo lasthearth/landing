@@ -12,3 +12,14 @@
     scrollbar-width: none;
     font-family: "Advent Pro", serif;
 }
+
+.welcome {
+    transition: all 2.5s 0.1s ease-in-out;
+    -webkit-box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
+    -moz-box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
+    box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
+}
+
+.scroll {
+    transform: translateY(-2000px);
+}

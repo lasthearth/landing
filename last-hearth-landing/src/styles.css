@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+:root {
+    /* Last Hearth variables. */
+    --lh-primary: #3f3c34;
+    --lh-primary-2: #31302b;
+
+    --lh-accent: #ff7920;
+    --lh-accent-2: #945a32;
+
+    --lh-danger: var(--color-red-600);
+    --lh-danger-hover: var(--color-red-700);
+    --lh-danger-active: var(--color-red-400);
+
+    --lh-success: var(--color-green-600);
+    --lh-success-hover: var(--color-green-700);
+    --lh-success-active: var(--color-green-400);
+
+    --lh-disabled: var(--color-gray-300);
+}
+
 @theme {
     --color-lh-primary: var(--lh-primary);
     --color-lh-primary-2: var(--lh-primary-2);
@@ -65,6 +84,30 @@ tui-dialog {
     border-radius: 0px 0px 16px 16px;
 }
 
+.almendra-regular {
+    font-family: "Almendra", serif;
+}
+
 tui-pulse {
     color: #ff7920 !important;
+}
+
+tui-tabs {
+    font-family: "Advent Pro", serif !important;
+    font-optical-sizing: auto;
+}
+
+tui-tabs.content-tabs {
+    align-items: stretch;
+    width: 100%;
+
+    button[tuiTab] {
+        white-space: normal;
+        flex: 1 1 0%;
+        word-break: break-word;
+        justify-content: center;
+        padding-inline: 0.5rem;
+        text-align: center;
+        --tui-tab-margin: 0px !important;
+    }
 }
