@@ -22,6 +22,11 @@ function getConfig() {
     config.ignoreNonceAfterRefresh = true;
     config.silentRenew = false;
 
+    config.renewTimeBeforeTokenExpiresInSeconds = 30;
+    config.autoUserInfo = true;
+    config.triggerAuthorizationResultEvent = true;
+
+
     return config;
 }
 
