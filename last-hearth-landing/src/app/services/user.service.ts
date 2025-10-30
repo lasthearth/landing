@@ -41,21 +41,16 @@ export class UserService {
                         return of(null);
                     }
 
-                    // НЕ устанавливаем состояние пока не убедимся в валидности токенов
+                    this.authStateChange$.next(true);
+                    this.userImage = authResult.userData?.picture;
+                    this.userName = authResult.userData?.username;
+
                     return combineLatest([
                         this.oidcSecurityService.getIdToken(),
                         this.oidcSecurityService.getAccessToken(),
                     ]).pipe(
+                        first(),
                         tap(([idToken, accessToken]) => {
-                            // СНАЧАЛА проверяем что токены валидны
-                            if (!idToken || !accessToken) {
-                                throw new Error('Tokens are missing');
-                            }
-
-                            // ТОЛЬКО ПОСЛЕ проверки устанавливаем состояние
-                            this.authStateChange$.next(true);
-                            this.userImage = authResult.userData?.picture;
-                            this.userName = authResult.userData?.username;
                             this.accessToken = accessToken;
 
                             try {
@@ -64,23 +59,18 @@ export class UserService {
                                 this.roles = decoded.roles ?? [];
                             } catch (decodeError) {
                                 console.error('[Auth] Ошибка декодирования ID токена:', decodeError);
-                                // Если не можем декодировать - считаем неавторизованным
-                                this.authStateChange$.next(false);
                             }
                         }),
                         catchError(tokenError => {
                             console.error('[Auth] Ошибка при получении токенов:', tokenError);
-                            // При ошибке токенов - сбрасываем состояние
-                            this.authStateChange$.next(false);
                             return of(null);
                         }),
                     );
                 }),
                 catchError(authError => {
-                    console.error('[Auth] ОШИБКА:', authError);
-                    this.authStateChange$.next(false);
                     return of(null);
                 }),
+                first(),
             )
             .subscribe();
     }

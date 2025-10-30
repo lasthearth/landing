@@ -22,23 +22,17 @@ function getConfig() {
     config.ignoreNonceAfterRefresh = true;
     config.silentRenew = false;
 
-    config.renewTimeBeforeTokenExpiresInSeconds = 30;
-    config.autoUserInfo = true;
-    config.triggerAuthorizationResultEvent = true;
-    config.silentRenewTimeoutInSeconds = 40;
-
-
     return config;
 }
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        provideAuth({
-            config: getConfig(),
-        }),
         provideAnimations(),
         provideEventPlugins(),
         provideZoneChangeDetection({ eventCoalescing: true }),
+        provideAuth({
+            config: getConfig(),
+        }),
         provideRouter(routes),
         provideHttpClient(withFetch()),
         {
