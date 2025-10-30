@@ -27,14 +27,14 @@ function getConfig() {
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        provideAuth({
+            config: getConfig(),
+        }),
         provideAnimations(),
         provideEventPlugins(),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes),
         provideHttpClient(withFetch()),
-        provideAuth({
-            config: getConfig(),
-        }),
         {
             provide: TUI_VALIDATION_ERRORS,
             useValue: {
