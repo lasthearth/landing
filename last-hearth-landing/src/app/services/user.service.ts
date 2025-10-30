@@ -8,6 +8,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement';
 import { ServerInformationService } from './server-information.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
     providedIn: 'root',
@@ -32,6 +33,8 @@ export class UserService {
     public readonly authState$: Observable<boolean> = this.authStateChange$;
 
     private readonly http: HttpClient = inject(HttpClient);
+
+    private readonly localStorageService = inject(LocalStorageService);
 
     constructor() {
         this.oidcSecurityService
@@ -81,7 +84,8 @@ export class UserService {
     }
 
     public signOut(): void {
-        this.oidcSecurityService.logoff().subscribe();
+        this.localStorageService.removeItem('welcomeWasWatched');
+        this.oidcSecurityService.logoffAndRevokeTokens().subscribe();
     }
 
     public getUserData(): IUser {

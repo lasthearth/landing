@@ -1,6 +1,11 @@
-@let isAuth = userAuth$ | async;
-<app-welcome *ngIf="!isAuth" [class.scroll]="test" (onScroll)="test = true" class="absolute welcome z-[100]" />
-
+@let isAuth = userAuth$ | async; @if(!isAuth && !test) {
+<app-welcome
+    *ngIf="!isAuth"
+    [class.scroll]="isCanScroll"
+    (onScroll)="onWelcomeScroll()"
+    class="absolute size-full welcome z-[200]"
+/>
+} @if(isWelcomeHide || (isAuth)) {
 <div>
     <div class="flex justify-center">
         <app-header class="w-full xl:w-[50%]" />
@@ -12,3 +17,4 @@
 <div class="flex justify-center">
     <app-footer class="w-full xl:w-[50%] main-panel rounded-t-xl! rounded-b-none!" />
 </div>
+}

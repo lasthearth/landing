@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, output, ViewChild } from '@angular/core';
 import { LocalStorageService } from '@app/services/local-storage.service';
 import { TuiIcon } from '@taiga-ui/core';
 
@@ -23,6 +23,13 @@ export class WelcomeComponent implements AfterViewInit {
      */
     @ViewChild('videoPlayer', { static: false })
     videoPlayer?: ElementRef<HTMLVideoElement>;
+
+    @HostListener('window:wheel', ['$event'])
+    onMouseWheel(event: WheelEvent) {
+        if (event.deltaY > 0) {
+            this.onScroll.emit();
+        }
+    }
 
     ngAfterViewInit() {
         this.initializeVideo();

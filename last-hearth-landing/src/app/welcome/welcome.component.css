@@ -9,3 +9,7 @@
     -moz-box-shadow: 0px 0px 16px 16px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 16px 16px rgba(0, 0, 0, 0.2);
 }
+
+video::-webkit-media-controls {
+    display: none !important;
+}

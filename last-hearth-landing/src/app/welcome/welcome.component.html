@@ -4,6 +4,8 @@
         loop
         muted
         playsinline
+        disablePictureInPicture
+        controlslist="nodownload nofullscreen noremoteplayback"
         class="size-full object-cover blur-xs brightness-80"
         (click)="videoPlayer.paused ? videoPlayer.play() : videoPlayer.pause()"
     >

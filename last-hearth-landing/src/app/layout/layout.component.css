@@ -14,12 +14,12 @@
 }
 
 .welcome {
-    transition: all 2.5s 0.1s ease-in-out;
     -webkit-box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
     -moz-box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
     box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
 }
 
 .scroll {
+    transition: all 2s 0s cubic-bezier(0.87, -0.35, 0.19, 1.44);
     transform: translateY(-2000px);
 }
