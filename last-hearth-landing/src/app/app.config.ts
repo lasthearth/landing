@@ -30,10 +30,6 @@ export const appConfig: ApplicationConfig = {
         provideAnimations(),
         provideEventPlugins(),
         provideZoneChangeDetection({ eventCoalescing: true }),
-        provideAuth({
-            config: getConfig(),
-        }),
-        provideRouter(routes),
         provideHttpClient(withFetch()),
         {
             provide: TUI_VALIDATION_ERRORS,
@@ -43,5 +39,9 @@ export const appConfig: ApplicationConfig = {
                 minlength: ({ requiredLength }: { requiredLength: string }) => `Минимальное количество символов должно быть ${requiredLength}.`,
             },
         },
+        provideAuth({
+            config: getConfig(),
+        }),
+        provideRouter(routes),
     ],
 };
