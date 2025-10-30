@@ -68,6 +68,7 @@ export class UserService {
                     );
                 }),
                 catchError(authError => {
+                    console.error('[Auth] ОШИБКА:', authError);
                     return of(null);
                 }),
                 first(),
