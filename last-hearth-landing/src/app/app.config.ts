@@ -25,6 +25,7 @@ function getConfig() {
     config.renewTimeBeforeTokenExpiresInSeconds = 30;
     config.autoUserInfo = true;
     config.triggerAuthorizationResultEvent = true;
+    config.silentRenewTimeoutInSeconds = 40;
 
 
     return config;
