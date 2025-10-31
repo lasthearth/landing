@@ -56,7 +56,9 @@
                     <img
                         [src]="userService.userImage"
                         alt="Аватар пользователя"
-                        class="relative ml-2 rounded-lg z-10 size-12 sm:size-16 shadow-md shadow-lh-primary-2"
+                        (click)="isAuth ? '' : signIn()"
+                        [routerLink]="isAuth ? ['/profile'] : ''"
+                        class="relative ml-2 cursor-pointer rounded-lg z-10 size-12 sm:size-16 shadow-md shadow-lh-primary-2"
                     />
                     }@else {
                     <tui-icon icon="@tui.square-user-round" class="relative rounded-lg z-10 text-6xl! text-white" />

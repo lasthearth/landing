@@ -20,7 +20,8 @@ function getConfig() {
     });
 
     config.ignoreNonceAfterRefresh = true;
-    config.silentRenew = true;
+    config.silentRenew = false;
+    config.disableIatOffsetValidation = true;
 
     return config;
 }
