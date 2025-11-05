@@ -7,35 +7,33 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { TuiAvatar } from '@taiga-ui/kit';
-import { ISettlement } from '../interfaces/i-settlement';
 
 @Component({
     standalone: true,
     selector: 'app-player-invite',
     imports: [LInputComponent, AsyncPipe, ReactiveFormsModule, NgIf, TuiAvatar],
     templateUrl: './player-invite.component.html',
-    styleUrls: ['./player-invite.component.css']
+    styleUrls: ['./player-invite.component.css'],
 })
 export class PlayerInviteComponent {
     protected playerNickControl = new FormControl();
 
     /**
-         * Контекст открытого диалогового окна.
-         */
-    protected readonly context: TuiDialogContext<void, { settlementId: string }> = inject<TuiDialogContext<void, { settlementId: string }>>(POLYMORPHEUS_CONTEXT);
+     * Контекст открытого диалогового окна.
+     */
+    protected readonly context: TuiDialogContext<void, { settlementId: string }> =
+        inject<TuiDialogContext<void, { settlementId: string }>>(POLYMORPHEUS_CONTEXT);
 
     protected readonly players$ = this.playerNickControl.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
         switchMap((term) => {
             if (term === '') {
-                return of({ users: [] })
+                return of({ users: [] });
+            } else {
+                return this.settlementService.searchUser$(term);
             }
-            else {
-                return this.settlementService.searchUser$(term)
-            }
-        }
-        )
+        })
     );
 
     /**
@@ -48,7 +46,6 @@ export class PlayerInviteComponent {
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
 
-
     /**
      * Открывает диалог создания вопроса.
      */
@@ -57,8 +54,6 @@ export class PlayerInviteComponent {
     }
 
     protected playerInvite(userId: string) {
-        debugger;
         this.settlementService.invitePlayer(this.context.data.settlementId, userId).subscribe();
     }
-
 }

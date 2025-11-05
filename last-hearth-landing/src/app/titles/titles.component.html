@@ -9,7 +9,9 @@
             <tui-icon icon="@tui.chevron-left" />
         </button>
         <tui-carousel [draggable]="true" [itemsCount]="3" [(index)]="index">
-            @for (item of titles; track $index) { <app-title-card [data]="item" *tuiItem></app-title-card> }
+            @for (item of titles; track $index) {
+                <app-title-card [data]="item" *tuiItem></app-title-card>
+            }
         </tui-carousel>
         <button (click)="nextCard()" class="cursor-pointer text-white bg-lh-primary p-2 rounded-2xl hidden sm:block">
             <tui-icon icon="@tui.chevron-right" />

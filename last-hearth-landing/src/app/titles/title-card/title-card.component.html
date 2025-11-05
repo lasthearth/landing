@@ -7,7 +7,7 @@
     <p class="md:text-2xl/7.5 text-base font-semibold text-lh-primary text-center">{{data().title}}</p>
     <p class="md:text-base text-sm font-semibold text-lh-primary bg-[#bdb093] px-2 py-1 rounded-xl">{{data().type}}</p>
     <p
-        [ngClass]="{ '!bg-lh-accent-1': select === data().path}"
+        [ngClass]="{ '!bg-lh-accent': select === data().path}"
         class="bg-[rgb(148,90,50)] text-white font-bold text-xs md:text-sm p-2 rounded-2xl text-center"
     >
         <span>•</span> {{data().price}}

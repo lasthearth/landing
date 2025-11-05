@@ -4,7 +4,7 @@
     <!-- 1. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isAboutServer = !isAboutServer">
-            <p class="text-2xl/7.5 text-lh-primary font-bold">1. Что это за сервер? Как понять подходит ли он мне?</p>
+            <p class="text-3xl/7.5 text-lh-primary font-bold">1. Какая концепция сервера?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isAboutServer }"
@@ -12,25 +12,59 @@
             />
         </div>
         <tui-expand [expanded]="isAboutServer">
-            <div class="flex flex-col gap-2">
-                <p class="text-xl pl-4">
-                    <b>Last Hearth</b> - это лайт-RP сервер по игре Vintage Story с упором на атмосферу средневекового
-                    выживания, экономики и взаимодействия игроков.
+            <div class="flex text-2xl/7.5 flex-col gap-3">
+                <p class="pl-4">
+                    <b>Last Hearth</b> — это уникальный ролевой политико-экономический проект с глубокой системой
+                    PvP-взаимодействий, построенный на выживании в Vintage Story.
                 </p>
-                <p class="text-xl pl-4">Сервер подходит тем, кто любит:</p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">•</span> осознанную игру с правилами и социальными механиками;
+                <p class="pl-4">
+                    Вы — один из жителей на дальних, необжитых границах обширной Империи. Ваша цель — не просто выжить,
+                    а возвыситься. Начните с одинокого хутора, объединитесь с другими игроками и пройдите путь до
+                    могущественного Города или Региональной Провинции, бросая вызов другим селениям за влияние и
+                    ресурсы.
                 </p>
-                <p class="text-xl pl-8"><span class="font-bold">•</span> строительство, торговлю и дипломатию;</p>
-                <p class="text-xl pl-8"><span class="font-bold">•</span> ведение войн, набегов и грабежей;</p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">•</span> развитие поселений от маленького лагеря до крупной региональной
-                    провинции.
+                <p class="pl-4 font-bold">Ключевые аспекты нашего мира:</p>
+                <p class="pl-8">
+                    • Путь к власти: развивайте своё поселение через 7 четких этапов (от Хутора до Сюзерена). Каждый
+                    уровень открывает новые возможности, права и обязанности, от простых набегов до объявления
+                    полномасштабных войн;
                 </p>
-                <p class="text-2xl/7.5 pl-4 font-bold">⚠️ Дисклеймер ⚠️</p>
-                <p class="text-2xl/7.5 pl-4 font-bold">
-                    У нас строгие правила и RP-элементы. Если вам ближе хаотичный PvP, "гриферство", либо полноценный
-                    PvE, то, возможно, этот сервер вам не подойдёт.
+                <p class="pl-8">
+                    • Дипломатия и конфликты: выберите свой политический курс — мирный, нейтральный или агрессивный.
+                    Участвуйте в тактических набегах с осадными орудиями и шпионажем, или ведите долгие войны за
+                    выполнение своих требований;
+                </p>
+                <p class="pl-8">
+                    • Экономика и строительство: используйте заработанные деньги, получайте патенты от Сюзеренов и
+                    возводите Великие Строения, чтобы получить благосклонность Императора и уникальные бонусы для своей
+                    стороны.
+                </p>
+                <p class="pl-8">
+                    • Центр мира: борьба за влияние происходит в Нейтральной зоне, где расположены ценные Ключевые
+                    точки. Контролируйте их, чтобы получать преимущества для всей своей стороны;
+                </p>
+                <p class="pl-4 font-bold">Чего ожидать новичку?</p>
+                <p class="pl-8">
+                    • Четкие правила: глубоко проработанная система регулирует все аспекты жизни: от воровства и
+                    строительства оборонных сооружений до ведения боевых действий. Здесь нет места гриферству, но есть
+                    место для ожесточенной, но честной конкуренции;
+                </p>
+                <p class="pl-8">
+                    • Защита и развитие: ваше поселение защищено территориальными блоками. Вы можете спокойно строить и
+                    развивать экономику, зная, что внезапный набег будет объявлен по всем правилам;
+                </p>
+                <p class="pl-8">
+                    • Социальная игра: самый ценный ресурс здесь — это другие игроки. Создавайте альянсы, заключайте
+                    сделки, ведите дипломатические переговоры или становитесь грозой морей и дорог.
+                </p>
+                <p class="pl-4 font-bold">Этот сервер для вас, если вы ищете:</p>
+                <p class="pl-4">
+                    Не просто выживание в доиндустриальном мире, а сложную, живую песочницу с политикой, экономикой и
+                    стратегическими конфликтами, где ваши решения и мастерство определяют вашу судьбу и судьбу мира.
+                </p>
+                <p class="pl-4">
+                    Начните свою историю сегодня — отстройте хутор или найдите себе товарищей, чтобы основать первое
+                    поселение!
                 </p>
             </div>
         </tui-expand>
@@ -38,44 +72,8 @@
 
     <!-- 2. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isHowToPlay = !isHowToPlay">
-            <p class="text-2xl/7.5 text-lh-primary font-bold">2. Как мне присоединиться к игре на сервере?</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isHowToPlay }"
-                class="text-lh-primary transition-all"
-            />
-        </div>
-        <tui-expand [expanded]="isHowToPlay">
-            <div class="flex flex-col gap-2">
-                <p class="text-xl pl-4">Чтобы попасть на <b>Last Hearth</b>:</p>
-                <p class="text-xl pl-8"><span class="font-bold">1.</span> Зарегистрируйтесь на сайте.</p>
-                <p class="text-xl pl-8"><span class="font-bold">2.</span> Заполните анкету для верификации.</p>
-                <p class="text-xl pl-8"><span class="font-bold">3.</span> Дождитесь проверки администрацией.</p>
-                <p class="text-xl pl-8">
-                    <span class="font-bold">4.</span> Получите доступ к серверу и IP-адрес в вашем профиле.
-                </p>
-                <p class="text-xl pl-8"><span class="font-bold">5.</span> Подключитесь через клиент Vintage Story.</p>
-                <p class="text-xl pl-4">
-                    С подробными шагами и ссылками можно ознакомиться на странице
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://lasthearth.ru/start-game"
-                        target="_blank"
-                    >
-                        "Начать игру"
-                    </a>
-                </p>
-            </div>
-        </tui-expand>
-    </div>
-
-    <!-- 3. -->
-    <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRegistration = !isRegistration">
-            <p class="text-2xl/7.5 text-lh-primary font-bold">
-                3. Регистрация на сайте. Что делать, если я забыл пароль?
-            </p>
+            <p class="text-3xl/7.5 text-lh-primary font-bold">2. Что делать, если я забыл пароль?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRegistration }"
@@ -83,17 +81,8 @@
             />
         </div>
         <tui-expand [expanded]="isRegistration">
-            <p class="text-xl pl-4">Регистрация на сайте необходима для:</p>
-            <p class="text-xl pl-8">
-                <span class="font-bold">•</span> верификации игроков (мы проверяем анкеты, чтобы сохранить качество
-                комьюнити);
-            </p>
-            <p class="text-xl pl-8"><span class="font-bold">•</span> доступа к правилам и информации о сервере;</p>
-            <p class="text-xl pl-8">
-                <span class="font-bold">•</span> (скоро появится) регистрации и просмотра существующих селений;
-            </p>
-            <p class="text-xl pl-4">
-                В случае, утраты доступу к сайту (забыл пароль, не заходит) - напишите в техподдержку в нашем
+            <p class="text-2xl/7.5 pl-4">
+                В случае, утраты доступу к сайту (забыл пароль, не заходит) — напишите в техподдержку в нашем
                 <a
                     class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
                     href="https://discord.com/invite/FZb7SGrSFy"
@@ -105,10 +94,10 @@
         </tui-expand>
     </div>
 
-    <!-- 4. -->
+    <!-- 3. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isTroubles = !isTroubles">
-            <p class="text-2xl/7.5 text-lh-primary font-bold">4. Что делать если у меня не заходит на сервер?</p>
+            <p class="text-3xl/7.5 text-lh-primary font-bold">3. Что делать если у меня не заходит на сервер?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTroubles }"

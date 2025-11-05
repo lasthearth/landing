@@ -29,6 +29,8 @@
     </div>
     <p class="pt-4 text-3xl font-semibold">Что идет в комплекте с титулом "Великий герцог":</p>
     <div class="flex gap-4 p-4 flex-wrap justify-center">
-        @for (item of gameItems; track $index) { <app-game-item-card [data]="item"></app-game-item-card> }
+        @for (item of gameItems; track $index) {
+            <app-game-item-card [data]="item"></app-game-item-card>
+        }
     </div>
 </div>

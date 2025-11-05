@@ -1,13 +1,14 @@
-import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
-import { provideRouter } from "@angular/router";
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { buildAngularAuthConfig } from '@logto/js';
 import { provideAuth } from 'angular-auth-oidc-client';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideEventPlugins } from '@taiga-ui/event-plugins';
+import { of } from 'rxjs';
 
-import { routes } from "./routes/app.routes";
-import { provideHttpClient, withFetch } from "@angular/common/http";
-import { TUI_VALIDATION_ERRORS } from "@taiga-ui/kit";
+import { routes } from './routes/app.routes';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { TUI_VALIDATION_ERRORS, TUI_COPY_TEXTS } from '@taiga-ui/kit';
 
 function getConfig() {
     const config = buildAngularAuthConfig({
@@ -41,8 +42,13 @@ export const appConfig: ApplicationConfig = {
             useValue: {
                 required: 'Вы не заполнили обязательное поле.',
                 serverResponse: (errors: string[]) => errors.join('\r\n'),
-                minlength: ({ requiredLength }: { requiredLength: string }) => `Минимальное количество символов должно быть ${requiredLength}.`,
+                minlength: ({ requiredLength }: { requiredLength: string }) =>
+                    `Минимальное количество символов должно быть ${requiredLength}.`,
             },
+        },
+        {
+            provide: TUI_COPY_TEXTS,
+            useFactory: () => of(['Копировать', 'Скопировано!'] as const),
         },
     ],
 };

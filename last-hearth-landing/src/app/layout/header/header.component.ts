@@ -11,11 +11,13 @@ import { filter, map, Observable } from 'rxjs';
 import { ServerInformationService } from '../../services/server-information.service';
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { UserService } from '../../services/user.service';
-import { TuiIcon } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { RouterOutlet, RouterLink, ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouteKeys } from '../../routes/enums/route-keys';
 import { NotificationService } from '../../services/notification.service';
+import { SignOutConfirmComponent } from '../sign-out-confirm/sign-out-confirm.component';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 
 /**
  * Компонент заголовка.
@@ -38,6 +40,8 @@ export class HeaderComponent {
      * Сервис данных о пользователе.
      */
     protected readonly userService: UserService = inject(UserService);
+
+    private readonly dialogs = inject(TuiDialogService);
 
     /**
      * {@link Observable} Количества онлайна.
@@ -157,7 +161,7 @@ export class HeaderComponent {
      * Выход из аккаунта
      */
     protected signOut(): void {
-        this.userService.signOut();
+        this.dialogs.open(new PolymorpheusComponent(SignOutConfirmComponent), { size: 's' }).subscribe();
     }
 
     /**

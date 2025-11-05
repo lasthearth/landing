@@ -16,7 +16,7 @@
         (input)="onInputChange($event)"
     ></textarea>
 
-    @if(type() === 'select') {
+    @if (type() === 'select') {
     <div class="flex justify-between">
         <div class="select-display" [class.text-[#8c8784]]="!displayedValue" [class.text-sm]="!displayedValue">
             {{ displayedValue || placeholder() }}

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
     /* Last Hearth variables. */
@@ -15,6 +15,8 @@
     --lh-success: var(--color-green-600);
     --lh-success-hover: var(--color-green-700);
     --lh-success-active: var(--color-green-400);
+
+    --lh-success-2: #4ac99b;
 
     --lh-disabled: var(--color-gray-300);
 }
@@ -38,7 +40,7 @@
 }
 
 html body {
-    font-family: "Advent Pro", serif !important;
+    font-family: 'Advent Pro', serif !important;
     font-optical-sizing: auto;
 }
 
@@ -48,7 +50,7 @@ a {
 
 .old-paper-background {
     background-color: #e8dfc8;
-    background-image: url("/old-paper.webp"), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
+    background-image: url('/old-paper.webp'), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,7 +58,7 @@ a {
 }
 
 .progress {
-    &[data-size="s"] {
+    &[data-size='s'] {
         color: #e2d7bb;
     }
     clip-path: none !important;
@@ -66,17 +68,17 @@ a {
 tui-dialog {
     .t-content {
         @apply text-base!;
-        font-family: "Advent Pro", serif !important;
+        font-family: 'Advent Pro', serif !important;
         font-optical-sizing: auto;
         background-color: #e2d7bb !important;
-        background-image: url("/image_1.webp") !important;
+        background-image: url('/image_1.webp') !important;
         background-repeat: repeat !important;
     }
 }
 
 .main-panel {
     background-color: #e2d7bb;
-    background-image: url("/image_1.webp");
+    background-image: url('/image_1.webp');
     background-repeat: repeat;
     -webkit-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
@@ -85,7 +87,7 @@ tui-dialog {
 }
 
 .almendra-regular {
-    font-family: "Almendra", serif;
+    font-family: 'Almendra', serif;
 }
 
 tui-pulse {
@@ -93,7 +95,7 @@ tui-pulse {
 }
 
 tui-tabs {
-    font-family: "Advent Pro", serif !important;
+    font-family: 'Advent Pro', serif !important;
     font-optical-sizing: auto;
 }
 
@@ -110,4 +112,12 @@ tui-tabs.content-tabs {
         text-align: center;
         --tui-tab-margin: 0px !important;
     }
+}
+
+tui-hint {
+    background-color: var(--lh-primary-2) !important;
+    color: var(--lh-success-2) !important;
+    font-family: 'Advent Pro', serif !important;
+    font-optical-sizing: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
 }

@@ -10,7 +10,7 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 max_line_length = 120
 
-# Языки разметки
+# Языки разметки (включая Angular HTML)
 [*.{html,htm}]
 html_wrap_attributes = auto
 html_wrap_attributes_indent_size = 4
@@ -20,6 +20,7 @@ html_attribute_sort = none
 html_indent_inner_html = true
 html_indent_style = space
 html_indent_size = 4
+html_enable_angular_control_flow = true
 
 [*.md]
 trim_trailing_whitespace = false  # Для совместимости с Markdown

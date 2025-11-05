@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+package-lock.json
+
+# Build outputs
+dist
+.angular
+
+# Environment files
+.env
+.env.local
+
+# IDE
+.vscode
+.idea
+
+# Other
+*.log
+coverage
+.nyc_output
+
+

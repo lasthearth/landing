@@ -2,20 +2,20 @@
 <div class="text-lh-primary items-start flex flex-col gap-4 p-6">
     <div class="flex gap-4 items-end mb-8">
         <div class="flex flex-col gap-1">
-            @if(userData.image) {
-            <div
-                class="flex rounded-2xl justify-center items-center cursor-pointer"
-                (click)="show(userData.image, 'Изображение профиля')"
-            >
-                <img
-                    [src]="userData.image"
-                    class="rounded-2xl rounded-b-sm max-w-32 max-h-32 transition-all duration-200 hover:opacity-85"
-                />
-            </div>
+            @if (userData.image) {
+                <div
+                    class="flex rounded-2xl justify-center items-center cursor-pointer"
+                    (click)="show(userData.image, 'Изображение профиля')"
+                >
+                    <img
+                        [src]="userData.image"
+                        class="rounded-2xl rounded-b-sm max-w-32 max-h-32 transition-all duration-200 hover:opacity-85"
+                    />
+                </div>
             } @else {
-            <div class="flex rounded-2xl justify-center items-center">
-                <tui-icon icon="@tui.user" class="text-6xl! self-center!" />
-            </div>
+                <div class="flex rounded-2xl justify-center items-center">
+                    <tui-icon icon="@tui.user" class="text-6xl! self-center!" />
+                </div>
             }
             <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
             <button
@@ -25,24 +25,34 @@
                 ИЗМЕНИТЬ ФОТО
             </button>
         </div>
-        <div class="flex flex-col gap-2">
-            <p class="text-4xl font-semibold text-shadow-2xs">{{userData.name}}</p>
-            <p
+        <div class="w-full flex flex-col gap-2">
+            <p class="text-4xl font-semibold text-shadow-2xs">{{ userData.name }}</p>
+            <div
                 *ngIf="userName"
-                class="text-base text-shadow-2xs py-1 font-bold text-center bg-lh-accent-2 text-neutral-200 rounded-2xl"
+                class="w-full flex text-xl/7.5 text-shadow-2xs gap-0.5 font-bold text-center text-neutral-200"
             >
-                {{userName}}
-            </p>
-            <p
-                [class.text-red-500!]="getRoleName() === 'Неверифицирован'"
-                class="text-base text-shadow-2xs uppercase py-1 font-bold text-center bg-lh-success text-neutral-200 rounded-2xl"
+                <span class="w-[100%] bg-lh-accent-2 py-1 px-4 rounded-s-2xl">{{ userName }}</span>
+                <span
+                    class="min-w-8 bg-lh-accent-2 py-1 rounded-e-2xl cursor-pointer hover:brightness-90 transition-all duration-200"
+                >
+                    <tui-icon icon="@tui.pencil-line" class="text-xl/7.5!" />
+                </span>
+            </div>
+            <div
+                *ngIf="userName"
+                class="flex w-full text-xl/7.5 text-shadow-2xs gap-1 font-bold text-center text-neutral-200"
             >
-                {{getRoleName()}}
-            </p>
+                <span
+                    [class.text-red-500!]="getRoleName() === 'Неверифицирован'"
+                    class="w-full bg-lh-success py-1 px-4 rounded-2xl"
+                >
+                    {{ getRoleName() }}
+                </span>
+            </div>
             @let details = details$ | async;
             <p *ngIf="details?.status === 'pending'" class="text-2xl/7.5">Ваша анкета отправлена. Ожидайте проверки.</p>
             <p *ngIf="details?.status === 'rejected'" class="text-2xl/7.5">
-                Вашу анкету отклонили. Причина: {{details?.rejection_reason}}
+                Вашу анкету отклонили. Причина: {{ details?.rejection_reason }}
             </p>
             <button
                 *ngIf="getRoleName() === 'Неверифицирован' && (details?.status == 'rejected' || !details)"
@@ -53,12 +63,12 @@
             </button>
         </div>
     </div>
-    @if(getRoleName() !== 'Неверифицирован' || (details?.status === 'approved' || details?.status === 'verified')) {
-    <router-outlet />
+    @if (getRoleName() !== "Неверифицирован" || details?.status === "approved" || details?.status === "verified") {
+        <router-outlet />
     } @else {
-    <p class="text-2xl/7.5">
-        Что бы начать пользоваться сайтом и узнать как попасть на сервер, необходимо пройти верификацию.
-    </p>
+        <p class="text-2xl/7.5">
+            Что бы начать пользоваться сайтом и узнать как попасть на сервер, необходимо пройти верификацию.
+        </p>
     }
 </div>
 

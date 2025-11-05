@@ -1,7 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { LocalStorageService } from "@app/services/local-storage.service";
-import { TuiExpand, TuiIcon } from "@taiga-ui/core";
+import { TuiIcon } from "@taiga-ui/core";
+import { TuiExpand } from '@taiga-ui/experimental';
 import { TuiPulse } from "@taiga-ui/kit";
 
 @Component({

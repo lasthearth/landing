@@ -36,7 +36,7 @@ export class SettlementService {
             .get<{
                 settlements: Array<IRequestSettlement>;
             }>(`${this.baseUrl}/settlements/verifications`, { headers: this.serverInfoService.getHeaders() })
-            .pipe(map(data => data.settlements));
+            .pipe(map((data) => data.settlements));
     }
 
     /**
@@ -48,7 +48,7 @@ export class SettlementService {
         return this.http.post(
             `${this.baseUrl}/settlements/${settlementId}/verification:approve`,
             {},
-            { headers: this.serverInfoService.getHeaders() },
+            { headers: this.serverInfoService.getHeaders() }
         );
     }
 
@@ -61,7 +61,7 @@ export class SettlementService {
         return this.http.post(
             `${this.baseUrl}/settlements/${settlementId}/verification:reject`,
             { rejection_reason: rejectReason },
-            { headers: this.serverInfoService.getHeaders() },
+            { headers: this.serverInfoService.getHeaders() }
         );
     }
 
@@ -70,7 +70,7 @@ export class SettlementService {
             .get<{
                 settlement: ISettlement;
             }>(`${this.baseUrl}/user/${userId}/settlements`, { headers: this.serverInfoService.getHeaders() })
-            .pipe(map(data => data.settlement));
+            .pipe(map((data) => data.settlement));
     }
 
     public getSettlements(): Observable<ISettlement[]> {
@@ -78,7 +78,7 @@ export class SettlementService {
             .get<{
                 settlements: ISettlement[];
             }>(`${this.baseUrl}/settlements`, { headers: this.serverInfoService.getHeaders() })
-            .pipe(map(data => data.settlements));
+            .pipe(map((data) => data.settlements));
     }
 
     public getSettlementById(settlementId: string) {
@@ -86,33 +86,38 @@ export class SettlementService {
             .get<{
                 settlement: ISettlement;
             }>(`${this.baseUrl}/settlements/${settlementId}`, { headers: this.serverInfoService.getHeaders() })
-            .pipe(map(data => data.settlement));
+            .pipe(map((data) => data.settlement));
     }
 
     public searchUser$(name: string) {
         const params = new HttpParams().set('query', name);
 
-        return this.http
-            .get<{
-                users: any[];
-            }>(`${this.baseUrl}/user/search`, { params, headers: this.serverInfoService.getHeaders() });
+        return this.http.get<{
+            users: any[];
+        }>(`${this.baseUrl}/user/search`, { params, headers: this.serverInfoService.getHeaders() });
     }
 
     public invitePlayer(settlementId: string, userId: string) {
-        return this.http
-            .post<{
-                users: any[];
-            }>(`${this.baseUrl}/settlements/${settlementId}/invitations`, {
+        return this.http.post<{
+            users: any[];
+        }>(
+            `${this.baseUrl}/settlements/${settlementId}/invitations`,
+            {
                 settlement_id: settlementId,
                 user_id: userId,
-            }, { headers: this.serverInfoService.getHeaders() });
+            },
+            { headers: this.serverInfoService.getHeaders() }
+        );
     }
 
     public inviteAccept(invitationId: string) {
-        return this.http
-            .post<{
-                users: any[];
-            }>(`${this.baseUrl}/settlements/invitations/${invitationId}:accept`, {}, { headers: this.serverInfoService.getHeaders() });
+        return this.http.post<{
+            users: any[];
+        }>(
+            `${this.baseUrl}/settlements/invitations/${invitationId}:accept`,
+            {},
+            { headers: this.serverInfoService.getHeaders() }
+        );
     }
 
     public getSettlementTypeByKey(key: string | undefined) {

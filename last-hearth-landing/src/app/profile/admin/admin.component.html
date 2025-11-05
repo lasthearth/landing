@@ -1,6 +1,7 @@
-@let veriverificationRequests = verificationRequests$ | async; @let requestExist = veriverificationRequests === null ||
-veriverificationRequests?.length === 0; @let settlements = settlementsRequests$ | async; @let settlementsRequest =
-settlements === null || settlements?.length === 0;
+@let veriverificationRequests = verificationRequests$ | async;
+@let requestExist = veriverificationRequests === null || veriverificationRequests?.length === 0;
+@let settlements = settlementsRequests$ | async;
+@let settlementsRequest = settlements === null || settlements?.length === 0;
 
 <div class="w-full flex flex-col gap-3 lg:gap-6">
     <p class="text-3xl lg:text-4xl font-bold">Кабинет администратора</p>
@@ -30,19 +31,29 @@ settlements === null || settlements?.length === 0;
     </tui-tabs>
 
     <div class="mt-2 flex flex-col gap-4">
-        @switch (activeItemIndex) { @case (0) {
-        <p *ngIf="requestExist" class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
-            Анкеты игроков отсутствуют...
-        </p>
-        @for (item of veriverificationRequests; track $index) {
-        <app-player-verify-request [data]="item" (requestWasWatched)="dataUpdate()" /> } } @case (1) {
-        <p *ngIf="settlementsRequest" class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
-            Анкеты селений отсутствуют...
-        </p>
-        @for (item of settlements; track $index) { <app-settlement-verification-request [data]="item" /> }} @case (2) {
-        <app-create-question-form />
-        } @case (3) {
-        <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">В разработке...</p>
-        }}
+        @switch (activeItemIndex) {
+            @case (0) {
+                <p *ngIf="requestExist" class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
+                    Анкеты игроков отсутствуют...
+                </p>
+                @for (item of veriverificationRequests; track $index) {
+                    <app-player-verify-request [data]="item" (requestWasWatched)="dataUpdate()" />
+                }
+            }
+            @case (1) {
+                <p *ngIf="settlementsRequest" class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
+                    Анкеты селений отсутствуют...
+                </p>
+                @for (item of settlements; track $index) {
+                    <app-settlement-verification-request [data]="item" />
+                }
+            }
+            @case (2) {
+                <app-create-question-form />
+            }
+            @case (3) {
+                <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">В разработке...</p>
+            }
+        }
     </div>
 </div>

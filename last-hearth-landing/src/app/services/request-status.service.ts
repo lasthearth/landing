@@ -3,7 +3,7 @@ import { TuiAlertService, TuiDialogContext } from '@taiga-ui/core';
 import { catchError, Observer, tap, throwError } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class RequestStatusService {
     /**
@@ -36,5 +36,9 @@ export class RequestStatusService {
                 implicit$.complete();
             }
         });
+    }
+
+    public showError(errorMessage: string = 'Произошла непредвиденная ошибка.') {
+        this.alertService.open('', { label: errorMessage, appearance: 'negative' }).subscribe();
     }
 }
