@@ -6,9 +6,11 @@
 <tui-loader />
 } @if(leaderBoard){
 <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 mb-8 !font-semibold !w-full content-tabs">
-    <button tuiTab type="button" (click)="getDeaths()" class="text-2xl uppercase !font-bold">По смертям</button>
-    <button tuiTab type="button" (click)="getHoursPlayed()" class="text-2xl uppercase !font-bold">По онлайну</button>
-    <button tuiTab type="button" (click)="getKills()" class="text-2xl uppercase !font-bold">По убийствам</button>
+    <button tuiTab type="button" (click)="getDeaths()" class="text-2xl/7.5 uppercase !font-bold">По смертям</button>
+    <button tuiTab type="button" (click)="getHoursPlayed()" class="text-2xl/7.5 uppercase !font-bold">
+        По онлайну
+    </button>
+    <button tuiTab type="button" (click)="getKills()" class="text-2xl/7.5 uppercase !font-bold">По убийствам</button>
 </tui-tabs>
 
 <div class="flex flex-col gap-6">
@@ -28,7 +30,7 @@
             [style.backgroundImage]="odd ? 'url(/1.webp)' : 'url(/3.webp)'"
             class="h-16 transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
         >
-            <div class="flex w-full justify-between gap-6 items-center px-8 p-4 z-50 text-neutral-200 text-2xl">
+            <div class="flex w-full justify-between gap-6 items-center px-8 p-4 z-50 text-neutral-200 text-2xl/7.5">
                 <img src="3.webp" class="size-10 rounded-full" />
                 <p>{{item.name}}</p>
                 <p *ngIf="activeItemIndex === 0">{{item.deaths}}</p>

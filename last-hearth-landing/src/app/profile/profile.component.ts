@@ -1,16 +1,17 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, TemplateRef, ViewChild } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { IUser } from '../services/interface/i-user';
 import { AsyncPipe, NgIf } from '@angular/common';
-import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { RouterOutlet } from '@angular/router';
 import { ServerInformationService } from '../services/server-information.service';
 import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
 import { map } from 'rxjs';
+import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 @Component({
     standalone: true,
-    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe],
+    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
 })
@@ -26,6 +27,27 @@ export class ProfileComponent {
     protected readonly details$ = inject(ServerInformationService).getDetails();
 
     protected readonly userGameName$ = this.userService.getPlayer$(this.userService.userId).pipe(map((data) => data.user_game_name));
+
+    /**
+     * Описание изображения открытого в предпросмотре.
+     */
+    protected previewDesc: string | null = null;
+
+    /**
+     * Ссылка на элемент в шаблоне.
+     */
+    @ViewChild('preview')
+    protected readonly preview?: TemplateRef<TuiDialogContext>;
+
+    /**
+     * Содержание предпросмотра.
+     */
+    protected previewContent: PolymorpheusContent;
+
+    /**
+         * Сервис предпросмотра.
+         */
+    private readonly previewService = inject(TuiPreviewDialogService);
 
     @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
@@ -67,5 +89,17 @@ export class ProfileComponent {
 
             reader.readAsDataURL(file);
         }
+    }
+
+    /**
+     *  Открывает изображение в окне предпросмотра.
+     *
+     * @param url Ссылка на изображение.
+     * @param desc Описание изображения.
+     */
+    protected show(url: string, desc: string): void {
+        this.previewContent = url;
+        this.previewDesc = desc;
+        this.previewService.open(this.preview || '').subscribe();
     }
 }

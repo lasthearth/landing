@@ -17,10 +17,25 @@ export class AppComponent {
     private readonly seo: ISeoData = {
         title: 'Last Hearth',
 
-        description: 'Last Hearth - сервер по игре Vintage story',
+        description: 'Last Hearth - уникальный ролевой сервер Vintage Story. Развивайте поселения от хутора до великого города, участвуйте в политике Империи, ведите войны и заключайте союзы. Присоединяйтесь к живому миру с экономикой, титулами и глубокой механикой PvP!',
 
-        keywords:
-            'Vintage story, Minecraft, рп сервер, Last Hearth, Vintage Story 1.20.12, Vintage Story сервер, Vintage Story сервер Россия, сервер Vintage Story, лучший Vintage Story сервер, Vintage Story онлайн, сервер выживания Vintage Story, ролевой сервер Vintage Story, средневековый сервер Vintage Story, Vintage Story с привилегиями, донат Vintage Story, Рыцарь Барон Граф Герцог, титулы Vintage Story, RP сервер Vintage Story, Vintage Story pvp сервер, Vintage Story pve сервер, бесплатный сервер Vintage Story, как играть Vintage Story онлайн, Vintage Story многопользовательский сервер, Vintage Story multiplayer, крафт Vintage Story сервер, строительство Vintage Story, Voxel игра сервер, Vintage Story моды, Vintage Story модификации, рпг сервер Vintage Story, open world Vintage Story сервер, реализм Vintage Story, Vanilla Vintage Story сервер, Vanilla+ сервер Vintage Story, лучшие сервера Vintage Story, средневековая песочница, Voxel RPG игра, Last Hearth сервер, Last Hearth Vintage Story, привилегии Vintage Story, донатный магазин Vintage Story, купить титул Vintage Story, игровой титул Рыцарь, игровой титул Барон, привилегии на сервере',
+        keywords: [
+            'Vintage Story сервер',
+            'Vintage Story Россия',
+            'ролевой сервер VS',
+            'Last Hearth',
+            'Vintage Story RP',
+            'сервер с поселениями',
+            'Vintage Story PvP',
+            'Vintage Story империя',
+            'средневековый сервер',
+            'Vintage Story титулы',
+            'Vintage Story 2025',
+            'рп сервер Vintage Story',
+            'Vintage Story гильдии',
+            'Vintage Story война',
+            'Vintage Story экономика'
+        ].join(', '),
 
         robots: 'index, follow',
 
@@ -30,7 +45,7 @@ export class AppComponent {
 
         locale: 'ru_RU',
 
-        siteName: 'Last Hearth',
+        siteName: 'Last Hearth - Сервер Vintage Story',
     };
 
     /**

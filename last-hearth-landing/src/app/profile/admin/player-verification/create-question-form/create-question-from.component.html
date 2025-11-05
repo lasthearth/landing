@@ -1,5 +1,5 @@
 <div class="p-6">
-    <p class="text-2xl">Придумайте вопрос на знание правил</p>
+    <p class="text-2xl/7.5">Придумайте вопрос на знание правил</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2 mt-4">
         <l-input formControlName="question" placeholder="Придумайте вопрос..." class="w-full"> Вопрос </l-input>
         <tui-error formControlName="question" [error]="[] | tuiFieldError | async" />

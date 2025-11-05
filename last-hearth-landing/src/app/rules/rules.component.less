@@ -21,3 +21,30 @@ p {
     text-align: center;
     color: #5a4635;
 }
+
+@keyframes gentle-shake {
+    0%,
+    100% {
+        transform: translateX(0) scale(1);
+    }
+    25% {
+        transform: translateX(-2px) scale(1);
+    }
+    50% {
+        transform: translateX(2px) scale(1);
+    }
+    75% {
+        transform: translateX(-1px) scale(1);
+    }
+}
+
+.shake-animation {
+    animation: gentle-shake 0.5s ease-in-out;
+
+    // Дополнительные стили для лучшего визуального эффекта
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+    border-radius: 12px;
+    transition: box-shadow 0.3s ease;
+}

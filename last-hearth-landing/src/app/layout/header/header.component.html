@@ -10,7 +10,7 @@
                 <img src="/images/logo.png" alt="Логотип сервера" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14" />
                 <p
                     [ngClass]="{'hidden! 2xl:block!': isAuth}"
-                    class="hidden sm:block text-2xl sm:text-5xl text-white font-medium text-nowrap"
+                    class="hidden sm:block text-2xl/7.5 sm:text-5xl text-white font-medium text-nowrap"
                 >
                     Last Hearth
                 </p>
@@ -31,7 +31,7 @@
                             </p>
                         </div>
                         <div class="text-white">
-                            <p class="hidden md:block text-base sm:text-2xl opacity-90 leading-6">Игроков</p>
+                            <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">Игроков</p>
                             <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time ? time : '-' }}</p>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                 class="mt-8 z-10 flex w-fit h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
             >
                 <div class="rounded-2xl gap-1 p-1 sm:p-3 flex items-center">
-                    <p class="text-sm sm:text-2xl text-white">{{userService.userName}}</p>
+                    <p class="text-sm sm:text-2xl/7.5 text-white">{{userService.userName}}</p>
                     @if(userService.userImage){
                     <img
                         [src]="userService.userImage"

@@ -3,8 +3,14 @@
     <div class="flex gap-4 items-end mb-8">
         <div class="flex flex-col gap-1">
             @if(userData.image) {
-            <div class="flex rounded-2xl justify-center items-center">
-                <img [src]="userData.image" class="rounded-2xl rounded-b-sm max-w-32 max-h-32" />
+            <div
+                class="flex rounded-2xl justify-center items-center cursor-pointer"
+                (click)="show(userData.image, 'Изображение профиля')"
+            >
+                <img
+                    [src]="userData.image"
+                    class="rounded-2xl rounded-b-sm max-w-32 max-h-32 transition-all duration-200 hover:opacity-85"
+                />
             </div>
             } @else {
             <div class="flex rounded-2xl justify-center items-center">
@@ -20,17 +26,22 @@
             </button>
         </div>
         <div class="flex flex-col gap-2">
-            <p class="text-4xl font-semibold">{{userData.name}}</p>
-            <p *ngIf="userName" class="text-3xl font-semibold">[{{userName}}]</p>
+            <p class="text-4xl font-semibold text-shadow-2xs">{{userData.name}}</p>
+            <p
+                *ngIf="userName"
+                class="text-base text-shadow-2xs py-1 font-bold text-center bg-lh-accent-2 text-neutral-200 rounded-2xl"
+            >
+                {{userName}}
+            </p>
             <p
                 [class.text-red-500!]="getRoleName() === 'Неверифицирован'"
-                class="text-base uppercase py-1 font-bold text-center bg-lh-accent-2 text-neutral-200 rounded-2xl"
+                class="text-base text-shadow-2xs uppercase py-1 font-bold text-center bg-lh-success text-neutral-200 rounded-2xl"
             >
                 {{getRoleName()}}
             </p>
             @let details = details$ | async;
-            <p *ngIf="details?.status === 'pending'" class="text-2xl">Ваша анкета отправлена. Ожидайте проверки.</p>
-            <p *ngIf="details?.status === 'rejected'" class="text-2xl">
+            <p *ngIf="details?.status === 'pending'" class="text-2xl/7.5">Ваша анкета отправлена. Ожидайте проверки.</p>
+            <p *ngIf="details?.status === 'rejected'" class="text-2xl/7.5">
                 Вашу анкету отклонили. Причина: {{details?.rejection_reason}}
             </p>
             <button
@@ -45,8 +56,18 @@
     @if(getRoleName() !== 'Неверифицирован' || (details?.status === 'approved' || details?.status === 'verified')) {
     <router-outlet />
     } @else {
-    <p class="text-2xl">
+    <p class="text-2xl/7.5">
         Что бы начать пользоваться сайтом и узнать как попасть на сервер, необходимо пройти верификацию.
     </p>
     }
 </div>
+
+<ng-template #preview let-preview>
+    <tui-preview [rotatable]="true">
+        <tui-preview-title>{{ previewDesc }}</tui-preview-title>
+        <img *polymorpheusOutlet="previewContent as src" alt="preview" [src]="src" />
+        <button iconStart="@tui.x" tuiIconButton tuiPreviewAction type="button" (click)="preview.complete()">
+            Close
+        </button>
+    </tui-preview>
+</ng-template>

@@ -4,7 +4,7 @@
     <!-- 1. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isAboutServer = !isAboutServer">
-            <p class="text-2xl text-lh-primary font-bold">1. Что это за сервер? Как понять подходит ли он мне?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">1. Что это за сервер? Как понять подходит ли он мне?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isAboutServer }"
@@ -27,8 +27,8 @@
                     <span class="font-bold">•</span> развитие поселений от маленького лагеря до крупной региональной
                     провинции.
                 </p>
-                <p class="text-2xl pl-4 font-bold">⚠️ Дисклеймер ⚠️</p>
-                <p class="text-2xl pl-4 font-bold">
+                <p class="text-2xl/7.5 pl-4 font-bold">⚠️ Дисклеймер ⚠️</p>
+                <p class="text-2xl/7.5 pl-4 font-bold">
                     У нас строгие правила и RP-элементы. Если вам ближе хаотичный PvP, "гриферство", либо полноценный
                     PvE, то, возможно, этот сервер вам не подойдёт.
                 </p>
@@ -39,7 +39,7 @@
     <!-- 2. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isHowToPlay = !isHowToPlay">
-            <p class="text-2xl text-lh-primary font-bold">2. Как мне присоединиться к игре на сервере?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">2. Как мне присоединиться к игре на сервере?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isHowToPlay }"
@@ -73,7 +73,9 @@
     <!-- 3. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRegistration = !isRegistration">
-            <p class="text-2xl text-lh-primary font-bold">3. Регистрация на сайте. Что делать, если я забыл пароль?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">
+                3. Регистрация на сайте. Что делать, если я забыл пароль?
+            </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRegistration }"
@@ -106,7 +108,7 @@
     <!-- 4. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isTroubles = !isTroubles">
-            <p class="text-2xl text-lh-primary font-bold">4. Что делать если у меня не заходит на сервер?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">4. Что делать если у меня не заходит на сервер?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTroubles }"
@@ -194,7 +196,7 @@
     <!-- 5. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isSeason = !isSeason">
-            <p class="text-2xl text-lh-primary font-bold">5. Когда вайп и сколько длятся сезоны?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">5. Когда вайп и сколько длятся сезоны?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isSeason }"
@@ -218,7 +220,7 @@
     <!-- 6. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isHowToStart = !isHowToStart">
-            <p class="text-2xl text-lh-primary font-bold">6. Я зашел на сервер, с чего мне начать?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">6. Я зашел на сервер, с чего мне начать?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isHowToStart }"
@@ -257,7 +259,7 @@
     <!-- 7. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isMoney = !isMoney">
-            <p class="text-2xl text-lh-primary font-bold">7. Валюта сервера, что это и какой курс?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">7. Валюта сервера, что это и какой курс?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isMoney }"
@@ -329,7 +331,7 @@
     <!-- 8. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isDocsAndSuzerain = !isDocsAndSuzerain">
-            <p class="text-2xl text-lh-primary font-bold">8. Что такое вольность, патенты и кто такой сюзерен?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">8. Что такое вольность, патенты и кто такой сюзерен?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isDocsAndSuzerain }"
@@ -370,7 +372,7 @@
     <!-- 9. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isSettlements = !isSettlements">
-            <p class="text-2xl text-lh-primary font-bold">9. Где найти к кому можно присоединиться?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">9. Где найти к кому можно присоединиться?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isSettlements }"
@@ -396,7 +398,7 @@
     <!-- 10. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isBagsOrViolation = !isBagsOrViolation">
-            <p class="text-2xl text-lh-primary font-bold">10. Я нашел баг или нарушение правил, куда писать?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">10. Я нашел баг или нарушение правил, куда писать?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isBagsOrViolation }"
@@ -423,7 +425,7 @@
     <!-- 11. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isDeathOrTheft = !isDeathOrTheft">
-            <p class="text-2xl text-lh-primary font-bold">11. Меня убили или обокрали, что делать?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">11. Меня убили или обокрали, что делать?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isDeathOrTheft }"
@@ -446,7 +448,7 @@
             class="flex w-full justify-between gap-2 cursor-pointer"
             (click)="isSettlementRegistration = !isSettlementRegistration"
         >
-            <p class="text-2xl text-lh-primary font-bold">
+            <p class="text-2xl/7.5 text-lh-primary font-bold">
                 12. Могу ли я сразу зарегистрировать город или деревню без предыдущих уровней селений?
             </p>
             <tui-icon
@@ -473,7 +475,7 @@
     <!-- 13. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isOffer = !isOffer">
-            <p class="text-2xl text-lh-primary font-bold">
+            <p class="text-2xl/7.5 text-lh-primary font-bold">
                 13. У меня есть предложение по модификации или концепции, куда писать?
             </p>
             <tui-icon
@@ -501,7 +503,7 @@
     <!-- 14. -->
     <div class="flex flex-col gap-2 shadow-2xs">
         <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isTeam = !isTeam">
-            <p class="text-2xl text-lh-primary font-bold">14. Как мне попасть в команду проекта Last Heath?</p>
+            <p class="text-2xl/7.5 text-lh-primary font-bold">14. Как мне попасть в команду проекта Last Heath?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTeam }"
