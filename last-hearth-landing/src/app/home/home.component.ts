@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { NewsCardComponent } from '../news/news-card/news-card.component';
 import { NewsService } from '../services/news.service';
@@ -10,16 +10,21 @@ import { TuiIcon } from '@taiga-ui/core';
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, TuiPagination, TuiIcon],
+    imports: [TuiCarousel, NewsCardComponent, TuiPagination, TuiIcon, TuiPagination],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
     /**
      * Номер элемента карусели.
      */
     protected carouselIndex: number = 0;
+
+    /**
+     * Номер страницы.
+     */
+    protected pageIndex: number = 0;
 
     /**
      * Путь до элементов карусели.
@@ -85,6 +90,20 @@ export class HomeComponent {
      */
     protected readonly news = inject(NewsService).news;
 
+    /**
+     * Список новостей.
+     */
+    protected pageNews: {
+        title: string;
+        date: string;
+        image: string;
+        description: string;
+    }[] = [];
+
+    ngOnInit() {
+        this.pageNews = this.news.slice(0, 3);
+    }
+
     protected navigate(direction: number): void {
         if (direction > 0) {
             this.carouselIndex = this.carouselIndex === this.images.length - 1 ? 0 : this.carouselIndex + 1;
@@ -93,5 +112,14 @@ export class HomeComponent {
         if (direction < 0) {
             this.carouselIndex = this.carouselIndex === 0 ? this.images.length - 1 : this.carouselIndex - 1;
         }
+    }
+
+    protected getPagesCount(): number {
+        return Math.round(this.news.length / 3);
+    }
+
+    protected goToPage(index: number): void {
+        this.pageIndex = index;
+        this.pageNews = this.news.slice(this.pageIndex * 3, this.pageIndex * 3 + 3);
     }
 }

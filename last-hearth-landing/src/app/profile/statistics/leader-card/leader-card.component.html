@@ -1,0 +1,30 @@
+<div class="main relative flex justify-center items-center">
+    <div
+        [style.backgroundImage]="'url(/br.jpg)'"
+        [class.!min-w-[130%]]="isBigSize()"
+        [class.!h-[110%]]="isBigSize()"
+        class="flex px-6 bg-center bg-cover before:absolute before:brightness-85 before:size-full before:z-10 before:backdrop-blur-2xl size-full flex-col gap-2 lg:gap-6 rounded-4xl before:rounded-4xl justify-center items-center shadow-2xl shadow-[#332C26] card-tilt"
+    >
+        <div class="absolute inset-0 z-20 pointer-events-none particles"></div>
+        <img src="3.webp" class="size-12 lg:size-14 xl:size-16 2xl:size-20 z-30 rounded-full" />
+        <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-neutral-200">
+            {{ playerName() }}
+        </p>
+        <p
+            [class.gold-text]="ratingPlace() === '1'"
+            [class.silver-text]="ratingPlace() === '2'"
+            [class.bronze-text]="ratingPlace() === '3'"
+            class="rating-text text-shadow-2xl font-extrabold z-30 rank-text"
+        >
+            {{ ratingPlace() }}
+        </p>
+        <div class="flex flex-col gap-1 justify-center items-center">
+            <p class="nick-text text-shadow-2xl text-shadow-2xl font-semibold z-30 text-neutral-200">
+                {{ count() }}
+            </p>
+            <p class="nick-text text-shadow-2xl font-semibold z-30 text-neutral-200">
+                {{ type() }}
+            </p>
+        </div>
+    </div>
+</div>

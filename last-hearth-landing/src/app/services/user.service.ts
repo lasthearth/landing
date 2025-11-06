@@ -40,7 +40,7 @@ export class UserService {
         this.oidcSecurityService
             .checkAuth()
             .pipe(
-                switchMap(authResult => {
+                switchMap((authResult) => {
                     if (!authResult.isAuthenticated) {
                         return of(null);
                     }
@@ -65,16 +65,16 @@ export class UserService {
                                 console.error('[Auth] Ошибка декодирования ID токена:', decodeError);
                             }
                         }),
-                        catchError(tokenError => {
+                        catchError((tokenError) => {
                             console.error('[Auth] Ошибка при получении токенов:', tokenError);
                             return of(null);
-                        }),
+                        })
                     );
                 }),
-                catchError(authError => {
+                catchError((authError) => {
                     return of(null);
                 }),
-                first(),
+                first()
             )
             .subscribe();
     }
@@ -107,11 +107,11 @@ export class UserService {
     public getInvitations$() {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.accessToken}`
+            Authorization: `Bearer ${this.accessToken}`,
         });
         return this.http
             .get<{
-                invitations: { id: string, user_id: string, settlement_id: string }[];
+                invitations: { id: string; user_id: string; settlement_id: string }[];
             }>(`${this.baseUrl}/users/${this.userId}/settlements/invitations`, { headers })
             .pipe();
     }
@@ -119,19 +119,18 @@ export class UserService {
     public getPlayer$(userId: string) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.accessToken}`
+            Authorization: `Bearer ${this.accessToken}`,
         });
         return this.http
             .get<{
-                user_id: string,
-                user_game_name: string,
+                user_id: string;
+                user_game_name: string;
                 avatar: {
-                    original: string,
-                    x96: string,
-                    x48: string
-
+                    original: string;
+                    x96: string;
+                    x48: string;
                 };
-            }>(`${this.baseUrl}/user/${userId}`, { headers })
+            }>(`${this.baseUrl}/users/${userId}`, { headers })
             .pipe();
     }
 }

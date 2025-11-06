@@ -69,7 +69,7 @@ export class SettlementService {
         return this.http
             .get<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/user/${userId}/settlements`, { headers: this.serverInfoService.getHeaders() })
+            }>(`${this.baseUrl}/users/${userId}/settlements`, { headers: this.serverInfoService.getHeaders() })
             .pipe(map((data) => data.settlement));
     }
 
@@ -94,7 +94,7 @@ export class SettlementService {
 
         return this.http.get<{
             users: any[];
-        }>(`${this.baseUrl}/user/search`, { params, headers: this.serverInfoService.getHeaders() });
+        }>(`${this.baseUrl}/users/search`, { params, headers: this.serverInfoService.getHeaders() });
     }
 
     public invitePlayer(settlementId: string, userId: string) {

@@ -12,7 +12,7 @@
             <div class="rounded-2xl gap-4 flex items-center p-4 sm:py-3 sm:pl-3 sm:pr-4">
                 <img src="/images/logo.png" alt="Логотип сервера" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14" />
                 <p
-                    [ngClass]="{'hidden! 2xl:block!': isAuth}"
+                    [ngClass]="{ 'hidden! 2xl:block!': isAuth }"
                     class="hidden sm:block text-2xl/7.5 sm:text-5xl text-white font-medium text-nowrap"
                 >
                     Last Hearth
@@ -27,15 +27,15 @@
                 <div class="flex flex-col gap-1">
                     <div class="flex w-full px-4 gap-4 justify-center items-center">
                         <div class="flex gap-0.5 items-center">
-                            <p class="text-3xl sm:text-5xl text-white">{{ online?.count ? online?.count : '-' }}</p>
+                            <p class="text-3xl sm:text-5xl text-white">{{ online?.count ? online?.count : "-" }}</p>
                             <p class="text-xs sm:text-sm text-white opacity-70">/</p>
                             <p class="text-xs sm:text-sm text-white opacity-70">
-                                {{ online?.max ? online?.max : '-' }}
+                                {{ online?.max ? online?.max : "-" }}
                             </p>
                         </div>
                         <div class="text-white">
                             <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">Игроков</p>
-                            <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time ? time : '-' }}</p>
+                            <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
                         </div>
                     </div>
                     <div class="w-full flex px-3.5">
@@ -64,7 +64,10 @@
                                 class="relative ml-2 cursor-pointer rounded-lg z-10 size-12 sm:size-16 shadow-md shadow-lh-primary-2"
                             />
                         } @else {
-                            <tui-icon icon="@tui.square-user-round" class="relative rounded-lg z-10 text-6xl! text-white" />
+                            <tui-icon
+                                icon="@tui.square-user-round"
+                                class="relative rounded-lg z-10 text-6xl! text-white"
+                            />
                         }
                     </div>
                 </div>
@@ -90,7 +93,10 @@
                 >
                     <tui-icon icon="@tui.gamepad-2" />
                     <span class="hidden md:block">НАЧАТЬ ИГРУ</span>
-                    <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110"> </tui-pulse>
+                    <tui-pulse
+                        tuiHintAppearance="floating"
+                        class="!absolute !top-0.5 !right-0.5 !scale-110"
+                    ></tui-pulse>
                 </button>
             }
             <button
@@ -132,12 +138,15 @@
             <button
                 (click)="isAuth ? '' : signIn()"
                 [routerLink]="isAuth ? ['/profile'] : ''"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'profile', '!rounded-xl': !isAuth }"
+                [ngClass]="{
+                    'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'profile',
+                    '!rounded-xl': !isAuth,
+                }"
                 class="relative nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-tl-lg rounded-bl-lg p-2.5 w-11!"
             >
                 <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
                 <tui-pulse
-                    *ngIf="invitations?.invitations?.length || userVerifications?.length && isAdmin()"
+                    *ngIf="invitations?.invitations?.length || (userVerifications?.length && isAdmin())"
                     tuiHintAppearance="floating"
                     class="!absolute !top-0.5 !right-0.5 !scale-110"
                 />
