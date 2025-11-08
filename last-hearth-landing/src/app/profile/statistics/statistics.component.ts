@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, startWith, switchMap } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { BehaviorSubject, catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { LeaderBoardType } from '../../services/enums/leader-board-type';
 import { ILeaderBoard } from '../../services/interface/i-leader-board';
 import { ServerInformationService } from '../../services/server-information.service';
-import { AsyncPipe, NgFor, NgIf, NgClass } from '@angular/common';
+import { UserService } from '../../services/user.service';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { TuiTabs } from '@taiga-ui/kit';
@@ -17,7 +18,7 @@ export type TypeLabel = 'Смертей' | 'Убийств' | 'Часов';
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [TuiTable, AsyncPipe, NgIf, TuiIcon, NgFor, TuiLoader, TuiTabs, NgClass, LeaderCardComponent],
+    imports: [TuiTable, AsyncPipe, NgIf, TuiIcon, TuiLoader, TuiTabs, LeaderCardComponent],
     styleUrl: './statistics.component.less',
     templateUrl: './statistics.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,21 @@ export class StatisticsComponent {
      * Сервис информации о сервере.
      */
     private readonly serverInfoService: ServerInformationService = inject(ServerInformationService);
+
+    /**
+     * Сервис данных о пользователе.
+     */
+    private readonly userService: UserService = inject(UserService);
+
+    /**
+     * ChangeDetectorRef для обновления вида.
+     */
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+    /**
+     * Кэш аватарок пользователей по user_id.
+     */
+    protected readonly avatarsCache: Map<string, string> = new Map<string, string>();
 
     /**
      * Индекс открытой вкладки.
@@ -48,7 +64,17 @@ export class StatisticsComponent {
      */
     protected readonly leaderBoard$: Observable<{
         entries: Array<ILeaderBoard>;
-    }> = this.filterSubject$.pipe(switchMap((filter) => this.serverInfoService.getLeaderBoard(filter)));
+    }> = this.filterSubject$.pipe(
+        switchMap((filter) =>
+            this.serverInfoService.getLeaderBoard(filter).pipe(
+                tap((data) => {
+                    if (data?.entries) {
+                        this.loadUserAvatars(data.entries);
+                    }
+                })
+            )
+        )
+    );
 
     /**
      * Возвращает список имен лидеров.
@@ -117,5 +143,55 @@ export class StatisticsComponent {
             default:
                 return entry.deaths;
         }
+    }
+
+    /**
+     * Загружает аватарки пользователей по их user_id.
+     *
+     * @param entries Записи лидерборда
+     */
+    private loadUserAvatars(entries: Array<ILeaderBoard>): void {
+        if (!this.userService.accessToken) {
+            return;
+        }
+
+        const uniqueUserIds = [
+            ...new Set(entries.map((entry) => entry.user_id).filter((id) => id && !this.avatarsCache.has(id))),
+        ];
+
+        if (uniqueUserIds.length === 0) {
+            return;
+        }
+
+        const requests = uniqueUserIds.map((userId) =>
+            this.userService.getPlayer$(userId).pipe(
+                map((user) => ({ userId, avatar: user.avatar.original })),
+                catchError(() => of({ userId, avatar: undefined }))
+            )
+        );
+
+        forkJoin(requests).subscribe({
+            next: (results) => {
+                results.forEach(({ userId, avatar }) => {
+                    if (avatar) {
+                        this.avatarsCache.set(userId, avatar);
+                    }
+                });
+                this.cdr.detectChanges();
+            },
+        });
+    }
+
+    /**
+     * Возвращает аватар пользователя по user_id.
+     *
+     * @param userId Идентификатор пользователя
+     * @returns URL аватара или undefined
+     */
+    protected getUserAvatar(userId: string | undefined): string | undefined {
+        if (!userId) {
+            return undefined;
+        }
+        return this.avatarsCache.get(userId);
     }
 }

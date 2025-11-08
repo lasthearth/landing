@@ -1,5 +1,72 @@
 /* Animated metallic text styles for rank display */
 
+@keyframes borderFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.card-frame {
+    --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(120, 110, 100, 0.18));
+    --border-glow: rgba(255, 240, 220, 0.22);
+    --border-thickness: 6px;
+    position: relative;
+    display: inline-block;
+    border-radius: 2rem;
+    isolation: isolate;
+}
+
+.card-frame::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--border-thickness));
+    border-radius: inherit;
+    background: var(--border-gradient);
+    background-size: 220% 220%;
+    animation: borderFlow 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+    filter: drop-shadow(0 0 18px var(--border-glow));
+    transition: filter 250ms ease-in-out;
+}
+
+.card-frame:hover::before {
+    filter: drop-shadow(0 0 26px var(--border-glow));
+}
+
+.card-frame__content {
+    position: relative;
+    z-index: 1;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+.card-frame--gold {
+    --border-gradient: linear-gradient(135deg, #6e5a00 0%, #b89100 20%, #ffd700 45%, #fff4a8 55%, #ffd700 70%, #b89100 85%, #6e5a00 100%);
+    --border-glow: rgba(255, 215, 0, 0.45);
+}
+
+.card-frame--silver {
+    --border-gradient: linear-gradient(135deg, #5c5c5c 0%, #8f8f8f 20%, #c0c0c0 45%, #f5f5f5 55%, #c0c0c0 70%, #8f8f8f 85%, #5c5c5c 100%);
+    --border-glow: rgba(192, 192, 192, 0.4);
+}
+
+.card-frame--bronze {
+    --border-gradient: linear-gradient(135deg, #6a3f1f 0%, #8a5128 20%, #cd7f32 45%, #f2c59b 55%, #cd7f32 70%, #8a5128 85%, #6a3f1f 100%);
+    --border-glow: rgba(205, 127, 50, 0.42);
+}
+
+.card-frame--default {
+    --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(170, 160, 150, 0.25) 45%, rgba(60, 54, 50, 0.35) 100%);
+    --border-glow: rgba(255, 255, 255, 0.16);
+}
+
 @keyframes shimmer {
     0% {
         background-position: 0% 50%;
@@ -324,6 +391,56 @@
     @media (width < 1280px) and (width > 900px) {
         font-size: var(--text-4xl) /* 1.25rem = 20px */;
         line-height: var(--tw-leading, var(--text-4xl--line-height) /* calc(1.75 / 1.25) ≈ 1.4 */);
+    }
+
+    font-size: var(--text-base) /* 1rem = 16px */;
+    line-height: var(--tw-leading, var(--text-base--line-height) /* calc(1.5 / 1) ≈ 1.5 */);
+}
+
+.type-text {
+    @media (width >= 2050px) {
+        font-size: var(--text-3xl) /* 3rem = 48px */;
+        line-height: var(--tw-leading, var(--text-3xl--line-height) /* 1 */);
+    }
+
+    @media (width >= 1800px) and (width < 2050px) {
+        font-size: var(--text-2xl) /* 1.875rem = 30px */;
+        line-height: var(--tw-leading, var(--text-2xl--line-height) /* calc(2.25 / 1.875) ≈ 1.2 */);
+    }
+
+    @media (width >= 1280px) and (width < 1800px) {
+        font-size: var(--text-xl) /* 1.5rem = 24px */;
+        line-height: var(--tw-leading, var(--text-xl--line-height) /* calc(2 / 1.5) ≈ 1.333333 */);
+    }
+
+    @media (width < 1280px) and (width > 900px) {
+        font-size: var(--text-3xl) /* 1.25rem = 20px */;
+        line-height: var(--tw-leading, var(--text-3xl--line-height) /* calc(1.75 / 1.25) ≈ 1.4 */);
+    }
+
+    font-size: var(--text-base) /* 1rem = 16px */;
+    line-height: var(--tw-leading, var(--text-base--line-height) /* calc(1.5 / 1) ≈ 1.5 */);
+}
+
+.count-text {
+    @media (width >= 2050px) {
+        font-size: var(--text-5xl) /* 3rem = 48px */;
+        line-height: var(--tw-leading, var(--text-5xl--line-height) /* 1 */);
+    }
+
+    @media (width >= 1800px) and (width < 2050px) {
+        font-size: var(--text-4xl) /* 1.875rem = 30px */;
+        line-height: var(--tw-leading, var(--text-4xl--line-height) /* calc(2.25 / 1.875) ≈ 1.2 */);
+    }
+
+    @media (width >= 1280px) and (width < 1800px) {
+        font-size: var(--text-3xl) /* 1.5rem = 24px */;
+        line-height: var(--tw-leading, var(--text-3xl--line-height) /* calc(2 / 1.5) ≈ 1.333333 */);
+    }
+
+    @media (width < 1280px) and (width > 900px) {
+        font-size: var(--text-5xl) /* 1.25rem = 20px */;
+        line-height: var(--tw-leading, var(--text-5xl--line-height) /* calc(1.75 / 1.25) ≈ 1.4 */);
     }
 
     font-size: var(--text-base) /* 1rem = 16px */;

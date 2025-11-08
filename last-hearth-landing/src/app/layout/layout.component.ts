@@ -6,7 +6,6 @@ import { UserService } from '@app/services/user.service';
 import { Observable } from 'rxjs';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { WelcomeComponent } from '@app/welcome/welcome.component';
-import { LocalStorageService } from '@app/services/local-storage.service';
 
 /**
  * Компонент разметки.
@@ -20,13 +19,6 @@ import { LocalStorageService } from '@app/services/local-storage.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent {
-    private readonly localStorageService = inject(LocalStorageService);
-    /**
-     *
-     */
-    constructor() {
-        this.test = this.localStorageService.getItem<boolean>('welcomeWasWatched') ? true : false;
-    }
     /**
      * Сервис данных о пользователе.
      */
@@ -40,15 +32,16 @@ export class LayoutComponent {
     protected test = false;
 
     public onWelcomeScroll() {
+        if (this.isCanScroll) {
+            return;
+        }
+
         this.isCanScroll = true;
+        this.cdr.markForCheck();
+
         setTimeout(() => {
             this.isWelcomeHide = true;
             this.cdr.markForCheck();
-        }, 500);
-
-        setTimeout(() => {
-            this.localStorageService.setItem('welcomeWasWatched', true);
-            this.cdr.markForCheck();
-        }, 2000);
+        }, 100);
     }
 }

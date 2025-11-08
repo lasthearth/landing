@@ -101,7 +101,11 @@ export class UserService {
             Authorization: `Bearer ${this.accessToken}`,
         });
 
-        return this.http.post<{ avatar: string }>(`${this.baseUrl}/user/avatar`, { avatar: base64Image }, { headers });
+        return this.http.post<{ avatar: string }>(
+            `${this.baseUrl}/users/${this.userId}/avatar`,
+            { avatar: base64Image },
+            { headers }
+        );
     }
 
     public getInvitations$() {

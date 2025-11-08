@@ -14,7 +14,7 @@ import { IVerificationQuestion } from './interface/i-verification-question';
     providedIn: 'root',
 })
 export class ServerInformationService {
-    private baseUrl = 'https://api.lasthearth.ru/v1';
+    private baseUrl = 'https://apiprev.lasthearth.ru/v1';
 
     private readonly http: HttpClient = inject(HttpClient);
 

@@ -1,9 +1,11 @@
 export interface ILeaderBoard {
-    name: string,
+    name: string;
 
-    deaths: number,
+    deaths: number;
 
-    kills: number,
+    kills: number;
 
-    hours_played: number
+    hours_played: number;
+
+    user_id: string;
 }
