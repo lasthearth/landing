@@ -1,3 +1,6 @@
+@let invitations = invitations$ | async;
+@let userVerifications = userVerifications$ | async;
+
 <div class="flex xl:flex-col gap-2 z-300!">
     <button
         [routerLink]="['/profile/how-play']"
@@ -16,17 +19,27 @@
     <button
         [routerLink]="['/profile/settlement']"
         [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'settlement' }"
-        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
+        class="relative nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
     >
         <tui-icon icon="@tui.castle" />
+        <tui-pulse
+            *ngIf="invitations?.invitations?.length"
+            tuiHintAppearance="floating"
+            class="!absolute !top-0.5 !right-0.5 !scale-110"
+        />
     </button>
     @let isAuth = userService.authState$ | async;
     <button
         [routerLink]="isAuth && isAdmin() ? ['/profile/admin'] : ''"
         [class.!hidden]="!isAdmin()"
         [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'admin' }"
-        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
+        class="relative nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
     >
         <tui-icon icon="@tui.shield" />
+        <tui-pulse
+            *ngIf="userVerifications?.length"
+            tuiHintAppearance="floating"
+            class="!absolute !top-0.5 !right-0.5 !scale-110"
+        />
     </button>
 </div>

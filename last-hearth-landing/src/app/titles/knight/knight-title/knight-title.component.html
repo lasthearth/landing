@@ -2,18 +2,20 @@
     <p class="text-3xl font-semibold">Возможности, которые открывает титул "Рыцарь":</p>
     <div class="flex gap-4">
         <p
-            class="text-2xl font-semibold flex items-center gap-2 border-2 rounded-2xl border-amber-600 p-2 bg-transparent size-fit"
+            class="text-2xl/7.5 font-semibold flex items-center gap-2 border-2 rounded-2xl border-amber-600 p-2 bg-transparent size-fit"
         >
             <tui-icon icon="@tui.paintbrush-vertical" class="text-3xl" /> Цветной ник в игре
         </p>
         <p
-            class="text-2xl font-semibold flex items-center gap-2 border-2 rounded-2xl border-amber-600 p-2 bg-transparent size-fit"
+            class="text-2xl/7.5 font-semibold flex items-center gap-2 border-2 rounded-2xl border-amber-600 p-2 bg-transparent size-fit"
         >
             <tui-icon icon="@tui.sparkle" class="text-3xl" /> Роль в дискорде
         </p>
     </div>
     <p class="pt-4 text-3xl font-semibold">Что идет в комплекте с титулом "Рыцарь":</p>
     <div class="flex gap-4 p-4">
-        @for (item of gameItems; track $index) { <app-game-item-card [data]="item"></app-game-item-card> }
+        @for (item of gameItems; track $index) {
+            <app-game-item-card [data]="item"></app-game-item-card>
+        }
     </div>
 </div>

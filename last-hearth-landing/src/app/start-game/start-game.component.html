@@ -4,18 +4,25 @@
     <div class="flex gap-10 items-start">
         <p class="text-8xl font-extrabold text-[#bdb093] min-w-12 leading-20">1</p>
         <div class="flex flex-col gap-1">
-            <p class="text-lh-primary text-2xl font-bold">Создайте аккаунт</p>
-            <p class="text-lh-primary text-base">
-                На нашем сервере используется собственная система авторизации игроков. Что бы начать играть у нас,
-                сначала
+            <p class="text-lh-primary text-2xl/7.5 font-bold">Установите игру</p>
+            <p class="text-lh-primary text-lg">
+                Для установки игры воспользуйтесь
                 <a
                     class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                    [routerLink]="isAuth ? ['/profile'] : ['/start-game']"
-                    (click)="isAuth ? '' : signIn()"
+                    href="https://www.vintagestory.at/store/category/1-game-account-game-servers/"
+                    target="_blank"
                 >
-                    создайте аккаунт
+                    официальным сайтом
                 </a>
-                .
+                (рекомендуется) или
+                <a
+                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                    href="https://fplay.su/vs/"
+                    target="_blank"
+                >
+                    бесплатной версией от fplay </a
+                >.<br />Затем создайте аккаунт в игре. Запомните ваш <b>игровой ник</b>, он потребуется для вашей
+                верификации у нас на сервере.
             </p>
         </div>
     </div>
@@ -23,34 +30,23 @@
     <div class="flex gap-10 items-start">
         <p class="text-8xl font-extrabold text-[#bdb093] min-w-12 leading-20">2</p>
         <div class="flex flex-col gap-1">
-            <p class="text-lh-primary text-2xl font-bold">Пройдите верификацию</p>
-            <p class="text-lh-primary text-base">
-                Для безопасной и комфортной игры все игроки проходят верификацию — отвечают на короткую анкету. Это
-                помогает убедиться, что вы ознакомлены с
+            <p class="text-lh-primary text-2xl/7.5 font-bold">Создайте аккаунт</p>
+            <p class="text-lh-primary text-lg">
+                Для безопасной и комфортной игры вам необходимо
+                <a
+                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                    [routerLink]="isAuth ? ['/profile'] : ['/start-game']"
+                    (click)="isAuth ? '' : signIn()"
+                >
+                    создать аккаунт </a
+                >, ознакомиться с
                 <a
                     class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
                     [routerLink]="['/rules']"
                 >
-                    правилами
-                </a>
-                и не создадите проблем другим игрокам.<br />В анкете вам <b>потребуется игровой ник</b>, поэтому не
-                забудьте скачать игру с
-                <a
-                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                    href="https://www.vintagestory.at/store/category/1-game-account-game-servers/"
-                    target="_blank"
-                >
-                    официального сайта
-                </a>
-                (рекомендуется) или временно попробовать на
-                <a
-                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                    href="https://fplay.su/"
-                    target="_blank"
-                >
-                    fplay.su
-                </a>
-                (рекомендуем приобрести лицензию) и настроить ваш аккаунт.
+                    правилами </a
+                >сервера и пройти верификацию в профиле.<br />Проверьте при прохождении анкеты верификации правильность
+                введенного игрового ника.
             </p>
         </div>
     </div>
@@ -58,10 +54,10 @@
     <div class="flex gap-10 items-start">
         <p class="text-8xl font-extrabold text-[#bdb093] min-w-12 leading-20">3</p>
         <div class="flex flex-col gap-1">
-            <p class="text-lh-primary text-2xl font-bold">Играйте</p>
+            <p class="text-lh-primary text-2xl/7.5 font-bold">Играйте</p>
             <p class="text-lh-primary text-base">
-                Войдите в игру и добавьте наш сервер. Инструкции для входа доступны в личном кабинете после прохождения
-                верификации.
+                Войдите в игру и добавьте наш сервер. Ip адрес и пароль доступны в профиле после прохождения
+                верификации.<br />Наслаждайтесь игрой.
             </p>
         </div>
     </div>

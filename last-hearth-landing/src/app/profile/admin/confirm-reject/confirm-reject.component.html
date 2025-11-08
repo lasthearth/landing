@@ -1,0 +1,31 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2">
+    <div class="flex flex-col gap-1">
+        <p class="text-2xl/7.5">Причина отклонения анкеты</p>
+        <label tuiLabel>
+            <tui-textfield [tuiTextfieldCleaner]="false">
+                <textarea
+                    placeholder="Причина"
+                    [formControl]="form.controls.reason"
+                    tuiTextarea
+                    class="bg-transparent! z-20!"
+                ></textarea>
+            </tui-textfield>
+            <tui-error formControlName="reason" [error]="[] | tuiFieldError | async" />
+        </label>
+    </div>
+    <div class="flex gap-4 justify-end">
+        <button
+            (click)="context.$implicit.complete()"
+            class="text-lh-primary rounded-lg! text-sm font-bold cursor-pointer mt-2 self-end bg-transparent py-2.5 px-4 hover:bg-neutral-100 active:bg-neutral-100"
+        >
+            ЕЩЕ ПОДУМАТЬ
+        </button>
+        <button
+            type="submit"
+            [disabled]="!form.valid"
+            class="text-white text-sm font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active disabled:bg-red-900 disabled:cursor-default"
+        >
+            ОТКЛОНИТЬ
+        </button>
+    </div>
+</form>

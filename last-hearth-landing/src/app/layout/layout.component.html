@@ -1,11 +1,23 @@
-<div>
-    <div class="flex justify-center">
-        <app-header class="w-full xl:w-[50%]" />
+@let isAuth = userAuth$ | async;
+
+@if (!isAuth) {
+    <app-welcome
+        [class.scroll]="isCanScroll"
+        (onScroll)="onWelcomeScroll()"
+        class="absolute size-full welcome z-[200]"
+    />
+}
+
+@if (isWelcomeHide || isAuth) {
+    <div>
+        <div class="flex justify-center">
+            <app-header class="w-full xl:w-[50%]" />
+        </div>
+
+        <router-outlet />
     </div>
 
-    <router-outlet />
-</div>
-
-<div class="flex justify-center">
-    <app-footer class="w-full xl:w-[50%] main-panel rounded-t-xl! rounded-b-none!" />
-</div>
+    <div class="flex justify-center">
+        <app-footer class="w-full xl:w-[50%] main-panel rounded-t-xl! rounded-b-none!" />
+    </div>
+}

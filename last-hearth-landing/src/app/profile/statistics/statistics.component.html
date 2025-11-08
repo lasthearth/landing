@@ -1,39 +1,86 @@
 @let leaderBoard = (leaderBoard$ | async)?.entries;
 
-<p class="text-2xl">Статистика:</p>
+<p class="text-3xl lg:text-4xl font-bold mb-8">Рейтинг игроков</p>
 
-@if(leaderBoard === null) {
-<tui-loader />
-} @if(leaderBoard){
-<table tuiTable [columns]="getNames(leaderBoard)" class="table w-full">
-    <thead>
-        <tr tuiThGroup>
-            <th tuiTh [resizable]="true">Ник</th>
-            <th tuiTh>
-                <button (click)="getDeaths()" class="cursor-pointer">
-                    Смерти
-                    <tui-icon *ngIf="selectedTh === 'deaths'" icon="@tui.filter" class="text-sm! ml-1 mb-0.5" />
-                </button>
-            </th>
-            <th tuiTh>
-                <button (click)="getKills()" class="cursor-pointer">
-                    Убийства<tui-icon *ngIf="selectedTh === 'kills'" icon="@tui.filter" class="text-sm! ml-1 mb-0.5" />
-                </button>
-            </th>
-            <th tuiTh>
-                <button (click)="getHoursPlayed()" class="cursor-pointer">
-                    Часы<tui-icon *ngIf="selectedTh === 'hours'" icon="@tui.filter" class="text-sm! ml-1 mb-0.5" />
-                </button>
-            </th>
-        </tr>
-    </thead>
-    <tbody tuiTbody [data]="leaderBoard">
-        <tr *ngFor="let item of leaderBoard" tuiTr>
-            <th *tuiCell="'name'" tuiTd>{{ item.name }}</th>
-            <th *tuiCell="'deaths'" tuiTd>{{ item.deaths }}</th>
-            <th *tuiCell="'kills'" tuiTd>{{ item.kills }}</th>
-            <th *tuiCell="'hours_played'" tuiTd>{{ item.hours_played }}</th>
-        </tr>
-    </tbody>
-</table>
+@if (leaderBoard === null) {
+    <tui-loader />
+}
+@if (leaderBoard) {
+    <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 mb-16 !font-semibold !w-full content-tabs">
+        <button tuiTab type="button" (click)="getDeaths()" class="text-2xl/7.5 uppercase !font-bold">По смертям</button>
+        <button tuiTab type="button" (click)="getHoursPlayed()" class="text-2xl/7.5 uppercase !font-bold">
+            По онлайну
+        </button>
+        <button tuiTab type="button" (click)="getKills()" class="text-2xl/7.5 uppercase !font-bold">
+            По убийствам
+        </button>
+    </tui-tabs>
+
+    @if (leaderBoard.length >= 3) {
+        <div class="flex gap-8 lg:gap-16 items-center justify-center mb-16">
+            <app-leader-card
+                [playerName]="leaderBoard[1]?.name ?? ''"
+                ratingPlace="2"
+                [type]="getTypeLabel()"
+                [count]="getCount(leaderBoard[1])"
+                [userImage]="getUserAvatar(leaderBoard[1]?.user_id)"
+            />
+            <app-leader-card
+                [playerName]="leaderBoard[0]?.name ?? ''"
+                ratingPlace="1"
+                [isBigSize]="true"
+                [count]="getCount(leaderBoard[0])"
+                [type]="getTypeLabel()"
+                [userImage]="getUserAvatar(leaderBoard[0]?.user_id)"
+            />
+            <app-leader-card
+                [playerName]="leaderBoard[2]?.name ?? ''"
+                ratingPlace="3"
+                [count]="getCount(leaderBoard[2])"
+                [type]="getTypeLabel()"
+                [userImage]="getUserAvatar(leaderBoard[2]?.user_id)"
+            />
+        </div>
+    }
+
+    <div class="flex flex-col gap-6">
+        @for (item of leaderBoard; track $index; let odd = $odd) {
+            @if ($index > 2) {
+                <div
+                    class="h-36 test relative transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat rounded-2xl object-center shadow-2xl before:z-10"
+                >
+                    <p
+                        class="absolute ml-12 self-center justify-self-start text-5xl uppercase font-bold text-[#bdb093]"
+                    >
+                        {{ $index + 1 }}
+                    </p>
+                    <div class="flex w-full justify-center gap-6 items-center z-30 text-neutral-200 text-2xl/7.5">
+                        <div class="flex flex-col gap-4 justify-center items-center">
+                            <div class="flex bg-[#EEDFC9] rounded-2xl p-3 gap-4 items-center">
+                                @if (getUserAvatar(item.user_id)) {
+                                    <img
+                                        [src]="getUserAvatar(item.user_id)"
+                                        class="size-8 rounded-full"
+                                        alt="Аватар игрока"
+                                    />
+                                } @else {
+                                    <tui-icon icon="@tui.user" class="size-8 text-lh-primary-2" />
+                                }
+                                <p class="font-semibold text-lh-primary-2">{{ item.name }}</p>
+                            </div>
+                            <p class="font-extrabold text-4xl text-shadow-lg" *ngIf="activeItemIndex === 0">
+                                {{ item.deaths }}
+                            </p>
+                            <p class="font-bold text-4xl text-shadow-lg" *ngIf="activeItemIndex === 1">
+                                {{ item.hours_played }}
+                            </p>
+                            <p class="font-bold text-4xl text-shadow-lg" *ngIf="activeItemIndex === 2">
+                                {{ item.kills }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 }

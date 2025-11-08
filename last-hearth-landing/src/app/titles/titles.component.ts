@@ -2,9 +2,8 @@ import { ChangeDetectorRef, Component, DestroyRef, inject, input, InputSignal } 
 import { TitleCardComponent } from './title-card/title-card.component';
 import { TitlesService } from '../services/titles.service';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { TuiButton, TuiDialogService, TuiIcon, TuiIcons } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { VerificationComponent } from '../verification/verification.component';
 import { HowToBuyComponent } from './how-to-buy/how-to-buy/how-to-buy.component';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { ITitles } from './interfaces/i-titles';
@@ -87,10 +86,8 @@ export class TitlesComponent {
                             this.index = 3;
                             break;
                         case RouteKeys.warrior:
-                            this.index = 4;
-                            break;
                         case RouteKeys.builder:
-                            this.index = 5;
+                            this.index = 4;
                             break;
                     }
                     this.cdr.markForCheck();
@@ -99,7 +96,7 @@ export class TitlesComponent {
     }
 
     protected nextCard() {
-        if (this.index === this.titles.length - 2) {
+        if (this.index === this.titles.length - 3) {
             this.index = 0;
         } else {
             this.index += 1;
@@ -108,7 +105,7 @@ export class TitlesComponent {
 
     protected prevCard() {
         if (this.index === 0) {
-            this.index = this.titles.length - 2;
+            this.index = this.titles.length - 3;
         } else {
             this.index -= 1;
         }

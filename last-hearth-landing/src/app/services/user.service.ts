@@ -7,6 +7,8 @@ import { BehaviorSubject, catchError, combineLatest, filter, finalize, first, Ob
 import { NavigationEnd, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement';
+import { ServerInformationService } from './server-information.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +26,7 @@ export class UserService {
 
     public accessToken!: string;
 
-    private baseUrl = 'https://api.lasthearth.ru/v1';
+    private baseUrl = 'https://apiprev.lasthearth.ru/v1';
 
     private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -32,11 +34,13 @@ export class UserService {
 
     private readonly http: HttpClient = inject(HttpClient);
 
+    private readonly localStorageService = inject(LocalStorageService);
+
     constructor() {
         this.oidcSecurityService
             .checkAuth()
             .pipe(
-                switchMap(authResult => {
+                switchMap((authResult) => {
                     if (!authResult.isAuthenticated) {
                         console.warn('[Auth] Пользователь не аутентифицирован');
                         this.authStateChange$.next(false);
@@ -63,11 +67,11 @@ export class UserService {
                                 this.authStateChange$.next(false);
                             }
                         }),
-                        catchError(tokenError => {
+                        catchError((tokenError) => {
                             console.error('[Auth] Ошибка при получении токенов:', tokenError);
                             this.authStateChange$.next(false);
                             return of(null);
-                        }),
+                        })
                     );
                 }),
                 catchError(authError => {
@@ -89,7 +93,8 @@ export class UserService {
     }
 
     public signOut(): void {
-        this.oidcSecurityService.logoff().subscribe();
+        this.localStorageService.removeItem('welcomeWasWatched');
+        this.oidcSecurityService.logoffAndRevokeTokens().subscribe();
     }
 
     public getUserData(): IUser {
@@ -105,6 +110,40 @@ export class UserService {
             Authorization: `Bearer ${this.accessToken}`,
         });
 
-        return this.http.post<{ avatar: string }>(`${this.baseUrl}/user/avatar`, { avatar: base64Image }, { headers });
+        return this.http.post<{ avatar: string }>(
+            `${this.baseUrl}/users/${this.userId}/avatar`,
+            { avatar: base64Image },
+            { headers }
+        );
+    }
+
+    public getInvitations$() {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.accessToken}`,
+        });
+        return this.http
+            .get<{
+                invitations: { id: string; user_id: string; settlement_id: string }[];
+            }>(`${this.baseUrl}/users/${this.userId}/settlements/invitations`, { headers })
+            .pipe();
+    }
+
+    public getPlayer$(userId: string) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.accessToken}`,
+        });
+        return this.http
+            .get<{
+                user_id: string;
+                user_game_name: string;
+                avatar: {
+                    original: string;
+                    x96: string;
+                    x48: string;
+                };
+            }>(`${this.baseUrl}/users/${userId}`, { headers })
+            .pipe();
     }
 }

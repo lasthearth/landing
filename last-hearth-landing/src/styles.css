@@ -1,12 +1,46 @@
 @import 'tailwindcss';
 
+:root {
+    /* Last Hearth variables. */
+    --lh-primary: #3f3c34;
+    --lh-primary-2: #332c26;
+
+    --lh-accent: #ff7920;
+    --lh-accent-2: #945a32;
+
+    --lh-danger: var(--color-red-600);
+    --lh-danger-hover: var(--color-red-700);
+    --lh-danger-active: var(--color-red-400);
+
+    --lh-success: var(--color-green-600);
+    --lh-success-hover: var(--color-green-700);
+    --lh-success-active: var(--color-green-400);
+
+    --lh-success-2: #4ac99b;
+
+    --lh-disabled: var(--color-gray-300);
+}
+
 @theme {
-  --color-lh-primary: #3f3c34;
-  --color-lh-primary-2: #31302b;
+    --color-lh-primary: var(--lh-primary);
+    --color-lh-primary-2: var(--lh-primary-2);
+
+    --color-lh-accent: var(--lh-accent);
+    --color-lh-accent-2: var(--lh-accent-2);
+
+    --color-lh-danger: var(--lh-danger);
+    --color-lh-danger-hover: var(--lh-danger-hover);
+    --color-lh-danger-active: var(--lh-danger-active);
+
+    --color-lh-success: var(--lh-success);
+    --color-lh-success-hover: var(--lh-success-hover);
+    --color-lh-success-active: var(--lh-success-active);
+
+    --color-lh-disabled: var(--lh-disabled);
 }
 
 html body {
-    font-family: "Advent Pro", serif !important;
+    font-family: 'Advent Pro', serif !important;
     font-optical-sizing: auto;
 }
 
@@ -16,7 +50,7 @@ a {
 
 .old-paper-background {
     background-color: #e8dfc8;
-    background-image: url("/old-paper.jpg"), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
+    background-image: url('/old-paper.webp'), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,28 +58,66 @@ a {
 }
 
 .progress {
-    &[data-size="s"] {
+    &[data-size='s'] {
         color: #e2d7bb;
     }
+    clip-path: none !important;
+    border-radius: 16px !important;
 }
 
 tui-dialog {
     .t-content {
         @apply text-base!;
-        font-family: "Advent Pro", serif !important;
+        font-family: 'Advent Pro', serif !important;
         font-optical-sizing: auto;
         background-color: #e2d7bb !important;
-        background-image: url("/image_1.png") !important;
+        background-image: url('/image_1.webp') !important;
         background-repeat: repeat !important;
     }
 }
 
 .main-panel {
     background-color: #e2d7bb;
-    background-image: url("/image_1.png");
+    background-image: url('/image_1.webp');
     background-repeat: repeat;
     -webkit-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 16px 16px;
+}
+
+.almendra-regular {
+    font-family: 'Almendra', serif;
+}
+
+tui-pulse {
+    color: #ff7920 !important;
+}
+
+tui-tabs {
+    font-family: 'Advent Pro', serif !important;
+    font-optical-sizing: auto;
+}
+
+tui-tabs.content-tabs {
+    align-items: stretch;
+    width: 100%;
+
+    button[tuiTab] {
+        white-space: normal;
+        flex: 1 1 0%;
+        word-break: break-word;
+        justify-content: center;
+        padding-inline: 0.5rem;
+        text-align: center;
+        --tui-tab-margin: 0px !important;
+    }
+}
+
+tui-hint {
+    background-color: var(--lh-primary-2) !important;
+    color: var(--lh-success-2) !important;
+    font-family: 'Advent Pro', serif !important;
+    font-optical-sizing: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
 }

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TuiExpand, TuiIcon } from '@taiga-ui/core';
+import { TuiIcon } from '@taiga-ui/core';
+import { TuiExpand } from '@taiga-ui/experimental';
 
 @Component({
     selector: 'app-faq',

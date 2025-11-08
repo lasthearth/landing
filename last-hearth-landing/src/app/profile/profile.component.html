@@ -1,52 +1,90 @@
+@let userName = userGameName$ | async;
 <div class="text-lh-primary items-start flex flex-col gap-4 p-6">
-    <div class="flex gap-4 items-end">
-        <div class="flex flex-col gap-1">
-            @if(userData.image) {
-            <div
-                class="flex rounded-2xl justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:opacity-80"
-                (click)="triggerFileInput()"
-            >
-                <img [src]="userData.image" class="rounded-2xl rounded-b-sm max-w-32 max-h-32" />
+    <div class="flex justify-start items-start lg:items-end lg:flex-row flex-col gap-12">
+        <div class="flex gap-4 items-end justify-start mb-8">
+            <div class="flex flex-col gap-1">
+                @if (userData.image) {
+                    <div
+                        class="flex rounded-2xl justify-center items-center cursor-pointer"
+                        (click)="show(userData.image, 'Изображение профиля')"
+                    >
+                        <img
+                            [src]="userData.image"
+                            class="rounded-2xl rounded-b-sm max-w-32 max-h-32 transition-all duration-200 hover:opacity-85"
+                        />
+                    </div>
+                } @else {
+                    <div class="flex rounded-2xl justify-center items-center">
+                        <tui-icon icon="@tui.user" class="text-9xl! self-center!" />
+                    </div>
+                }
+                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
+                <button
+                    (click)="triggerFileInput()"
+                    class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary rounded-t-sm rounded-lg py-2.5 px-4"
+                >
+                    ИЗМЕНИТЬ ФОТО
+                </button>
             </div>
-            } @else {
-            <div
-                class="flex rounded-2xl justify-center items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                (click)="triggerFileInput()"
-            >
-                <tui-icon icon="@tui.user" class="text-6xl! self-center!" />
+            <div class="w-auto flex flex-col gap-2">
+                <p class="text-4xl font-semibold text-shadow-2xs">{{ userData.name }}</p>
+                <div
+                    *ngIf="userName && getRoleName() !== 'Неверифицирован'"
+                    class="w-full flex text-xl/7.5 text-shadow-2xs gap-0.5 font-bold text-center text-neutral-200"
+                >
+                    <span class="w-[100%] bg-lh-accent-2 py-1 px-4 rounded-s-2xl">{{ userName }}</span>
+                    <span
+                        class="min-w-8 bg-lh-accent-2 py-1 rounded-e-2xl cursor-pointer hover:brightness-90 transition-all duration-200"
+                    >
+                        <tui-icon icon="@tui.pencil-line" class="text-xl/7.5!" />
+                    </span>
+                </div>
+                <div
+                    *ngIf="userName"
+                    class="flex w-full text-xl/7.5 text-shadow-2xs gap-1 font-bold text-center text-neutral-200"
+                >
+                    <span
+                        [class.text-red-500!]="getRoleName() === 'Неверифицирован'"
+                        [class.bg-lh-primary!]="getRoleName() === 'Неверифицирован'"
+                        class="w-full bg-lh-success py-1 px-4 rounded-2xl"
+                    >
+                        {{ getRoleName() }}
+                    </span>
+                </div>
+                @let details = details$ | async;
+                <button
+                    *ngIf="getRoleName() === 'Неверифицирован' && (details?.status == 'rejected' || !details)"
+                    (click)="verification()"
+                    class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
+                >
+                    ПРОЙТИ ВЕРИФИКАЦИЮ
+                </button>
             </div>
-            }
-            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
-            <button
-                (click)="signOut()"
-                class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-red-800 rounded-t-sm rounded-lg py-2.5 px-4"
-            >
-                ВЫЙТИ
-            </button>
         </div>
-        <div class="flex flex-col gap-2">
-            <p class="text-4xl font-semibold">{{userData.name}}</p>
-            <p [class.text-red-500!]="getRoleName() === 'Неверифицирован'" class="text-2xl">{{getRoleName()}}</p>
-            @let details = details$ | async;
-            <p *ngIf="details?.status === 'pending'" class="text-2xl">Ваша анкета отправлена. Ожидайте проверки.</p>
-            <p *ngIf="details?.status === 'rejected'" class="text-2xl">
-                Вашу анкету отклонили. Причина: {{details?.rejection_reason}}
+        <div class="mb-8">
+            <p *ngIf="details?.status === 'pending'" class="text-3xl/7.5 font-bold">
+                Ваша анкета отправлена. Ожидайте проверки.
             </p>
-            <button
-                *ngIf="getRoleName() === 'Неверифицирован' && (details?.status == 'rejected' || !details)"
-                (click)="verification()"
-                class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-            >
-                ПРОЙТИ ВЕРИФИКАЦИЮ
-            </button>
+        </div>
+        <div *ngIf="details?.status === 'rejected'" class="mb-8">
+            <p class="text-3xl/7.5 font-bold">Вашу анкету отклонили:</p>
+            <p class="text-2xl/7.5 max-w-72 text-wrap break-words">{{ details?.rejection_reason }}</p>
         </div>
     </div>
-    @if(getRoleName() !== 'Неверифицирован' || (details?.status === 'approved' || details?.status === 'verified')) {
-    <hr class="w-full h-px mt-10 bg-lh-primary" />
-    <router-outlet />
+
+    @if (getRoleName() !== "Неверифицирован" || details?.status === "approved" || details?.status === "verified") {
+        <router-outlet />
     } @else {
-    <p class="text-2xl">
-        Что бы начать пользоваться сайтом и узнать как попасть на сервер, необходимо пройти верификацию.
-    </p>
+        <p class="text-3xl/7.5 font-bold mt-8">Что бы попасть на сервер, необходимо пройти верификацию.</p>
     }
 </div>
+
+<ng-template #preview let-preview>
+    <tui-preview [rotatable]="true">
+        <tui-preview-title>{{ previewDesc }}</tui-preview-title>
+        <img *polymorpheusOutlet="previewContent as src" alt="preview" [src]="src" />
+        <button iconStart="@tui.x" tuiIconButton tuiPreviewAction type="button" (click)="preview.complete()">
+            Close
+        </button>
+    </tui-preview>
+</ng-template>

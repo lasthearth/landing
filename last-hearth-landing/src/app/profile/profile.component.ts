@@ -1,22 +1,23 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, TemplateRef, ViewChild } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { IUser } from '../services/interface/i-user';
 import { AsyncPipe, NgIf } from '@angular/common';
-import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { VerificationComponent } from '../verification/verification.component';
+import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { RouterOutlet } from '@angular/router';
 import { ServerInformationService } from '../services/server-information.service';
+import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
+import { map, switchMap, tap } from 'rxjs';
+import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
+import { RequestStatusService } from '@app/services/request-status.service';
 @Component({
     standalone: true,
-    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe],
+    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
 })
 export class ProfileComponent {
     protected readonly userService = inject(UserService);
-
-    protected select = 'how-play';
 
     protected readonly userData: IUser = this.userService.getUserData();
 
@@ -26,11 +27,42 @@ export class ProfileComponent {
 
     protected readonly details$ = inject(ServerInformationService).getDetails();
 
-    @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+    protected readonly userGameName$ = this.userService
+        .getPlayer$(this.userService.userId)
+        .pipe(map((data) => data.user_game_name));
 
-    protected signOut(): void {
-        this.userService.signOut();
-    }
+    /**
+     * Описание изображения открытого в предпросмотре.
+     */
+    protected previewDesc: string | null = null;
+
+    /**
+     * Ссылка на элемент в шаблоне.
+     */
+    @ViewChild('preview')
+    protected readonly preview?: TemplateRef<TuiDialogContext>;
+
+    /**
+     * Содержание предпросмотра.
+     */
+    protected previewContent: PolymorpheusContent;
+
+    /**
+     * Сервис уведомлений.
+     */
+    private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    /**
+     * Сервис предпросмотра.
+     */
+    private readonly previewService = inject(TuiPreviewDialogService);
+
+    /**
+     * ChangeDetectorRef для принудительного обновления представления.
+     */
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
     protected getRoleName() {
         if (this.userService.roles.includes('admin')) {
@@ -45,7 +77,7 @@ export class ProfileComponent {
     }
 
     protected verification() {
-        this.dialogs.open(new PolymorpheusComponent(VerificationComponent), { size: 'l' }).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(PlayerVerificationFormComponent), { size: 'l' }).subscribe();
     }
 
     triggerFileInput() {
@@ -57,18 +89,47 @@ export class ProfileComponent {
         const file = input.files?.[0];
 
         if (file) {
+            if (file.size > 3145728) {
+                this.requestStatusService.showError('Файл превышает 3МБ!');
+                return;
+            }
+
             const reader = new FileReader();
 
             reader.onload = () => {
-                const base64 = (reader.result as string).split(',')[1]; // убираем data:image/png;base64,
+                const base64 = (reader.result as string).split(',')[1];
+                const dataUrl = reader.result as string;
 
-                this.userService.setProfileImage$(base64).subscribe({
-                    next: res => console.log('Uploaded:', res),
-                    error: err => console.error('Error:', err),
-                });
+                this.userService
+                    .setProfileImage$(base64)
+                    .pipe(
+                        this.requestStatusService.handleError('Файл не должен превышать 512х512!'),
+                        tap(() => {
+                            this.userService.userImage = dataUrl;
+                            this.userData.image = dataUrl;
+
+                            this.cdr.detectChanges();
+                        }),
+                        this.requestStatusService.handleSuccess('Изображение обновлено!')
+                    )
+                    .subscribe({
+                        error: () => {},
+                    });
             };
 
             reader.readAsDataURL(file);
         }
+    }
+
+    /**
+     *  Открывает изображение в окне предпросмотра.
+     *
+     * @param url Ссылка на изображение.
+     * @param desc Описание изображения.
+     */
+    protected show(url: string, desc: string): void {
+        this.previewContent = url;
+        this.previewDesc = desc;
+        this.previewService.open(this.preview || '').subscribe();
     }
 }

@@ -1,13 +1,42 @@
 <div class="relative">
-    <tui-carousel [(index)]="carouselIndex" [duration]="4000" class="h-auto!">
+    <button
+        (click)="navigate(1)"
+        class="absolute nav-button size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] transition-all duration-200 rounded-xl backdrop-blur-md shadow-2xl"
+    >
+        <tui-icon icon="@tui.chevron-right" class="text-white" />
+    </button>
+    <tui-carousel [(index)]="carouselIndex" [duration]="3500" class="h-auto! !rounded-t-xl">
         @for (item of images; track $index) {
-        <img *tuiItem [src]="item" class="h-full md:h-[500px] object-cover object-center" />
+            <div *tuiItem class="size-full relative">
+                <img
+                    [src]="item.image"
+                    [class.brightness-75!]="item.isLight"
+                    class="h-full w-full md:h-[600px] object-cover object-center"
+                />
+                <div
+                    class="absolute flex flex-col justify-start left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white w-[90%] px-4 py-6"
+                >
+                    <!-- Заголовок -->
+                    <h2 class="text-8xl font-bold mb-4 uppercase !text-shadow-lg">{{ item.header }}</h2>
+
+                    <!-- Текст под заголовком -->
+                    <p [innerHTML]="item.body" class="text-4xl font-medium !text-shadow-lg"></p>
+                </div>
+            </div>
         }
     </tui-carousel>
     <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" class="mt-2" />
+    <button
+        (click)="navigate(-1)"
+        class="absolute nav-button size-12 z-40 left-8 cursor-pointer hover:scale-[105%] transition-all duration-200 top-1/2 -translate-y-1/2 rounded-xl backdrop-blur-md shadow-2xl"
+    >
+        <tui-icon icon="@tui.chevron-left" class="text-white" />
+    </button>
 </div>
-<div class="flex flex-wrap items-center gap-7 pt-0 p-10">
-    @for (item of news; track $index; let first = $first) {
-    <app-news-card [data]="item" class="h-auto! lg:h-[280px]!" />
+<div class="flex flex-wrap items-center gap-7 pt-0 p-10 pb-4">
+    @for (item of pageNews; track $index) {
+        <app-news-card [data]="item" class="!h-auto w-full" />
     }
 </div>
+
+<tui-pagination [index]="pageIndex" [length]="getPagesCount()" (indexChange)="goToPage($event)" class="mb-4" />

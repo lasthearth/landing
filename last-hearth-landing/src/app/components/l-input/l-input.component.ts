@@ -21,7 +21,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     ]
 })
 export class LInputComponent<T = string> implements ControlValueAccessor {
-    public type: InputSignal<"input" | "select"> = input<'input' | 'select'>('input');
+    public type: InputSignal<'input' | 'select' | 'textarea'> = input<'input' | 'select' | 'textarea'>('input');
 
     public items: InputSignal<T[]> = input<T[]>([]);
 

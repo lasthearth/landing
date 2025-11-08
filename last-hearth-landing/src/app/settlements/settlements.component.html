@@ -1,0 +1,23 @@
+@let settlements = settlements$ | async;
+
+@if (settlements === null) {
+    <div class="m-12 flex justify-center items-center">
+        <tui-loader />
+    </div>
+} @else {
+    @if (settlements === undefined) {
+        <div class="p-6 flex items-center justify-center">
+            <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Здесь пока нет селений...</p>
+        </div>
+    } @else {
+        <div class="text-lh-primary flex flex-col gap-6 p-6">
+            <p class="text-4xl font-bold">Список поселений игроков</p>
+
+            <div class="flex flex-wrap justify-center items-stretch gap-8 pt-0">
+                @for (item of settlements; track $index) {
+                    <app-settlement-card [data]="item" class="card" />
+                }
+            </div>
+        </div>
+    }
+}

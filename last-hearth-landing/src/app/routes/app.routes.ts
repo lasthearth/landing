@@ -3,10 +3,9 @@ import { LandingComponent } from '../landing/landing.component';
 import { RulesComponent } from '../rules/rules.component';
 import { HomeComponent } from '../home/home.component';
 import { TitlesComponent } from '../titles/titles.component';
-import { MarketComponent } from '../market/market.component';
 import { RouteKeys } from './enums/route-keys';
 import { ProfileComponent } from '../profile/profile.component';
-import { AdminComponent } from '../admin/admin.component';
+import { AdminComponent } from '../profile/admin/admin.component';
 import { adminGuard } from '../guards/admin.guard';
 import { StatisticsComponent } from '../profile/statistics/statistics.component';
 import { HowPlayComponent } from '../profile/how-play/how-play.component';
@@ -23,6 +22,7 @@ import { BuilderTitleComponent } from '../titles/builder/builder-title/builder-t
 import { ExplorerTitleComponent } from '../titles/explorer/explorer-title/explorer-title.component';
 import { WarriorTitleComponent } from '../titles/warrior/warrior-title/warrior-title.component';
 import { FaqComponent } from '../faq/faq.component';
+import { SettlementsComponent } from '../settlements/settlements.component';
 
 export const routes: Routes = [
     {
@@ -39,11 +39,6 @@ export const routes: Routes = [
                 path: 'rules',
                 component: RulesComponent,
                 data: { route_keys: RouteKeys.rules },
-            },
-            {
-                path: 'market',
-                component: MarketComponent,
-                data: { route_keys: RouteKeys.market },
             },
             {
                 path: 'profile',
@@ -137,6 +132,12 @@ export const routes: Routes = [
                 path: 'faq',
                 component: FaqComponent,
                 data: { route_keys: RouteKeys.faq },
+            },
+            {
+                path: 'settlements',
+                canActivate: [userGuard],
+                component: SettlementsComponent,
+                data: { route_keys: RouteKeys.settlements },
             },
         ],
     },

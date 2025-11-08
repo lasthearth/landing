@@ -5,7 +5,7 @@ import { GameItemCardComponent } from '../../game-item-card/game-item-card/game-
 
 @Component({
     selector: 'app-warrior-title',
-    imports: [GameItemCardComponent, TuiIcon],
+    imports: [GameItemCardComponent],
     templateUrl: './warrior-title.component.html',
     styleUrl: './warrior-title.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
