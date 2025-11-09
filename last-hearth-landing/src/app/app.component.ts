@@ -17,7 +17,8 @@ export class AppComponent {
     private readonly seo: ISeoData = {
         title: 'Last Hearth',
 
-        description: 'Last Hearth - уникальный ролевой сервер Vintage Story. Развивайте поселения от хутора до великого города, участвуйте в политике Империи, ведите войны и заключайте союзы. Присоединяйтесь к живому миру с экономикой, титулами и глубокой механикой PvP!',
+        description:
+            'Last Hearth - уникальный ролевой сервер Vintage Story. Развивайте поселения от хутора до великого города, участвуйте в политике Империи, ведите войны и заключайте союзы. Присоединяйтесь к живому миру с экономикой, титулами и глубокой механикой PvP!',
 
         keywords: [
             'Vintage Story сервер',
@@ -34,7 +35,7 @@ export class AppComponent {
             'рп сервер Vintage Story',
             'Vintage Story гильдии',
             'Vintage Story война',
-            'Vintage Story экономика'
+            'Vintage Story экономика',
         ].join(', '),
 
         robots: 'index, follow',
