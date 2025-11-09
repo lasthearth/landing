@@ -1,7 +1,7 @@
 <div class="relative">
     <button
         (click)="navigate(1)"
-        class="absolute nav-button size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] transition-all duration-200 rounded-xl backdrop-blur-md shadow-2xl"
+        class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] transition-all duration-200 rounded-xl backdrop-blur-md shadow-2xl"
     >
         <tui-icon icon="@tui.chevron-right" class="text-white" />
     </button>
@@ -28,7 +28,7 @@
     <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" class="mt-2" />
     <button
         (click)="navigate(-1)"
-        class="absolute nav-button size-12 z-40 left-8 cursor-pointer hover:scale-[105%] transition-all duration-200 top-1/2 -translate-y-1/2 rounded-xl backdrop-blur-md shadow-2xl"
+        class="absolute nav-button hidden md:block size-12 z-40 left-8 cursor-pointer hover:scale-[105%] transition-all duration-200 top-1/2 -translate-y-1/2 rounded-xl backdrop-blur-md shadow-2xl"
     >
         <tui-icon icon="@tui.chevron-left" class="text-white" />
     </button>
