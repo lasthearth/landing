@@ -47,14 +47,14 @@
         @for (item of leaderBoard; track $index; let odd = $odd) {
             @if ($index > 2) {
                 <div
-                    class="h-36 test relative transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat rounded-2xl object-center shadow-2xl before:z-10"
+                    class="h-36 test relative transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat rounded-2xl object-center shadow-2xl"
                 >
                     <p
                         class="absolute ml-12 self-center justify-self-start text-5xl uppercase font-bold text-[#bdb093]"
                     >
                         {{ $index + 1 }}
                     </p>
-                    <div class="flex w-full justify-center gap-6 items-center z-30 text-neutral-200 text-2xl/7.5">
+                    <div class="flex w-full justify-center gap-6 items-center text-neutral-200 text-2xl/7.5">
                         <div class="flex flex-col gap-4 justify-center items-center">
                             <div class="flex bg-[#EEDFC9] rounded-2xl p-3 gap-4 items-center">
                                 @if (getUserAvatar(item.user_id)) {
