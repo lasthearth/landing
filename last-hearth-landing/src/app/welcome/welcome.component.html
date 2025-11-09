@@ -1,4 +1,4 @@
-<div class="size-full relative">
+<div class="size-full relative" (tuiSwipe)="onSwipe($event)">
     <video
         #videoPlayer
         loop
@@ -10,7 +10,8 @@
         (click)="videoPlayer.paused ? videoPlayer.play() : videoPlayer.pause()"
     >
         <source [src]="videoUrl" type="video/mp4" />
-        Ваш браузер не поддерживает элемент <code>video</code>
+        Ваш браузер не поддерживает элемент
+        <code>video</code>
     </video>
 
     <div
@@ -45,8 +46,8 @@
     </div>
 
     <button
-        (click)="test()"
-        class="w-14 h-24 border border-neutral-500 rounded-full z-20 absolute left-1/2 -translate-x-1/2 bottom-20 cursor-pointer hover: shadow-2xl animate-bounce backdrop-blur-md"
+        (click)="scroll()"
+        class="w-12 h-20 md:w-14 md:h-24 border border-neutral-500 rounded-full z-20 absolute top-[83%] left-1/2 -translate-x-1/2 bottom-20 cursor-pointer hover:shadow-2xl animate-bounce backdrop-blur-md"
     >
         <tui-icon icon="@tui.chevrons-down" class="!text-5xl text-white" />
     </button>
