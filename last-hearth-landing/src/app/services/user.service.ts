@@ -25,7 +25,7 @@ export class UserService {
     public roles: string[] = [];
 
     public accessToken!: string;
-
+    
     private baseUrl = 'https://apiprev.lasthearth.ru/v1';
 
     private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -145,5 +145,22 @@ export class UserService {
                 };
             }>(`${this.baseUrl}/users/${userId}`, { headers })
             .pipe();
+    }
+
+    /**
+     * Создает запрос на изменение игрового никнейма пользователя.
+     * 
+     * @param newNickname Новое имя пользователя.
+     */
+    public changeUsername$(newNickname:string){
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.accessToken}`,
+        });
+        return this.http
+            .put<{
+                old_nickname: string,
+                new_nickname: string
+            }>(`${this.baseUrl}/users/${this.userId}/nickname`,{user_id: this.userId,new_nickname: newNickname},{headers})
     }
 }
