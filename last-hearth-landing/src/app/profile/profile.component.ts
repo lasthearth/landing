@@ -81,7 +81,10 @@ export class ProfileComponent {
         this.dialogs.open(new PolymorpheusComponent(PlayerVerificationFormComponent), { size: 'l' }).subscribe();
     }
 
-    protected openDialogChangeUsername(){
+    /**
+     * Открывает диалоговое окно изменения игрового никнейма пользователя
+     */
+    protected openDialogChangeUsername(): void {
         this.dialogs.open(new PolymorpheusComponent(ChangeUsernameComponent), { size: 'l' }).subscribe();
     }
 

@@ -15,7 +15,8 @@
     --lh-success: var(--color-green-600);
     --lh-success-hover: var(--color-green-700);
     --lh-success-active: var(--color-green-400);
-
+    --lh-success-disabled: #7A9D8C;
+    
     --lh-success-2: #4ac99b;
     
     --lh-disabled: var(--color-gray-300);
@@ -35,8 +36,10 @@
     --color-lh-success: var(--lh-success);
     --color-lh-success-hover: var(--lh-success-hover);
     --color-lh-success-active: var(--lh-success-active);
-
+    --color-lh-succes-disabled: var(--lh-success-disabled);
+    
     --color-lh-disabled: var(--lh-disabled);
+    
 }
 
 html body {
@@ -120,4 +123,42 @@ tui-hint {
     font-family: 'Advent Pro', serif !important;
     font-optical-sizing: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.lh-confirm-button {
+    background-color: var(--lh-success);
+    color:white;
+    cursor: pointer;
+    font-size: var(--text-sm) ;
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    border-radius: var(--radius-lg);
+    align-self: flex-start;
+    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 2.5);
+    margin-top: calc(var(--spacing) * 2);
+    transition: all 0.3s ease-in-out;
+    &:disabled {
+        background-color: var(--lh-success-disabled);
+        pointer-events: none;
+    }
+    &:hover {
+        background-color: var(--color-lh-success-hover);
+    }
+}
+
+.lh-cancel-button {
+    background-color: var(--lh-danger);
+    color:white;
+    cursor: pointer;
+    font-size: var(--text-sm) ;
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    border-radius: var(--radius-lg);
+    align-self: flex-start;
+    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 2.5);
+    margin-top: calc(var(--spacing) * 2);
+    transition: all 0.3s ease-in-out;
+    &:hover {
+        background-color: var(--color-lh-danger-hover);
+    }
 }

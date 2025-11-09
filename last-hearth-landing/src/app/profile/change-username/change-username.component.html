@@ -1,10 +1,11 @@
-<form class="flex flex-col gap-3 p-6" [formGroup]="form" (ngSubmit)="onSubmit.next()">
-  <p class="text-3xl font-bold text-lh-primary">Изменение никнейм-а</p>
-  <p class="text-base text-lh-danger">Внимание! Никнейм можно сменить только раз в 6 месяцев.</p>
-  <l-input placeholder="Ваш новый никнейм" formControlName="newUserName">
+<form  [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-3 p-6">
+  <p class="text-3xl font-bold text-lh-primary">Изменить игровой ник</p>
+  <p class="text-base text-lh-danger">Предупреждение! Игровой ник можно изменить 1 раз в 6 месяцев</p>
+  <l-input placeholder="Ваш новый никнейм" formControlName="newUsername">
   </l-input>
+  <tui-error formControlName="newUsername" [error]="[] | tuiFieldError | async" />
   <div class="flex gap-4">
-  <button  class="text-white text-sm! cursor-pointer bg-lh-danger rounded-lg self-start py-1.5 px-2.5 mt-2 hover:bg-lh-danger-hover transition-all duration-300" (click)="context.$implicit.complete()"> Отменить </button>
-  <button type="submit" class="text-white text-sm! cursor-pointer bg-lh-success rounded-lg self-start py-1.5 px-2.5 mt-2 disabled:bg-lh-disabled hover:bg-lh-success-hover transition-all duration-300" [disabled]="!form.valid"> Изменить </button>
+  <button (click)="context.$implicit.complete()" class="lh-cancel-button"> Отменить </button>
+  <button type="submit"  [disabled]="!form.valid" class="lh-confirm-button"> Изменить </button>
   </div>
 </form>

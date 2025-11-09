@@ -147,13 +147,16 @@ export class UserService {
             .pipe();
     }
 
+    /**
+     * Создает запрос на изменение игрового никнейма пользователя.
+     * 
+     * @param newNickname Новое имя пользователя.
+     */
     public changeUsername$(newNickname:string){
-        
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.accessToken}`,
         });
-    
         return this.http
             .put<{
                 old_nickname: string,
