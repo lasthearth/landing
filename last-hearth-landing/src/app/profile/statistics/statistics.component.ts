@@ -9,6 +9,7 @@ import { TuiTable } from '@taiga-ui/addon-table';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { TuiTabs } from '@taiga-ui/kit';
 import { LeaderCardComponent } from './leader-card/leader-card.component';
+import { TUI_IS_MOBILE } from '@taiga-ui/cdk';
 
 export type TypeLabel = 'Смертей' | 'Убийств' | 'Часов';
 
@@ -53,6 +54,8 @@ export class StatisticsComponent {
      * Выбранный столбец.
      */
     protected selectedTh: 'deaths' | 'kills' | 'hours' = 'deaths';
+
+    protected isMobile: boolean = inject(TUI_IS_MOBILE);
 
     /**
      * {@link Subject} фильтрации таблицы.
