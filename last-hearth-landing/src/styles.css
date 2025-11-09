@@ -17,7 +17,7 @@
     --lh-success-active: var(--color-green-400);
 
     --lh-success-2: #4ac99b;
-
+    
     --lh-disabled: var(--color-gray-300);
 }
 
@@ -27,7 +27,7 @@
 
     --color-lh-accent: var(--lh-accent);
     --color-lh-accent-2: var(--lh-accent-2);
-
+    
     --color-lh-danger: var(--lh-danger);
     --color-lh-danger-hover: var(--lh-danger-hover);
     --color-lh-danger-active: var(--lh-danger-active);
