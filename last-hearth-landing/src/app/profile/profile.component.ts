@@ -10,6 +10,7 @@ import { PlayerVerificationFormComponent } from './player-verification-form/play
 import { map, switchMap, tap } from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { RequestStatusService } from '@app/services/request-status.service';
+import { ChangeUsernameComponent } from './change-username/change-username.component';
 @Component({
     standalone: true,
     imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton],
@@ -78,6 +79,13 @@ export class ProfileComponent {
 
     protected verification() {
         this.dialogs.open(new PolymorpheusComponent(PlayerVerificationFormComponent), { size: 'l' }).subscribe();
+    }
+
+    /**
+     * Открывает диалоговое окно изменения игрового никнейма пользователя
+     */
+    protected openDialogChangeUsername(): void {
+        this.dialogs.open(new PolymorpheusComponent(ChangeUsernameComponent), { size: 'l' }).subscribe();
     }
 
     triggerFileInput() {
