@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LInputComponent } from '@app/components/l-input/l-input.component';
@@ -18,6 +18,7 @@ import { Subject, tap } from 'rxjs';
     templateUrl: './change-username.component.html',
     imports: [LInputComponent, ReactiveFormsModule, FormsModule, TuiError, TuiFieldErrorPipe, AsyncPipe],
     styleUrl: './change-username.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChangeUsernameComponent {
     /**

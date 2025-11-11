@@ -12,10 +12,22 @@ import { INews } from '../interfaces/i-news';
 })
 export class NewsCardComponent {
     /**
-     * Данные новости.
+     * Заголовок новости.
      */
     public title: InputSignal<string> = input.required();
+
+    /**
+     * Содержание новости.
+     */
     public content: InputSignal<string> = input.required();
+
+    /**
+     * Превью(Иконка) новости.
+     */
     public preview: InputSignal<string> = input.required();
+
+    /**
+     * Дата созджания новости.
+     */
     public date: InputSignal<string> = input.required();
 }

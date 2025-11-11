@@ -48,11 +48,6 @@ export class AdminComponent {
     private readonly settlementService: SettlementService = inject(SettlementService);
 
     /**
-     * Сервис новостей.
-     */
-    private readonly newsService: NewsService = inject(NewsService);
-
-    /**
      * {@link Subject} Обновления списка запросов верификаций игроков.
      */
     private readonly verificationsUpdate$: Subject<void> = new Subject<void>();

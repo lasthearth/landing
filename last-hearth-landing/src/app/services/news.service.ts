@@ -1,40 +1,30 @@
 import { inject, Injectable } from '@angular/core';
 import { INews } from './interface/i-news-admin';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { LocalStorageService } from './local-storage.service';
-import { Title } from '@angular/platform-browser';
 import { UserService } from './user.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NewsService {
-    private oidcSecurityService: OidcSecurityService = inject(OidcSecurityService);
+    /**
+     * Базовый урл для работы с API
+     */
+    private readonly baseUrl = 'https://apiprev.lasthearth.ru/v1';
 
-    public userImage!: string;
-
-    public userName!: string;
-
-    public userId!: string;
-
-    public roles: string[] = [];
-
-    public accessToken!: string;
-
-    private baseUrl = 'https://apiprev.lasthearth.ru/v1';
-
-    private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    public readonly authState$: Observable<boolean> = this.authStateChange$;
-
+    /**
+     * Сервис для работы с запросами HTTP
+     */
     private readonly http: HttpClient = inject(HttpClient);
 
-    private readonly localStorageService = inject(LocalStorageService);
-
+    /**
+     * Сервис пользователя для получения токенов
+     */
     private readonly userService = inject(UserService);
 
+    /**
+     * Новости на главной странице
+     */
     public readonly news = [
         {
             title: 'Бета крупного обновления сайта здесь!',
@@ -87,6 +77,13 @@ export class NewsService {
         },
     ];
 
+    /**
+     * Создает запрос на создание новости администратором.
+     *
+     * @param title Заголовок новости.
+     * @param content Содержание новости.
+     * @param preview Превью новости.
+     */
     public createNews$(news: INews) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',

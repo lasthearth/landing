@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -6,23 +6,17 @@ import {
     DestroyRef,
     ElementRef,
     inject,
-    input,
-    InputSignal,
     ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { LInputComponent } from '@app/components/l-input/l-input.component';
 import { INews } from '@app/services/interface/i-news-admin';
-import { IUser } from '@app/services/interface/i-user';
 import { NewsService } from '@app/services/news.service';
 import { RequestStatusService } from '@app/services/request-status.service';
-import { UserService } from '@app/services/user.service';
-import { TuiDialogContext, TuiError } from '@taiga-ui/core';
-import { TuiFieldErrorPipe, TuiFileLike, TuiFile, TuiFilesComponent, TuiFiles } from '@taiga-ui/kit';
-import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { finalize, forkJoin, interval, map, Observable, of, startWith, Subject, switchMap, tap, timer } from 'rxjs';
+import { TuiError } from '@taiga-ui/core';
+import { TuiFieldErrorPipe, TuiFile, TuiFilesComponent, TuiFiles } from '@taiga-ui/kit';
+import { finalize, interval, map, Observable, of, startWith, Subject, switchMap, tap, timer } from 'rxjs';
 import { NewsCardComponent } from '@app/news/news-card/news-card.component';
 
 /**
@@ -41,15 +35,19 @@ import { NewsCardComponent } from '@app/news/news-card/news-card.component';
         TuiFile,
         TuiFiles,
         TuiFilesComponent,
-        NgIf,
         NewsCardComponent,
         DatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
+/**
+ * Компонент создания новостей со стороны администратора
+ */
 export class CreateNewsComponent {
-    protected readonly userService = inject(UserService);
-    protected readonly userData: IUser = this.userService.getUserData();
+    /**
+     * Форма создания новости(заголовок,содержание,превью)
+     */
     protected readonly form = new FormGroup({
         title: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
         content: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -57,19 +55,27 @@ export class CreateNewsComponent {
     });
 
     /**
-     * Обработка состояния загрузки файла
+     * Обработка состояния(неудачно) файла
      */
-    protected readonly failedFiles$ = new Subject<File | null>();
-    protected readonly loadingFiles$ = new Subject<File | null>();
-    protected readonly loadedFiles$ = this.form.controls.preview.valueChanges.pipe(
-        switchMap((file) => this.processFile(file, this.loadingFiles$, this.failedFiles$))
+    protected readonly failedFile$: Subject<File | null> = new Subject<File | null>();
+
+    /**
+     * Обработка состояния(загружается) файла
+     */
+    protected readonly loadingFile$: Subject<File | null> = new Subject<File | null>();
+
+    /**
+     * Обработка состояния(загружен) файла
+     */
+    protected readonly loadedFile$: Observable<File | null> = this.form.controls.preview.valueChanges.pipe(
+        switchMap((file) => this.processFile(file, this.loadingFile$, this.failedFile$))
     );
     protected previewUrl: string | null = null; // для отображения картинки в превью
 
     /**
      * ChangeDetectorRef для принудительного обновления представления.
      */
-    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
     /**
@@ -91,14 +97,23 @@ export class CreateNewsComponent {
      * Сервис новостей сайта.
      */
     private readonly newsService: NewsService = inject(NewsService);
+    currentTime: Date | undefined;
 
     /**
-     * Методы работы с загрозкой файла
+     * Удаляет загруженный файл
      */
     protected removeFile(): void {
         this.form.controls.preview.setValue(null);
     }
 
+    /**
+     *
+     * Обрабатыет загруженный файл
+     *
+     * @param file Сам файл
+     * @param loading$ {@link Subject} загрузки файла
+     * @param failed$ {@link Subject} неудачной загрузки файла
+     */
     protected processFile(
         file: File | null,
         loading$: Subject<File | null>,
@@ -142,19 +157,22 @@ export class CreateNewsComponent {
                 const reader = new FileReader();
                 reader.onload = () => {
                     this.previewUrl = reader.result as string;
-                    this.cdr.markForCheck();
                 };
                 reader.readAsDataURL(file);
             } else {
                 this.previewUrl = null;
-                this.cdr.markForCheck();
             }
+            this.cdr.markForCheck();
+            takeUntilDestroyed(this.destroyRef);
+        });
+
+        this.currentDate$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((date) => {
+            this.currentTime = date;
         });
 
         this.onSubmit
             .pipe(
                 switchMap(() => {
-                    // Собираем массив Observable<string> для всех файлов
                     let base64Files$: Observable<string | null> = of(null);
                     if (this.form.controls.preview.value) {
                         const file = this.form.controls.preview.value;
@@ -163,7 +181,7 @@ export class CreateNewsComponent {
                         }
                     }
 
-                    // Ждём когда все base64 загрузятся
+                    // Ждём когда base64 загрузится
                     return base64Files$.pipe(
                         map((base64Files) => {
                             const request: INews = {
