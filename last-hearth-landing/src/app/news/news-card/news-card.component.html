@@ -1,5 +1,5 @@
 <div
-    [style.backgroundImage]="data().image ? 'url('+ data().image +')' : 'url(/images/screenshots/screen_1.webp)'"
+    [style.backgroundImage]="preview() ? 'url(' + preview() + ')' : 'url(/images/screenshots/screen_1.webp)'"
     class="transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
 >
     <div class="flex sm:flex-col justify-between gap-4 items-end sm:items-start sm:gap-0 h-full">
@@ -7,20 +7,20 @@
             <div
                 class="shrink-0 relative hidden md:block xl:hidden 2xl:block size-72 shadow-2xl shadow-black/60 overflow-clip rounded-xl"
             >
-                <img [src]="data().image" class="hidden md:block xl:hidden 2xl:block size-72 object-cover rounded-xl" />
+                <img [src]="preview()" class="hidden md:block xl:hidden 2xl:block size-72 object-cover rounded-xl" />
             </div>
             <div class="flex flex-col gap-6 w-full items-start">
                 <div class="flex flex-col gap-2 items-start">
                     <h1 class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100">
-                        {{ data().title }}
+                        {{ title() }}
                     </h1>
                     <span class="bg-[#c35a17] text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl">
-                        {{ data().date }}
+                        {{ date() }}
                     </span>
                 </div>
                 <p
                     class="text-base md:text-xl font-semibold text-shadow-md text-neutral-200"
-                    [innerHTML]="data().description"
+                    [innerHTML]="content()"
                 ></p>
             </div>
         </div>

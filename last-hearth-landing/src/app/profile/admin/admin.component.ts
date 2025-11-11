@@ -9,14 +9,24 @@ import { PlayerVerifyRequestComponent } from './player-verification/player-verif
 import { CreateQuestionFormComponent } from './player-verification/create-question-form/create-question-form.component';
 import { SettlementVerificationRequestComponent } from './settlement-verification-request/settlement-verification-request.component';
 import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
-
+import { NewsService } from '@app/services/news.service';
+import { CreateNewsComponent } from './create-news/create-news.component';
 /**
  * Компонент страницы администратора.
  */
 @Component({
     standalone: true,
     selector: 'app-admin',
-    imports: [PlayerVerifyRequestComponent, AsyncPipe, SettlementVerificationRequestComponent, TuiTabs, CommonModule, TuiPulse, CreateQuestionFormComponent],
+    imports: [
+        PlayerVerifyRequestComponent,
+        AsyncPipe,
+        SettlementVerificationRequestComponent,
+        TuiTabs,
+        CommonModule,
+        TuiPulse,
+        CreateQuestionFormComponent,
+        CreateNewsComponent,
+    ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,13 +52,12 @@ export class AdminComponent {
      */
     private readonly verificationsUpdate$: Subject<void> = new Subject<void>();
 
-
     /**
      * {@link Observable} Списка запросов верификации.
      */
-    protected readonly verificationRequests$: Observable<IVerifyRequest[]> = this.verificationsUpdate$.pipe(startWith(null)).pipe(
-        switchMap(() => this.serverInfo.getVerifyRequests())
-    );
+    protected readonly verificationRequests$: Observable<IVerifyRequest[]> = this.verificationsUpdate$
+        .pipe(startWith(null))
+        .pipe(switchMap(() => this.serverInfo.getVerifyRequests()));
 
     /**
      * {@link Observable} Списка запросов верификации.

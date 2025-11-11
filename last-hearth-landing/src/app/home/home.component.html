@@ -35,7 +35,13 @@
 </div>
 <div class="flex flex-wrap items-center gap-7 pt-0 p-10 pb-4">
     @for (item of pageNews; track $index) {
-        <app-news-card [data]="item" class="!h-auto w-full" />
+        <app-news-card
+            [title]="item.title"
+            [content]="item.description"
+            [preview]="item.image"
+            [date]="item.date"
+            class="!h-auto w-full"
+        />
     }
 </div>
 

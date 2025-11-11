@@ -1,11 +1,10 @@
-<form  [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-3 p-6">
-  <p class="text-3xl font-bold text-lh-primary">Изменить игровой ник</p>
-  <p class="text-base text-lh-danger">Предупреждение! Игровой ник можно изменить 1 раз в 6 месяцев</p>
-  <l-input placeholder="Ваш новый никнейм" formControlName="newUsername">
-  </l-input>
-  <tui-error formControlName="newUsername" [error]="[] | tuiFieldError | async" />
-  <div class="flex gap-4">
-  <button (click)="context.$implicit.complete()" class="lh-cancel-button"> Отменить </button>
-  <button type="submit"  [disabled]="!form.valid" class="lh-confirm-button"> Изменить </button>
-  </div>
+<form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-3 p-6">
+    <p class="text-3xl font-bold text-lh-primary">Изменить игровой ник</p>
+    <p class="text-base text-lh-danger">Предупреждение! Игровой ник можно изменить 1 раз в 6 месяцев</p>
+    <l-input placeholder="Ваш новый никнейм" formControlName="newUsername"></l-input>
+    <tui-error formControlName="newUsername" [error]="[] | tuiFieldError | async" />
+    <div class="flex gap-4">
+        <button (click)="context.$implicit.complete()" class="lh-cancel-button">Отменить</button>
+        <button type="submit" [disabled]="!form.valid" class="lh-confirm-button">Изменить</button>
+    </div>
 </form>

@@ -1,9 +1,31 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { INews } from './interface/i-news-admin';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UserService } from './user.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NewsService {
+    /**
+     * Базовый урл для работы с API
+     */
+    private readonly baseUrl = 'https://apiprev.lasthearth.ru/v1';
+
+    /**
+     * Сервис для работы с запросами HTTP
+     */
+    private readonly http: HttpClient = inject(HttpClient);
+
+    /**
+     * Сервис пользователя для получения токенов
+     */
+    private readonly userService = inject(UserService);
+
+    /**
+     * Новости на главной странице
+     */
     public readonly news = [
         {
             title: 'Бета крупного обновления сайта здесь!',
@@ -55,4 +77,19 @@ export class NewsService {
                 'Наш сайт получил крупное обновление! Теперь вся верификация и получение доступа к серверу осуществляется через него. Внесена крупная автоматизация и множество функций, включая регистрацию поселений на подходе!',
         },
     ];
+
+    /**
+     * Создает запрос на создание новости администратором.
+     *
+     * @param title Заголовок новости.
+     * @param content Содержание новости.
+     * @param preview Превью новости.
+     */
+    public createNews$(news: INews): Observable<INews> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.userService.accessToken}`,
+        });
+        return this.http.post<INews>(`${this.baseUrl}/news`, news, { headers: headers });
+    }
 }

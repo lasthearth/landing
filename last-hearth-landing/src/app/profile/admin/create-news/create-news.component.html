@@ -1,0 +1,64 @@
+<div class="p-6">
+    <p class="text-3xl/7.5 font-bold">Создание новостей</p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2 mt-4">
+        <p class="text-2xl/7.5">Заголовок новости</p>
+        <l-input formControlName="title" placeholder="Придумайте заголовок новости..." class="w-full" />
+        <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />
+
+        <p class="text-2xl/7.5">Содержание новости</p>
+        <l-input
+            formControlName="content"
+            placeholder="Придумайте содержание новости..."
+            class="w-full"
+            type="textarea"
+        />
+        <tui-error formControlName="content" [error]="[] | tuiFieldError | async" />
+
+        <p class="text-2xl/7.5">Изображение новости</p>
+
+        @if (!form.controls.preview.value) {
+            <label tuiInputFiles>
+                <ng-template tuiInputFilesContent>
+                    <span class="text-gray-600">Добавить изображение...</span>
+                    <input accept="image/*" tuiInputFiles formControlName="preview" />
+                </ng-template>
+            </label>
+        }
+
+        <tui-files>
+            @if (form.controls.preview.value | tuiFileRejected: { accept: "image/*" } | async; as file) {
+                <tui-file state="error" [file]="file" (remove)="removeFile()" />
+            }
+
+            @if (loadingFile$ | async; as file) {
+                <tui-file state="loading" [file]="file" (remove)="removeFile()" />
+            }
+
+            @if (failedFile$ | async; as file) {
+                <tui-file state="error" [file]="file" (remove)="removeFile()" />
+            }
+
+            @if (loadedFile$ | async; as file) {
+                <tui-file [file]="file" (remove)="removeFile()" />
+            }
+        </tui-files>
+
+        <tui-error formControlName="preview" [error]="[] | tuiFieldError | async" />
+
+        <button
+            type="submit"
+            class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-end py-1.5 px-2.5 mt-2 disabled:text-lh-disabled disabled:bg-lh-primary"
+        >
+            Создать новость
+        </button>
+
+        <p class="text-2xl/7.5 text-center p-2">Предпросмотр новости</p>
+
+        <app-news-card
+            title="{{ form.controls.title.value || 'Введите заголовок новости...' }}"
+            content="{{ form.controls.content.value || 'Введите содержание новости...' }}"
+            [preview]="previewUrl || '/7.png'"
+            date="{{ currentDate$ | async | date: 'dd.MM.yy - HH:mm' }}"
+        />
+    </form>
+</div>
