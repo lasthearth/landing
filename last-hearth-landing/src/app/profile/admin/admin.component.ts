@@ -9,14 +9,15 @@ import { PlayerVerifyRequestComponent } from './player-verification/player-verif
 import { CreateQuestionFormComponent } from './player-verification/create-question-form/create-question-form.component';
 import { SettlementVerificationRequestComponent } from './settlement-verification-request/settlement-verification-request.component';
 import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
-
+import { NewsService } from '@app/services/news.service';
+import { CreateNewsComponent } from "./create-news/create-news.component";
 /**
  * Компонент страницы администратора.
  */
 @Component({
     standalone: true,
     selector: 'app-admin',
-    imports: [PlayerVerifyRequestComponent, AsyncPipe, SettlementVerificationRequestComponent, TuiTabs, CommonModule, TuiPulse, CreateQuestionFormComponent],
+    imports: [PlayerVerifyRequestComponent, AsyncPipe, SettlementVerificationRequestComponent, TuiTabs, CommonModule, TuiPulse, CreateQuestionFormComponent, CreateNewsComponent],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +37,11 @@ export class AdminComponent {
      * Сервис поселений.
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
+
+    /**
+     * Сервис новостей.
+     */
+    private readonly newsService: NewsService = inject(NewsService);
 
     /**
      * {@link Subject} Обновления списка запросов верификаций игроков.

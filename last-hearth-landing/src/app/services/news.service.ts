@@ -1,9 +1,41 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { INews } from './interface/i-news-admin';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { LocalStorageService } from './local-storage.service';
+import { Title } from '@angular/platform-browser';
+import { UserService } from './user.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NewsService {
+    
+   private oidcSecurityService: OidcSecurityService = inject(OidcSecurityService);
+   
+       public userImage!: string;
+   
+       public userName!: string;
+   
+       public userId!: string;
+   
+       public roles: string[] = [];
+   
+       public accessToken!: string;
+       
+       private baseUrl = 'https://apiprev.lasthearth.ru/v1';
+   
+       private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+   
+       public readonly authState$: Observable<boolean> = this.authStateChange$;
+   
+       private readonly http: HttpClient = inject(HttpClient);
+   
+       private readonly localStorageService = inject(LocalStorageService);
+
+       private readonly userService = inject(UserService);
+
     public readonly news = [
         {
             title: 'Бета крупного обновления сайта здесь!',
@@ -55,4 +87,21 @@ export class NewsService {
                 'Наш сайт получил крупное обновление! Теперь вся верификация и получение доступа к серверу осуществляется через него. Внесена крупная автоматизация и множество функций, включая регистрацию поселений на подходе!',
         },
     ];
+
+    public createNews$(news: INews){
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.userService.accessToken}`,
+        });
+        return this.http
+            .post<{
+                title:   string,
+                content: string,
+                preview: string
+            }>
+            (`${this.baseUrl}/news`,
+                {title:news.title, content:news.content, preview:news.preview},
+                {headers : headers})
+    }
 }
+

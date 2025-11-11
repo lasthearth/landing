@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input, InputSignal } from '@angular/core';
 import { INews } from '../interfaces/i-news';
 
 /**
@@ -14,5 +14,8 @@ export class NewsCardComponent {
     /**
      * Данные новости.
      */
-    public data: InputSignal<INews> = input.required();
+    public title: InputSignal<string> = input.required();
+    public content: InputSignal<string> = input.required();
+    public preview: InputSignal<string> = input.required();
+    public date: InputSignal<string> = input.required();
 }

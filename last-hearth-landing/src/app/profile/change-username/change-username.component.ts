@@ -48,7 +48,7 @@ export class ChangeUsernameComponent {
      * Сервис уведомлений.
      */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
-
+    
     /**
      * Сервис информации о пользователе.
      */
