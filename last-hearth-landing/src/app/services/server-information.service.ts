@@ -9,7 +9,7 @@ import { IVerifyRequest } from './interface/i-verify-request';
 import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement';
 import { IRequestSettlement } from '../settlements/interfaces/i-request-settlement';
 import { IVerificationQuestion } from './interface/i-verification-question';
-                                                
+
 @Injectable({
     providedIn: 'root',
 })

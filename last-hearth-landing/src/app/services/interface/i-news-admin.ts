@@ -1,9 +1,9 @@
-import { TuiFile } from "@taiga-ui/kit";
+import { TuiFile } from '@taiga-ui/kit';
 
 export interface INews {
-    title: string,
+    title: string;
 
-    content: string,
+    content: string;
 
-    preview: string,
+    preview: string;
 }

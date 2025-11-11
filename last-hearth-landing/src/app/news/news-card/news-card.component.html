@@ -1,9 +1,12 @@
-<div [style.backgroundImage]="preview() ? 'url('+ preview() +')' : 'url(/images/screenshots/screen_1.webp)'"
-    class="transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10">
+<div
+    [style.backgroundImage]="preview() ? 'url(' + preview() + ')' : 'url(/images/screenshots/screen_1.webp)'"
+    class="transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
+>
     <div class="flex sm:flex-col justify-between gap-4 items-end sm:items-start sm:gap-0 h-full">
         <div class="p-8 z-20 flex gap-12 items-center justify-between w-full">
             <div
-                class="shrink-0 relative hidden md:block xl:hidden 2xl:block size-72 shadow-2xl shadow-black/60 overflow-clip rounded-xl">
+                class="shrink-0 relative hidden md:block xl:hidden 2xl:block size-72 shadow-2xl shadow-black/60 overflow-clip rounded-xl"
+            >
                 <img [src]="preview()" class="hidden md:block xl:hidden 2xl:block size-72 object-cover rounded-xl" />
             </div>
             <div class="flex flex-col gap-6 w-full items-start">
@@ -15,8 +18,10 @@
                         {{ date() }}
                     </span>
                 </div>
-                <p class="text-base md:text-xl font-semibold text-shadow-md text-neutral-200" [innerHTML]="content()">
-                </p>
+                <p
+                    class="text-base md:text-xl font-semibold text-shadow-md text-neutral-200"
+                    [innerHTML]="content()"
+                ></p>
             </div>
         </div>
     </div>

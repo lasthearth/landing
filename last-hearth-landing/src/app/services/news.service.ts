@@ -11,30 +11,29 @@ import { UserService } from './user.service';
     providedIn: 'root',
 })
 export class NewsService {
-    
-   private oidcSecurityService: OidcSecurityService = inject(OidcSecurityService);
-   
-       public userImage!: string;
-   
-       public userName!: string;
-   
-       public userId!: string;
-   
-       public roles: string[] = [];
-   
-       public accessToken!: string;
-       
-       private baseUrl = 'https://apiprev.lasthearth.ru/v1';
-   
-       private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-   
-       public readonly authState$: Observable<boolean> = this.authStateChange$;
-   
-       private readonly http: HttpClient = inject(HttpClient);
-   
-       private readonly localStorageService = inject(LocalStorageService);
+    private oidcSecurityService: OidcSecurityService = inject(OidcSecurityService);
 
-       private readonly userService = inject(UserService);
+    public userImage!: string;
+
+    public userName!: string;
+
+    public userId!: string;
+
+    public roles: string[] = [];
+
+    public accessToken!: string;
+
+    private baseUrl = 'https://apiprev.lasthearth.ru/v1';
+
+    private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+    public readonly authState$: Observable<boolean> = this.authStateChange$;
+
+    private readonly http: HttpClient = inject(HttpClient);
+
+    private readonly localStorageService = inject(LocalStorageService);
+
+    private readonly userService = inject(UserService);
 
     public readonly news = [
         {
@@ -88,20 +87,19 @@ export class NewsService {
         },
     ];
 
-    public createNews$(news: INews){
+    public createNews$(news: INews) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.userService.accessToken}`,
         });
-        return this.http
-            .post<{
-                title:   string,
-                content: string,
-                preview: string
-            }>
-            (`${this.baseUrl}/news`,
-                {title:news.title, content:news.content, preview:news.preview},
-                {headers : headers})
+        return this.http.post<{
+            title: string;
+            content: string;
+            preview: string;
+        }>(
+            `${this.baseUrl}/news`,
+            { title: news.title, content: news.content, preview: news.preview },
+            { headers: headers }
+        );
     }
 }
-
