@@ -22,7 +22,7 @@ export class NewsCardComponent {
     public content: InputSignal<string> = input.required();
 
     /**
-     * Превью(Иконка) новости.
+     * Превью(Изображение) новости.
      */
     public preview: InputSignal<string> = input.required();
 

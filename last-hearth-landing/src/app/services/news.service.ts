@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { INews } from './interface/i-news-admin';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserService } from './user.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -84,19 +85,11 @@ export class NewsService {
      * @param content Содержание новости.
      * @param preview Превью новости.
      */
-    public createNews$(news: INews) {
+    public createNews$(news: INews): Observable<INews> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.userService.accessToken}`,
         });
-        return this.http.post<{
-            title: string;
-            content: string;
-            preview: string;
-        }>(
-            `${this.baseUrl}/news`,
-            { title: news.title, content: news.content, preview: news.preview },
-            { headers: headers }
-        );
+        return this.http.post<INews>(`${this.baseUrl}/news`, news, { headers: headers });
     }
 }
