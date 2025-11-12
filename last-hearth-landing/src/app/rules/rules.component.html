@@ -49,7 +49,7 @@
                     </span>
                     зоны влияния и запрещено основание селений уровнем выше хутора.
                 </p>
-                <p class="text-2xl/7.5 pl-4">
+                <p class="text-2xl/7.5 pl-4" #ImportantPoint>
                     <span class="font-bold">Ключевая точка</span>
                     — это 1 из 3-х ключевых локаций находящихся на
                     <span
@@ -60,7 +60,7 @@
                     </span>
                     , и предоставляющая определенные выгоды контролирующей ее стороне.
                 </p>
-                <p class="text-2xl/7.5 pl-4">
+                <p class="text-2xl/7.5 pl-4" #Suzerain>
                     <span class="font-bold">Сюзерен</span>
                     — особый статус, присваиваемый
                     <span
@@ -85,7 +85,7 @@
                     <br />
                     <span class="pl-8">• общее время онлайна.</span>
                 </p>
-                <p class="text-2xl/7.5 pl-4">
+                <p class="text-2xl/7.5 pl-4" #GreatBuilding>
                     <span class="font-bold">Великое строение</span>
                     — строение, которое было построено игроками по одобренному администрацией проекту, предназначенное
                     для экономических, культурных и/или научных целей, находящееся вне территории какого-либо селения и
@@ -93,21 +93,44 @@
                 </p>
                 <p class="text-2xl/7.5 pl-4">
                     <span class="font-bold">Благосклонность Императора</span>
-                    — уровень доверия Императора к тому или иному Сюзерену, дающий определенные выгоды. Уровень
-                    измеряется в условных единицах, которые начисляются тому или иному Сюзерену за:
+                    — уровень доверия Императора к тому или иному
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="scrollToElement(Suzerain)"
+                    >
+                        Сюзерену
+                    </span>
+                    , дающий определенные выгоды. Уровень измеряется в условных единицах, которые начисляются тому или
+                    иному Сюзерену за:
                     <br />
-                    <span class="pl-8">• удержание и развитие ключевых точек интереса;</span>
+                    <span class="pl-8">
+                        • удержание и развитие
+                        <span
+                            class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                            (click)="scrollToElement(ImportantPoint)"
+                        >
+                            ключевых точек интереса;
+                        </span>
+                    </span>
                     <br />
-                    <span class="pl-8">• возведение Великих строений;</span>
+                    <span class="pl-8">
+                        • возведение
+                        <span
+                            class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                            (click)="scrollToElement(GreatBuilding)"
+                        >
+                            Великих строений;
+                        </span>
+                    </span>
                     <br />
                     <span class="pl-8">• выполнения особых поручений Императора.</span>
                 </p>
                 <p class="text-2xl/7.5 pl-4">
                     <span class="font-bold">Защищенная территория</span>
-                    — территория, которую покрывает территориальный блок [игровой предмет], выдаваемый исключительно
+                    — зона, которую покрывает территориальный блок [игровой предмет], выдаваемый исключительно
                     администрацией.
                 </p>
-                <p class="text-2xl/7.5 pl-4">
+                <p class="text-2xl/7.5 pl-4" #Monument>
                     <span class="font-bold">Монумент селения</span>
                     — специально установленные вне помещения высеченные блоки, согласно требованиям селения.
                 </p>
@@ -115,12 +138,12 @@
                     <span class="font-bold">Валюта сервера</span>
                     — игровые монеты использующиеся как средство обмена и оплаты товаров и услуг в игровом процессе.
                 </p>
-                <p class="text-2xl/7.5 pl-4">
+                <p class="text-2xl/7.5 pl-4" #Patent>
                     <span class="font-bold">Патент на селение</span>
                     — книга-документ, предоставляемая и подписываемая Сюзереном, дающая право на основание определенного
                     типа селения.
                 </p>
-                <p class="text-2xl/7.5 pl-4">
+                <p class="text-2xl/7.5 pl-4" #Volnost>
                     <span class="font-bold">Купчая вольности</span>
                     — книга-документ, предоставляемая Сюзереном, изменяющая ваш статус [роль] при её использовании.
                 </p>
@@ -134,14 +157,14 @@
                     — долговременное состояние, когда игроки одного селения начинают военные действия против игроков
                     другого селения, с целью достижения своих требований.
                 </p>
-                <p class="text-2xl/7.5 pl-4">
+                <p class="text-2xl/7.5 pl-4" #Diplomacy>
                     <span class="font-bold">Политический курс</span>
                     — это выбранное селением стратегическое направление его ролевой деятельности, которое должно явно
                     отражать данную деятельность. Возможно допустимыми вариантами курсов являются:
                     <br />
-                    &nbsp;&nbsp;• мирный — допускает исключительно оборону своего селения и отсутствие или поддержку
-                    иных агрессивных, военных или воровских действий, даже в рамках любых официальных договоренностей
-                    (союзов, пактов и т.п.);
+                    &nbsp;&nbsp;• мирный — допускает исключительно оборону своего селения и накладывает полный запрет на
+                    проведение или поддержку иных агрессивных, военных или воровских действий, даже в рамках любых
+                    официальных договоренностей (союзов, пактов и т.п.);
                     <br />
                     &nbsp;&nbsp;• нейтральный — допускает оборону своего селения, оборону селения союзника и военные
                     действия в рамках помощи союзнику по официальным соглашениям, но запрещает собственное инициирование
@@ -217,7 +240,28 @@
                     <span class="font-bold">1.10</span>
                     Запрещено разрушать, размещать любые блоки, сущности, объекты, в том числе ландшафт, на территории
                     селений других игроков и ключевых точек, за исключением случаев прямо предусмотренных настоящими
-                    правилами, таких как: п.3, п.6, п.7, п.8, или по согласованию с владельцем селения.
+                    правилами, таких как:
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="scrollToElement(P3)"
+                    >
+                        п.3
+                    </span>
+                    ,
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="scrollToElement(P5)"
+                    >
+                        п.5
+                    </span>
+                    , или по согласованию с владельцем
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="isTerminology = true; scrollToElement(Settlement)"
+                    >
+                        селения
+                    </span>
+                    .
                 </p>
                 <p class="text-2xl/7.5 pl-4">
                     <span class="font-bold">1.11</span>
@@ -225,28 +269,60 @@
                 </p>
                 <p class="text-2xl/7.5 pl-4">
                     <span class="font-bold">1.12</span>
-                    Запрещено использовать взрывчатку, способную разрушить блоки, вблизи [200 блоков] селений игроков.
+                    Запрещено использовать взрывчатку, способную разрушить блоки, вблизи [200 блоков]
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="isTerminology = true; scrollToElement(Settlement)"
+                    >
+                        селений
+                    </span>
+                    игроков.
                 </p>
                 <p class="text-2xl/7.5 pl-4">
                     <span class="font-bold">1.13</span>
-                    Любое селение обязано соблюдать свой политический курс. Курс может быть изменен селением раз в пол
-                    игровых года. При его изменении селение не имеет право производить любые агрессивные действия в
-                    течении 24 реальных часов.
+                    Любое селение обязано соблюдать свой
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="isTerminology = true; scrollToElement(Diplomacy)"
+                    >
+                        политический курс
+                    </span>
+                    . Курс может быть изменен
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="isTerminology = true; scrollToElement(Settlement)"
+                    >
+                        селением
+                    </span>
+                    раз в пол игровых года. При его изменении селение не имеет право производить любые агрессивные
+                    действия в течении 24 реальных часов.
                 </p>
                 <p class="text-2xl/7.5 pl-4">
                     <span class="font-bold">1.14</span>
-                    Все проживающие в селении и участвующие в боевых действиях от него игроки обязаны быть в списке
-                    жителей этого селения.
+                    Все проживающие в
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="isTerminology = true; scrollToElement(Settlement)"
+                    >
+                        селении
+                    </span>
+                    и участвующие в боевых действиях от него игроки обязаны быть в списке жителей этого селения.
                 </p>
                 <p class="text-2xl/7.5 pl-4">
                     <span class="font-bold">1.15</span>
                     Запрещено использовать приваты типа Claim за исключением преимуществ данными привилегией - титулом.
                     <br />
-                    Для хуторов разрешается приватить исключительно дом игрока с титулом. Для всех селений уровнями
-                    выше, разрешен приват исключительно до 8-ми одиночных сундуков. Приватить иное или в большем
-                    количестве - запрещается. Если игрок не состоит ни в одном селении, он имеет право заприватить себе
-                    всю доступную для привата территорию, но не имеет права хранить там ресурсы с других селений и
-                    других игроков.
+                    Для хуторов разрешается приватить исключительно дом игрока с титулом. Для всех
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="isTerminology = true; scrollToElement(Settlement)"
+                    >
+                        селений
+                    </span>
+                    уровнями выше, разрешен приват исключительно до 8-ми одиночных сундуков. Приватить иное или в
+                    большем количестве - запрещается. Если игрок не состоит ни в одном селении, он имеет право
+                    заприватить себе всю доступную для привата территорию, но не имеет права хранить там ресурсы с
+                    других селений и других игроков.
                 </p>
             </div>
         </tui-expand>
@@ -275,7 +351,10 @@
                         class="flex w-full justify-between gap-2 cursor-pointer transition-all duration-300 hover:opacity-60"
                         (click)="isTypesAndStatuses = !isTypesAndStatuses; toggleTypesAndStatuses()"
                     >
-                        <p class="text-2xl/7.5 relative pl-8 text-lh-primary cursor-pointer font-bold">
+                        <p
+                            class="text-2xl/7.5 relative pl-8 text-lh-primary cursor-pointer font-bold"
+                            #TypesAndStatuses
+                        >
                             2.1 Типы и статусы
                             <tui-pulse
                                 *ngIf="!isTypesAndStatusesWasWatched"
@@ -311,7 +390,7 @@
                                 </div>
                                 <tui-expand [expanded]="isSinglePlayers">
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-2xl/7.5 pl-20">
+                                        <p class="text-2xl/7.5 pl-20" #SinglePlayers>
                                             Хутор — это
                                             <span
                                                 class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
@@ -325,18 +404,44 @@
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
                                         <p class="text-2xl/7.5 pl-24">• Наличие территориального блока.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Население не менее 1-го и не более 2-х человек.
+                                            • Расположение: не далее чем 6.5 тыс. блоков от нулевой координаты.
                                         </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Расположение не далее чем 6.5 тыс. блоков от нулевой координаты.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Отсутствие оборонительных построек.</p>
+                                        <p class="text-2xl/7.5 pl-24">• Население: 1-2 человека.</p>
+                                        <p class="text-2xl/7.5 pl-24">• Оборонительные постройки: отсутствуют.</p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Преимущества:</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Защита территории хутора от действий других игроков (п.3, п.5.1, п.5.2).
+                                            • Защита территории хутора от действий других игроков (
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P3)"
+                                            >
+                                                п.3
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P5)"
+                                            >
+                                                п.5
+                                            </span>
+                                            ).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность объявлять набеги на: Хутора, Лагеря.
+                                            • Возможность объявлять набеги на:
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(SinglePlayers)"
+                                            >
+                                                Хутора
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isCamp = true; scrollToElement(Camp)"
+                                            >
+                                                Лагеря
+                                            </span>
+                                            .
                                         </p>
                                     </div>
                                 </tui-expand>
@@ -363,35 +468,103 @@
                                 </div>
                                 <tui-expand [expanded]="isCamp">
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-2xl/7.5 pl-20">
-                                            Лагерь — это селение, состоящее из 3-х и более игроков, зарегистрированное
-                                            на сайте, имеющее все основные постройки на поверхности и соответствующее
-                                            следующим требованиям:
+                                        <p class="text-2xl/7.5 pl-20" #Camp>
+                                            Лагерь — это
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Settlement)"
+                                            >
+                                                селение
+                                            </span>
+                                            , состоящее из 3-х и более игроков, зарегистрированное на сайте, имеющее все
+                                            основные постройки на поверхности и соответствующее следующим требованиям:
                                         </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
                                         <p class="text-2xl/7.5 pl-24">• Наличие территориального блока.</p>
-                                        <p class="text-2xl/7.5 pl-24">• Население не менее 3-х человек.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Монумент селения размерами 1х1х2 блока (ш,д,в).
+                                            • Расположение: не далее 5 тыс. блоков от нулевой координаты.
+                                        </p>
+                                        <p class="text-2xl/7.5 pl-24">• Население: от 3-х человек.</p>
+                                        <p class="text-2xl/7.5 pl-24">
+                                            •
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Monument)"
+                                            >
+                                                Монумент
+                                            </span>
+                                            : 1х1х2 блока (ш,д,в).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Оборудованное место, где располагается костер.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие не менее 3-х установленных кроватей.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие отдельного крытого склада, или складского помещения в уже
-                                            имеющемся здании.
+                                            • Инфраструктура: оборудованное место с костром.
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Расположение не далее 5 тыс. блоков от нулевой координаты.
+                                            • Хозяйство:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 3-х установленных кроватей;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ отдельный крытый склад, или складское помещение в уже имеющемся
+                                                здании.
+                                            </span>
                                         </p>
-                                        <p class="text-2xl/7.5 pl-24">• Отсутствие оборонительных построек.</p>
+                                        <p class="text-2xl/7.5 pl-24">• Оборонительные постройки: отсутствуют.</p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Преимущества:</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Защита территории селения от действий других игроков (п.3, п.5.1, п.5.2).
+                                            • Защита территории селения от действий других игроков (
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P3)"
+                                            >
+                                                п.3
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P5)"
+                                            >
+                                                п.5
+                                            </span>
+                                            ).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность объявлять набеги на: Хутора, Лагеря, Деревни.
+                                            • Возможность объявлять набеги на:
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isSinglePlayers = true;
+                                                    scrollToElement(SinglePlayers)
+                                                "
+                                            >
+                                                Хутора
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isCamp = true;
+                                                    scrollToElement(Camp)
+                                                "
+                                            >
+                                                Лагеря
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isVillage = true;
+                                                    scrollToElement(Village)
+                                                "
+                                            >
+                                                Деревни
+                                            </span>
+                                            .
                                         </p>
                                     </div>
                                 </tui-expand>
@@ -418,52 +591,163 @@
                                 </div>
                                 <tui-expand [expanded]="isVillage">
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-2xl/7.5 pl-20">
-                                            Деревня — это селение, основанное после этапа «Лагерь», состоящее из 4-х и
-                                            более игроков, зарегистрированное на сайте, имеющее все основные постройки
-                                            на поверхности и соответствующее следующим требованиям:
+                                        <p class="text-2xl/7.5 pl-20" #Village>
+                                            Деревня — это
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Settlement)"
+                                            >
+                                                селение
+                                            </span>
+                                            , основанное после этапа «Лагерь», состоящее из 4-х и более игроков,
+                                            зарегистрированное на сайте, имеющее все основные постройки на поверхности и
+                                            соответствующее следующим требованиям:
                                         </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
                                         <p class="text-2xl/7.5 pl-24">• Наличие территориального блока.</p>
-                                        <p class="text-2xl/7.5 pl-24">• Население не менее 4-х человек.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Монумент селения размерами 1х1х3 блока (ш,д,в).
+                                            • Расположение: не далее 5 тыс. блоков от нулевой координаты.
+                                        </p>
+                                        <p class="text-2xl/7.5 pl-24">• Население: от 4-х человек.</p>
+                                        <p class="text-2xl/7.5 pl-24">
+                                            •
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Monument)"
+                                            >
+                                                Монумент
+                                            </span>
+                                            : 1х1х3 блока (ш,д,в).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Подписанный патент на разрешение основания деревни от сюзерена.
+                                            • Документы:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ подписанный
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Patent)"
+                                                >
+                                                    патент
+                                                </span>
+                                                на разрешение основания деревни от
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                                >
+                                                    сюзерена
+                                                </span>
+                                                ;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 4-х купчих
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Volnost)"
+                                                >
+                                                    вольности
+                                                </span>
+                                                .
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Купчая вольности не менее, чем на 4-х жителей селения.
+                                            • Инфраструктура:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ деревенская площадь;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ колодец с питьевой водой;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ тропы между постройками шириной не менее 2-х блоков, где это возможно.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие отдельного крытого склада, или складского помещения в уже
-                                            имеющемся здании.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие амбара.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Расположение не далее 5 тыс. блоков от нулевой координаты.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Обустроенный центр селения [деревенская площадь].
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Колодец с питьевой водой.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие не менее 4-х отдельных одноэтажных строений.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие либо грядок 3х3 блока, либо загона с животными не менее 4-х голов.
+                                            • Хозяйство:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ склад, или складское помещение в уже имеющемся здании;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ амбар;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ грядки площадью от 25-ти блоков или загон с не менее чем 4-мя
+                                                животными.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Тропы между всеми постройками шириной не менее 2-х блоков, где это
-                                            возможно.
+                                            • Дополнительные строения: от 4-х одноэтажных строений.
                                         </p>
-                                        <p class="text-2xl/7.5 pl-24">• Отсутствие оборонительных построек.</p>
+                                        <p class="text-2xl/7.5 pl-24">• Оборонительные постройки: отсутствуют.</p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Преимущества:</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Защита территории селения от действий других игроков (п.3, п.5.1, п.5.2).
+                                            • Защита территории селения от действий других игроков (
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P3)"
+                                            >
+                                                п.3
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P5)"
+                                            >
+                                                п.5
+                                            </span>
+                                            ).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность объявлять набеги на: Хутора, Лагеря, Деревни, Поселки.
+                                            • Возможность объявлять набеги на:
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isSinglePlayers = true;
+                                                    scrollToElement(SinglePlayers)
+                                                "
+                                            >
+                                                Хутора
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isCamp = true;
+                                                    scrollToElement(Camp)
+                                                "
+                                            >
+                                                Лагеря
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isVillage = true;
+                                                    scrollToElement(Village)
+                                                "
+                                            >
+                                                Деревни
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isTownship = true;
+                                                    scrollToElement(Township)
+                                                "
+                                            >
+                                                Поселки
+                                            </span>
+                                            .
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
                                             • Возможность получить 1-го случайного торговца.
@@ -496,60 +780,188 @@
                                 </div>
                                 <tui-expand [expanded]="isTownship">
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-2xl/7.5 pl-20">
-                                            Поселок — это селение, основанное после этапа «Деревня», состоящее из 5-ти и
-                                            более игроков, зарегистрированное на сайте, имеющее все основные постройки
-                                            на поверхности и соответствующее следующим требованиям:
+                                        <p class="text-2xl/7.5 pl-20" #Township>
+                                            Поселок — это
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Settlement)"
+                                            >
+                                                селение
+                                            </span>
+                                            , основанное после этапа «Деревня», состоящее из 5-ти и более игроков,
+                                            зарегистрированное на сайте, имеющее все основные постройки на поверхности и
+                                            соответствующее следующим требованиям:
                                         </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
                                         <p class="text-2xl/7.5 pl-24">• Наличие территориального блока.</p>
-                                        <p class="text-2xl/7.5 pl-24">• Население не менее 5-ти человек.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Монумент селения размерами 1х1х5 блока (ш,д,в).
+                                            • Расположение: не далее 5 тыс. блоков от нулевой координаты.
+                                        </p>
+                                        <p class="text-2xl/7.5 pl-24">• Население: от 5-ти человек.</p>
+                                        <p class="text-2xl/7.5 pl-24">
+                                            •
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Monument)"
+                                            >
+                                                Монумент
+                                            </span>
+                                            : 1х1х5 блока (ш,д,в).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Купчая вольности не менее чем на 5 жителей селения.
+                                            • Документы: от 5-ти купчих
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Volnost)"
+                                            >
+                                                вольности
+                                            </span>
+                                            .
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие отдельного крытого склада, или складского помещения в уже
-                                            имеющемся здании.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие амбара.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Расположение не далее 5 тыс. блоков от нулевой координаты.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Обустроенный центр поселка [сельская площадь].
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Колодец с питьевой водой.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие не менее 4-х отдельных одноэтажных строений и не менее 1-го
-                                            отдельного двухэтажного строения.
+                                            • Инфраструктура:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ сельская площадь;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ колодец с питьевой водой;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ тропы между постройками шириной не менее 2-х блоков, где это возможно.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие религиозного или научного или экономического здания или здания
-                                            культурной направленности.
+                                            • Хозяйство:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ склад, или складское помещение в уже имеющемся здании;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ амбар;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ грядки площадью от 36-ти блоков.</span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Тропы между всеми постройками шириной не менее 2-х блоков, где это
-                                            возможно.
+                                            • Дополнительные строения:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 4-х одноэтажных строений;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 1-го двухэтажного строения;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ здание религиозного или научного или экономического или культурного
+                                                направления.
+                                            </span>
                                         </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие здания мастерской.</p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие здания кузницы.</p>
+                                        <p class="text-2xl/7.5 pl-24">
+                                            • Промышленность:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 1-й мастерской [кожевенная, углежог, ткацкая и т.п.];
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 1-й кузницы.</span>
+                                        </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Преимущества:</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Защита территории селения от действий других игроков (п.3, п.5.1, п.5.2).
+                                            • Защита территории селения от действий других игроков (
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P3)"
+                                            >
+                                                п.3
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P5)"
+                                            >
+                                                п.5
+                                            </span>
+                                            ).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность объявлять набеги на: Хутора, Лагеря, Деревни, Поселки, Города.
+                                            • Возможность объявлять набеги на:
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isSinglePlayers = true;
+                                                    scrollToElement(SinglePlayers)
+                                                "
+                                            >
+                                                Хутора
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isCamp = true;
+                                                    scrollToElement(Camp)
+                                                "
+                                            >
+                                                Лагеря
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isVillage = true;
+                                                    scrollToElement(Village)
+                                                "
+                                            >
+                                                Деревни
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isTownship = true;
+                                                    scrollToElement(Township)
+                                                "
+                                            >
+                                                Поселки
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    isCity = true;
+                                                    scrollToElement(City)
+                                                "
+                                            >
+                                                Города
+                                            </span>
+                                            .
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность возведения оборонительных построек 1-го уровня.
+                                            • Возможность возведения
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isDefendBuilds = true; scrollToElement(Defend1)"
+                                            >
+                                                оборонительных построек
+                                            </span>
+                                            1-го уровня.
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">• Чертеж для улучшенных парусов.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Право получить льготный кредит от сюзерена под 10% годовых [Может быть не
-                                            выполнено, в случае враждебности к сюзерену].
+                                            • Право получить льготный кредит от
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                            >
+                                                сюзерена
+                                            </span>
+                                            под 10% годовых [Может быть не выполнено, в случае враждебности к сюзерену].
                                         </p>
                                     </div>
                                 </tui-expand>
@@ -576,84 +988,190 @@
                                 </div>
                                 <tui-expand [expanded]="isCity">
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-2xl/7.5 pl-20">
-                                            Город — это селение, основанное после этапа «Поселок», состоящее из 6-ти и
-                                            более игроков, зарегистрированное на сайте, имеющее все основные постройки
-                                            на поверхности и соответствующее следующим требованиям:
+                                        <p class="text-2xl/7.5 pl-20" #City>
+                                            Город — это
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Settlement)"
+                                            >
+                                                селение
+                                            </span>
+                                            , основанное после этапа «Поселок», состоящее из 6-ти и более игроков,
+                                            зарегистрированное на сайте, имеющее все основные постройки на поверхности и
+                                            соответствующее следующим требованиям:
                                         </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
                                         <p class="text-2xl/7.5 pl-24">• Наличие территориального блока.</p>
-                                        <p class="text-2xl/7.5 pl-24">• Население не менее 6-ти человек.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Монумент селения размерами 1х1х7 блоков (ш,д,в).
+                                            • Расположение: не далее 5 тыс. блоков от нулевой координаты.
+                                        </p>
+                                        <p class="text-2xl/7.5 pl-24">• Население: от 6-ти человек.</p>
+                                        <p class="text-2xl/7.5 pl-24">
+                                            •
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Monument)"
+                                            >
+                                                Монумент
+                                            </span>
+                                            : 1х1х7 блоков (ш,д,в).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Подписанный патент на разрешение основания города от сюзерена.
+                                            • Документы:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ подписанный
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Patent)"
+                                                >
+                                                    патент
+                                                </span>
+                                                на разрешение основания города от
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                                >
+                                                    сюзерена
+                                                </span>
+                                                ;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 6-х купчих
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Volnost)"
+                                                >
+                                                    вольности
+                                                </span>
+                                                .
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Купчая вольности не менее чем на 6 жителей селения.
+                                            • Инфраструктура:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ городская площадь;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ колодец с питьевой водой;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ дороги между всеми постройками шириной не менее 3-х блоков, где это
+                                                возможно;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ дорога шириной не менее 3-х блоков до
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                                >
+                                                    сюзерена
+                                                </span>
+                                                и еще одного любого поселения при его наличии. При отсутствии
+                                                сухопутного пути допускается размещение буйков.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие отдельного крытого склада, или складского помещения в уже
-                                            имеющемся здании.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие амбара.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Расположение не далее 5 тыс. блоков от нулевой координаты.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Обустроенный центр города [городская площадь].
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Колодец с питьевой водой.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие не менее 2-х отдельных одноэтажных строений и не менее 4-х
-                                            отдельных двухэтажных строений.
+                                            • Хозяйство:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ склад, или складское помещение в уже имеющемся здании;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ амбар;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ грядки площадью до 64-ти блоков или загон с не более чем 12-ю
+                                                животными.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие религиозного или научного или экономического здания или здания
-                                            культурной направленности.
+                                            • Дополнительные строения:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 4-х одноэтажных строений;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 5-ти двухэтажных строений;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ здание религиозного или научного или экономического или культурного
+                                                направления;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 2-х действующих рыночных прилавков.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Минимум 1 поле культур площадью не менее 80-ти блоков [форма может быть
-                                            произвольной].
+                                            • Промышленность:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 1-й мастерской [кожевенная, углежог, ткацкая и т.п.];
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 1-й кузницы;</span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Дороги между всеми постройками шириной не менее 3-х блоков, где это
-                                            возможно.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие здания мастерской.</p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие здания кузницы.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие действующего рынка не менее чем на 1 прилавок.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Дорога шириной не менее 3-х блоков до сюзерена и еще одного любого
-                                            поселения при его наличии. При отсутствии сухопутного пути допускается
-                                            размещение буйков.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Проведение не менее 1-го события [ивента] за все время до получения
-                                            данного типа.
+                                            • Проведение событий: не менее 1-го события [ивента] за все время до
+                                            получения данного типа.
                                         </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Преимущества:</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Защита территории селения от действий других игроков (п.3, п.5.1, п.5.2).
+                                            • Защита территории селения от действий других игроков (
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P3)"
+                                            >
+                                                п.3
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P5)"
+                                            >
+                                                п.5
+                                            </span>
+                                            ).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность объявлять набеги на все типы селений.
+                                            • Возможность объявлять набеги на
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    scrollToElement(TypesAndStatuses)
+                                                "
+                                            >
+                                                все типы селений
+                                            </span>
+                                            .
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
                                             • Возможность объявлять войну при наличии казус белли.
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность возведения оборонительных построек 2-го уровня.
+                                            • Возможность возведения
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isDefendBuilds = true; scrollToElement(Defend2)"
+                                            >
+                                                оборонительных построек
+                                            </span>
+                                            2-го уровня.
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
                                             • Возможность получить 3-х случайных торговцев.
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Право получить льготный кредит от сюзерена под 10% годовых [Может быть не
-                                            выполнено, в случае враждебности к сюзерену].
+                                            • Право получить льготный кредит от
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                            >
+                                                сюзерена
+                                            </span>
+                                            под 10% годовых [Может быть не выполнено, в случае враждебности к сюзерену].
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">• Право основать не более 1 колонии.</p>
                                         <p class="text-2xl/7.5 pl-24">
@@ -684,93 +1202,193 @@
                                 </div>
                                 <tui-expand [expanded]="isRegion">
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-2xl/7.5 pl-20">
-                                            Региональная провинция — это селение, основанное после этапа «Город»,
-                                            состоящее из 8-ми и более игроков, зарегистрированное на сайте, имеющее все
-                                            основные постройки на поверхности и соответствующее следующим требованиям:
+                                        <p class="text-2xl/7.5 pl-20" #Region>
+                                            Региональная провинция — это
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Settlement)"
+                                            >
+                                                селение
+                                            </span>
+                                            , основанное после этапа «Город», состоящее из 8-ми и более игроков,
+                                            зарегистрированное на сайте, имеющее все основные постройки на поверхности и
+                                            соответствующее следующим требованиям:
                                         </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
                                         <p class="text-2xl/7.5 pl-24">• Наличие территориального блока.</p>
-                                        <p class="text-2xl/7.5 pl-24">• Население не менее 8-ми человек.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Монумент селения размерами 1х1х9 блоков (ш,д,в).
+                                            • Расположение: не далее 5 тыс. блоков от нулевой координаты.
+                                        </p>
+                                        <p class="text-2xl/7.5 pl-24">• Население: от 8-ми человек.</p>
+                                        <p class="text-2xl/7.5 pl-24">
+                                            •
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Monument)"
+                                            >
+                                                Монумент
+                                            </span>
+                                            : 1х1х9 блоков (ш,д,в).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Купчая вольности не менее чем на 8 жителей селения.
+                                            • Документы:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 8-ми купчих
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Volnost)"
+                                                >
+                                                    вольности
+                                                </span>
+                                                ;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 10-ти книг [либо самописных, либо сюжетных] доступных для прочтения
+                                                любым игрокам.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие отдельного крытого склада, или складского помещения в уже
-                                            имеющемся здании.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие амбара.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Расположение не далее 5 тыс. блоков от нулевой координаты.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Минимум 2 обустроенных центра селения [большая и малая площади].
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Колодец с питьевой водой.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие не менее 3-х одноэтажных отдельных строений, 4-х двухэтажных и
-                                            1-го трехэтажного.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие 2-х зданий религиозной или научной или экономической или
-                                            культурной направленности.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Минимум 1 поле культур площадью не менее 144 блоков [форма может быть
-                                            произвольной].
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Дороги между всеми постройками шириной не менее 5-ти блоков, где это
-                                            возможно.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие здания мастерской.</p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие здания кузницы.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Наличие действующего рынка не менее чем на 3 прилавка.
+                                            • Инфраструктура:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ городская малая площадь;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ городская большая площадь;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ колодец с питьевой водой;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ крытые конюшни или небольшой порт;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ дороги между всеми постройками шириной не менее 3-х блоков, где это
+                                                возможно;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ дорога шириной не менее 3-х блоков до
+                                                <span
+                                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                    (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                                >
+                                                    сюзерена
+                                                </span>
+                                                и еще 3-х любых поселений при их наличии. При отсутствии сухопутного
+                                                пути допускается размещение буйков.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Дорога шириной не менее 3-х блоков до сюзерена и еще 2-х любых поселений
-                                            при их наличии. При отсутствии сухопутного пути допускается размещение
-                                            буйков.
+                                            • Хозяйство:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ склад, или складское помещение в уже имеющемся здании;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ амбар;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ грядки площадью до 48-и блоков или загон с не более чем 10-ю
+                                                животными.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие здания заготовки под будущую сталелитейную.
+                                            • Дополнительные строения:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 4-х одноэтажных строений;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 6-ти двухэтажных строений;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 1-го трехэтажного строения;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 2-х зданий религиозного или научного или экономического или
+                                                культурного направления;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 5-ти действующих рыночных прилавков;
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 1-й таверны;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ любое из: колизей, ипподром, арена, тренировочный плац, университет,
+                                                библиотека, обсерватория, музей, пирамида и прочее подходящее по смыслу
+                                                перечисленных строений и имеющее площадь не менее 33х33 блока.
+                                            </span>
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие одного из представленных зданий: колизей, ипподром, арена,
-                                            тренировочный плац, университет, библиотека, обсерватория, музей, пирамида,
-                                            величественная огромная статуя и прочее подходящее по смыслу перечисленных
-                                            строений.
+                                            • Промышленность:
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ от 2-х мастерских [кожевенная, углежог, ткацкая и т.п.];
+                                            </span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">◦ от 1-й кузницы;</span>
+                                            <br />
+                                            <span class="text-2xl/7.5 pl-12">
+                                                ◦ здание заготовка под будущую сталелитейную.
+                                            </span>
                                         </p>
-                                        <p class="text-2xl/7.5 pl-24">• Наличие здания таверны.</p>
+                                        <p class="text-2xl/7.5 pl-24">• Великое строение: начатая стройка/проект.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Наличие не менее 10-ти книг [либо самописных, либо лорных] доступных для
-                                            прочтения любым игрокам.
-                                        </p>
-                                        <p class="text-2xl/7.5 pl-24">• Начатая стройка/проект Великого строения.</p>
-                                        <p class="text-2xl/7.5 pl-24">
-                                            • Проведение не менее 2-х событий [ивентов] за все время до получения
-                                            данного типа.
+                                            • Проведение событий: не менее 3-х событий [ивентов] за все время до
+                                            получения данного типа.
                                         </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Преимущества:</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Защита территории селения от действий других игроков (п.3, п.5.1, п.5.2).
+                                            • Защита территории селения от действий других игроков (
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P3)"
+                                            >
+                                                п.3
+                                            </span>
+                                            ,
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="scrollToElement(P5)"
+                                            >
+                                                п.5
+                                            </span>
+                                            ).
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность объявлять набеги на все типы селений.
+                                            • Возможность объявлять набеги на
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="
+                                                    isAboutSettlements = true;
+                                                    isTypesAndStatuses = true;
+                                                    scrollToElement(TypesAndStatuses)
+                                                "
+                                            >
+                                                все типы селений
+                                            </span>
+                                            .
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
                                             • Возможность объявлять войну при наличии казус белли.
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Возможность возведения оборонительных построек 3-го уровня.
+                                            • Возможность возведения
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isDefendBuilds = true; scrollToElement(Defend3)"
+                                            >
+                                                оборонительных построек
+                                            </span>
+                                            3-го уровня.
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Право получить льготный кредит от сюзерена под 10% годовых [Может быть не
-                                            выполнено, в случае враждебности к сюзерену].
+                                            • Право получить льготный кредит от
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                            >
+                                                сюзерена
+                                            </span>
+                                            под 10% годовых [Может быть не выполнено, в случае враждебности к сюзерену].
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">• Право основать не более 2-х колоний.</p>
                                         <p class="text-2xl/7.5 pl-24">• Право получить чертеж на сталелитейную печь.</p>
@@ -799,14 +1417,28 @@
                                 </div>
                                 <tui-expand [expanded]="isSuzerain">
                                     <div class="flex flex-col gap-3">
-                                        <p class="text-2xl/7.5 pl-20">
+                                        <p class="text-2xl/7.5 pl-20" #SuzerainStatus>
                                             Сюзерен — это статус, накладывающий ряд требований и преимуществ:
                                         </p>
                                         <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
                                         <p class="text-2xl/7.5 pl-24">• Являться одним из типов селений.</p>
                                         <p class="text-2xl/7.5 pl-24">
-                                            • Выполнение обязательств сюзерена по выдаче кредитов, при условии, что
-                                            селение проситель не проявляет открыто-доказанную агрессию сюзерену.
+                                            • Выполнение обязательств
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                            >
+                                                сюзерена
+                                            </span>
+                                            по выдаче кредитов, при условии, что селение проситель не проявляет
+                                            открыто-доказанную агрессию
+                                            <span
+                                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                                (click)="isTerminology = true; scrollToElement(Suzerain)"
+                                            >
+                                                сюзерену
+                                            </span>
+                                            .
                                         </p>
                                         <p class="text-2xl/7.5 pl-24">
                                             • Наличие действующих рынков, где продаются купчие вольности, дипломы смены
@@ -853,7 +1485,7 @@
                         class="flex w-full justify-between gap-2 cursor-pointer transition-all duration-300 hover:opacity-60"
                         (click)="isDefendBuilds = !isDefendBuilds; toggleDefendBuilds()"
                     >
-                        <p class="relative text-2xl/7.5 pl-8 text-lh-primary cursor-pointer font-bold">
+                        <p class="relative text-2xl/7.5 pl-8 text-lh-primary cursor-pointer font-bold" #P2_2>
                             2.2 Оборонительные сооружения
                             <tui-pulse
                                 *ngIf="!isDefendBuildsWasWatched"
@@ -903,7 +1535,7 @@
                                 <b>Уровни оборонительных сооружений</b>
                             </p>
 
-                            <p class="text-2xl/7.5 pl-16 text-lh-primary">
+                            <p class="text-2xl/7.5 pl-16 text-lh-primary" #Defend1>
                                 <b>Уровень 1</b>
                                 — бревенчатые стены, не превышающие высоту 4-х блоков и окружающие площадь не более
                                 36х36 блоков.
@@ -912,7 +1544,7 @@
                                 главных ресурсов и жилье правителя, высотой не более 23-х блоков не считая кровлю,
                                 площадью не более 17х17 блоков. С предусмотренной возможностью для будущего расширения.
                             </p>
-                            <p class="text-2xl/7.5 pl-16 text-lh-primary">
+                            <p class="text-2xl/7.5 pl-16 text-lh-primary" #Defend2>
                                 <b>Уровень 2</b>
                                 — каменные стены, не превышающие высоту 9-ти блоков и окружающие все селение или его
                                 часть. Составное оборонительное строение: каменная башня, либо форт, либо донжон, замок
@@ -920,7 +1552,7 @@
                                 29-ти блоков не считая кровлю, площадью не более 29х29 блоков. С предусмотренной
                                 возможностью для будущего расширения.
                             </p>
-                            <p class="text-2xl/7.5 pl-16 text-lh-primary">
+                            <p class="text-2xl/7.5 pl-16 text-lh-primary" #Defend3>
                                 <b>Уровень 3</b>
                                 — любые оборонительные строения на всей площади селения, не нарушающие правил сервера.
                             </p>
@@ -937,7 +1569,7 @@
             class="flex w-full justify-between gap-2 cursor-pointer transition-all duration-300 hover:opacity-60"
             (click)="isPlayersActions = !isPlayersActions; togglePlayersActions()"
         >
-            <p class="text-3xl relative text-lh-primary font-bold">
+            <p class="text-3xl relative text-lh-primary font-bold" #P3>
                 3. Действия игроков
                 <tui-pulse *ngIf="!isPlayersActionsWasWatched" class="!absolute top-1/2 -translate-y-1/2 ml-6" />
             </p>
@@ -954,7 +1586,7 @@
                         class="flex w-full justify-between gap-2 cursor-pointer transition-all duration-300 hover:opacity-60"
                         (click)="isTheft = !isTheft; toggleTheft()"
                     >
-                        <p class="relative text-2xl/7.5 pl-8 text-lh-primary cursor-pointer font-bold">
+                        <p class="relative text-2xl/7.5 pl-8 text-lh-primary cursor-pointer font-bold" #P3_1>
                             3.1 Воровство.
                             <tui-pulse *ngIf="!isTheftWasWatched" class="!absolute top-1/2 -translate-y-1/2 ml-6" />
                         </p>
@@ -1063,7 +1695,14 @@
                                 правил сервера, кроме своей территории, данной преимуществом. Исключением являются
                                 целенаправленные нон-стоп убийства игроков на нулевой координате и радиусе сотни блоков
                                 от нее. Все выше описанное не действует в случаях состояния набег и война (в случаях
-                                воровства убийство допускается согласно правилам п.3.1).
+                                воровства убийство допускается согласно правилам
+                                <span
+                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                    (click)="isPlayersActions = true; isTheft = true; scrollToElement(P3_1)"
+                                >
+                                    п.3.1
+                                </span>
+                                ).
                             </p>
                         </div>
                     </tui-expand>
@@ -1092,9 +1731,15 @@
                             </p>
                             <p class="text-2xl/7.5 pl-16">
                                 <span class="font-bold">3.3.2</span>
-                                Шпион может украсть у поселения в которое он внедрен ресурсы, но соблюдая: Правила
-                                воровства [При этом в сети и на территории должен находиться как минимум 1 игрок,
-                                входящий в состав селения, не являющийся шпионом].
+                                Шпион может украсть у поселения в которое он внедрен ресурсы, но соблюдая:
+                                <span
+                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                    (click)="isPlayersActions = true; isTheft = true; scrollToElement(P3_1)"
+                                >
+                                    Правила воровства
+                                </span>
+                                [При этом в сети и на территории должен находиться как минимум 1 игрок, входящий в
+                                состав селения, не являющийся шпионом].
                             </p>
                             <p class="text-2xl/7.5 pl-16">
                                 <span class="font-bold">3.3.3</span>
@@ -1169,7 +1814,7 @@
             class="flex w-full justify-between gap-2 cursor-pointer transition-all duration-300 hover:opacity-60"
             (click)="isMilitaryActions = !isMilitaryActions; toggleMilitaryActions()"
         >
-            <p class="text-3xl relative text-lh-primary font-bold">
+            <p class="text-3xl relative text-lh-primary font-bold" #P5>
                 5. Военные действия
                 <tui-pulse *ngIf="!isMilitaryActionsWasWatched" class="!absolute top-1/2 -translate-y-1/2 ml-6" />
             </p>
@@ -1186,7 +1831,7 @@
                     class="flex w-full justify-between pl-8 gap-2 cursor-pointer shadow-2xs transition-all duration-300 hover:opacity-60"
                     (click)="isRaid = !isRaid; toggleRaid()"
                 >
-                    <p class="relative text-2xl/7.5 text-lh-primary font-bold">
+                    <p class="relative text-2xl/7.5 text-lh-primary font-bold" #P5_1>
                         5.1 Набег
                         <tui-pulse *ngIf="!isRaidWasWatched" class="!absolute top-1/2 -translate-y-1/2 ml-6" />
                     </p>
@@ -1238,16 +1883,16 @@
                         </div>
 
                         <div class="flex flex-col gap-3">
-                            <p class="text-2xl/7.5 pl-8 text-lh-primary font-bold">
-                                5.2 Правила ведения боевых действий во время состояния «набег» для стороны защищающихся
+                            <p class="text-2xl/7.5 pl-8 text-lh-primary font-bold" #P5_2>
+                                Правила ведения боевых действий во время состояния «набег» для стороны защищающихся
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.2.1</span>
+                                <span class="font-bold">5.1.8</span>
                                 После объявления «набега», запрещается выход из игры с целью сохранить и спрятать
                                 ресурсы внутри инвентаря игрока.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.2.2</span>
+                                <span class="font-bold">5.1.9</span>
                                 Запрещается ставить любые блоки и объекты позволяющие создать преимущество во время
                                 набега, за исключением:
                             </p>
@@ -1262,54 +1907,61 @@
                                 подготовленных точек.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.2.3</span>
+                                <span class="font-bold">5.1.10</span>
                                 Запрещается деспавн ресурсов.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.2.3</span>
+                                <span class="font-bold">5.1.11</span>
                                 Запрещается укреплять любые баррикады установленные во время набега более чем на 50
                                 единиц прочности.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.2.4</span>
+                                <span class="font-bold">5.1.12</span>
                                 За набег разрешается установка не более чем трех полос баррикад.
                             </p>
 
-                            <p class="text-2xl/7.5 pl-8 text-lh-primary font-bold">
-                                5.3 Правила ведения боевых действий во время состояния «набег» для стороны атакующих
+                            <p class="text-2xl/7.5 pl-8 text-lh-primary font-bold" #P5_3>
+                                Правила ведения боевых действий во время состояния «набег» для стороны атакующих
                             </p>
 
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.1</span>
+                                <span class="font-bold">5.1.13</span>
                                 Атакующие обязаны перед нападением соорудить небольшой лагерь [оборона которого, должна
-                                так же проходить по п.5.2], не более 10х10х12 блоков.
+                                так же проходить по
+                                <span
+                                    class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                    (click)="isMilitaryActions = true; scrollToElement(P5_2)"
+                                >
+                                    правилам ведения боевых действий для стороны защищающихся
+                                </span>
+                                ], не более 10х10х12 блоков.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.2</span>
+                                <span class="font-bold">5.1.14</span>
                                 Лагерь обязан быть расположен не ближе чем в 100 блоках от территории противника. Если
                                 возможности установить лагерь нет [море], атакующим разрешается разбить свой лагерь
                                 сразу же на побережье, либо на созданной песчаной насыпи.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.3</span>
+                                <span class="font-bold">5.1.15</span>
                                 Лагерем не может выступать селение.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.4</span>
+                                <span class="font-bold">5.1.16</span>
                                 Атакующие обязаны установить в лагере монумент 1x1x2 [ш, д, в].
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.5</span>
+                                <span class="font-bold">5.1.17</span>
                                 Атакующие обязаны использовать темпоральные шестеренки исключительно внутри своего
                                 лагеря.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.6</span>
+                                <span class="font-bold">5.1.18</span>
                                 Атакующие обязаны признать поражение и прекратить набег, как только будет полностью
                                 разрушен монумент в лагере.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.7</span>
+                                <span class="font-bold">5.1.19</span>
                                 Атакующим запрещается установка любых блоков во время нападения, за исключением:
                             </p>
                             <p class="text-2xl/7.5 pl-20 text-lh-primary">
@@ -1335,15 +1987,15 @@
                                 Сундуков и сосудов.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.8</span>
+                                <span class="font-bold">5.1.20</span>
                                 Атакующим запрещено использование планера.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.9</span>
+                                <span class="font-bold">5.1.21</span>
                                 Запрещается деспавн ресурсов.
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.10</span>
+                                <span class="font-bold">5.1.22</span>
                                 Запрещено ломать всё, кроме:
                             </p>
                             <p class="text-2xl/7.5 pl-20 text-lh-primary">
@@ -1380,7 +2032,7 @@
                                 условии возвращения саркофага на место].
                             </p>
                             <p class="text-2xl/7.5 pl-16 text-lh-primary">
-                                <span class="font-bold">5.3.11</span>
+                                <span class="font-bold">5.1.23</span>
                                 Запрещается грабить лут, который представляет из себя элементы промышленности, например:
                                 генераторы, аккумуляторы, моторы, ветряки, наковальни и прочее, если они поставлены, а
                                 не находятся внутри сосудов/сундуков/ящиков и т.п. Такой лут можно получить только во
@@ -1392,7 +2044,7 @@
 
                 <!-- Война. -->
                 <div
-                    class="flex w-full justify-between pl-8 gap-2 cursor-pointer transition-all duration-300 hover:opacity-60"
+                    class="flex w-full justify-between pl-8 gap-2 cursor-pointer shadow-2xs transition-all duration-300 hover:opacity-60"
                     (click)="isWar = !isWar; toggleWar()"
                 >
                     <p class="relative text-2xl/7.5 text-lh-primary font-bold">
@@ -1498,8 +2150,28 @@
                         </p>
                         <p class="text-2xl/7.5 pl-16">
                             <b>5.3.5</b>
-                            На ключевой точке действует защита территории от действий других игроков (п.3, п.5.1,
-                            п.5.2).
+                            На ключевой точке действует защита территории от действий других игроков (
+                            <span
+                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                (click)="scrollToElement(P3)"
+                            >
+                                п.3
+                            </span>
+                            ,
+                            <span
+                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                (click)="isMilitaryActions = true; isRaid = true; scrollToElement(P5_1)"
+                            >
+                                п.5.1
+                            </span>
+                            ,
+                            <span
+                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                (click)="isMilitaryActions = true; scrollToElement(P5_2)"
+                            >
+                                п.5.2
+                            </span>
+                            ).
                         </p>
                         <p class="text-2xl/7.5 pl-16">
                             <b>5.3.6</b>
@@ -1507,8 +2179,15 @@
                         </p>
                         <p class="text-2xl/7.5 pl-20">• Для захвата точки необходимо разрушить монумент точки.</p>
                         <p class="text-2xl/7.5 pl-20">
-                            • После совершенного набега (удачный или не удачный) на всю сторону сюзерена которая
-                            выполняла набег объявляется кулдаун на его повторное проведение в 4 реальных часа.
+                            • После совершенного набега (удачный или не удачный) на всю сторону
+                            <span
+                                class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                                (click)="isTerminology = true; scrollToElement(Suzerain)"
+                            >
+                                сюзерена
+                            </span>
+                            которая выполняла набег объявляется кулдаун на его повторное проведение на эту конкретную
+                            точку в 4 реальных часа.
                         </p>
                         <p class="text-2xl/7.5 pl-16">
                             <b>5.3.7</b>
@@ -1520,6 +2199,12 @@
                             После захвата точки, захватившие обязаны написать тикет-запрос на адаптацию точки под них и
                             соблюдать правило неприкосновенности любых блоков и объектов на точке до получения
                             разрешения от Администрации.
+                        </p>
+                        <p class="text-2xl/7.5 pl-16">
+                            <b>5.3.9</b>
+                            Сюзерен может отказаться от контролируемой им точки и оставить ее. Для этого необходимо
+                            написать тикет в дискорд и заявление в дипломатии. После чего точка будет сброшена к
+                            изначальному состоянию и считаться ничьей.
                         </p>
                     </div>
                 </tui-expand>
