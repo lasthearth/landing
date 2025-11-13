@@ -9,13 +9,14 @@ import { of } from 'rxjs';
 import { routes } from './routes/app.routes';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TUI_VALIDATION_ERRORS, TUI_COPY_TEXTS } from '@taiga-ui/kit';
+import { environment } from '../environments/environment';
 
 function getConfig() {
     const config = buildAngularAuthConfig({
         endpoint: 'https://logto.lasthearth.ru/',
         appId: 'u9k3c8kap0lyhhs0o5jn1',
-        redirectUri: 'https://lasthearth.ru/home',
-        postLogoutRedirectUri: 'https://lasthearth.ru/home',
+        redirectUri: environment.redirectUri,
+        postLogoutRedirectUri: environment.postLogoutRedirectUri,
         scopes: ['openid', 'profile', 'email', 'roles', 'question:create', 'user:verify', 'settlements:manage'],
         resource: 'https://api.lasthearth.ru',
     });
