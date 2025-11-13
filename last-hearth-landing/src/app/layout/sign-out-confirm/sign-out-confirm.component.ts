@@ -1,18 +1,20 @@
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { UserService } from '@app/services/user.service';
 
+/**
+ * Компонент диалогового окна "Подтверждение выхода".
+ */
 @Component({
     selector: 'app-sign-out-confirm',
     templateUrl: './sign-out-confirm.component.html',
-    styleUrls: ['./sign-out-confirm.component.css']
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignOutConfirmComponent {
-
     /**
-       * Контекст открытого диалогового окна.
-       */
+     * Контекст открытого диалогового окна.
+     */
     protected readonly context: TuiDialogContext = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
 
     /**
@@ -20,6 +22,9 @@ export class SignOutConfirmComponent {
      */
     private readonly userService: UserService = inject(UserService);
 
+    /**
+     * Производит выход из аккаунта.
+     */
     protected signOut() {
         this.userService.signOut();
         this.context.$implicit.complete();

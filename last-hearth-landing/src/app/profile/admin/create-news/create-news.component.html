@@ -2,11 +2,11 @@
     <p class="text-3xl/7.5 font-bold">Создание новостей</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2 mt-4">
         <p class="text-2xl/7.5">Заголовок новости</p>
-        <l-input formControlName="title" placeholder="Придумайте заголовок новости..." class="w-full" />
+        <lh-input formControlName="title" placeholder="Придумайте заголовок новости..." class="w-full" />
         <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />
 
         <p class="text-2xl/7.5">Содержание новости</p>
-        <l-input
+        <lh-input
             formControlName="content"
             placeholder="Придумайте содержание новости..."
             class="w-full"

@@ -3,15 +3,11 @@
 
     <!-- 1. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isAboutServer = !isAboutServer">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">1. Какая концепция сервера?</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isAboutServer }"
-                class="text-lh-primary transition-all"
-            />
+        <div (click)="isServerConcept = !isServerConcept" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">1. Какая концепция сервера?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isServerConcept }" class="transition-all" />
         </div>
-        <tui-expand [expanded]="isAboutServer">
+        <tui-expand [expanded]="isServerConcept">
             <div class="flex text-2xl/7.5 flex-col gap-3">
                 <p class="pl-4">
                     <b>Last Hearth</b>
@@ -73,24 +69,14 @@
 
     <!-- 2. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isRegistration = !isRegistration">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">2. Что делать, если я забыл пароль?</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isRegistration }"
-                class="text-lh-primary transition-all"
-            />
+        <div (click)="isPasswordLost = !isPasswordLost" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">2. Что делать, если я забыл пароль?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isPasswordLost }" class="transition-all" />
         </div>
-        <tui-expand [expanded]="isRegistration">
+        <tui-expand [expanded]="isPasswordLost">
             <p class="text-2xl/7.5 pl-4">
                 В случае, утраты доступу к сайту (забыл пароль, не заходит) — напишите в техподдержку в нашем
-                <a
-                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                    href="https://discord.com/invite/FZb7SGrSFy"
-                    target="_blank"
-                >
-                    Discord
-                </a>
+                <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
                 .
             </p>
         </tui-expand>
@@ -98,13 +84,9 @@
 
     <!-- 3. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isTroubles = !isTroubles">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">3. Что делать если у меня не заходит на сервер?</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isTroubles }"
-                class="text-lh-primary transition-all"
-            />
+        <div (click)="isTroubles = !isTroubles" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">3. Что делать если у меня не заходит на сервер?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isTroubles }" class="transition-all" />
         </div>
         <tui-expand [expanded]="isTroubles">
             <div class="flex text-2xl/7.5 flex-col gap-3">
@@ -122,13 +104,7 @@
                     <span class="font-bold">•</span>
                     статус вашей анкеты можно узнать на сайте в личном кабинете (статус в профиле) или у администраторов
                     в
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://discord.com/invite/FZb7SGrSFy"
-                        target="_blank"
-                    >
-                        Discord
-                    </a>
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
                     .
                 </p>
                 <p class="pl-8">
@@ -138,13 +114,7 @@
                 <p class="pl-16">
                     <span class="font-bold">•</span>
                     проверьте, совпадает ли версия клиента с той, что указана на странице
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://lasthearth.ru/profile/how-play"
-                        target="_blank"
-                    >
-                        "Играть"
-                    </a>
+                    <a href="https://lasthearth.ru/profile/how-play" target="_blank">"Играть"</a>
                     в личном кабинете.
                 </p>
                 <p class="pl-8">
@@ -154,25 +124,13 @@
                 <p class="pl-16">
                     <span class="font-bold">•</span>
                     если не удается получить доступ к сайту ModDB - гайд на починку есть в канале #гайды в
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://discord.com/invite/FZb7SGrSFy"
-                        target="_blank"
-                    >
-                        Discord
-                    </a>
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
                     ;
                 </p>
                 <p class="pl-16">
                     <span class="font-bold">•</span>
                     если не удается загрузить какой-то определенный мод - можно написать об этом в
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://discord.com/invite/FZb7SGrSFy"
-                        target="_blank"
-                    >
-                        Discord
-                    </a>
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
                     - в чате помогут и отправят вам недостающий мод.
                 </p>
                 <p class="pl-8">
@@ -194,13 +152,7 @@
                 </p>
                 <p class="pl-4">
                     Проблема до сих пор сохраняется? Напишите тикет для техподдержки с описанием проблемы в
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://discord.com/invite/FZb7SGrSFy"
-                        target="_blank"
-                    >
-                        Discord
-                    </a>
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
                     .
                 </p>
             </div>
@@ -209,13 +161,9 @@
 
     <!-- 5. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isSeason = !isSeason">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">4. Когда вайп и сколько длятся сезоны?</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isSeason }"
-                class="text-lh-primary transition-all"
-            />
+        <div (click)="isSeason = !isSeason" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">4. Когда вайп и сколько длятся сезоны?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isSeason }" class="transition-all" />
         </div>
         <tui-expand [expanded]="isSeason">
             <div class="flex flex-col gap-3 text-2xl/7.5">
@@ -227,13 +175,9 @@
 
     <!-- 6. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isHowToStart = !isHowToStart">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">5. Я зашел на сервер, с чего мне начать?</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isHowToStart }"
-                class="text-lh-primary transition-all"
-            />
+        <div (click)="isHowToStart = !isHowToStart" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">5. Я зашел на сервер, с чего мне начать?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isHowToStart }" class="transition-all" />
         </div>
         <tui-expand [expanded]="isHowToStart">
             <div class="flex flex-col gap-3 text-2xl/7.5">
@@ -255,13 +199,7 @@
                 <p class="pl-4">
                     <span class="font-bold">•</span>
                     Советуем новичкам для начала найти союзников в
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://discord.com/invite/FZb7SGrSFy"
-                        target="_blank"
-                    >
-                        Discord
-                    </a>
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
                     и освоиться вместе.
                 </p>
             </div>
@@ -270,12 +208,12 @@
 
     <!-- 10. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isBagsOrViolation = !isBagsOrViolation">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">6. Я нашел баг или нарушение правил, куда писать?</p>
+        <div (click)="isBagsOrViolation = !isBagsOrViolation" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">6. Я нашел баг или нарушение правил, куда писать?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isBagsOrViolation }"
-                class="text-lh-primary transition-all"
+                class="transition-all"
             />
         </div>
         <tui-expand [expanded]="isBagsOrViolation">
@@ -284,13 +222,7 @@
                     <span class="font-bold">•</span>
                     В случае невозможности подключиться, крашей, неправильных рецептов, нарушений правил воровства, и
                     т.п. необходимо написать тикет через канал #тех-поддержка в
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://discord.com/invite/FZb7SGrSFy"
-                        target="_blank"
-                    >
-                        Discord
-                    </a>
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
                     .
                 </p>
             </div>
@@ -299,13 +231,9 @@
 
     <!-- 11. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isDeathOrTheft = !isDeathOrTheft">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">7. Меня убили или обокрали, что делать?</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isDeathOrTheft }"
-                class="text-lh-primary transition-all"
-            />
+        <div (click)="isDeathOrTheft = !isDeathOrTheft" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">7. Меня убили или обокрали, что делать?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isDeathOrTheft }" class="transition-all" />
         </div>
         <tui-expand [expanded]="isDeathOrTheft">
             <div class="flex flex-col gap-3">
@@ -320,28 +248,16 @@
 
     <!-- 13. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isOffer = !isOffer">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">
-                8. У меня есть предложение по модификации или концепции, куда писать?
-            </p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isOffer }"
-                class="text-lh-primary transition-all"
-            />
+        <div (click)="isOffer = !isOffer" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">8. У меня есть предложение по модификации или концепции, куда писать?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isOffer }" class="transition-all" />
         </div>
         <tui-expand [expanded]="isOffer">
             <div class="flex flex-col gap-3">
                 <p class="pl-4 text-2xl/7.5">
                     <span class="font-bold">•</span>
                     Все предложения принимаются в специальном канале #предложения в
-                    <a
-                        class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                        href="https://discord.com/invite/FZb7SGrSFy"
-                        target="_blank"
-                    >
-                        Discord
-                    </a>
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
                     .
                 </p>
             </div>
@@ -350,13 +266,9 @@
 
     <!-- 14. -->
     <div class="flex flex-col gap-2 shadow-2xs">
-        <div class="flex w-full justify-between gap-2 cursor-pointer" (click)="isTeam = !isTeam">
-            <p class="text-3xl/7.5 text-lh-primary font-bold">9. Как мне попасть в команду проекта Last Heath?</p>
-            <tui-icon
-                icon="@tui.chevron-down"
-                [ngClass]="{ 'rotate-180!': isTeam }"
-                class="text-lh-primary transition-all"
-            />
+        <div (click)="isTeam = !isTeam" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">9. Как мне попасть в команду проекта Last Heath?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isTeam }" class="transition-all" />
         </div>
         <tui-expand [expanded]="isTeam">
             <div class="flex flex-col gap-3 text-2xl/7.5">

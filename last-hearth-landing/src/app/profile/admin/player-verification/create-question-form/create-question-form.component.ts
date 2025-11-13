@@ -8,7 +8,7 @@ import { Subject, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ServerInformationService } from '@services/server-information.service';
 import { RequestStatusService } from '@app/services/request-status.service';
-import { LInputComponent } from '@app/components/l-input/l-input.component';
+import { LHInputComponent } from '@app/components/l-input/lh-input.component';
 
 /**
  * Компонент создания вопроса для верификации.
@@ -23,7 +23,7 @@ import { LInputComponent } from '@app/components/l-input/l-input.component';
         TuiFieldErrorPipe,
         AsyncPipe,
         TuiTextfieldControllerModule,
-        LInputComponent
+        LHInputComponent,
     ],
     templateUrl: './create-question-from.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,14 +65,17 @@ export class CreateQuestionFormComponent {
                 tap(() => {
                     const question = this.form.controls.question.value;
                     if (question !== null) {
-                        this.serverInfoService.postQuestion(question).pipe(
-                            this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess('Вопрос создан!'),
-                            takeUntilDestroyed(this.destroyRef))
+                        this.serverInfoService
+                            .postQuestion(question)
+                            .pipe(
+                                this.requestStatusService.handleError(),
+                                this.requestStatusService.handleSuccess('Вопрос создан!'),
+                                takeUntilDestroyed(this.destroyRef)
+                            )
                             .subscribe();
                     }
                 }),
-                takeUntilDestroyed(this.destroyRef),
+                takeUntilDestroyed(this.destroyRef)
             )
             .subscribe();
     }

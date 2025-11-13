@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LInputComponent } from '@app/components/l-input/l-input.component';
 import { INews } from '@app/services/interface/i-news-admin';
 import { NewsService } from '@app/services/news.service';
 import { RequestStatusService } from '@app/services/request-status.service';
@@ -18,6 +17,7 @@ import { TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe, TuiFile, TuiFilesComponent, TuiFiles } from '@taiga-ui/kit';
 import { finalize, interval, map, Observable, of, startWith, Subject, switchMap, tap, timer } from 'rxjs';
 import { NewsCardComponent } from '@app/news/news-card/news-card.component';
+import { LHInputComponent } from '@app/components/l-input/lh-input.component';
 
 /**
  * Компонент создания новостей админом
@@ -26,7 +26,7 @@ import { NewsCardComponent } from '@app/news/news-card/news-card.component';
     selector: 'app-create-news',
     templateUrl: './create-news.component.html',
     imports: [
-        LInputComponent,
+        LHInputComponent,
         ReactiveFormsModule,
         FormsModule,
         TuiError,

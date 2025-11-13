@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
-import { UserService } from '../services/user.service';
+import { UserService } from '@app/services/user.service';
 import { map, take } from 'rxjs';
 
 /**
@@ -11,12 +11,12 @@ export const adminGuard: CanActivateFn = () => {
 
     return userService.authState$.pipe(
         take(1),
-        map(isAuthenticated => {
+        map((isAuthenticated) => {
             if (isAuthenticated && userService.roles.includes('admin')) {
                 return true;
             } else {
                 return false;
             }
-        }),
+        })
     );
 };

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
-import { NewsCardComponent } from '../news/news-card/news-card.component';
-import { NewsService } from '../services/news.service';
 import { TuiIcon } from '@taiga-ui/core';
+import { NewsCardComponent } from '@app/news/news-card/news-card.component';
+import { NewsService } from '@app/services/news.service';
 
 /**
  * Компонент главной страницы.
@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit {
     protected readonly news = inject(NewsService).news;
 
     /**
-     * Список новостей.
+     * Список новостей открытой страницы.
      */
     protected pageNews: {
         title: string;
@@ -100,10 +100,16 @@ export class HomeComponent implements OnInit {
         description: string;
     }[] = [];
 
-    ngOnInit() {
+    /** @inheritdoc */
+    public ngOnInit(): void {
         this.pageNews = this.news.slice(0, 3);
     }
 
+    /**
+     * Производит переключение изображений в карусели.
+     *
+     * @param direction Направление (1 - вправо, -1 влево).
+     */
     protected navigate(direction: number): void {
         if (direction > 0) {
             this.carouselIndex = this.carouselIndex === this.images.length - 1 ? 0 : this.carouselIndex + 1;
@@ -114,10 +120,18 @@ export class HomeComponent implements OnInit {
         }
     }
 
+    /**
+     * Возвращает количество страниц для всех новостей.
+     */
     protected getPagesCount(): number {
         return Math.round(this.news.length / 3);
     }
 
+    /**
+     * Производит переход на страницу с номером.
+     *
+     * @param index Номер страницы.
+     */
     protected goToPage(index: number): void {
         this.pageIndex = index;
         this.pageNews = this.news.slice(this.pageIndex * 3, this.pageIndex * 3 + 3);

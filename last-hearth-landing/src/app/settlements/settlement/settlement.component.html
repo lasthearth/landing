@@ -97,13 +97,23 @@
                         }
                     </div>
 
-                    <button
-                        *ngIf="userId === settlement.leader.user_id"
-                        (click)="invitePlayer(settlement)"
-                        class="text-white transition-all mt-8 self-start duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
-                    >
-                        Пригласить игроков
-                    </button>
+                    <div class="flex w-full justify-between">
+                        <button
+                            *ngIf="userId === settlement.leader.user_id"
+                            (click)="invitePlayer(settlement)"
+                            class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                        >
+                            Пригласить игроков
+                        </button>
+
+                        <button
+                            *ngIf="userId === settlement.leader.user_id"
+                            (click)="levelUp(settlement.type)"
+                            class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                        >
+                            Повысить уровень
+                        </button>
+                    </div>
                 </div>
             }
         }

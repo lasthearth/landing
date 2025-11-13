@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 
 :root {
-    /* Last Hearth variables. */
     --lh-primary: #3f3c34;
     --lh-primary-2: #332c26;
 
@@ -15,10 +14,10 @@
     --lh-success: var(--color-green-600);
     --lh-success-hover: var(--color-green-700);
     --lh-success-active: var(--color-green-400);
-    --lh-success-disabled: #7A9D8C;
-    
+    --lh-success-disabled: #7a9d8c;
+
     --lh-success-2: #4ac99b;
-    
+
     --lh-disabled: var(--color-gray-300);
 }
 
@@ -28,7 +27,7 @@
 
     --color-lh-accent: var(--lh-accent);
     --color-lh-accent-2: var(--lh-accent-2);
-    
+
     --color-lh-danger: var(--lh-danger);
     --color-lh-danger-hover: var(--lh-danger-hover);
     --color-lh-danger-active: var(--lh-danger-active);
@@ -37,9 +36,8 @@
     --color-lh-success-hover: var(--lh-success-hover);
     --color-lh-success-active: var(--lh-success-active);
     --color-lh-succes-disabled: var(--lh-success-disabled);
-    
+
     --color-lh-disabled: var(--lh-disabled);
-    
 }
 
 html body {
@@ -49,6 +47,17 @@ html body {
 
 a {
     cursor: pointer;
+    color: var(--color-blue-400);
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+    border-bottom: 1px;
+    --tw-border-style: dashed;
+    border-style: dashed;
+    transition: all 0.1s ease-in-out;
+}
+
+a:hover {
+    color: var(--color-blue-600);
 }
 
 .old-paper-background {
@@ -127,9 +136,9 @@ tui-hint {
 
 .lh-confirm-button {
     background-color: var(--lh-success);
-    color:white;
+    color: white;
     cursor: pointer;
-    font-size: var(--text-sm) ;
+    font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     border-radius: var(--radius-lg);
     align-self: flex-start;
@@ -148,9 +157,9 @@ tui-hint {
 
 .lh-cancel-button {
     background-color: var(--lh-danger);
-    color:white;
+    color: white;
     cursor: pointer;
-    font-size: var(--text-sm) ;
+    font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     border-radius: var(--radius-lg);
     align-self: flex-start;

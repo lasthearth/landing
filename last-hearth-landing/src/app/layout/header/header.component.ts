@@ -1,23 +1,16 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    DestroyRef,
-    inject,
-    KeyValueDiffers,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { filter, map, Observable } from 'rxjs';
-import { ServerInformationService } from '../../services/server-information.service';
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import { UserService } from '../../services/user.service';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { RouterOutlet, RouterLink, ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { RouterLink, ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouteKeys } from '../../routes/enums/route-keys';
-import { NotificationService } from '../../services/notification.service';
-import { SignOutConfirmComponent } from '../sign-out-confirm/sign-out-confirm.component';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { RouteKeys } from '@app/routes/enums/route-keys';
+import { NotificationService } from '@app/services/notification.service';
+import { ServerInformationService } from '@app/services/server-information.service';
+import { UserService } from '@app/services/user.service';
+import { SignOutConfirmComponent } from '@layout/sign-out-confirm/sign-out-confirm.component';
 
 /**
  * Компонент заголовка.
@@ -25,7 +18,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterOutlet, RouterLink, NgClass, TuiIcon, TuiPulse, NgIf],
+    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterLink, TuiIcon, TuiPulse],
     templateUrl: './header.component.html',
     styleUrl: './header.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +34,9 @@ export class HeaderComponent {
      */
     protected readonly userService: UserService = inject(UserService);
 
+    /**
+     * Сервис диалогов.
+     */
     private readonly dialogs = inject(TuiDialogService);
 
     /**
@@ -49,14 +45,14 @@ export class HeaderComponent {
     protected readonly online$: Observable<{
         count: number;
         max: number;
-    }> = this.serverInformationService.getOnlinePlayersCount$().pipe(map(info => info));
+    }> = this.serverInformationService.getOnlinePlayersCount$().pipe(map((info) => info));
 
     /**
      * {@link Observable} Даты и времени сервера.
      */
     protected readonly time$: Observable<string> = this.serverInformationService
         .getTime$()
-        .pipe(map(info => info.formatted_time));
+        .pipe(map((info) => info.formatted_time));
 
     /**
      * Объект с информацией о текущем роуте.
@@ -73,10 +69,19 @@ export class HeaderComponent {
      */
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
-    private readonly notificationService = inject(NotificationService);
+    /**
+     * Сервис уведомлений.
+     */
+    private readonly notificationService: NotificationService = inject(NotificationService);
 
+    /**
+     * {@link Observable} Списка приглашений в селения.
+     */
     protected readonly invitations$ = this.notificationService.invitations$;
 
+    /**
+     * {@link Observable} Списка анкет на верификацию от пользователей.
+     */
     protected readonly userVerifications$ = this.notificationService.userVerifications$;
 
     /**
@@ -84,6 +89,9 @@ export class HeaderComponent {
      */
     protected select: string = 'home';
 
+    /**
+     * Объект слеженИя за изменениями.
+     */
     private readonly cdr = inject(ChangeDetectorRef);
 
     /**
@@ -92,8 +100,8 @@ export class HeaderComponent {
     public constructor() {
         this.router.events
             .pipe(
-                filter(event => event instanceof NavigationEnd),
-                takeUntilDestroyed(this.destroyRef),
+                filter((event) => event instanceof NavigationEnd),
+                takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
                 let route = this.activatedRoute;
@@ -145,20 +153,21 @@ export class HeaderComponent {
                             this.select = 'settlements';
                             break;
                     }
+
                     this.cdr.markForCheck();
                 }
             });
     }
 
     /**
-     * Авторизация пользователя.
+     * Авторизует пользователя.
      */
     protected signIn(): void {
         this.userService.signIn();
     }
 
     /**
-     * Выход из аккаунта
+     * Открывает диалоговое окно подтверждения выхода из аккаунта.
      */
     protected signOut(): void {
         this.dialogs.open(new PolymorpheusComponent(SignOutConfirmComponent), { size: 's' }).subscribe();

@@ -1,11 +1,7 @@
 <div class="xl:overflow-x-hidden">
     <div class="flex justify-center xl:justify-start items-center xl:ml-[25%] xl:w-full">
-        <div class="h-auto w-full xl:w-[50%] flex">
-            <div class="flex size-full justify-center gap-3 mb-10">
-                <div class="main-panel size-full !rounded-2xl">
-                    <router-outlet />
-                </div>
-            </div>
+        <div class="main-panel xl:w-[50%] mb-10 size-full !rounded-2xl">
+            <router-outlet />
         </div>
 
         @let currentRouteKey = currentRouteKey$ | async;

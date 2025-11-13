@@ -10,6 +10,7 @@ import { ISettlement } from '../interfaces/i-settlement';
 import { NotificationService } from '../../services/notification.service';
 import { catchError, map, mergeMap, Observable, of, share, shareReplay, Subject, switchMap, tap } from 'rxjs';
 import { CreateSettlementFormComponent } from '@app/profile/create-settlement-from/create-settlement-from.component';
+import { SettlementsTypes } from '@app/services/enums/settlements-types';
 
 @Component({
     standalone: true,
@@ -114,6 +115,14 @@ export class SettlementComponent {
 
     protected inviteAccept(id: string) {
         this.settlementService.inviteAccept(id).subscribe();
+    }
+
+    protected levelUp(currentType: string): void {
+        const type = currentType === 'CAMP' ? SettlementsTypes.camp : SettlementsTypes.camp;
+
+        this.dialogs
+            .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: type } })
+            .subscribe();
     }
 
     protected getPlayerName(userId: string) {}

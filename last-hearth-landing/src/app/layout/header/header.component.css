@@ -1,4 +1,15 @@
 .nav-button {
     transition: all 0.3s 0s;
+    background-color: var(--color-lh-primary-2);
+    padding: calc(var(--spacing) * 2.5);
+    border-radius: var(--radius-lg);
     height: 44px;
+    cursor: pointer;
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    gap: 8px;
+    align-items: center;
+    justify-items: center;
+    display: flex;
 }

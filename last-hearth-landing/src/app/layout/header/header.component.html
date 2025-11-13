@@ -3,6 +3,7 @@
 @let isAuth = userService.authState$ | async;
 @let invitations = invitations$ | async;
 @let userVerifications = userVerifications$ | async;
+
 <div class="flex flex-col xl:gap-24 gap-8">
     <div class="flex justify-center sm:justify-between px-4 sm:px-0">
         <!-- Логотип -->
@@ -19,6 +20,7 @@
                 </p>
             </div>
         </div>
+
         <!-- Табло информации о сервере -->
         <div class="flex gap-2 sm:gap-4 items-center">
             <div
@@ -28,13 +30,16 @@
                     <div class="flex w-full px-4 gap-4 justify-center items-center">
                         <div class="flex gap-0.5 items-center">
                             <p class="text-3xl sm:text-5xl text-white">{{ online?.count ? online?.count : "-" }}</p>
+
                             <p class="text-xs sm:text-sm text-white opacity-70">/</p>
+
                             <p class="text-xs sm:text-sm text-white opacity-70">
                                 {{ online?.max ? online?.max : "-" }}
                             </p>
                         </div>
                         <div class="text-white">
                             <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">Игроков</p>
+
                             <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
                         </div>
                     </div>
@@ -49,6 +54,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Табло информации о пользователе -->
             @if (isAuth) {
                 <div
                     class="mt-8 z-10 flex w-fit h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
@@ -74,25 +81,28 @@
             }
         </div>
     </div>
+
     <!-- Блок навигации -->
     <div class="flex gap-2 justify-center xl:justify-between md:gap-4 w-full mb-4">
         <div class="flex gap-2">
-            <a
+            <button
                 (click)="select = 'home'"
-                class="nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5"
                 [routerLink]="['/home']"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'home' }"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'home' }"
+                class="nav-button"
             >
                 <tui-icon icon="@tui.house" />
-            </a>
+            </button>
             @if (!isAuth) {
                 <button
                     [routerLink]="['/start-game']"
-                    class="nav-button relative w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'startGame' }"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'startGame' }"
+                    class="nav-button relative md:w-auto md:min-w-20 px-4"
                 >
                     <tui-icon icon="@tui.gamepad-2" />
+
                     <span class="hidden md:block">НАЧАТЬ ИГРУ</span>
+
                     <tui-pulse
                         tuiHintAppearance="floating"
                         class="!absolute !top-0.5 !right-0.5 !scale-110"
@@ -101,16 +111,16 @@
             }
             <button
                 [routerLink]="['/rules']"
-                class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'rules' }"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'rules' }"
+                class="nav-button md:w-auto md:min-w-20 px-4"
             >
                 <tui-icon icon="@tui.file-text" />
                 <span class="hidden md:block">ПРАВИЛА</span>
             </button>
             <button
                 [routerLink]="['/faq']"
-                class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'faq' }"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'faq' }"
+                class="nav-button md:w-auto md:min-w-20 px-4"
             >
                 <tui-icon icon="@tui.info" />
                 <span class="hidden md:block">FAQ</span>
@@ -118,8 +128,8 @@
             @if (isAuth) {
                 <button
                     [routerLink]="['/settlements']"
-                    class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'settlements' }"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
+                    class="nav-button md:w-auto md:min-w-20 px-4"
                 >
                     <tui-icon icon="@tui.tent" />
                     <span class="hidden md:block">СЕЛЕНИЯ</span>
@@ -127,8 +137,8 @@
             }
             <button
                 [routerLink]="['/titles']"
-                class="nav-button w-11 md:w-auto md:min-w-20 text-white flex justify-center items-center gap-2 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'titles' }"
+                class="nav-button w-11 md:w-auto md:min-w-20 px-4"
             >
                 <tui-icon icon="@tui.store" />
                 <span class="hidden md:block">МАГАЗИН</span>
@@ -139,25 +149,25 @@
                 (click)="isAuth ? '' : signIn()"
                 [routerLink]="isAuth ? ['/profile'] : ''"
                 [ngClass]="{
-                    'bg-[#e2d7bb]! text-lh-primary! font-bold! text-sm!': select === 'profile',
-                    '!rounded-xl': !isAuth,
+                    'bg-[#e2d7bb]! text-lh-primary!': select === 'profile',
+                    '!rounded-lg': !isAuth,
+                    '!rounded-r-none': isAuth,
                 }"
-                class="relative nav-button text-white font-bold cursor-pointer bg-lh-primary-2 rounded-tl-lg rounded-bl-lg p-2.5 w-11!"
+                class="relative nav-button p-2.5"
             >
                 <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
-                <tui-pulse
-                    *ngIf="invitations?.invitations?.length || (userVerifications?.length && isAdmin())"
-                    tuiHintAppearance="floating"
-                    class="!absolute !top-0.5 !right-0.5 !scale-110"
-                />
+                @if (invitations?.invitations?.length || (userVerifications?.length && isAdmin())) {
+                    <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
+                }
             </button>
-            <button
-                *ngIf="isAuth"
-                (click)="signOut()"
-                class="relative nav-button bg-red-800! text-neutral-300 font-bold cursor-pointer hover:!bg-lh-danger-hover rounded-tr-lg rounded-br-lg p-1 w-[32px]!"
-            >
-                <tui-icon icon="@tui.log-out" />
-            </button>
+            @if (isAuth) {
+                <button
+                    (click)="signOut()"
+                    class="relative nav-button bg-red-800! hover:!bg-lh-danger-hover !rounded-l-none !p-1 w-8!"
+                >
+                    <tui-icon icon="@tui.log-out" />
+                </button>
+            }
         </div>
     </div>
 </div>

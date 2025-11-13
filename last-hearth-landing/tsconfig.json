@@ -6,7 +6,10 @@
         "outDir": "./dist/out-tsc",
         "paths": {
             "@app/*": ["./src/app/*"],
-            "@services/*": ["./src/app/services/*"]
+            "@services/*": ["./src/app/services/*"],
+            "@routes/*": ["./src/app/routes/*"],
+            "@profile/*": ["./src/app/profile/*"],
+            "@layout/*": ["./src/app/layout/*"]
         },
         "strict": true,
         "noImplicitOverride": true,

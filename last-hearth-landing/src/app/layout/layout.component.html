@@ -2,7 +2,7 @@
 
 @if (!isAuth) {
     <app-welcome
-        [class.scroll]="isCanScroll"
+        [class.scroll]="isSetScrollClass"
         (onScroll)="onWelcomeScroll()"
         class="absolute size-full welcome z-[200]"
     />

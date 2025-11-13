@@ -7,16 +7,17 @@ import { RouterLink } from '@angular/router';
 import { finalize, forkJoin, map, Observable, of, Subject, switchMap, tap, timer } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { LInputComponent } from '@app/components/l-input/l-input.component';
 import { SettlementService } from '@app/services/settlement.service';
 import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
+import { SettlementsTypes } from '@app/services/enums/settlements-types';
+import { LHInputComponent } from '@app/components/l-input/lh-input.component';
 
 type FileKey = 'map' | 'monument' | 'fireplace' | 'warehouse' | 'beds' | 'preview';
 
 @Component({
     standalone: true,
     selector: 'app-create-settlement',
-    imports: [LInputComponent, FormsModule, ReactiveFormsModule, RouterLink, NgFor, AsyncPipe, NgIf, TuiFiles],
+    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, RouterLink, NgFor, AsyncPipe, NgIf, TuiFiles],
     templateUrl: './create-settlement-from.component.html',
     styleUrl: './create-settlement-from.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,11 +25,7 @@ type FileKey = 'map' | 'monument' | 'fireplace' | 'warehouse' | 'beds' | 'previe
 export class CreateSettlementFormComponent {
     name = '';
     selectedUser: { id: number; name: string } | null = null;
-    diplomacy = [
-        'Миролюбивый',
-        'Нейтральный',
-        'Агрессивный',
-    ];
+    diplomacy = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
 
     protected readonly fileFields: FileKey[] = ['preview', 'map', 'monument', 'fireplace', 'warehouse', 'beds'];
 
@@ -51,7 +48,7 @@ export class CreateSettlementFormComponent {
             acc.loading[key] = new Subject<File | null>();
             acc.failed[key] = new Subject<File | null>();
             acc.loaded[key] = this.form.controls[key].valueChanges.pipe(
-                switchMap(file => this.processFile(file, acc.loading[key], acc.failed[key])),
+                switchMap((file) => this.processFile(file, acc.loading[key], acc.failed[key]))
             );
             return acc;
         },
@@ -59,7 +56,7 @@ export class CreateSettlementFormComponent {
             loading: {} as Record<FileKey, Subject<File | null>>,
             failed: {} as Record<FileKey, Subject<File | null>>,
             loaded: {} as Record<FileKey, Observable<File | null>>,
-        },
+        }
     );
 
     /**
@@ -75,7 +72,8 @@ export class CreateSettlementFormComponent {
     /**
      * Контекст открытого диалогового окна.
      */
-    private readonly context: TuiDialogContext = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
+    protected readonly context: TuiDialogContext<void, { level: SettlementsTypes }> =
+        inject<TuiDialogContext<void, { level: SettlementsTypes }>>(POLYMORPHEUS_CONTEXT);
 
     private readonly settlementService = inject(SettlementService);
 
@@ -89,7 +87,7 @@ export class CreateSettlementFormComponent {
                     const values = this.form.value;
 
                     // Собираем массив Observable<string> для всех файлов
-                    const base64Files$: Observable<string | null>[] = this.fileFields.map(key => {
+                    const base64Files$: Observable<string | null>[] = this.fileFields.map((key) => {
                         const file = values[key];
                         if (file) {
                             return this.convertTuiFileLikeToBase64(file);
@@ -99,7 +97,7 @@ export class CreateSettlementFormComponent {
 
                     // Ждём когда все base64 загрузятся
                     return forkJoin(base64Files$).pipe(
-                        map(base64Files => {
+                        map((base64Files) => {
                             const attachments = this.fileFields.map((key, i) => ({
                                 data: base64Files[i] ?? '',
                                 description: this.getLabelForKey(key),
@@ -118,10 +116,10 @@ export class CreateSettlementFormComponent {
                             };
 
                             return request;
-                        }),
+                        })
                     );
                 }),
-                tap(request => {
+                tap((request) => {
                     console.log(request);
                     this.settlementService
                         .postRequestSettlement$(request)
@@ -130,7 +128,7 @@ export class CreateSettlementFormComponent {
                             this.context.$implicit.complete();
                         });
                 }),
-                takeUntilDestroyed(this.destroyRef),
+                takeUntilDestroyed(this.destroyRef)
             )
             .subscribe();
     }
@@ -142,7 +140,7 @@ export class CreateSettlementFormComponent {
     protected processFile(
         file: File | null,
         loading$: Subject<File | null>,
-        failed$: Subject<File | null>,
+        failed$: Subject<File | null>
     ): Observable<File | null> {
         failed$.next(null);
 
@@ -161,7 +159,7 @@ export class CreateSettlementFormComponent {
 
         return timer(300).pipe(
             map(() => file),
-            finalize(() => loading$.next(null)),
+            finalize(() => loading$.next(null))
         );
     }
 
@@ -181,7 +179,7 @@ export class CreateSettlementFormComponent {
     }
 
     convertTuiFileLikeToBase64(file: File): Observable<string> {
-        return new Observable<string>(observer => {
+        return new Observable<string>((observer) => {
             const reader = new FileReader();
 
             reader.onload = () => {
@@ -191,7 +189,7 @@ export class CreateSettlementFormComponent {
                 observer.complete();
             };
 
-            reader.onerror = err => {
+            reader.onerror = (err) => {
                 observer.error(err);
             };
 
