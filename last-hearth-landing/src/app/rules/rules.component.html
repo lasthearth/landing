@@ -1731,6 +1731,15 @@
                             </p>
                             <p class="text-2xl/7.5 pl-16">
                                 <span class="font-bold">3.3.2</span>
+                                Шпионаж может проводиться при любом политическом курсе селения.
+                            </p>
+                            <p class="text-2xl/7.5 pl-16">
+                                <span class="font-bold">3.3.3</span>
+                                Шпион может быть участником во время любых военных действий на стороне селения на
+                                которое он работает, или на стороне селения, где он является шпионом.
+                            </p>
+                            <p class="text-2xl/7.5 pl-16">
+                                <span class="font-bold">3.3.4</span>
                                 Шпион может украсть у поселения в которое он внедрен ресурсы, но соблюдая:
                                 <span
                                     class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
@@ -1742,16 +1751,16 @@
                                 состав селения, не являющийся шпионом].
                             </p>
                             <p class="text-2xl/7.5 pl-16">
-                                <span class="font-bold">3.3.3</span>
+                                <span class="font-bold">3.3.5</span>
                                 Шпион может открыть ворота во время осады при ведении войны или набега. Подразумеваются
                                 только первые, внешние ворота. Открытие ворот кроме них - запрещено.
                             </p>
                             <p class="text-2xl/7.5 pl-16">
-                                <span class="font-bold">3.3.4</span>
+                                <span class="font-bold">3.3.6</span>
                                 Шпион может передавать любую разведывательную информацию.
                             </p>
                             <p class="text-2xl/7.5 pl-16">
-                                <span class="font-bold">3.3.5</span>
+                                <span class="font-bold">3.3.7</span>
                                 Любые иные действия шпиона являются запрещенными.
                             </p>
                         </div>
@@ -1790,13 +1799,6 @@
                 <p class="text-2xl/7.5 pl-16">• Иметь статус селения не ниже Города.</p>
                 <p class="text-2xl/7.5 pl-16">• Иметь дополнительную регистрацию на сайте.</p>
                 <p class="text-2xl/7.5 pl-16">
-                    • Селение колонизаторов должно иметь статус не меньше лагеря и не выше деревни.
-                </p>
-                <p class="text-2xl/7.5 pl-16">
-                    • Селение колонизаторов может быть расположено на любых координатах, не входящих в нейтральную зону
-                    и для основания иметь население на 2 человека меньше, чем требуется для данного типа селения.
-                </p>
-                <p class="text-2xl/7.5 pl-16">
                     • Колонию можно ограбить руководствуясь соответствующими правилами для совершения этого действия,
                     согласно ее типу.
                 </p>
@@ -1804,6 +1806,98 @@
                     • Набег объявляется не колонии, а основному селению, учитывая их общее население находящееся в
                     онлайне. Колония может быть целью набега.
                 </p>
+                <p class="text-2xl/7.5 pl-16">• Допустимые уровни селений для колонизации:</p>
+                <p class="text-2xl/7.5 font-bold pl-16">Лагерь:</p>
+                <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
+                <p class="text-2xl/7.5 pl-28">• Наличие территориального блока.</p>
+                <p class="text-2xl/7.5 pl-28">• Расположение: любое вне нейтральной зоны.</p>
+                <p class="text-2xl/7.5 pl-28">• Население: от 1-го человека.</p>
+                <p class="text-2xl/7.5 pl-28">
+                    •
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="isTerminology = true; scrollToElement(Monument)"
+                    >
+                        Монумент
+                    </span>
+                    : 1х1х2 блока (ш,д,в).
+                </p>
+                <p class="text-2xl/7.5 pl-28">• Инфраструктура: оборудованное место с костром.</p>
+                <p class="text-2xl/7.5 pl-28">
+                    • Хозяйство:
+                    <br />
+                    <span class="text-2xl/7.5 pl-12">◦ от 1-го строения-хранилища;</span>
+                </p>
+                <p class="text-2xl/7.5 pl-28">• Оборонительные постройки: отсутствуют.</p>
+                <p class="text-2xl/7.5 pl-24 text-lh-primary font-bold">Преимущества:</p>
+                <p class="text-2xl/7.5 pl-28">• Сохранены все преимущества с типа селения Лагерь.</p>
+                <p class="text-2xl/7.5 font-bold pl-16">Деревня:</p>
+                <p class="text-2xl/7.5 pl-20 text-lh-primary font-bold">Требования:</p>
+                <p class="text-2xl/7.5 pl-28">• Наличие территориального блока.</p>
+                <p class="text-2xl/7.5 pl-28">• Расположение: любое вне нейтральной зоны.</p>
+                <p class="text-2xl/7.5 pl-28">• Население: от 2-х человек.</p>
+                <p class="text-2xl/7.5 pl-28">
+                    •
+                    <span
+                        class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                        (click)="isTerminology = true; scrollToElement(Monument)"
+                    >
+                        Монумент
+                    </span>
+                    : 1х1х2 блока (ш,д,в).
+                </p>
+                <p class="text-2xl/7.5 pl-28">
+                    • Документы:
+                    <br />
+                    <span class="text-2xl/7.5 pl-12">
+                        ◦ подписанный
+                        <span
+                            class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                            (click)="isTerminology = true; scrollToElement(Patent)"
+                        >
+                            патент
+                        </span>
+                        на разрешение основания деревни от
+                        <span
+                            class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                            (click)="isTerminology = true; scrollToElement(Suzerain)"
+                        >
+                            сюзерена
+                        </span>
+                        ;
+                    </span>
+                    <br />
+                    <span class="text-2xl/7.5 pl-12">
+                        ◦ от 2-х купчих
+                        <span
+                            class="text-blue-400 font-semibold border-dashed border-b cursor-pointer hover:text-blue-600 transition-all duration-100"
+                            (click)="isTerminology = true; scrollToElement(Volnost)"
+                        >
+                            вольности
+                        </span>
+                        .
+                    </span>
+                </p>
+                <p class="text-2xl/7.5 pl-28">
+                    • Инфраструктура:
+                    <br />
+                    <span class="text-2xl/7.5 pl-12">◦ колодец с питьевой водой;</span>
+                    <br />
+                    <span class="text-2xl/7.5 pl-12">
+                        ◦ тропы между постройками шириной не менее 2-х блоков, где это возможно.
+                    </span>
+                </p>
+                <p class="text-2xl/7.5 pl-28">
+                    • Хозяйство:
+                    <br />
+                    <span class="text-2xl/7.5 pl-12">◦ от 2-х строений-хранилищ;</span>
+                    <br />
+                    <span class="text-2xl/7.5 pl-12">◦ либо сельхоз угодья [грядки/загоны], либо мастерские.</span>
+                </p>
+                <p class="text-2xl/7.5 pl-28">• Дополнительные строения: от 1-го одноэтажного строения.</p>
+                <p class="text-2xl/7.5 pl-28">• Оборонительные постройки: отсутствуют.</p>
+                <p class="text-2xl/7.5 pl-24 text-lh-primary font-bold">Преимущества:</p>
+                <p class="text-2xl/7.5 pl-28">• Сохранены все преимущества с типа селения Деревня.</p>
             </div>
         </tui-expand>
     </div>
