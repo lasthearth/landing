@@ -156,7 +156,7 @@
                 class="relative nav-button p-2.5"
             >
                 <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
-                @if (invitations?.invitations?.length || (userVerifications?.length && isAdmin())) {
+                @if (invitations?.length || (userVerifications?.length && isAdmin())) {
                     <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
                 }
             </button>

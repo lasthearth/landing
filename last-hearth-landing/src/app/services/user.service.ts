@@ -1,14 +1,13 @@
-import { ChangeDetectorRef, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { IUser } from './interface/i-user';
 import { jwtDecode } from 'jwt-decode';
 import { IJwtTokenLh } from './interface/i-jwt-token-lh';
-import { BehaviorSubject, catchError, combineLatest, filter, finalize, first, Observable, of, switchMap, tap } from 'rxjs';
-import { NavigationEnd, Router } from '@angular/router';
+import { BehaviorSubject, catchError, combineLatest, finalize, first, map, Observable, of, switchMap, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement';
-import { ServerInformationService } from './server-information.service';
 import { LocalStorageService } from './local-storage.service';
+import { ISettlementInvitation } from './interface/i-settlement-invitation';
+import { IPlayer } from './interface/i-player';
 
 @Injectable({
     providedIn: 'root',
@@ -25,7 +24,7 @@ export class UserService {
     public roles: string[] = [];
 
     public accessToken!: string;
-    
+
     private baseUrl = 'https://apiprev.lasthearth.ru/v1';
 
     private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -74,7 +73,7 @@ export class UserService {
                         })
                     );
                 }),
-                catchError(authError => {
+                catchError((authError) => {
                     console.error('[Auth] Ошибка при checkAuth:', authError);
                     this.authStateChange$.next(false);
                     return of(null);
@@ -83,7 +82,7 @@ export class UserService {
                 finalize(() => {
                     // Например, убрать индикатор загрузки или логировать окончание процесса
                     console.debug('[Auth] Проверка аутентификации завершена');
-                }),
+                })
             )
             .subscribe();
     }
@@ -124,9 +123,9 @@ export class UserService {
         });
         return this.http
             .get<{
-                invitations: { id: string; user_id: string; settlement_id: string }[];
+                invitations: ISettlementInvitation[];
             }>(`${this.baseUrl}/users/${this.userId}/settlements/invitations`, { headers })
-            .pipe();
+            .pipe(map((invitationObj) => invitationObj.invitations));
     }
 
     public getPlayer$(userId: string) {
@@ -134,33 +133,26 @@ export class UserService {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.accessToken}`,
         });
-        return this.http
-            .get<{
-                user_id: string;
-                user_game_name: string;
-                avatar: {
-                    original: string;
-                    x96: string;
-                    x48: string;
-                };
-            }>(`${this.baseUrl}/users/${userId}`, { headers })
-            .pipe();
+        return this.http.get<IPlayer>(`${this.baseUrl}/users/${userId}`, { headers }).pipe();
     }
 
     /**
      * Создает запрос на изменение игрового никнейма пользователя.
-     * 
+     *
      * @param newNickname Новое имя пользователя.
      */
-    public changeUsername$(newNickname:string){
+    public changeUsername$(newNickname: string) {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.accessToken}`,
         });
-        return this.http
-            .put<{
-                old_nickname: string,
-                new_nickname: string
-            }>(`${this.baseUrl}/users/${this.userId}/nickname`,{user_id: this.userId,new_nickname: newNickname},{headers})
+        return this.http.put<{
+            old_nickname: string;
+            new_nickname: string;
+        }>(
+            `${this.baseUrl}/users/${this.userId}/nickname`,
+            { user_id: this.userId, new_nickname: newNickname },
+            { headers }
+        );
     }
 }

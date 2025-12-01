@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LHInputComponent } from '@app/components/l-input/lh-input.component';
+import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 import { RequestStatusService } from '@app/services/request-status.service';
 import { UserService } from '@app/services/user.service';
 import { TuiDialogContext, TuiError } from '@taiga-ui/core';

@@ -8,7 +8,7 @@ import { Subject, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ServerInformationService } from '@services/server-information.service';
 import { RequestStatusService } from '@app/services/request-status.service';
-import { LHInputComponent } from '@app/components/l-input/lh-input.component';
+import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 
 /**
  * Компонент создания вопроса для верификации.

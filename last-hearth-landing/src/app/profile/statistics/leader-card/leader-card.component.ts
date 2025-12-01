@@ -5,7 +5,7 @@ import { TuiIcon } from '@taiga-ui/core';
 @Component({
     standalone: true,
     selector: 'app-leader-card',
-    imports: [NgClass, NgIf, TuiIcon],
+    imports: [NgIf, TuiIcon],
     templateUrl: './leader-card.component.html',
     styleUrls: ['./leader-card.component.css'],
 })
