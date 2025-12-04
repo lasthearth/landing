@@ -1,199 +1,41 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { TuiFiles } from '@taiga-ui/kit';
-import { RouterLink } from '@angular/router';
-import { finalize, forkJoin, map, Observable, of, Subject, switchMap, tap, timer } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { SettlementService } from '@app/services/settlement.service';
-import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
 import { SettlementsTypes } from '@app/services/enums/settlements-types';
-import { LHInputComponent } from '@app/components/l-input/lh-input.component';
-
-type FileKey = 'map' | 'monument' | 'fireplace' | 'warehouse' | 'beds' | 'preview';
+import { CampFormComponent } from './settlements-types-forms/camp-form/camp-form.component';
+import { VillageFormComponent } from './settlements-types-forms/village-form/village-form.component';
+import { RegionFormComponent } from './settlements-types-forms/region-form/region-form.component';
+import { CityFormComponent } from './settlements-types-forms/city-form/city-form.component';
+import { TownshipFormComponent } from './settlements-types-forms/township-form/township-form.component';
 
 @Component({
     standalone: true,
     selector: 'app-create-settlement',
-    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, RouterLink, NgFor, AsyncPipe, NgIf, TuiFiles],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        TuiFiles,
+        CampFormComponent,
+        VillageFormComponent,
+        RegionFormComponent,
+        CityFormComponent,
+        TownshipFormComponent,
+    ],
     templateUrl: './create-settlement-from.component.html',
     styleUrl: './create-settlement-from.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateSettlementFormComponent {
-    name = '';
-    selectedUser: { id: number; name: string } | null = null;
-    diplomacy = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
-
-    protected readonly fileFields: FileKey[] = ['preview', 'map', 'monument', 'fireplace', 'warehouse', 'beds'];
-
-    protected readonly form = new FormGroup({
-        name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        x: new FormControl<number | null>(null, [Validators.required]),
-        z: new FormControl<number | null>(null, [Validators.required]),
-        diplomacy: new FormControl<string | null>(null, [Validators.required]),
-        description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, Validators.required),
-        map: new FormControl<File | null>(null, Validators.required),
-        monument: new FormControl<File | null>(null, Validators.required),
-        fireplace: new FormControl<File | null>(null, Validators.required),
-        warehouse: new FormControl<File | null>(null, Validators.required),
-        beds: new FormControl<File | null>(null, Validators.required),
-    });
-
-    protected readonly fileStatus = this.fileFields.reduce(
-        (acc, key) => {
-            acc.loading[key] = new Subject<File | null>();
-            acc.failed[key] = new Subject<File | null>();
-            acc.loaded[key] = this.form.controls[key].valueChanges.pipe(
-                switchMap((file) => this.processFile(file, acc.loading[key], acc.failed[key]))
-            );
-            return acc;
-        },
-        {
-            loading: {} as Record<FileKey, Subject<File | null>>,
-            failed: {} as Record<FileKey, Subject<File | null>>,
-            loaded: {} as Record<FileKey, Observable<File | null>>,
-        }
-    );
-
-    /**
-     * {@link Subject} события отправки формы.
-     */
-    protected readonly onSubmit: Subject<void> = new Subject<void>();
-
-    /**
-     * Ссылка уничтожения на компонент.
-     */
-    private readonly destroyRef: DestroyRef = inject(DestroyRef);
-
     /**
      * Контекст открытого диалогового окна.
      */
     protected readonly context: TuiDialogContext<void, { level: SettlementsTypes }> =
         inject<TuiDialogContext<void, { level: SettlementsTypes }>>(POLYMORPHEUS_CONTEXT);
 
-    private readonly settlementService = inject(SettlementService);
-
     /**
-     * Инициализирует компонент класса {@link }
+     * Перечесляемые типы селений
      */
-    public constructor() {
-        this.onSubmit
-            .pipe(
-                switchMap(() => {
-                    const values = this.form.value;
-
-                    // Собираем массив Observable<string> для всех файлов
-                    const base64Files$: Observable<string | null>[] = this.fileFields.map((key) => {
-                        const file = values[key];
-                        if (file) {
-                            return this.convertTuiFileLikeToBase64(file);
-                        }
-                        return of(null);
-                    });
-
-                    // Ждём когда все base64 загрузятся
-                    return forkJoin(base64Files$).pipe(
-                        map((base64Files) => {
-                            const attachments = this.fileFields.map((key, i) => ({
-                                data: base64Files[i] ?? '',
-                                description: this.getLabelForKey(key),
-                            }));
-
-                            const request: ICreateSettlement = {
-                                type: 1,
-                                name: values.name ?? '',
-                                description: values.description ?? '',
-                                diplomacy: values.diplomacy ?? '',
-                                coordinates: {
-                                    x: values.x ?? 0,
-                                    y: values.z ?? 0,
-                                },
-                                attachments,
-                            };
-
-                            return request;
-                        })
-                    );
-                }),
-                tap((request) => {
-                    console.log(request);
-                    this.settlementService
-                        .postRequestSettlement$(request)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => {
-                            this.context.$implicit.complete();
-                        });
-                }),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe();
-    }
-
-    protected removeFile(controlName: FileKey): void {
-        this.form.controls[controlName].setValue(null);
-    }
-
-    protected processFile(
-        file: File | null,
-        loading$: Subject<File | null>,
-        failed$: Subject<File | null>
-    ): Observable<File | null> {
-        failed$.next(null);
-
-        if (!file) {
-            return of(null);
-        }
-
-        const maxSizeBytes = 10 * 1024 * 1024;
-
-        if (file.size && file.size > maxSizeBytes) {
-            failed$.next(file);
-            return of(null);
-        }
-
-        loading$.next(file);
-
-        return timer(300).pipe(
-            map(() => file),
-            finalize(() => loading$.next(null))
-        );
-    }
-
-    displayUserName(user: { id: number; name: string }): string {
-        return user.name;
-    }
-
-    getLabelForKey(key: FileKey): string {
-        return {
-            map: 'Вид с карты',
-            monument: 'Ваш монумент',
-            fireplace: 'Место костра',
-            warehouse: 'Склад',
-            beds: 'Кровати 3 шт.',
-            preview: 'Заглавное изображение вашего селения',
-        }[key];
-    }
-
-    convertTuiFileLikeToBase64(file: File): Observable<string> {
-        return new Observable<string>((observer) => {
-            const reader = new FileReader();
-
-            reader.onload = () => {
-                const result = reader.result as string;
-                const base64 = result.split(',')[1]; // убираем data:*/*;base64,
-                observer.next(base64);
-                observer.complete();
-            };
-
-            reader.onerror = (err) => {
-                observer.error(err);
-            };
-
-            reader.readAsDataURL(file);
-        });
-    }
+    protected readonly settlementsTypes: typeof SettlementsTypes = SettlementsTypes;
 }

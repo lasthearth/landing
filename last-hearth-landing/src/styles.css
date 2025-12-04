@@ -5,9 +5,10 @@
     --lh-primary-2: #332c26;
 
     --lh-accent: #ff7920;
-    --lh-accent-2: #945a32;
+    --lh-accent-2: #97471b;
+    --lh-accent-3: #86523b;
 
-    --lh-danger: var(--color-red-600);
+    --lh-danger: #720000;
     --lh-danger-hover: var(--color-red-700);
     --lh-danger-active: var(--color-red-400);
 
@@ -19,6 +20,11 @@
     --lh-success-2: #4ac99b;
 
     --lh-disabled: var(--color-gray-300);
+
+    --lh-online: #05ad5f;
+    --lh-offline: #3b3c36;
+
+    --lh-leader: #3d5381;
 }
 
 @theme {
@@ -27,6 +33,7 @@
 
     --color-lh-accent: var(--lh-accent);
     --color-lh-accent-2: var(--lh-accent-2);
+    --color-lh-accent-3: var(--lh-accent-3);
 
     --color-lh-danger: var(--lh-danger);
     --color-lh-danger-hover: var(--lh-danger-hover);
@@ -38,6 +45,11 @@
     --color-lh-succes-disabled: var(--lh-success-disabled);
 
     --color-lh-disabled: var(--lh-disabled);
+
+    --color-lh-online: var(--lh-online);
+    --color-lh-offline: var(--lh-offline);
+
+    --color-lh-leader: var(--lh-leader);
 }
 
 html body {
@@ -170,4 +182,10 @@ tui-hint {
     &:hover {
         background-color: var(--color-lh-danger-hover);
     }
+}
+tui-pulse.online {
+    color: var(--color-lh-online) !important;
+}
+tui-pulse.offline {
+    color: var(--color-lh-offline) !important;
 }

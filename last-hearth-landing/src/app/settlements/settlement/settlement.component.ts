@@ -1,23 +1,26 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { TuiDialogService, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '../../services/settlement.service';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { PlayerInviteComponent } from '../player-invite/player-invite.component';
-import { SettlementCardComponent } from '../settlement-card/settlement-card.component';
 import { ISettlement } from '../interfaces/i-settlement';
 import { NotificationService } from '../../services/notification.service';
-import { catchError, map, mergeMap, Observable, of, share, shareReplay, Subject, switchMap, tap } from 'rxjs';
+import { catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { CreateSettlementFormComponent } from '@app/profile/create-settlement-from/create-settlement-from.component';
 import { SettlementsTypes } from '@app/services/enums/settlements-types';
-
+import { ISettlementInvitation } from '@app/services/interface/i-settlement-invitation';
+import { getSettlementTypeByKey } from '@app/functions/get-settlement-type-by-key.function';
+import { TuiPulse } from '@taiga-ui/kit';
+import { IPlayer } from '@app/services/interface/i-player';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, NgIf, TuiLoader],
+    imports: [AsyncPipe, NgIf, TuiLoader, TuiPulse],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementComponent {
     /**
@@ -25,82 +28,123 @@ export class SettlementComponent {
      */
     private readonly dialogs: TuiDialogService = inject(TuiDialogService);
 
-    private readonly addUserName$ = new Subject<string>();
-
     /**
      * Сервис данных о пользователе.
      */
     private readonly userService: UserService = inject(UserService);
 
-    protected userId = this.userService.userId;
+    /**
+     * Идентификатор пользователя.
+     */
+    protected readonly userId: string = this.userService.userId;
 
-    private readonly notificationService = inject(NotificationService);
+    /**
+     * Сервис уведомлений.
+     */
+    private readonly notificationService: NotificationService = inject(NotificationService);
 
-    cdr = inject(ChangeDetectorRef);
-    protected readonly notifications$ = this.notificationService.invitations$;
+    /**
+     * Объект обнаружения изменений.
+     */
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+    /**
+     * {@link Observable} Списка приглашений в селение.
+     */
+    protected readonly invitations$: Observable<ISettlementInvitation[]> = this.notificationService.invitations$;
 
     /**
      * Сервис поселений.
      */
     protected readonly settlementService: SettlementService = inject(SettlementService);
+    /**
+     * {@link Observable} Информации о селении.
+     */
+    protected readonly settlementInfo$: Observable<ISettlement | undefined> = this.settlementService
+        .getSettlementInfo(this.userService.userId)
+        .pipe(
+            map((settlement) => {
+                if (settlement === null) return undefined;
 
-    protected readonly settlementInfo = this.settlementService.getSettlementInfo(this.userService.userId).pipe(
-        map((i) => {
-            if (i === null) return undefined;
-            this.userService
-                .getPlayer$(i.leader.user_id)
-                .pipe(
-                    tap((u) => {
-                        this.leader = u.user_game_name;
-                        this.cdr.detectChanges();
-                    })
-                )
-                .subscribe();
-
-            i.members.forEach((m) => {
                 this.userService
-                    .getPlayer$(m.user_id)
+                    .getPlayer$(settlement.leader.user_id)
                     .pipe(
-                        tap((u) => {
-                            this.users.push(u.user_game_name);
+                        tap((user) => {
+                            this.leader = user;
                             this.cdr.detectChanges();
                         })
                     )
                     .subscribe();
-            });
 
-            return i;
-        }),
-        catchError(() => {
-            return of(undefined);
-        })
-    );
+                settlement.members.forEach((member) => {
+                    this.userService
+                        .getPlayer$(member.user_id)
+                        .pipe(
+                            tap((user) => {
+                                this.users.push(user);
+                                this.cdr.detectChanges();
+                            })
+                        )
+                        .subscribe();
+                });
 
-    protected users: string[] = [];
+                return settlement;
+            }),
+            catchError(() => {
+                return of(undefined);
+            })
+        );
 
-    protected leader!: string;
+    /**
+     * Список членов поселения.
+     */
+    protected users: IPlayer[] = [];
 
+    /**
+     * Имя лидера поселения.
+     */
+    protected leader!: IPlayer;
+
+    /**
+     * Открывает диалоговое окно создания поселения.
+     */
     protected createSettlement(): void {
-        this.dialogs.open(new PolymorpheusComponent(CreateSettlementFormComponent)).subscribe();
+        this.dialogs
+            .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: SettlementsTypes.camp } })
+            .subscribe();
     }
 
-    protected getSettlementTypeByKey(key: string | undefined) {
-        switch (key) {
-            case 'CAMP':
-            default:
-                return 'Лагерь';
-        }
+    /**
+     * Возвращает наименования типа селения по его ключу.
+     *
+     * @param key Ключ-типа селения.
+     */
+    protected getSettlementType(key: string | undefined): string {
+        return getSettlementTypeByKey(key);
     }
 
+    /**
+     * Открывает диалоговое окно приглашения пользователя.
+     *
+     * @param info Информация об селении.
+     */
     protected invitePlayer(info: ISettlement): void {
         this.dialogs
             .open(new PolymorpheusComponent(PlayerInviteComponent), { data: { settlementId: info.id } })
             .subscribe();
     }
 
-    private settlementCache = new Map<string, Observable<string>>();
+    /**
+     * Временная память данных о поселениях.
+     */
+    private settlementCache: Map<string, Observable<string>> = new Map<string, Observable<string>>();
 
-    protected getSettlementName(id: string): Observable<string> {
+    /**
+     * Возвращает имя селения.
+     *
+     * @param id Идентификатор селения.
+     */
+    protected getSettlementName$(id: string): Observable<string> {
         if (!this.settlementCache.has(id)) {
             this.settlementCache.set(
                 id,
@@ -113,17 +157,46 @@ export class SettlementComponent {
         return this.settlementCache.get(id)!;
     }
 
-    protected inviteAccept(id: string) {
+    /**
+     * Принимает приглашение в селение.
+     *
+     * @param id Идентификатор приглашения.
+     */
+    protected inviteAccept(id: string): void {
         this.settlementService.inviteAccept(id).subscribe();
     }
 
+    /**
+     * Открывает диалоговое окно повышения уровня поселения.
+     *
+     * @param currentType Текущий тип поселения.
+     */
     protected levelUp(currentType: string): void {
-        const type = currentType === 'CAMP' ? SettlementsTypes.camp : SettlementsTypes.camp;
-
+        const type = this.getSettlementsTypeEnumByKey(currentType);
+        console.log(type);
         this.dialogs
             .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: type } })
             .subscribe();
     }
 
-    protected getPlayerName(userId: string) {}
+    /**
+     * Возвращает именнованый тип поселения.
+     *
+     * @param key Ключ-типа селения.
+     */
+    protected getSettlementsTypeEnumByKey(key: string): SettlementsTypes {
+        switch (key) {
+            case 'CAMP':
+            default:
+                return SettlementsTypes.camp;
+            case 'VILLAGE':
+                return SettlementsTypes.village;
+            case 'TOWNSHIP':
+                return SettlementsTypes.township;
+            case 'CITY':
+                return SettlementsTypes.city;
+            case 'PROVINCE':
+                return SettlementsTypes.region;
+        }
+    }
 }

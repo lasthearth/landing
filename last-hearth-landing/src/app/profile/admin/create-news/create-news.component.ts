@@ -17,7 +17,7 @@ import { TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe, TuiFile, TuiFilesComponent, TuiFiles } from '@taiga-ui/kit';
 import { finalize, interval, map, Observable, of, startWith, Subject, switchMap, tap, timer } from 'rxjs';
 import { NewsCardComponent } from '@app/news/news-card/news-card.component';
-import { LHInputComponent } from '@app/components/l-input/lh-input.component';
+import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 
 /**
  * Компонент создания новостей админом

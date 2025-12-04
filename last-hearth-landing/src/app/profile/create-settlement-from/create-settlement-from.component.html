@@ -1,92 +1,20 @@
 <div class="flex flex-col gap-6 w-full">
     <p class="text-2xl/7.5 text-lh-primary">Создавайте и процветайте...</p>
-    <form [formGroup]="form" class="flex flex-col gap-6 w-full" (ngSubmit)="onSubmit.next()">
-        <div class="flex flex-col gap-1">
-            <p class="text-xl">
-                Какое будет название?
-                <span class="text-red-700">*</span>
-            </p>
-            <lh-input placeholder="Введите название..." formControlName="name" />
-            <p class="text-sm pl-1">
-                Это будет официальное название вашего образования. Оно должно быть логичным и не содержать нецензурной
-                лексики.
-            </p>
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <p class="text-xl">
-                Координаты расположения
-                <span class="text-red-700">*</span>
-            </p>
-            <lh-input placeholder="Введите x..." type="inputNumber" formControlName="x" />
-            <lh-input placeholder="Введите z..." type="inputNumber" formControlName="z" />
-            <p class="text-sm pl-1">
-                Игровые координаты где располагается образование в виде: х: значение, z: значение.
-            </p>
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <p class="text-xl">
-                Выберите ваш дипломатический статус
-                <span class="text-red-700">*</span>
-            </p>
-            <lh-input formControlName="diplomacy" type="select" [items]="diplomacy" placeholder="Выберите тип..." />
-            <div class="flex flex-col pl-1">
-                <p class="text-sm">Дипломатический статус должен строго исполняться образованием.</p>
-            </div>
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <p class="text-xl">
-                Описание или лор образования
-                <span class="text-red-700">*</span>
-            </p>
-            <lh-input placeholder="Введите историю..." type="textarea" formControlName="description" />
-            <p class="text-sm pl-1">
-                Опишите историю или то, чем является ваше образование. Это поможет новым игрокам вступить именно к вам.
-            </p>
-        </div>
-
-        <div *ngFor="let key of fileFields">
-            <p class="text-xl">
-                {{ getLabelForKey(key) }}
-                <span class="text-red-700">*</span>
-            </p>
-
-            <label *ngIf="!form.controls[key].value" tuiInputFiles>
-                <ng-template tuiInputFilesContent>
-                    <span class="text-gray-600">Добавить изображение...</span>
-                </ng-template>
-                <input accept="image/*" tuiInputFiles [formControl]="form.controls[key]" class="border-lh-primary!" />
-            </label>
-
-            <tui-files class="tui-space_top-1">
-                <tui-file
-                    *ngIf="form.controls[key].value | tuiFileRejected: { accept: 'image/*' } | async as file"
-                    state="error"
-                    [file]="file"
-                    (remove)="removeFile(key)"
-                />
-                <tui-file *ngIf="fileStatus.loaded[key] | async as file" [file]="file" (remove)="removeFile(key)" />
-                <tui-file
-                    *ngIf="fileStatus.failed[key] | async as file"
-                    state="error"
-                    [file]="file"
-                    (remove)="removeFile(key)"
-                />
-                <tui-file
-                    *ngIf="fileStatus.loading[key] | async as file"
-                    state="loading"
-                    [file]="file"
-                    (remove)="removeFile(key)"
-                />
-            </tui-files>
-        </div>
-        <button
-            type="submit"
-            class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-2 disabled:text-gray-300 disabled:bg-lh-primary"
-        >
-            Основать
-        </button>
-    </form>
+    @switch (context.data.level) {
+        @case (settlementsTypes.camp) {
+            <app-village-form (submitEvent)="context.$implicit.complete()" />
+        }
+        @case (settlementsTypes.village) {
+            <app-township-form (submitEvent)="context.$implicit.complete()" />
+        }
+        @case (settlementsTypes.township) {
+            <app-city-form (submitEvent)="context.$implicit.complete()" />
+        }
+        @case (settlementsTypes.city) {
+            <app-region-form (submitEvent)="context.$implicit.complete()" />
+        }
+        @default {
+            <app-camp-form (submitEvent)="context.$implicit.complete()" />
+        }
+    }
 </div>

@@ -1,16 +1,13 @@
 import { ChangeDetectionStrategy, inject, input, InputSignal, TemplateRef, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import {
-    PolymorpheusComponent,
-    PolymorpheusContent,
-    PolymorpheusOutlet,
-} from '@taiga-ui/polymorpheus';
+import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { IRequestSettlement } from '@app/settlements/interfaces/i-request-settlement';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 import { SettlementService } from '@services/settlement.service';
+import { getSettlementTypeByKey } from '@app/functions/get-settlement-type-by-key.function';
 
 /**
  * Компонент отображения запроса на верификацию селения.
@@ -76,7 +73,10 @@ export class SettlementVerificationRequestComponent {
      */
     protected reject(): void {
         this.dialogService
-            .open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: { userId: this.data().id, type: 'settlement' }, })
+            .open(new PolymorpheusComponent(ConfirmRejectComponent), {
+                size: 'l',
+                data: { userId: this.data().id, type: 'settlement' },
+            })
             .subscribe();
     }
 
@@ -98,6 +98,6 @@ export class SettlementVerificationRequestComponent {
      * @param key Ключ.
      */
     protected getSettlementType(key: string): string {
-        return this.settlementService.getSettlementTypeByKey(key);
+        return getSettlementTypeByKey(key);
     }
 }

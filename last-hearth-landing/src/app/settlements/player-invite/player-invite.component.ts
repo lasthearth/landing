@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT, PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '../../services/settlement.service';
@@ -6,14 +6,15 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { TuiAvatar } from '@taiga-ui/kit';
-import { LHInputComponent } from '@app/components/l-input/lh-input.component';
+import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 
 @Component({
     standalone: true,
     selector: 'app-player-invite',
     imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, NgIf, TuiAvatar],
     templateUrl: './player-invite.component.html',
-    styleUrls: ['./player-invite.component.css'],
+    styleUrl: './player-invite.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerInviteComponent {
     protected playerNickControl = new FormControl();
