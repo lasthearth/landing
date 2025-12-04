@@ -20,7 +20,7 @@ export class RequestStatusService {
     public handleError(errorMessage: string = 'Произошла непредвиденная ошибка.') {
         return catchError((error: HttpErrorResponse) => {
             this.alertService.open('', { label: errorMessage, appearance: 'negative' }).subscribe();
-            this.alertService.open('', { label: `Код ошибки:${error.message}`, appearance: 'negative' }).subscribe();
+            this.alertService.open('', { label: `Код ошибки:${error.error.code}`, appearance: 'negative' }).subscribe();
             return throwError(() => error);
         });
     }

@@ -23,9 +23,7 @@
     >
         <tui-icon icon="@tui.castle" />
         @if (invitations?.length) {
-            <tui-pulse>
-                <div tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110"></div>
-            </tui-pulse>
+            <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
         }
     </button>
     @let isAuth = userService.authState$ | async;

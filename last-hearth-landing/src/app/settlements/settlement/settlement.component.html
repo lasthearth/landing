@@ -21,6 +21,7 @@
                             Вступить
                         </button>
                         <button
+                            (click)="rejectAccept(item.id)"
                             class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
                         >
                             Отклонить
@@ -51,7 +52,7 @@
                                 <div class="flex gap-3 items-center">
                                     <p class="text-xl font-semibold">Тип поселения:</p>
                                     <span
-                                        class="bg-lh-accent-3 uppercase font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
+                                        class="bg-lh-leader uppercase font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
                                     >
                                         {{ getSettlementType(settlement.type) }}
                                     </span>
@@ -97,37 +98,56 @@
                         </div>
 
                         @for (item of users; track $index) {
-                            <div
-                                class="flex bg-lh-accent-3 text-neutral-100 font-bold text-xs md:text-base px-3 p-1.5 rounded-2xl"
-                            >
-                                @if (item?.isOnline === true) {
-                                    <tui-pulse class="self-center mr-2.5 online" />
-                                } @else {
-                                    <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
+                            <div class="flex gap-0.5 justify-center items-center">
+                                <div
+                                    [class.rounded-l-2xl]="userId === settlement.leader.user_id"
+                                    [class.rounded-2xl]="userId !== settlement.leader.user_id"
+                                    class="flex bg-lh-accent-3 text-neutral-100 font-bold text-xs md:text-base px-3 p-1.5"
+                                >
+                                    @if (item?.isOnline === true) {
+                                        <tui-pulse class="self-center mr-2.5 online" />
+                                    } @else {
+                                        <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
+                                    }
+                                    <span>
+                                        {{ item?.user_game_name }}
+                                    </span>
+                                </div>
+                                @if (userId === settlement.leader.user_id) {
+                                    <div
+                                        (click)="settlementLeave(settlement.id, item.user_id)"
+                                        class="flex cursor-pointer hover:opacity-65 transition-all duration-300 bg-lh-accent-3 h-full justify-center items-center text-neutral-100 font-bold text-xs md:text-base px-3 p-1.5 rounded-r-2xl"
+                                    >
+                                        <tui-icon icon="@tui.user-round-x" class="!text-xs md:!text-base" />
+                                    </div>
                                 }
-                                <span>
-                                    {{ item?.user_game_name }}
-                                </span>
                             </div>
                         }
                     </div>
 
                     <div class="flex w-full justify-between">
-                        <button
-                            *ngIf="userId === settlement.leader.user_id"
-                            (click)="invitePlayer(settlement)"
-                            class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
-                        >
-                            Пригласить игроков
-                        </button>
+                        @if (userId === settlement.leader.user_id) {
+                            <button
+                                (click)="invitePlayer(settlement)"
+                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                            >
+                                Пригласить игроков
+                            </button>
 
-                        <button
-                            *ngIf="userId === settlement.leader.user_id"
-                            (click)="levelUp(settlement.type)"
-                            class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
-                        >
-                            Повысить уровень
-                        </button>
+                            <button
+                                (click)="levelUp(settlement.type)"
+                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                            >
+                                Повысить уровень
+                            </button>
+                        } @else {
+                            <button
+                                (click)="settlementLeave(settlement.id, userId)"
+                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                            >
+                                Покинуть селение
+                            </button>
+                        }
                     </div>
                 </div>
             }

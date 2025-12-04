@@ -153,7 +153,14 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
         let val: T;
 
         if (this.type() === 'inputNumber') {
-            const numericValue = input.value.replace(/[^\d]/g, '');
+            const hasMinus = input.value.startsWith('-');
+
+            let numericValue = input.value.replace(/\D/g, '');
+
+            if (hasMinus) {
+                numericValue = '-' + numericValue;
+            }
+
             val = numericValue as unknown as T;
             input.value = numericValue;
         } else {

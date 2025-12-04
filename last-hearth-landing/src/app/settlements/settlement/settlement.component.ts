@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { TuiDialogService, TuiLoader } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '../../services/settlement.service';
 import { AsyncPipe, NgIf } from '@angular/common';
@@ -17,7 +17,7 @@ import { IPlayer } from '@app/services/interface/i-player';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, NgIf, TuiLoader, TuiPulse],
+    imports: [AsyncPipe, NgIf, TuiLoader, TuiPulse, TuiIcon],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -110,7 +110,9 @@ export class SettlementComponent {
      */
     protected createSettlement(): void {
         this.dialogs
-            .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: SettlementsTypes.camp } })
+            .open(new PolymorpheusComponent(CreateSettlementFormComponent), {
+                data: { level: SettlementsTypes.initial },
+            })
             .subscribe();
     }
 
@@ -167,16 +169,28 @@ export class SettlementComponent {
     }
 
     /**
+     * Принимает приглашение в селение.
+     *
+     * @param id Идентификатор приглашения.
+     */
+    protected rejectAccept(id: string): void {
+        this.settlementService.rejectAccept(id).subscribe();
+    }
+
+    /**
      * Открывает диалоговое окно повышения уровня поселения.
      *
      * @param currentType Текущий тип поселения.
      */
     protected levelUp(currentType: string): void {
         const type = this.getSettlementsTypeEnumByKey(currentType);
-        console.log(type);
         this.dialogs
             .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: type } })
             .subscribe();
+    }
+
+    protected settlementLeave(settlementId: string, userId: string): void {
+        this.settlementService.settlementLeave$(settlementId, userId).subscribe();
     }
 
     /**

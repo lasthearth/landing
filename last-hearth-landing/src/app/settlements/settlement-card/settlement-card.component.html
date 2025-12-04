@@ -2,21 +2,21 @@
     [style.backgroundImage]="
         data().attachments[0].url ? 'url(' + data().attachments[0].url + ')' : 'url(/images/screenshots/screen_1.png)'
     "
-    class="transform transition duration-500 hover:scale-[101%] flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
+    class="transform transition overflow-clip duration-500 hover:scale-[101%] flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
 >
     <div class="p-8 z-20 flex flex-col gap-8 items-center justify-between w-full">
-        <div class="shrink-0 relative h-64 w-full shadow-2xl shadow-black/60 overflow-clip rounded-xl">
-            <img [src]="data().attachments[0].url" class="h-64 w-full object-cover rounded-xl" />
-        </div>
-        <div class="flex flex-col gap-6 w-full items-start">
-            <div class="flex flex-col gap-2 items-start">
+        <div class="w-full flex flex-col gap-4">
+            <div class="shrink-0 relative h-64 w-full shadow-2xl shadow-black/60 overflow-clip rounded-xl">
+                <img [src]="data().attachments[0].url" class="h-64 w-full object-cover rounded-xl" />
+            </div>
+            <div class="flex flex-col gap-2 items-start mt-6">
                 <h1 class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100">
                     {{ data().name }}
                 </h1>
 
                 <div class="flex gap-3">
                     <span
-                        class="bg-lh-accent-3 uppercase text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
+                        class="bg-lh-leader uppercase text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
                     >
                         {{ getSettlementTypeByKey(data().type) }}
                     </span>
@@ -32,9 +32,11 @@
             </div>
 
             <p
-                class="text-base md:text-xl font-semibold text-shadow-md text-neutral-200"
+                class="text-base md:text-xl line-clamp-[7] font-semibold text-shadow-md text-neutral-200"
                 [innerHTML]="data().description"
             ></p>
+        </div>
+        <div class="flex flex-col gap-6 w-full items-start">
             <hr class="h-px bg-neutral-200 w-full mt-2 rounded-full" />
             <div class="flex flex-wrap gap-3">
                 <div class="flex bg-lh-leader text-neutral-100 font-bold text-xs md:text-base px-3 p-1.5 rounded-2xl">

@@ -11,7 +11,11 @@
         @for (item of players?.users; track $index) {
             <div class="w-full justify-between flex">
                 <div class="flex gap-2 items-center w-full">
-                    <tui-avatar size="s" [src]="item.avatar.original" />
+                    @if (item?.avatar?.original) {
+                        <tui-avatar size="s" [src]="item.avatar.original" />
+                    } @else {
+                        <tui-icon icon="@tui.user" class="!text-[32px]" />
+                    }
                     <span>{{ item.user_game_name }}</span>
                 </div>
                 <button

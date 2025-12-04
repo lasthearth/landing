@@ -120,6 +120,22 @@ export class SettlementService {
         );
     }
 
+    public rejectAccept(invitationId: string) {
+        return this.http.post<{
+            users: any[];
+        }>(
+            `${this.baseUrl}/settlements/invitations/${invitationId}:reject`,
+            {},
+            { headers: this.serverInfoService.getHeaders() }
+        );
+    }
+
+    public settlementLeave$(settlementId: string, userId: string) {
+        return this.http.delete(`${this.baseUrl}/settlements/${settlementId}/members/${userId}`, {
+            headers: this.serverInfoService.getHeaders(),
+        });
+    }
+
     public getSettlementTypeByKey(key: string | undefined) {
         switch (key) {
             case 'CAMP':

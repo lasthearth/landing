@@ -1,11 +1,13 @@
 export enum SettlementsTypes {
-    camp,
+    initial = -1,
 
-    village,
+    camp = 0,
 
-    township,
+    village = 1,
 
-    city,
+    township = 2,
 
-    region,
+    city = 3,
+
+    region = 4,
 }
