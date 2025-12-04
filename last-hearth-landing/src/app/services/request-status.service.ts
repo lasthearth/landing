@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { TuiAlertService, TuiDialogContext } from '@taiga-ui/core';
 import { catchError, Observer, tap, throwError } from 'rxjs';
@@ -17,8 +18,9 @@ export class RequestStatusService {
      * @param errorMessage Сообщение ошибки.
      */
     public handleError(errorMessage: string = 'Произошла непредвиденная ошибка.') {
-        return catchError((error: any) => {
+        return catchError((error: HttpErrorResponse) => {
             this.alertService.open('', { label: errorMessage, appearance: 'negative' }).subscribe();
+            this.alertService.open('', { label: `Код ошибки:${error.message}`, appearance: 'negative' }).subscribe();
             return throwError(() => error);
         });
     }
