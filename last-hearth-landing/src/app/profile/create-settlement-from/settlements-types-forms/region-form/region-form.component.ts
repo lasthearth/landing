@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getBase64Files } from '@app/functions/get-base64-files.function';
@@ -11,26 +11,30 @@ import { TuiFiles } from '@taiga-ui/kit';
 import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 
+/**
+ * Форма провинции
+ */
 @Component({
     selector: 'app-region-form',
     templateUrl: './region-form.component.html',
     imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegionFormComponent {
     /**
      * Событие, которое будет эмитироваться после успешной отправки формы.
      */
-    protected submitEvent: OutputEmitterRef<void> = output<void>();
+    protected readonly submitEvent: OutputEmitterRef<void> = output<void>();
 
     /**
      * Массив всех ключей файлов, используемых в форме.
      */
-    protected fileFields = [...fileFieldsRegion];
+    protected readonly fileFields = [...fileFieldsRegion];
 
     /**
      * Варианты дипломатического поведения.
      */
-    diplomacy = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
 
     /**
      * Основная форма создания.
@@ -46,15 +50,11 @@ export class RegionFormComponent {
         monument: new FormControl<File | null>(null, Validators.required),
         playersDocuments: new FormControl<File | null>(null, Validators.required),
         loreBooks: new FormControl<File | null>(null, Validators.required),
-
         yardage: new FormControl<File | null>(null, Validators.required),
         bigYardage: new FormControl<File | null>(null, Validators.required),
-
         pit: new FormControl<File | null>(null, Validators.required),
-
         localRoads: new FormControl<File | null>(null, Validators.required),
         globalRoads: new FormControl<File | null>(null, Validators.required),
-
         warehouse: new FormControl<File | null>(null, Validators.required),
         barn: new FormControl<File | null>(null, Validators.required),
         seedbeds: new FormControl<File | null>(null, Validators.required),
@@ -90,7 +90,11 @@ export class RegionFormComponent {
      * Статусы файлов (например, загружен/не загружен)
      * Используется для UI, чтобы отображать состояние загрузки каждого файла.
      */
-    protected readonly fileStatus = getFileStatuses(this.fileFields, this.form);
+    protected readonly fileStatus: {
+        loading: Record<string, Subject<File | null>>;
+        failed: Record<string, Subject<File | null>>;
+        loaded: Record<string, Observable<File | null>>;
+    } = getFileStatuses(this.fileFields, this.form);
 
     /**
      * Ссылка уничтожения на компонент.
@@ -100,10 +104,19 @@ export class RegionFormComponent {
     /**
      * Сервис поселенний.
      */
-    private readonly settlementService = inject(SettlementService);
+    private readonly settlementService: SettlementService = inject(SettlementService);
 
+    /**
+     * Триггер отправки формы — запускает обработку данных и загрузку файлов
+     */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
+    // Подписка на событие отправки формы:
+    // 1. Берёт данные формы
+    // 2. Конвертирует файлы в base64
+    // 3. Формирует объект запроса
+    // 4. Отправляет его на сервер
+    // 5. По завершении вызывает submitEvent.emit()
     public constructor() {
         this.onSubmit
             .pipe(
@@ -122,7 +135,7 @@ export class RegionFormComponent {
                             }));
 
                             const request: ICreateSettlement = {
-                                type: 5,
+                                type: 'CAMP',
                                 name: values.name ?? '',
                                 description: values.description ?? '',
                                 diplomacy: values.diplomacy ?? '',
@@ -163,6 +176,7 @@ export class RegionFormComponent {
      */
     protected getLabelForKey(key: FileKeyRegion): string {
         return {
+            preview: 'Заглавное изображение поселения',
             map: 'Вид с карты',
             monument: 'Монумент поселения',
             playersDocuments: 'Документы игроков',
@@ -201,7 +215,6 @@ export class RegionFormComponent {
             importantBuilding: 'Важное здание региона',
             greateBuilding: 'Великое здание',
             steelBuilding: 'Сталелитейное здание',
-            preview: 'Заглавное изображение региона',
         }[key];
     }
 }

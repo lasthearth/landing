@@ -1,4 +1,13 @@
+/**
+ * Тип, представляющий любой ключ из массива `fileFieldsCity`.
+ * Используется для обращения к конкретным файлам города.
+ */
+export type FileKeyCity = (typeof fileFieldsCity)[number];
+/**
+ * Список ключей файлов, связанных с городом.
+ */
 export const fileFieldsCity = [
+    'preview',
     'map',
     'monument',
     'playersDocuments',
@@ -24,7 +33,4 @@ export const fileFieldsCity = [
     'religionOrCultureOrEconomicHouse',
     'marketPlace1',
     'marketPlace2',
-    'preview',
 ] as const;
-
-export type FileKeyCity = (typeof fileFieldsCity)[number];

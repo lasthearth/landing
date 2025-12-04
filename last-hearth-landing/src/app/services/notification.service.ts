@@ -9,17 +9,32 @@ import { IVerifyRequest } from './interface/i-verify-request';
     providedIn: 'root',
 })
 export class NotificationService {
+    /**
+     * Сервисные зависимости
+     */
     private readonly userService = inject(UserService);
-
-    public updateAllNotification$ = new Subject<void>();
-
     private readonly serverInformationService = inject(ServerInformationService);
 
+    /**
+     * Триггер для обновления данных (приглашений и запросов на верификацию).
+     * Каждый next() по этому Subject инициирует повторную загрузку информации.
+     */
+    public updateAllNotification$ = new Subject<void>();
+
+    /**
+     * Поток приглашений поселений для текущего пользователя.
+     * При первом подписании сразу делает запрос (startWith(null)),
+     * затем обновляется каждый раз при вызове updateAllNotification$.
+     */
     public readonly invitations$: Observable<ISettlementInvitation[]> = this.updateAllNotification$.pipe(
         startWith(null),
         switchMap(() => this.userService.getInvitations$())
     );
 
+    /**
+     * Поток запросов на верификацию пользователей.
+     * Аналогично invitations$, загружается при подписке и обновляется по триггеру.
+     */
     public readonly userVerifications$: Observable<IVerifyRequest[]> = this.updateAllNotification$.pipe(
         startWith(null),
         switchMap(() => this.serverInformationService.getVerifyRequests())

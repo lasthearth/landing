@@ -173,7 +173,7 @@ export class SettlementComponent {
      */
     protected levelUp(currentType: string): void {
         const type = this.getSettlementsTypeEnumByKey(currentType);
-
+        console.log(type);
         this.dialogs
             .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: type } })
             .subscribe();

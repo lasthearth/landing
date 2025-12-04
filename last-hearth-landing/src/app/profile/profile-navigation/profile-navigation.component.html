@@ -22,11 +22,11 @@
         class="relative nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 rounded-lg p-2.5 size-11!"
     >
         <tui-icon icon="@tui.castle" />
-        <tui-pulse
-            *ngIf="invitations?.length"
-            tuiHintAppearance="floating"
-            class="!absolute !top-0.5 !right-0.5 !scale-110"
-        />
+        @if (invitations?.length) {
+            <tui-pulse>
+                <div tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110"></div>
+            </tui-pulse>
+        }
     </button>
     @let isAuth = userService.authState$ | async;
     <button

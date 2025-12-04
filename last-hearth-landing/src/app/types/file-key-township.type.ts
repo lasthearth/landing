@@ -1,4 +1,13 @@
+/**
+ * Тип, представляющий любой ключ из массива `fileFieldsTownship`.
+ * Используется для обращения к конкретным файлам посёлка/тауншипа.
+ */
+export type FileKeyTownship = (typeof fileFieldsTownship)[number];
+/**
+ * Список ключей файлов, связанных с поселком.
+ */
 export const fileFieldsTownship = [
+    'preview',
     'map',
     'monument',
     'playersDocuments',
@@ -15,7 +24,4 @@ export const fileFieldsTownship = [
     'doubleFloorHouse1',
     'workshop',
     'blacksmithShop',
-    'preview',
 ] as const;
-
-export type FileKeyTownship = (typeof fileFieldsTownship)[number];

@@ -1,4 +1,11 @@
+/**
+ * Тип, представляющий любой ключ из массива `fileFields`.
+ * Используется для обращения к конкретным файлам деревни.
+ */
 export type FileKeyVillage = (typeof fileFields)[number];
+/**
+ * Список ключей файлов, связанных с деревней.
+ */
 export const fileFields = [
     'preview',
     'map',

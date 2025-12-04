@@ -1,5 +1,5 @@
 import { NgFor, AsyncPipe, NgIf } from '@angular/common';
-import { Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
@@ -7,30 +7,34 @@ import { getBase64Files } from '@app/functions/get-base64-files.function';
 import { getFileStatuses } from '@app/functions/get-file-statuses.function';
 import { SettlementService } from '@app/services/settlement.service';
 import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
-import { fileFieldsCity, FileKeyCity } from '@app/types/file-key-city.type';
+import { fileFieldsCity, FileKeyCity } from '@app/types/file-key-city.type'; //Получения типов для формы
 import { TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
 
+/**
+ * Форма города
+ */
 @Component({
     selector: 'app-city-form',
     templateUrl: './city-form.component.html',
     imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CityFormComponent {
     /**
      * Событие, которое будет эмитироваться после успешной отправки формы.
      */
-    protected submitEvent: OutputEmitterRef<void> = output<void>();
+    protected readonly submitEvent: OutputEmitterRef<void> = output<void>();
 
     /**
      * Массив всех ключей файлов, используемых в форме.
      */
-    protected fileFields = [...fileFieldsCity];
+    protected readonly fileFields = [...fileFieldsCity];
 
     /**
      * Варианты дипломатического поведения.
      */
-    diplomacy = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
 
     /**
      * Основная форма создания.
@@ -73,7 +77,11 @@ export class CityFormComponent {
      * Статусы файлов (например, загружен/не загружен)
      * Используется для UI, чтобы отображать состояние загрузки каждого файла.
      */
-    protected readonly fileStatus = getFileStatuses(this.fileFields, this.form);
+    protected readonly fileStatus: {
+        loading: Record<string, Subject<File | null>>;
+        failed: Record<string, Subject<File | null>>;
+        loaded: Record<string, Observable<File | null>>;
+    } = getFileStatuses(this.fileFields, this.form);
 
     /**
      * Ссылка уничтожения на компонент.
@@ -83,10 +91,19 @@ export class CityFormComponent {
     /**
      * Сервис поселенний.
      */
-    private readonly settlementService = inject(SettlementService);
+    private readonly settlementService: SettlementService = inject(SettlementService);
 
+    /**
+     * Триггер отправки формы — запускает обработку данных и загрузку файлов
+     */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
+    // Подписка на событие отправки формы:
+    // 1. Берёт данные формы
+    // 2. Конвертирует файлы в base64
+    // 3. Формирует объект запроса
+    // 4. Отправляет его на сервер
+    // 5. По завершении вызывает submitEvent.emit()
     public constructor() {
         this.onSubmit
             .pipe(
@@ -105,7 +122,7 @@ export class CityFormComponent {
                             }));
 
                             const request: ICreateSettlement = {
-                                type: 4,
+                                type: 'CAMP',
                                 name: values.name ?? '',
                                 description: values.description ?? '',
                                 diplomacy: values.diplomacy ?? '',
@@ -145,6 +162,7 @@ export class CityFormComponent {
      */
     protected getLabelForKey(key: FileKeyCity): string {
         return {
+            preview: 'Заглавное изображение города',
             map: 'Вид с карты',
             monument: 'Монумент поселения',
             playersDocuments: 'Документы игроков',
@@ -170,7 +188,6 @@ export class CityFormComponent {
             religionOrCultureOrEconomicHouse: 'Здание религии/культуры/экономики',
             marketPlace1: 'Торговая площадь №1',
             marketPlace2: 'Торговая площадь №2',
-            preview: 'Заглавное изображение города',
         }[key];
     }
 }

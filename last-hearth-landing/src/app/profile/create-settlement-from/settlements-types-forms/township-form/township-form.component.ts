@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { getBase64Files } from '@app/functions/get-base64-files.function';
@@ -12,37 +12,41 @@ import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 
+/**
+ * Форма поселка
+ */
 @Component({
     selector: 'app-township-form',
     templateUrl: './township-form.component.html',
     imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TownshipFormComponent {
     /**
      * Событие, которое будет эмитироваться после успешной отправки формы.
      */
-    protected submitEvent: OutputEmitterRef<void> = output<void>();
+    protected readonly submitEvent: OutputEmitterRef<void> = output<void>();
 
     /**
      * Массив всех ключей файлов, используемых в форме.
      */
-    protected fileFields = [...fileFieldsTownship];
+    protected readonly fileFields = [...fileFieldsTownship];
 
     /**
      * Варианты дипломатического поведения.
      */
-    diplomacy = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
 
     /**
      * Основная форма создания.
      */
     protected readonly form = new FormGroup({
+        preview: new FormControl<File | null>(null, Validators.required),
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         x: new FormControl<number | null>(null, [Validators.required]),
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, Validators.required),
         map: new FormControl<File | null>(null, Validators.required),
         monument: new FormControl<File | null>(null, Validators.required),
         playersDocuments: new FormControl<File | null>(null, Validators.required),
@@ -65,7 +69,11 @@ export class TownshipFormComponent {
      * Статусы файлов (например, загружен/не загружен)
      * Используется для UI, чтобы отображать состояние загрузки каждого файла.
      */
-    protected readonly fileStatus = getFileStatuses(this.fileFields, this.form);
+    protected readonly fileStatus: {
+        loading: Record<string, Subject<File | null>>;
+        failed: Record<string, Subject<File | null>>;
+        loaded: Record<string, Observable<File | null>>;
+    } = getFileStatuses(this.fileFields, this.form);
 
     /**
      * Ссылка уничтожения на компонент.
@@ -75,10 +83,19 @@ export class TownshipFormComponent {
     /**
      * Сервис поселенний.
      */
-    private readonly settlementService = inject(SettlementService);
+    private readonly settlementService: SettlementService = inject(SettlementService);
 
+    /**
+     * Триггер отправки формы — запускает обработку данных и загрузку файлов
+     */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
+    // Подписка на событие отправки формы:
+    // 1. Берёт данные формы
+    // 2. Конвертирует файлы в base64
+    // 3. Формирует объект запроса
+    // 4. Отправляет его на сервер
+    // 5. По завершении вызывает submitEvent.emit()
     public constructor() {
         this.onSubmit
             .pipe(
@@ -97,7 +114,7 @@ export class TownshipFormComponent {
                             }));
 
                             const request: ICreateSettlement = {
-                                type: 3,
+                                type: 'CAMP',
                                 name: values.name ?? '',
                                 description: values.description ?? '',
                                 diplomacy: values.diplomacy ?? '',
@@ -139,6 +156,7 @@ export class TownshipFormComponent {
      */
     protected getLabelForKey(key: FileKeyTownship): string {
         return {
+            preview: 'Заглавное изображение поселения',
             map: 'Вид с карты',
             monument: 'Монумент поселения',
             playersDocuments: 'Документы игроков',
@@ -155,7 +173,6 @@ export class TownshipFormComponent {
             doubleFloorHouse1: '2-этажный дом №1',
             workshop: 'Мастерская',
             blacksmithShop: 'Кузница',
-            preview: 'Заглавное изображение поселения',
         }[key];
     }
 }

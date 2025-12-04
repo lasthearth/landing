@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { convertTuiFileLikeToBase64 } from './convert-file-to-base64.function';
 
 /**
@@ -10,7 +10,7 @@ import { convertTuiFileLikeToBase64 } from './convert-file-to-base64.function';
  * @param form - объект FormGroup с файлами
  * @returns Observable<string | null>[] - массив Observable для каждого файла
  */
-export function getBase64Files(fileFields: string[], form: FormGroup) {
+export function getBase64Files(fileFields: string[], form: FormGroup): Observable<string | null>[] {
     const values = form.value;
 
     return fileFields.map((key) => {

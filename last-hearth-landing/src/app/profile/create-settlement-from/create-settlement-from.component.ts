@@ -9,9 +9,6 @@ import { VillageFormComponent } from './settlements-types-forms/village-form/vil
 import { RegionFormComponent } from './settlements-types-forms/region-form/region-form.component';
 import { CityFormComponent } from './settlements-types-forms/city-form/city-form.component';
 import { TownshipFormComponent } from './settlements-types-forms/township-form/township-form.component';
-/**
- * Ключ файла-изображения.
- */
 
 @Component({
     standalone: true,
@@ -36,5 +33,9 @@ export class CreateSettlementFormComponent {
      */
     protected readonly context: TuiDialogContext<void, { level: SettlementsTypes }> =
         inject<TuiDialogContext<void, { level: SettlementsTypes }>>(POLYMORPHEUS_CONTEXT);
+
+    /**
+     * Перечесляемые типы селений
+     */
     protected readonly settlementsTypes: typeof SettlementsTypes = SettlementsTypes;
 }

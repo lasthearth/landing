@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { SettlementService } from '../services/settlement.service';
 import { AsyncPipe } from '@angular/common';
 import { catchError, map, of } from 'rxjs';
@@ -9,7 +9,8 @@ import { TuiLoader } from '@taiga-ui/core';
     selector: 'app-settlements',
     imports: [AsyncPipe, SettlementCardComponent, TuiLoader],
     templateUrl: './settlements.component.html',
-    styleUrls: ['./settlements.component.css'],
+    styleUrl: './settlements.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementsComponent {
     protected readonly settlements$ = inject(SettlementService)

@@ -1,5 +1,5 @@
 import { NgFor, AsyncPipe, NgIf } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
@@ -12,26 +12,30 @@ import { FileKeyVillage } from '@app/types/file-key-village.type';
 import { TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
 
+/**
+ * Форма деревни
+ */
 @Component({
     selector: 'app-village-form',
     templateUrl: './village-form.component.html',
     imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VillageFormComponent {
     /**
      * Событие, которое будет эмитироваться после успешной отправки формы.
      */
-    protected submitEvent: OutputEmitterRef<void> = output<void>();
+    protected readonly submitEvent: OutputEmitterRef<void> = output<void>();
 
     /**
      * Массив всех ключей файлов, используемых в форме.
      */
-    protected fileFields = [...fileFields];
+    protected readonly fileFields = [...fileFields];
 
     /**
      * Варианты дипломатического поведения.
      */
-    diplomacy = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
 
     /**
      * Основная форма создания.
@@ -65,7 +69,11 @@ export class VillageFormComponent {
      * Статусы файлов (например, загружен/не загружен)
      * Используется для UI, чтобы отображать состояние загрузки каждого файла.
      */
-    protected readonly fileStatus = getFileStatuses(this.fileFields, this.form);
+    protected readonly fileStatus: {
+        loading: Record<string, Subject<File | null>>;
+        failed: Record<string, Subject<File | null>>;
+        loaded: Record<string, Observable<File | null>>;
+    } = getFileStatuses(this.fileFields, this.form);
 
     /**
      * Ссылка уничтожения на компонент.
@@ -75,10 +83,16 @@ export class VillageFormComponent {
     /**
      * Сервис поселенний.
      */
-    private readonly settlementService = inject(SettlementService);
+    private readonly settlementService: SettlementService = inject(SettlementService);
 
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
+    // Подписка на событие отправки формы:
+    // 1. Берёт данные формы
+    // 2. Конвертирует файлы в base64
+    // 3. Формирует объект запроса
+    // 4. Отправляет его на сервер
+    // 5. По завершении вызывает submitEvent.emit()
     public constructor() {
         this.onSubmit
             .pipe(
@@ -97,7 +111,7 @@ export class VillageFormComponent {
                             }));
 
                             const request: ICreateSettlement = {
-                                type: 2,
+                                type: 'CAMP',
                                 name: values.name ?? '',
                                 description: values.description ?? '',
                                 diplomacy: values.diplomacy ?? '',
@@ -138,6 +152,7 @@ export class VillageFormComponent {
      */
     protected getLabelForKey(key: FileKeyVillage): string {
         return {
+            preview: 'Заглавное изображение поселения',
             map: 'Вид с карты',
             monument: 'Ваш монумент',
             playersDocuments: 'Документы игроков',
@@ -152,7 +167,6 @@ export class VillageFormComponent {
             house2: '1 этажный дом №2',
             house3: '1 этажный дом №3',
             house4: '1 этажный дом №4',
-            preview: 'Заглавное изображение вашего селения',
             beds: 'Кровати',
         }[key];
     }

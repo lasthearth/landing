@@ -1,13 +1,14 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, input, InputSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 
 @Component({
     standalone: true,
     selector: 'app-leader-card',
-    imports: [NgIf, TuiIcon],
+    imports: [TuiIcon],
     templateUrl: './leader-card.component.html',
-    styleUrls: ['./leader-card.component.css'],
+    styleUrl: './leader-card.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LeaderCardComponent {
     public isBigSize: InputSignal<boolean> = input<boolean>(false);

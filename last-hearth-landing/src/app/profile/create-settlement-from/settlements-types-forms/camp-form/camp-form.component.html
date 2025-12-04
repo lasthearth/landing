@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-1">
         <p class="text-xl">
             Какое будет название?
-            <span class="text-red-700">*</span>
+            <span class="text-lh-danger">*</span>
         </p>
         <lh-input placeholder="Введите название..." formControlName="name" />
         <p class="text-sm pl-1">
@@ -14,7 +14,7 @@
     <div class="flex flex-col gap-1">
         <p class="text-xl">
             Координаты расположения
-            <span class="text-red-700">*</span>
+            <span class="text-lh-danger">*</span>
         </p>
         <lh-input placeholder="Введите x..." type="inputNumber" formControlName="x" />
         <lh-input placeholder="Введите z..." type="inputNumber" formControlName="z" />
@@ -24,7 +24,7 @@
     <div class="flex flex-col gap-1">
         <p class="text-xl">
             Выберите ваш дипломатический статус
-            <span class="text-red-700">*</span>
+            <span class="text-lh-danger">*</span>
         </p>
         <lh-input formControlName="diplomacy" type="select" [items]="diplomacy" placeholder="Выберите тип..." />
         <div class="flex flex-col pl-1">
@@ -35,7 +35,7 @@
     <div class="flex flex-col gap-1">
         <p class="text-xl">
             Описание или лор образования
-            <span class="text-red-700">*</span>
+            <span class="text-lh-danger">*</span>
         </p>
         <lh-input placeholder="Введите историю..." type="textarea" formControlName="description" />
         <p class="text-sm pl-1">
@@ -46,7 +46,7 @@
     <div *ngFor="let key of fileFields">
         <p class="text-xl">
             {{ getLabelForKey(key) }}
-            <span class="text-red-700">*</span>
+            <span class="text-lh-danger">*</span>
         </p>
 
         <label *ngIf="!form.controls[key].value" tuiInputFiles>

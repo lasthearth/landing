@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { fileFieldsCamp, FileKeyCamp } from '@app/types/file-key-camp.type';
 import { Subject, switchMap, Observable, map, forkJoin, tap } from 'rxjs';
@@ -8,29 +8,33 @@ import { TuiFiles } from '@taiga-ui/kit';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
 import { SettlementService } from '@app/services/settlement.service';
-import { getFileStatuses } from '@app/functions/get-file-statuses.function';
-import { getBase64Files } from '@app/functions/get-base64-files.function';
+import { getFileStatuses } from '@app/functions/get-file-statuses.function'; // Функция для работы со статусом файлов
+import { getBase64Files } from '@app/functions/get-base64-files.function'; // Функция для перевода файла в Base64
 
+/**
+ * Форма лагеря
+ */
 @Component({
     selector: 'app-camp-form',
     imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
     templateUrl: './camp-form.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CampFormComponent {
     /**
      * Событие, которое будет эмитироваться после успешной отправки формы.
      */
-    protected submitEvent: OutputEmitterRef<void> = output<void>();
+    protected readonly submitEvent: OutputEmitterRef<void> = output<void>();
 
     /**
      * Массив всех ключей файлов, используемых в форме.
      */
-    protected fileFields = [...fileFieldsCamp];
+    protected readonly fileFields = [...fileFieldsCamp];
 
     /**
      * Варианты дипломатического поведения.
      */
-    diplomacy = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
 
     /**
      * Основная форма создания.
@@ -63,10 +67,19 @@ export class CampFormComponent {
     /**
      * Сервис поселенний.
      */
-    private readonly settlementService = inject(SettlementService);
+    private readonly settlementService: SettlementService = inject(SettlementService);
 
+    /**
+     * Триггер отправки формы — запускает обработку данных и загрузку файлов
+     */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
+    // Подписка на событие отправки формы:
+    // 1. Берёт данные формы
+    // 2. Конвертирует файлы в base64
+    // 3. Формирует объект запроса
+    // 4. Отправляет его на сервер
+    // 5. По завершении вызывает submitEvent.emit()
     public constructor() {
         this.onSubmit
             .pipe(
@@ -85,7 +98,7 @@ export class CampFormComponent {
                             }));
 
                             const request: ICreateSettlement = {
-                                type: 1,
+                                type: 'CAMP',
                                 name: values.name ?? '',
                                 description: values.description ?? '',
                                 diplomacy: values.diplomacy ?? '',
@@ -125,12 +138,12 @@ export class CampFormComponent {
      */
     protected getLabelForKey(key: FileKeyCamp): string {
         return {
+            preview: 'Заглавное изображение вашего селения',
             map: 'Вид с карты',
             monument: 'Ваш монумент',
             fireplace: 'Место костра',
             warehouse: 'Склад или складское помещение',
             beds: 'Кровати 3 шт.',
-            preview: 'Заглавное изображение вашего селения',
         }[key];
     }
 }

@@ -13,7 +13,14 @@ import { processFileUpload } from './process-file-upload.function';
  *  - failed: Record<string, Subject<File | null>> - эмитит, если загрузка файла не удалась
  *  - loaded: Record<string, Observable<File | null>> - эмитит успешный результат загрузки файла
  */
-export function getFileStatuses(fileFields: string[], form: FormGroup) {
+export function getFileStatuses(
+    fileFields: string[],
+    form: FormGroup
+): {
+    loading: Record<string, Subject<File | null>>;
+    failed: Record<string, Subject<File | null>>;
+    loaded: Record<string, Observable<File | null>>;
+} {
     return fileFields.reduce(
         (acc, key) => {
             acc.loading[key] = new Subject<File | null>();

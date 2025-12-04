@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, inject, input, InputSignal, OnInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    input,
+    InputSignal,
+    OnInit,
+} from '@angular/core';
 import { ISettlement } from '../interfaces/i-settlement';
 import { SettlementService } from '../../services/settlement.service';
 import { TuiDialogService } from '@taiga-ui/core';
@@ -14,6 +22,7 @@ import { getSettlementTypeByKey } from '@app/functions/get-settlement-type-by-ke
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
     imports: [CommonModule, TuiPulse],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent implements OnInit {
     /**
@@ -38,16 +47,22 @@ export class SettlementCardComponent implements OnInit {
      */
     protected readonly settlementService: SettlementService = inject(SettlementService);
 
+    /**
+     * Лидер поселения
+     */
     protected leader!: IPlayer;
 
     cdr = inject(ChangeDetectorRef);
 
+    /**
+     * Список игроков
+     */
     protected users: IPlayer[] = [];
 
     /**
-     *
+     * @inheritdoc
      */
-    ngOnInit() {
+    public ngOnInit(): void {
         this.userService
             .getPlayer$(this.data().leader.user_id)
             .pipe(
@@ -71,7 +86,16 @@ export class SettlementCardComponent implements OnInit {
         });
     }
 
-    protected getSettlementTypeByKey(key: string | undefined) {
+    /**
+     * Получает тип поселения по ключу.
+     *
+     * @param key - уникальный идентификатор поселения (может быть undefined)
+     * @returns Тип поселения в виде строки:
+     * 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция'
+     */
+    protected getSettlementTypeByKey(
+        key: string | undefined
+    ): 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция' {
         return getSettlementTypeByKey(key);
     }
 }

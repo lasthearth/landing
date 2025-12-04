@@ -59,9 +59,9 @@
                                 <div class="flex gap-3 items-center">
                                     <p class="text-xl font-semibold">Дипломатический статус:</p>
                                     <span
-                                        [class.!bg-green-600]="settlement.diplomacy === 'Мирный'"
-                                        [class.!bg-neutral-600]="settlement.diplomacy === 'Нейтральный'"
-                                        [class.!bg-red-600]="settlement.diplomacy === 'Агрессивный'"
+                                        [class.!bg-lh-success]="settlement.diplomacy === 'Миролюбивый'"
+                                        [class.!bg-lh-offline]="settlement.diplomacy === 'Нейтральный'"
+                                        [class.!bg-lh-danger]="settlement.diplomacy === 'Агрессивный'"
                                         class="uppercase font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
                                     >
                                         {{ settlement.diplomacy }}

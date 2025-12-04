@@ -1,4 +1,13 @@
+/**
+ * Тип, представляющий любой ключ из массива `fileFieldsRegion`.
+ * Используется для обращения к конкретным файлам региона.
+ */
+export type FileKeyRegion = (typeof fileFieldsRegion)[number];
+/**
+ * Список ключей файлов, связанных с провинцией.
+ */
 export const fileFieldsRegion = [
+    'preview',
     'map',
     'monument',
     'playersDocuments',
@@ -37,7 +46,4 @@ export const fileFieldsRegion = [
     'importantBuilding',
     'greateBuilding',
     'steelBuilding',
-    'preview',
 ] as const;
-
-export type FileKeyRegion = (typeof fileFieldsRegion)[number];

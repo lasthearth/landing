@@ -1,5 +1,5 @@
 export interface ICreateSettlement {
-    type: number;
+    type?: string;
 
     name: string;
 
@@ -8,13 +8,13 @@ export interface ICreateSettlement {
     diplomacy: string;
 
     coordinates: {
-        x: number,
-        y: number
-    }
+        x: number;
+        y: number;
+    };
 
     attachments: {
-        data: string,
+        data: string;
 
-        description: string
-    }[]
+        description: string;
+    }[];
 }

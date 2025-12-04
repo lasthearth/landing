@@ -3,7 +3,9 @@
  *
  * @param key Ключ-типа селения.
  */
-export function getSettlementTypeByKey(key: string | undefined) {
+export function getSettlementTypeByKey(
+    key: string | undefined
+): 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция' {
     switch (key) {
         case 'CAMP':
             return 'Лагерь';
