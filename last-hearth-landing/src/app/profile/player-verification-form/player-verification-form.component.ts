@@ -17,7 +17,19 @@ import { IVerificationQuestion } from '@services/interface/i-verification-questi
 @Component({
     standalone: true,
     selector: 'app-player-verification-form',
-    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiTextareaModule, TuiInputModule, TuiFieldErrorPipe, AsyncPipe, TuiLabel, TuiTextfieldControllerModule, TuiTextarea, TuiTextfield],
+    imports: [
+        TuiError,
+        ReactiveFormsModule,
+        FormsModule,
+        TuiTextareaModule,
+        TuiInputModule,
+        TuiFieldErrorPipe,
+        AsyncPipe,
+        TuiLabel,
+        TuiTextfieldControllerModule,
+        TuiTextarea,
+        TuiTextfield,
+    ],
     templateUrl: './player-verification-form.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -41,8 +53,8 @@ export class PlayerVerificationFormComponent {
     });
 
     /**
-    * Сервис уведомлений.
-    */
+     * Сервис уведомлений.
+     */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
 
     /**
@@ -55,19 +67,21 @@ export class PlayerVerificationFormComponent {
      */
     private readonly userService = inject(UserService);
 
-    protected readonly questions$: Observable<IVerificationQuestion[]> = this.serverInfoService.getQuestions$().pipe(tap((questions) => {
-        this.form.controls.question1.setValue(questions[0].question);
-        this.form.controls.question2.setValue(questions[1].question);
-        this.form.controls.question3.setValue(questions[2].question);
-        this.form.controls.question4.setValue(questions[3].question);
-        this.form.controls.question5.setValue(questions[4].question);
-    }));
+    protected readonly questions$: Observable<IVerificationQuestion[]> = this.serverInfoService.getQuestions$().pipe(
+        tap((questions) => {
+            this.form.controls.question1.setValue(questions[0].question);
+            this.form.controls.question2.setValue(questions[1].question);
+            this.form.controls.question3.setValue(questions[2].question);
+            this.form.controls.question4.setValue(questions[3].question);
+            this.form.controls.question5.setValue(questions[4].question);
+        })
+    );
 
     private readonly context: TuiDialogContext = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
 
     /**
-         * Ссылка уничтожения на компонент.
-         */
+     * Ссылка уничтожения на компонент.
+     */
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
     /**
@@ -79,40 +93,52 @@ export class PlayerVerificationFormComponent {
      * Инициализирует экземпляр класса {@link PlayerVerificationFormComponent}.
      */
     public constructor() {
-        this.onSubmit.pipe(filter(() => this.form.valid), tap(() => {
-            const data = {
-                user_name: this.userService.userName,
-                user_game_name: this.form.controls.gameName.value?.trim(),
-                contacts: this.form.controls.contacts.value,
-                answers: [
-                    {
-                        question: this.form.controls.question1.value,
-                        answer: this.form.controls.answer1.value,
-                    },
-                    {
-                        question: this.form.controls.question2.value,
-                        answer: this.form.controls.answer2.value,
-                    },
-                    {
-                        question: this.form.controls.question3.value,
-                        answer: this.form.controls.answer3.value,
-                    },
-                    {
-                        question: this.form.controls.question4.value,
-                        answer: this.form.controls.answer4.value,
-                    },
-                    {
-                        question: this.form.controls.question5.value,
-                        answer: this.form.controls.answer5.value,
-                    }
-                ]
-            } as IVerifyData
+        this.onSubmit
+            .pipe(
+                filter(() => this.form.valid),
+                tap(() => {
+                    const data = {
+                        user_name: this.userService.userName,
+                        user_game_name: this.form.controls.gameName.value?.trim(),
+                        contacts: this.form.controls.contacts.value,
+                        answers: [
+                            {
+                                question: this.form.controls.question1.value,
+                                answer: this.form.controls.answer1.value,
+                            },
+                            {
+                                question: this.form.controls.question2.value,
+                                answer: this.form.controls.answer2.value,
+                            },
+                            {
+                                question: this.form.controls.question3.value,
+                                answer: this.form.controls.answer3.value,
+                            },
+                            {
+                                question: this.form.controls.question4.value,
+                                answer: this.form.controls.answer4.value,
+                            },
+                            {
+                                question: this.form.controls.question5.value,
+                                answer: this.form.controls.answer5.value,
+                            },
+                        ],
+                    } as IVerifyData;
 
-            this.serverInfoService.postVerifyUser(data).pipe(
-                this.requestStatusService.handleError(),
-                this.requestStatusService.handleSuccess('Анкета отправлена на модерацию!', this.context.$implicit),
+                    this.serverInfoService
+                        .postVerifyUser(data)
+                        .pipe(
+                            this.requestStatusService.handleError(),
+                            this.requestStatusService.handleSuccess(
+                                'Анкета отправлена на модерацию!',
+                                this.context.$implicit
+                            ),
+                            takeUntilDestroyed(this.destroyRef)
+                        )
+                        .subscribe();
+                }),
                 takeUntilDestroyed(this.destroyRef)
-            ).subscribe();
-        }), takeUntilDestroyed(this.destroyRef)).subscribe();
+            )
+            .subscribe();
     }
 }

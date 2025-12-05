@@ -65,6 +65,13 @@ export class ProfileComponent {
 
     @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
+    /**
+     *
+     */
+    constructor() {
+        this.userService.checkAuthTrigger$.next(true);
+    }
+
     protected getRoleName() {
         if (this.userService.roles.includes('admin')) {
             return 'Администратор';
