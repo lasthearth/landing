@@ -39,7 +39,8 @@
                             "@taiga-ui/core/styles/taiga-ui-fonts.less",
                             "@taiga-ui/addon-mobile/styles/taiga-ui-mobile.less",
                             "src/styles.css",
-                            "src/app/styles/variables.less"
+                            "src/app/styles/variables.less",
+                            "src/app/styles/appearances/icon.appearance.css"
                         ],
                         "scripts": []
                     },
