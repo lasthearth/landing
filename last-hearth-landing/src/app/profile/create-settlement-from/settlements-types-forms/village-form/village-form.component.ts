@@ -11,6 +11,7 @@ import { fileFields } from '@app/types/file-key-village.type';
 import { FileKeyVillage } from '@app/types/file-key-village.type';
 import { TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
+import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 
 /**
  * Форма деревни
@@ -18,7 +19,7 @@ import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
 @Component({
     selector: 'app-village-form',
     templateUrl: './village-form.component.html',
-    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
+    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles, LHHintComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VillageFormComponent {

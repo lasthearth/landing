@@ -10,13 +10,13 @@ import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settleme
 import { SettlementService } from '@app/services/settlement.service';
 import { getFileStatuses } from '@app/functions/get-file-statuses.function'; // Функция для работы со статусом файлов
 import { getBase64Files } from '@app/functions/get-base64-files.function'; // Функция для перевода файла в Base64
-
+import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 /**
  * Форма лагеря
  */
 @Component({
     selector: 'app-camp-form',
-    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
+    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles, LHHintComponent],
     templateUrl: './camp-form.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

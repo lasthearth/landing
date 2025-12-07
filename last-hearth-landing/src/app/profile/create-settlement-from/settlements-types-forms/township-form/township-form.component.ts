@@ -11,6 +11,7 @@ import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
 import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 
 /**
  * Форма поселка
@@ -18,7 +19,7 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 @Component({
     selector: 'app-township-form',
     templateUrl: './township-form.component.html',
-    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
+    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles, LHHintComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TownshipFormComponent {

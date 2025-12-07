@@ -10,6 +10,7 @@ import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settleme
 import { fileFieldsCity, FileKeyCity } from '@app/types/file-key-city.type'; //Получения типов для формы
 import { TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
+import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 
 /**
  * Форма города
@@ -17,7 +18,7 @@ import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
 @Component({
     selector: 'app-city-form',
     templateUrl: './city-form.component.html',
-    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles],
+    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles, LHHintComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CityFormComponent {

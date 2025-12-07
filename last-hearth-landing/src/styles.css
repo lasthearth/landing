@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-
+@import './app/styles/appearances/icon.appearance.css';
 :root {
     --lh-primary: #3f3c34;
     --lh-primary-2: #332c26;
@@ -25,6 +25,8 @@
     --lh-offline: #3b3c36;
 
     --lh-leader: #3d5381;
+
+    --lh-hint: #30303056;
 }
 
 @theme {
@@ -140,7 +142,7 @@ tui-tabs.content-tabs {
 
 tui-hint {
     background-color: var(--lh-primary-2) !important;
-    color: var(--lh-success-2) !important;
+    color: var(--color-white) !important;
     font-family: 'Advent Pro', serif !important;
     font-optical-sizing: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;

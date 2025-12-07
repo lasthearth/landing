@@ -1,0 +1,6 @@
+tui-icon[data-appearance='tui-icon-hint'] {
+    color: var(--lh-hint);
+    &:hover {
+        color: var(--lh-primary);
+    }
+}
