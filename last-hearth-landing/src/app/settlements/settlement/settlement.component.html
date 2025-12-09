@@ -43,12 +43,22 @@
                     </button>
                 </div>
             } @else {
-                <div class="w-full main-panel flex flex-col gap-6 !bg-lh-primary !rounded-2xl text-neutral-200 p-6">
-                    <div class="flex xl:flex-row flex-col gap-3 xl:gap-8 justify-between">
+                <div
+                    class="w-full overflow-clip main-panel flex flex-col gap-6 !bg-lh-primary !rounded-2xl text-neutral-200 p-6"
+                >
+                    <div class="flex xl:flex-row overflow-clip flex-col gap-3 xl:gap-8 justify-between">
                         <div class="flex flex-col gap-6">
                             <p class="text-4xl font-bold uppercase">{{ settlement.name }}</p>
-
                             <div class="flex flex-col gap-3">
+                                <div class="flex gap-3">
+                                    <p class="text-xl font-semibold">Статусы поселения:</p>
+                                    @for (tag of settlement.tags; track $index) {
+                                        <app-settlement-tag
+                                            [text]="getTag(tag.id)?.text || ''"
+                                            [type]="getTag(tag.id)?.type || 'east'"
+                                        />
+                                    }
+                                </div>
                                 <div class="flex gap-3 items-center">
                                     <p class="text-xl font-semibold">Тип поселения:</p>
                                     <span
@@ -68,9 +78,9 @@
                                         {{ settlement.diplomacy }}
                                     </span>
                                 </div>
-                                <div class="flex flex-col mt-3 items-start">
+                                <div class="flex flex-col mt-3 items-start w-full">
                                     <p class="text-xl font-semibold">О поселении:</p>
-                                    <p class="text-base">{{ settlement.description }}</p>
+                                    <p class="text-base break-all">{{ settlement.description }}</p>
                                 </div>
                             </div>
                         </div>

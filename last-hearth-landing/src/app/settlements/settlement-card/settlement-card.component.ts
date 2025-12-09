@@ -9,19 +9,22 @@ import {
 } from '@angular/core';
 import { ISettlement } from '../interfaces/i-settlement';
 import { SettlementService } from '../../services/settlement.service';
-import { TuiDialogService } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '@app/services/user.service';
 import { tap } from 'rxjs';
 import { TuiPulse } from '@taiga-ui/kit';
 import { IPlayer } from '@app/services/interface/i-player';
 import { getSettlementTypeByKey } from '@app/functions/get-settlement-type-by-key.function';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { SetTagsComponent } from './set-tags/set-tags.component';
+import { SettlementTagComponent } from '@app/profile/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 
 @Component({
     standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
-    imports: [CommonModule, TuiPulse],
+    imports: [CommonModule, TuiPulse, TuiIcon, SettlementTagComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent implements OnInit {
@@ -97,5 +100,25 @@ export class SettlementCardComponent implements OnInit {
         key: string | undefined
     ): 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция' {
         return getSettlementTypeByKey(key);
+    }
+
+    protected openSetTagsDialog() {
+        this.dialogs
+            .open(new PolymorpheusComponent(SetTagsComponent), {
+                size: 'm',
+                data: { settlementId: this.data().id, settlementName: this.data().name, tagsIds: this.data().tags },
+            })
+            .subscribe();
+    }
+
+    protected getTag(tagId: string) {
+        return this.settlementService.getTagById(tagId);
+    }
+
+    /**
+     * Возвращает признак, является ли пользователь администратором.
+     */
+    protected isAdmin(): boolean {
+        return this.userService.roles.includes('admin');
     }
 }

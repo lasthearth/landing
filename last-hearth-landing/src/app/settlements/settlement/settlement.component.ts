@@ -14,10 +14,11 @@ import { ISettlementInvitation } from '@app/services/interface/i-settlement-invi
 import { getSettlementTypeByKey } from '@app/functions/get-settlement-type-by-key.function';
 import { TuiPulse } from '@taiga-ui/kit';
 import { IPlayer } from '@app/services/interface/i-player';
+import { SettlementTagComponent } from '@app/profile/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, NgIf, TuiLoader, TuiPulse, TuiIcon],
+    imports: [AsyncPipe, NgIf, TuiLoader, TuiPulse, TuiIcon, SettlementTagComponent],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -212,5 +213,9 @@ export class SettlementComponent {
             case 'PROVINCE':
                 return SettlementsTypes.region;
         }
+    }
+
+    protected getTag(tagId: string) {
+        return this.settlementService.getTagById(tagId);
     }
 }

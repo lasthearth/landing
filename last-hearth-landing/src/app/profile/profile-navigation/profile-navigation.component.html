@@ -1,5 +1,6 @@
 @let invitations = invitations$ | async;
 @let userVerifications = userVerifications$ | async;
+@let settlementVerifications = settlementVerifications$ | async;
 
 <div class="flex xl:flex-col gap-2 z-300!">
     <button
@@ -35,7 +36,7 @@
     >
         <tui-icon icon="@tui.shield" />
         <tui-pulse
-            *ngIf="userVerifications?.length"
+            *ngIf="userVerifications?.length || settlementVerifications?.length"
             tuiHintAppearance="floating"
             class="!absolute !top-0.5 !right-0.5 !scale-110"
         />

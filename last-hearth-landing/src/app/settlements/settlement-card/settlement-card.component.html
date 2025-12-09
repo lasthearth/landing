@@ -28,6 +28,20 @@
                     >
                         {{ data().diplomacy }}
                     </span>
+                    @for (tag of data().tags; track $index) {
+                        <app-settlement-tag
+                            [text]="getTag(tag.id)?.text || ''"
+                            [type]="getTag(tag.id)?.type || 'east'"
+                        />
+                    }
+                    @if (isAdmin()) {
+                        <div
+                            (click)="openSetTagsDialog()"
+                            class="bg-lh-leader hover:opacity-60 cursor-pointer transition-all duration-300 active:scale-[95%] flex justify-center items-center px-1 text-neutral-200 rounded-full"
+                        >
+                            <tui-icon icon="@tui.circle-plus" />
+                        </div>
+                    }
                 </div>
             </div>
 

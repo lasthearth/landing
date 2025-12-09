@@ -6,6 +6,7 @@ import { ICreateSettlement } from '../settlements/interfaces/i-create-settlement
 import { IRequestSettlement } from '../settlements/interfaces/i-request-settlement';
 import { ServerInformationService } from './server-information.service';
 import { ISettlement } from '../settlements/interfaces/i-settlement';
+import { Tag } from '@app/profile/admin/moderate-settlement-request/interfaces/tag.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -142,5 +143,44 @@ export class SettlementService {
             default:
                 return 'Лагерь';
         }
+    }
+
+    private tagsIds: Record<string, Tag> = {
+        '6936e810061b4fa4e3467319': {
+            id: '6936e810061b4fa4e3467319',
+            text: 'Восток',
+            action: 'add',
+            type: 'east',
+            unique: true,
+            disabled: false,
+        },
+        '6936e848061b4fa4e346731a': {
+            id: '6936e848061b4fa4e346731a',
+            text: 'Запад',
+            action: 'add',
+            type: 'west',
+            unique: true,
+            disabled: false,
+        },
+        '6936e858061b4fa4e346731b': {
+            id: '6936e858061b4fa4e346731b',
+            text: 'Сюзерен',
+            action: 'add',
+            type: 'suzerain',
+            disabled: false,
+        },
+    };
+
+    public postSettlementTags(tagId: string, settlementId: string) {
+        return this.http.post(
+            `${this.baseUrl}/settlements/${settlementId}/tags`,
+            { settlement_id: settlementId, tag_id: tagId },
+            { headers: this.serverInfoService.getHeaders() }
+        );
+    }
+
+    public getTagById(tagId: string): Tag | undefined {
+        const tag = this.tagsIds[tagId];
+        return tag ? { ...tag } : undefined;
     }
 }

@@ -26,6 +26,30 @@
 
     --lh-leader: #3d5381;
 
+    --lh-tag-purple: #9d5bd2;
+    --lh-tag-purple-bg: rgba(157, 91, 210, 0.15);
+
+    --lh-tag-blue: #4b89da;
+    --lh-tag-blue-bg: rgba(75, 137, 218, 0.15);
+
+    --lh-tag-cyan: #2cb5b6;
+    --lh-tag-cyan-bg: rgba(44, 181, 182, 0.15);
+
+    --lh-tag-gold: #f4c753;
+    --lh-tag-gold-bg: rgba(244, 199, 83, 0.15);
+
+    --lh-tag-pink: #d65db1;
+    --lh-tag-pink-bg: rgba(214, 93, 177, 0.15);
+
+    --lh-tag-lime: #a3d920;
+    --lh-tag-lime-bg: rgba(163, 217, 32, 0.15);
+
+    --lh-tag-slate: #8da3b8;
+    --lh-tag-slate-bg: rgba(141, 163, 184, 0.15);
+
+    --lh-tag-coral: #ff6b6b;
+    --lh-tag-coral-bg: rgba(255, 107, 107, 0.15);
+
     --lh-hint: #30303056;
 }
 
@@ -52,6 +76,42 @@
     --color-lh-offline: var(--lh-offline);
 
     --color-lh-leader: var(--lh-leader);
+
+    --color-lh-base-01: var(--lh-base-01);
+    --color-lh-base-02: var(--lh-base-02);
+    --color-lh-base-03: var(--lh-base-03);
+
+    /* Purple */
+    --color-lh-tag-purple: var(--lh-tag-purple);
+    --color-lh-tag-purple-bg: var(--lh-tag-purple-bg);
+
+    /* Blue */
+    --color-lh-tag-blue: var(--lh-tag-blue);
+    --color-lh-tag-blue-bg: var(--lh-tag-blue-bg);
+
+    /* Cyan */
+    --color-lh-tag-cyan: var(--lh-tag-cyan);
+    --color-lh-tag-cyan-bg: var(--lh-tag-cyan-bg);
+
+    /* Gold */
+    --color-lh-tag-gold: var(--lh-tag-gold);
+    --color-lh-tag-gold-bg: var(--lh-tag-gold-bg);
+
+    /* Pink */
+    --color-lh-tag-pink: var(--lh-tag-pink);
+    --color-lh-tag-pink-bg: var(--lh-tag-pink-bg);
+
+    /* Lime */
+    --color-lh-tag-lime: var(--lh-tag-lime);
+    --color-lh-tag-lime-bg: var(--lh-tag-lime-bg);
+
+    /* Slate */
+    --color-lh-tag-slate: var(--lh-tag-slate);
+    --color-lh-tag-slate-bg: var(--lh-tag-slate-bg);
+
+    /* Coral */
+    --color-lh-tag-coral: var(--lh-tag-coral);
+    --color-lh-tag-coral-bg: var(--lh-tag-coral-bg);
 }
 
 html body {
@@ -72,6 +132,10 @@ a {
 
 a:hover {
     color: var(--color-blue-600);
+}
+
+.words-break {
+    word-break: break-word;
 }
 
 .old-paper-background {

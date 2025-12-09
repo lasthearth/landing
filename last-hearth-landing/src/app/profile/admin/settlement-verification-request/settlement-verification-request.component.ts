@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, inject, input, InputSignal, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    inject,
+    input,
+    InputSignal,
+    output,
+    OutputEmitterRef,
+    TemplateRef,
+    ViewChild,
+} from '@angular/core';
 import { Component } from '@angular/core';
 import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
@@ -8,6 +17,7 @@ import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.comp
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 import { SettlementService } from '@services/settlement.service';
 import { getSettlementTypeByKey } from '@app/functions/get-settlement-type-by-key.function';
+import { ModerateSettlementRequestComponent } from '../moderate-settlement-request/moderate-settlement-request.component';
 
 /**
  * Компонент отображения запроса на верификацию селения.
@@ -57,15 +67,24 @@ export class SettlementVerificationRequestComponent {
     protected previewContent: PolymorpheusContent;
 
     /**
+     * Событие принятия/отклонения запроса.
+     */
+    public requestWasWatched: OutputEmitterRef<void> = output();
+
+    /**
      * Открывает окно подтверждения принятия анкеты.
      */
     protected approve(): void {
         this.dialogService
-            .open(new PolymorpheusComponent(ConfirmApproveComponent), {
-                size: 'auto',
-                data: { userId: this.data().id, type: 'settlement' },
+            .open(new PolymorpheusComponent(ModerateSettlementRequestComponent), {
+                size: 'm',
+                data: { userId: this.data().id },
             })
-            .subscribe();
+            .subscribe({
+                complete: () => {
+                    this.requestWasWatched.emit();
+                },
+            });
     }
 
     /**

@@ -84,6 +84,8 @@ export class HeaderComponent {
      */
     protected readonly userVerifications$ = this.notificationService.userVerifications$;
 
+    protected readonly settlementVerifications$ = this.notificationService.settlementVerifications$;
+
     /**
      * Активная страница.
      */

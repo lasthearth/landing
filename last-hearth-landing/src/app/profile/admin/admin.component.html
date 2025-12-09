@@ -46,7 +46,7 @@
                     Анкеты селений отсутствуют...
                 </p>
                 @for (item of settlements; track $index) {
-                    <app-settlement-verification-request [data]="item" />
+                    <app-settlement-verification-request [data]="item" (requestWasWatched)="dataUpdate()" />
                 }
             }
             @case (2) {
