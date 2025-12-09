@@ -17,7 +17,18 @@ function getConfig() {
         appId: 'u9k3c8kap0lyhhs0o5jn1',
         redirectUri: environment.redirectUri,
         postLogoutRedirectUri: environment.postLogoutRedirectUri,
-        scopes: ['openid', 'profile', 'email', 'roles', 'question:create', 'user:verify', 'settlements:manage'],
+        scopes: [
+            'openid',
+            'profile',
+            'email',
+            'roles',
+            'question:create',
+            'user:verify',
+            'settlements:manage',
+            'tags:create',
+            'tags:delete',
+            'tags:manage',
+        ],
         resource: 'https://api.lasthearth.ru',
     });
 

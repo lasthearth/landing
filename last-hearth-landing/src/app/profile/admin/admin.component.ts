@@ -53,6 +53,11 @@ export class AdminComponent {
     private readonly verificationsUpdate$: Subject<void> = new Subject<void>();
 
     /**
+     * {@link Subject} Обновления списка запросов верификаций игроков.
+     */
+    private readonly settlementVerificationsUpdate$: Subject<void> = new Subject<void>();
+
+    /**
      * {@link Observable} Списка запросов верификации.
      */
     protected readonly verificationRequests$: Observable<IVerifyRequest[]> = this.verificationsUpdate$
@@ -62,8 +67,9 @@ export class AdminComponent {
     /**
      * {@link Observable} Списка запросов верификации.
      */
-    protected readonly settlementsRequests$ = this.settlementService.getSettlementsRequests$();
-
+    protected readonly settlementsRequests$ = this.settlementVerificationsUpdate$
+        .pipe(startWith(null))
+        .pipe(switchMap(() => this.settlementService.getSettlementsRequests$()));
     /**
      * Индекс открытой вкладки.
      */
@@ -74,6 +80,7 @@ export class AdminComponent {
      */
     protected dataUpdate(): void {
         this.verificationsUpdate$.next();
+        this.settlementVerificationsUpdate$.next();
         this.notificationService.updateAllNotification$.next();
     }
 }

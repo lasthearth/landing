@@ -4,6 +4,8 @@ import { ServerInformationService } from './server-information.service';
 import { Observable, Subject, merge, startWith, switchMap } from 'rxjs';
 import { ISettlementInvitation } from './interface/i-settlement-invitation';
 import { IVerifyRequest } from './interface/i-verify-request';
+import { SettlementService } from './settlement.service';
+import { IRequestSettlement } from '@app/settlements/interfaces/i-request-settlement';
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +16,7 @@ export class NotificationService {
      */
     private readonly userService = inject(UserService);
     private readonly serverInformationService = inject(ServerInformationService);
+    private readonly settlementService = inject(SettlementService);
 
     /**
      * Триггер для обновления данных (приглашений и запросов на верификацию).
@@ -38,5 +41,14 @@ export class NotificationService {
     public readonly userVerifications$: Observable<IVerifyRequest[]> = this.updateAllNotification$.pipe(
         startWith(null),
         switchMap(() => this.serverInformationService.getVerifyRequests())
+    );
+
+    /**
+     * Поток запросов на верификацию пользователей.
+     * Аналогично invitations$, загружается при подписке и обновляется по триггеру.
+     */
+    public readonly settlementVerifications$: Observable<IRequestSettlement[]> = this.updateAllNotification$.pipe(
+        startWith(null),
+        switchMap(() => this.settlementService.getSettlementsRequests$())
     );
 }

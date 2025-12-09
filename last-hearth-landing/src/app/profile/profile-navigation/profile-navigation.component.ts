@@ -33,6 +33,8 @@ export class ProfileNavigationComponent implements OnInit {
 
     protected readonly userVerifications$ = this.notificationService.userVerifications$;
 
+    protected readonly settlementVerifications$ = this.notificationService.settlementVerifications$;
+
     /**
      * Возвращает признак, является ли пользователь администратором.
      */
@@ -43,9 +45,9 @@ export class ProfileNavigationComponent implements OnInit {
     ngOnInit() {
         this.router.events
             .pipe(
-                filter(event => event instanceof NavigationEnd),
+                filter((event) => event instanceof NavigationEnd),
                 takeUntilDestroyed(this.destroyRef),
-                startWith('how-play'),
+                startWith('how-play')
             )
             .subscribe(() => {
                 let route = this.activatedRoute;
@@ -76,5 +78,4 @@ export class ProfileNavigationComponent implements OnInit {
                 this.cdr.markForCheck();
             });
     }
-
 }

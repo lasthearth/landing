@@ -1,7 +1,7 @@
-import { IMember } from "../../services/interface/i-member";
+import { IMember } from '../../services/interface/i-member';
 
 export interface ISettlement {
-    id: string,
+    id: string;
 
     type: string;
 
@@ -16,14 +16,20 @@ export interface ISettlement {
     diplomacy: string;
 
     coordinates: {
-        x: number,
-        y: number
-    }
+        x: number;
+        y: number;
+    };
+
+    tags: [
+        {
+            id: string;
+        },
+    ];
 
     attachments: {
-        url: string,
+        url: string;
 
-        desc: string
+        desc: string;
     }[];
 
     created_at: string;
