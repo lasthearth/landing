@@ -1,8 +1,10 @@
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TuiTabs } from '@taiga-ui/kit/components/tabs';
 import { TitlesComponent } from './components/titles/titles.component';
 import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
+import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
 
 /**
  * Компонент магазина привилегий.
@@ -18,4 +20,8 @@ export class MarketComponent {
      * Индекс открытой вкладки.
      */
     protected activeItemIndex: number = 0;
+
+    protected howToBuy() {
+        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent), { size: 'l' }).subscribe();
+    }
 }
