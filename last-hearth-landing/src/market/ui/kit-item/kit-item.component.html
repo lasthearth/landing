@@ -1,0 +1,14 @@
+<tui-badged-content
+    [tuiHint]="data().hint"
+    tuiHintDirection="bottom"
+    class="cursor-pointer hover:shadow-lg rounded-2xl transition-all duration-300"
+>
+    <tui-badge-notification size="l" tuiSlot="bottom" class="!bg-lh-accent">
+        {{ data().count }}
+    </tui-badge-notification>
+    <img
+        [src]="data().image"
+        [alt]="data().hint"
+        class="md:size-20 size-16 shadow-2xl rounded-2xl border-2 border-lh-accent-2"
+    />
+</tui-badged-content>

@@ -1,0 +1,19 @@
+<div class="p-6 flex flex-col gap-8">
+    <p class="text-4xl font-bold text-lh-primary">Магазин привилегий</p>
+    <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl !font-semibold !w-full content-tabs">
+        <button tuiTab type="button" class="text-2xl/7.5 uppercase !font-bold">Титулы</button>
+        <button tuiTab type="button" class="text-2xl/7.5 uppercase !font-bold">Наборы</button>
+        <button tuiTab type="button" class="text-2xl/7.5 uppercase !font-bold">Особое</button>
+    </tui-tabs>
+    @switch (activeItemIndex) {
+        @case (0) {
+            <app-titles />
+        }
+        @case (1) {
+            <app-kits />
+        }
+        @case (2) {
+            <app-special />
+        }
+    }
+</div>

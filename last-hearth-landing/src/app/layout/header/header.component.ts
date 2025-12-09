@@ -136,15 +136,8 @@ export class HeaderComponent {
                         case RouteKeys.publicOffer:
                             this.select = 'publicOffer';
                             break;
-                        case RouteKeys.titles:
-                        case RouteKeys.baron:
-                        case RouteKeys.duke:
-                        case RouteKeys.graph:
-                        case RouteKeys.knight:
-                        case RouteKeys.builder:
-                        case RouteKeys.warrior:
-                        case RouteKeys.explorer:
-                            this.select = 'titles';
+                        case RouteKeys.market:
+                            this.select = 'market';
                             break;
                         case RouteKeys.faq:
                             this.select = 'faq';
