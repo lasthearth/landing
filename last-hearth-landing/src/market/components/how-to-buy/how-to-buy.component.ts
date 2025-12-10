@@ -1,15 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { TuiCopy } from '@taiga-ui/kit';
 
 @Component({
-  selector: 'app-how-to-buy',
-  templateUrl: './how-to-buy.component.html',
-  styleUrls: ['./how-to-buy.component.css']
+    selector: 'app-how-to-buy',
+    imports: [TuiCopy],
+    templateUrl: './how-to-buy.component.html',
 })
-export class HowToBuyComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-}
+export class HowToBuyComponent {}

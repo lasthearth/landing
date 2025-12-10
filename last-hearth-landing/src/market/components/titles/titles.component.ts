@@ -155,7 +155,7 @@ export class TitlesComponent {
         {
             title: 'Граф',
             image: '/images/donat-images/graf.webp',
-            price: '1250 р/мес',
+            price: '1850 р/мес',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -216,10 +216,11 @@ export class TitlesComponent {
         {
             title: 'Маркиз',
             image: '/images/donat-images/marquis.webp',
-            price: '1950 р/мес',
+            price: '2450 р/мес',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
+                { icon: '@tui.timer', text: 'Заход за 10 минут до старта сезона' },
             ],
             kitItems: [
                 {
@@ -299,6 +300,7 @@ export class TitlesComponent {
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
+                { icon: '@tui.timer', text: 'Заход за 10 минут до старта сезона' },
             ],
             kitItems: [
                 { hint: 'Серебряная корона на 1 гнездо', count: 1, image: '/images/title-items/coronet.webp' },
@@ -319,7 +321,7 @@ export class TitlesComponent {
                 { hint: 'Свинцовая пуля', count: 32, image: '/images/title-items/lead_bullet.webp' },
                 { hint: 'Клочок льна', count: 32, image: '/images/title-items/piece_flax.webp' },
                 { hint: 'Подсумок для пистолета', count: 1, image: '/images/title-items/gun_pouch.webp' },
-                { hint: 'Подсумок для пуль', count: 1, image: '/images/title-items/ammo_pouch.webp' },
+                { hint: 'Подсумок для пуль', count: 1, image: '/images/title-items/bullet_pouch.webp' },
                 {
                     hint: 'Белый украшенный стальной щит',
                     count: 1,
