@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { LandingComponent } from '../landing/landing.component';
 import { RulesComponent } from '../rules/rules.component';
 import { HomeComponent } from '../home/home.component';
-import { TitlesComponent } from '../titles/titles.component';
 import { RouteKeys } from './enums/route-keys';
 import { ProfileComponent } from '../profile/profile.component';
 import { AdminComponent } from '../profile/admin/admin.component';
@@ -13,16 +12,10 @@ import { StartGameComponent } from '../start-game/start-game.component';
 import { userGuard } from '../guards/user.guard';
 import { SettlementComponent } from '../settlements/settlement/settlement.component';
 import { PrivacyPolicyComponent } from '../privacy-policy/privacy-policy.component';
-import { KnightTitleComponent } from '../titles/knight/knight-title/knight-title.component';
-import { BaronTitleComponent } from '../titles/baron/baron-title/baron-title.component';
-import { GraphTitleComponent } from '../titles/graph/graph-title/graph-title.component';
-import { DukeTitleComponent } from '../titles/duke/duke-title/duke-title.component';
 import { PublicOfferComponent } from '../public-offer/public-offer/public-offer.component';
-import { BuilderTitleComponent } from '../titles/builder/builder-title/builder-title.component';
-import { ExplorerTitleComponent } from '../titles/explorer/explorer-title/explorer-title.component';
-import { WarriorTitleComponent } from '../titles/warrior/warrior-title/warrior-title.component';
 import { FaqComponent } from '../faq/faq.component';
 import { SettlementsComponent } from '../settlements/settlements.component';
+import { MarketComponent } from '../../market/market.component';
 
 export const routes: Routes = [
     {
@@ -76,47 +69,9 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.startGame },
             },
             {
-                path: 'titles',
-                component: TitlesComponent,
-                data: { route_keys: RouteKeys.titles },
-                children: [
-                    { path: '', redirectTo: 'knight', pathMatch: 'full' },
-                    {
-                        path: 'knight',
-                        component: KnightTitleComponent,
-                        data: { route_keys: RouteKeys.knight },
-                    },
-                    {
-                        path: 'baron',
-                        component: BaronTitleComponent,
-                        data: { route_keys: RouteKeys.baron },
-                    },
-                    {
-                        path: 'graph',
-                        component: GraphTitleComponent,
-                        data: { route_keys: RouteKeys.graph },
-                    },
-                    {
-                        path: 'duke',
-                        component: DukeTitleComponent,
-                        data: { route_keys: RouteKeys.duke },
-                    },
-                    {
-                        path: 'builder',
-                        component: BuilderTitleComponent,
-                        data: { route_keys: RouteKeys.builder },
-                    },
-                    {
-                        path: 'explorer',
-                        component: ExplorerTitleComponent,
-                        data: { route_keys: RouteKeys.explorer },
-                    },
-                    {
-                        path: 'warrior',
-                        component: WarriorTitleComponent,
-                        data: { route_keys: RouteKeys.warrior },
-                    },
-                ],
+                path: 'market',
+                component: MarketComponent,
+                data: { route_keys: RouteKeys.market },
             },
             {
                 path: 'privacy-policy',

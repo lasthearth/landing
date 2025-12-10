@@ -1,0 +1,16 @@
+<div class="flex gap-6 justify-center items-center">
+    <button (click)="navigate(-1)" class="cursor-pointer text-white bg-lh-primary p-2 rounded-2xl hidden sm:block">
+        <tui-icon icon="@tui.chevron-left" />
+    </button>
+    <tui-carousel [itemsCount]="3" [(index)]="carouselIndex">
+        @for (item of items(); track $index) {
+            <div *tuiItem (click)="selectedPrivilege.emit(item)">
+                <ng-container *ngTemplateOutlet="itemTemplate(); context: { $implicit: item }"></ng-container>
+            </div>
+        }
+    </tui-carousel>
+    <button (click)="navigate(1)" class="cыursor-pointer text-white bg-lh-primary p-2 rounded-2xl hidden sm:block">
+        <tui-icon icon="@tui.chevron-right" />
+    </button>
+</div>
+<tui-pagination size="s" [length]="items().length - 2" [(index)]="carouselIndex" class="mt-6" />

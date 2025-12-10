@@ -15,27 +15,13 @@ export enum RouteKeys {
 
     settlement = 7,
 
-    titles = 8,
+    privacyPolicy = 8,
 
-    privacyPolicy = 9,
+    publicOffer = 9,
 
-    knight = 10,
+    faq = 10,
 
-    baron = 11,
+    settlements = 11,
 
-    graph = 12,
-
-    duke = 13,
-
-    publicOffer = 14,
-
-    builder = 15,
-
-    explorer = 16,
-
-    warrior = 17,
-
-    faq = 18,
-
-    settlements = 19,
+    market = 12,
 }

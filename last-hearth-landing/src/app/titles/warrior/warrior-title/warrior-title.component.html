@@ -1,8 +1,0 @@
-<div class="flex flex-col w-full h-full text-lh-primary gap-4 items-center">
-    <p class="pt-4 text-3xl font-semibold">Что идет в наборе "Воин":</p>
-    <div class="flex gap-4 p-4 flex-wrap justify-center">
-        @for (item of gameItems; track $index) {
-            <app-game-item-card [data]="item"></app-game-item-card>
-        }
-    </div>
-</div>
