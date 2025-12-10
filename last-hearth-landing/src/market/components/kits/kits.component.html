@@ -15,18 +15,10 @@
 />
 
 <div class="flex flex-col gap-6 mt-6 justify-center items-center">
-    <p class="text-3xl font-semibold text-lh-primary">Набор титула «{{ selectedPrivilege.title }}»</p>
+    <p class="text-3xl font-semibold text-lh-primary">Набор «{{ selectedPrivilege.title }}»</p>
     <div class="flex gap-4 flex-wrap items-center justify-center">
         @for (kitItem of selectedPrivilege.kitItems; track $index) {
             <app-kit-item [data]="kitItem" />
         }
     </div>
-    @if (selectedPrivilege.dailyKitItems) {
-        <p class="text-3xl font-semibold text-lh-primary">Ежедневный набор титула «{{ selectedPrivilege.title }}»</p>
-        <div class="flex gap-4 flex-wrap items-center justify-center">
-            @for (kitItem of selectedPrivilege.dailyKitItems; track $index) {
-                <app-kit-item [data]="kitItem" />
-            }
-        </div>
-    }
 </div>
