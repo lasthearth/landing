@@ -242,7 +242,7 @@ export class TitlesComponent {
                 { hint: 'Арбалет с козьей лапкой', count: 1, image: '/images/title-items/crossbow_goatsfoot.webp' },
                 { hint: 'Козья лапка', count: 1, image: '/images/title-items/goatsfoot.webp' },
                 { hint: 'Стальной болт', count: 16, image: '/images/title-items/bolt_steel.webp' },
-                { hint: 'Подсумок для болтов', count: 1, image: '/images/title-items/bugs_belt.webp' },
+                { hint: 'Подсумок для болтов', count: 1, image: '/images/title-items/crossbow_pouch.webp' },
                 { hint: 'Ножны', count: 1, image: '/images/title-items/sword_pouch.webp' },
                 { hint: 'Пояс для подсумка', count: 1, image: '/images/title-items/bugs_belt.webp' },
                 {
