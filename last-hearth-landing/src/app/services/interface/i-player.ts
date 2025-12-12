@@ -27,5 +27,5 @@ export interface IPlayer {
     /**
      * Статус присутствия игрока — онлайн или офлайн.
      */
-    isOnline: boolean;
+    is_online: boolean;
 }
