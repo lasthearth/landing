@@ -81,8 +81,12 @@
     </div>
     <button
         type="submit"
-        class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-2 disabled:text-gray-300 disabled:bg-lh-primary"
+        class="text-white w-20 h-10 text-sm! self-start cursor-pointer bg-lh-primary-2 rounded-lg py-1.5 px-2.5 mt-2 disabled:text-gray-300 disabled:bg-lh-primary"
     >
-        Улучшить
+        @if (isLoading) {
+            <tui-loader [showLoader]="isLoading" />
+        } @else {
+            Основать
+        }
     </button>
 </form>

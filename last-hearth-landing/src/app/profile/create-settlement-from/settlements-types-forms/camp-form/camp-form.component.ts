@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { fileFieldsCamp, FileKeyCamp } from '@app/types/file-key-camp.type';
-import { Subject, switchMap, Observable, map, forkJoin, tap } from 'rxjs';
+import { Subject, switchMap, Observable, map, forkJoin, tap, finalize } from 'rxjs';
 import { NgFor, AsyncPipe, NgIf } from '@angular/common';
 import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
@@ -11,12 +11,24 @@ import { SettlementService } from '@app/services/settlement.service';
 import { getFileStatuses } from '@app/functions/get-file-statuses.function'; // Функция для работы со статусом файлов
 import { getBase64Files } from '@app/functions/get-base64-files.function'; // Функция для перевода файла в Base64
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
+import { RequestStatusService } from '@app/services/request-status.service';
+import { TuiLoader } from '@taiga-ui/core';
 /**
  * Форма лагеря
  */
 @Component({
     selector: 'app-camp-form',
-    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles, LHHintComponent],
+    imports: [
+        LHInputComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        NgFor,
+        AsyncPipe,
+        NgIf,
+        TuiFiles,
+        LHHintComponent,
+        TuiLoader,
+    ],
     templateUrl: './camp-form.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -70,6 +82,13 @@ export class CampFormComponent {
     private readonly settlementService: SettlementService = inject(SettlementService);
 
     /**
+     * Сервис уведомлений.
+     */
+    private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    protected isLoading = false;
+
+    /**
      * Триггер отправки формы — запускает обработку данных и загрузку файлов
      */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
@@ -84,6 +103,7 @@ export class CampFormComponent {
         this.onSubmit
             .pipe(
                 switchMap(() => {
+                    this.isLoading = true;
                     const values = this.form.value;
 
                     // Собираем массив Observable<string> для всех файлов
@@ -116,7 +136,14 @@ export class CampFormComponent {
                 tap((request) => {
                     this.settlementService
                         .postRequestSettlement$(request)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .pipe(
+                            this.requestStatusService.handleError(),
+                            this.requestStatusService.handleSuccess('Отправлено!'),
+                            finalize(() => {
+                                this.isLoading = false;
+                            }),
+                            takeUntilDestroyed(this.destroyRef)
+                        )
                         .subscribe(() => {
                             this.submitEvent.emit();
                         });

@@ -58,6 +58,8 @@ export class SettlementComponent {
      * Сервис поселений.
      */
     protected readonly settlementService: SettlementService = inject(SettlementService);
+
+    protected requestStatus$ = this.settlementService.getRequestSettlementStatus$(this.userId);
     /**
      * {@link Observable} Информации о селении.
      */

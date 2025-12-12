@@ -5,8 +5,9 @@
         <tui-loader />
     </div>
 } @else {
-    @if (settlements === undefined) {
-        <div class="p-6 flex items-center justify-center">
+    @if (settlements === undefined || settlements.length === 0) {
+        <div class="flex flex-col gap-6 p-6 items-center justify-center">
+            <p class="self-start text-4xl text-lh-primary font-bold">Список поселений игроков</p>
             <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Здесь пока нет селений...</p>
         </div>
     } @else {

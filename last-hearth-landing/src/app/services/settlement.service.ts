@@ -179,6 +179,17 @@ export class SettlementService {
         );
     }
 
+    public getRequestSettlementStatus$(userId: string) {
+        return this.http
+            .get<{ status: string; rejection_reason: string }>(
+                `${this.baseUrl}/users/${userId}/settlements/verification:status`,
+                {
+                    headers: this.serverInfoService.getHeaders(),
+                }
+            )
+            .pipe();
+    }
+
     public getTagById(tagId: string): Tag | undefined {
         const tag = this.tagsIds[tagId];
         return tag ? { ...tag } : undefined;
