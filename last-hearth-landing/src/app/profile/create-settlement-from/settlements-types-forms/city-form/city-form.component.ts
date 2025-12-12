@@ -9,8 +9,10 @@ import { SettlementService } from '@app/services/settlement.service';
 import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
 import { fileFieldsCity, FileKeyCity } from '@app/types/file-key-city.type'; //Получения типов для формы
 import { TuiFiles } from '@taiga-ui/kit';
-import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
+import { Subject, switchMap, Observable, forkJoin, map, tap, finalize } from 'rxjs';
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
+import { RequestStatusService } from '@app/services/request-status.service';
+import { TuiLoader } from '@taiga-ui/core';
 
 /**
  * Форма города
@@ -18,7 +20,17 @@ import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/
 @Component({
     selector: 'app-city-form',
     templateUrl: './city-form.component.html',
-    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles, LHHintComponent],
+    imports: [
+        LHInputComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        NgFor,
+        AsyncPipe,
+        NgIf,
+        TuiFiles,
+        LHHintComponent,
+        TuiLoader,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CityFormComponent {
@@ -36,6 +48,13 @@ export class CityFormComponent {
      * Варианты дипломатического поведения.
      */
     protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+
+    /**
+     * Сервис уведомлений.
+     */
+    private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    protected isLoading = false;
 
     /**
      * Основная форма создания.
@@ -141,7 +160,14 @@ export class CityFormComponent {
                 tap((request) => {
                     this.settlementService
                         .postRequestSettlement$(request)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .pipe(
+                            this.requestStatusService.handleError(),
+                            this.requestStatusService.handleSuccess('Отправлено!'),
+                            finalize(() => {
+                                this.isLoading = false;
+                            }),
+                            takeUntilDestroyed(this.destroyRef)
+                        )
                         .subscribe(() => {
                             this.submitEvent.emit();
                         });

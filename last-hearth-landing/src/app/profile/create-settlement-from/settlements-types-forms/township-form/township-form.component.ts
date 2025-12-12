@@ -7,11 +7,13 @@ import { SettlementService } from '@app/services/settlement.service';
 import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
 import { fileFieldsTownship } from '@app/types/file-key-township.type';
 import { FileKeyTownship } from '@app/types/file-key-township.type';
-import { Subject, switchMap, Observable, forkJoin, map, tap } from 'rxjs';
+import { Subject, switchMap, Observable, forkJoin, map, tap, finalize } from 'rxjs';
 import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
+import { RequestStatusService } from '@app/services/request-status.service';
+import { TuiLoader } from '@taiga-ui/core';
 
 /**
  * Форма поселка
@@ -19,7 +21,17 @@ import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/
 @Component({
     selector: 'app-township-form',
     templateUrl: './township-form.component.html',
-    imports: [LHInputComponent, FormsModule, ReactiveFormsModule, NgFor, AsyncPipe, NgIf, TuiFiles, LHHintComponent],
+    imports: [
+        LHInputComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        NgFor,
+        AsyncPipe,
+        NgIf,
+        TuiFiles,
+        LHHintComponent,
+        TuiLoader,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TownshipFormComponent {
@@ -37,6 +49,13 @@ export class TownshipFormComponent {
      * Варианты дипломатического поведения.
      */
     protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+
+    /**
+     * Сервис уведомлений.
+     */
+    private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    protected isLoading = false;
 
     /**
      * Основная форма создания.
@@ -133,7 +152,14 @@ export class TownshipFormComponent {
                 tap((request) => {
                     this.settlementService
                         .postRequestSettlement$(request)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .pipe(
+                            this.requestStatusService.handleError(),
+                            this.requestStatusService.handleSuccess('Отправлено!'),
+                            finalize(() => {
+                                this.isLoading = false;
+                            }),
+                            takeUntilDestroyed(this.destroyRef)
+                        )
                         .subscribe(() => {
                             this.submitEvent.emit();
                         });
