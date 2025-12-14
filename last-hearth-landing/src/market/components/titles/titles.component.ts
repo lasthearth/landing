@@ -226,17 +226,17 @@ export class TitlesComponent {
                 {
                     hint: 'Чешуйчатый шлем из метеоритного железа',
                     count: 1,
-                    image: '/images/title-items/scaly_iron_helmet.webp',
+                    image: '/images/title-items/scaly_meteor_helmet.webp',
                 },
                 {
                     hint: 'Чешуйчатый нагрудник из метеоритного железа',
                     count: 1,
-                    image: '/images/title-items/scaly_iron_breastplate.webp',
+                    image: '/images/title-items/scaly_meteor_breastplate.webp',
                 },
                 {
                     hint: 'Чешуйчатые поножи из метеоритного железа',
                     count: 1,
-                    image: '/images/title-items/scaly_iron_greaves.webp',
+                    image: '/images/title-items/scaly_meteor_greaves.webp',
                 },
                 { hint: 'Стальной клеймор', count: 1, image: '/images/title-items/steel_claymore.webp' },
                 { hint: 'Арбалет с козьей лапкой', count: 1, image: '/images/title-items/crossbow_goatsfoot.webp' },
