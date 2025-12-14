@@ -66,6 +66,6 @@ export class PlayerInviteComponent {
                 this.requestStatus.handleSuccess('Игрок приглашен!', this.context.$implicit),
                 takeUntilDestroyed(this.destroyRef$)
             )
-            .subscribe();   
+            .subscribe();
     }
 }

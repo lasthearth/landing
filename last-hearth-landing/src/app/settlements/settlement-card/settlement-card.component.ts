@@ -19,6 +19,7 @@ import { getSettlementTypeByKey } from '@app/functions/get-settlement-type-by-ke
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SetTagsComponent } from './set-tags/set-tags.component';
 import { SettlementTagComponent } from '@app/profile/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
+import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 
 @Component({
     standalone: true,
@@ -107,6 +108,15 @@ export class SettlementCardComponent implements OnInit {
             .open(new PolymorpheusComponent(SetTagsComponent), {
                 size: 'm',
                 data: { settlementId: this.data().id, settlementName: this.data().name, tagsIds: this.data().tags },
+            })
+            .subscribe();
+    }
+
+    protected openDetails() {
+        this.dialogs
+            .open(new PolymorpheusComponent(SettlementDetailedComponent), {
+                size: 'l',
+                data: { settlement: this.data() },
             })
             .subscribe();
     }
