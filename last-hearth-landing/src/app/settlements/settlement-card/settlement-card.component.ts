@@ -20,6 +20,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SetTagsComponent } from './set-tags/set-tags.component';
 import { SettlementTagComponent } from '@app/profile/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
     standalone: true,
@@ -50,6 +51,8 @@ export class SettlementCardComponent implements OnInit {
      * Сервис поселений.
      */
     protected readonly settlementService: SettlementService = inject(SettlementService);
+
+    protected readonly environment = environment;
 
     /**
      * Лидер поселения
@@ -130,5 +133,19 @@ export class SettlementCardComponent implements OnInit {
      */
     protected isAdmin(): boolean {
         return this.userService.roles.includes('admin');
+    }
+
+    protected isEastSuzerain(settlement: ISettlement): boolean {
+        const hasFirstTag = settlement.tags.some((tag) => tag.id === '6936e858061b4fa4e346731b');
+        const hasSecondTag = settlement.tags.some((tag) => tag.id === '6936e810061b4fa4e3467319');
+
+        return hasFirstTag && hasSecondTag;
+    }
+
+    protected isWestSuzerain(settlement: ISettlement): boolean {
+        const hasFirstTag = settlement.tags.some((tag) => tag.id === '6936e858061b4fa4e346731b');
+        const hasSecondTag = settlement.tags.some((tag) => tag.id === '6936e848061b4fa4e346731a');
+
+        return hasFirstTag && hasSecondTag;
     }
 }

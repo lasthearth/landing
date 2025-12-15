@@ -13,6 +13,21 @@
                 <h1 class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100">
                     {{ data().name }}
                 </h1>
+                @if (isEastSuzerain(this.data())) {
+                    <span
+                        class="bg-lh-accent uppercase text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
+                    >
+                        БИ: {{ environment.eastSuzerain }}
+                    </span>
+                }
+
+                @if (isWestSuzerain(this.data())) {
+                    <span
+                        class="bg-lh-accent uppercase text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
+                    >
+                        БИ: {{ environment.westSuzerain }}
+                    </span>
+                }
 
                 <div class="flex gap-3">
                     <span
