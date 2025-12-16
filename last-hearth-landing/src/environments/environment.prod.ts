@@ -2,6 +2,6 @@ export const environment = {
     production: true,
     redirectUri: 'https://lasthearth.ru/home',
     postLogoutRedirectUri: 'https://lasthearth.ru/home',
-    eastSuzerain: '192 на 15.12 11:15',
-    westSuzerain: '216 на 15.12 11:15',
+    eastSuzerain: '136 на 16.12 14:08',
+    westSuzerain: '324 на 16.12 14:08',
 };
