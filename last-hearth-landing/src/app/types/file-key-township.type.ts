@@ -24,4 +24,5 @@ export const fileFieldsTownship = [
     'doubleFloorHouse1',
     'workshop',
     'blacksmithShop',
+    'religionOrCultureOrEconomicHouse',
 ] as const;

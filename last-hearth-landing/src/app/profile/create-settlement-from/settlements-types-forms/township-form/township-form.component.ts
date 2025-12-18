@@ -83,6 +83,7 @@ export class TownshipFormComponent {
         doubleFloorHouse1: new FormControl<File | null>(null, Validators.required),
         workshop: new FormControl<File | null>(null, Validators.required),
         blacksmithShop: new FormControl<File | null>(null, Validators.required),
+        religionOrCultureOrEconomicHouse: new FormControl<File | null>(null, Validators.required),
     });
 
     /**
@@ -187,12 +188,12 @@ export class TownshipFormComponent {
             map: 'Вид с карты',
             monument: 'Монумент поселения',
             playersDocuments: 'Документы игроков',
-            yardage: 'Площадь участка',
-            pit: 'Колодец / котлован',
+            yardage: 'Сельская площадь',
+            pit: 'Колодец',
             roads: 'Дороги и тропы',
             warehouse: 'Склад или складское помещение',
             barn: 'Амбар',
-            seedbeds: 'Грядки / рассадник',
+            seedbeds: 'Грядки / загоны',
             oneFloorHouse1: '1-этажный дом №1',
             oneFloorHouse2: '1-этажный дом №2',
             oneFloorHouse3: '1-этажный дом №3',
@@ -200,6 +201,8 @@ export class TownshipFormComponent {
             doubleFloorHouse1: '2-этажный дом №1',
             workshop: 'Мастерская',
             blacksmithShop: 'Кузница',
+            religionOrCultureOrEconomicHouse:
+                'Здание религиозного или научного или культурного или экономического направления',
         }[key];
     }
 }
