@@ -29,7 +29,7 @@ export class TitlesComponent {
         {
             title: 'Рыцарь',
             image: '/images/donat-images/knight.webp',
-            price: '400 р/мес',
+            price: '350 р/мес',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -52,7 +52,7 @@ export class TitlesComponent {
         {
             title: 'Барон',
             image: '/images/donat-images/baron.webp',
-            price: '550 р/мес',
+            price: '450 р/мес',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -155,7 +155,7 @@ export class TitlesComponent {
         {
             title: 'Граф',
             image: '/images/donat-images/graf.webp',
-            price: '1850 р/мес',
+            price: '2000 р/мес',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -216,7 +216,7 @@ export class TitlesComponent {
         {
             title: 'Маркиз',
             image: '/images/donat-images/marquis.webp',
-            price: '2450 р/мес',
+            price: '3150 р/мес',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -296,7 +296,7 @@ export class TitlesComponent {
         {
             title: 'Герцог',
             image: '/images/donat-images/duke.webp',
-            price: '6000 р/мес',
+            price: '5850 р/мес',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },

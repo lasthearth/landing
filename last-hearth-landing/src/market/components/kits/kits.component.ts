@@ -15,7 +15,7 @@ export class KitsComponent {
         {
             title: 'Исследователь',
             image: '/images/donat-images/explorer.webp',
-            price: '950 р',
+            price: '1150 р',
             kitItems: [
                 { hint: 'JPS', count: 1, image: '/images/title-items/jps.webp' },
                 { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
@@ -39,7 +39,7 @@ export class KitsComponent {
         {
             title: 'Воин',
             image: '/images/donat-images/warrior.webp',
-            price: '700 р',
+            price: '750 р',
             kitItems: [
                 { hint: 'Чешуйчатый шлем из железа', count: 1, image: '/images/title-items/scaly_iron_helmet.webp' },
                 {
@@ -67,7 +67,7 @@ export class KitsComponent {
         {
             title: 'Строитель',
             image: '/images/donat-images/builder.webp',
-            price: '500 р',
+            price: '950 р',
             kitItems: [
                 { hint: 'Молот из железа', count: 1, image: '/images/title-items/hummer_iron.webp' },
                 { hint: 'Зубило из железа', count: 1, image: '/images/title-items/chisel_iron.webp' },
@@ -91,7 +91,7 @@ export class KitsComponent {
         {
             title: 'Фермер',
             image: '/images/donat-images/farmer.webp',
-            price: '950 р',
+            price: '750 р',
             kitItems: [
                 { hint: 'Чернозем', count: 128, image: '/images/title-items/humus.webp' },
                 { hint: 'Компост', count: 256, image: '/images/title-items/compost.webp' },

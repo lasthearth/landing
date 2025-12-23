@@ -21,12 +21,12 @@ export class ServerInformationService {
     private readonly userService = inject(UserService);
 
     public getOnlinePlayersCount$(): Observable<{ count: number; max: number }> {
-        return this.http.get<{ count: number; max: number }>(`${this.baseUrl}/players/count`);
+        return this.http.get<{ count: number; max: number }>(`${this.baseUrl}/serverinfo/totalonline`);
     }
 
     // TODO: [TASK:#15]
     public getTime$(): Observable<{ formatted_time: string }> {
-        return this.http.get<{ formatted_time: string }>(`${this.baseUrl}/time`);
+        return this.http.get<{ formatted_time: string }>(`${this.baseUrl}/serverinfo/worldtime`);
     }
 
     public getLeaderBoard(type: LeaderBoardType = 0): Observable<{ entries: Array<ILeaderBoard> }> {
