@@ -30,12 +30,12 @@
                 <div class="flex flex-col gap-1">
                     <div class="flex w-full px-4 gap-4 justify-center items-center">
                         <div class="flex gap-0.5 items-center">
-                            <p class="text-3xl sm:text-5xl text-white">{{ online?.count ? online?.count : "-" }}</p>
+                            <p class="text-3xl sm:text-5xl text-white">{{ online?.online ? online?.online : "-" }}</p>
 
                             <p class="text-xs sm:text-sm text-white opacity-70">/</p>
 
                             <p class="text-xs sm:text-sm text-white opacity-70">
-                                {{ online?.max ? online?.max : "-" }}
+                                {{ online?.max_online ? online?.max_online : "-" }}
                             </p>
                         </div>
                         <div class="text-white">
@@ -46,10 +46,10 @@
                     </div>
                     <div class="w-full flex px-3.5">
                         <progress
-                            [max]="online?.max ? online?.max : 0"
+                            [max]="online?.max_online ? online?.max_online : 0"
                             size="s"
                             tuiProgressBar
-                            [value]="online?.count ? online?.count : 0"
+                            [value]="online?.online ? online?.online : 0"
                             class="progress"
                         ></progress>
                     </div>

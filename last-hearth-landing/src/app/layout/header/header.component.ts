@@ -43,8 +43,8 @@ export class HeaderComponent {
      * {@link Observable} Количества онлайна.
      */
     protected readonly online$: Observable<{
-        count: number;
-        max: number;
+        online: number;
+        max_online: number;
     }> = this.serverInformationService.getOnlinePlayersCount$().pipe(map((info) => info));
 
     /**
@@ -52,7 +52,7 @@ export class HeaderComponent {
      */
     protected readonly time$: Observable<string> = this.serverInformationService
         .getTime$()
-        .pipe(map((info) => info.formatted_time));
+        .pipe(map((info) => info.time));
 
     /**
      * Объект с информацией о текущем роуте.
