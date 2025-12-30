@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
      * Возвращает количество страниц для всех новостей.
      */
     protected getPagesCount(): number {
-        return Math.round(this.news.length / 3);
+        return Math.ceil(this.news.length / 3);
     }
 
     /**
