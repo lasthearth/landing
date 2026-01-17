@@ -13,7 +13,8 @@ import { TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, Observable, forkJoin, map, tap, finalize } from 'rxjs';
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@app/services/request-status.service';
-import { TuiLoader } from '@taiga-ui/core';
+import { TuiError, TuiHintDirective, TuiLoader } from '@taiga-ui/core';
+import { maxFileSize } from '@app/functions/file-max-size-validator.function';
 
 /**
  * Форма деревни
@@ -31,6 +32,8 @@ import { TuiLoader } from '@taiga-ui/core';
         TuiFiles,
         LHHintComponent,
         TuiLoader,
+        TuiError,
+        TuiHintDirective,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -66,23 +69,23 @@ export class VillageFormComponent {
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, Validators.required),
-        map: new FormControl<File | null>(null, Validators.required),
-        monument: new FormControl<File | null>(null, Validators.required),
-        fireplace: new FormControl<File | null>(null, Validators.required),
-        warehouse: new FormControl<File | null>(null, Validators.required),
-        beds: new FormControl<File | null>(null, Validators.required),
-        playersDocuments: new FormControl<File | null>(null, Validators.required),
-        document: new FormControl<File | null>(null, Validators.required),
-        yardage: new FormControl<File | null>(null, Validators.required),
-        pit: new FormControl<File | null>(null, Validators.required),
-        roads: new FormControl<File | null>(null, Validators.required),
-        barn: new FormControl<File | null>(null, Validators.required),
-        seedbeds: new FormControl<File | null>(null, Validators.required),
-        house1: new FormControl<File | null>(null, Validators.required),
-        house2: new FormControl<File | null>(null, Validators.required),
-        house3: new FormControl<File | null>(null, Validators.required),
-        house4: new FormControl<File | null>(null, Validators.required),
+        preview: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        map: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        monument: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        beds: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        playersDocuments: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        document: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        yardage: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        pit: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        roads: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        barn: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        seedbeds: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        house1: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        house2: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        house3: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        house4: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
     });
 
     /**
@@ -181,15 +184,15 @@ export class VillageFormComponent {
         return {
             preview: 'Заглавное изображение поселения',
             map: 'Вид с карты',
-            monument: 'Ваш монумент',
+            monument: 'Монумент поселения',
             playersDocuments: 'Документы игроков',
-            document: 'Основной документ основания деревни',
-            yardage: 'Площадь',
+            document: 'Подписанный патент на разрешение основании деревни',
+            yardage: 'Деревенская площадь',
             pit: 'Колодец',
             roads: 'Дороги и тропы',
             warehouse: 'Склад или складское помещение',
             barn: 'Амбар',
-            seedbeds: 'Грядки / рассадник',
+            seedbeds: 'Грядки',
             house1: '1 этажный дом №1',
             house2: '1 этажный дом №2',
             house3: '1 этажный дом №3',

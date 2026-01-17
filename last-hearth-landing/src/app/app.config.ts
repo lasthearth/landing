@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 
 import { routes } from './routes/app.routes';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { TUI_VALIDATION_ERRORS, TUI_COPY_TEXTS } from '@taiga-ui/kit';
+import { TUI_VALIDATION_ERRORS, TUI_COPY_TEXTS, TUI_FILE_TEXTS } from '@taiga-ui/kit';
 import { environment } from '../environments/environment';
 
 function getConfig() {
@@ -61,6 +61,13 @@ export const appConfig: ApplicationConfig = {
         {
             provide: TUI_COPY_TEXTS,
             useFactory: () => of(['Копировать', 'Скопировано!'] as const),
+        },
+        {
+            provide: TUI_FILE_TEXTS,
+            useValue: of({
+                defaultLabel: '',
+                failLabel: '',
+            }),
         },
     ],
 };

@@ -8,7 +8,6 @@ import { TuiTooltip } from '@taiga-ui/kit';
 @Component({
     selector: 'lh-hint',
     templateUrl: './lh-hint.component.html',
-    styleUrl: './lh-hint.component.css',
     imports: [TuiIcon, TuiTooltip, TuiHint],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
