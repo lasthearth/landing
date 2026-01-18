@@ -2,6 +2,6 @@ export const environment = {
     production: false,
     redirectUri: 'http://localhost:4200/home',
     postLogoutRedirectUri: 'http://localhost:4200/home',
-    eastSuzerain: '737 на 12.01 13:00',
-    westSuzerain: '997 на 12.01 13:00',
+    eastSuzerain: '1041 на 18.01 21:00',
+    westSuzerain: '831 на 18.01 21:00',
 };
