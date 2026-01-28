@@ -220,8 +220,8 @@ export class CityFormComponent {
             workshop: 'Мастерская',
             blacksmithShop: 'Кузница',
             religionOrCultureOrEconomicHouse: 'Здание религии/культуры/экономики',
-            marketPlace1: 'Торговая площадь №1',
-            marketPlace2: 'Торговая площадь №2',
+            marketPlace1: 'Рыночный прилавок №1',
+            marketPlace2: 'Рыночный прилавок №2',
         }[key];
     }
     protected getControl(key: string): FormControl {
