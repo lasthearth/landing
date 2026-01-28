@@ -211,7 +211,7 @@ export class TownshipFormComponent {
             religionOrCultureOrEconomicHouse: 'Здание религиозного,научного,культурного или экономического направления',
         }[key];
     }
-    getControl(key: string): FormControl {
+    protected getControl(key: string): FormControl {
         return this.form.get(key) as FormControl;
     }
 }

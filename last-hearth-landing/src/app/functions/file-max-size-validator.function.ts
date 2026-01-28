@@ -5,7 +5,7 @@ export const maxFileSizeValidator = (maxSizeMb: number): ValidatorFn => {
     return (control: AbstractControl): ValidationErrors | null => {
         const file = control.value;
 
-        //Проверка передается ли файл
+        //Проверка передается ли файл нужного формата
         if (!file || !(file instanceof File)) {
             return { fileFormat: true };
         }

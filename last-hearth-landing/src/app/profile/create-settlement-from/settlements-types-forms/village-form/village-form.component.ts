@@ -201,7 +201,7 @@ export class VillageFormComponent {
             beds: 'Кровати',
         }[key];
     }
-    getControl(key: string): FormControl {
+    protected getControl(key: string): FormControl {
         return this.form.get(key) as FormControl;
     }
 }

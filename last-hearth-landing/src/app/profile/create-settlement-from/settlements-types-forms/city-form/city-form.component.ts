@@ -224,7 +224,7 @@ export class CityFormComponent {
             marketPlace2: 'Торговая площадь №2',
         }[key];
     }
-    getControl(key: string): FormControl {
+    protected getControl(key: string): FormControl {
         return this.form.get(key) as FormControl;
     }
 }
