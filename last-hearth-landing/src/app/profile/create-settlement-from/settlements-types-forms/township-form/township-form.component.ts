@@ -9,11 +9,12 @@ import { fileFieldsTownship } from '@app/types/file-key-township.type';
 import { FileKeyTownship } from '@app/types/file-key-township.type';
 import { Subject, switchMap, Observable, forkJoin, map, tap, finalize } from 'rxjs';
 import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
-import { TuiFiles } from '@taiga-ui/kit';
+import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@app/services/request-status.service';
-import { TuiLoader } from '@taiga-ui/core';
+import { TuiError, TuiHintDirective, TuiLoader } from '@taiga-ui/core';
+import { maxFileSizeValidator } from '@app/functions/file-max-size-validator.function';
 
 /**
  * Форма поселка
@@ -31,6 +32,9 @@ import { TuiLoader } from '@taiga-ui/core';
         TuiFiles,
         LHHintComponent,
         TuiLoader,
+        TuiError,
+        TuiHintDirective,
+        TuiFieldErrorPipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -67,23 +71,26 @@ export class TownshipFormComponent {
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        map: new FormControl<File | null>(null, Validators.required),
-        monument: new FormControl<File | null>(null, Validators.required),
-        playersDocuments: new FormControl<File | null>(null, Validators.required),
-        yardage: new FormControl<File | null>(null, Validators.required),
-        pit: new FormControl<File | null>(null, Validators.required),
-        roads: new FormControl<File | null>(null, Validators.required),
-        warehouse: new FormControl<File | null>(null, Validators.required),
-        barn: new FormControl<File | null>(null, Validators.required),
-        seedbeds: new FormControl<File | null>(null, Validators.required),
-        oneFloorHouse1: new FormControl<File | null>(null, Validators.required),
-        oneFloorHouse2: new FormControl<File | null>(null, Validators.required),
-        oneFloorHouse3: new FormControl<File | null>(null, Validators.required),
-        oneFloorHouse4: new FormControl<File | null>(null, Validators.required),
-        doubleFloorHouse1: new FormControl<File | null>(null, Validators.required),
-        workshop: new FormControl<File | null>(null, Validators.required),
-        blacksmithShop: new FormControl<File | null>(null, Validators.required),
-        religionOrCultureOrEconomicHouse: new FormControl<File | null>(null, Validators.required),
+        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        playersDocuments: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        yardage: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        pit: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        roads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        barn: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        seedbeds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        oneFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        oneFloorHouse2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        oneFloorHouse3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        oneFloorHouse4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        doubleFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        workshop: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        blacksmithShop: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        religionOrCultureOrEconomicHouse: new FormControl<File | null>(null, [
+            Validators.required,
+            maxFileSizeValidator(2),
+        ]),
     });
 
     /**
@@ -193,7 +200,7 @@ export class TownshipFormComponent {
             roads: 'Дороги и тропы',
             warehouse: 'Склад или складское помещение',
             barn: 'Амбар',
-            seedbeds: 'Грядки / загоны',
+            seedbeds: 'Грядки',
             oneFloorHouse1: '1-этажный дом №1',
             oneFloorHouse2: '1-этажный дом №2',
             oneFloorHouse3: '1-этажный дом №3',
@@ -201,8 +208,10 @@ export class TownshipFormComponent {
             doubleFloorHouse1: '2-этажный дом №1',
             workshop: 'Мастерская',
             blacksmithShop: 'Кузница',
-            religionOrCultureOrEconomicHouse:
-                'Здание религиозного или научного или культурного или экономического направления',
+            religionOrCultureOrEconomicHouse: 'Здание религиозного,научного,культурного или экономического направления',
         }[key];
+    }
+    protected getControl(key: string): FormControl {
+        return this.form.get(key) as FormControl;
     }
 }

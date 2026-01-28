@@ -12,7 +12,9 @@ import { getFileStatuses } from '@app/functions/get-file-statuses.function'; // 
 import { getBase64Files } from '@app/functions/get-base64-files.function'; // Функция для перевода файла в Base64
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@app/services/request-status.service';
-import { TuiLoader } from '@taiga-ui/core';
+import { TuiLoader, TuiError, TuiHintDirective } from '@taiga-ui/core';
+import { maxFileSizeValidator } from '@app/functions/file-max-size-validator.function';
+import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 /**
  * Форма лагеря
  */
@@ -28,6 +30,9 @@ import { TuiLoader } from '@taiga-ui/core';
         TuiFiles,
         LHHintComponent,
         TuiLoader,
+        TuiError,
+        TuiHintDirective,
+        TuiFieldErrorPipe,
     ],
     templateUrl: './camp-form.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,12 +62,12 @@ export class CampFormComponent {
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, Validators.required),
-        map: new FormControl<File | null>(null, Validators.required),
-        monument: new FormControl<File | null>(null, Validators.required),
-        fireplace: new FormControl<File | null>(null, Validators.required),
-        warehouse: new FormControl<File | null>(null, Validators.required),
-        beds: new FormControl<File | null>(null, Validators.required),
+        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        beds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
     });
 
     /**
@@ -167,10 +172,14 @@ export class CampFormComponent {
         return {
             preview: 'Заглавное изображение вашего селения',
             map: 'Вид с карты',
-            monument: 'Ваш монумент',
+            monument: 'Монумент поселения',
             fireplace: 'Место костра',
             warehouse: 'Склад или складское помещение',
             beds: 'Кровати 3 шт.',
         }[key];
+    }
+
+    protected getControl(key: string): FormControl {
+        return this.form.get(key) as FormControl;
     }
 }
