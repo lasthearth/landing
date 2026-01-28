@@ -8,12 +8,12 @@ import { getFileStatuses } from '@app/functions/get-file-statuses.function';
 import { SettlementService } from '@app/services/settlement.service';
 import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
 import { fileFieldsCity, FileKeyCity } from '@app/types/file-key-city.type'; //Получения типов для формы
-import { TuiFiles } from '@taiga-ui/kit';
+import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, Observable, forkJoin, map, tap, finalize } from 'rxjs';
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@app/services/request-status.service';
 import { TuiError, TuiHintDirective, TuiLoader } from '@taiga-ui/core';
-import { maxFileSize } from '@app/functions/file-max-size-validator.function';
+import { maxFileSizeValidator } from '@app/functions/file-max-size-validator.function';
 
 /**
  * Форма города
@@ -33,6 +33,7 @@ import { maxFileSize } from '@app/functions/file-max-size-validator.function';
         TuiLoader,
         TuiError,
         TuiHintDirective,
+        TuiFieldErrorPipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -68,32 +69,35 @@ export class CityFormComponent {
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        map: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        monument: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        playersDocuments: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        document: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        yardage: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        pit: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        localRoads: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        globalRoads: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        barn: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        seedbeds: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        oneFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        oneFloorHouse2: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        oneFloorHouse3: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        oneFloorHouse4: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        doubleFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        doubleFloorHouse2: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        doubleFloorHouse3: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        doubleFloorHouse4: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        doubleFloorHouse5: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        workshop: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        blacksmithShop: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        religionOrCultureOrEconomicHouse: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        marketPlace1: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        marketPlace2: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        playersDocuments: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        document: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        yardage: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        pit: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        localRoads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        globalRoads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        barn: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        seedbeds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        oneFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        oneFloorHouse2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        oneFloorHouse3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        oneFloorHouse4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        doubleFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        doubleFloorHouse2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        doubleFloorHouse3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        doubleFloorHouse4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        doubleFloorHouse5: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        workshop: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        blacksmithShop: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        religionOrCultureOrEconomicHouse: new FormControl<File | null>(null, [
+            Validators.required,
+            maxFileSizeValidator(2),
+        ]),
+        marketPlace1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        marketPlace2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
     });
 
     /**
@@ -219,5 +223,8 @@ export class CityFormComponent {
             marketPlace1: 'Торговая площадь №1',
             marketPlace2: 'Торговая площадь №2',
         }[key];
+    }
+    getControl(key: string): FormControl {
+        return this.form.get(key) as FormControl;
     }
 }

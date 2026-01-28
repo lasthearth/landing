@@ -9,12 +9,12 @@ import { SettlementService } from '@app/services/settlement.service';
 import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
 import { fileFields } from '@app/types/file-key-village.type';
 import { FileKeyVillage } from '@app/types/file-key-village.type';
-import { TuiFiles } from '@taiga-ui/kit';
+import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, Observable, forkJoin, map, tap, finalize } from 'rxjs';
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@app/services/request-status.service';
 import { TuiError, TuiHintDirective, TuiLoader } from '@taiga-ui/core';
-import { maxFileSize } from '@app/functions/file-max-size-validator.function';
+import { maxFileSizeValidator } from '@app/functions/file-max-size-validator.function';
 
 /**
  * Форма деревни
@@ -34,6 +34,7 @@ import { maxFileSize } from '@app/functions/file-max-size-validator.function';
         TuiLoader,
         TuiError,
         TuiHintDirective,
+        TuiFieldErrorPipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -69,23 +70,23 @@ export class VillageFormComponent {
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        map: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        monument: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        beds: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        playersDocuments: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        document: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        yardage: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        pit: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        roads: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        barn: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        seedbeds: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        house1: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        house2: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        house3: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        house4: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        beds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        playersDocuments: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        document: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        yardage: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        pit: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        roads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        barn: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        seedbeds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
     });
 
     /**
@@ -199,5 +200,8 @@ export class VillageFormComponent {
             house4: '1 этажный дом №4',
             beds: 'Кровати',
         }[key];
+    }
+    getControl(key: string): FormControl {
+        return this.form.get(key) as FormControl;
     }
 }

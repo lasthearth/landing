@@ -54,34 +54,33 @@
         </label>
 
         <tui-files class="tui-space_top-1">
-            <ng-container *ngIf="form.controls[key].hasError('maxFileSize') && form.controls[key].value as file">
-                <tui-file state="error" [file]="file" (remove)="removeFile(key)"></tui-file>
-                <tui-error class="tui-space_bottom-2" [error]="'Файл слишком большой (макс. 2МБ)'"></tui-error>
-            </ng-container>
-
-            <ng-container *ngIf="form.controls[key].value | tuiFileRejected: { accept: 'image/*' } | async as file">
-                <tui-file state="error" [file]="file" (remove)="removeFile(key)"></tui-file>
-                <tui-error class="tui-space_bottom-2" [error]="'Неверный формат файла'"></tui-error>
-            </ng-container>
             <tui-file
                 *ngIf="fileStatus.loading[key] | async as file"
                 state="loading"
                 [file]="file"
                 (remove)="removeFile(key)"
-            />
-            <tui-file
-                *ngIf="form.controls[key].valid && form.controls[key].value as file"
-                [file]="file"
-                (remove)="removeFile(key)"
             ></tui-file>
+
+            <ng-container *ngIf="form.get(key)?.value as file">
+                <tui-file
+                    *ngIf="form.get(key)?.invalid || (file | tuiFileRejected: { accept: 'image/*' } | async)"
+                    state="error"
+                    [file]="file"
+                    (remove)="removeFile(key)"
+                ></tui-file>
+
+                <tui-file
+                    *ngIf="form.get(key)?.valid && !(file | tuiFileRejected: { accept: 'image/*' } | async)"
+                    [file]="file"
+                    (remove)="removeFile(key)"
+                ></tui-file>
+            </ng-container>
+
+            <tui-error [formControl]="getControl(key)" [error]="[] | tuiFieldError | async"></tui-error>
         </tui-files>
     </div>
 
     <button
-        [tuiHint]="
-            form.invalid ? 'Заполните все обязательные поля формы перед отправкой.  ' : 'Форма готова к отправке.'
-        "
-        tuiHintDirection="right"
         type="submit"
         class="text-white w-20 h-10 text-sm! self-start cursor-pointer bg-lh-primary-2 rounded-lg py-1.5 px-2.5 mt-2 font-bold hover:text-lh-primary hover:bg-[#e2d7bb] border transition-all duration-300 disabled:text-gray-300 disabled:bg-lh-primary disabled:cursor-not-allowed"
         [disabled]="form.invalid || isLoading"

@@ -1,20 +1,23 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export function maxFileSize(maxSizeMb: number): ValidatorFn {
+//Валидатор размера файла
+export const maxFileSizeValidator = (maxSizeMb: number): ValidatorFn => {
     return (control: AbstractControl): ValidationErrors | null => {
-        const file = control.value as File;
+        const file = control.value;
 
-        // Если файла нет или это не файл (например, строка), валидация пройдена
+        //Проверка передается ли файл
         if (!file || !(file instanceof File)) {
-            return null;
+            return { fileFormat: true };
         }
 
+        //Преобразование мегабайт в байты
         const maxSizeInBytes = maxSizeMb * 1024 * 1024;
 
+        //Проверка размера файла
         if (file.size > maxSizeInBytes) {
             return { maxFileSize: true };
         }
 
         return null;
     };
-}
+};

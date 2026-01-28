@@ -13,7 +13,8 @@ import { getBase64Files } from '@app/functions/get-base64-files.function'; // Ф
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@app/services/request-status.service';
 import { TuiLoader, TuiError, TuiHintDirective } from '@taiga-ui/core';
-import { maxFileSize } from '@app/functions/file-max-size-validator.function';
+import { maxFileSizeValidator } from '@app/functions/file-max-size-validator.function';
+import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 /**
  * Форма лагеря
  */
@@ -31,6 +32,7 @@ import { maxFileSize } from '@app/functions/file-max-size-validator.function';
         TuiLoader,
         TuiError,
         TuiHintDirective,
+        TuiFieldErrorPipe,
     ],
     templateUrl: './camp-form.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,12 +62,12 @@ export class CampFormComponent {
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        map: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        monument: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
-        beds: new FormControl<File | null>(null, [Validators.required, maxFileSize(2)]),
+        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        beds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
     });
 
     /**
@@ -175,5 +177,9 @@ export class CampFormComponent {
             warehouse: 'Склад или складское помещение',
             beds: 'Кровати 3 шт.',
         }[key];
+    }
+
+    getControl(key: string): FormControl {
+        return this.form.get(key) as FormControl;
     }
 }

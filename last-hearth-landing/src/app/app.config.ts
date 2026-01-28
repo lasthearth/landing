@@ -56,6 +56,8 @@ export const appConfig: ApplicationConfig = {
                 serverResponse: (errors: string[]) => errors.join('\r\n'),
                 minlength: ({ requiredLength }: { requiredLength: string }) =>
                     `Минимальное количество символов должно быть ${requiredLength}.`,
+                fileFormat: 'Неверный формат файла.',
+                maxFileSize: 'Размер файла превышает допустимый.(2 МБ)',
             },
         },
         {
