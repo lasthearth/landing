@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from '../landing/landing.component';
-import { RulesComponent } from '../rules/rules.component';
+import { RulesComponent } from '../features/rules/rules.component';
 import { HomeComponent } from '../home/home.component';
 import { RouteKeys } from './enums/route-keys';
 import { ProfileComponent } from '../profile/profile.component';
@@ -15,7 +15,7 @@ import { PrivacyPolicyComponent } from '../privacy-policy/privacy-policy.compone
 import { PublicOfferComponent } from '../public-offer/public-offer/public-offer.component';
 import { FaqComponent } from '../faq/faq.component';
 import { SettlementsComponent } from '../settlements/settlements.component';
-import { MarketComponent } from '../../market/market.component';
+import { MarketComponent } from '../features/market/market.component';
 
 export const routes: Routes = [
     {
