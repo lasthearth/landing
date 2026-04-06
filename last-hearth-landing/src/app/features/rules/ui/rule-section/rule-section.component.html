@@ -1,0 +1,38 @@
+<div
+    class="flex flex-col cursor-pointer gap-2 shadow-2xs"
+    [attr.sectionid]="sectionId()"
+    [class.mt-2]="needsMarginTop()"
+>
+    <div
+        class="flex w-full justify-between gap-2 cursor-pointer transition-all duration-300 hover:opacity-60"
+        (click)="toggle()"
+    >
+        <p class="relative text-lh-primary cursor-pointer font-bold" [class]="titleClass() + ' ' + indentClass()">
+            @if (icon()) {
+                <tui-icon
+                    [icon]="icon() ?? ''"
+                    class="text-lh-primary"
+                    [ngClass]="{ 'mr-2': level() > 0 }"
+                />
+            }
+            {{ title() }}
+            @if (!isWatched()) {
+                <tui-pulse
+                    class="!absolute top-1/2 -translate-y-1/2"
+                    [ngClass]="{ 'ml-4': level() > 0, 'ml-6': level() === 0 }"
+                />
+            }
+        </p>
+        <tui-icon
+            icon="@tui.chevron-down"
+            [ngClass]="{ 'rotate-180!': isExpanded() }"
+            class="text-lh-primary transition-all"
+        />
+    </div>
+
+    <tui-expand [expanded]="isExpanded()">
+        <div [class]="contentClass()">
+            <ng-content />
+        </div>
+    </tui-expand>
+</div>

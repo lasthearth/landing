@@ -1,0 +1,25 @@
+import { Component, output } from '@angular/core';
+import { RuleLinkComponent } from '@app/features/rules/ui/rule-link/rule-link.component';
+import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/rule-paragraph.component';
+
+/**
+ * Компонент сюзерена - высшего правителя региона.
+ */
+@Component({
+    selector: 'app-suzerain',
+    templateUrl: './suzerain.component.html',
+    imports: [RuleParagraphComponent, RuleLinkComponent],
+})
+export class SuzerainComponent {
+    /**
+     * Событие прокрутки к элементу.
+     */
+    public scrollTo = output<string>();
+
+    /**
+     * Обрабатывает событие прокрутки.
+     */
+    protected onScrollTo(elementId: string): void {
+        this.scrollTo.emit(elementId);
+    }
+}

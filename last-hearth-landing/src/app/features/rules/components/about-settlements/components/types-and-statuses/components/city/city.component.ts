@@ -1,0 +1,25 @@
+import { Component, output } from '@angular/core';
+import { RuleLinkComponent } from '@app/features/rules/ui/rule-link/rule-link.component';
+import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/rule-paragraph.component';
+
+/**
+ * Компонент города - крупного поселения.
+ */
+@Component({
+    selector: 'app-city',
+    templateUrl: './city.component.html',
+    imports: [RuleParagraphComponent, RuleLinkComponent],
+})
+export class CityComponent {
+    /**
+     * Событие прокрутки к элементу.
+     */
+    public scrollTo = output<string>();
+
+    /**
+     * Обрабатывает событие прокрутки.
+     */
+    protected onScrollTo(elementId: string): void {
+        this.scrollTo.emit(elementId);
+    }
+}

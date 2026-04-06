@@ -1,0 +1,136 @@
+<div class="flex flex-col gap-3">
+    <app-rule-paragraph anchor="Empire">
+        <b>Империя</b>
+        — обширное государство на землях которого происходит весь игровой процесс.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Settlement">
+        <b>Селение</b>
+        — группа игроков, объединенная в соответствии с одним из типов, установленных правилами.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Neutral zone">
+        <b>Нейтральная зона</b>
+        — территория, обозначенная на карте в канале discord, где находятся
+        <app-rule-link target="Empire">Имперские</app-rule-link>
+        зоны влияния и запрещено основание селений типом выше хутора.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Key point">
+        <b>Ключевая точка</b>
+        — это 1 из 3-х ключевых локаций находящихся на
+        <app-rule-link target="Neutral zone">нейтральной зоне,</app-rule-link>
+        и предоставляющая определенные выгоды контролирующей ее стороне.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Suzerain">
+        <b>Сюзерен</b>
+        — особый статус, присваиваемый
+        <app-rule-link target="Settlement">селению,</app-rule-link>
+        который может быть получен одним из трех способов:
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            по решению администрации в начале игрового сезона;
+        </app-rule-paragraph>
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            путем военной победы над действующим Сюзереном;
+        </app-rule-paragraph>
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            добровольной передачи статуса.
+        </app-rule-paragraph>
+        Критерии для назначения статуса администрацией включают:
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            количество покоренных селений;
+        </app-rule-paragraph>
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            силы дипломатического влияния;
+        </app-rule-paragraph>
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            уровень развития экономики;
+        </app-rule-paragraph>
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            общее время онлайна.
+        </app-rule-paragraph>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Great building">
+        <b>Великое строение</b>
+        — строение, которое было построено игроками по одному из доступных проектов, опубликованных в канале discord.
+        Оно имеет защиту от любых изменений, порчи внутри него и в радиусе 15 блоков от него, предоставляет определенные
+        выгоды построившей его группе лиц. Количество доступных к постройке Великих строений на сезон ограничено.
+        Завершенные строения сохраняются из сезона в сезон.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="BI">
+        <b>Благосклонность Император</b>
+        — уровень доверия Императора к тому или иному
+        <app-rule-link target="Suzerain">Сюзерену,</app-rule-link>
+        дающий определенные выгоды. Уровень измеряется в условных единицах, которые начисляются тому или иному Сюзерену
+        за:
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            удержание и развитие
+            <app-rule-link target="Key point">ключевых точек интереса;</app-rule-link>
+        </app-rule-paragraph>
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            возведение
+            <app-rule-link target="Great buildings">великих строений;</app-rule-link>
+        </app-rule-paragraph>
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            выполнения особых поручений Императора.
+        </app-rule-paragraph>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Defend land">
+        <b>Защищенная территория</b>
+        — зона, которую покрывает территориальный блок [игровой предмет], выдаваемый исключительно администрацией.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Monument">
+        <b>Монумент селения</b>
+        — специально установленные вне помещения высеченные блоки, согласно требованиям селения.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph>
+        <b>Валюта сервера</b>
+        — игровые монеты использующиеся как средство обмена и оплаты товаров и услуг в игровом процессе.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Patent">
+        <b>Патент на селение</b>
+        — книга-документ, предоставляемая и подписываемая Сюзереном, дающая право на основание определенного типа
+        селения.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Volnost">
+        <b>Купчая вольности</b>
+        — книга-документ, предоставляемая Сюзереном, изменяющая ваш статус [роль] при её использовании.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Raid">
+        <b>Набег</b>
+        — кратковременное состояние, когда игроки одного селения совершают внезапное нападение на другое селение, с
+        целью уничтожения живой силы противника и/или разграбления его ресурсов.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="War">
+        <b>Война</b>
+        — долговременное состояние, когда игроки одного селения начинают военные действия против игроков другого
+        селения, с целью достижения своих требований.
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Political course">
+        <b>Политический курс</b>
+        — это выбранное селением стратегическое направление его ролевой деятельности, которое должно явно отражать
+        данную деятельность. Все возможные виды политических курсов представлены в разделе
+        <app-rule-link target="Diplomacy">дипломатия.</app-rule-link>
+    </app-rule-paragraph>
+</div>

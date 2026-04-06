@@ -1,0 +1,17 @@
+<div class="flex flex-col gap-4">
+    <app-rule-section sectionId="Theft" title="3.1 Воровство" [level]="1">
+        <app-theft (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <app-rule-section sectionId="Kills" title="3.2 Убийства" [level]="1">
+        <app-kills (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <app-rule-section sectionId="Espionage" title="3.3 Шпионаж" [level]="1">
+        <app-espionage (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <app-rule-section sectionId="Diplomacy" title="3.4 Дипломатия" [level]="1">
+        <app-diplomacy (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+</div>
