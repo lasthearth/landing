@@ -1,0 +1,74 @@
+<div class="text-lh-primary flex flex-col gap-6 p-6">
+    <div class="flex justify-between">
+        <p class="text-4xl font-bold">Правила сервера</p>
+        <button
+            (click)="toggleAll()"
+            class="py-2 self-end text-white font-bold cursor-pointer hover:bg-lh-primary transition-all duration-300 bg-lh-primary-2 rounded-lg px-4"
+        >
+            {{ globalExpandService.globalExpandState() ? 'Скрыть всё' : 'Раскрыть всё' }}
+        </button>
+    </div>
+
+    <!-- Терминология -->
+    <app-rule-section
+        sectionId="terminology"
+        title="Терминология"
+        icon="@tui.scroll-text"
+        (scrollTo)="scrollToElement($event)"
+    >
+        <app-terminology (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <app-rule-section
+        sectionId="base"
+        title="1. Основы"
+        (scrollTo)="scrollToElement($event)"
+    >
+        <app-base (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <!-- 2. О селениях -->
+    <app-rule-section
+        sectionId="settlements"
+        title="2. О селениях"
+        (scrollTo)="scrollToElement($event)"
+    >
+        <app-about-settlements (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <!-- 3. Действия игроков -->
+    <app-rule-section
+        sectionId="actions"
+        title="3. Действия игроков"
+        (scrollTo)="scrollToElement($event)"
+    >
+        <app-players-actions (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <!-- 4. Колонизация -->
+    <app-rule-section
+        sectionId="colonization"
+        title="4. Колонизация"
+        (scrollTo)="scrollToElement($event)"
+    >
+        <app-colonization (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <!-- 5. Военные действия -->
+    <app-rule-section
+        sectionId="military"
+        title="5. Военные действия"
+        (scrollTo)="scrollToElement($event)"
+    >
+        <app-military-actions (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <!-- 6. Права и обязанности администрации -->
+    <app-rule-section
+        sectionId="admin"
+        title="6. Права и обязанности администрации"
+        (scrollTo)="scrollToElement($event)"
+    >
+        <app-admin-rights (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+</div>
