@@ -1,0 +1,17 @@
+<div
+    [class.opacity-55]="disabled()"
+    [class.pointer-events-none]="disabled()"
+    [class.brightness-85]="disabled()"
+    class="text-md flex justify-center items-center gap-0.5 text-neutral-200 font-medium"
+>
+    <div [class]="tagClasses()" class="flex justify-center items-center rounded-l-full px-3 h-8">
+        {{ text() }}
+    </div>
+    <div
+        (click)="tagWasClicked.emit(action())"
+        [class]="tagClasses()"
+        class="hover:opacity-70 active:scale-[95%] transition-all duration-300 cursor-pointer flex justify-center items-center text-center rounded-r-full px-2 h-8"
+    >
+        <tui-icon [icon]="getIcon() ?? ''" class="!text-lg" />
+    </div>
+</div>

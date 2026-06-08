@@ -1,0 +1,18 @@
+<div class="flex flex-col gap-6 justify-center items-center">
+    <p class="text-3xl font-bold text-lh-primary">Выйти в бешенстве?</p>
+
+    <div class="flex gap-2">
+        <button
+            (click)="context.$implicit.complete()"
+            class="text-neutral-200 transition-all duration-300 rounded-lg! text-sm font-bold cursor-pointer mt-2 self-end bg-lh-primary py-2.5 px-4 hover:bg-lh-primary-2 active:bg-neutral-100"
+        >
+            Остаться
+        </button>
+        <button
+            (click)="signOut()"
+            class="text-neutral-200 text-sm transition-all duration-300 font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active disabled:bg-red-900 disabled:cursor-default"
+        >
+            Выйти
+        </button>
+    </div>
+</div>

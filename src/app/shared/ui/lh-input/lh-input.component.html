@@ -1,0 +1,43 @@
+<div (click)="toggleDropdown()" [class.select-mode]="type() === 'select'" class="flexible-input">
+    @if (type() === "input" || type() === "inputNumber") {
+        <input
+            type="text"
+            [placeholder]="placeholder()"
+            [value]="displayedValue"
+            [disabled]="disabled"
+            (input)="onInputChange($event)"
+        />
+    }
+
+    @if (type() === "textarea") {
+        <textarea
+            [placeholder]="placeholder()"
+            [value]="displayedValue"
+            [disabled]="disabled"
+            (input)="onInputChange($event)"
+        ></textarea>
+    }
+
+    @if (type() === "select") {
+        <div class="flex justify-between">
+            <div [class.text-[#8c8784]]="!displayedValue" [class.text-sm]="!displayedValue" class="select-display">
+                {{ displayedValue || placeholder() }}
+            </div>
+            <img
+                src="/chevron-down.svg"
+                [class.rotate-180]="dropdownOpen()"
+                class="transition-all duration-300 opacity-50"
+            />
+        </div>
+    }
+
+    @if (type() === "select") {
+        <div [class.dropdown--open]="dropdownOpen()" class="dropdown">
+            @for (item of items(); track $index) {
+                <div (click)="selectItem(item); $event.stopPropagation()" class="dropdown-option">
+                    {{ displayWith(item) }}
+                </div>
+            }
+        </div>
+    }
+</div>

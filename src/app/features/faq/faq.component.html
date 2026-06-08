@@ -1,0 +1,283 @@
+<div class="text-lh-primary flex flex-col gap-6 p-6">
+    <p class="text-4xl font-bold">Ответы на частые вопросы</p>
+
+    <!-- 1. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isServerConcept = !isServerConcept" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">1. Какая концепция сервера?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isServerConcept }" class="transition-all" />
+        </div>
+        <tui-expand [expanded]="isServerConcept">
+            <div class="flex text-2xl/7.5 flex-col gap-3">
+                <p class="pl-4">
+                    <b>Last Hearth</b>
+                    — это уникальный ролевой политико-экономический проект с глубокой системой PvP-взаимодействий,
+                    построенный на выживании в Vintage Story.
+                </p>
+                <p class="pl-4">
+                    Вы — один из жителей на дальних, необжитых границах обширной Империи. Ваша цель — не просто выжить,
+                    а возвыситься. Начните с одинокого хутора, объединитесь с другими игроками и пройдите путь до
+                    могущественного Города или Региональной Провинции, бросая вызов другим селениям за влияние и
+                    ресурсы.
+                </p>
+                <p class="pl-4 font-bold">Ключевые аспекты нашего мира:</p>
+                <p class="pl-8">
+                    • Путь к власти: развивайте своё поселение через 7 четких этапов (от Хутора до Сюзерена). Каждый
+                    уровень открывает новые возможности, права и обязанности, от простых набегов до объявления
+                    полномасштабных войн;
+                </p>
+                <p class="pl-8">
+                    • Дипломатия и конфликты: выберите свой политический курс — мирный, нейтральный или агрессивный.
+                    Участвуйте в тактических набегах с осадными орудиями и шпионажем, или ведите долгие войны за
+                    выполнение своих требований;
+                </p>
+                <p class="pl-8">
+                    • Экономика и строительство: используйте заработанные деньги, получайте патенты от Сюзеренов и
+                    возводите Великие Строения, чтобы получить благосклонность Императора и уникальные бонусы для своей
+                    стороны.
+                </p>
+                <p class="pl-8">
+                    • Центр мира: борьба за влияние происходит в Нейтральной зоне, где расположены ценные Ключевые
+                    точки. Контролируйте их, чтобы получать преимущества для всей своей стороны;
+                </p>
+                <p class="pl-4 font-bold">Чего ожидать новичку?</p>
+                <p class="pl-8">
+                    • Четкие правила: глубоко проработанная система регулирует все аспекты жизни: от воровства и
+                    строительства оборонных сооружений до ведения боевых действий. Здесь нет места гриферству, но есть
+                    место для ожесточенной, но честной конкуренции;
+                </p>
+                <p class="pl-8">
+                    • Защита и развитие: ваше поселение защищено территориальными блоками. Вы можете спокойно строить и
+                    развивать экономику, зная, что внезапный набег будет объявлен по всем правилам;
+                </p>
+                <p class="pl-8">
+                    • Социальная игра: самый ценный ресурс здесь — это другие игроки. Создавайте альянсы, заключайте
+                    сделки, ведите дипломатические переговоры или становитесь грозой морей и дорог.
+                </p>
+                <p class="pl-4 font-bold">Этот сервер для вас, если вы ищете:</p>
+                <p class="pl-4">
+                    Не просто выживание в доиндустриальном мире, а сложную, живую песочницу с политикой, экономикой и
+                    стратегическими конфликтами, где ваши решения и мастерство определяют вашу судьбу и судьбу мира.
+                </p>
+                <p class="pl-4">
+                    Начните свою историю сегодня — отстройте хутор или найдите себе товарищей, чтобы основать первое
+                    поселение!
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 2. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isPasswordLost = !isPasswordLost" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">2. Что делать, если я забыл пароль?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isPasswordLost }" class="transition-all" />
+        </div>
+        <tui-expand [expanded]="isPasswordLost">
+            <p class="text-2xl/7.5 pl-4">
+                В случае, утраты доступу к сайту (забыл пароль, не заходит) — напишите в техподдержку в нашем
+                <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
+                .
+            </p>
+        </tui-expand>
+    </div>
+
+    <!-- 3. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isTroubles = !isTroubles" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">3. Что делать если у меня не заходит на сервер?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isTroubles }" class="transition-all" />
+        </div>
+        <tui-expand [expanded]="isTroubles">
+            <div class="flex text-2xl/7.5 flex-col gap-3">
+                <p class="pl-4">Первым делом стоит проверить возможные проблемы:</p>
+                <p class="pl-8">
+                    <span class="font-bold">1.</span>
+                    Вы не прошли верификацию;
+                </p>
+                <p class="pl-16">
+                    <span class="font-bold">•</span>
+                    возможные причины: вы еще не отправили анкету, анкету еще не проверили, анкету отклонили, вы указали
+                    не игровой ник в анкете;
+                </p>
+                <p class="pl-16">
+                    <span class="font-bold">•</span>
+                    статус вашей анкеты можно узнать на сайте в личном кабинете (статус в профиле) или у администраторов
+                    в
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
+                    .
+                </p>
+                <p class="pl-8">
+                    <span class="font-bold">2.</span>
+                    У вас не та версия клиента Vintage Story:
+                </p>
+                <p class="pl-16">
+                    <span class="font-bold">•</span>
+                    проверьте, совпадает ли версия клиента с той, что указана на странице
+                    <a href="https://lasthearth.ru/profile/how-play" target="_blank">"Играть"</a>
+                    в личном кабинете.
+                </p>
+                <p class="pl-8">
+                    <span class="font-bold">3.</span>
+                    У вас не скачиваются модификации:
+                </p>
+                <p class="pl-16">
+                    <span class="font-bold">•</span>
+                    если не удается получить доступ к сайту ModDB - гайд на починку есть в канале #гайды в
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
+                    ;
+                </p>
+                <p class="pl-16">
+                    <span class="font-bold">•</span>
+                    если не удается загрузить какой-то определенный мод - можно написать об этом в
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
+                    - в чате помогут и отправят вам недостающий мод.
+                </p>
+                <p class="pl-8">
+                    <span class="font-bold">4.</span>
+                    Проблема с кэшем:
+                </p>
+                <p class="pl-16">
+                    <span class="font-bold">•</span>
+                    почистите папку VintagestoryData;
+                </p>
+                <p class="pl-16">
+                    <span class="font-bold">•</span>
+                    для этого на Windows - нажмите "Win+R", затем введите "%APPDATA%", удалите папку VintagestoryData и
+                    пробуйте перезайти;
+                </p>
+                <p class="pl-16">
+                    <span class="font-bold">•</span>
+                    для этого на Linux путь до кеша: home/USER/.config/VintagestoryData;
+                </p>
+                <p class="pl-4">
+                    Проблема до сих пор сохраняется? Напишите тикет для техподдержки с описанием проблемы в
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
+                    .
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 5. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isSeason = !isSeason" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">4. Когда вайп и сколько длятся сезоны?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isSeason }" class="transition-all" />
+        </div>
+        <tui-expand [expanded]="isSeason">
+            <div class="flex flex-col gap-3 text-2xl/7.5">
+                <p class="pl-4">Наш сервер живет долгими сезонами, каждый из которых длится по полгода.</p>
+                <p class="pl-4">Приблизительно вайпы происходят 12 июня и 12 декабря соответственно.</p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 6. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isHowToStart = !isHowToStart" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">5. Я зашел на сервер, с чего мне начать?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isHowToStart }" class="transition-all" />
+        </div>
+        <tui-expand [expanded]="isHowToStart">
+            <div class="flex flex-col gap-3 text-2xl/7.5">
+                <p class="pl-4">
+                    <span class="font-bold">•</span>
+                    Для начала стоит освоиться: узнать кто играет на сервере, какие образованы селения, какой у них
+                    политический курс.
+                </p>
+                <p class="pl-4">
+                    <span class="font-bold">•</span>
+                    Затем важно определить свой путь: быть одиночкой, присоединиться к чьему-нибудь поселению, или же
+                    основать свое.
+                </p>
+                <p class="pl-4">
+                    <span class="font-bold">•</span>
+                    Немаловажно сколотить первоначальное состояние, ведь все торговые сотрудничества заключаются в
+                    валюте сервера.
+                </p>
+                <p class="pl-4">
+                    <span class="font-bold">•</span>
+                    Советуем новичкам для начала найти союзников в
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
+                    и освоиться вместе.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 10. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isBagsOrViolation = !isBagsOrViolation" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">6. Я нашел баг или нарушение правил, куда писать?</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ 'rotate-180!': isBagsOrViolation }"
+                class="transition-all"
+            />
+        </div>
+        <tui-expand [expanded]="isBagsOrViolation">
+            <div class="flex flex-col gap-3 text-2xl/7.5">
+                <p class="pl-4">
+                    <span class="font-bold">•</span>
+                    В случае невозможности подключиться, крашей, неправильных рецептов, нарушений правил воровства, и
+                    т.п. необходимо написать тикет через канал #тех-поддержка в
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
+                    .
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 11. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isDeathOrTheft = !isDeathOrTheft" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">7. Меня убили или обокрали, что делать?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isDeathOrTheft }" class="transition-all" />
+        </div>
+        <tui-expand [expanded]="isDeathOrTheft">
+            <div class="flex flex-col gap-3">
+                <p class="text-2xl/7.5 pl-4">
+                    <span class="font-bold">•</span>
+                    В первую очередь важно проверить не были ли нарушены правила стороной-агрессором. Если вы нашли
+                    нарушение правил, то напишите тикет в соответствии с п.6.
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 13. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isOffer = !isOffer" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">8. У меня есть предложение по модификации или концепции, куда писать?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isOffer }" class="transition-all" />
+        </div>
+        <tui-expand [expanded]="isOffer">
+            <div class="flex flex-col gap-3">
+                <p class="pl-4 text-2xl/7.5">
+                    <span class="font-bold">•</span>
+                    Все предложения принимаются в специальном канале #предложения в
+                    <a href="https://discord.com/invite/FZb7SGrSFy" target="_blank">Discord</a>
+                    .
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 14. -->
+    <div class="flex flex-col gap-2 shadow-2xs">
+        <div (click)="isTeam = !isTeam" class="flex w-full justify-between gap-2 cursor-pointer">
+            <p class="text-3xl/7.5 font-bold">9. Как мне попасть в команду проекта Last Heath?</p>
+            <tui-icon icon="@tui.chevron-down" [ngClass]="{ 'rotate-180!': isTeam }" class="transition-all" />
+        </div>
+        <tui-expand [expanded]="isTeam">
+            <div class="flex flex-col gap-3 text-2xl/7.5">
+                <p class="pl-4">
+                    <span class="font-bold">•</span>
+                    Мы всегда рады новым лицам! Напишите лидерам проекта в Discord или Telegram. Там же можно узнать о
+                    текущем наборе (модерация, квестоделы, строители и т.д.).
+                </p>
+            </div>
+        </tui-expand>
+    </div>
+</div>

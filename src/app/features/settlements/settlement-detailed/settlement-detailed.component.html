@@ -1,0 +1,25 @@
+<div
+    [style.backgroundImage]="
+        settlementData.attachments[0].url
+            ? 'url(' + settlementData.attachments[0].url + ')'
+            : 'url(/images/screenshots/screen_1.png)'
+    "
+    class="mt-6 transform transition overflow-clip duration-500 hover:scale-[101%] flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
+>
+    <div class="p-8 z-20 flex flex-col gap-8 items-center justify-between w-full">
+        <div class="w-full flex flex-col gap-4">
+            <div class="shrink-0 relative h-full w-full shadow-2xl shadow-black/60 overflow-clip rounded-xl">
+                <img [src]="settlementData.attachments[0].url" class="h-full w-full object-cover rounded-xl" />
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 items-start mt-6">
+            <h1 class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100">
+                {{ settlementData.name }}
+            </h1>
+            <p
+                class="text-base md:text-xl font-semibold text-shadow-md text-neutral-200"
+                [innerHTML]="settlementData.description"
+            ></p>
+        </div>
+    </div>
+</div>

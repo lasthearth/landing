@@ -1,0 +1,94 @@
+@let questions = questions$ | async;
+
+@if (questions !== null) {
+<div class="p-6! bg-transparent flex flex-col gap-4">
+    <p class="text-2xl/7.5">Запрос на верификацию</p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2">
+        <p class="text-lh-danger">Используйте ваш настоящий игровой ник в Vintage Story*</p>
+        <label tuiLabel>
+            <tui-input formControlName="gameName" tuiTextfieldSize="s"> Игровой ник </tui-input>
+            <tui-error formControlName="gameName" [error]="[] | tuiFieldError | async" />
+        </label>
+        <label tuiLabel>
+            <tui-input formControlName="contacts" tuiTextfieldSize="s"> Ваш discord или telegram </tui-input>
+            <tui-error formControlName="contacts" [error]="[] | tuiFieldError | async" />
+        </label>
+        <div class="flex flex-col gap-1 mt-4">
+            <p>{{questions[0].question}}</p>
+            <tui-textfield [tuiTextfieldCleaner]="false">
+                <textarea
+                    placeholder="Ответ на вопрос"
+                    [formControl]="form.controls.answer1"
+                    tuiTextarea
+                    class="bg-transparent! z-20!"
+                ></textarea>
+            </tui-textfield>
+            <tui-error formControlName="answer1" [error]="[] | tuiFieldError | async" />
+        </div>
+        <div class="flex flex-col gap-1">
+            <p>{{questions[1].question}}</p>
+            <label tuiLabel>
+                <tui-textfield [tuiTextfieldCleaner]="false">
+                    <textarea
+                        placeholder="Ответ на вопрос"
+                        [formControl]="form.controls.answer2"
+                        tuiTextarea
+                        class="bg-transparent! z-20!"
+                    ></textarea>
+                </tui-textfield>
+                <tui-error formControlName="answer2" [error]="[] | tuiFieldError | async" />
+            </label>
+        </div>
+        <div class="flex flex-col gap-1">
+            <p>{{questions[2].question}}</p>
+            <label tuiLabel>
+                <tui-textfield [tuiTextfieldCleaner]="false">
+                    <textarea
+                        placeholder="Ответ на вопрос"
+                        [formControl]="form.controls.answer3"
+                        tuiTextarea
+                        class="bg-transparent! z-20!"
+                    ></textarea>
+                </tui-textfield>
+                <tui-error formControlName="answer3" [error]="[] | tuiFieldError | async" />
+            </label>
+        </div>
+        <div class="flex flex-col gap-1">
+            <p>{{questions[3].question}}</p>
+            <label tuiLabel>
+                <tui-textfield [tuiTextfieldCleaner]="false">
+                    <textarea
+                        placeholder="Ответ на вопрос"
+                        [formControl]="form.controls.answer4"
+                        tuiTextarea
+                        class="bg-transparent! z-20!"
+                    ></textarea>
+                </tui-textfield>
+                <tui-error formControlName="answer4" [error]="[] | tuiFieldError | async" />
+            </label>
+        </div>
+        <div class="flex flex-col gap-1">
+            <p>{{questions[4].question}}</p>
+            <label tuiLabel>
+                <tui-textfield [tuiTextfieldCleaner]="false">
+                    <textarea
+                        placeholder="Ответ на вопрос"
+                        [formControl]="form.controls.answer5"
+                        tuiTextarea
+                        class="bg-transparent! z-20!"
+                    ></textarea>
+                </tui-textfield>
+                <tui-error formControlName="answer5" [error]="[] | tuiFieldError | async" />
+            </label>
+        </div>
+
+        <button
+            [disabled]="!form.valid"
+            type="submit"
+            class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-start py-1.5 px-2.5 mt-4 disabled:text-lh-disabled disabled:bg-lh-primary"
+        >
+            Отправить запрос
+        </button>
+    </form>
+</div>
+}

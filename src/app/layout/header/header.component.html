@@ -1,0 +1,186 @@
+@let online = online$ | async;
+@let time = time$ | async;
+@let isAuth = userService.authState$ | async;
+@let invitations = invitations$ | async;
+@let userVerifications = userVerifications$ | async;
+@let settlementVerifications = settlementVerifications$ | async;
+
+<div class="flex flex-col xl:gap-24 gap-8">
+    <div class="flex justify-center sm:justify-between px-4 sm:px-0">
+        <!-- Логотип -->
+        <div
+            class="hidden mt-8 z-10 sm:flex w-fit h-18 sm:h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+        >
+            <div class="rounded-2xl gap-4 flex items-center p-4 sm:py-3 sm:pl-3 sm:pr-4">
+                <img src="/logo.ico" alt="Логотип сервера" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14" />
+                <p
+                    [ngClass]="{ 'hidden! 2xl:block!': isAuth }"
+                    class="hidden sm:block text-2xl/7.5 sm:text-5xl text-white font-medium text-nowrap"
+                >
+                    Last Hearth
+                </p>
+            </div>
+        </div>
+
+        <!-- Табло информации о сервере -->
+        <div class="flex gap-2 sm:gap-4 items-center">
+            <div
+                class="mt-8 z-10 pt-1.5 sm:pt-3 flex h-20 flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+            >
+                <div class="flex flex-col gap-1">
+                    <div class="flex w-full px-4 gap-4 justify-center items-center">
+                        <div class="flex gap-0.5 items-center">
+                            <p class="text-3xl sm:text-5xl text-white">{{ online?.online ? online?.online : "-" }}</p>
+
+                            <p class="text-xs sm:text-sm text-white opacity-70">/</p>
+
+                            <p class="text-xs sm:text-sm text-white opacity-70">
+                                {{ online?.max_online ? online?.max_online : "-" }}
+                            </p>
+                        </div>
+                        <div class="text-white">
+                            <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">Игроков</p>
+
+                            <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
+                        </div>
+                    </div>
+                    <div class="w-full flex px-3.5">
+                        <progress
+                            [max]="online?.max_online ? online?.max_online : 0"
+                            size="s"
+                            tuiProgressBar
+                            [value]="online?.online ? online?.online : 0"
+                            class="progress"
+                        ></progress>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Табло информации о пользователе -->
+            @if (isAuth) {
+                <div
+                    class="mt-8 z-10 flex w-fit h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                >
+                    <div class="rounded-2xl gap-1 p-1 sm:p-3 flex items-center">
+                        <div class="flex flex-col items-start gap-0.5">
+                            <p class="text-sm sm:text-2xl/7.5 text-white">{{ userService.userName }}</p>
+                            <div class="flex items-center gap-0.5 bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 bg-clip-text text-transparent">
+                                <img
+                                    src="/splinter-of-spark.png"
+                                    alt="Осколок Искры"
+                                    class="h-6 w-6 sm:h-8 sm:w-8 object-contain spark-glow"
+                                />
+                                <span class="text-lg sm:text-2xl font-bold">{{ (balance$ | async) ?? '—' }}</span>
+                            </div>
+                        </div>
+                        @if (userService.userImage) {
+                            <img
+                                [src]="userService.userImage"
+                                alt="Аватар пользователя"
+                                (click)="isAuth ? '' : signIn()"
+                                [routerLink]="isAuth ? ['/profile'] : ''"
+                                class="relative ml-2 cursor-pointer rounded-lg z-10 size-12 sm:size-16 shadow-md shadow-lh-primary-2"
+                            />
+                        } @else {
+                            <tui-icon
+                                icon="@tui.square-user-round"
+                                class="relative rounded-lg z-10 text-6xl! text-white"
+                            />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Блок навигации -->
+    <div class="flex gap-2 justify-center xl:justify-between md:gap-4 w-full mb-4">
+        <div class="flex gap-2">
+            <button
+                (click)="select = 'home'"
+                [routerLink]="['/home']"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'home' }"
+                class="nav-button"
+            >
+                <tui-icon icon="@tui.house" />
+            </button>
+            @if (!isAuth) {
+                <button
+                    [routerLink]="['/start-game']"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'startGame' }"
+                    class="nav-button relative md:w-auto md:min-w-20 px-4"
+                >
+                    <tui-icon icon="@tui.gamepad-2" />
+
+                    <span class="hidden md:block">НАЧАТЬ ИГРУ</span>
+
+                    <tui-pulse
+                        tuiHintAppearance="floating"
+                        class="!absolute !top-0.5 !right-0.5 !scale-110"
+                    ></tui-pulse>
+                </button>
+            }
+            <button
+                [routerLink]="['/rules']"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'rules' }"
+                class="nav-button md:w-auto md:min-w-20 px-4"
+            >
+                <tui-icon icon="@tui.file-text" />
+                <span class="hidden md:block">ПРАВИЛА</span>
+            </button>
+            <button
+                [routerLink]="['/faq']"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'faq' }"
+                class="nav-button md:w-auto md:min-w-20 px-4"
+            >
+                <tui-icon icon="@tui.info" />
+                <span class="hidden md:block">FAQ</span>
+            </button>
+            @if (isAuth) {
+                <button
+                    [routerLink]="['/settlements']"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
+                    class="nav-button md:w-auto md:min-w-20 px-4"
+                >
+                    <tui-icon icon="@tui.tent" />
+                    <span class="hidden md:block">СЕЛЕНИЯ</span>
+                </button>
+            }
+            <button
+                [routerLink]="['/market']"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'market' }"
+                class="nav-button w-11 md:w-auto md:min-w-20 px-4"
+            >
+                <tui-icon icon="@tui.store" />
+                <span class="hidden md:block">МАГАЗИН</span>
+            </button>
+        </div>
+        <div class="flex flex-row gap-1">
+            <button
+                (click)="isAuth ? '' : signIn()"
+                [routerLink]="isAuth ? ['/profile'] : ''"
+                [ngClass]="{
+                    'bg-[#e2d7bb]! text-lh-primary!': select === 'profile',
+                    '!rounded-lg': !isAuth,
+                    '!rounded-r-none': isAuth,
+                }"
+                class="relative nav-button p-2.5"
+            >
+                <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
+                @if (
+                    invitations?.length || ((settlementVerifications?.length || userVerifications?.length) && isAdmin())
+                ) {
+                    <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
+                }
+            </button>
+            @if (isAuth) {
+                <button
+                    (click)="signOut()"
+                    class="relative nav-button bg-red-800! hover:!bg-lh-danger-hover !rounded-l-none !p-1 w-8!"
+                >
+                    <tui-icon icon="@tui.log-out" />
+                </button>
+            }
+        </div>
+    </div>
+</div>

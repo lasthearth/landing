@@ -1,0 +1,32 @@
+.nav-button {
+    transition: all 0.3s 0s;
+    background-color: var(--color-lh-primary-2);
+    padding: calc(var(--spacing) * 2.5);
+    border-radius: var(--radius-lg);
+    height: 44px;
+    cursor: pointer;
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    gap: 8px;
+    align-items: center;
+    justify-items: center;
+    display: flex;
+}
+
+.spark-glow {
+    animation: spark-flicker 3s ease-in-out infinite;
+}
+
+@keyframes spark-flicker {
+    0%,
+    100% {
+        filter: drop-shadow(0 0 2px #ffaa00) drop-shadow(0 0 4px #ff6600);
+        opacity: 1;
+    }
+
+    50% {
+        filter: drop-shadow(0 0 1px #ff8800) drop-shadow(0 0 2px #ff4400);
+        opacity: 0.92;
+    }
+}

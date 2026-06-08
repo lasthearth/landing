@@ -1,0 +1,53 @@
+<div
+    (click)="onCardClick()"
+    [style.backgroundImage]="preview() ? 'url(' + preview() + ')' : 'url(/images/screenshots/screen_1.webp)'"
+    class="transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
+>
+    @if (canDelete()) {
+        <button
+            type="button"
+            (click)="onDeleteClick($event)"
+            class="absolute top-4 right-4 z-30 size-9 flex items-center justify-center rounded-lg bg-lh-primary-2/60 hover:bg-lh-danger/80 backdrop-blur-md transition-all duration-200 cursor-pointer"
+            title="Удалить новость"
+        >
+            <tui-icon icon="@tui.trash-2" class="text-neutral-200 size-4" />
+        </button>
+    }
+
+    <div class="flex sm:flex-col justify-between gap-4 items-end sm:items-start sm:gap-0 h-full">
+        <div class="p-8 z-20 flex gap-12 items-center justify-between w-full">
+            <div
+                class="shrink-0 relative hidden md:block xl:hidden 2xl:block size-72 shadow-2xl shadow-black/60 overflow-clip rounded-xl"
+            >
+                <img [src]="preview()" class="hidden md:block xl:hidden 2xl:block size-72 object-cover rounded-xl" />
+            </div>
+            <div class="flex flex-col gap-6 w-full items-start">
+                <div class="flex flex-col gap-2 items-start">
+                    <h1 class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100">
+                        {{ title() }}
+                    </h1>
+                    <div class="flex flex-wrap gap-2 items-center">
+                        @if (date() !== '—') {
+                            <span class="bg-[#c35a17] text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl">
+                                {{ date() }}
+                            </span>
+                        }
+                        @if (createdBy()) {
+                            <span class="bg-neutral-700 text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl">
+                                {{ createdBy() }}
+                            </span>
+                        }
+                        <span class="bg-neutral-800 text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl flex items-center gap-1">
+                            <tui-icon icon="@tui.eye" class="size-3.5" />
+                            {{ viewCount() }}
+                        </span>
+                    </div>
+                </div>
+                <p
+                    class="text-base md:text-xl font-semibold text-shadow-md text-neutral-200"
+                    [innerHTML]="content()"
+                ></p>
+            </div>
+        </div>
+    </div>
+</div>

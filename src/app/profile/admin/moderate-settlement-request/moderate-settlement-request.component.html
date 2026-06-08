@@ -1,0 +1,17 @@
+<div class="flex flex-col gap-4 p-4 items-start">
+    <p class="text-4xl font-semibold text-lh-primary">Вы уверены в этом?</p>
+    <div class="flex gap-4 justify-end">
+        <button
+            (click)="context.$implicit.complete()"
+            class="text-white text-sm font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active"
+        >
+            ЕЩЕ ПОДУМАТЬ
+        </button>
+        <button
+            (click)="confirmApprove()"
+            class="text-white text-sm font-bold cursor-pointer mt-2 self-end bg-lh-success rounded-lg py-2.5 px-4 hover:bg-lh-success-hover active:bg-lh-success-active"
+        >
+            ОДОБРИТЬ
+        </button>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.card {
+    @media (width >= 1695px) {
+        width: 48%;
+    }
+
+    @media (width > 1280px) and (width < 1695px) {
+        width: 100%;
+    }
+
+    @media (width > 1024px) and (width <= 1280px) {
+        width: 48%;
+    }
+
+    width: 100%;
+}

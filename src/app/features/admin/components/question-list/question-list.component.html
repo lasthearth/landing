@@ -1,0 +1,25 @@
+<div class="flex flex-col gap-4">
+    @if (questions().length > 0) {
+        <div class="flex flex-col gap-3">
+            @for (q of questions(); track q.id) {
+                <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-lh-primary/35">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <p class="text-xl text-lh-primary">{{ q.text }}</p>
+                        @if (q.createdBy) {
+                            <span class="text-base text-lh-leader">Создано: {{ userNames()[q.createdBy] }}</span>
+                        }
+                    </div>
+                    <button
+                        type="button"
+                        class="text-white text-sm! cursor-pointer bg-lh-primary-2 hover:bg-lh-primary-2/50 transition-all duration-150 rounded-lg self-start py-1.5 px-2.5 mt-2 disabled:text-lh-disabled disabled:bg-lh-primary"
+                        (click)="remove(q.id)"
+                    >
+                        Удалить
+                    </button>
+                </div>
+            }
+        </div>
+    } @else {
+        <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Вопросов пока нет...</p>
+    }
+</div>
