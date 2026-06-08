@@ -122,58 +122,62 @@ export class HeaderComponent {
      * Инициализирует компонент класса {@link LandingComponent}
      */
     public constructor() {
+        const updateSelect = () => {
+            let route = this.activatedRoute;
+
+            while (route.firstChild) {
+                route = route.firstChild;
+            }
+
+            const routeKey = route.snapshot.data['route_keys'];
+
+            if (routeKey) {
+                switch (routeKey) {
+                    case RouteKeys.home:
+                        this.select = 'home';
+                        break;
+                    case RouteKeys.rules:
+                        this.select = 'rules';
+                        break;
+                    case RouteKeys.profile:
+                    case RouteKeys.howPlay:
+                    case RouteKeys.stats:
+                    case RouteKeys.admin:
+                    case RouteKeys.settlement:
+                        this.select = 'profile';
+                        break;
+                    case RouteKeys.startGame:
+                        this.select = 'startGame';
+                        break;
+                    case RouteKeys.privacyPolicy:
+                        this.select = 'privacyPolicy';
+                        break;
+                    case RouteKeys.publicOffer:
+                        this.select = 'publicOffer';
+                        break;
+                    case RouteKeys.market:
+                        this.select = 'market';
+                        break;
+                    case RouteKeys.faq:
+                        this.select = 'faq';
+                        break;
+                    case RouteKeys.settlements:
+                        this.select = 'settlements';
+                        break;
+                }
+
+                this.cdr.markForCheck();
+            }
+        };
+
+        updateSelect();
+
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(() => {
-                let route = this.activatedRoute;
-
-                while (route.firstChild) {
-                    route = route.firstChild;
-                }
-
-                const routeKey = route.snapshot.data['route_keys'];
-
-                if (routeKey) {
-                    switch (routeKey) {
-                        case RouteKeys.home:
-                            this.select = 'home';
-                            break;
-                        case RouteKeys.rules:
-                            this.select = 'rules';
-                            break;
-                        case RouteKeys.profile:
-                        case RouteKeys.howPlay:
-                        case RouteKeys.stats:
-                        case RouteKeys.admin:
-                        case RouteKeys.settlement:
-                            this.select = 'profile';
-                            break;
-                        case RouteKeys.startGame:
-                            this.select = 'startGame';
-                            break;
-                        case RouteKeys.privacyPolicy:
-                            this.select = 'privacyPolicy';
-                            break;
-                        case RouteKeys.publicOffer:
-                            this.select = 'publicOffer';
-                            break;
-                        case RouteKeys.market:
-                            this.select = 'market';
-                            break;
-                        case RouteKeys.faq:
-                            this.select = 'faq';
-                            break;
-                        case RouteKeys.settlements:
-                            this.select = 'settlements';
-                            break;
-                    }
-
-                    this.cdr.markForCheck();
-                }
-            });
+            .subscribe(() => updateSelect());
     }
 
     /**

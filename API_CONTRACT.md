@@ -101,8 +101,8 @@
 | `GET` | `/v1/donate/shop/items` | Список товаров |
 | `GET` | `/v1/donate/shop/items/{id}` | Товар по ID |
 | `POST`| `/v1/donate/shop/items/{item_id}:buy` | Купить товар |
-| `POST`| `/v1/donate/players/{player_id}/coins:add` | Начислить монеты (admin) |
-| `POST`| `/v1/donate/players/{player_id}/coins:deduct` | Списать монеты (admin) |
+| `POST`| `/v1/donate/players/{player_id}/coins:add` | Начислить монеты (admin). Body: `{ amount, player_name }` |
+| `POST`| `/v1/donate/players/{player_id}/coins:deduct` | Списать монеты (admin). Body: `{ amount }` |
 | `GET` | `/v1/donate/players/{player_id}/purchases` | Покупки игрока (admin) |
 | `GET` | `/v1/donate/players/{player_id}/transactions` | Транзакции игрока |
 | `POST`| `/v1/donate/purchases/{purchase_id}:refund` | Возврат покупки |

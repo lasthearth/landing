@@ -26,9 +26,9 @@
                 />
             </p>
         </button>
-        <button tuiTab type="button">Список вопросов</button>
-        <button tuiTab type="button">Создать вопрос</button>
+        <button tuiTab type="button">Вопросы</button>
         <button tuiTab type="button">Создать новость</button>
+        <button tuiTab type="button">Экономика</button>
     </tui-tabs>
 
     <div class="mt-2 flex flex-col gap-4">
@@ -50,13 +50,16 @@
                 }
             }
             @case (2) {
-                <app-question-list [refreshTrigger]="questionsUpdate$" />
+                <div class="flex flex-col gap-6">
+                    <app-create-question-form (created)="questionsUpdate$.next()" />
+                    <app-question-list [refreshTrigger]="questionsUpdate$" />
+                </div>
             }
             @case (3) {
-                <app-create-question-form (created)="questionsUpdate$.next()" />
+                <app-create-news />
             }
             @case (4) {
-                <app-create-news />
+                <app-admin-coin-panel />
             }
         }
     </div>

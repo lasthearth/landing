@@ -113,7 +113,7 @@ export function mapDtoToTransaction(dto: ITransactionDto): ITransaction {
         id: dto.id,
         playerId: dto.player_id,
         amount: dto.amount,
-        type: dto.type,
+        type: dto.type.toUpperCase(),
         reason: dto.reason,
         purchaseId: dto.purchase_id ?? '',
         createdAt,

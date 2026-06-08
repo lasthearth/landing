@@ -118,10 +118,10 @@ export class DonateService {
      * @param amount Сумма для начисления (decimal as string).
      * @returns Observable с результатом операции.
      */
-    public addCoins$(playerId: string, amount: string): Observable<unknown> {
+    public addCoins$(playerId: string, amount: string, playerName: string, reason?: string): Observable<unknown> {
         return this.http.post<unknown>(
             `${this.baseUrl}/donate/players/${playerId}/coins:add`,
-            { amount }
+            { amount, player_name: playerName, ...(reason ? { reason } : {}) }
         );
     }
 
@@ -134,10 +134,10 @@ export class DonateService {
      * @param amount Сумма для списания (decimal as string).
      * @returns Observable с результатом операции.
      */
-    public deductCoins$(playerId: string, amount: string): Observable<unknown> {
+    public deductCoins$(playerId: string, amount: string, reason?: string): Observable<unknown> {
         return this.http.post<unknown>(
             `${this.baseUrl}/donate/players/${playerId}/coins:deduct`,
-            { amount }
+            { amount, ...(reason ? { reason } : {}) }
         );
     }
 

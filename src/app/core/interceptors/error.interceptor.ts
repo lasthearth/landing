@@ -19,12 +19,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         catchError((err: HttpErrorResponse) => {
             const message = getErrorMessage(err);
 
-            alerts.open(message, { label: 'Ошибка', appearance: 'negative' }).subscribe();
-
+            // Для GET-запросов показываем алерт здесь, т.к. компоненты обычно не ловят ошибку
             if (req.method === 'GET') {
+                alerts.open(message, { label: 'Ошибка', appearance: 'negative' }).subscribe();
                 return EMPTY;
             }
 
+            // Для модифицирующих запросов (POST/PUT/DELETE) алерт покажет компонент через RequestStatusService
             return throwError(() => err);
         })
     );

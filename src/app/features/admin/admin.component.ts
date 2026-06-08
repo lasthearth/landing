@@ -10,6 +10,7 @@ import { CreateQuestionFormComponent } from './components/create-question-form/c
 import { QuestionListComponent } from './components/question-list/question-list.component';
 import { SettlementVerificationRequestComponent } from './settlement-verification-request/settlement-verification-request.component';
 import { CreateNewsComponent } from '../news/components/create-news-form/create-news.component';
+import { AdminCoinPanelComponent } from './ui/admin-coin-panel/admin-coin-panel.component';
 import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
 
 /**
@@ -28,6 +29,7 @@ import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
         CreateQuestionFormComponent,
         QuestionListComponent,
         CreateNewsComponent,
+        AdminCoinPanelComponent,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.css',
