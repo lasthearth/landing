@@ -6,18 +6,11 @@
         class="flex px-6 bg-center bg-cover before:absolute before:brightness-85 before:size-full before:z-10 before:backdrop-blur-2xl size-full flex-col gap-2 lg:gap-6 rounded-4xl before:rounded-4xl justify-center items-center shadow-2xl shadow-[#332C26] card-tilt"
     >
         <div class="absolute inset-0 z-20 pointer-events-none particles"></div>
-        @if (userImage()) {
-            <img
-                [src]="userImage()"
-                class="size-12 lg:size-14 xl:size-16 2xl:size-20 z-30 rounded-full"
-                alt="Аватар игрока"
-            />
-        } @else {
-            <tui-icon
-                icon="@tui.user"
-                class="!text-4xl lg:!text-5xl xl:!text-6xl 2xl:!text-7xl z-30 text-neutral-200"
-            />
-        }
+        <img
+            [src]="userImage() || '/default-avatar.png'"
+            class="size-12 lg:size-14 xl:size-16 2xl:size-20 z-30 rounded-full object-cover aspect-square"
+            alt="Аватар игрока"
+        />
         <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-neutral-200">
             {{ playerName() }}
         </p>

@@ -6,6 +6,7 @@
     padding: 8px;
     cursor: text;
     box-sizing: border-box;
+    color: var(--lh-primary);
     -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
     box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
@@ -13,14 +14,16 @@
         width: 100%;
         border: none;
         outline: none;
-        font-size: 14px;
+        font-size: 16px;
+        color: inherit;
     }
 
     textarea {
         width: 100%;
         border: none;
         outline: none;
-        font-size: 14px;
+        font-size: 16px;
+        color: inherit;
         font-family: inherit;
         resize: vertical;
         background: transparent;
@@ -31,7 +34,7 @@
         user-select: none;
 
         .select-display {
-            min-height: 20px;
+            min-height: 22px;
         }
     }
 

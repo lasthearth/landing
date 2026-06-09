@@ -14,7 +14,7 @@
                     @if (item?.avatar?.original) {
                         <tui-avatar size="s" [src]="item.avatar.original" />
                     } @else {
-                        <tui-icon icon="@tui.user" class="!text-[32px]" />
+                        <tui-avatar size="s" src="/default-avatar.png" />
                     }
                     <span>{{ item.user_game_name }}</span>
                 </div>

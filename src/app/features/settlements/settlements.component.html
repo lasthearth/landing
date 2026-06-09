@@ -1,24 +1,120 @@
-@let settlements = settlements$ | async;
+<div class="flex flex-col gap-6 p-6">
+    <div class="flex flex-col gap-4">
+        <p class="text-4xl font-bold text-[#2d201a]">Список поселений игроков</p>
 
-@if (settlements === null) {
-    <div class="m-12 flex justify-center items-center">
-        <tui-loader />
-    </div>
-} @else {
-    @if (settlements === undefined || settlements.length === 0) {
-        <div class="flex flex-col gap-6 p-6 items-center justify-center">
-            <p class="self-start text-4xl text-lh-primary font-bold">Список поселений игроков</p>
-            <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Здесь пока нет селений...</p>
-        </div>
-    } @else {
-        <div class="text-lh-primary flex flex-col gap-6 p-6">
-            <p class="text-4xl font-bold">Список поселений игроков</p>
-
-            <div class="flex flex-wrap justify-center items-stretch gap-8 pt-0">
-                @for (item of settlements; track $index) {
-                    <app-settlement-card [data]="item" class="card" />
+        <div class="flex flex-wrap gap-2">
+            <button
+                [class.bg-lh-primary-2!]="isSortActive('default')"
+                [class.text-white!]="isSortActive('default')"
+                (click)="setSort('default')"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+            >
+                По умолчанию
+                <span class="text-xs transition-all duration-300 origin-center">
+                    ━
+                </span>
+            </button>
+            <button
+                [class.bg-lh-primary-2!]="isSortActive('population')"
+                [class.text-white!]="isSortActive('population')"
+                (click)="setSort('population')"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+            >
+                По населению
+                <span
+                    class="text-xs transition-all duration-300 origin-center"
+                    [class.rotate-180]="getSortDirection('population') === 'asc'"
+                >
+                    @if (isSortActive('population')) { ▼ } @else { ━ }
+                </span>
+            </button>
+            <button
+                [class.bg-lh-primary-2!]="isSortActive('online')"
+                [class.text-white!]="isSortActive('online')"
+                (click)="setSort('online')"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+            >
+                По онлайну
+                <span
+                    class="text-xs transition-all duration-300 origin-center"
+                    [class.rotate-180]="getSortDirection('online') === 'asc'"
+                >
+                    @if (isSortActive('online')) { ▼ } @else { ━ }
+                </span>
+                @if (loadingOnline()) {
+                    <span class="inline-block ml-1 size-3 border-2 border-lh-primary border-t-transparent rounded-full animate-spin"></span>
                 }
-            </div>
+            </button>
+            <button
+                [class.bg-lh-primary-2!]="isSortActive('east')"
+                [class.text-white!]="isSortActive('east')"
+                (click)="setSort('east')"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+            >
+                Восток
+                <span
+                    class="text-xs transition-all duration-300 origin-center"
+                    [class.rotate-180]="getSortDirection('east') === 'asc'"
+                >
+                    @if (isSortActive('east')) { ▼ } @else { ━ }
+                </span>
+            </button>
+            <button
+                [class.bg-lh-primary-2!]="isSortActive('west')"
+                [class.text-white!]="isSortActive('west')"
+                (click)="setSort('west')"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+            >
+                Запад
+                <span
+                    class="text-xs transition-all duration-300 origin-center"
+                    [class.rotate-180]="getSortDirection('west') === 'asc'"
+                >
+                    @if (isSortActive('west')) { ▼ } @else { ━ }
+                </span>
+            </button>
+            <button
+                [class.bg-lh-primary-2!]="isSortActive('suzerain')"
+                [class.text-white!]="isSortActive('suzerain')"
+                (click)="setSort('suzerain')"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+            >
+                Сюзеренство
+                <span
+                    class="text-xs transition-all duration-300 origin-center"
+                    [class.rotate-180]="getSortDirection('suzerain') === 'asc'"
+                >
+                    @if (isSortActive('suzerain')) { ▼ } @else { ━ }
+                </span>
+            </button>
+            <button
+                [class.bg-lh-primary-2!]="isSortActive('diplomacy')"
+                [class.text-white!]="isSortActive('diplomacy')"
+                (click)="setSort('diplomacy')"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+            >
+                Дипломатия
+                <span
+                    class="text-xs transition-all duration-300 origin-center"
+                    [class.rotate-180]="getSortDirection('diplomacy') === 'asc'"
+                >
+                    @if (isSortActive('diplomacy')) { ▼ } @else { ━ }
+                </span>
+            </button>
+        </div>
+    </div>
+
+    @if (loading()) {
+        <div class="m-12 flex justify-center items-center">
+            <tui-loader />
+        </div>
+    } @else if (sortedSettlements().length === 0) {
+        <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Здесь пока нет селений...</p>
+    } @else {
+        <div class="flex flex-wrap justify-center items-stretch gap-6 pt-0">
+            @for (item of sortedSettlements(); track item.id) {
+                <app-settlement-card [data]="item" class="card" />
+            }
         </div>
     }
-}
+</div>

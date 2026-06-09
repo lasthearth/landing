@@ -1,6 +1,14 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { ChangeDetectionStrategy, Component, inject, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    input,
+    InputSignal,
+    output,
+    OutputEmitterRef,
+} from '@angular/core';
 import { IVerifyRequest } from '@features/verification';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
@@ -35,21 +43,33 @@ export class PlayerVerifyRequestComponent {
      * Открывает окно подтверждения принятия анкеты.
      */
     protected approve(): void {
-        this.dialogService.open(new PolymorpheusComponent(ConfirmApproveComponent), { size: 'auto', data: { userId: this.data().user_id, type: 'user' } }).subscribe({
-            complete: () => {
-                this.requestWasWatched.emit();
-            },
-        });
+        this.dialogService
+            .open(new PolymorpheusComponent(ConfirmApproveComponent), {
+                size: 'auto',
+                closeable: false,
+                data: { userId: this.data().user_id, type: 'user' },
+            })
+            .subscribe({
+                complete: () => {
+                    this.requestWasWatched.emit();
+                },
+            });
     }
 
     /**
      * Открывает окно подтверждения отклонения анкеты.
      */
     protected reject(): void {
-        this.dialogService.open(new PolymorpheusComponent(ConfirmRejectComponent), { size: 'l', data: { userId: this.data().user_id, type: 'user' } }).subscribe({
-            complete: () => {
-                this.requestWasWatched.emit();
-            },
-        });
+        this.dialogService
+            .open(new PolymorpheusComponent(ConfirmRejectComponent), {
+                size: 'l',
+                closeable: false,
+                data: { userId: this.data().user_id, type: 'user' },
+            })
+            .subscribe({
+                complete: () => {
+                    this.requestWasWatched.emit();
+                },
+            });
     }
 }

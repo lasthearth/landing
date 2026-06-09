@@ -14,9 +14,11 @@
                         />
                     </div>
                 } @else {
-                    <div class="flex rounded-2xl justify-center items-center">
-                        <tui-icon icon="@tui.user" class="text-9xl! self-center!" />
-                    </div>
+                    <img
+                        src="/default-avatar.png"
+                        class="rounded-2xl rounded-b-sm max-w-32 max-h-32"
+                        alt="Аватар по умолчанию"
+                    />
                 }
                 <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
                 <button

@@ -25,6 +25,6 @@ export class MarketComponent {
      private readonly dialogs = inject(TuiDialogService);
 
     protected howToBuy() {
-        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent), { size: 'l' }).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent)).subscribe();
     }
 }

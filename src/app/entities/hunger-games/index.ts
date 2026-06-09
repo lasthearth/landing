@@ -7,10 +7,12 @@
 
 export * from './model/season-info.interface';
 export * from './model/season-result-entry.interface';
+export * from './model/leaderboard-entry.interface';
 export * from './model/match-result-request.interface';
 export {
     mapDtoToSeasonInfo,
     mapDtoToSeasonResultEntry,
+    mapDtoToLeaderboardEntry,
     mapMatchPlayerToDto,
 } from './model/hunger-games.mapper';
 export { HungerGamesService } from './api/hunger-games.service';

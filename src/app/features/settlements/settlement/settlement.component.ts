@@ -25,7 +25,7 @@ import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, NgIf, TuiLoader, TuiPulse, TuiIcon, SettlementTagComponent],
+    imports: [AsyncPipe, TuiLoader, TuiPulse, TuiIcon, SettlementTagComponent],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

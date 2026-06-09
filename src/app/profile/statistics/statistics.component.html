@@ -59,15 +59,11 @@
                     <div class="flex w-full justify-center gap-6 items-center text-neutral-200 text-2xl/7.5">
                         <div class="flex flex-col gap-4 justify-center items-center">
                             <div class="flex bg-[#EEDFC9] rounded-2xl p-3 gap-4 items-center">
-                                @if (getUserAvatar(item.user_id)) {
-                                    <img
-                                        [src]="getUserAvatar(item.user_id)"
-                                        class="size-8 rounded-full"
-                                        alt="Аватар игрока"
-                                    />
-                                } @else {
-                                    <tui-icon icon="@tui.user" class="size-8 text-lh-primary-2" />
-                                }
+                                <img
+                                    [src]="getUserAvatar(item.user_id)"
+                                    class="size-8 rounded-full object-cover aspect-square"
+                                    alt="Аватар игрока"
+                                />
                                 <p class="font-semibold text-lh-primary-2 text-base sm:text-2xl">{{ item.name }}</p>
                             </div>
                             <p class="font-extrabold text-4xl text-shadow-lg" *ngIf="activeItemIndex === 0">

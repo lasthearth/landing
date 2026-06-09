@@ -1,25 +1,51 @@
-<div
-    [style.backgroundImage]="
-        settlementData.attachments[0].url
-            ? 'url(' + settlementData.attachments[0].url + ')'
-            : 'url(/images/screenshots/screen_1.png)'
-    "
-    class="mt-6 transform transition overflow-clip duration-500 hover:scale-[101%] flex size-full bg-cover bg-repeat relative rounded-4xl before:brightness-60 object-center shadow-2xl before:rounded-4xl before: before:size-full before:absolute before:!backdrop-blur-2xl before:z-10"
->
-    <div class="p-8 z-20 flex flex-col gap-8 items-center justify-between w-full">
-        <div class="w-full flex flex-col gap-4">
-            <div class="shrink-0 relative h-full w-full shadow-2xl shadow-black/60 overflow-clip rounded-xl">
-                <img [src]="settlementData.attachments[0].url" class="h-full w-full object-cover rounded-xl" />
-            </div>
-        </div>
-        <div class="flex flex-col gap-2 items-start mt-6">
-            <h1 class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100">
+<div class="mt-4 flex flex-col gap-4 w-full bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+    <div class="shrink-0 relative w-full shadow-md shadow-black/10 overflow-clip rounded-xl">
+        <img
+            [src]="settlementData.attachments[0].url ? settlementData.attachments[0].url : '/images/screenshots/screen_1.png'"
+            class="w-full max-h-96 object-cover rounded-xl"
+        />
+    </div>
+    <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-2xl/7.5 md:text-3xl uppercase font-bold text-[#2d201a]">
                 {{ settlementData.name }}
             </h1>
-            <p
-                class="text-base md:text-xl font-semibold text-shadow-md text-neutral-200"
-                [innerHTML]="settlementData.description"
-            ></p>
+            <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-sm px-2 py-0.5 rounded-lg">
+                {{ (settlementData.members?.length ?? 0) + 1 }} жит.
+            </span>
+            <span class="bg-[#16a34a]/15 text-[#16a34a] font-bold text-sm px-2 py-0.5 rounded-lg">
+                {{ onlineCount }} онл.
+            </span>
+        </div>
+
+        <p
+            class="text-base md:text-lg font-medium text-[#5c4030] leading-7"
+            [innerHTML]="settlementData.description"
+        ></p>
+
+        <hr class="h-px bg-[#bdb093]/30 w-full rounded-full" />
+
+        <p class="text-lg font-semibold text-[#2d201a]">Население</p>
+        <div class="flex flex-wrap gap-2">
+            <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-sm px-3 py-1.5 rounded-xl items-center">
+                @if (leader?.is_online === true) {
+                    <tui-pulse class="self-center mr-2 online" />
+                } @else {
+                    <tui-pulse [playing]="false" class="self-center mr-2 offline" />
+                }
+                <span>{{ leader?.user_game_name }}</span>
+            </div>
+
+            @for (item of users; track $index) {
+                <div class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-sm px-3 py-1.5 rounded-xl items-center">
+                    @if (item?.is_online === true) {
+                        <tui-pulse class="self-center mr-2 online" />
+                    } @else {
+                        <tui-pulse [playing]="false" class="self-center mr-2 offline" />
+                    }
+                    <span>{{ item?.user_game_name }}</span>
+                </div>
+            }
         </div>
     </div>
 </div>

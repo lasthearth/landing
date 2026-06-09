@@ -11,7 +11,7 @@ export class NewsService {
     /**
      * Базовый урл для работы с API
      */
-    private readonly baseUrl = 'https://apiprev.lasthearth.ru/v1';
+    private readonly baseUrl = 'https://api.lasthearth.ru/v1';
 
     /**
      * Сервис для работы с запросами HTTP

@@ -191,10 +191,10 @@ export class StatisticsComponent {
      * @param userId Идентификатор пользователя
      * @returns URL аватара или undefined
      */
-    protected getUserAvatar(userId: string | undefined): string | undefined {
+    protected getUserAvatar(userId: string | undefined): string {
         if (!userId) {
-            return undefined;
+            return '/default-avatar.png';
         }
-        return this.avatarsCache.get(userId);
+        return this.avatarsCache.get(userId) ?? '/default-avatar.png';
     }
 }

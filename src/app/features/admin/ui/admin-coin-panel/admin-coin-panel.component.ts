@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { TuiDialogService } from '@taiga-ui/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { debounceTime, distinctUntilChanged, filter, switchMap, catchError, of, tap } from 'rxjs';
@@ -10,6 +12,7 @@ import { DonateService, ITransaction } from '@entities/donate';
 import { UserService } from '@entities/user';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
 import { ISelectedPlayer } from '../../model/selected-player.model';
 
 /**
@@ -51,6 +54,11 @@ export class AdminCoinPanelComponent {
      * Сервис данных о пользователе.
      */
     private readonly userService = inject(UserService);
+
+    /**
+     * Сервис диалогов Taiga UI.
+     */
+    private readonly dialogs = inject(TuiDialogService);
 
     /**
      * Поле управления поиском игрока.
@@ -145,10 +153,13 @@ export class AdminCoinPanelComponent {
     }
 
     /**
-     * Начисляет донат-валюту выбранному игроку.
+     * Открывает диалог "Как приобрести" при нажатии на начисление.
+     *
+     * ⚠️ Временная заглушка. Позже будет заменён на кастомный диалог
+     * подтверждения начисления.
      */
     protected addCoins(): void {
-        this.performOperation('add');
+        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent)).subscribe();
     }
 
     /**

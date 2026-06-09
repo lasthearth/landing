@@ -1,31 +1,58 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2">
-    <div class="flex flex-col gap-1">
-        <p class="text-2xl/7.5">Причина отклонения анкеты</p>
-        <label tuiLabel>
-            <tui-textfield [tuiTextfieldCleaner]="false">
-                <textarea
-                    placeholder="Причина"
-                    [formControl]="form.controls.reason"
-                    tuiTextarea
-                    class="bg-transparent! z-20!"
-                ></textarea>
-            </tui-textfield>
-            <tui-error formControlName="reason" [error]="[] | tuiFieldError | async" />
-        </label>
-    </div>
-    <div class="flex gap-4 justify-end">
-        <button
-            (click)="context.$implicit.complete()"
-            class="text-lh-primary rounded-lg! text-sm font-bold cursor-pointer mt-2 self-end bg-transparent py-2.5 px-4 hover:bg-neutral-100 active:bg-neutral-100"
+<form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit.next()"
+    class="bg-[#e2d7bb] rounded-2xl p-10 min-w-[420px] shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+>
+    <div class="flex items-center gap-4">
+        <div
+            class="flex items-center justify-center size-12 rounded-full bg-lh-accent/10 border border-lh-accent/20 shrink-0"
         >
-            ЕЩЕ ПОДУМАТЬ
+            <tui-icon icon="@tui.x" class="size-6! text-lh-accent" />
+        </div>
+        <p class="text-2xl font-bold text-[#2d201a]">Причина отклонения</p>
+    </div>
+
+    <!-- Типовые причины -->
+    <div class="flex flex-col gap-3 mt-6">
+        <span class="text-base text-[#8a7a6a] font-medium">Быстрый выбор:</span>
+        <div class="flex flex-wrap gap-2">
+            @for (reason of quickReasons; track $index) {
+                <button
+                    type="button"
+                    (click)="selectReason(reason)"
+                    class="text-sm cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 text-[#5c4030] rounded-lg py-1.5 px-3 hover:bg-lh-accent/10 hover:border-lh-accent/30 hover:text-lh-accent transition-all"
+                >
+                    {{ reason }}
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- Поле причины -->
+    <div class="mt-5">
+        <textarea
+            placeholder="Опишите причину отклонения..."
+            [formControl]="form.controls.reason"
+            class="w-full min-h-[100px] bg-lh-primary-2/5 border border-lh-primary-2/20 rounded-xl p-4 text-lg text-lh-primary placeholder:text-neutral-500 resize-y focus:outline-none focus:border-lh-accent/40 transition-colors"
+        ></textarea>
+        <tui-error formControlName="reason" [error]="[] | tuiFieldError | async" />
+    </div>
+
+    <!-- Кнопки -->
+    <div class="flex gap-4 justify-end mt-8">
+        <button
+            type="button"
+            (click)="context.$implicit.complete()"
+            class="text-lg font-bold cursor-pointer bg-transparent border-2 border-neutral-500 text-neutral-600 rounded-xl py-2.5 px-6 hover:bg-neutral-500/10 transition-colors"
+        >
+            Отмена
         </button>
         <button
             type="submit"
             [disabled]="!form.valid"
-            class="text-white text-sm font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active disabled:bg-red-900 disabled:cursor-default"
+            class="text-lg font-bold cursor-pointer bg-transparent border-2 border-lh-danger text-lh-danger rounded-xl py-2.5 px-6 hover:bg-lh-danger/10 transition-colors disabled:opacity-40 disabled:cursor-default"
         >
-            ОТКЛОНИТЬ
+            Отклонить
         </button>
     </div>
 </form>

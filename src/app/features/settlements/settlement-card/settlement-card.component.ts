@@ -26,7 +26,7 @@ import { environment } from '@core/config/environments/environment';
     standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
-    imports: [CommonModule, TuiPulse, TuiIcon, SettlementTagComponent],
+    imports: [CommonModule, TuiPulse, TuiIcon],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent implements OnInit {
@@ -67,6 +67,11 @@ export class SettlementCardComponent implements OnInit {
     protected users: IPlayer[] = [];
 
     /**
+     * Количество онлайн-участников селения.
+     */
+    protected onlineCount: number = 0;
+
+    /**
      * @inheritdoc
      */
     public ngOnInit(): void {
@@ -75,6 +80,9 @@ export class SettlementCardComponent implements OnInit {
             .pipe(
                 tap((u) => {
                     this.leader = u;
+                    if (u?.is_online) {
+                        this.onlineCount++;
+                    }
                     this.cdr.detectChanges();
                 })
             )
@@ -86,6 +94,9 @@ export class SettlementCardComponent implements OnInit {
                 .pipe(
                     tap((u) => {
                         this.users.push(u);
+                        if (u?.is_online) {
+                            this.onlineCount++;
+                        }
                         this.cdr.detectChanges();
                     })
                 )

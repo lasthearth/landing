@@ -12,7 +12,7 @@ import { Tag } from '@app/profile/admin/moderate-settlement-request/interfaces/t
     providedIn: 'root',
 })
 export class SettlementService {
-    private readonly baseUrl = 'https://apiprev.lasthearth.ru/v1';
+    private readonly baseUrl = 'https://api.lasthearth.ru/v1';
 
     private readonly http: HttpClient = inject(HttpClient);
 

@@ -1,5 +1,6 @@
 import { ISeasonInfoDto, ISeasonInfo } from './season-info.interface';
 import { ISeasonResultEntryDto, ISeasonResultEntry } from './season-result-entry.interface';
+import { ILeaderboardEntryDto, ILeaderboardEntry } from './leaderboard-entry.interface';
 import { IMatchPlayerDto, IMatchPlayer } from './match-result-request.interface';
 
 /**
@@ -87,6 +88,24 @@ export function mapDtoToSeasonResultEntry(dto: ISeasonResultEntryDto): ISeasonRe
         elo: dto.elo,
         wins: dto.wins,
         kills: dto.kills,
+        rank: dto.rank,
+        rewardCoins: dto.reward_coins,
+    };
+}
+
+/**
+ * Преобразует DTO записи текущего лидерборда в UI-модель.
+ *
+ * @param dto DTO записи от API.
+ * @returns UI-модель записи лидерборда.
+ */
+export function mapDtoToLeaderboardEntry(dto: ILeaderboardEntryDto): ILeaderboardEntry {
+    return {
+        name: dto.name,
+        deaths: dto.deaths,
+        kills: dto.kills,
+        hoursPlayed: dto.hours_played,
+        userId: dto.user_id,
     };
 }
 

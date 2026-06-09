@@ -20,7 +20,7 @@
 
     @if (type() === "select") {
         <div class="flex justify-between">
-            <div [class.text-[#8c8784]]="!displayedValue" [class.text-sm]="!displayedValue" class="select-display">
+            <div [class.text-[#8c8784]]="!displayedValue" class="select-display">
                 {{ displayedValue || placeholder() }}
             </div>
             <img

@@ -1,4 +1,3 @@
-
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -9,7 +8,13 @@ import { debounceTime, distinctUntilChanged, filter, switchMap, catchError, fina
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { SettlementService } from '@entities/settlement';
-import { HungerGamesService, IMatchPlayer, ISeasonInfo, ISeasonResultEntry } from '@entities/hunger-games';
+import {
+    HungerGamesService,
+    ILeaderboardEntry,
+    IMatchPlayer,
+    ISeasonInfo,
+    ISeasonResultEntry,
+} from '@entities/hunger-games';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { ISeasonOption } from './model/season-option.model';
 
@@ -17,8 +22,8 @@ import { ISeasonOption } from './model/season-option.model';
 /**
  * Компонент панели управления Hunger Games в админке.
  *
- * Предоставляет интерфейс для управления сезонами, записи результатов матчей
- * и просмотра лидербордов.
+ * Предоставляет интерфейс для управления сезонами, записи результатов матчей,
+ * просмотра лидербордов и распределения наград.
  */
 @Component({
     selector: 'app-hunger-games-panel',
@@ -65,9 +70,14 @@ export class HungerGamesPanelComponent implements OnInit {
     protected readonly seasons = signal<ISeasonInfo[]>([]);
 
     /**
-     * Список записей лидерборда.
+     * Лидерборд текущего активного сезона.
      */
-    protected readonly leaderboard = signal<ISeasonResultEntry[]>([]);
+    protected readonly currentLeaderboard = signal<ILeaderboardEntry[]>([]);
+
+    /**
+     * Лидерборд выбранного архивного сезона.
+     */
+    protected readonly archiveLeaderboard = signal<ISeasonResultEntry[]>([]);
 
     /**
      * Идентификатор выбранного сезона для просмотра истории лидерборда.
@@ -129,6 +139,20 @@ export class HungerGamesPanelComponent implements OnInit {
      * Результаты поиска игрока для добавления в матч.
      */
     protected readonly searchResults = signal<any[]>([]);
+
+    /**
+     * Список наград для распределения при сбросе сезона.
+     */
+    protected readonly seasonRewards = signal<{ rank: number; coins: string }[]>([
+        { rank: 1, coins: '' },
+        { rank: 2, coins: '' },
+        { rank: 3, coins: '' },
+    ]);
+
+    /**
+     * Ошибка валидации наград.
+     */
+    protected readonly rewardsValidationError = signal<string>('');
 
     /**
      * Инициализирует компонент и загружает начальные данные.
@@ -197,23 +221,35 @@ export class HungerGamesPanelComponent implements OnInit {
     /**
      * Загружает лидерборд.
      *
-     * Если выбран конкретный сезон — загружает его лидерборд,
+     * Если выбран конкретный сезон — загружает его архивный лидерборд,
      * иначе — текущий активный.
      */
     protected loadLeaderboard(): void {
         const seasonId = this.selectedSeasonId();
-        const request$ = seasonId
-            ? this.hungerGamesService.getSeasonLeaderboard$(seasonId)
-            : this.hungerGamesService.getLeaderboard$();
 
-        request$
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                catchError(() => of([]))
-            )
-            .subscribe((list) => {
-                this.leaderboard.set(list);
-            });
+        if (seasonId) {
+            this.currentLeaderboard.set([]);
+            this.hungerGamesService
+                .getSeasonLeaderboard$(seasonId)
+                .pipe(
+                    takeUntilDestroyed(this.destroyRef),
+                    catchError(() => of([]))
+                )
+                .subscribe((list) => {
+                    this.archiveLeaderboard.set(list);
+                });
+        } else {
+            this.archiveLeaderboard.set([]);
+            this.hungerGamesService
+                .getLeaderboard$()
+                .pipe(
+                    takeUntilDestroyed(this.destroyRef),
+                    catchError(() => of([]))
+                )
+                .subscribe((list) => {
+                    this.currentLeaderboard.set(list);
+                });
+        }
     }
 
     /**
@@ -255,21 +291,69 @@ export class HungerGamesPanelComponent implements OnInit {
     }
 
     /**
-     * Сбрасывает текущий сезон после подтверждения.
+     * Проверяет корректность списка наград.
+     *
+     * @returns `true`, если награды валидны.
+     */
+    private validateRewards(): boolean {
+        const rewards = this.seasonRewards();
+
+        if (rewards.length === 0) {
+            this.rewardsValidationError.set('Добавьте хотя бы одну награду');
+            return false;
+        }
+
+        const validRewards = rewards.filter((r) => r.coins.trim() !== '');
+
+        if (validRewards.length === 0) {
+            this.rewardsValidationError.set('Укажите сумму хотя бы для одной награды');
+            return false;
+        }
+
+        const ranks = validRewards.map((r) => r.rank);
+        const uniqueRanks = new Set(ranks);
+
+        if (uniqueRanks.size !== ranks.length) {
+            this.rewardsValidationError.set('Места наград не должны повторяться');
+            return false;
+        }
+
+        if (validRewards.some((r) => r.rank <= 0)) {
+            this.rewardsValidationError.set('Место должно быть положительным числом');
+            return false;
+        }
+
+        if (validRewards.some((r) => Number(r.coins) < 0)) {
+            this.rewardsValidationError.set('Сумма награды не может быть отрицательной');
+            return false;
+        }
+
+        this.rewardsValidationError.set('');
+        return true;
+    }
+
+    /**
+     * Сбрасывает текущий сезон после подтверждения, распределяя награды.
      */
     protected resetSeason(): void {
+        if (!this.validateRewards()) {
+            return;
+        }
+
+        const rewards = this.seasonRewards().filter((r) => r.coins.trim() !== '');
+
         this.confirmDialog
             .open({
                 title: 'Сбросить текущий сезон?',
-                text: 'Все результаты текущего сезона будут аннулированы. Это действие нельзя отменить.',
+                text: `Будет распределено ${rewards.length} наград. Это действие нельзя отменить.`,
             })
             .pipe(
                 filter((confirmed) => confirmed),
                 tap(() => this.isSeasonActionLoading.set(true)),
                 switchMap(() =>
                     this.hungerGamesService
-                        .resetSeason$()
-                        .pipe(this.requestStatus.handleError(), this.requestStatus.handleSuccess('Сезон сброшен'))
+                        .resetSeason$(rewards)
+                        .pipe(this.requestStatus.handleError(), this.requestStatus.handleSuccess('Сезон завершён и награды распределены'))
                 ),
                 catchError(() => of(null)),
                 takeUntilDestroyed(this.destroyRef)
@@ -277,8 +361,60 @@ export class HungerGamesPanelComponent implements OnInit {
             .subscribe(() => {
                 this.isSeasonActionLoading.set(false);
                 this.loadCurrentSeason();
+                this.loadSeasons();
                 this.loadLeaderboard();
             });
+    }
+
+    /**
+     * Добавляет новую награду в список.
+     */
+    protected addReward(): void {
+        this.seasonRewards.update((rewards) => [
+            ...rewards,
+            { rank: rewards.length + 1, coins: '' },
+        ]);
+        this.rewardsValidationError.set('');
+    }
+
+    /**
+     * Удаляет награду из списка.
+     *
+     * @param index Индекс награды.
+     */
+    protected removeReward(index: number): void {
+        this.seasonRewards.update((rewards) => rewards.filter((_, i) => i !== index));
+        this.rewardsValidationError.set('');
+    }
+
+    /**
+     * Обновляет место награды.
+     *
+     * @param index Индекс награды.
+     * @param value Новое значение места.
+     */
+    protected updateRewardRank(index: number, value: string): void {
+        const rank = parseInt(value, 10);
+
+        this.seasonRewards.update((rewards) => {
+            const updated = [...rewards];
+            updated[index] = { ...updated[index], rank: isNaN(rank) ? 0 : rank };
+            return updated;
+        });
+    }
+
+    /**
+     * Обновляет сумму награды.
+     *
+     * @param index Индекс награды.
+     * @param value Новая сумма.
+     */
+    protected updateRewardCoins(index: number, value: string): void {
+        this.seasonRewards.update((rewards) => {
+            const updated = [...rewards];
+            updated[index] = { ...updated[index], coins: value };
+            return updated;
+        });
     }
 
     /**

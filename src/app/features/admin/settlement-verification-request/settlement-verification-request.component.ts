@@ -9,7 +9,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { Component } from '@angular/core';
-import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
+import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { IRequestSettlement } from '@entities/settlement';
@@ -25,7 +25,7 @@ import { ModerateSettlementRequestComponent } from '../moderate-settlement-reque
 @Component({
     standalone: true,
     selector: 'app-settlement-verification-request',
-    imports: [PolymorpheusOutlet, TuiButton, TuiPreview],
+    imports: [PolymorpheusOutlet, TuiButton, TuiPreview, TuiIcon],
     templateUrl: './settlement-verification-request.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -78,6 +78,7 @@ export class SettlementVerificationRequestComponent {
         this.dialogService
             .open(new PolymorpheusComponent(ModerateSettlementRequestComponent), {
                 size: 'm',
+                closeable: false,
                 data: { userId: this.data().id },
             })
             .subscribe({
@@ -94,6 +95,7 @@ export class SettlementVerificationRequestComponent {
         this.dialogService
             .open(new PolymorpheusComponent(ConfirmRejectComponent), {
                 size: 'l',
+                closeable: false,
                 data: { userId: this.data().id, type: 'settlement' },
             })
             .subscribe();

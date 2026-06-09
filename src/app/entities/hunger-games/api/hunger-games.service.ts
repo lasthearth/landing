@@ -9,12 +9,17 @@ import {
     ISeasonResultEntryDto,
 } from '../model/season-result-entry.interface';
 import {
+    ILeaderboardEntry,
+    ILeaderboardEntryDto,
+} from '../model/leaderboard-entry.interface';
+import {
     IMatchPlayer,
     IMatchResultRequestDto,
 } from '../model/match-result-request.interface';
 import {
     mapDtoToSeasonInfo,
     mapDtoToSeasonResultEntry,
+    mapDtoToLeaderboardEntry,
     mapMatchPlayerToDto,
 } from '../model/hunger-games.mapper';
 
@@ -42,14 +47,17 @@ export class HungerGamesService {
     private readonly baseUrl = environment.apiUrl;
 
     /**
-     * Кэшированный Observable текущего сезона.
+     * Кэшированный Observable текущего активного сезона.
+     *
+     * Текущий сезон определяется как первый сезон без даты окончания
+     * из списка всех сезонов, отсортированных по убыванию номера.
      */
     private readonly currentSeason$ = this.http
-        .get<ISeasonInfoDto | { season: ISeasonInfoDto }>(`${this.baseUrl}/hungergames/season`)
+        .get<{ seasons: ISeasonInfoDto[] }>(`${this.baseUrl}/hungergames/seasons`)
         .pipe(
             map((response) => {
-                const dto = 'season' in response ? response.season : response;
-                return dto ? mapDtoToSeasonInfo(dto) : null;
+                const active = response.seasons.find((s) => !s.ended_at);
+                return active ? mapDtoToSeasonInfo(active) : null;
             }),
             catchError(() => of(null)),
             shareReplay(1)
@@ -97,14 +105,15 @@ export class HungerGamesService {
     }
 
     /**
-     * Сбрасывает текущий сезон Hunger Games.
+     * Сбрасывает текущий сезон Hunger Games, распределяя награды.
      *
      * ⚠️ Требуются права администратора.
      *
+     * @param rewards Список наград по местам.
      * @returns Observable с результатом операции.
      */
-    public resetSeason$(): Observable<unknown> {
-        return this.http.post<unknown>(`${this.baseUrl}/hungergames/season/reset`, {});
+    public resetSeason$(rewards: { rank: number; coins: string }[]): Observable<unknown> {
+        return this.http.post<unknown>(`${this.baseUrl}/hungergames/season/reset`, { rewards });
     }
 
     /**
@@ -128,13 +137,13 @@ export class HungerGamesService {
      *
      * @returns Observable с записями лидерборда.
      */
-    public getLeaderboard$(): Observable<ISeasonResultEntry[]> {
+    public getLeaderboard$(): Observable<ILeaderboardEntry[]> {
         return this.http
-            .get<{ leaderboard: ISeasonResultEntryDto[] }>(
+            .get<{ entries: ILeaderboardEntryDto[] }>(
                 `${this.baseUrl}/hungergames/leaderboard`
             )
             .pipe(
-                map((response) => response.leaderboard.map(mapDtoToSeasonResultEntry)),
+                map((response) => response.entries.map(mapDtoToLeaderboardEntry)),
                 catchError(() => of([]))
             );
     }
@@ -147,11 +156,11 @@ export class HungerGamesService {
      */
     public getSeasonLeaderboard$(seasonId: string): Observable<ISeasonResultEntry[]> {
         return this.http
-            .get<{ leaderboard: ISeasonResultEntryDto[] }>(
+            .get<{ entries: ISeasonResultEntryDto[] }>(
                 `${this.baseUrl}/hungergames/seasons/${seasonId}/leaderboard`
             )
             .pipe(
-                map((response) => response.leaderboard.map(mapDtoToSeasonResultEntry)),
+                map((response) => response.entries.map(mapDtoToSeasonResultEntry)),
                 catchError(() => of([]))
             );
     }

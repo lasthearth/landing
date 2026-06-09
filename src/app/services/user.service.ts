@@ -37,7 +37,7 @@ export class UserService {
 
     public accessToken!: string;
 
-    private baseUrl = 'https://apiprev.lasthearth.ru/v1';
+    private baseUrl = 'https://api.lasthearth.ru/v1';
 
     private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
