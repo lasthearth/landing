@@ -166,7 +166,7 @@
 | `GET` | `/v1/hungergames/seasons` | История сезонов |
 | `POST`| `/v1/hungergames/season` | Создать сезон (admin) |
 | `POST`| `/v1/hungergames/season/reset` | Сбросить сезон (admin) |
-| `POST`| `/v1/hungergames/match` | Записать результат матча |
+| `POST`| `/v1/hungergames/match` | Записать результат матча (admin, требуется активный сезон) |
 | `GET` | `/v1/hungergames/leaderboard` | Текущий лидерборд |
 | `GET` | `/v1/hungergames/seasons/{season_id}/leaderboard` | Лидерборд сезона |
 | `GET` | `/v1/hungergames/seasons/{season_id}/players/{player_id}` | Статистика игрока в сезоне |
@@ -307,7 +307,28 @@ interface SeasonInfo {
 }
 ```
 
-### 3.9 SeasonResultEntry
+### 3.9 MatchResultRequest (HungerGames)
+
+Запрос на запись результата матча. Требуется минимум 2 участника, уникальные `place` и активный сезон.
+
+```typescript
+interface MatchResultRequest {
+  players: MatchPlayer[];
+}
+
+interface MatchPlayer {
+  player_id: string;
+  player_name: string;
+  place: number;             // занятое место, уникальное в рамках матча
+  kills: number;             // количество убийств
+}
+```
+
+**Возможные ошибки:**
+- `INVALID_ARGUMENT (400)`: менее 2 игроков, повторяющиеся `place` или отсутствует активный сезон.
+- `PERMISSION_DENIED (403)`: недостаточно прав.
+
+### 3.10 SeasonResultEntry
 
 ```typescript
 interface SeasonResultEntry {
@@ -320,7 +341,7 @@ interface SeasonResultEntry {
 }
 ```
 
-### 3.10 VerificationStatusResponse
+### 3.11 VerificationStatusResponse
 
 ```typescript
 interface VerificationStatusResponse {
@@ -329,7 +350,7 @@ interface VerificationStatusResponse {
 }
 ```
 
-### 3.11 Notification
+### 3.12 Notification
 
 ```typescript
 interface Notification {
@@ -342,7 +363,7 @@ interface Notification {
 }
 ```
 
-### 3.12 LeaderboardEntry
+### 3.13 LeaderboardEntry
 
 ```typescript
 interface LeaderboardEntry {
@@ -367,6 +388,7 @@ interface LeaderboardEntry {
 | RuleService | — | *в админке* |
 | NewsService | `NewsService` | `src/app/services/news.service.ts` |
 | KitService | — | *требуется создание* |
+| HungerGamesService | `HungerGamesService` | `src/app/entities/hunger-games/api/hunger-games.service.ts` |
 | LeaderboardService / StatsService | `ServerInformationService` | `src/app/services/server-information.service.ts` |
 | NotificationService | — | *требуется создание* |
 | ServerInfoService | `ServerInformationService` | `src/app/services/server-information.service.ts` |

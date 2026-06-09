@@ -1,0 +1,233 @@
+<div class="flex flex-col gap-8 max-w-5xl mx-auto w-full text-base">
+    <!-- Сезон -->
+    <div class="flex flex-col gap-4">
+        <p class="text-xl font-semibold text-lh-primary">Текущий сезон</p>
+
+        @if (isLoading()) {
+            <div class="flex justify-center py-8">
+                <tui-loader [showLoader]="true" size="m" />
+            </div>
+        } @else if (currentSeason(); as season) {
+            <div
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary"
+            >
+                <div class="flex flex-col gap-1">
+                    <span class="text-2xl font-bold text-lh-primary">Сезон {{ season.number }}</span>
+                    <span class="text-lh-primary/80">
+                        Начало: <span class="font-medium">{{ season.formattedStartedAt }}</span>
+                    </span>
+                    @if (!season.isActive) {
+                        <span class="text-lh-primary/80">
+                            Окончание: <span class="font-medium">{{ season.formattedEndedAt }}</span>
+                        </span>
+                        <span class="text-lh-danger font-semibold">Сезон завершён</span>
+                    } @else {
+                        <span class="text-lh-success font-semibold">Сезон активен</span>
+                    }
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        type="button"
+                        [disabled]="isSeasonActionLoading()"
+                        (click)="createSeason()"
+                        class="py-2 px-4 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white font-bold uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                        @if (isSeasonActionLoading()) {
+                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                        }
+                        <tui-icon icon="@tui.plus" class="!text-[16px]" />
+                        Создать сезон
+                    </button>
+                    <button
+                        type="button"
+                        [disabled]="isSeasonActionLoading() || !season.isActive"
+                        (click)="resetSeason()"
+                        class="py-2 px-4 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                        @if (isSeasonActionLoading()) {
+                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                        }
+                        <tui-icon icon="@tui.rotate-ccw" class="!text-[16px]" />
+                        Сбросить
+                    </button>
+                </div>
+            </div>
+        } @else {
+            <div
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary"
+            >
+                <span class="text-lh-primary/70">Нет активного сезона</span>
+                <button
+                    type="button"
+                    [disabled]="isSeasonActionLoading()"
+                    (click)="createSeason()"
+                    class="py-2 px-4 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white font-bold uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                    @if (isSeasonActionLoading()) {
+                        <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                    }
+                    <tui-icon icon="@tui.plus" class="!text-[16px]" />
+                    Создать сезон
+                </button>
+            </div>
+        }
+    </div>
+
+    <!-- Запись матча -->
+    <div class="flex flex-col gap-4">
+        <p class="text-xl font-semibold text-lh-primary">Запись матча</p>
+
+        <div class="flex flex-col gap-4 p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary">
+            <!-- Поиск игрока -->
+            <div class="flex flex-col gap-2">
+                <label class="text-lh-primary font-medium">Добавить участника</label>
+                <div class="relative">
+                    <input
+                        type="text"
+                        [formControl]="searchControl"
+                        placeholder="Введите ник (от 2 символов)..."
+                        class="w-full px-4 py-3 pr-10 rounded-xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] text-lh-primary placeholder:text-lh-primary/60 focus:outline-none focus:border-lh-accent transition-all shadow-sm"
+                    />
+                    <div class="absolute right-3 top-0 bottom-0 flex items-center pointer-events-none">
+                        <tui-icon icon="@tui.search" class="text-lh-primary/50" />
+                    </div>
+                </div>
+
+                @if (searchResults(); as users) {
+                    @if (users.length > 0) {
+                        <div
+                            class="flex flex-col gap-1 max-h-48 overflow-y-auto hide-scrollbar rounded-xl border border-lh-primary bg-lh-primary-2/10 backdrop-blur-sm p-2 shadow-lg"
+                        >
+                            @for (user of users; track user.user_id) {
+                                <div
+                                    class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-lh-primary-2/30 transition-colors"
+                                    (click)="addPlayer(user)"
+                                >
+                                    @if (user.avatar?.original) {
+                                        <tui-avatar size="s" [src]="user.avatar.original" />
+                                    } @else {
+                                        <tui-icon icon="@tui.user" class="!text-[24px] text-lh-primary" />
+                                    }
+                                    <span class="text-lh-primary font-medium">{{ user.user_game_name }}</span>
+                                </div>
+                            } @empty {
+                                <span class="text-lh-primary/50 p-3 text-center">Ничего не найдено</span>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Список участников -->
+            @if (matchPlayers(); as players) {
+                @if (players.length > 0) {
+                    <div class="flex flex-col gap-2">
+                        <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-lh-primary/70 text-base uppercase font-semibold px-2">
+                            <span>Игрок</span>
+                            <span class="text-center">Место</span>
+                            <span class="text-center">Убийства</span>
+                            <span></span>
+                        </div>
+                        @for (player of players; track player.playerId; let idx = $index) {
+                            <div
+                                class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center p-2 rounded-lg bg-lh-primary-2/5 border border-lh-primary"
+                            >
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <span class="text-lh-primary font-medium truncate">{{ player.playerName }}</span>
+                                </div>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    [value]="player.place"
+                                    (input)="updatePlace(idx, $any($event.target).value)"
+                                    class="w-16 px-2 py-1 rounded-lg bg-[#e2d7bb] border border-[#bdb093] text-lh-primary text-center focus:outline-none focus:border-lh-accent"
+                                />
+                                <input
+                                    type="number"
+                                    min="0"
+                                    [value]="player.kills"
+                                    (input)="updateKills(idx, $any($event.target).value)"
+                                    class="w-20 px-2 py-1 rounded-lg bg-[#e2d7bb] border border-[#bdb093] text-lh-primary text-center focus:outline-none focus:border-lh-accent"
+                                />
+                                <button
+                                    type="button"
+                                    (click)="removePlayer(idx)"
+                                    class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
+                                    title="Удалить"
+                                >
+                                    <tui-icon icon="@tui.trash-2" class="!text-[18px]" />
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+
+            @if (matchValidationError(); as error) {
+                <p class="text-lh-danger text-base font-medium">{{ error }}</p>
+            }
+
+            <button
+                type="button"
+                [disabled]="matchPlayers().length < 2 || isMatchLoading()"
+                (click)="recordMatch()"
+                class="self-start py-3 px-6 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white font-bold uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+                @if (isMatchLoading()) {
+                    <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                }
+                Записать результат
+            </button>
+        </div>
+    </div>
+
+    <!-- Лидерборд -->
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p class="text-xl font-semibold text-lh-primary">Лидерборд</p>
+            <lh-input
+                type="select"
+                class="min-w-[220px]"
+                [items]="seasonOptions()"
+                [displayWith]="displaySeason"
+                [formControl]="seasonSelectControl"
+                placeholder="Текущий сезон"
+            />
+        </div>
+
+        @if (leaderboard(); as list) {
+            @if (list.length > 0) {
+                <div class="overflow-x-auto rounded-xl border border-lh-primary">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-lh-primary-2/20 text-lh-primary font-semibold uppercase text-base">
+                            <tr>
+                                <th class="p-4">#</th>
+                                <th class="p-4">Игрок</th>
+                                <th class="p-4 text-center">ELO</th>
+                                <th class="p-4 text-center">Победы</th>
+                                <th class="p-4 text-center">Убийства</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (entry of list; track entry.playerId; let idx = $index) {
+                                <tr class="border-t border-lh-primary-2/10 hover:bg-lh-primary-2/5 transition-colors">
+                                    <td class="p-4 text-lh-primary font-bold">{{ idx + 1 }}</td>
+                                    <td class="p-4 text-lh-primary font-medium">{{ entry.playerName }}</td>
+                                    <td class="p-4 text-lh-primary text-center font-bold">{{ entry.elo }}</td>
+                                    <td class="p-4 text-lh-primary text-center">{{ entry.wins }}</td>
+                                    <td class="p-4 text-lh-primary text-center">{{ entry.kills }}</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            } @else {
+                <p
+                    class="text-lh-primary/50 text-center py-8 bg-lh-primary-2/5 rounded-xl border border-dashed border-lh-primary"
+                >
+                    Лидерборд пуст
+                </p>
+            }
+        }
+    </div>
+</div>

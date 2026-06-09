@@ -3,7 +3,7 @@ import { IMember } from '@entities/settlement';
 export interface ISettlement {
     id: string;
 
-    type: string;
+    type: string | number;
 
     name: string;
 

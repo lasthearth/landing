@@ -174,7 +174,7 @@ export class SettlementComponent {
      *
      * @param key Ключ-типа селения.
      */
-    protected getSettlementType(key: string | undefined): string {
+    protected getSettlementType(key: string | number | undefined): string {
         return getSettlementTypeByKey(key);
     }
 
@@ -239,8 +239,8 @@ export class SettlementComponent {
      *
      * @param currentType Текущий тип поселения.
      */
-    protected levelUp(currentType: string): void {
-        const type = this.getSettlementsTypeEnumByKey(currentType);
+    protected levelUp(currentType: string | number): void {
+        const type = typeof currentType === 'number' ? currentType : this.getSettlementsTypeEnumByKey(currentType);
         this.dialogs
             .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: type } })
             .subscribe();
@@ -321,7 +321,10 @@ export class SettlementComponent {
      *
      * @param key Ключ-типа селения.
      */
-    protected getSettlementsTypeEnumByKey(key: string): SettlementsTypes {
+    protected getSettlementsTypeEnumByKey(key: string | number): SettlementsTypes {
+        if (typeof key === 'number') {
+            return key as SettlementsTypes;
+        }
         switch (key) {
             case 'CAMP':
             default:

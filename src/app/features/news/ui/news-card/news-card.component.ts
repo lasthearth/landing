@@ -12,6 +12,7 @@ import { TuiIcon } from '@taiga-ui/core';
     selector: 'app-news-card',
     imports: [TuiIcon],
     templateUrl: './news-card.component.html',
+    styleUrl: './news-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewsCardComponent {

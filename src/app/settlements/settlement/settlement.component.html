@@ -15,13 +15,13 @@
                 <div class="flex gap-3">
                     <button
                         (click)="inviteAccept(item.id)"
-                        class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                        class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#c35a17] rounded-2xl py-1.5 px-3"
                     >
                         Вступить
                     </button>
                     <button
                         (click)="rejectAccept(item.id)"
-                        class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                        class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#c35a17] rounded-2xl py-1.5 px-3"
                     >
                         Отклонить
                     </button>
@@ -164,21 +164,21 @@
                         @if (userId === settlement.leader.user_id) {
                             <button
                                 (click)="invitePlayer(settlement)"
-                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#c35a17] rounded-2xl py-1.5 px-3"
                             >
                                 Пригласить игроков
                             </button>
 
                             <button
                                 (click)="levelUp(settlement.type)"
-                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#c35a17] rounded-2xl py-1.5 px-3"
                             >
                                 Повысить уровень
                             </button>
                         } @else {
                             <button
                                 (click)="settlementLeave(settlement.id, userId)"
-                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#ff7920] rounded-2xl py-1.5 px-3"
+                                class="text-white transition-all mt-8 duration-300 font-semibold text-base cursor-pointer bg-lh-accent-3 hover:bg-[#c35a17] rounded-2xl py-1.5 px-3"
                             >
                                 Покинуть селение
                             </button>

@@ -234,13 +234,23 @@ export class SettlementService {
      * @param key Ключ типа поселения.
      * @returns Локализованное название.
      */
-    public getSettlementTypeByKey(key: string | undefined) {
+    public getSettlementTypeByKey(key: string | number | undefined) {
         switch (key) {
+            case 1:
+            case 'CITY':
+                return 'Город';
+            case 2:
+            case 'FORTRESS':
+                return 'Крепость';
+            case 3:
+            case 'CAPITAL':
+                return 'Столица';
+            case 0:
             case 'CAMP':
             default:
                 return 'Лагерь';
-            }
         }
+    }
 
     /**
      * Хранилище системных тегов поселений.

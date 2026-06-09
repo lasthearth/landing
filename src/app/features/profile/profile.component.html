@@ -1,82 +1,221 @@
 @let userName = userGameName$ | async;
-<div class="text-lh-primary items-start flex flex-col gap-4 p-6">
-    <div class="flex justify-start items-start lg:items-end lg:flex-row flex-col gap-12">
-        <div class="flex gap-4 items-end justify-start mb-8">
-            <div class="flex flex-col gap-1">
+@let balance = balance$ | async;
+@let stats = playerStats$ | async;
+@let settlement = settlement$ | async;
+@let details = details$ | async;
+@let purchases = purchases$ | async;
+@let settlementOnline = settlementMembersOnline$ | async;
+@let hgSeason = hungerGamesSeason$ | async;
+@let hgStats = hungerGamesStats$ | async;
+
+<div class="text-lh-primary flex flex-col gap-2 p-6">
+    <!-- Шапка профиля -->
+    <div class="grid gap-4 grid-cols-[1fr_auto_auto] max-[1710px]:grid-cols-1">
+        <!-- Колонка 1: Профиль -->
+        <div class="flex gap-4 max-[640px]:flex-col">
+            <!-- Аватар -->
+            <div class="flex flex-col shrink-0 overflow-hidden rounded-2xl max-[640px]:hidden">
                 @if (userData.image) {
-                    <div
-                        class="flex rounded-2xl justify-center items-center cursor-pointer"
+                    <img
+                        [src]="userData.image"
                         (click)="show(userData.image, 'Изображение профиля')"
-                    >
-                        <img
-                            [src]="userData.image"
-                            class="rounded-2xl rounded-b-sm max-w-32 max-h-32 transition-all duration-200 hover:opacity-85"
-                        />
-                    </div>
+                        class="w-full h-full object-cover rounded-t-2xl max-h-44 max-w-40 transition-all duration-200 hover:opacity-85"
+                    />
                 } @else {
-                    <div class="flex rounded-2xl justify-center items-center">
-                        <tui-icon icon="@tui.user" class="text-9xl! self-center!" />
+                    <div
+                        class="flex-1 flex justify-center items-center bg-lh-primary-2/20 border-b border-lh-primary-2/10"
+                    >
+                        <tui-icon icon="@tui.user" class="text-8xl! text-lh-primary-2" />
                     </div>
                 }
                 <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
                 <button
                     (click)="triggerFileInput()"
-                    class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary rounded-t-sm rounded-lg py-2.5 px-4"
+                    class="text-lg leading-[27px] border border-lh-primary-2/10 hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary font-bold cursor-pointer bg-lh-primary-2/10 py-2 px-4 text-center"
                 >
                     ИЗМЕНИТЬ ФОТО
                 </button>
             </div>
-            <div class="w-auto flex flex-col gap-2">
-                <p class="text-4xl font-semibold text-shadow-2xs">{{ userData.name }}</p>
-                <div
-                    *ngIf="userName && getRoleName() !== 'Неверифицирован'"
-                    class="w-full flex text-xl/7.5 text-shadow-2xs gap-0.5 font-bold text-center text-neutral-200"
-                >
-                    <span class="w-[100%] bg-lh-accent-3 py-1 px-4 rounded-s-2xl">{{ userName }}</span>
-                    <span
-                        (click)="openDialogChangeUsername()"
-                        class="min-w-8 bg-lh-accent-3 py-1 rounded-e-2xl cursor-pointer hover:brightness-90 transition-all duration-200"
+
+            <!-- Инфо -->
+            <div class="flex flex-col justify-between gap-3 min-w-0 flex-1">
+                <div class="flex items-stretch gap-3 max-[530px]:flex-col">
+                    <!-- Роль -->
+                    <div
+                        class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
                     >
-                        <tui-icon icon="@tui.pencil" class="text-xl/7.5! mr-0.5" />
-                    </span>
+                        <p class="text-lg leading-[27px] text-neutral-500 mb-1">Роль</p>
+                        <p class="text-lg leading-[27px] font-bold">{{ getRoleName() }}</p>
+                    </div>
+
+                    <!-- Ник -->
+                    @if (userName && getRoleName() !== "Неверифицирован") {
+                        <div
+                            class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
+                        >
+                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">Игровой ник</p>
+                            <div class="flex items-center justify-between gap-2">
+                                <p class="text-lg leading-[27px] font-bold truncate">{{ userName }}</p>
+                                <button
+                                    (click)="openDialogChangeUsername()"
+                                    class="shrink-0 hover:bg-lh-primary-2/30 text-lh-primary transition-all duration-200 cursor-pointer bg-lh-primary-2/20 rounded-lg p-1"
+                                    title="Изменить ник"
+                                >
+                                    <tui-icon icon="@tui.pencil" class="size-5!" />
+                                </button>
+                            </div>
+                        </div>
+                    }
                 </div>
-                <div
-                    *ngIf="userName"
-                    class="flex w-full text-xl/7.5 text-shadow-2xs gap-1 font-bold text-center text-neutral-200"
-                >
-                    <span
-                        [class.text-red-500!]="getRoleName() === 'Неверифицирован'"
-                        [class.bg-lh-primary!]="getRoleName() === 'Неверифицирован'"
-                        class="w-full bg-lh-success py-1 px-4 rounded-2xl"
+
+                <!-- Селение -->
+                @if (settlement) {
+                    <div
+                        class="flex-1 shrink-1 flex gap-1 flex-col justify-start bg-lh-primary-2/10 rounded-xl px-4 py-3 border border-lh-primary-2/10 w-full"
                     >
-                        {{ getRoleName() }}
-                    </span>
-                </div>
-                @let details = details$ | async;
-                <button
-                    *ngIf="getRoleName() === 'Неверифицирован' && (details?.status == 'rejected' || !details)"
-                    (click)="verification()"
-                    class="md:min-w-20 hover:opacity-80 transition-all duration-300 text-white md:tracking-wider font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4"
-                >
-                    ПРОЙТИ ВЕРИФИКАЦИЮ
-                </button>
+                        <p class="text-lg leading-[27px] text-neutral-500 mb-1">Поселение</p>
+                        <span class="font-bold truncate text-lg leading-[27px]">
+                            {{ settlement.leader?.user_id === userService.userId ? "Глава" : "Житель" }}
+                            «{{ settlement.name }}»
+                        </span>
+                        <div class="flex items-start gap-2 flex-wrap text-lg leading-[27px]">
+                            <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
+                                {{ settlementService.getSettlementTypeByKey(settlement.type) }}
+                            </span>
+                            <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
+                                {{ settlement.members?.length ?? 0 }} жит.
+                            </span>
+                            <span class="px-2 py-0.5 bg-[#a0b8d0]/30 text-[#5a7a9a] rounded-full">
+                                {{ settlementOnline ?? 0 }} онлайн
+                            </span>
+                            @if (settlement.diplomacy) {
+                                <span class="px-2 py-0.5 bg-lh-accent-3/20 text-lh-accent-3 rounded-full">
+                                    {{ settlement.diplomacy }}
+                                </span>
+                            }
+                        </div>
+                    </div>
+                } @else {
+                    <div
+                        class="bg-lh-primary-2/10 rounded-xl px-4 py-3 text-center border border-lh-primary-2/10 w-full"
+                    >
+                        <span class="text-lg leading-[27px] text-neutral-500">Нет поселения</span>
+                    </div>
+                }
+
+                @if (getRoleName() === "Неверифицирован" && (details?.status == "rejected" || !details)) {
+                    <button
+                        (click)="verification()"
+                        class="w-fit hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+                    >
+                        ПРОЙТИ ВЕРИФИКАЦИЮ
+                    </button>
+                }
             </div>
         </div>
-        <div class="mb-8">
-            <p *ngIf="details?.status === 'pending'" class="text-3xl/7.5 font-bold">
-                Ваша анкета отправлена. Ожидайте проверки.
-            </p>
+
+        <!-- Колонка 2: Голодные игры -->
+        <div
+            class="bg-lh-primary-2/10 shrink-0 rounded-xl px-4 py-3 border border-lh-primary-2/10 text-center flex flex-col"
+        >
+            <p class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold mb-2">Голодные игры</p>
+            @if (hgSeason) {
+                <p class="text-lg leading-[27px] font-bold mb-2">Сезон {{ hgSeason.number }}</p>
+                @if (hgStats) {
+                    <div class="flex justify-center gap-3 text-lg leading-[27px]">
+                        <div>
+                            <p class="text-neutral-500 text-lg leading-[27px]">ELO</p>
+                            <p class="font-bold text-lg leading-[27px]">{{ hgStats.elo }}</p>
+                        </div>
+                        <div>
+                            <p class="text-neutral-500 text-lg leading-[27px]">Побед</p>
+                            <p class="font-bold text-lg leading-[27px]">{{ hgStats.wins }}</p>
+                        </div>
+                        <div>
+                            <p class="text-neutral-500 text-lg leading-[27px]">Убийств</p>
+                            <p class="font-bold text-lg leading-[27px]">{{ hgStats.kills }}</p>
+                        </div>
+                    </div>
+                } @else {
+                    <p class="text-lg leading-[27px] text-neutral-500">Нет данных</p>
+                }
+            } @else {
+                <p class="text-lg leading-[27px] text-neutral-500">Сезон не активен</p>
+            }
         </div>
-        <div *ngIf="details?.status === 'rejected'" class="mb-8">
-            <p class="text-3xl/7.5 font-bold">Вашу анкету отклонили:</p>
-            <p class="text-2xl/7.5 max-w-72 text-wrap break-words">{{ details?.rejection_reason }}</p>
-        </div>
+
+        <!-- Колонка 3: Валюта и статистика -->
+        @if (getRoleName() !== "Неверифицирован") {
+            <div class="flex gap-2 flex-col">
+                <!-- Баланс -->
+                <div
+                    class="flex items-center justify-between gap-3 bg-lh-primary-2/10 rounded-xl px-4 py-2 border border-lh-primary-2/10"
+                >
+                    <div class="flex items-center gap-2">
+                        <img
+                            src="/splinter-of-spark.png"
+                            alt="Осколок Искры"
+                            class="h-10 w-10 object-contain spark-glow"
+                        />
+                        <span class="text-lg leading-[27px] font-bold">{{ balance ?? "—" }}</span>
+                    </div>
+                    <span class="text-lg leading-[27px] text-neutral-500 font-semibold">Осколков</span>
+                </div>
+
+                <!-- Кнопка пополнения -->
+                <button
+                    class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4 w-full text-center"
+                >
+                    Пополнить
+                </button>
+
+                <!-- Статистика -->
+                <div class="flex gap-3 w-full">
+                    <div
+                        class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                    >
+                        <tui-icon icon="@tui.skull" class="size-6! text-[#c9a0a0] mb-1" />
+                        <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Смерти</span>
+                        <span class="text-lg leading-[27px] font-bold">{{ stats?.deaths ?? "—" }}</span>
+                    </div>
+                    <div
+                        class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                    >
+                        <tui-icon icon="@tui.swords" class="size-6! text-[#c9a880] mb-1" />
+                        <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Убийства</span>
+                        <span class="text-lg leading-[27px] font-bold">{{ stats?.kills ?? "—" }}</span>
+                    </div>
+                    <div
+                        class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                    >
+                        <tui-icon icon="@tui.clock" class="size-6! text-[#8a9eb0] mb-1" />
+                        <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Часы</span>
+                        <span class="text-lg leading-[27px] font-bold">
+                            {{ stats ? (stats.hours_played | number: "1.0-1") : "—" }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
+    <!-- Сообщения о верификации -->
+    @if (details?.status === "pending") {
+        <p class="text-lg leading-[27px] font-bold">Ваша анкета отправлена. Ожидайте проверки.</p>
+    }
+    @if (details?.status === "rejected") {
+        <div>
+            <p class="text-lg leading-[27px] font-bold">Вашу анкету отклонили:</p>
+            <p class="text-lg leading-[27px] max-w-72 text-wrap break-words">{{ details?.rejection_reason }}</p>
+        </div>
+    }
+
     @if (getRoleName() !== "Неверифицирован" || details?.status === "approved" || details?.status === "verified") {
-        <router-outlet />
+        <div class="mt-12">
+            <router-outlet />
+        </div>
     } @else {
-        <p class="text-3xl/7.5 font-bold mt-8">Что бы попасть на сервер, необходимо пройти верификацию.</p>
+        <p class="text-3xl leading-[30px] font-bold mt-8">Что бы попасть на сервер, необходимо пройти верификацию.</p>
     }
 </div>
 

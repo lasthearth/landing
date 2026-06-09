@@ -101,7 +101,7 @@ export class SettlementCardComponent implements OnInit {
      * 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция'
      */
     protected getSettlementTypeByKey(
-        key: string | undefined
+        key: string | number | undefined
     ): 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция' {
         return getSettlementTypeByKey(key);
     }

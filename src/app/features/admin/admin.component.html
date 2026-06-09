@@ -29,6 +29,7 @@
         <button tuiTab type="button">Вопросы</button>
         <button tuiTab type="button">Создать новость</button>
         <button tuiTab type="button">Экономика</button>
+        <button tuiTab type="button">Голодные игры</button>
     </tui-tabs>
 
     <div class="mt-2 flex flex-col gap-4">
@@ -60,6 +61,9 @@
             }
             @case (4) {
                 <app-admin-coin-panel />
+            }
+            @case (5) {
+                <app-hunger-games-panel />
             }
         }
     </div>

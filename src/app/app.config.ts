@@ -28,6 +28,9 @@ function getConfig() {
             'tags:create',
             'tags:delete',
             'tags:manage',
+            'hungergames:match:record',
+            'hungergames:season:reset',
+            'hungergames:season:create',
         ],
         resource: 'https://api.lasthearth.ru',
     });

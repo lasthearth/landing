@@ -1,24 +1,36 @@
 import { ChangeDetectorRef, Component, ElementRef, inject, TemplateRef, ViewChild } from '@angular/core';
 import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, DecimalPipe, NgIf } from '@angular/common';
 import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { RouterOutlet } from '@angular/router';
 import { VerificationService } from '@features/verification';
 import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
-import { map, switchMap, tap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
+import { DonateService } from '@entities/donate';
+import { ServerInformationService } from '@core/services/server-information.service';
+import { SettlementService } from '@entities/settlement';
+import { HungerGamesService } from '@features/hunger-games/api/hunger-games.service';
 @Component({
     standalone: true,
-    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton],
+    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton, DecimalPipe],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
 })
 export class ProfileComponent {
     protected readonly userService = inject(UserService);
+
+    private readonly donateService = inject(DonateService);
+
+    private readonly serverInfoService = inject(ServerInformationService);
+
+    protected readonly settlementService = inject(SettlementService);
+
+    private readonly hungerGamesService = inject(HungerGamesService);
 
     protected readonly userData: IUser = this.userService.getUserData();
 
@@ -30,9 +42,96 @@ export class ProfileComponent {
 
     protected readonly details$ = this.verificationService.getDetails();
 
-    protected readonly userGameName$ = this.userService
+    protected readonly player$ = this.userService
         .getPlayer$(this.userService.userId)
-        .pipe(map((data) => data.user_game_name));
+        .pipe(catchError(() => of(null)));
+
+    protected readonly userGameName$ = this.player$.pipe(
+        map((data) => data?.user_game_name ?? '')
+    );
+
+    protected readonly isOnline$ = this.player$.pipe(
+        map((data) => data?.is_online ?? false)
+    );
+
+    /**
+     * Баланс Осколков Искры текущего пользователя.
+     */
+    protected readonly balance$: Observable<string | null> = this.userService.authState$.pipe(
+        switchMap((isAuth) => {
+            if (!isAuth) {
+                return of(null);
+            }
+            return this.donateService.getMyBalance$().pipe(
+                map((response) => response.coins),
+                catchError(() => of(null))
+            );
+        })
+    );
+
+    /**
+     * Индивидуальная статистика игрока (смерти, убийства, часы).
+     */
+    protected readonly playerStats$ = this.userGameName$.pipe(
+        switchMap((name) => {
+            if (!name) {
+                return of(null);
+            }
+            return this.serverInfoService.getPlayerStats$(name).pipe(catchError(() => of(null)));
+        })
+    );
+
+    /**
+     * История покупок текущего пользователя.
+     */
+    protected readonly purchases$ = this.donateService.getMyPurchases$().pipe(catchError(() => of([])));
+
+    /**
+     * Поселение текущего пользователя.
+     */
+    protected readonly settlement$ = this.settlementService
+        .getSettlementInfo(this.userService.userId)
+        .pipe(catchError(() => of(null)));
+
+    /**
+     * Количество онлайн-участников селения текущего пользователя.
+     */
+    protected readonly settlementMembersOnline$ = this.settlement$.pipe(
+        switchMap((settlement) => {
+            if (!settlement?.members?.length) {
+                return of(0);
+            }
+            const requests = settlement.members.map((member) =>
+                this.userService.getPlayer$(member.user_id).pipe(
+                    map((player) => player?.is_online ?? false),
+                    catchError(() => of(false))
+                )
+            );
+            return forkJoin(requests).pipe(map((results) => results.filter(Boolean).length));
+        }),
+        catchError(() => of(0))
+    );
+
+    /**
+     * Текущий сезон голодных игр.
+     */
+    protected readonly hungerGamesSeason$ = this.hungerGamesService.getCurrentSeason$().pipe(
+        catchError(() => of(null))
+    );
+
+    /**
+     * Статистика игрока в текущем сезоне голодных игр.
+     */
+    protected readonly hungerGamesStats$ = this.hungerGamesSeason$.pipe(
+        switchMap((season) => {
+            if (!season) {
+                return of(null);
+            }
+            return this.hungerGamesService
+                .getPlayerSeasonStats$(season.id, this.userService.userId)
+                .pipe(catchError(() => of(null)));
+        })
+    );
 
     /**
      * Описание изображения открытого в предпросмотре.

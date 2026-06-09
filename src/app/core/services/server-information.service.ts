@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../config/environments/environment';
 import type { ILeaderBoard } from '@entities/user';
 
@@ -53,5 +53,23 @@ export class ServerInformationService {
         const params = new HttpParams().set('filter', type.toString()).set('limit', '25');
 
         return this.http.get<{ entries: Array<ILeaderBoard> }>(`${this.baseUrl}/leaderboard`, { params });
+    }
+
+    /**
+     * Получает индивидуальную статистику игрока из лидерборда.
+     *
+     * Запрашивает топ-200 записей и ищет игрока по имени.
+     *
+     * @param name Игровое имя игрока.
+     * @returns Observable со статистикой игрока или `null` если не найден.
+     */
+    public getPlayerStats$(name: string): Observable<ILeaderBoard | null> {
+        const params = new HttpParams().set('filter', '0').set('limit', '200');
+
+        return this.http.get<{ entries: Array<ILeaderBoard> }>(`${this.baseUrl}/leaderboard`, { params }).pipe(
+            map((response: { entries: Array<ILeaderBoard> }) =>
+                response.entries.find((entry: ILeaderBoard) => entry.name === name) ?? null
+            )
+        );
     }
 }
