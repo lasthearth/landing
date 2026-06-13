@@ -5,9 +5,19 @@ import { KitItem } from './kit-item.interface';
  */
 export interface PrivilegeCard {
     /**
+     * Идентификатор товара магазина (для покупки).
+     */
+    id?: string;
+
+    /**
      * Название привилегии.
      */
     title: string;
+
+    /**
+     * Описание привилегии.
+     */
+    description?: string;
 
     /**
      * Изображение привилегии.
@@ -37,12 +47,17 @@ export interface PrivilegeCard {
     /**
      * Преимущества привилегии.
      */
-    abilties?: any[];
+    abilities?: any[];
 
     /**
      * Набор игровых предметов привилегии.
      */
     kitItems: KitItem[];
+
+    /**
+     * Валюта цены: коины или рубли.
+     */
+    currency?: 'coins' | 'rubles';
 
     /**
      * Ежедневный набор привилегии.

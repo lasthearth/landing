@@ -1,17 +1,24 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { catchError, of } from 'rxjs';
+import { DonateService, IShopItem } from '@entities/donate';
+import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { AbilityTagComponent } from '../../ui/ability-tag/ability-tag.component';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
+import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
 
 /**
- * Компонент титулов.
+ * Компонент вкладки «Привилегии» в магазине.
+ *
+ * Загружает реальные товары типа ITEM_TYPE_ITEM с составом (entries)
+ * и отображает их в виде selectable карточек с деталями.
  */
 @Component({
     selector: 'app-titles',
-    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, PurchaseDialogComponent],
+    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, MarketGridSkeletonComponent],
     templateUrl: './titles.component.html',
     styleUrl: './titles.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,386 +30,77 @@ export class TitlesComponent {
     private readonly dialogs = inject(TuiDialogService);
 
     /**
+     * Сервис донат-магазина.
+     */
+    private readonly donateService = inject(DonateService);
+
+    /**
+     * Сервис явного обнаружения изменений.
+     */
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    /**
      * Выбранный срок подписки.
      */
     protected readonly selectedTerm = signal<'month' | 'season'>('month');
 
     /**
-     * Список титулов.
+     * Признак загрузки товаров.
      */
-    protected readonly titles: PrivilegeCard[] = [
-        {
-            title: 'Рыцарь',
-            image: '/images/donat-images/knight.webp',
-            monthPrice: '3500',
-            monthPriceOriginal: '',
-            seasonPrice: '10000',
-            seasonPriceOriginal: '10500',
-            abilties: [
-                { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
-                { icon: '@tui.sparkles', text: 'Роль в дискорде' },
-            ],
-            kitItems: [
-                { hint: 'Стеганный шлем', count: 1, image: '/images/title-items/quilted_helmet.webp' },
-                { hint: 'Стеганный нагрудник', count: 1, image: '/images/title-items/quilted_breastplate.webp' },
-                { hint: 'Стеганные поножи', count: 1, image: '/images/title-items/quilted_greaves.webp' },
-                { hint: 'Железный рыцарский меч', count: 1, image: '/images/title-items/iron_knight_sword.webp' },
-                { hint: 'Ножны', count: 1, image: '/images/title-items/sword_pouch.webp' },
-                { hint: 'Пояс для подсумка', count: 1, image: '/images/title-items/bugs_belt.webp' },
-                { hint: 'Грубый щит', count: 1, image: '/images/title-items/rough_shield.webp' },
-                { hint: 'Полотняный мешок', count: 1, image: '/images/title-items/linen_bag.webp' },
-                { hint: 'Темпоральная шестеренка', count: 1, image: '/images/title-items/temporal_gear.webp' },
-                { hint: 'Вольная', count: 1, image: '/images/title-items/freedom.webp' },
-                { hint: 'Ржаной хлеб', count: 5, image: '/images/title-items/bread.webp' },
-                { hint: 'Стеклянная бутылка (2л)', count: 1, image: '/images/title-items/bottle.webp' },
-            ],
-        },
-        {
-            title: 'Барон',
-            image: '/images/donat-images/baron.webp',
-            monthPrice: '4500',
-            monthPriceOriginal: '',
-            seasonPrice: '13000',
-            seasonPriceOriginal: '13500',
-            abilties: [
-                { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
-                { icon: '@tui.sparkles', text: 'Роль в дискорде' },
-            ],
-            kitItems: [
-                {
-                    hint: 'Стеганный шлем сшитый на заказ',
-                    count: 1,
-                    image: '/images/title-items/to_order_quilted_helmet.webp',
-                },
-                {
-                    hint: 'Стеганный нагрудник сшитый на заказ',
-                    count: 1,
-                    image: '/images/title-items/to_order_quilted_breastplate.webp',
-                },
-                {
-                    hint: 'Стеганные поножи сшитые на заказ',
-                    count: 1,
-                    image: '/images/title-items/to_order_quilted_greaves.webp',
-                },
-                { hint: 'Железный боевой молот', count: 1, image: '/images/title-items/iron_war_hammer.webp' },
-                { hint: 'Пояс для подсумка', count: 1, image: '/images/title-items/bugs_belt.webp' },
-                { hint: 'Деревянный щит', count: 1, image: '/images/title-items/wooden_shield.webp' },
-                { hint: 'Полотняный мешок', count: 2, image: '/images/title-items/linen_bag.webp' },
-                { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
-                { hint: 'Темпоральная шестеренка', count: 1, image: '/images/title-items/temporal_gear.webp' },
-                { hint: 'Вольная', count: 1, image: '/images/title-items/freedom.webp' },
-                { hint: 'Серебряные монеты', count: 5, image: '/images/title-items/silver_coin.webp' },
-                { hint: 'Ржаной хлеб', count: 3, image: '/images/title-items/bread.webp' },
-                {
-                    hint: 'Стеклянная бутылка (2л) с клюквенным вином',
-                    count: 1,
-                    image: '/images/title-items/red_bottle.webp',
-                },
-                {
-                    hint: 'Запеченная выдержанная колбаса из мяса дичи с сыром',
-                    count: 1,
-                    image: '/images/title-items/sausage.webp',
-                },
-                { hint: 'Чеддер в оболочке', count: 1, image: '/images/title-items/cheese.webp' },
-            ],
-        },
-        {
-            title: 'Виконт',
-            image: '/images/donat-images/viscount.webp',
-            monthPrice: '7500',
-            monthPriceOriginal: '',
-            seasonPrice: '22000',
-            seasonPriceOriginal: '22500',
-            abilties: [
-                { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
-                { icon: '@tui.sparkles', text: 'Роль в дискорде' },
-            ],
-            kitItems: [
-                {
-                    hint: 'Бригантинный шлем (железо)',
-                    count: 1,
-                    image: '/images/title-items/iron_brigantine_helmet.webp',
-                },
-                {
-                    hint: 'Бригантинный нагрудник (железо)',
-                    count: 1,
-                    image: '/images/title-items/iron_brigantine_breasplate.webp',
-                },
-                {
-                    hint: 'Бригантинные поножи (железо)',
-                    count: 1,
-                    image: '/images/title-items/iron_brigantine_greaves.webp',
-                },
-                { hint: 'Железный длинный меч', count: 1, image: '/images/title-items/iron_long_sword.webp' },
-                { hint: 'Ножны', count: 1, image: '/images/title-items/sword_pouch.webp' },
-                { hint: 'Пояс для подсумка', count: 1, image: '/images/title-items/bugs_belt.webp' },
-                {
-                    hint: 'Украшенный укрепленный деревянный щит',
-                    count: 1,
-                    image: '/images/title-items/deco_renfor_wooden_shield.webp',
-                },
-                { hint: 'Рюкзак из прочной кожи', count: 1, image: '/images/title-items/durable_backpack.webp' },
-                { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
-                { hint: 'Темпоральная шестеренка', count: 3, image: '/images/title-items/temporal_gear.webp' },
-                { hint: 'Карта', count: 1, image: '/images/title-items/map.webp' },
-                { hint: 'Огниво', count: 1, image: '/images/title-items/flint.webp' },
-                { hint: 'Нож из оловянной бронзы', count: 1, image: '/images/title-items/knife_bronze.webp' },
-                { hint: 'Фонарь из оловянной бронзы', count: 1, image: '/images/title-items/bronze_lantern.webp' },
-                { hint: 'Вольная', count: 1, image: '/images/title-items/freedom.webp' },
-                { hint: 'Серебряные монеты', count: 8, image: '/images/title-items/silver_coin.webp' },
-                { hint: 'Мягкий хлеб', count: 6, image: '/images/title-items/soft_bread.webp' },
-                {
-                    hint: 'Стеклянная бутылка (2л) с марочной водкой',
-                    count: 1,
-                    image: '/images/title-items/bottle.webp',
-                },
-                {
-                    hint: 'Запеченная выдержанная колбаса из мяса дичи с сыром',
-                    count: 6,
-                    image: '/images/title-items/sausage.webp',
-                },
-                { hint: 'Чеддер в оболочке', count: 2, image: '/images/title-items/cheese.webp' },
-                { hint: 'Петух', count: 1, image: '/images/title-items/rooster.webp' },
-                { hint: 'Курица', count: 6, image: '/images/title-items/chicken.webp' },
-            ],
-        },
-        {
-            title: 'Граф',
-            image: '/images/donat-images/graf.webp',
-            monthPrice: '20000',
-            monthPriceOriginal: '',
-            seasonPrice: '58000',
-            seasonPriceOriginal: '60000',
-            abilties: [
-                { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
-                { icon: '@tui.sparkles', text: 'Роль в дискорде' },
-            ],
-            kitItems: [
-                { hint: 'Чешуйчатый шлем из железа', count: 1, image: '/images/title-items/scaly_iron_helmet.webp' },
-                {
-                    hint: 'Чешуйчатый нагрудник из железа',
-                    count: 1,
-                    image: '/images/title-items/scaly_iron_breastplate.webp',
-                },
-                { hint: 'Чешуйчатые поножи из железа', count: 1, image: '/images/title-items/scaly_iron_greaves.webp' },
-                { hint: 'Стальной длинный меч', count: 1, image: '/images/title-items/steel_long_sword.webp' },
-                { hint: 'Длинный лук', count: 1, image: '/images/title-items/long_bow.webp' },
-                { hint: 'Железная стрела', count: 32, image: '/images/title-items/arrow_iron.webp' },
-                { hint: 'Колчан', count: 1, image: '/images/title-items/arrows_pouch.webp' },
-                { hint: 'Сумка под лук', count: 1, image: '/images/title-items/bow_pouch.webp' },
-                { hint: 'Ножны', count: 1, image: '/images/title-items/sword_pouch.webp' },
-                { hint: 'Пояс для подсумка', count: 1, image: '/images/title-items/bugs_belt.webp' },
-                {
-                    hint: 'Зеленый украшенный железный щит',
-                    count: 1,
-                    image: '/images/title-items/deco_green_iron_shield.webp',
-                },
-                { hint: 'Рюкзак из прочной кожи', count: 1, image: '/images/title-items/durable_backpack.webp' },
-                { hint: 'Полотняный мешок', count: 1, image: '/images/title-items/linen_bag.webp' },
-                { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
-                { hint: 'Темпоральная шестеренка', count: 5, image: '/images/title-items/temporal_gear.webp' },
-                { hint: 'Медово-серная припарка', count: 2, image: '/images/title-items/poultice_of_cloth.webp' },
-                { hint: 'Карта', count: 1, image: '/images/title-items/map.webp' },
-                { hint: 'Огниво', count: 1, image: '/images/title-items/flint.webp' },
-                { hint: 'Нож из оловянной бронзы', count: 1, image: '/images/title-items/knife_bronze.webp' },
-                { hint: 'Фонарь из оловянной бронзы', count: 1, image: '/images/title-items/bronze_lantern.webp' },
-                { hint: 'Вольная', count: 1, image: '/images/title-items/freedom.webp' },
-                { hint: 'Серебряные монеты', count: 12, image: '/images/title-items/silver_coin.webp' },
-                { hint: 'Мягкий хлеб', count: 12, image: '/images/title-items/soft_bread.webp' },
-                {
-                    hint: 'Малая демижонная бутылка (5л)',
-                    count: 1,
-                    image: '/images/title-items/big_bottle.webp',
-                },
-                {
-                    hint: 'Запеченная выдержанная колбаса из мяса дичи с сыром',
-                    count: 12,
-                    image: '/images/title-items/sausage.webp',
-                },
-                { hint: 'Чеддер в оболочке', count: 4, image: '/images/title-items/cheese.webp' },
-                { hint: 'Петух', count: 1, image: '/images/title-items/rooster.webp' },
-                { hint: 'Курица', count: 6, image: '/images/title-items/chicken.webp' },
-                { hint: 'Кабан', count: 1, image: '/images/title-items/boar_m.webp' },
-                { hint: 'Кабаниха', count: 3, image: '/images/title-items/boar_f.webp' },
-                { hint: 'Вапити', count: 1, image: '/images/title-items/vapity.webp' },
-                { hint: 'Седло', count: 1, image: '/images/title-items/saddle.webp' },
-                { hint: 'Уздечка с трензельными поводьями', count: 1, image: '/images/title-items/bridle.webp' },
-                { hint: 'Медальон вапити', count: 1, image: '/images/title-items/medalion_deer_scarab.webp' },
-            ],
-        },
-        {
-            title: 'Маркиз',
-            image: '/images/donat-images/marquis.webp',
-            monthPrice: '31500',
-            monthPriceOriginal: '',
-            seasonPrice: '90000',
-            seasonPriceOriginal: '94500',
-            abilties: [
-                { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
-                { icon: '@tui.sparkles', text: 'Роль в дискорде' },
-                { icon: '@tui.timer', text: 'Заход за 10 минут до старта сезона' },
-            ],
-            kitItems: [
-                {
-                    hint: 'Чешуйчатый шлем из метеоритного железа',
-                    count: 1,
-                    image: '/images/title-items/scaly_meteor_helmet.webp',
-                },
-                {
-                    hint: 'Чешуйчатый нагрудник из метеоритного железа',
-                    count: 1,
-                    image: '/images/title-items/scaly_meteor_breastplate.webp',
-                },
-                {
-                    hint: 'Чешуйчатые поножи из метеоритного железа',
-                    count: 1,
-                    image: '/images/title-items/scaly_meteor_greaves.webp',
-                },
-                { hint: 'Стальной клеймор', count: 1, image: '/images/title-items/steel_claymore.webp' },
-                { hint: 'Арбалет с козьей лапкой', count: 1, image: '/images/title-items/crossbow_goatsfoot.webp' },
-                { hint: 'Козья лапка', count: 1, image: '/images/title-items/goatsfoot.webp' },
-                { hint: 'Стальной болт', count: 16, image: '/images/title-items/bolt_steel.webp' },
-                { hint: 'Подсумок для болтов', count: 1, image: '/images/title-items/crossbow_pouch.webp' },
-                { hint: 'Ножны', count: 1, image: '/images/title-items/sword_pouch.webp' },
-                { hint: 'Пояс для подсумка', count: 1, image: '/images/title-items/bugs_belt.webp' },
-                {
-                    hint: 'Белый украшенный стальной щит',
-                    count: 1,
-                    image: '/images/title-items/white_deco_steel_shield.webp',
-                },
-                { hint: 'Рюкзак из прочной кожи', count: 2, image: '/images/title-items/durable_backpack.webp' },
-                { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
-                { hint: 'Темпоральная шестеренка', count: 8, image: '/images/title-items/temporal_gear.webp' },
-                { hint: 'Медово-серная припарка', count: 10, image: '/images/title-items/poultice_of_cloth.webp' },
-                { hint: 'Карта', count: 1, image: '/images/title-items/map.webp' },
-                { hint: 'Секстант из железа', count: 1, image: '/images/title-items/sextant.webp' },
-                { hint: 'Огниво', count: 1, image: '/images/title-items/flint.webp' },
-                { hint: 'Нож из железа', count: 1, image: '/images/title-items/knife_iron.webp' },
-                { hint: 'Топор из железа', count: 1, image: '/images/title-items/axe_iron.webp' },
-                { hint: 'Лопата из железа', count: 1, image: '/images/title-items/shovel_iron.webp' },
-                { hint: 'Фонарь из серебра', count: 1, image: '/images/title-items/silver_lantern.webp' },
-                { hint: 'Вольная', count: 1, image: '/images/title-items/freedom.webp' },
-                { hint: 'Серебряные монеты', count: 35, image: '/images/title-items/silver_coin.webp' },
-                { hint: 'Сильно сухие рисовые сухари', count: 64, image: '/images/title-items/breadcrumbs.webp' },
-                {
-                    hint: 'Малая демижонная бутылка (5л) с марочной водкой',
-                    count: 1,
-                    image: '/images/title-items/big_bottle.webp',
-                },
-                {
-                    hint: 'Запеченная выдержанная колбаса из мяса дичи с сыром',
-                    count: 12,
-                    image: '/images/title-items/sausage.webp',
-                },
-                { hint: 'Чеддер в оболочке', count: 4, image: '/images/title-items/cheese.webp' },
-                { hint: 'Петух', count: 1, image: '/images/title-items/rooster.webp' },
-                { hint: 'Курица', count: 6, image: '/images/title-items/chicken.webp' },
-                { hint: 'Кабан', count: 1, image: '/images/title-items/boar_m.webp' },
-                { hint: 'Кабаниха', count: 3, image: '/images/title-items/boar_f.webp' },
-                { hint: 'Вапити', count: 1, image: '/images/title-items/vapity.webp' },
-                { hint: 'Седло', count: 1, image: '/images/title-items/saddle.webp' },
-                { hint: 'Уздечка с трензельными поводьями', count: 1, image: '/images/title-items/bridle.webp' },
-                { hint: 'Медальон вапити', count: 1, image: '/images/title-items/medalion_deer_scarab.webp' },
-                { hint: 'Седельные сумки', count: 1, image: '/images/title-items/saddlebags.webp' },
-            ],
-            dailyKitItems: [
-                { hint: 'Сильно сухие рисовые сухари', count: 16, image: '/images/title-items/breadcrumbs.webp' },
-                { hint: 'Медово-серная припарка', count: 4, image: '/images/title-items/poultice_of_cloth.webp' },
-                { hint: 'Ведро с 10л молока', count: 1, image: '/images/title-items/milk.webp' },
-                { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
-                { hint: 'Медные монеты', count: 30, image: '/images/title-items/copper_coin.webp' },
-            ],
-        },
-        {
-            title: 'Герцог',
-            image: '/images/donat-images/duke.webp',
-            monthPrice: '58500',
-            monthPriceOriginal: '',
-            seasonPrice: '170000',
-            seasonPriceOriginal: '175500',
-            abilties: [
-                { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
-                { icon: '@tui.sparkles', text: 'Роль в дискорде' },
-                { icon: '@tui.timer', text: 'Заход за 10 минут до старта сезона' },
-            ],
-            kitItems: [
-                { hint: 'Серебряная корона на 1 гнездо', count: 1, image: '/images/title-items/coronet.webp' },
-                { hint: 'Чешуйчатый шлем из стали', count: 1, image: '/images/title-items/scaly_steel_helmet.webp' },
-                {
-                    hint: 'Чешуйчатый нагрудник из стали',
-                    count: 1,
-                    image: '/images/title-items/scaly_steel_breastplate.webp',
-                },
-                { hint: 'Чешуйчатые поножи из стали', count: 1, image: '/images/title-items/scaly_steel_greaves.webp' },
-                { hint: 'Стальной клеймор', count: 1, image: '/images/title-items/steel_claymore.webp' },
-                { hint: 'Ножны', count: 1, image: '/images/title-items/sword_pouch.webp' },
-                { hint: 'Пояс для подсумка', count: 1, image: '/images/title-items/bugs_belt.webp' },
-                { hint: 'Пистолет (600 прочности)', count: 1, image: '/images/title-items/gun.webp' },
-                { hint: 'Рейтарский ключ', count: 1, image: '/images/title-items/reitar_key.webp' },
-                { hint: 'Порох', count: 64, image: '/images/title-items/gunpowder.webp' },
-                { hint: 'Пороховница', count: 1, image: '/images/title-items/flask.webp' },
-                { hint: 'Свинцовая пуля', count: 32, image: '/images/title-items/lead_bullet.webp' },
-                { hint: 'Клочок льна', count: 32, image: '/images/title-items/piece_flax.webp' },
-                { hint: 'Подсумок для пистолета', count: 1, image: '/images/title-items/gun_pouch.webp' },
-                { hint: 'Подсумок для пуль', count: 1, image: '/images/title-items/bullet_pouch.webp' },
-                {
-                    hint: 'Белый украшенный стальной щит',
-                    count: 1,
-                    image: '/images/title-items/white_deco_steel_shield.webp',
-                },
-                { hint: 'Рюкзак из прочной кожи', count: 4, image: '/images/title-items/durable_backpack.webp' },
-                { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
-                { hint: 'Темпоральная шестеренка', count: 16, image: '/images/title-items/temporal_gear.webp' },
-                { hint: 'Медово-серная припарка', count: 16, image: '/images/title-items/poultice_of_cloth.webp' },
-                { hint: 'JPS', count: 1, image: '/images/title-items/jps.webp' },
-                { hint: 'Огниво', count: 1, image: '/images/title-items/flint.webp' },
-                { hint: 'Нож из железа', count: 1, image: '/images/title-items/knife_iron.webp' },
-                { hint: 'Топор из железа', count: 1, image: '/images/title-items/axe_iron.webp' },
-                { hint: 'Лопата из железа', count: 1, image: '/images/title-items/shovel_iron.webp' },
-                { hint: 'Молот из железа', count: 1, image: '/images/title-items/hummer_iron.webp' },
-                { hint: 'Зубило из железа', count: 1, image: '/images/title-items/chisel_iron.webp' },
-                { hint: 'Кирка из железа', count: 1, image: '/images/title-items/pickaxe_iron.webp' },
-                { hint: 'Фонарь из серебра', count: 1, image: '/images/title-items/silver_lantern.webp' },
-                { hint: 'Вольная', count: 1, image: '/images/title-items/freedom.webp' },
-                { hint: 'Золотые монеты', count: 2, image: '/images/title-items/gold_coin.webp' },
-                { hint: 'Сильно сухие рисовые сухари', count: 128, image: '/images/title-items/breadcrumbs.webp' },
-                {
-                    hint: 'Малая демижонная бутылка (5л) с выдержанным бренди из белого вина',
-                    count: 1,
-                    image: '/images/title-items/big_bottle.webp',
-                },
-                {
-                    hint: 'Запеченная выдержанная колбаса из мяса дичи с сыром',
-                    count: 32,
-                    image: '/images/title-items/sausage.webp',
-                },
-                { hint: 'Чеддер в оболочке', count: 8, image: '/images/title-items/cheese.webp' },
-                { hint: 'Петух', count: 1, image: '/images/title-items/rooster.webp' },
-                { hint: 'Курица', count: 6, image: '/images/title-items/chicken.webp' },
-                { hint: 'Кабан', count: 1, image: '/images/title-items/boar_m.webp' },
-                { hint: 'Кабаниха', count: 3, image: '/images/title-items/boar_f.webp' },
-                { hint: 'Белый вапити', count: 1, image: '/images/title-items/vapity_white.webp' },
-                { hint: 'Седло', count: 1, image: '/images/title-items/saddle.webp' },
-                { hint: 'Глубокий вальтрап дворянина', count: 1, image: '/images/title-items/waltrap.webp' },
-                { hint: 'Уздечка с трензельными поводьями', count: 1, image: '/images/title-items/bridle.webp' },
-                { hint: 'Медальон вапити красный', count: 1, image: '/images/title-items/medalion_deer_red.webp' },
-                { hint: 'Прочные сдельные сумки', count: 1, image: '/images/title-items/durable_saddlebags.webp' },
-            ],
-            dailyKitItems: [
-                { hint: 'Сильно сухие рисовые сухари', count: 32, image: '/images/title-items/breadcrumbs.webp' },
-                { hint: 'Медово-серная припарка', count: 8, image: '/images/title-items/poultice_of_cloth.webp' },
-                { hint: 'Ведро с 10л молока', count: 1, image: '/images/title-items/milk.webp' },
-                { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
-                { hint: 'Темпоральная шестеренка', count: 1, image: '/images/title-items/temporal_gear.webp' },
-                { hint: 'Серебряные монеты', count: 1, image: '/images/title-items/silver_coin.webp' },
-                { hint: 'Огниво', count: 1, image: '/images/title-items/flint.webp' },
-                { hint: 'Скальная бомба', count: 1, image: '/images/title-items/stone_bomb.webp' },
-                { hint: 'Ржавая шестеренка', count: 16, image: '/images/title-items/rusty_gear.webp' },
-            ],
-        },
-    ];
+    protected readonly loading = signal(true);
 
-    protected selectedPrivilege: PrivilegeCard = this.titles[0];
+    /**
+     * Список привилегий.
+     */
+    protected titles: PrivilegeCard[] = [];
+
+    /**
+     * Выбранная привилегия.
+     */
+    protected selectedPrivilege: PrivilegeCard | null = null;
+
+    constructor() {
+        this.donateService
+            .getShopItems$()
+            .pipe(
+                catchError(() => {
+                    this.loading.set(false);
+                    return of([]);
+                })
+            )
+            .subscribe((items) => {
+                this.titles = this.filterAndMapPrivileges(items);
+                this.selectedPrivilege = this.titles[0] ?? null;
+                this.loading.set(false);
+                this.changeDetectorRef.markForCheck();
+            });
+    }
+
+    /**
+     * Фильтрует товары-привилегии и преобразует их в модель карточки.
+     *
+     * @param items Список товаров магазина.
+     * @returns Список карточек привилегий.
+     */
+    private filterAndMapPrivileges(items: IShopItem[]): PrivilegeCard[] {
+        return items
+            .filter(
+                (item) =>
+                    item.isAvailable &&
+                    item.itemType === 'ITEM_TYPE_ITEM' &&
+                    (item.entries?.length ?? 0) > 0
+            )
+            .map(mapShopItemToPrivilegeCard);
+    }
+
+    /**
+     * Выбирает привилегию из бокового списка.
+     *
+     * @param privilege Выбранная привилегия.
+     */
+    protected selectPrivilege(privilege: PrivilegeCard): void {
+        this.selectedPrivilege = privilege;
+    }
 
     /**
      * Вычисляет процент скидки.
@@ -411,26 +109,6 @@ export class TitlesComponent {
      * @param originalPrice Оригинальная цена до скидки.
      * @returns Процент скидки или 0.
      */
-    /**
-     * Открывает диалог покупки выбранного титула.
-     */
-    protected openPurchaseDialog(): void {
-        const p = this.selectedPrivilege;
-        const term = this.selectedTerm();
-        const data: PurchaseDialogData = {
-            title: p.title,
-            image: p.image,
-            monthPrice: p.monthPrice,
-            seasonPrice: p.seasonPrice,
-            currency: 'rubles',
-            initialTerm: term,
-            kitItems: p.kitItems,
-            dailyKitItems: p.dailyKitItems,
-            abilities: p.abilties,
-        };
-        this.dialogs.open(new PolymorpheusComponent(PurchaseDialogComponent), { size: 'auto', data }).subscribe();
-    }
-
     protected getDiscountPercent(price: string, originalPrice: string): number {
         if (!originalPrice || !price) {
             return 0;
@@ -441,5 +119,32 @@ export class TitlesComponent {
             return 0;
         }
         return Math.round(((original - current) / original) * 100);
+    }
+
+    /**
+     * Открывает диалог покупки выбранной привилегии.
+     */
+    protected openPurchaseDialog(): void {
+        const p = this.selectedPrivilege;
+        if (!p || !p.id) {
+            return;
+        }
+
+        const term = this.selectedTerm();
+        const data: PurchaseDialogData = {
+            itemId: p.id,
+            title: p.title,
+            image: p.image,
+            monthPrice: p.monthPrice,
+            seasonPrice: p.seasonPrice,
+            currency: p.currency ?? 'coins',
+            initialTerm: term,
+            description: p.description,
+            kitItems: p.kitItems,
+            dailyKitItems: p.dailyKitItems,
+            abilities: p.abilities,
+        };
+
+        this.dialogs.open(new PolymorpheusComponent(PurchaseDialogComponent), { size: 'auto', data }).subscribe();
     }
 }

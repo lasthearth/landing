@@ -1,15 +1,21 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiButton, TuiIcon, TuiDialogContext } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiDialogContext, TuiAlertService } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DonateService } from '@entities/donate';
+import { RequestStatusService } from '@core/services/request-status.service';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 
 /**
  * Данные для диалога покупки товара.
  */
 export interface PurchaseDialogData {
+    /**
+     * Идентификатор товара магазина.
+     */
+    itemId?: string;
+
     /**
      * Название товара.
      */
@@ -70,7 +76,7 @@ export interface PurchaseDialogData {
 @Component({
     selector: 'app-purchase-dialog',
     standalone: true,
-    imports: [CommonModule, FormsModule, TuiButton, TuiIcon, KitItemComponent, LHInputComponent],
+    imports: [FormsModule, TuiButton, TuiIcon, LHInputComponent],
     templateUrl: './purchase-dialog.component.html',
     styleUrl: './purchase-dialog.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,6 +86,26 @@ export class PurchaseDialogComponent {
      * Контекст диалога Taiga UI.
      */
     protected readonly context = inject<TuiDialogContext<void, PurchaseDialogData>>(POLYMORPHEUS_CONTEXT);
+
+    /**
+     * Сервис донат-магазина.
+     */
+    private readonly donateService = inject(DonateService);
+
+    /**
+     * Сервис статуса запросов.
+     */
+    private readonly requestStatusService = inject(RequestStatusService);
+
+    /**
+     * Сервис уведомлений.
+     */
+    private readonly alertService = inject(TuiAlertService);
+
+    /**
+     * Ссылка уничтожения на компонент.
+     */
+    private readonly destroyRef = inject(DestroyRef);
 
     /**
      * Данные товара для отображения.
@@ -108,13 +134,30 @@ export class PurchaseDialogComponent {
     /**
      * Обрабатывает нажатие кнопки «Купить».
      *
-     * ⚠️ Заглушка: реальное списание и покупка будут реализованы
-     * после появления batch-эндпоинта на бэкенде.
+     * Отправляет запрос покупки товара на бэкенд.
+     * При успехе показывает уведомление и закрывает диалог.
      */
     protected onBuy(): void {
-        // eslint-disable-next-line no-console
-        console.debug('[PurchaseDialog] Покупка:', this.data.title, 'Комментарий:', this.comment);
-        this.context.completeWith();
+        const itemId = this.data.itemId;
+        if (!itemId) {
+            this.requestStatusService.showError('Не удалось определить товар для покупки.');
+            return;
+        }
+
+        this.donateService
+            .buyItem$(itemId)
+            .pipe(
+                this.requestStatusService.handleError('Не удалось оформить покупку.'),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe({
+                next: () => {
+                    this.alertService
+                        .open('', { label: 'Покупка успешно оформлена', appearance: 'positive' })
+                        .subscribe();
+                    this.context.completeWith();
+                },
+            });
     }
 
     /**
