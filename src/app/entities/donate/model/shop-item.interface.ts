@@ -22,6 +22,8 @@ export interface IShopItemDto {
 
     /**
      * URL изображения товара.
+     *
+     * Публичный URL, полученный через MediaService.
      */
     image_url: string;
 
@@ -52,6 +54,89 @@ export interface IShopItemDto {
      * Код внутриигрового ассета.
      */
     code: string;
+
+    /**
+     * Тип товара.
+     */
+    item_type: ShopItemType;
+
+    /**
+     * Составные части товара (для набора / ITEM_TYPE_KIT).
+     */
+    entries?: IKitEntryDto[];
+
+    /**
+     * Есть ли скидка на товар.
+     */
+    has_discount?: boolean;
+
+    /**
+     * Процент скидки.
+     */
+    discount_percent?: number;
+
+    /**
+     * Итоговая цена с учётом скидки.
+     */
+    effective_price?: string;
+}
+
+/**
+ * Тип товара магазина.
+ */
+export type ShopItemType =
+    | 'ITEM_TYPE_UNSPECIFIED'
+    | 'ITEM_TYPE_ITEM'
+    | 'ITEM_TYPE_KIT';
+
+/**
+ * DTO составной части набора (kit entry).
+ */
+export interface IKitEntryDto {
+    /**
+     * Название позиции.
+     */
+    name: string;
+
+    /**
+     * Описание позиции.
+     */
+    description?: string;
+
+    /**
+     * URL изображения позиции.
+     */
+    image_url?: string;
+
+    /**
+     * Количество.
+     */
+    quantity: number;
+}
+
+/**
+ * UI-модель составной части набора.
+ */
+export interface IKitEntry {
+    /**
+     * Название позиции.
+     */
+    name: string;
+
+    /**
+     * Описание позиции.
+     */
+    description?: string;
+
+    /**
+     * URL изображения позиции.
+     */
+    imageUrl?: string;
+
+    /**
+     * Количество.
+     */
+    quantity: number;
 }
 
 /**
@@ -125,4 +210,143 @@ export interface IShopItem {
      * Код внутриигрового ассета.
      */
     code: string;
+
+    /**
+     * Тип товара.
+     */
+    itemType: ShopItemType;
+
+    /**
+     * Составные части товара (для набора).
+     */
+    entries?: IKitEntry[];
+
+    /**
+     * Есть ли скидка на товар.
+     */
+    hasDiscount?: boolean;
+
+    /**
+     * Процент скидки.
+     */
+    discountPercent?: number;
+
+    /**
+     * Итоговая цена с учётом скидки.
+     */
+    effectivePrice?: string;
+}
+
+/**
+ * Запрос на создание товара магазина.
+ */
+export interface ICreateShopItemRequest {
+    /**
+     * Название товара.
+     */
+    name: string;
+
+    /**
+     * Описание товара.
+     */
+    description: string;
+
+    /**
+     * URL изображения товара.
+     *
+     * Публичный URL, полученный через MediaService.
+     */
+    image_url: string;
+
+    /**
+     * Цена товара как строка.
+     */
+    price: string;
+
+    /**
+     * Код внутриигрового ассета.
+     */
+    code: string;
+
+    /**
+     * Тип товара.
+     */
+    item_type: ShopItemType;
+
+    /**
+     * Составные части набора.
+     */
+    entries?: IKitEntryDto[];
+
+    /**
+     * Есть ли скидка.
+     */
+    has_discount?: boolean;
+
+    /**
+     * Процент скидки.
+     */
+    discount_percent?: number;
+}
+
+/**
+ * Запрос на обновление товара магазина.
+ */
+export interface IUpdateShopItemRequest {
+    /**
+     * Идентификатор товара.
+     */
+    id?: string;
+
+    /**
+     * Название товара.
+     */
+    name?: string;
+
+    /**
+     * Описание товара.
+     */
+    description?: string;
+
+    /**
+     * URL изображения товара.
+     *
+     * Пусто — оставить текущее изображение.
+     */
+    image_url?: string;
+
+    /**
+     * Цена товара как строка.
+     */
+    price?: string;
+
+    /**
+     * Доступен ли товар.
+     */
+    is_available?: boolean;
+
+    /**
+     * Код внутриигрового ассета.
+     */
+    code?: string;
+
+    /**
+     * Тип товара.
+     */
+    item_type?: ShopItemType;
+
+    /**
+     * Составные части набора.
+     */
+    entries?: IKitEntryDto[];
+
+    /**
+     * Есть ли скидка.
+     */
+    has_discount?: boolean;
+
+    /**
+     * Процент скидки.
+     */
+    discount_percent?: number;
 }

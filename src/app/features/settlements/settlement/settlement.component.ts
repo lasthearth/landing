@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inje
 import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '@entities/settlement';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { UserService } from '@entities/user';
 import { PlayerInviteComponent } from '../player-invite/player-invite.component';
 import { ISettlement } from '@entities/settlement';
@@ -25,7 +25,7 @@ import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, TuiLoader, TuiPulse, TuiIcon, SettlementTagComponent],
+    imports: [AsyncPipe, DatePipe, TuiLoader, TuiPulse, TuiIcon, SettlementTagComponent],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,43 +89,45 @@ export class SettlementComponent {
     /**
      * {@link Observable} Информации о селении.
      */
-    protected readonly settlementInfo$: Observable<ISettlement | undefined> = this.settlementService
-        .getSettlementInfo(this.userService.userId)
-        .pipe(
-            map((settlement) => {
-                if (settlement === null) return undefined;
+    protected readonly settlementInfo$: Observable<ISettlement | undefined> = !this.userService.userId
+        ? of(undefined)
+        : this.settlementService
+              .getSettlementInfo(this.userService.userId)
+              .pipe(
+                  map((settlement) => {
+                      if (settlement === null) return undefined;
 
-                this.userService
-                    .getPlayer$(settlement.leader.user_id)
-                    .pipe(
-                        tap((user) => {
-                            this.leader = user;
-                            this.cdr.detectChanges();
-                        })
-                    )
-                    .subscribe();
+                      this.userService
+                          .getPlayer$(settlement.leader.user_id)
+                          .pipe(
+                              tap((user) => {
+                                  this.leader = user;
+                                  this.cdr.detectChanges();
+                              })
+                          )
+                          .subscribe();
 
-                settlement.members.forEach((member) => {
-                    this.userService
-                        .getPlayer$(member.user_id)
-                        .pipe(
-                            tap((user) => {
-                                this.users.push(user);
-                                this.cdr.detectChanges();
-                            })
-                        )
-                        .subscribe();
-                });
+                      settlement.members.forEach((member) => {
+                          this.userService
+                              .getPlayer$(member.user_id)
+                              .pipe(
+                                  tap((user) => {
+                                      this.users.push(user);
+                                      this.cdr.detectChanges();
+                                  })
+                              )
+                              .subscribe();
+                      });
 
-                return settlement;
-            }),
-            tap((settlement) => {
-                this.settlementId$.next(settlement?.id ?? null);
-            }),
-            catchError(() => {
-                return of(undefined);
-            })
-        );
+                      return settlement;
+                  }),
+                  tap((settlement) => {
+                      this.settlementId$.next(settlement?.id ?? null);
+                  }),
+                  catchError(() => {
+                      return of(undefined);
+                  })
+              );
 
     /**
      * {@link Observable} Списка отправленных приглашений (только для лидера).

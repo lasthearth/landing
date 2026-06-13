@@ -15,9 +15,24 @@ export interface PrivilegeCard {
     image: string;
 
     /**
-     * Стоимость привилегии.
+     * Стоимость привилегии за 1 месяц.
      */
-    price: string;
+    monthPrice: string;
+
+    /**
+     * Оригинальная стоимость за 1 месяц (до скидки) для зачёркивания.
+     */
+    monthPriceOriginal: string;
+
+    /**
+     * Стоимость привилегии за весь сезон.
+     */
+    seasonPrice: string;
+
+    /**
+     * Оригинальная стоимость за сезон (до скидки) для зачёркивания.
+     */
+    seasonPriceOriginal: string;
 
     /**
      * Преимущества привилегии.

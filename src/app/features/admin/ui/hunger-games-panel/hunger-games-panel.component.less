@@ -1,5 +1,23 @@
 /* Стили панели Hunger Games. Утилитарные классы используются через Tailwind. */
 
+:host ::ng-deep lh-input .flexible-input {
+    padding: 12px 16px;
+    font-size: 18px;
+
+    input,
+    .select-display {
+        font-size: 18px;
+    }
+}
+
+:host ::ng-deep lh-input .dropdown {
+    font-size: 18px;
+
+    .dropdown-option {
+        padding: 12px;
+    }
+}
+
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }

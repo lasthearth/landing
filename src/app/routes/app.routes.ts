@@ -90,7 +90,6 @@ export const routes: Routes = [
             },
             {
                 path: 'settlements',
-                canActivate: [userGuard],
                 component: SettlementsComponent,
                 data: { route_keys: RouteKeys.settlements },
             },

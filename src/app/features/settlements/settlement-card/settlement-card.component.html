@@ -41,28 +41,36 @@
                 <span
                     [class]="
                         'uppercase font-bold text-sm px-2 py-0.5 rounded-lg ' +
-                        (data().diplomacy === 'Миролюбивый' ? 'bg-[#16a34a]/15 text-[#16a34a]' :
-                         data().diplomacy === 'Нейтральный' ? 'bg-[#3b3c36]/15 text-[#3b3c36]' :
-                         'bg-[#720000]/15 text-[#720000]')
+                        (data().diplomacy === 'Миролюбивый'
+                            ? 'bg-[#16a34a]/15 text-[#16a34a]'
+                            : data().diplomacy === 'Нейтральный'
+                              ? 'bg-[#3b3c36]/15 text-[#3b3c36]'
+                              : 'bg-[#720000]/15 text-[#720000]')
                     "
                 >
                     {{ data().diplomacy }}
                 </span>
                 @for (tag of data().tags; track $index) {
                     @switch (getTag(tag.id)?.type) {
-                        @case ('east') {
-                            <span class="bg-[#ff6b6b]/15 text-[#ff6b6b] uppercase font-bold text-sm px-2 py-0.5 rounded-lg">
-                                {{ getTag(tag.id)?.text || '' }}
+                        @case ("east") {
+                            <span
+                                class="bg-[#ff6b6b]/15 text-[#ff6b6b] uppercase font-bold text-sm px-2 py-0.5 rounded-lg"
+                            >
+                                {{ getTag(tag.id)?.text || "" }}
                             </span>
                         }
-                        @case ('west') {
-                            <span class="bg-[#2cb5b6]/15 text-[#2cb5b6] uppercase font-bold text-sm px-2 py-0.5 rounded-lg">
-                                {{ getTag(tag.id)?.text || '' }}
+                        @case ("west") {
+                            <span
+                                class="bg-[#2cb5b6]/15 text-[#2cb5b6] uppercase font-bold text-sm px-2 py-0.5 rounded-lg"
+                            >
+                                {{ getTag(tag.id)?.text || "" }}
                             </span>
                         }
-                        @case ('suzerain') {
-                            <span class="bg-[#9d5bd2]/15 text-[#9d5bd2] uppercase font-bold text-sm px-2 py-0.5 rounded-lg">
-                                {{ getTag(tag.id)?.text || '' }}
+                        @case ("suzerain") {
+                            <span
+                                class="bg-[#9d5bd2]/15 text-[#9d5bd2] uppercase font-bold text-sm px-2 py-0.5 rounded-lg"
+                            >
+                                {{ getTag(tag.id)?.text || "" }}
                             </span>
                         }
                     }
@@ -77,10 +85,7 @@
                 }
             </div>
 
-            <p
-                class="text-base text-[#5c4030] leading-6 line-clamp-3"
-                [innerHTML]="data().description"
-            ></p>
+            <p class="text-lg text-[#5c4030] leading-6 line-clamp-3" [innerHTML]="data().description"></p>
         </div>
 
         <div class="flex flex-col gap-2">
@@ -96,7 +101,9 @@
                 </div>
 
                 @for (item of users; track $index) {
-                    <div class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-sm px-2 py-1 rounded-lg items-center">
+                    <div
+                        class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-sm px-2 py-1 rounded-lg items-center"
+                    >
                         @if (item?.is_online === true) {
                             <tui-pulse class="self-center mr-1.5 online" />
                         } @else {

@@ -96,6 +96,13 @@
                                     />
                                 }
                             </div>
+                            <div class="flex flex-wrap gap-3 items-center text-[18px] text-[#5c554a] font-medium">
+                                <span>Создано: {{ settlement.created_at | date: 'dd.MM.yy' }}</span>
+                                <span class="w-px h-4 bg-[#c4b89e]"></span>
+                                <span>Обновлено: {{ settlement.updated_at | date: 'dd.MM.yy' }}</span>
+                                <span class="w-px h-4 bg-[#c4b89e]"></span>
+                                <span>Координаты: {{ settlement.coordinates.x }}, {{ settlement.coordinates.y }}</span>
+                            </div>
                         </div>
                     </div>
 

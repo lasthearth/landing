@@ -153,13 +153,10 @@ export class AdminCoinPanelComponent {
     }
 
     /**
-     * Открывает диалог "Как приобрести" при нажатии на начисление.
-     *
-     * ⚠️ Временная заглушка. Позже будет заменён на кастомный диалог
-     * подтверждения начисления.
+     * Начисляет донат-валюту выбранному игроку.
      */
     protected addCoins(): void {
-        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent)).subscribe();
+        this.performOperation('add');
     }
 
     /**

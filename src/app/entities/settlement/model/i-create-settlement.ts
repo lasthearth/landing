@@ -13,7 +13,7 @@ export interface ICreateSettlement {
     };
 
     attachments: {
-        data: string;
+        url: string;
 
         description: string;
     }[];

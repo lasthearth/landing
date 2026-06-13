@@ -1,17 +1,18 @@
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-6">
     @if (questions().length > 0) {
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-6">
             @for (q of questions(); track q.id) {
-                <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-lh-primary/35">
-                    <div class="flex flex-col gap-1 flex-1">
-                        <p class="text-xl text-lh-primary">{{ q.text }}</p>
+                <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] flex items-center justify-between gap-4">
+                    <div class="flex flex-col gap-2 flex-1 min-w-0">
+                        <p class="text-[23px] leading-[32px] text-[#2d201a]">{{ q.text }}</p>
                         @if (q.createdBy) {
-                            <span class="text-base text-lh-leader">Создано: {{ userNames()[q.createdBy] }}</span>
+                            <span class="text-[18px] text-[#5c554a]">Создано: {{ userNames()[q.createdBy] }}</span>
                         }
                     </div>
                     <button
                         type="button"
-                        class="text-white text-sm! cursor-pointer bg-lh-primary-2 hover:bg-lh-primary-2/50 transition-all duration-150 rounded-lg self-start py-1.5 px-2.5 mt-2 disabled:text-lh-disabled disabled:bg-lh-primary"
+                        [disabled]="deletingId() === q.id"
+                        class="shrink-0 rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e] disabled:opacity-50 disabled:cursor-not-allowed"
                         (click)="remove(q.id)"
                     >
                         Удалить

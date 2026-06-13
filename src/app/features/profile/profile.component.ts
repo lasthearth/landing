@@ -49,13 +49,17 @@ export class ProfileComponent {
 
     private readonly verificationService = inject(VerificationService);
 
-    protected readonly code$ = this.verificationService.getCode();
+    protected readonly code$ = this.userService.authState$.pipe(
+        switchMap((isAuth) => (isAuth ? this.verificationService.getCode() : of(null)))
+    );
 
-    protected readonly details$ = this.verificationService.getDetails();
+    protected readonly details$ = this.userService.authState$.pipe(
+        switchMap((isAuth) => (isAuth ? this.verificationService.getDetails() : of(null)))
+    );
 
-    protected readonly player$ = this.userService
-        .getPlayer$(this.userService.userId)
-        .pipe(catchError(() => of(null)));
+    protected readonly player$ = !this.userService.userId
+        ? of(null)
+        : this.userService.getPlayer$(this.userService.userId).pipe(catchError(() => of(null)));
 
     protected readonly userGameName$ = this.player$.pipe(
         map((data) => data?.user_game_name ?? '')
@@ -95,14 +99,16 @@ export class ProfileComponent {
     /**
      * История покупок текущего пользователя.
      */
-    protected readonly purchases$ = this.donateService.getMyPurchases$().pipe(catchError(() => of([])));
+    protected readonly purchases$ = this.userService.authState$.pipe(
+        switchMap((isAuth) => (isAuth ? this.donateService.getMyPurchases$().pipe(catchError(() => of([]))) : of([])))
+    );
 
     /**
      * Поселение текущего пользователя.
      */
-    protected readonly settlement$ = this.settlementService
-        .getSettlementInfo(this.userService.userId)
-        .pipe(catchError(() => of(null)));
+    protected readonly settlement$ = !this.userService.userId
+        ? of(null)
+        : this.settlementService.getSettlementInfo(this.userService.userId).pipe(catchError(() => of(null)));
 
     /**
      * Количество онлайн-участников селения текущего пользователя.
@@ -169,7 +175,7 @@ export class ProfileComponent {
      */
     protected readonly hungerGamesStats$ = toObservable(this.hungerGamesSeason).pipe(
         switchMap((season) => {
-            if (!season) {
+            if (!season || !this.userService.userId) {
                 return of(null);
             }
             return this.hungerGamesService
@@ -285,11 +291,10 @@ export class ProfileComponent {
             const reader = new FileReader();
 
             reader.onload = () => {
-                const base64 = (reader.result as string).split(',')[1];
                 const dataUrl = reader.result as string;
 
                 this.userService
-                    .setProfileImage$(base64)
+                    .setProfileImage$(file)
                     .pipe(
                         this.requestStatusService.handleError('Файл не должен превышать 512х512!'),
                         tap(() => {

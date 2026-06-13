@@ -25,6 +25,11 @@ export class LayoutComponent {
     protected readonly userAuth$: Observable<boolean> = inject(UserService).authState$;
 
     /**
+     * {@link Observable} Признак завершения первоначальной проверки авторизации.
+     */
+    protected readonly isAuthChecked$: Observable<boolean> = inject(UserService).isAuthChecked$;
+
+    /**
      * Объект детекции изменений.
      */
     private readonly cdr = inject(ChangeDetectorRef);

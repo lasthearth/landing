@@ -1,6 +1,7 @@
 @let isAuth = userAuth$ | async;
+@let authChecked = isAuthChecked$ | async;
 
-@if (!isAuth) {
+@if (!isAuth && authChecked) {
     <app-welcome
         [class.scroll]="isSetScrollClass"
         (onScroll)="onWelcomeScroll()"
@@ -8,7 +9,7 @@
     />
 }
 
-@if (isWelcomeHide || isAuth) {
+@if (isAuth || isWelcomeHide) {
     <div>
         <div class="flex justify-center">
             <app-header class="w-full xl:w-[60%]" />

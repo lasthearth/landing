@@ -1,4 +1,4 @@
-import { IShopItemDto, IShopItem } from './shop-item.interface';
+import { IShopItemDto, IShopItem, IKitEntryDto, IKitEntry } from './shop-item.interface';
 import { IPurchaseDto, IPurchase } from './purchase.interface';
 import { ITransactionDto, ITransaction } from './transaction.interface';
 import { IBalanceResponseDto, IBalanceResponse } from './balance-response.interface';
@@ -76,6 +76,26 @@ export function mapDtoToShopItem(dto: IShopItemDto): IShopItem {
         updatedAt,
         formattedUpdatedAt: updatedAt ? formatDate(updatedAt) : '—',
         code: dto.code,
+        itemType: dto.item_type,
+        entries: dto.entries?.map(mapDtoToKitEntry),
+        hasDiscount: dto.has_discount,
+        discountPercent: dto.discount_percent,
+        effectivePrice: dto.effective_price,
+    };
+}
+
+/**
+ * Преобразует DTO составной части набора в UI-модель.
+ *
+ * @param dto DTO части набора от API.
+ * @returns UI-модель части набора.
+ */
+export function mapDtoToKitEntry(dto: IKitEntryDto): IKitEntry {
+    return {
+        name: dto.name,
+        description: dto.description,
+        imageUrl: dto.image_url,
+        quantity: dto.quantity,
     };
 }
 

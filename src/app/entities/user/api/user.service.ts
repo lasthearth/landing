@@ -16,6 +16,7 @@ import {
     tap,
 } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { convertTuiFileLikeToBase64 } from '@shared/lib/convert-file-to-base64.function';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { environment } from '@core/config/environments/environment';
 import { IJwtTokenLh } from '../model/i-jwt-token-lh';
@@ -76,6 +77,16 @@ export class UserService {
      * Публичный поток состояния авторизации.
      */
     public readonly authState$: Observable<boolean> = this.authStateChange$;
+
+    /**
+     * Признак завершения первоначальной проверки авторизации.
+     */
+    private readonly authChecked$ = new BehaviorSubject(false);
+
+    /**
+     * Публичный поток признака завершения проверки авторизации.
+     */
+    public readonly isAuthChecked$: Observable<boolean> = this.authChecked$.asObservable();
 
     /**
      * HTTP-клиент Angular.
@@ -168,7 +179,7 @@ export class UserService {
                             return of(null);
                         }),
                         finalize(() => {
-                            // Логика завершения
+                            this.authChecked$.next(true);
                         })
                     );
                 })
@@ -217,14 +228,21 @@ export class UserService {
     /**
      * Обновляет аватар пользователя.
      *
-     * @param base64Image Изображение в формате base64.
+     * ⚠️ В отличие от других медиа, аватар пока загружается через base64
+     * в эндпоинт `/users/{user_id}/avatar`.
+     *
+     * @param file Файл изображения аватара.
      * @returns Observable с URL нового аватара.
      */
-    public setProfileImage$(base64Image: string): Observable<{ avatar: string }> {
-        return this.http.post<{ avatar: string }>(
-            `${this.baseUrl}/users/${this.userId}/avatar`,
-            { avatar: base64Image },
-            { headers: this.getHeaders() }
+    public setProfileImage$(file: File): Observable<{ avatar: string }> {
+        return convertTuiFileLikeToBase64(file).pipe(
+            switchMap((base64Image) =>
+                this.http.post<{ avatar: string }>(
+                    `${this.baseUrl}/users/${this.userId}/avatar`,
+                    { avatar: base64Image, user_id: this.userId },
+                    { headers: this.getHeaders() }
+                )
+            )
         );
     }
 

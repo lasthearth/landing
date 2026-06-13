@@ -1,14 +1,17 @@
-<tui-badged-content
-    [tuiHint]="data().hint"
-    tuiHintDirection="bottom"
-    class="cursor-pointer hover:shadow-lg rounded-2xl transition-all duration-300"
+<div
+    [title]="data().hint"
+    class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-[#8b7355] bg-[#d4c5a9] shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_2px_4px_rgba(0,0,0,0.15)] cursor-pointer transition-all duration-150 hover:scale-110 hover:rotate-2 hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.25)] hover:border-[#ff7920] group"
 >
-    <tui-badge-notification size="l" tuiSlot="bottom" class="!bg-lh-accent">
-        {{ data().count }}
-    </tui-badge-notification>
     <img
         [src]="data().image"
         [alt]="data().hint"
-        class="md:size-20 size-16 shadow-2xl rounded-2xl border-2 border-lh-accent-2"
+        class="w-full h-full object-contain p-1 drop-shadow-md"
     />
-</tui-badged-content>
+    @if (data().count > 1) {
+        <span
+            class="absolute bottom-0.5 right-0.5 min-w-[1.5rem] h-6 flex items-center justify-center bg-[#3f3c34] text-white text-base font-extrabold leading-none px-1 rounded-md border border-white/30 shadow-sm"
+        >
+            {{ data().count }}
+        </span>
+    }
+</div>

@@ -43,12 +43,11 @@ export class RuleParagraphComponent {
         const level = this.level();
         const classes = [
             '', // level 0 - без отступа
-            'pl-8!', // level 1 - 2rem
-            'pl-16!', // level 2 - 4rem
-            'pl-20!', // level 3 - 5rem
-
-            'pl-24!', // level 4 - 6rem
-            'pl-28!',
+            'pl-6!', // level 1 - 1.5rem
+            'pl-10!', // level 2 - 2.5rem
+            'pl-14!', // level 3 - 3.5rem
+            'pl-16!', // level 4 - 4rem
+            'pl-20!', // level 5 - 5rem
         ];
         return classes[level] || '';
     });

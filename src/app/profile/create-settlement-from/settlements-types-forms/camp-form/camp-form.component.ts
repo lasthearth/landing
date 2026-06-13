@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { fileFieldsCamp, FileKeyCamp } from '@app/types/file-key-camp.type';
-import { Subject, switchMap, Observable, map, forkJoin, tap, finalize } from 'rxjs';
+import { Subject, switchMap, map, tap, finalize } from 'rxjs';
 import { NgFor, AsyncPipe, NgIf } from '@angular/common';
 import { LHInputComponent } from '@app/components/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
@@ -9,7 +9,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ICreateSettlement } from '@app/settlements/interfaces/i-create-settlement';
 import { SettlementService } from '@app/services/settlement.service';
 import { getFileStatuses } from '@app/functions/get-file-statuses.function'; // Функция для работы со статусом файлов
-import { getBase64Files } from '@app/functions/get-base64-files.function'; // Функция для перевода файла в Base64
+import { uploadSettlementAttachments } from '@shared/lib/upload-settlement-attachments.function';
+import { MediaService } from '@entities/media';
 import { LHHintComponent } from '@app/components/lh-hint-icon/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@app/services/request-status.service';
 import { TuiLoader, TuiError, TuiHintDirective } from '@taiga-ui/core';
@@ -87,6 +88,11 @@ export class CampFormComponent {
     private readonly settlementService: SettlementService = inject(SettlementService);
 
     /**
+     * Сервис загрузки медиафайлов.
+     */
+    private readonly mediaService: MediaService = inject(MediaService);
+
+    /**
      * Сервис уведомлений.
      */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
@@ -100,7 +106,7 @@ export class CampFormComponent {
 
     // Подписка на событие отправки формы:
     // 1. Берёт данные формы
-    // 2. Конвертирует файлы в base64
+    // 2. Загружает файлы через MediaService
     // 3. Формирует объект запроса
     // 4. Отправляет его на сервер
     // 5. По завершении вызывает submitEvent.emit()
@@ -111,17 +117,10 @@ export class CampFormComponent {
                     this.isLoading = true;
                     const values = this.form.value;
 
-                    // Собираем массив Observable<string> для всех файлов
-                    const base64Files$: Observable<string | null>[] = getBase64Files(this.fileFields, this.form);
-
-                    // Ждём когда все base64 загрузятся
-                    return forkJoin(base64Files$).pipe(
-                        map((base64Files) => {
-                            const attachments = this.fileFields.map((key, i) => ({
-                                data: base64Files[i] ?? '',
-                                description: this.getLabelForKey(key),
-                            }));
-
+                    return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
+                        this.getLabelForKey(key)
+                    ).pipe(
+                        map((attachments) => {
                             const request: ICreateSettlement = {
                                 type: 'CAMP',
                                 name: values.name ?? '',

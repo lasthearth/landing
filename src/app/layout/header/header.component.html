@@ -144,16 +144,14 @@
                 <tui-icon icon="@tui.info" />
                 <span class="hidden md:block">FAQ</span>
             </button>
-            @if (isAuth) {
-                <button
-                    [routerLink]="['/settlements']"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
-                    class="nav-button md:w-auto md:min-w-20 px-4"
-                >
-                    <tui-icon icon="@tui.tent" />
-                    <span class="hidden md:block">СЕЛЕНИЯ</span>
-                </button>
-            }
+            <button
+                [routerLink]="['/settlements']"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
+                class="nav-button md:w-auto md:min-w-20 px-4"
+            >
+                <tui-icon icon="@tui.tent" />
+                <span class="hidden md:block">СЕЛЕНИЯ</span>
+            </button>
             <button
                 [routerLink]="['/market']"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'market' }"

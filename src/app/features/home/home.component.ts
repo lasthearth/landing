@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
 import { NewsCardComponent } from '@app/features/news/ui/news-card/news-card.component';
+import { NewsSkeletonComponent } from '@app/features/news/ui/news-skeleton/news-skeleton.component';
 import { NewsApiService, mapDtoToNews } from '@entities/news';
 import { UserService, Role, IPlayer } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
-import { catchError, forkJoin, map, of, startWith, Subject, switchMap, take } from 'rxjs';
+import { catchError, defaultIfEmpty, finalize, forkJoin, map, of, startWith, Subject, switchMap, take, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -15,7 +16,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, TuiPagination, TuiIcon],
+    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +46,11 @@ export class HomeComponent {
      * Ссылка уничтожения на компонент.
      */
     private readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Признак загрузки новостей.
+     */
+    readonly loading = signal(true);
 
     /**
      * Номер элемента карусели.
@@ -124,9 +130,12 @@ export class HomeComponent {
      * Поток новостей из API.
      *
      * При первой подписке и по refresh$ загружает данные заново.
+     * Для неавторизованных пользователей имена авторов не разрешаются,
+     * чтобы избежать 401-ошибок на защищённых эндпоинтах.
      */
     readonly news$ = this.refresh$.pipe(
         startWith(null),
+        tap(() => this.loading.set(true)),
         switchMap(() => this.api.getList()),
         map((list) => list.map(mapDtoToNews)),
         switchMap((news) => {
@@ -136,25 +145,38 @@ export class HomeComponent {
                 return of(news);
             }
 
-            return forkJoin(
-                authorIds.map((id) =>
-                    this.userService.getPlayer$(id).pipe(catchError(() => of(null)))
-                )
-            ).pipe(
-                map((players) => {
-                    const playerMap = new Map(
-                        players
-                            .filter((player): player is IPlayer => player !== null)
-                            .map((player) => [player.user_id, player.user_game_name])
-                    );
+            return this.userService.authState$.pipe(
+                switchMap((isAuth) => {
+                    if (!isAuth) {
+                        return of(news);
+                    }
 
-                    return news.map((item) => ({
-                        ...item,
-                        createdBy: playerMap.get(item.createdBy) || item.createdBy,
-                    }));
+                    return forkJoin(
+                        authorIds.map((id) =>
+                            this.userService.getPlayer$(id).pipe(
+                                defaultIfEmpty(null),
+                                catchError(() => of(null))
+                            )
+                        )
+                    ).pipe(
+                        map((players) => {
+                            const playerMap = new Map(
+                                players
+                                    .filter((player): player is IPlayer => player !== null)
+                                    .map((player) => [player.user_id, player.user_game_name])
+                            );
+
+                            return news.map((item) => ({
+                                ...item,
+                                createdBy: playerMap.get(item.createdBy) || item.createdBy,
+                            }));
+                        }),
+                        catchError(() => of(news))
+                    );
                 })
             );
-        })
+        }),
+        tap(() => this.loading.set(false))
     );
 
     /**

@@ -75,6 +75,10 @@ export class SettlementCardComponent implements OnInit {
      * @inheritdoc
      */
     public ngOnInit(): void {
+        if (!this.userService.userId) {
+            return;
+        }
+
         this.userService
             .getPlayer$(this.data().leader.user_id)
             .pipe(

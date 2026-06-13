@@ -1,16 +1,16 @@
 @let isAuth = userService.authState$ | async;
-<div class="p-6 flex flex-col gap-6 max-w-4xl">
+<div class="p-6 flex flex-col gap-6 w-full">
     <p class="text-3xl lg:text-4xl font-bold text-[#2d201a]">Начать игру</p>
 
     <!-- Шаг 1 -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <p class="text-8xl font-extrabold text-lh-accent min-w-[80px] leading-none">1</p>
-        <div class="flex flex-col gap-2 pt-2">
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
+        <p class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#2d201a]">1</p>
+        <div class="flex flex-col gap-2 pt-2 flex-1">
             <p class="text-2xl font-bold text-[#2d201a]">Установите игру</p>
-            <p class="text-lg text-lh-primary leading-7">
+            <p class="text-xl text-lh-primary leading-8">
                 Для установки игры воспользуйтесь
                 <a
-                    class="text-lh-accent font-bold border-dashed border-b border-lh-accent hover:text-[#e66a1a] transition-all duration-100"
+                    class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
                     href="https://www.vintagestory.at/store/category/1-game-account-game-servers/"
                     target="_blank"
                 >
@@ -18,7 +18,7 @@
                 </a>
                 (рекомендуется) или
                 <a
-                    class="text-lh-accent font-bold border-dashed border-b border-lh-accent hover:text-[#e66a1a] transition-all duration-100"
+                    class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
                     href="https://fplay.su/vs/"
                     target="_blank"
                 >
@@ -30,14 +30,14 @@
     </div>
 
     <!-- Шаг 2 -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <p class="text-8xl font-extrabold text-lh-accent min-w-[80px] leading-none">2</p>
-        <div class="flex flex-col gap-2 pt-2">
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
+        <p class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#2d201a]">2</p>
+        <div class="flex flex-col gap-2 pt-2 flex-1">
             <p class="text-2xl font-bold text-[#2d201a]">Создайте аккаунт</p>
-            <p class="text-lg text-lh-primary leading-7">
+            <p class="text-xl text-lh-primary leading-8">
                 Для безопасной и комфортной игры вам необходимо
                 <a
-                    class="text-lh-accent font-bold border-dashed border-b border-lh-accent hover:text-[#e66a1a] transition-all duration-100"
+                    class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
                     [routerLink]="isAuth ? ['/profile'] : ['/start-game']"
                     (click)="isAuth ? '' : signIn()"
                 >
@@ -45,7 +45,7 @@
                 </a>,
                 ознакомиться с
                 <a
-                    class="text-lh-accent font-bold border-dashed border-b border-lh-accent hover:text-[#e66a1a] transition-all duration-100"
+                    class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
                     [routerLink]="['/rules']"
                 >
                     правилами
@@ -57,11 +57,11 @@
     </div>
 
     <!-- Шаг 3 -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <p class="text-8xl font-extrabold text-lh-accent min-w-[80px] leading-none">3</p>
-        <div class="flex flex-col gap-2 pt-2">
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
+        <p class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#2d201a]">3</p>
+        <div class="flex flex-col gap-2 pt-2 flex-1">
             <p class="text-2xl font-bold text-[#2d201a]">Играйте</p>
-            <p class="text-lg text-lh-primary leading-7">
+            <p class="text-xl text-lh-primary leading-8">
                 Войдите в игру и добавьте наш сервер. IP адрес и пароль доступны в профиле после прохождения верификации.<br />
                 Наслаждайтесь игрой.
             </p>

@@ -1,74 +1,101 @@
-<div class="text-lh-primary flex flex-col gap-6 p-6">
-    <div class="flex justify-between">
-        <p class="text-4xl font-bold">Правила сервера</p>
+<div class="text-lh-primary flex flex-col gap-6 p-6 relative">
+    <!-- Маркер для определения прокрутки -->
+    <div id="rules-scroll-sentinel" class="absolute top-0 left-0 w-px h-px pointer-events-none"></div>
+
+    <div class="flex justify-between items-center">
+        <p class="text-3xl lg:text-4xl font-bold text-[#2d201a]">Правила сервера</p>
         <button
             (click)="toggleAll()"
-            class="py-2 self-end text-white font-bold cursor-pointer hover:bg-lh-primary transition-all duration-300 bg-lh-primary-2 rounded-lg px-4"
+            class="shrink-0 rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e]"
         >
             {{ globalExpandService.globalExpandState() ? 'Скрыть всё' : 'Раскрыть всё' }}
         </button>
     </div>
 
     <!-- Терминология -->
-    <app-rule-section
-        sectionId="terminology"
-        title="Терминология"
-        icon="@tui.scroll-text"
-        (scrollTo)="scrollToElement($event)"
-    >
-        <app-terminology (scrollTo)="scrollToElement($event)" />
-    </app-rule-section>
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <app-rule-section
+            sectionId="terminology"
+            title="Терминология"
+            icon="@tui.scroll-text"
+            (scrollTo)="scrollToElement($event)"
+        >
+            <app-terminology (scrollTo)="scrollToElement($event)" />
+        </app-rule-section>
+    </div>
 
-    <app-rule-section
-        sectionId="base"
-        title="1. Основы"
-        (scrollTo)="scrollToElement($event)"
-    >
-        <app-base (scrollTo)="scrollToElement($event)" />
-    </app-rule-section>
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <app-rule-section
+            sectionId="base"
+            title="1. Основы"
+            (scrollTo)="scrollToElement($event)"
+        >
+            <app-base (scrollTo)="scrollToElement($event)" />
+        </app-rule-section>
+    </div>
 
     <!-- 2. О селениях -->
-    <app-rule-section
-        sectionId="settlements"
-        title="2. О селениях"
-        (scrollTo)="scrollToElement($event)"
-    >
-        <app-about-settlements (scrollTo)="scrollToElement($event)" />
-    </app-rule-section>
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <app-rule-section
+            sectionId="settlements"
+            title="2. О селениях"
+            (scrollTo)="scrollToElement($event)"
+        >
+            <app-about-settlements (scrollTo)="scrollToElement($event)" />
+        </app-rule-section>
+    </div>
 
     <!-- 3. Действия игроков -->
-    <app-rule-section
-        sectionId="actions"
-        title="3. Действия игроков"
-        (scrollTo)="scrollToElement($event)"
-    >
-        <app-players-actions (scrollTo)="scrollToElement($event)" />
-    </app-rule-section>
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <app-rule-section
+            sectionId="actions"
+            title="3. Действия игроков"
+            (scrollTo)="scrollToElement($event)"
+        >
+            <app-players-actions (scrollTo)="scrollToElement($event)" />
+        </app-rule-section>
+    </div>
 
     <!-- 4. Колонизация -->
-    <app-rule-section
-        sectionId="colonization"
-        title="4. Колонизация"
-        (scrollTo)="scrollToElement($event)"
-    >
-        <app-colonization (scrollTo)="scrollToElement($event)" />
-    </app-rule-section>
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <app-rule-section
+            sectionId="colonization"
+            title="4. Колонизация"
+            (scrollTo)="scrollToElement($event)"
+        >
+            <app-colonization (scrollTo)="scrollToElement($event)" />
+        </app-rule-section>
+    </div>
 
     <!-- 5. Военные действия -->
-    <app-rule-section
-        sectionId="military"
-        title="5. Военные действия"
-        (scrollTo)="scrollToElement($event)"
-    >
-        <app-military-actions (scrollTo)="scrollToElement($event)" />
-    </app-rule-section>
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <app-rule-section
+            sectionId="military"
+            title="5. Военные действия"
+            (scrollTo)="scrollToElement($event)"
+        >
+            <app-military-actions (scrollTo)="scrollToElement($event)" />
+        </app-rule-section>
+    </div>
 
     <!-- 6. Права и обязанности администрации -->
-    <app-rule-section
-        sectionId="admin"
-        title="6. Права и обязанности администрации"
-        (scrollTo)="scrollToElement($event)"
-    >
-        <app-admin-rights (scrollTo)="scrollToElement($event)" />
-    </app-rule-section>
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <app-rule-section
+            sectionId="admin"
+            title="6. Права и обязанности администрации"
+            (scrollTo)="scrollToElement($event)"
+        >
+            <app-admin-rights (scrollTo)="scrollToElement($event)" />
+        </app-rule-section>
+    </div>
+
+    @if (showScrollTop) {
+        <button
+            (click)="scrollToTop()"
+            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-[#d8cdb3] border border-[#c4b89e] text-[#2a2722] flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-[#c4b89e] shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+            title="Наверх"
+        >
+            <tui-icon icon="@tui.chevron-up" class="size-6!" />
+        </button>
+    }
 </div>

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
-import { IShopItemDto } from '../model/shop-item.interface';
+import { IShopItemDto, ICreateShopItemRequest, IUpdateShopItemRequest } from '../model/shop-item.interface';
 import { IPurchaseDto } from '../model/purchase.interface';
 import { ITransactionDto } from '../model/transaction.interface';
 import { IBalanceResponseDto } from '../model/balance-response.interface';
@@ -121,7 +121,7 @@ export class DonateService {
     public addCoins$(playerId: string, amount: string, playerName: string, reason?: string): Observable<unknown> {
         return this.http.post<unknown>(
             `${this.baseUrl}/donate/players/${playerId}/coins:add`,
-            { amount, player_name: playerName, ...(reason ? { reason } : {}) }
+            { player_id: playerId, player_name: playerName, amount, ...(reason ? { reason } : {}) }
         );
     }
 
@@ -137,7 +137,7 @@ export class DonateService {
     public deductCoins$(playerId: string, amount: string, reason?: string): Observable<unknown> {
         return this.http.post<unknown>(
             `${this.baseUrl}/donate/players/${playerId}/coins:deduct`,
-            { amount, ...(reason ? { reason } : {}) }
+            { player_id: playerId, amount, ...(reason ? { reason } : {}) }
         );
     }
 
@@ -182,5 +182,46 @@ export class DonateService {
             `${this.baseUrl}/donate/purchases/${purchaseId}:refund`,
             {}
         );
+    }
+
+    /**
+     * Создаёт товар в донат-магазине.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param request Данные для создания товара.
+     * @returns Observable с созданным товаром.
+     */
+    public createShopItem$(request: ICreateShopItemRequest): Observable<IShopItem> {
+        return this.http
+            .post<{ item: IShopItemDto }>(`${this.baseUrl}/donate/shop/items`, request)
+            .pipe(map((response) => mapDtoToShopItem(response.item)));
+    }
+
+    /**
+     * Обновляет товар в донат-магазине.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param id Идентификатор товара.
+     * @param request Данные для обновления товара.
+     * @returns Observable с обновлённым товаром.
+     */
+    public updateShopItem$(id: string, request: IUpdateShopItemRequest): Observable<IShopItem> {
+        return this.http
+            .put<{ item: IShopItemDto }>(`${this.baseUrl}/donate/shop/items/${id}`, request)
+            .pipe(map((response) => mapDtoToShopItem(response.item)));
+    }
+
+    /**
+     * Удаляет товар из донат-магазина.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param id Идентификатор товара.
+     * @returns Observable с пустым результатом.
+     */
+    public deleteShopItem$(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/donate/shop/items/${id}`);
     }
 }

@@ -81,7 +81,7 @@ export class RuleSectionComponent extends BaseExpandableSection {
      * Возвращает CSS класс для заголовка в зависимости от уровня.
      */
     protected readonly titleClass = computed(() => {
-        return this.level() === 0 ? 'rule-section-title' : 'text-2xl/7.5';
+        return this.level() === 0 ? 'rule-section-title' : 'text-[26px]/8';
     });
 
     /**

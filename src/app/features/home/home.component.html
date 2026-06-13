@@ -35,7 +35,12 @@
     </button>
 </div>
 
-@if (news().length > 0) {
+@if (loading()) {
+    <div class="flex flex-wrap items-center gap-7 pt-0 p-10 pb-4">
+        <app-news-skeleton class="!h-auto w-full" />
+        <app-news-skeleton class="!h-auto w-full" />
+    </div>
+} @else if (news().length > 0) {
     <div class="flex flex-wrap items-center gap-7 pt-0 p-10 pb-4">
         @for (item of pageNews(); track item.id) {
             <app-news-card

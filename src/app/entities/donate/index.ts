@@ -7,6 +7,9 @@
 
 export * from './model/shop-item.interface';
 export * from './model/purchase.interface';
+export {
+    mapDtoToKitEntry,
+} from './model/donate.mapper';
 export * from './model/transaction.interface';
 export * from './model/balance-response.interface';
 export {

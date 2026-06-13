@@ -30,7 +30,7 @@ export interface NewsDto {
     /**
      * Превью-изображение.
      *
-     * Может быть URL или base64-строкой.
+     * Публичный URL изображения, полученный через MediaService.
      */
     preview: string;
 
@@ -87,7 +87,7 @@ export interface News {
     /**
      * Превью-изображение.
      *
-     * URL или base64-строка.
+     * Публичный URL изображения.
      */
     preview: string;
 
@@ -136,9 +136,9 @@ export interface CreateNewsRequest {
     content: string;
 
     /**
-     * Превью-изображение в формате base64.
+     * Превью-изображение.
      *
-     * Без префикса data:*\/*;base64,.
+     * Публичный URL изображения, полученный через MediaService.
      */
     preview: string;
 }

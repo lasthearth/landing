@@ -7,98 +7,122 @@
                 [class.bg-lh-primary-2!]="isSortActive('default')"
                 [class.text-white!]="isSortActive('default')"
                 (click)="setSort('default')"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
             >
                 По умолчанию
-                <span class="text-xs transition-all duration-300 origin-center">
-                    ━
-                </span>
+                <span class="text-xs transition-all duration-300 origin-center">━</span>
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('population')"
                 [class.text-white!]="isSortActive('population')"
                 (click)="setSort('population')"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
             >
                 По населению
                 <span
                     class="text-xs transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('population') === 'asc'"
                 >
-                    @if (isSortActive('population')) { ▼ } @else { ━ }
+                    @if (isSortActive("population")) {
+                        ▼
+                    } @else {
+                        ━
+                    }
                 </span>
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('online')"
                 [class.text-white!]="isSortActive('online')"
                 (click)="setSort('online')"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
             >
                 По онлайну
                 <span
                     class="text-xs transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('online') === 'asc'"
                 >
-                    @if (isSortActive('online')) { ▼ } @else { ━ }
+                    @if (isSortActive("online")) {
+                        ▼
+                    } @else {
+                        ━
+                    }
                 </span>
                 @if (loadingOnline()) {
-                    <span class="inline-block ml-1 size-3 border-2 border-lh-primary border-t-transparent rounded-full animate-spin"></span>
+                    <span
+                        class="inline-block ml-1 size-3 border-2 border-lh-primary border-t-transparent rounded-full animate-spin"
+                    ></span>
                 }
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('east')"
                 [class.text-white!]="isSortActive('east')"
                 (click)="setSort('east')"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
             >
                 Восток
                 <span
                     class="text-xs transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('east') === 'asc'"
                 >
-                    @if (isSortActive('east')) { ▼ } @else { ━ }
+                    @if (isSortActive("east")) {
+                        ▼
+                    } @else {
+                        ━
+                    }
                 </span>
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('west')"
                 [class.text-white!]="isSortActive('west')"
                 (click)="setSort('west')"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
             >
                 Запад
                 <span
                     class="text-xs transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('west') === 'asc'"
                 >
-                    @if (isSortActive('west')) { ▼ } @else { ━ }
+                    @if (isSortActive("west")) {
+                        ▼
+                    } @else {
+                        ━
+                    }
                 </span>
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('suzerain')"
                 [class.text-white!]="isSortActive('suzerain')"
                 (click)="setSort('suzerain')"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
             >
                 Сюзеренство
                 <span
                     class="text-xs transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('suzerain') === 'asc'"
                 >
-                    @if (isSortActive('suzerain')) { ▼ } @else { ━ }
+                    @if (isSortActive("suzerain")) {
+                        ▼
+                    } @else {
+                        ━
+                    }
                 </span>
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('diplomacy')"
                 [class.text-white!]="isSortActive('diplomacy')"
                 (click)="setSort('diplomacy')"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
             >
                 Дипломатия
                 <span
                     class="text-xs transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('diplomacy') === 'asc'"
                 >
-                    @if (isSortActive('diplomacy')) { ▼ } @else { ━ }
+                    @if (isSortActive("diplomacy")) {
+                        ▼
+                    } @else {
+                        ━
+                    }
                 </span>
             </button>
         </div>

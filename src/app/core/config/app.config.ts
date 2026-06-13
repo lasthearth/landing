@@ -37,18 +37,32 @@ function getConfig() {
             'tags:create',
             'tags:delete',
             'tags:manage',
-            'donate:manage',
+            'donate:coins:add',
+            'donate:coins:deduct',
+            'donate:shop:create',
+            'donate:shop:update',
+            'donate:shop:delete',
+            'donate:purchase:refund',
+            'donate:transaction:list',
+            'donate:purchase:list',
+            'donate:purchase:issue',
+            'kit:assign',
+            'kit:list',
+            'kit:read',
             'hungergames:match:record',
             'hungergames:season:reset',
             'hungergames:season:create',
             'news:create',
             'news:delete',
+            'offline_access',
         ],
         resource: 'https://api.lasthearth.ru',
     });
 
     config.ignoreNonceAfterRefresh = true;
     config.disableIatOffsetValidation = true;
+    config.silentRenew = true;
+    config.useRefreshToken = true;
 
     return config;
 }

@@ -1,21 +1,35 @@
-import { Component } from '@angular/core';
-import { TuiCarousel } from '@taiga-ui/kit';
-import { PrivilegeCarouselTemplateComponent } from '../../templates/privilege-carousel-template/privilege-carousel-template.component';
+import { Component, inject, signal } from '@angular/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
-import { PrivilegeCardComponent } from '../../ui/privilege-card/privilege-card.component';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
+import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 
 @Component({
     selector: 'app-kits',
-    imports: [PrivilegeCardComponent, PrivilegeCarouselTemplateComponent, TuiCarousel, KitItemComponent],
+    imports: [KitItemComponent, TuiIcon, PurchaseDialogComponent],
     templateUrl: './kits.component.html',
+    styleUrl: './kits.component.less',
 })
 export class KitsComponent {
-    protected readonly titles: PrivilegeCard[] = [
+    /**
+     * Сервис диалогов.
+     */
+    private readonly dialogs = inject(TuiDialogService);
+
+    /**
+     * Выбранный срок подписки.
+     */
+    protected readonly selectedTerm = signal<'month' | 'season'>('month');
+
+    protected readonly kits: PrivilegeCard[] = [
         {
             title: 'Исследователь',
             image: '/images/donat-images/explorer.webp',
-            price: '1150 р',
+            monthPrice: '11500',
+            monthPriceOriginal: '',
+            seasonPrice: '',
+            seasonPriceOriginal: '',
             kitItems: [
                 { hint: 'JPS', count: 1, image: '/images/title-items/jps.webp' },
                 { hint: 'Темпоральный амулет', count: 1, image: '/images/title-items/temporal_amulet.webp' },
@@ -39,7 +53,10 @@ export class KitsComponent {
         {
             title: 'Воин',
             image: '/images/donat-images/warrior.webp',
-            price: '750 р',
+            monthPrice: '7500',
+            monthPriceOriginal: '',
+            seasonPrice: '',
+            seasonPriceOriginal: '',
             kitItems: [
                 { hint: 'Чешуйчатый шлем из железа', count: 1, image: '/images/title-items/scaly_iron_helmet.webp' },
                 {
@@ -67,7 +84,10 @@ export class KitsComponent {
         {
             title: 'Строитель',
             image: '/images/donat-images/builder.webp',
-            price: '950 р',
+            monthPrice: '9500',
+            monthPriceOriginal: '',
+            seasonPrice: '',
+            seasonPriceOriginal: '',
             kitItems: [
                 { hint: 'Молот из железа', count: 1, image: '/images/title-items/hummer_iron.webp' },
                 { hint: 'Зубило из железа', count: 1, image: '/images/title-items/chisel_iron.webp' },
@@ -91,7 +111,10 @@ export class KitsComponent {
         {
             title: 'Фермер',
             image: '/images/donat-images/farmer.webp',
-            price: '750 р',
+            monthPrice: '7500',
+            monthPriceOriginal: '',
+            seasonPrice: '',
+            seasonPriceOriginal: '',
             kitItems: [
                 { hint: 'Чернозем', count: 128, image: '/images/title-items/humus.webp' },
                 { hint: 'Компост', count: 256, image: '/images/title-items/compost.webp' },
@@ -123,5 +146,43 @@ export class KitsComponent {
         },
     ];
 
-    protected selectedPrivilege: PrivilegeCard = this.titles[0];
+    protected selectedPrivilege: PrivilegeCard = this.kits[0];
+
+    /**
+     * Вычисляет процент скидки.
+     *
+     * @param price Текущая цена.
+     * @param originalPrice Оригинальная цена до скидки.
+     * @returns Процент скидки или 0.
+     */
+    /**
+     * Открывает диалог покупки выбранного набора.
+     */
+    protected openPurchaseDialog(): void {
+        const p = this.selectedPrivilege;
+        const term = this.selectedTerm();
+        const data: PurchaseDialogData = {
+            title: p.title,
+            image: p.image,
+            monthPrice: p.monthPrice,
+            seasonPrice: p.seasonPrice,
+            currency: 'rubles',
+            initialTerm: term,
+            kitItems: p.kitItems,
+            dailyKitItems: p.dailyKitItems,
+        };
+        this.dialogs.open(new PolymorpheusComponent(PurchaseDialogComponent), { size: 'auto', data }).subscribe();
+    }
+
+    protected getDiscountPercent(price: string, originalPrice: string): number {
+        if (!originalPrice || !price) {
+            return 0;
+        }
+        const original = parseInt(originalPrice.replace(/\D/g, ''), 10);
+        const current = parseInt(price.replace(/\D/g, ''), 10);
+        if (!original || !current) {
+            return 0;
+        }
+        return Math.round(((original - current) / original) * 100);
+    }
 }

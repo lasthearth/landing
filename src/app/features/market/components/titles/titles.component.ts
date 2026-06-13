@@ -1,27 +1,32 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { PrivilegeCardComponent } from '../../ui/privilege-card/privilege-card.component';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
-import { TuiCarousel } from '@taiga-ui/kit';
-import { PrivilegeCarouselTemplateComponent } from '../../templates/privilege-carousel-template/privilege-carousel-template.component';
 import { AbilityTagComponent } from '../../ui/ability-tag/ability-tag.component';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
+import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 
 /**
  * Компонент титулов.
  */
 @Component({
     selector: 'app-titles',
-    imports: [
-        PrivilegeCardComponent,
-        PrivilegeCarouselTemplateComponent,
-        TuiCarousel,
-        AbilityTagComponent,
-        KitItemComponent,
-    ],
+    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, PurchaseDialogComponent],
     templateUrl: './titles.component.html',
+    styleUrl: './titles.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitlesComponent {
+    /**
+     * Сервис диалогов.
+     */
+    private readonly dialogs = inject(TuiDialogService);
+
+    /**
+     * Выбранный срок подписки.
+     */
+    protected readonly selectedTerm = signal<'month' | 'season'>('month');
+
     /**
      * Список титулов.
      */
@@ -29,7 +34,10 @@ export class TitlesComponent {
         {
             title: 'Рыцарь',
             image: '/images/donat-images/knight.webp',
-            price: '350 р/мес',
+            monthPrice: '3500',
+            monthPriceOriginal: '',
+            seasonPrice: '10000',
+            seasonPriceOriginal: '10500',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -52,7 +60,10 @@ export class TitlesComponent {
         {
             title: 'Барон',
             image: '/images/donat-images/baron.webp',
-            price: '450 р/мес',
+            monthPrice: '4500',
+            monthPriceOriginal: '',
+            seasonPrice: '13000',
+            seasonPriceOriginal: '13500',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -98,7 +109,10 @@ export class TitlesComponent {
         {
             title: 'Виконт',
             image: '/images/donat-images/viscount.webp',
-            price: '750 р/мес',
+            monthPrice: '7500',
+            monthPriceOriginal: '',
+            seasonPrice: '22000',
+            seasonPriceOriginal: '22500',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -155,7 +169,10 @@ export class TitlesComponent {
         {
             title: 'Граф',
             image: '/images/donat-images/graf.webp',
-            price: '2000 р/мес',
+            monthPrice: '20000',
+            monthPriceOriginal: '',
+            seasonPrice: '58000',
+            seasonPriceOriginal: '60000',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -216,7 +233,10 @@ export class TitlesComponent {
         {
             title: 'Маркиз',
             image: '/images/donat-images/marquis.webp',
-            price: '3150 р/мес',
+            monthPrice: '31500',
+            monthPriceOriginal: '',
+            seasonPrice: '90000',
+            seasonPriceOriginal: '94500',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -296,7 +316,10 @@ export class TitlesComponent {
         {
             title: 'Герцог',
             image: '/images/donat-images/duke.webp',
-            price: '5850 р/мес',
+            monthPrice: '58500',
+            monthPriceOriginal: '',
+            seasonPrice: '170000',
+            seasonPriceOriginal: '175500',
             abilties: [
                 { icon: '@tui.paintbrush', text: 'Цветной ник в игре' },
                 { icon: '@tui.sparkles', text: 'Роль в дискорде' },
@@ -380,4 +403,43 @@ export class TitlesComponent {
     ];
 
     protected selectedPrivilege: PrivilegeCard = this.titles[0];
+
+    /**
+     * Вычисляет процент скидки.
+     *
+     * @param price Текущая цена.
+     * @param originalPrice Оригинальная цена до скидки.
+     * @returns Процент скидки или 0.
+     */
+    /**
+     * Открывает диалог покупки выбранного титула.
+     */
+    protected openPurchaseDialog(): void {
+        const p = this.selectedPrivilege;
+        const term = this.selectedTerm();
+        const data: PurchaseDialogData = {
+            title: p.title,
+            image: p.image,
+            monthPrice: p.monthPrice,
+            seasonPrice: p.seasonPrice,
+            currency: 'rubles',
+            initialTerm: term,
+            kitItems: p.kitItems,
+            dailyKitItems: p.dailyKitItems,
+            abilities: p.abilties,
+        };
+        this.dialogs.open(new PolymorpheusComponent(PurchaseDialogComponent), { size: 'auto', data }).subscribe();
+    }
+
+    protected getDiscountPercent(price: string, originalPrice: string): number {
+        if (!originalPrice || !price) {
+            return 0;
+        }
+        const original = parseInt(originalPrice.replace(/\D/g, ''), 10);
+        const current = parseInt(price.replace(/\D/g, ''), 10);
+        if (!original || !current) {
+            return 0;
+        }
+        return Math.round(((original - current) / original) * 100);
+    }
 }

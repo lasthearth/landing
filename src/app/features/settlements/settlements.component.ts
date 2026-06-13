@@ -157,6 +157,10 @@ export class SettlementsComponent {
         if (this.onlineLoaded || this.loadingOnline()) {
             return;
         }
+        if (!this.userService.userId) {
+            this.onlineLoaded = true;
+            return;
+        }
         this.loadingOnline.set(true);
 
         const allUserIds = [

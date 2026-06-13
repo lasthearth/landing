@@ -29,6 +29,7 @@
         <button tuiTab type="button">Вопросы</button>
         <button tuiTab type="button">Создать новость</button>
         <button tuiTab type="button">Начисления</button>
+        <button tuiTab type="button">Донат-магазин</button>
         <button tuiTab type="button">Голодные игры</button>
     </tui-tabs>
 
@@ -63,6 +64,9 @@
                 <app-admin-coin-panel />
             }
             @case (5) {
+                <app-donate-shop-panel />
+            }
+            @case (6) {
                 <app-hunger-games-panel />
             }
         }

@@ -28,6 +28,10 @@ export class SettlementDetailedComponent implements OnInit {
     protected onlineCount: number = 0;
 
     public ngOnInit(): void {
+        if (!this.userService.userId) {
+            return;
+        }
+
         this.userService
             .getPlayer$(this.settlementData.leader.user_id)
             .pipe(

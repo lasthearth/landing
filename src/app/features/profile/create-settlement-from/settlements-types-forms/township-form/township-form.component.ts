@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { getBase64Files } from '@shared/lib/get-base64-files.function';
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function';
+import { uploadSettlementAttachments } from '@shared/lib/upload-settlement-attachments.function';
 import { SettlementService } from '@entities/settlement';
 import { ICreateSettlement } from '@entities/settlement';
+import { MediaService } from '@entities/media';
 import { fileFieldsTownship } from './township-form.types';
 import { FileKeyTownship } from './township-form.types';
-import { Subject, switchMap, Observable, forkJoin, map, tap, finalize } from 'rxjs';
+import { Subject, switchMap, Observable, map, tap, finalize } from 'rxjs';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
@@ -121,13 +122,18 @@ export class TownshipFormComponent {
     private readonly settlementService: SettlementService = inject(SettlementService);
 
     /**
+     * Сервис загрузки медиафайлов.
+     */
+    private readonly mediaService: MediaService = inject(MediaService);
+
+    /**
      * Триггер отправки формы — запускает обработку данных и загрузку файлов
      */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
     // Подписка на событие отправки формы:
     // 1. Берёт данные формы
-    // 2. Конвертирует файлы в base64
+    // 2. Загружает файлы через MediaService
     // 3. Формирует объект запроса
     // 4. Отправляет его на сервер
     // 5. По завершении вызывает submitEvent.emit()
@@ -139,17 +145,10 @@ export class TownshipFormComponent {
                 switchMap(() => {
                     const values = this.form.value;
 
-                    // Собираем массив Observable<string> для всех файлов
-                    const base64Files$: Observable<string | null>[] = getBase64Files(this.fileFields, this.form);
-
-                    // Ждём когда все base64 загрузятся
-                    return forkJoin(base64Files$).pipe(
-                        map((base64Files) => {
-                            const attachments = this.fileFields.map((key, i) => ({
-                                data: base64Files[i] ?? '',
-                                description: this.getLabelForKey(key),
-                            }));
-
+                    return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
+                        this.getLabelForKey(key)
+                    ).pipe(
+                        map((attachments) => {
                             const request: ICreateSettlement = {
                                 type: 'CAMP',
                                 name: values.name ?? '',

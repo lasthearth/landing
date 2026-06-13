@@ -12,6 +12,7 @@ import { SettlementVerificationRequestComponent } from './settlement-verificatio
 import { CreateNewsComponent } from '../news/components/create-news-form/create-news.component';
 import { AdminCoinPanelComponent } from './ui/admin-coin-panel/admin-coin-panel.component';
 import { HungerGamesPanelComponent } from './ui/hunger-games-panel/hunger-games-panel.component';
+import { DonateShopPanelComponent } from './ui/donate-shop-panel/donate-shop-panel.component';
 import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
 
 /**
@@ -32,6 +33,7 @@ import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
         CreateNewsComponent,
         AdminCoinPanelComponent,
         HungerGamesPanelComponent,
+        DonateShopPanelComponent,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.css',
