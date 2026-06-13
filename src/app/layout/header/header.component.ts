@@ -191,7 +191,7 @@ export class HeaderComponent {
      * Открывает диалоговое окно подтверждения выхода из аккаунта.
      */
     protected signOut(): void {
-        this.dialogs.open(new PolymorpheusComponent(SignOutConfirmComponent), { size: 's' }).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(SignOutConfirmComponent), { size: 'auto' }).subscribe();
     }
 
     /**
@@ -199,5 +199,12 @@ export class HeaderComponent {
      */
     protected isAdmin(): boolean {
         return this.userService.roles.includes('admin');
+    }
+
+    /**
+     * Возвращает признак, верифицирован ли пользователь (игрок или админ).
+     */
+    protected isVerified(): boolean {
+        return this.userService.roles.includes('player') || this.userService.roles.includes('admin');
     }
 }

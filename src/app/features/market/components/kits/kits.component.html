@@ -56,7 +56,7 @@
                 >
                     @if (selectedPrivilege.monthPriceOriginal) {
                         <div
-                            class="absolute -top-0.5 -left-0.5 bg-white text-[#c35a17] text-sm font-extrabold px-3 py-1.5 rounded-br-xl shadow-md -rotate-3 "
+                            class="absolute -top-0.5 -left-0.5 bg-white text-[#c35a17] text-base font-extrabold px-3 py-1.5 rounded-br-xl shadow-md -rotate-3 "
                         >
                             −{{ getDiscountPercent(selectedPrivilege.monthPrice, selectedPrivilege.monthPriceOriginal) }}%
                         </div>
@@ -105,7 +105,7 @@
                     >
                         @if (selectedPrivilege.seasonPriceOriginal) {
                             <div
-                                class="absolute -top-0.5 -left-0.5 bg-white text-[#c35a17] text-sm font-extrabold px-3 py-1.5 rounded-br-xl shadow-md discount-badge"
+                                class="absolute -top-0.5 -left-0.5 bg-white text-[#c35a17] text-base font-extrabold px-3 py-1.5 rounded-br-xl shadow-md discount-badge"
                             >
                                 −{{ getDiscountPercent(selectedPrivilege.seasonPrice, selectedPrivilege.seasonPriceOriginal) }}%
                             </div>

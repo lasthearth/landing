@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
-import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '@entities/settlement';
 import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
@@ -14,6 +14,7 @@ import { SettlementsTypes } from '@entities/settlement';
 import { ISettlementInvitation } from '@entities/settlement';
 import { getSettlementTypeByKey } from '@entities/settlement/lib/get-settlement-type-by-key.function';
 import { TuiPulse } from '@taiga-ui/kit';
+import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { IPlayer } from '@entities/user';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
@@ -25,7 +26,8 @@ import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, DatePipe, TuiLoader, TuiPulse, TuiIcon, SettlementTagComponent],
+    imports: [AsyncPipe, TuiPulse, TuiIcon, SettlementTagComponent, SettlementDetailSkeletonComponent],
+    providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,6 +67,11 @@ export class SettlementComponent {
      * Объект обнаружения изменений.
      */
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+    /**
+     * Пайп форматирования дат.
+     */
+    private readonly datePipe: DatePipe = inject(DatePipe);
 
     /**
      * {@link Observable} Списка приглашений в селение (входящие).
@@ -349,5 +356,25 @@ export class SettlementComponent {
      */
     protected getTag(tagId: string) {
         return this.settlementService.getTagById(tagId);
+    }
+
+    /**
+     * Форматирует Unix timestamp (в секундах) в локальную дату.
+     *
+     * @param value Timestamp в виде строки/числа.
+     * @returns Строка в формате "dd.MM.yy" или "—".
+     */
+    protected formatTimestamp(value: string | number | null | undefined): string {
+        if (value === null || value === undefined || value === '') {
+            return '—';
+        }
+
+        const timestamp = Number(value);
+
+        if (Number.isNaN(timestamp)) {
+            return '—';
+        }
+
+        return this.datePipe.transform(timestamp * 1000, 'dd.MM.yy') ?? '—';
     }
 }

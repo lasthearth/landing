@@ -2,7 +2,7 @@
     class="transform transition overflow-clip duration-500 hover:scale-[101%] flex xl:flex-row flex-col bg-lh-primary-2/10 border border-lh-primary-2/10 relative rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] h-full max-h-[400px]"
 >
     <!-- Изображение -->
-    <div class="xl:w-2/5 w-full shrink-0 h-full">
+    <div class="hidden xl:block xl:w-2/5 w-full shrink-0 h-full">
         <img
             [src]="data().attachments[0].url ? data().attachments[0].url : '/images/screenshots/screen_1.png'"
             class="h-full w-full object-cover rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
@@ -16,31 +16,31 @@
                 <h1 class="text-xl/7 md:text-2xl uppercase font-bold text-[#2d201a]">
                     {{ data().name }}
                 </h1>
-                <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-sm px-2 py-0.5 rounded-lg">
+                <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-0.5 rounded-lg">
                     {{ (data().members?.length ?? 0) + 1 }} жит.
                 </span>
-                <span class="bg-[#16a34a]/15 text-[#16a34a] font-bold text-sm px-2 py-0.5 rounded-lg">
+                <span class="bg-[#16a34a]/15 text-[#16a34a] font-bold text-base px-2 py-0.5 rounded-lg">
                     {{ onlineCount }} онл.
                 </span>
             </div>
 
             <div class="flex gap-1.5 flex-wrap">
                 @if (isEastSuzerain(this.data())) {
-                    <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-sm px-2 py-0.5 rounded-lg">
+                    <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
                         БИ: {{ environment.eastSuzerain }}
                     </span>
                 }
                 @if (isWestSuzerain(this.data())) {
-                    <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-sm px-2 py-0.5 rounded-lg">
+                    <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
                         БИ: {{ environment.westSuzerain }}
                     </span>
                 }
-                <span class="bg-[#3d5381]/15 text-[#3d5381] uppercase font-bold text-sm px-2 py-0.5 rounded-lg">
+                <span class="bg-[#3d5381]/15 text-[#3d5381] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
                     {{ getSettlementTypeByKey(data().type) }}
                 </span>
                 <span
                     [class]="
-                        'uppercase font-bold text-sm px-2 py-0.5 rounded-lg ' +
+                        'uppercase font-bold text-base px-2 py-0.5 rounded-lg ' +
                         (data().diplomacy === 'Миролюбивый'
                             ? 'bg-[#16a34a]/15 text-[#16a34a]'
                             : data().diplomacy === 'Нейтральный'
@@ -54,21 +54,21 @@
                     @switch (getTag(tag.id)?.type) {
                         @case ("east") {
                             <span
-                                class="bg-[#ff6b6b]/15 text-[#ff6b6b] uppercase font-bold text-sm px-2 py-0.5 rounded-lg"
+                                class="bg-[#ff6b6b]/15 text-[#ff6b6b] uppercase font-bold text-base px-2 py-0.5 rounded-lg"
                             >
                                 {{ getTag(tag.id)?.text || "" }}
                             </span>
                         }
                         @case ("west") {
                             <span
-                                class="bg-[#2cb5b6]/15 text-[#2cb5b6] uppercase font-bold text-sm px-2 py-0.5 rounded-lg"
+                                class="bg-[#2cb5b6]/15 text-[#2cb5b6] uppercase font-bold text-base px-2 py-0.5 rounded-lg"
                             >
                                 {{ getTag(tag.id)?.text || "" }}
                             </span>
                         }
                         @case ("suzerain") {
                             <span
-                                class="bg-[#9d5bd2]/15 text-[#9d5bd2] uppercase font-bold text-sm px-2 py-0.5 rounded-lg"
+                                class="bg-[#9d5bd2]/15 text-[#9d5bd2] uppercase font-bold text-base px-2 py-0.5 rounded-lg"
                             >
                                 {{ getTag(tag.id)?.text || "" }}
                             </span>
@@ -91,7 +91,7 @@
         <div class="flex flex-col gap-2">
             <hr class="h-px bg-[#bdb093]/30 w-full rounded-full" />
             <div class="flex flex-wrap gap-1.5 max-h-[68px] overflow-hidden">
-                <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-sm px-2 py-1 rounded-lg items-center">
+                <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-1 rounded-lg items-center">
                     @if (leader?.is_online === true) {
                         <tui-pulse class="self-center mr-1.5 online" />
                     } @else {
@@ -102,7 +102,7 @@
 
                 @for (item of users; track $index) {
                     <div
-                        class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-sm px-2 py-1 rounded-lg items-center"
+                        class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base px-2 py-1 rounded-lg items-center"
                     >
                         @if (item?.is_online === true) {
                             <tui-pulse class="self-center mr-1.5 online" />

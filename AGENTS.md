@@ -132,11 +132,13 @@ feature-name/
 ```json
 {
   "@app/*": ["./src/app/*"],
-  "@services/*": ["./src/app/services/*"],
   "@routes/*": ["./src/app/routes/*"],
-  "@profile/*": ["./src/app/profile/*"],
   "@layout/*": ["./src/app/layout/*"],
-  "@market/*": ["./src/app/market/*"]
+  "@core/*": ["./src/app/core/*"],
+  "@shared/*": ["./src/app/shared/*"],
+  "@entities/*": ["./src/app/entities/*"],
+  "@features/*": ["./src/app/features/*"],
+  "@pages/*": ["./src/app/pages/*"]
 }
 ```
 

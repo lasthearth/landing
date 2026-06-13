@@ -10,7 +10,7 @@
                 class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 flex items-center gap-1"
             >
                 По умолчанию
-                <span class="text-xs transition-all duration-300 origin-center">━</span>
+                <span class="text-base transition-all duration-300 origin-center">━</span>
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('population')"
@@ -20,7 +20,7 @@
             >
                 По населению
                 <span
-                    class="text-xs transition-all duration-300 origin-center"
+                    class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('population') === 'asc'"
                 >
                     @if (isSortActive("population")) {
@@ -38,7 +38,7 @@
             >
                 По онлайну
                 <span
-                    class="text-xs transition-all duration-300 origin-center"
+                    class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('online') === 'asc'"
                 >
                     @if (isSortActive("online")) {
@@ -61,7 +61,7 @@
             >
                 Восток
                 <span
-                    class="text-xs transition-all duration-300 origin-center"
+                    class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('east') === 'asc'"
                 >
                     @if (isSortActive("east")) {
@@ -79,7 +79,7 @@
             >
                 Запад
                 <span
-                    class="text-xs transition-all duration-300 origin-center"
+                    class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('west') === 'asc'"
                 >
                     @if (isSortActive("west")) {
@@ -97,7 +97,7 @@
             >
                 Сюзеренство
                 <span
-                    class="text-xs transition-all duration-300 origin-center"
+                    class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('suzerain') === 'asc'"
                 >
                     @if (isSortActive("suzerain")) {
@@ -115,7 +115,7 @@
             >
                 Дипломатия
                 <span
-                    class="text-xs transition-all duration-300 origin-center"
+                    class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('diplomacy') === 'asc'"
                 >
                     @if (isSortActive("diplomacy")) {
@@ -129,8 +129,10 @@
     </div>
 
     @if (loading()) {
-        <div class="m-12 flex justify-center items-center">
-            <tui-loader />
+        <div class="flex flex-wrap justify-center items-stretch gap-6 pt-0">
+            @for (_ of skeletonItems; track $index) {
+                <app-settlement-card-skeleton class="card" />
+            }
         </div>
     } @else if (sortedSettlements().length === 0) {
         <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Здесь пока нет селений...</p>

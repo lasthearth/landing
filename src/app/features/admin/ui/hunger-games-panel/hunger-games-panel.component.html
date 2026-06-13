@@ -4,9 +4,7 @@
         <h2 class="text-[32px] font-bold text-[#2d201a]">Текущий сезон</h2>
 
         @if (isLoading()) {
-            <div class="flex justify-center py-8">
-                <tui-loader [showLoader]="true" size="m" />
-            </div>
+            <app-admin-season-skeleton />
         } @else if (currentSeason(); as season) {
             <div
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
@@ -81,20 +79,18 @@
                                 <div
                                     class="grid grid-cols-[auto_1fr_auto] gap-2 items-center p-2 rounded-lg bg-[#3f3c34]/5 border border-[#bdb093]/60"
                                 >
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        [value]="reward.rank"
-                                        (input)="updateRewardRank(idx, $any($event.target).value)"
-                                        class="w-16 px-2 py-2.5 rounded-lg bg-[#e2d7bb]/40 border border-[#a89a7e] text-[#2a2722] text-center text-[18px] focus:outline-none focus:border-lh-accent focus:bg-[#e2d7bb]/60 transition-colors"
-                                    />
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        [value]="reward.coins"
-                                        (input)="updateRewardCoins(idx, $any($event.target).value)"
+                                    <div class="w-16 text-center">
+                                        <lh-input
+                                            type="inputNumber"
+                                            [ngModel]="reward.rank"
+                                            (ngModelChange)="updateRewardRank(idx, $event)"
+                                        />
+                                    </div>
+                                    <lh-input
+                                        type="inputNumber"
+                                        [ngModel]="reward.coins"
+                                        (ngModelChange)="updateRewardCoins(idx, $event)"
                                         placeholder="Сумма в осколках"
-                                        class="w-full px-3 py-2.5 rounded-lg bg-[#e2d7bb]/40 border border-[#a89a7e] text-[#2a2722] text-[18px] focus:outline-none focus:border-lh-accent focus:bg-[#e2d7bb]/60 transition-colors"
                                     />
                                     <button
                                         type="button"
@@ -118,7 +114,7 @@
                         (click)="addReward()"
                         class="self-start py-2 px-4 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer flex items-center gap-2 text-[18px]"
                     >
-                        <tui-icon icon="@tui.plus" class="!text-[14px]" />
+                        <tui-icon icon="@tui.plus" class="!text-base" />
                         Добавить награду
                     </button>
                 </div>
@@ -152,17 +148,12 @@
             <!-- Поиск игрока -->
             <div class="flex flex-col gap-4">
                 <label class="text-[32px] font-bold text-[#2d201a]">Добавить участника</label>
-                <div class="relative">
-                    <input
-                        type="text"
-                        [formControl]="searchControl"
-                        placeholder="Введите ник (от 2 символов)..."
-                        class="w-full px-4 py-3 pr-10 rounded-xl bg-[#e2d7bb]/40 border border-[#a89a7e] text-[#2a2722] placeholder:text-[#5c554a] focus:outline-none focus:border-lh-accent focus:bg-[#e2d7bb]/60 transition-colors shadow-sm text-[18px]"
-                    />
-                    <div class="absolute right-3 top-0 bottom-0 flex items-center pointer-events-none">
-                        <tui-icon icon="@tui.search" class="text-[#5c554a]" />
-                    </div>
-                </div>
+                <lh-input
+                    type="input"
+                    [formControl]="searchControl"
+                    placeholder="Введите ник (от 2 символов)..."
+                    icon="@tui.search"
+                />
 
                 @if (searchResults(); as users) {
                     @if (users.length > 0) {
@@ -204,20 +195,20 @@
                                 <div class="flex items-center gap-3 min-w-0">
                                     <span class="text-[18px] font-medium truncate text-[#2a2722]">{{ player.playerName }}</span>
                                 </div>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    [value]="player.place"
-                                    (input)="updatePlace(idx, $any($event.target).value)"
-                                    class="w-16 px-2 py-2 rounded-lg bg-[#e2d7bb]/40 border border-[#a89a7e] text-[#2a2722] text-center text-[18px] focus:outline-none focus:border-lh-accent focus:bg-[#e2d7bb]/60"
-                                />
-                                <input
-                                    type="number"
-                                    min="0"
-                                    [value]="player.kills"
-                                    (input)="updateKills(idx, $any($event.target).value)"
-                                    class="w-20 px-2 py-2 rounded-lg bg-[#e2d7bb]/40 border border-[#a89a7e] text-[#2a2722] text-center text-[18px] focus:outline-none focus:border-lh-accent focus:bg-[#e2d7bb]/60"
-                                />
+                                <div class="w-16 text-center">
+                                    <lh-input
+                                        type="inputNumber"
+                                        [ngModel]="player.place"
+                                        (ngModelChange)="updatePlace(idx, $event)"
+                                    />
+                                </div>
+                                <div class="w-20 text-center">
+                                    <lh-input
+                                        type="inputNumber"
+                                        [ngModel]="player.kills"
+                                        (ngModelChange)="updateKills(idx, $event)"
+                                    />
+                                </div>
                                 <button
                                     type="button"
                                     (click)="removePlayer(idx)"
@@ -254,19 +245,22 @@
     <div class="flex flex-col gap-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <h2 class="text-[32px] font-bold text-[#2d201a]">Лидерборд</h2>
-            <lh-input
-                type="select"
-                class="min-w-[220px]"
-                [items]="seasonOptions()"
-                [displayWith]="displaySeason"
-                [formControl]="seasonSelectControl"
-                placeholder="Текущий сезон"
-            />
+            <div class="min-w-[220px]">
+                <lh-input
+                    type="select"
+                    [items]="seasonOptions()"
+                    [displayWith]="displaySeason"
+                    [formControl]="seasonSelectControl"
+                    placeholder="Текущий сезон"
+                />
+            </div>
         </div>
 
         @if (selectedSeasonId(); as seasonId) {
             <!-- Архивный сезон -->
-            @if (archiveLeaderboard(); as list) {
+            @if (isLeaderboardLoading()) {
+                <app-admin-table-skeleton [columns]="6" [rows]="5" />
+            } @else if (archiveLeaderboard(); as list) {
                 @if (list.length > 0) {
                     <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
                         <table class="w-full text-left border-collapse text-[18px]">
@@ -325,7 +319,9 @@
             }
         } @else {
             <!-- Текущий сезон -->
-            @if (currentLeaderboard(); as list) {
+            @if (isLeaderboardLoading()) {
+                <app-admin-table-skeleton [columns]="5" [rows]="5" />
+            } @else if (currentLeaderboard(); as list) {
                 @if (list.length > 0) {
                     <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
                         <table class="w-full text-left border-collapse text-[18px]">

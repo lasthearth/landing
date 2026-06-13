@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { TuiAvatar } from '@taiga-ui/kit';
@@ -16,6 +16,7 @@ import {
     ISeasonResultEntry,
 } from '@entities/hunger-games';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { AdminSeasonSkeletonComponent, AdminTableSkeletonComponent } from '@shared/ui/skeletons';
 import { ISeasonOption } from './model/season-option.model';
 
 
@@ -28,7 +29,7 @@ import { ISeasonOption } from './model/season-option.model';
 @Component({
     selector: 'app-hunger-games-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, TuiAvatar, TuiIcon, TuiLoader, LHInputComponent],
+    imports: [ReactiveFormsModule, FormsModule, TuiAvatar, TuiIcon, TuiLoader, LHInputComponent, AdminSeasonSkeletonComponent, AdminTableSkeletonComponent],
     templateUrl: './hunger-games-panel.component.html',
     styleUrl: './hunger-games-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -109,6 +110,11 @@ export class HungerGamesPanelComponent implements OnInit {
      * Признак выполнения запроса.
      */
     protected readonly isLoading = signal(false);
+
+    /**
+     * Признак загрузки лидерборда.
+     */
+    protected readonly isLeaderboardLoading = signal(false);
 
     /**
      * Признак выполнения запроса создания/сброса сезона.
@@ -225,6 +231,7 @@ export class HungerGamesPanelComponent implements OnInit {
      * иначе — текущий активный.
      */
     protected loadLeaderboard(): void {
+        this.isLeaderboardLoading.set(true);
         const seasonId = this.selectedSeasonId();
 
         if (seasonId) {

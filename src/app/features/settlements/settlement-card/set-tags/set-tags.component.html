@@ -1,11 +1,12 @@
-<div class="flex flex-col gap-4 p-4 items-start">
-    <p class="text-4xl font-semibold text-lh-primary">
+<div class="lh-dialog-card">
+    <h2 class="lh-dialog-title">
         Добавить теги к селению
-        <span class="uppercase font-bold">{{ context.data.settlementName }}</span>
-    </p>
-    <div class="flex gap-3 flex-col">
-        <p class="text-2xl font-semibold text-lh-primary">Доступные теги:</p>
-        <div class="flex gap-2">
+        <span class="uppercase">{{ context.data.settlementName }}</span>
+    </h2>
+
+    <div class="flex flex-col gap-3">
+        <p class="text-lg font-semibold text-[#2d201a]">Доступные теги:</p>
+        <div class="flex flex-wrap gap-2">
             @for (tag of tags; track $index) {
                 <app-active-tag
                     [type]="tag.type"
@@ -17,9 +18,10 @@
             }
         </div>
     </div>
-    <div class="flex gap-3 flex-col">
-        <p class="text-2xl font-semibold text-lh-primary">Выбранные теги:</p>
-        <div class="flex gap-2">
+
+    <div class="flex flex-col gap-3">
+        <p class="text-lg font-semibold text-[#2d201a]">Выбранные теги:</p>
+        <div class="flex flex-wrap gap-2">
             @if (addedTags.length === 0) {
                 <p class="text-base h-8 -mt-2 uppercase font-bold text-[#bdb093] self-center">
                     Теги селения отсутствуют...
@@ -36,21 +38,18 @@
             }
         </div>
     </div>
-    <div class="flex gap-4 justify-end">
-        <button
-            (click)="context.$implicit.complete()"
-            class="text-white text-sm font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active"
-        >
-            ЕЩЕ ПОДУМАТЬ
+
+    <div class="lh-dialog-actions">
+        <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
+            Отмена
         </button>
         <button
+            type="button"
             (click)="saveTags()"
-            [class.opacity-55]="addedTags.length === 0"
-            [class.pointer-events-none]="addedTags.length === 0"
-            [class.brightness-85]="addedTags.length === 0"
-            class="text-white text-sm font-bold cursor-pointer mt-2 self-end bg-lh-success rounded-lg py-2.5 px-4 hover:bg-lh-success-hover active:bg-lh-success-active"
+            [disabled]="addedTags.length === 0"
+            class="lh-dialog-button lh-dialog-button-primary"
         >
-            ДОБАВИТЬ
+            Добавить
         </button>
     </div>
 </div>

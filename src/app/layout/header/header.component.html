@@ -38,18 +38,18 @@
                                 <p class="text-3xl sm:text-5xl text-white dash-animated">-</p>
                             }
 
-                            <p class="text-xs sm:text-sm text-white opacity-70">/</p>
+                            <p class="text-base sm:text-base text-white opacity-70">/</p>
 
                             @if (online?.max_online) {
-                                <p class="text-xs sm:text-sm text-white opacity-70">{{ online?.max_online }}</p>
+                                <p class="text-base sm:text-base text-white opacity-70">{{ online?.max_online }}</p>
                             } @else {
-                                <p class="text-xs sm:text-sm text-white opacity-70 dash-animated">-</p>
+                                <p class="text-base sm:text-base text-white opacity-70 dash-animated">-</p>
                             }
                         </div>
                         <div class="text-white">
                             <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">Игроков</p>
 
-                            <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
+                            <p class="text-base sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
                         </div>
                     </div>
                     <div class="w-full flex px-3.5">
@@ -71,7 +71,7 @@
                 >
                     <div class="rounded-2xl gap-1 p-1 sm:p-3 flex items-center">
                         <div class="flex flex-col items-start gap-0.5">
-                            <p class="text-sm sm:text-2xl/7.5 text-white">{{ userService.userName }}</p>
+                            <p class="text-base sm:text-2xl/7.5 text-white">{{ userService.userName }}</p>
                             <div class="flex items-center gap-0.5 bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 bg-clip-text text-transparent">
                                 <img
                                     src="/splinter-of-spark.png"
@@ -144,14 +144,16 @@
                 <tui-icon icon="@tui.info" />
                 <span class="hidden md:block">FAQ</span>
             </button>
-            <button
-                [routerLink]="['/settlements']"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
-                class="nav-button md:w-auto md:min-w-20 px-4"
-            >
-                <tui-icon icon="@tui.tent" />
-                <span class="hidden md:block">СЕЛЕНИЯ</span>
-            </button>
+            @if (isAuth && isVerified()) {
+                <button
+                    [routerLink]="['/settlements']"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
+                    class="nav-button md:w-auto md:min-w-20 px-4"
+                >
+                    <tui-icon icon="@tui.tent" />
+                    <span class="hidden md:block">СЕЛЕНИЯ</span>
+                </button>
+            }
             <button
                 [routerLink]="['/market']"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'market' }"

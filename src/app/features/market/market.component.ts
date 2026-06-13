@@ -1,6 +1,5 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { TuiTabs } from '@taiga-ui/kit/components/tabs';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { TitlesComponent } from './components/titles/titles.component';
 import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
@@ -12,7 +11,7 @@ import { TuiDialogService } from '@taiga-ui/core';
  */
 @Component({
     selector: 'app-market',
-    imports: [TuiTabs, TitlesComponent, KitsComponent, SpecialComponent],
+    imports: [TitlesComponent, KitsComponent, SpecialComponent],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -20,11 +19,11 @@ export class MarketComponent {
     /**
      * Индекс открытой вкладки.
      */
-    protected activeItemIndex: number = 0;
+    protected activeItemIndex = signal(0);
 
      private readonly dialogs = inject(TuiDialogService);
 
     protected howToBuy() {
-        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent)).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent), { size: 'auto' }).subscribe();
     }
 }

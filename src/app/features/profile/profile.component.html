@@ -6,6 +6,11 @@
 @let purchases = purchases$ | async;
 @let settlementOnline = settlementMembersOnline$ | async;
 @let hgStats = hungerGamesStats$ | async;
+@let isLoading = isLoading$ | async;
+
+@if (isLoading) {
+    <app-profile-skeleton />
+} @else {
 
 <div class="text-lh-primary flex flex-col gap-2 p-6">
     <!-- Шапка профиля -->
@@ -18,7 +23,7 @@
                     <img
                         [src]="userData.image"
                         (click)="show(userData.image, 'Изображение профиля')"
-                        class="w-full h-full object-cover rounded-t-2xl max-h-44 max-w-40 transition-all duration-200 hover:opacity-85"
+                        class="w-full h-full object-cover rounded-t-2xl max-h-44 max-w-40 transition-all duration-200 hover:opacity-85 cursor-pointer"
                     />
                 } @else {
                     <img
@@ -127,29 +132,29 @@
                         type="button"
                         [disabled]="!(canPrevHgSeason$ | async)"
                         (click)="prevHgSeason()"
-                        class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                     >
                         <tui-icon icon="@tui.chevron-left" class="size-4!" />
                     </button>
                     <div class="flex items-center gap-1.5">
                         <p class="text-lg leading-[27px] font-bold">Сезон {{ season.number }}</p>
                         @if (season.ended_at) {
-                            <span class="text-[10px] px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold">Завершён</span>
+                            <span class="text-base px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold">Завершён</span>
                         } @else {
-                            <span class="text-[10px] px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold">Активен</span>
+                            <span class="text-base px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold">Активен</span>
                         }
                     </div>
                     <button
                         type="button"
                         [disabled]="!(canNextHgSeason$ | async)"
                         (click)="nextHgSeason()"
-                        class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                     >
                         <tui-icon icon="@tui.chevron-right" class="size-4!" />
                     </button>
                 </div>
                 @if (!hasActiveSeason()) {
-                    <p class="text-xs leading-4 text-lh-danger/80 font-medium">Сейчас нет текущего сезона</p>
+                    <p class="text-base leading-4 text-lh-danger/80 font-medium">Сейчас нет текущего сезона</p>
                 }
                 @if (hgStats) {
                     <div class="flex flex-col gap-0.5">
@@ -255,6 +260,7 @@
         <p class="text-3xl leading-[30px] font-bold mt-8">Что бы попасть на сервер, необходимо пройти верификацию.</p>
     }
 </div>
+}
 
 <ng-template #preview let-preview>
     <tui-preview [rotatable]="true">

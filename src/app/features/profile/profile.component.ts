@@ -9,17 +9,18 @@ import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to
 import { RouterOutlet } from '@angular/router';
 import { VerificationService } from '@features/verification';
 import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
-import { catchError, combineLatest, forkJoin, map, Observable, of, switchMap, take, tap } from 'rxjs';
+import { catchError, combineLatest, forkJoin, map, Observable, of, startWith, switchMap, take, tap } from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
+import { ProfileSkeletonComponent } from '@shared/ui/skeletons';
 import { DonateService } from '@entities/donate';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { SettlementService } from '@entities/settlement';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
 @Component({
     standalone: true,
-    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton, DecimalPipe],
+    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton, DecimalPipe, ProfileSkeletonComponent],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
 })
@@ -44,7 +45,7 @@ export class ProfileComponent {
      * Используется как временная заглушка для кнопки пополнения баланса.
      */
     protected howToBuy(): void {
-        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent)).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent), { size: 'auto' }).subscribe();
     }
 
     private readonly verificationService = inject(VerificationService);
@@ -57,9 +58,14 @@ export class ProfileComponent {
         switchMap((isAuth) => (isAuth ? this.verificationService.getDetails() : of(null)))
     );
 
-    protected readonly player$ = !this.userService.userId
-        ? of(null)
-        : this.userService.getPlayer$(this.userService.userId).pipe(catchError(() => of(null)));
+    protected readonly player$ = this.userService.authState$.pipe(
+        switchMap((isAuth) => {
+            if (!isAuth || !this.isVerifiedUser() || !this.userService.userId) {
+                return of(null);
+            }
+            return this.userService.getPlayer$(this.userService.userId).pipe(catchError(() => of(null)));
+        })
+    );
 
     protected readonly userGameName$ = this.player$.pipe(
         map((data) => data?.user_game_name ?? '')
@@ -74,7 +80,7 @@ export class ProfileComponent {
      */
     protected readonly balance$: Observable<string | null> = this.userService.authState$.pipe(
         switchMap((isAuth) => {
-            if (!isAuth) {
+            if (!isAuth || !this.isVerifiedUser()) {
                 return of(null);
             }
             return this.donateService.getMyBalance$().pipe(
@@ -100,15 +106,25 @@ export class ProfileComponent {
      * История покупок текущего пользователя.
      */
     protected readonly purchases$ = this.userService.authState$.pipe(
-        switchMap((isAuth) => (isAuth ? this.donateService.getMyPurchases$().pipe(catchError(() => of([]))) : of([])))
+        switchMap((isAuth) => {
+            if (!isAuth || !this.isVerifiedUser()) {
+                return of([]);
+            }
+            return this.donateService.getMyPurchases$().pipe(catchError(() => of([])));
+        })
     );
 
     /**
      * Поселение текущего пользователя.
      */
-    protected readonly settlement$ = !this.userService.userId
-        ? of(null)
-        : this.settlementService.getSettlementInfo(this.userService.userId).pipe(catchError(() => of(null)));
+    protected readonly settlement$ = this.userService.authState$.pipe(
+        switchMap((isAuth) => {
+            if (!isAuth || !this.isVerifiedUser() || !this.userService.userId) {
+                return of(null);
+            }
+            return this.settlementService.getSettlementInfo(this.userService.userId).pipe(catchError(() => of(null)));
+        })
+    );
 
     /**
      * Количество онлайн-участников селения текущего пользователя.
@@ -175,13 +191,28 @@ export class ProfileComponent {
      */
     protected readonly hungerGamesStats$ = toObservable(this.hungerGamesSeason).pipe(
         switchMap((season) => {
-            if (!season || !this.userService.userId) {
+            if (!season || !this.userService.userId || !this.isVerifiedUser()) {
                 return of(null);
             }
             return this.hungerGamesService
                 .getPlayerSeasonStats$(season.id, this.userService.userId)
                 .pipe(catchError(() => of(null)));
         })
+    );
+
+    /**
+     * Признак первоначальной загрузки данных профиля.
+     */
+    protected readonly isLoading$ = combineLatest([
+        this.userGameName$,
+        this.balance$,
+        this.playerStats$,
+        this.settlement$,
+        this.hungerGamesStats$,
+        this.details$,
+    ]).pipe(
+        map(() => false),
+        startWith(true)
     );
 
     /**
@@ -263,15 +294,23 @@ export class ProfileComponent {
         return 'Неверифицирован';
     }
 
+    /**
+     * Проверяет, прошёл ли текущий пользователь верификацию.
+     * Верифицированными считаются пользователи с ролью admin или player.
+     */
+    private isVerifiedUser(): boolean {
+        return this.userService.roles.includes('admin') || this.userService.roles.includes('player');
+    }
+
     protected verification() {
-        this.dialogs.open(new PolymorpheusComponent(PlayerVerificationFormComponent), { size: 'l' }).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(PlayerVerificationFormComponent), { size: 'auto' }).subscribe();
     }
 
     /**
      * Открывает диалоговое окно изменения игрового никнейма пользователя
      */
     protected openDialogChangeUsername(): void {
-        this.dialogs.open(new PolymorpheusComponent(ChangeUsernameComponent), { size: 'l' }).subscribe();
+        this.dialogs.open(new PolymorpheusComponent(ChangeUsernameComponent), { size: 'auto' }).subscribe();
     }
 
     triggerFileInput() {

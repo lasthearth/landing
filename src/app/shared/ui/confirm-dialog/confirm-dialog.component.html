@@ -1,26 +1,10 @@
-<div class="flex flex-col gap-6 justify-center items-center">
-    <h2 class="text-2xl/7.5 font-bold text-lh-primary text-center">
-        {{ context.data.title }}
-    </h2>
+<div class="lh-dialog-card">
+    <h2 class="lh-dialog-title text-center">{{ context.data.title }}</h2>
 
-    <p class="text-base text-lh-primary text-center max-w-md">
-        {{ context.data.text }}
-    </p>
+    <p class="lh-dialog-text text-center">{{ context.data.text }}</p>
 
-    <div class="flex gap-4">
-        <button
-            type="button"
-            (click)="cancel()"
-            class="text-lh-primary rounded-lg! text-sm font-bold cursor-pointer bg-transparent py-2.5 px-4 hover:bg-neutral-100 active:bg-neutral-100 transition-all duration-200"
-        >
-            Отмена
-        </button>
-        <button
-            type="button"
-            (click)="confirm()"
-            class="text-white text-sm font-bold cursor-pointer bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active transition-all duration-200"
-        >
-            Подтвердить
-        </button>
+    <div class="lh-dialog-actions">
+        <button type="button" (click)="cancel()" class="lh-dialog-button lh-dialog-button-secondary">Отмена</button>
+        <button type="button" (click)="confirm()" class="lh-dialog-button lh-dialog-button-primary">Подтвердить</button>
     </div>
 </div>

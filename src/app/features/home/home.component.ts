@@ -6,7 +6,7 @@ import { NewsSkeletonComponent } from '@app/features/news/ui/news-skeleton/news-
 import { NewsApiService, mapDtoToNews } from '@entities/news';
 import { UserService, Role, IPlayer } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
-import { catchError, defaultIfEmpty, finalize, forkJoin, map, of, startWith, Subject, switchMap, take, tap } from 'rxjs';
+import { catchError, defaultIfEmpty, finalize, forkJoin, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -272,25 +272,4 @@ export class HomeComponent {
             });
     }
 
-    /**
-     * Открывает новость по идентификатору.
-     *
-     * Вызывает GET /v1/news/{id}, который инкрементирует счетчик просмотров на сервере.
-     * После успешного запроса обновляет список новостей.
-     *
-     * @param id Идентификатор новости.
-     */
-    protected openNews(id: string): void {
-        this.api
-            .getById(id)
-            .pipe(take(1))
-            .subscribe({
-                next: () => {
-                    this.refresh$.next();
-                },
-                error: (err) => {
-                    console.error('[News] Ошибка открытия новости:', err);
-                },
-            });
-    }
 }

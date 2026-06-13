@@ -6,9 +6,10 @@ import { ServerInformationService } from '@core/services/server-information.serv
 import { UserService } from '@entities/user';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { TuiTable } from '@taiga-ui/addon-table';
-import { TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { TuiIcon } from '@taiga-ui/core';
 import { TuiTabs } from '@taiga-ui/kit';
 import { LeaderCardComponent } from './leader-card/leader-card.component';
+import { StatisticsSkeletonComponent } from '@shared/ui/skeletons';
 import { TUI_IS_MOBILE } from '@taiga-ui/cdk';
 
 export type TypeLabel = 'Смертей' | 'Убийств' | 'Часов';
@@ -19,7 +20,7 @@ export type TypeLabel = 'Смертей' | 'Убийств' | 'Часов';
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [TuiTable, AsyncPipe, NgIf, TuiIcon, TuiLoader, TuiTabs, LeaderCardComponent],
+    imports: [TuiTable, AsyncPipe, NgIf, TuiIcon, TuiTabs, LeaderCardComponent, StatisticsSkeletonComponent],
     styleUrl: './statistics.component.less',
     templateUrl: './statistics.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

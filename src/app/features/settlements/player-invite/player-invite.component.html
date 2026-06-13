@@ -1,7 +1,7 @@
 @let players = players$ | async;
 
-<div class="flex flex-col gap-6 w-full">
-    <p class="text-3xl font-bold text-[#2d201a]">Пригласите игрока в ваше поселение</p>
+<div class="lh-dialog-card">
+    <h2 class="lh-dialog-title">Пригласите игрока в ваше поселение</h2>
 
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
         <div class="flex flex-col gap-2">
@@ -23,12 +23,18 @@
                     </div>
                     <button
                         (click)="playerInvite(item.user_id)"
-                        class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-sm font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 shrink-0"
+                        class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-base font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-1.5 px-3 shrink-0"
                     >
                         Пригласить
                     </button>
                 </div>
             }
         </div>
+    </div>
+
+    <div class="lh-dialog-actions">
+        <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
+            Закрыть
+        </button>
     </div>
 </div>

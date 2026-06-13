@@ -1,4 +1,4 @@
-<div (click)="onCardClick()" class="news-card">
+<div class="news-card">
     <div
         class="news-card__bg"
         [style.backgroundImage]="
@@ -36,20 +36,20 @@
                     <div class="flex flex-wrap gap-2 items-center">
                         @if (date() !== '—') {
                             <span
-                                class="bg-[#c35a17] text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
+                                class="bg-[#c35a17] text-neutral-100 font-bold text-base md:text-base px-3 p-1.5 rounded-2xl"
                             >
                                 {{ date() }}
                             </span>
                         }
                         @if (createdBy()) {
                             <span
-                                class="bg-neutral-700 text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl"
+                                class="bg-neutral-700 text-neutral-100 font-bold text-base md:text-base px-3 p-1.5 rounded-2xl"
                             >
                                 {{ createdBy() }}
                             </span>
                         }
                         <span
-                            class="bg-neutral-800 text-neutral-100 font-bold text-xs md:text-sm px-3 p-1.5 rounded-2xl flex items-center gap-1"
+                            class="bg-neutral-800 text-neutral-100 font-bold text-base md:text-base px-3 p-1.5 rounded-2xl flex items-center gap-1"
                         >
                             <tui-icon icon="@tui.eye" class="size-3.5" />
                             {{ viewCount() }}

@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TuiIcon } from '@taiga-ui/core';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -24,7 +25,7 @@ export type LHInputType = 'input' | 'select' | 'textarea' | 'inputNumber';
 @Component({
     standalone: true,
     selector: 'lh-input',
-    imports: [CommonModule],
+    imports: [CommonModule, TuiIcon],
     templateUrl: './lh-input.component.html',
     styleUrl: './lh-input.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,6 +58,16 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
      * Плейсхолдер.
      */
     public placeholder: InputSignal<string> = input('');
+
+    /**
+     * Количество строк для многострочного поля.
+     */
+    public rows: InputSignal<number> = input(3);
+
+    /**
+     * Иконка Taiga UI, отображаемая справа внутри поля.
+     */
+    public icon: InputSignal<string> = input('');
 
     /**
      * Признак того, раскрыт ли список.
@@ -137,10 +148,10 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
      */
     get displayedValue(): string {
         if (this.type() === 'input' || this.type() === 'inputNumber' || this.type() === 'textarea') {
-            return this.value ? String(this.value) : '';
-        } else {
-            return this.value ? this.displayWith(this.value) : '';
+            return this.value !== null && this.value !== undefined ? String(this.value) : '';
         }
+
+        return this.value !== null && this.value !== undefined ? this.displayWith(this.value) : '';
     }
 
     /**

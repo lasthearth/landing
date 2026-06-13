@@ -13,6 +13,7 @@ import { RequestStatusService } from '@core/services/request-status.service';
     standalone: true,
     selector: 'app-confirm-approve',
     templateUrl: './confirm-approve.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TuiIcon],
 })

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { SettlementCardComponent } from './settlement-card/settlement-card.component';
-import { TuiLoader } from '@taiga-ui/core';
+import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
 import { from, mergeMap, of, toArray } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ISettlement } from '@entities/settlement';
@@ -31,12 +31,13 @@ interface EnrichedSettlement extends ISettlement {
  */
 @Component({
     selector: 'app-settlements',
-    imports: [SettlementCardComponent, TuiLoader],
+    imports: [SettlementCardComponent, SettlementCardSkeletonComponent],
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementsComponent {
+    protected readonly skeletonItems = Array.from({ length: 3 });
     private readonly settlementService = inject(SettlementService);
     private readonly userService = inject(UserService);
 

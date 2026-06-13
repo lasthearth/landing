@@ -61,14 +61,6 @@ export class NewsCardComponent {
     public readonly delete = output<void>();
 
     /**
-     * Событие открытия новости.
-     *
-     * Вызывается при клике на карточку.
-     * Используется для инкремента просмотров через API.
-     */
-    public readonly open = output<void>();
-
-    /**
      * Обрабатывает клик по кнопке удаления.
      *
      * Предотвращает всплытие события и эмитит запрос на удаление.
@@ -80,12 +72,4 @@ export class NewsCardComponent {
         this.delete.emit();
     }
 
-    /**
-     * Обрабатывает клик по карточке новости.
-     *
-     * Эмитит событие открытия для инкремента просмотра.
-     */
-    protected onCardClick(): void {
-        this.open.emit();
-    }
 }

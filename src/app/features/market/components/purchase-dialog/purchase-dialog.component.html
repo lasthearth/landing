@@ -1,7 +1,11 @@
-<div class="flex flex-col gap-5 p-8 w-[32rem] bg-[#e2d7bb] rounded-2xl text-[#2a2722] shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
+<div
+    class="flex flex-col gap-5 p-8 w-[32rem] bg-[#e2d7bb] rounded-2xl text-[#2a2722] shadow-[0_12px_40px_rgba(0,0,0,0.25)]"
+>
     <!-- Header -->
     <div class="flex items-center gap-5">
-        <div class="w-24 h-24 rounded-xl overflow-hidden border-2 border-[#bdb093] bg-[#e8dcc0] shadow-[0_4px_12px_rgba(0,0,0,0.1)] shrink-0">
+        <div
+            class="w-24 h-24 rounded-xl overflow-hidden border-2 border-[#bdb093] bg-[#e8dcc0] shadow-[0_4px_12px_rgba(0,0,0,0.1)] shrink-0"
+        >
             <img [src]="data.image" [alt]="data.title" class="w-full h-full object-cover" />
         </div>
         <div class="flex flex-col gap-2 justify-center h-24">
@@ -9,7 +13,7 @@
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-7 w-7 object-contain" />
                 <span class="text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
-                @if (data.currency === 'rubles') {
+                @if (data.currency === "rubles") {
                     <span class="text-[18px] text-[#5c554a]">руб.</span>
                 }
             </div>
@@ -77,31 +81,12 @@
     <!-- Comment -->
     <div class="flex flex-col gap-3">
         <label class="text-[18px] font-bold uppercase tracking-wide text-[#5c554a]">Комментарий к заказу</label>
-        <textarea
-            [(ngModel)]="comment"
-            rows="3"
-            placeholder="Например: выдайте вечером после 20:00..."
-            class="w-full bg-[#d8cdb3] border border-[#c4b89e] rounded-xl p-4 text-[18px] text-[#1c1a16] placeholder:text-[#9e9789] resize-none focus:outline-none focus:border-lh-accent/60 transition-colors"
-        ></textarea>
+        <lh-input type="textarea" [(ngModel)]="comment" placeholder="Например: выдайте вечером после 20:00..." />
     </div>
 
     <!-- Actions -->
     <div class="flex gap-4 pt-2">
-        <button
-            tuiButton
-            appearance="secondary"
-            (click)="onCancel()"
-            class="flex-1 text-[18px]"
-        >
-            Отмена
-        </button>
-        <button
-            tuiButton
-            appearance="primary"
-            (click)="onBuy()"
-            class="flex-1 text-[18px]"
-        >
-            Приобрести
-        </button>
+        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-[18px]">Отмена</button>
+        <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-[18px]">Приобрести</button>
     </div>
 </div>

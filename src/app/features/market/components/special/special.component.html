@@ -1,7 +1,5 @@
 @if (loading()) {
-    <div class="flex justify-center py-12">
-        <tui-loader size="xl" />
-    </div>
+    <app-market-grid-skeleton />
 } @else if (items().length === 0) {
     <div class="flex justify-center py-12">
         <p class="text-2xl uppercase font-bold text-[#bdb093] self-center">СКОРО ПОЯВИТСЯ....</p>
@@ -39,7 +37,7 @@
                 <!-- Buy button -->
                 <button
                     (click)="openPurchaseDialog(item)"
-                    class="w-full text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-[#e56a18] hover:from-[#e56a18] hover:to-lh-accent rounded-xl py-2.5 text-sm shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
+                    class="w-full text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-[#e56a18] hover:from-[#e56a18] hover:to-lh-accent rounded-xl py-2.5 text-base shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
                 >
                     КУПИТЬ
                 </button>

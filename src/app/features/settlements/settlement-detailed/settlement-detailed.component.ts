@@ -9,6 +9,7 @@ import { tap } from 'rxjs';
 @Component({
     selector: 'app-settlement-detailed',
     templateUrl: './settlement-detailed.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
     imports: [TuiPulse, TuiIcon],
 })
 export class SettlementDetailedComponent implements OnInit {

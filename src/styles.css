@@ -233,8 +233,8 @@ tui-hint {
     background-color: var(--lh-success);
     color: white;
     cursor: pointer;
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
     border-radius: var(--radius-lg);
     align-self: flex-start;
     padding-block: calc(var(--spacing) * 1.5);
@@ -254,8 +254,8 @@ tui-hint {
     background-color: var(--lh-danger);
     color: white;
     cursor: pointer;
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
     border-radius: var(--radius-lg);
     align-self: flex-start;
     padding-block: calc(var(--spacing) * 1.5);
@@ -277,4 +277,184 @@ tui-pulse.offline {
     -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
     box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
+}
+
+/**
+ * Глобальный курсор для интерактивных элементов.
+ * Убирает необходимость добавлять cursor-pointer в каждый шаблон.
+ */
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+a,
+input[type='checkbox'],
+input[type='radio'],
+input[type='file'],
+input[type='range'],
+select,
+summary {
+    cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled='true'] {
+    cursor: not-allowed;
+}
+
+/**
+ * Единая карточка диалогового окна.
+ * Используется как корневой контейнер для всех модальных компонентов.
+ */
+.lh-dialog-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 2rem;
+    min-width: auto;
+    max-width: 42rem;
+    background-color: #e2d7bb;
+    border-radius: 1rem;
+    color: #2a2722;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+/**
+ * Заголовок диалога.
+ */
+.lh-dialog-title {
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #1c1a16;
+}
+
+/**
+ * Описательный текст в диалоге.
+ */
+.lh-dialog-text {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #5c554a;
+}
+
+/**
+ * Панель кнопок действий диалога.
+ */
+.lh-dialog-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+/**
+ * Базовая кнопка диалога.
+ */
+.lh-dialog-button {
+    flex: 1 1 0%;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/**
+ * Первичная кнопка диалога.
+ */
+.lh-dialog-button-primary {
+    background-color: var(--lh-accent);
+    color: #ffffff;
+}
+
+.lh-dialog-button-primary:hover {
+    filter: brightness(1.1);
+}
+
+.lh-dialog-button-primary:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/**
+ * Вторичная кнопка диалога.
+ */
+.lh-dialog-button-secondary {
+    background-color: transparent;
+    border: 2px solid #6b6256;
+    color: #6b6256;
+}
+
+.lh-dialog-button-secondary:hover {
+    background-color: rgba(107, 98, 86, 0.1);
+}
+
+/**
+ * Опасная кнопка диалога.
+ */
+.lh-dialog-button-danger {
+    background-color: var(--lh-danger);
+    color: #ffffff;
+}
+
+.lh-dialog-button-danger:hover {
+    filter: brightness(1.1);
+}
+
+.lh-dialog-button-danger:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/**
+ * Информационный блок внутри диалога.
+ */
+.lh-dialog-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #d8cdb3;
+    border: 1px solid #c4b89e;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+}
+
+/**
+ * Кастомный чекбокс в стиле проекта.
+ * Скрывает нативный input и рисует квадрат с пергаментным фоном
+ * и градиентной заливкой в активном состоянии.
+ */
+.lh-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: 1.5rem;
+    border: 2px solid #a89a7e;
+    border-radius: 8px;
+    background-color: rgba(226, 215, 187, 0.4);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.lh-checkbox:checked {
+    background: linear-gradient(135deg, #c35a17, #e07830);
+    border-color: #c35a17;
+}
+
+.lh-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 0.35rem;
+    height: 0.65rem;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.lh-checkbox:focus-visible {
+    outline: 2px solid #c35a17;
+    outline-offset: 2px;
 }

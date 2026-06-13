@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiCopy } from '@taiga-ui/kit';
+import { environment } from '@core/config/environments/environment';
 
 /**
  * Компонент страницы "Как зайти".
@@ -13,4 +14,6 @@ import { TuiCopy } from '@taiga-ui/kit';
     imports: [TuiCopy, TuiIcon],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HowPlayComponent {}
+export class HowPlayComponent {
+    protected readonly environment = environment;
+}

@@ -77,7 +77,7 @@ export class SettlementVerificationRequestComponent {
     protected approve(): void {
         this.dialogService
             .open(new PolymorpheusComponent(ModerateSettlementRequestComponent), {
-                size: 'm',
+                size: 'auto',
                 closeable: false,
                 data: { userId: this.data().id },
             })
@@ -94,7 +94,7 @@ export class SettlementVerificationRequestComponent {
     protected reject(): void {
         this.dialogService
             .open(new PolymorpheusComponent(ConfirmRejectComponent), {
-                size: 'l',
+                size: 'auto',
                 closeable: false,
                 data: { userId: this.data().id, type: 'settlement' },
             })

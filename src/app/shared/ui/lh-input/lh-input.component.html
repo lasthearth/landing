@@ -1,10 +1,16 @@
-<div (click)="toggleDropdown()" [class.select-mode]="type() === 'select'" class="flexible-input">
+<div
+    (click)="toggleDropdown()"
+    [class.select-mode]="type() === 'select'"
+    [class.has-icon]="icon() && type() !== 'select'"
+    class="flexible-input"
+>
     @if (type() === "input" || type() === "inputNumber") {
         <input
             type="text"
             [placeholder]="placeholder()"
             [value]="displayedValue"
             [disabled]="disabled"
+            [attr.inputmode]="type() === 'inputNumber' ? 'numeric' : null"
             (input)="onInputChange($event)"
         />
     }
@@ -14,12 +20,13 @@
             [placeholder]="placeholder()"
             [value]="displayedValue"
             [disabled]="disabled"
+            [rows]="rows()"
             (input)="onInputChange($event)"
         ></textarea>
     }
 
     @if (type() === "select") {
-        <div class="flex justify-between">
+        <div class="flex justify-between w-full">
             <div [class.text-[#8c8784]]="!displayedValue" class="select-display">
                 {{ displayedValue || placeholder() }}
             </div>
@@ -29,6 +36,10 @@
                 class="transition-all duration-300 opacity-50"
             />
         </div>
+    }
+
+    @if (icon() && type() !== "select") {
+        <tui-icon [icon]="icon()" class="input-icon" />
     }
 
     @if (type() === "select") {

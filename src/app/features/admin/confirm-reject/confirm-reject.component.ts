@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TuiDialogContext, TuiError, TuiIcon } from '@taiga-ui/core';
+import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { Subject, filter, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
@@ -17,8 +18,9 @@ import { RequestStatusService } from '@core/services/request-status.service';
 @Component({
     standalone: true,
     selector: 'app-confirm-reject',
-    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiFieldErrorPipe, AsyncPipe, TuiIcon],
+    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiFieldErrorPipe, AsyncPipe, TuiIcon, LHInputComponent],
     templateUrl: './confirm-reject.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmRejectComponent {

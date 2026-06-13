@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TuiButton, TuiIcon, TuiLoader, TuiDialogService } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { catchError, of } from 'rxjs';
 import { DonateService, IShopItem } from '@entities/donate';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
+import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 
 /**
  * Компонент вкладки "Особое" в магазине.
@@ -13,7 +14,7 @@ import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/
  */
 @Component({
     selector: 'app-special',
-    imports: [CommonModule, TuiButton, TuiIcon, TuiLoader, PurchaseDialogComponent],
+    imports: [CommonModule, TuiButton, TuiIcon, PurchaseDialogComponent, MarketGridSkeletonComponent],
     templateUrl: './special.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

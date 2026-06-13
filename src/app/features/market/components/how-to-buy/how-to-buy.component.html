@@ -1,6 +1,5 @@
-<div class="flex flex-col gap-5 w-full p-1">
-    <!-- Заголовок -->
-    <p class="text-3xl text-lh-primary font-bold text-center">Пополнить осколки</p>
+<div class="lh-dialog-card">
+    <h2 class="lh-dialog-title text-center">Пополнить осколки</h2>
 
     <!-- Блок выбора суммы -->
     <div class="flex flex-col gap-4 p-5 rounded-2xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] shadow-sm">
@@ -38,12 +37,13 @@
         <div class="flex flex-col gap-2">
             <label class="text-lh-primary text-base font-semibold">Сумма пополнения, ₽</label>
             <div class="flex items-center gap-3">
-                <lh-input
-                    type="inputNumber"
-                    class="flex-1"
-                    [ngModel]="rubles()"
-                    (ngModelChange)="onRublesChange($event)"
-                />
+                <div class="flex-1">
+                    <lh-input
+                        type="inputNumber"
+                        [ngModel]="rubles()"
+                        (ngModelChange)="onRublesChange($event)"
+                    />
+                </div>
                 <span class="text-lh-primary text-xl font-bold">₽</span>
             </div>
             <p class="text-lh-primary/50 text-base text-center">

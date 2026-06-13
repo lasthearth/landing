@@ -11,6 +11,7 @@ import { Tag } from './interfaces/tag.interface';
     selector: 'app-moderate-settlement-request',
     imports: [ActiveTagComponent],
     templateUrl: './moderate-settlement-request.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
 })
 export class ModerateSettlementRequestComponent {
     /**

@@ -41,28 +41,36 @@ export class NotificationService {
 
     /**
      * Поток запросов на верификацию пользователей.
-     * Аналогично invitations$, загружается при подписке и обновляется по триггеру.
-     * Для неавторизованных пользователей возвращает пустой массив.
+     * Загружается только для администраторов.
+     * Для неавторизованных и не-админов возвращает пустой массив.
      */
     public readonly userVerifications$: Observable<IVerifyRequest[]> = this.updateAllNotification$.pipe(
         startWith(null),
         switchMap(() =>
             this.userService.authState$.pipe(
-                switchMap((isAuth) => (isAuth ? this.verificationService.getVerifyRequests() : of([])))
+                switchMap((isAuth) =>
+                    isAuth && this.userService.roles.includes('admin')
+                        ? this.verificationService.getVerifyRequests()
+                        : of([])
+                )
             )
         )
     );
 
     /**
      * Поток запросов на верификацию поселений.
-     * Аналогично invitations$, загружается при подписке и обновляется по триггеру.
-     * Для неавторизованных пользователей возвращает пустой массив.
+     * Загружается только для администраторов.
+     * Для неавторизованных и не-админов возвращает пустой массив.
      */
     public readonly settlementVerifications$: Observable<IRequestSettlement[]> = this.updateAllNotification$.pipe(
         startWith(null),
         switchMap(() =>
             this.userService.authState$.pipe(
-                switchMap((isAuth) => (isAuth ? this.settlementService.getSettlementsRequests$() : of([])))
+                switchMap((isAuth) =>
+                    isAuth && this.userService.roles.includes('admin')
+                        ? this.settlementService.getSettlementsRequests$()
+                        : of([])
+                )
             )
         )
     );

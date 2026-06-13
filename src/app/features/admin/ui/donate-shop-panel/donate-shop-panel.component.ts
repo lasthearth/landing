@@ -14,8 +14,9 @@ import {
 import { MediaService } from '@entities/media';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
-import { TuiFiles } from '@taiga-ui/kit';
-import { finalize, Observable, startWith, Subject, switchMap, tap } from 'rxjs';
+import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
+import { TuiFile, TuiFiles, TuiFilesComponent } from '@taiga-ui/kit';
+import { finalize, map, Observable, startWith, Subject, Subscription, switchMap, tap, timer } from 'rxjs';
 
 /**
  * Панель управления донат-магазином в админке.
@@ -26,7 +27,7 @@ import { finalize, Observable, startWith, Subject, switchMap, tap } from 'rxjs';
 @Component({
     selector: 'app-donate-shop-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, FormsModule, AsyncPipe, LHInputComponent, TuiIcon, TuiLoader, TuiFiles],
+    imports: [ReactiveFormsModule, FormsModule, AsyncPipe, LHInputComponent, TuiIcon, TuiLoader, TuiFiles, TuiFilesComponent, TuiFile, MarketGridSkeletonComponent],
     templateUrl: './donate-shop-panel.component.html',
     styleUrl: './donate-shop-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,14 +84,22 @@ export class DonateShopPanelComponent {
     protected imagePreviewUrl = signal<string | null>(null);
 
     /**
-     * URL превью для каждой entry набора.
+     * Подписки на изменения файлов entry набора.
      */
-    protected entryPreviewUrls = signal<Record<number, string | null>>({});
+    private readonly entryImageSubscriptions = new Map<FormControl<File | null>, Subscription>();
 
     /**
      * Доступные типы товара.
      */
-    protected readonly itemTypes: ShopItemType[] = ['ITEM_TYPE_ITEM', 'ITEM_TYPE_KIT'];
+    /**
+     * Внутренний тип товара с псевдо-типом "Привилегия".
+     * На бэкенд отправляется как ITEM_TYPE_ITEM, но с поддержкой entries.
+     */
+    protected readonly itemTypes: (ShopItemType | 'ITEM_TYPE_PRIVILEGE')[] = [
+        'ITEM_TYPE_ITEM',
+        'ITEM_TYPE_KIT',
+        'ITEM_TYPE_PRIVILEGE',
+    ];
 
     /**
      * Возвращает отображаемое название типа товара.
@@ -98,7 +107,8 @@ export class DonateShopPanelComponent {
      * @param type Тип товара.
      * @returns Локализованная строка.
      */
-    protected itemTypeDisplay = (type: ShopItemType): string => this.getItemTypeLabel(type);
+    protected itemTypeDisplay = (type: ShopItemType | 'ITEM_TYPE_PRIVILEGE'): string =>
+        this.getItemTypeLabel(type);
 
     /**
      * Возвращает локализованное название типа товара.
@@ -107,16 +117,17 @@ export class DonateShopPanelComponent {
      * @returns Локализованная строка.
      */
     protected getItemTypeLabel(type: string): string {
-        return this.itemTypeLabels[type as ShopItemType] ?? 'Не указан';
+        return this.itemTypeLabels[type as ShopItemType | 'ITEM_TYPE_PRIVILEGE'] ?? 'Не указан';
     }
 
     /**
      * Отображаемое название типа товара.
      */
-    protected readonly itemTypeLabels: Record<ShopItemType, string> = {
+    protected readonly itemTypeLabels: Record<ShopItemType | 'ITEM_TYPE_PRIVILEGE', string> = {
         ITEM_TYPE_ITEM: 'Предмет',
         ITEM_TYPE_KIT: 'Набор',
         ITEM_TYPE_UNSPECIFIED: 'Не указан',
+        ITEM_TYPE_PRIVILEGE: 'Привилегия',
     };
 
     /**
@@ -130,7 +141,7 @@ export class DonateShopPanelComponent {
             validators: [Validators.required, Validators.pattern(/^\d+\.?\d*$/)],
         }),
         code: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        item_type: new FormControl<ShopItemType>('ITEM_TYPE_ITEM', {
+        item_type: new FormControl<ShopItemType | 'ITEM_TYPE_PRIVILEGE'>('ITEM_TYPE_ITEM', {
             nonNullable: true,
             validators: [Validators.required],
         }),
@@ -149,12 +160,28 @@ export class DonateShopPanelComponent {
     });
 
     /**
+     * Поток неудачной загрузки файла изображения товара.
+     */
+    protected readonly failedFile$: Subject<File | null> = new Subject<File | null>();
+
+    /**
+     * Поток загрузки файла изображения товара.
+     */
+    protected readonly loadingFile$: Subject<File | null> = new Subject<File | null>();
+
+    /**
+     * Поток успешно выбранного файла изображения товара.
+     */
+    protected readonly loadedFile$: Observable<File | null> = this.form.controls.image.valueChanges.pipe(
+        switchMap((file) => this.processFile(file, this.loadingFile$, this.failedFile$))
+    );
+
+    /**
      * Данные для предпросмотра карточки товара.
      */
     protected readonly previewItem = computed(() => {
         const values = this.formValue();
         const entries = this.entriesArray.getRawValue();
-        const previewUrls = this.entryPreviewUrls();
         const imageUrl = this.imagePreviewUrl() ?? '';
 
         return {
@@ -168,12 +195,12 @@ export class DonateShopPanelComponent {
             discountPercent: values.discount_percent ?? 0,
             imageUrl,
             entries:
-                values.item_type === 'ITEM_TYPE_KIT'
+                values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE'
                     ? entries.map((entry, index) => ({
                           name: entry.name || `Позиция ${index + 1}`,
                           description: entry.description,
                           quantity: entry.quantity,
-                          imageUrl: previewUrls[index] ?? entry.image_url ?? '',
+                          imageUrl: entry.image_url ?? '',
                       }))
                     : [],
         };
@@ -215,9 +242,20 @@ export class DonateShopPanelComponent {
      */
     public constructor() {
         this.form.controls.item_type.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((type) => {
-            if (type !== 'ITEM_TYPE_KIT') {
+            if (type !== 'ITEM_TYPE_KIT' && type !== 'ITEM_TYPE_PRIVILEGE') {
                 this.entriesArray.clear();
-                this.entryPreviewUrls.set({});
+                this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
+                this.entryImageSubscriptions.clear();
+            }
+        });
+
+        this.form.controls.image.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((file) => {
+            if (file instanceof File) {
+                const reader = new FileReader();
+                reader.onload = () => this.imagePreviewUrl.set(reader.result as string);
+                reader.readAsDataURL(file);
+            } else {
+                this.imagePreviewUrl.set(null);
             }
         });
     }
@@ -242,26 +280,28 @@ export class DonateShopPanelComponent {
         this.editingItemId.set(item.id);
         this.imagePreviewUrl.set(item.imageUrl);
 
+        const isPrivilege =
+            item.itemType === 'ITEM_TYPE_ITEM' && item.entries && item.entries.length > 0;
+
         this.form.patchValue({
             name: item.name,
             description: item.description,
             price: item.price,
             code: item.code,
-            item_type: item.itemType,
+            item_type: isPrivilege ? 'ITEM_TYPE_PRIVILEGE' : item.itemType,
             is_available: item.isAvailable,
             has_discount: item.hasDiscount ?? false,
             discount_percent: item.discountPercent ?? 0,
         });
 
         this.entriesArray.clear();
-        const previews: Record<number, string | null> = {};
+        this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
+        this.entryImageSubscriptions.clear();
 
-        item.entries?.forEach((entry, index) => {
-            previews[index] = entry.imageUrl ?? null;
+        item.entries?.forEach((entry) => {
             this.entriesArray.push(this.createEntryForm(entry));
         });
 
-        this.entryPreviewUrls.set(previews);
         this.activeTabIndex.set(1);
     }
 
@@ -286,54 +326,64 @@ export class DonateShopPanelComponent {
      * @param index Индекс позиции.
      */
     protected removeEntry(index: number): void {
-        this.entriesArray.removeAt(index);
-        this.entryPreviewUrls.update((urls) => {
-            const updated = { ...urls };
-            delete updated[index];
-            return updated;
-        });
-    }
-
-    /**
-     * Обрабатывает выбор файла изображения товара.
-     *
-     * @param file Выбранный файл.
-     */
-    protected onImageSelected(file: File | null): void {
-        this.form.controls.image.setValue(file);
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => this.imagePreviewUrl.set(reader.result as string);
-            reader.readAsDataURL(file);
-        } else {
-            this.imagePreviewUrl.set(null);
+        const control = this.entriesArray.at(index).controls.image;
+        const subscription = this.entryImageSubscriptions.get(control);
+        if (subscription) {
+            subscription.unsubscribe();
+            this.entryImageSubscriptions.delete(control);
         }
+        this.entriesArray.removeAt(index);
     }
 
     /**
-     * Обрабатывает выбор файла изображения для entry.
+     * Удаляет выбранный файл изображения товара.
+     */
+    protected removeFile(): void {
+        this.form.controls.image.setValue(null);
+    }
+
+    /**
+     * Удаляет выбранный файл изображения entry.
      *
      * @param index Индекс entry.
-     * @param file Выбранный файл.
      */
-    protected onEntryImageSelected(index: number, file: File | null): void {
-        this.entriesArray.at(index).controls.image.setValue(file);
+    protected removeEntryFile(index: number): void {
+        this.entriesArray.at(index).controls.image.setValue(null);
+    }
 
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () =>
-                this.entryPreviewUrls.update((urls) => ({
-                    ...urls,
-                    [index]: reader.result as string,
-                }));
-            reader.readAsDataURL(file);
-        } else {
-            this.entryPreviewUrls.update((urls) => ({
-                ...urls,
-                [index]: null,
-            }));
+    /**
+     * Обрабатывает выбранный файл: эмулирует короткую загрузку,
+     * отлавливает превышение размера и возвращает файл для отображения.
+     *
+     * @param file Выбранный файл.
+     * @param loading$ {@link Subject} состояния загрузки.
+     * @param failed$ {@link Subject} состояния ошибки.
+     * @returns Observable с файлом или null.
+     */
+    protected processFile(
+        file: File | null,
+        loading$: Subject<File | null>,
+        failed$: Subject<File | null>
+    ): Observable<File | null> {
+        failed$.next(null);
+
+        if (!file) {
+            return timer(0).pipe(map(() => null));
         }
+
+        const maxSizeBytes = 10 * 1024 * 1024;
+
+        if (file.size && file.size > maxSizeBytes) {
+            failed$.next(file);
+            return timer(0).pipe(map(() => null));
+        }
+
+        loading$.next(file);
+
+        return timer(300).pipe(
+            map(() => file),
+            finalize(() => loading$.next(null))
+        );
     }
 
     /**
@@ -371,6 +421,9 @@ export class DonateShopPanelComponent {
             const values = this.form.getRawValue();
             const imageUrl = await this.resolveImageUrl();
             const entries = await this.resolveEntries();
+            const itemType = values.item_type === 'ITEM_TYPE_PRIVILEGE' ? 'ITEM_TYPE_ITEM' : values.item_type;
+            const shouldSendEntries =
+                values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE';
 
             if (this.isEditMode() && this.editingItemId()) {
                 const request: IUpdateShopItemRequest = {
@@ -379,12 +432,12 @@ export class DonateShopPanelComponent {
                     description: values.description,
                     price: values.price,
                     code: values.code,
-                    item_type: values.item_type,
+                    item_type: itemType,
                     is_available: values.is_available,
                     has_discount: values.has_discount,
                     discount_percent: values.has_discount ? values.discount_percent : undefined,
                     image_url: imageUrl,
-                    entries: values.item_type === 'ITEM_TYPE_KIT' ? entries : undefined,
+                    entries: shouldSendEntries ? entries : undefined,
                 };
 
                 this.donateService
@@ -405,11 +458,11 @@ export class DonateShopPanelComponent {
                     description: values.description,
                     price: values.price,
                     code: values.code,
-                    item_type: values.item_type,
+                    item_type: itemType,
                     image_url: imageUrl ?? '',
                     has_discount: values.has_discount,
                     discount_percent: values.has_discount ? values.discount_percent : undefined,
-                    entries: values.item_type === 'ITEM_TYPE_KIT' ? entries : undefined,
+                    entries: shouldSendEntries ? entries : undefined,
                 };
 
                 this.donateService
@@ -483,6 +536,23 @@ export class DonateShopPanelComponent {
         quantity: number;
         imageUrl?: string;
     }): FormGroup<KitEntryForm> {
+        const imageControl = new FormControl<File | null>(null);
+        const imageUrlControl = new FormControl<string | null>(entry?.imageUrl ?? null);
+
+        const subscription = imageControl.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((file) => {
+                if (file instanceof File) {
+                    const reader = new FileReader();
+                    reader.onload = () => imageUrlControl.setValue(reader.result as string);
+                    reader.readAsDataURL(file);
+                } else {
+                    imageUrlControl.setValue(null);
+                }
+            });
+
+        this.entryImageSubscriptions.set(imageControl, subscription);
+
         return new FormGroup<KitEntryForm>({
             name: new FormControl<string>(entry?.name ?? '', {
                 nonNullable: true,
@@ -493,8 +563,8 @@ export class DonateShopPanelComponent {
                 nonNullable: true,
                 validators: [Validators.required, Validators.min(1)],
             }),
-            image: new FormControl<File | null>(null),
-            image_url: new FormControl<string | null>(entry?.imageUrl ?? null),
+            image: imageControl,
+            image_url: imageUrlControl,
         });
     }
 
@@ -514,8 +584,9 @@ export class DonateShopPanelComponent {
             image: null,
         });
         this.entriesArray.clear();
+        this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
+        this.entryImageSubscriptions.clear();
         this.imagePreviewUrl.set(null);
-        this.entryPreviewUrls.set({});
     }
 }
 

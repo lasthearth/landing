@@ -62,7 +62,7 @@ export class PlayerVerifyRequestComponent {
     protected reject(): void {
         this.dialogService
             .open(new PolymorpheusComponent(ConfirmRejectComponent), {
-                size: 'l',
+                size: 'auto',
                 closeable: false,
                 data: { userId: this.data().user_id, type: 'user' },
             })

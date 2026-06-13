@@ -124,7 +124,7 @@ export class SettlementCardComponent implements OnInit {
     protected openSetTagsDialog() {
         this.dialogs
             .open(new PolymorpheusComponent(SetTagsComponent), {
-                size: 'm',
+                size: 'auto',
                 data: { settlementId: this.data().id, settlementName: this.data().name, tagsIds: this.data().tags },
             })
             .subscribe();
@@ -133,7 +133,7 @@ export class SettlementCardComponent implements OnInit {
     protected openDetails() {
         this.dialogs
             .open(new PolymorpheusComponent(SettlementDetailedComponent), {
-                size: 'l',
+                size: 'auto',
                 data: { settlement: this.data() },
             })
             .subscribe();

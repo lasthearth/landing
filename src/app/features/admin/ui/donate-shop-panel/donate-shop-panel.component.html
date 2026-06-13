@@ -1,29 +1,35 @@
 <div class="flex flex-col gap-6 w-full donate-shop-panel">
     <!-- Внутренние табы -->
-    <div class="flex gap-2 border-b border-lh-primary-2/20 pb-3">
+    <div class="flex gap-3">
         <button
             type="button"
             (click)="activeTabIndex.set(0)"
-            [class.bg-lh-accent-3]="activeTabIndex() === 0"
+            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
+            [class.border-[#c35a17]]="activeTabIndex() === 0"
+            [class.bg-gradient-to-r]="activeTabIndex() === 0"
+            [class.from-[#c35a17]]="activeTabIndex() === 0"
+            [class.to-[#e07830]]="activeTabIndex() === 0"
             [class.text-white]="activeTabIndex() === 0"
-            [class.shadow-md]="activeTabIndex() === 0"
-            [class.bg-lh-primary-2/10]="activeTabIndex() !== 0"
-            [class.text-lh-primary]="activeTabIndex() !== 0"
-            [class.hover:bg-lh-primary-2/20]="activeTabIndex() !== 0"
-            class="px-5 py-2.5 rounded-t-xl text-xl font-bold uppercase transition-all"
+            [class.border-[#c4b89e]]="activeTabIndex() !== 0"
+            [class.bg-[#d8cdb3]]="activeTabIndex() !== 0"
+            [class.text-[#2a2722]]="activeTabIndex() !== 0"
+            [class.hover:bg-[#c4b89e]]="activeTabIndex() !== 0"
         >
             Список товаров
         </button>
         <button
             type="button"
             (click)="startCreate()"
-            [class.bg-lh-accent-3]="activeTabIndex() === 1"
+            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
+            [class.border-[#c35a17]]="activeTabIndex() === 1"
+            [class.bg-gradient-to-r]="activeTabIndex() === 1"
+            [class.from-[#c35a17]]="activeTabIndex() === 1"
+            [class.to-[#e07830]]="activeTabIndex() === 1"
             [class.text-white]="activeTabIndex() === 1"
-            [class.shadow-md]="activeTabIndex() === 1"
-            [class.bg-lh-primary-2/10]="activeTabIndex() !== 1"
-            [class.text-lh-primary]="activeTabIndex() !== 1"
-            [class.hover:bg-lh-primary-2/20]="activeTabIndex() !== 1"
-            class="px-5 py-2.5 rounded-t-xl text-xl font-bold uppercase transition-all"
+            [class.border-[#c4b89e]]="activeTabIndex() !== 1"
+            [class.bg-[#d8cdb3]]="activeTabIndex() !== 1"
+            [class.text-[#2a2722]]="activeTabIndex() !== 1"
+            [class.hover:bg-[#c4b89e]]="activeTabIndex() !== 1"
         >
             {{ isEditMode() ? 'Редактировать товар' : 'Создать товар' }}
         </button>
@@ -32,17 +38,6 @@
     <!-- Список товаров -->
     @if (activeTabIndex() === 0) {
         <div class="flex flex-col gap-5">
-            <div class="flex justify-end">
-                <button
-                    type="button"
-                    (click)="startCreate()"
-                    class="px-6 py-3 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white font-bold uppercase text-lg transition-all flex items-center gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.12)]"
-                >
-                    <tui-icon icon="@tui.plus" class="size-5!" />
-                    Создать товар
-                </button>
-            </div>
-
             @if (shopItems$ | async; as items) {
                 @if (items.length > 0) {
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -52,7 +47,7 @@
                             >
                                 @if (item.hasDiscount) {
                                     <div
-                                        class="absolute top-3 left-3 bg-white text-[#c35a17] text-sm font-extrabold px-3 py-1 rounded-br-xl shadow-md -rotate-3 z-10"
+                                        class="absolute top-3 left-3 bg-white text-[#c35a17] text-base font-extrabold px-3 py-1 rounded-br-xl shadow-md -rotate-3 z-10"
                                     >
                                         -{{ item.discountPercent }}%
                                     </div>
@@ -88,11 +83,11 @@
                                 </div>
 
                                 <div class="flex flex-wrap items-center justify-center gap-2 mt-auto">
-                                    <span class="px-2.5 py-1 rounded-lg bg-lh-primary-2/10 text-lh-primary text-sm font-semibold">
+                                    <span class="px-2.5 py-1 rounded-lg bg-lh-primary-2/10 text-lh-primary text-base font-semibold">
                                         {{ getItemTypeLabel(item.itemType) }}
                                     </span>
                                     <span
-                                        class="px-2.5 py-1 rounded-lg text-sm font-semibold text-white"
+                                        class="px-2.5 py-1 rounded-lg text-base font-semibold text-white"
                                         [class.bg-lh-success]="item.isAvailable"
                                         [class.bg-lh-danger]="!item.isAvailable"
                                     >
@@ -104,7 +99,7 @@
                                     <button
                                         type="button"
                                         (click)="startEdit(item)"
-                                        class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-sm transition-colors flex items-center justify-center gap-1"
+                                        class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base transition-colors flex items-center justify-center gap-1"
                                     >
                                         <tui-icon icon="@tui.pencil" class="size-4!" />
                                         Редактировать
@@ -127,9 +122,7 @@
                     </div>
                 }
             } @else {
-                <div class="flex justify-center py-12">
-                    <tui-loader [showLoader]="true" size="xl" />
-                </div>
+                <app-market-grid-skeleton />
             }
         </div>
     }
@@ -185,24 +178,29 @@
                                 </div>
                             }
                         </div>
-                        <div class="flex flex-col gap-3">
-                            <tui-files>
-                                <input
-                                    tuiFile
-                                    type="file"
-                                    accept="image/*"
-                                    (change)="onImageSelected($any($event.target).files?.[0] ?? null)"
-                                />
-                            </tui-files>
-                            @if (imagePreviewUrl()) {
-                                <button
-                                    type="button"
-                                    (click)="onImageSelected(null)"
-                                    class="text-lg text-red-400 hover:text-red-300 transition-colors text-left"
-                                >
-                                    Удалить изображение
-                                </button>
+                        <div class="flex flex-col gap-3 flex-1">
+                            @if (!form.controls.image.value) {
+                                <label tuiInputFiles>
+                                    <ng-template tuiInputFilesContent>
+                                        <span class="text-[#5c554a] text-[18px]">Добавить изображение...</span>
+                                        <input accept="image/*" tuiInputFiles [formControl]="form.controls.image" />
+                                    </ng-template>
+                                </label>
                             }
+                            <tui-files>
+                                @if (form.controls.image.value | tuiFileRejected: { accept: 'image/*' } | async; as file) {
+                                    <tui-file state="error" [file]="file" (remove)="removeFile()" />
+                                }
+                                @if (loadingFile$ | async; as file) {
+                                    <tui-file state="loading" [file]="file" (remove)="removeFile()" />
+                                }
+                                @if (failedFile$ | async; as file) {
+                                    <tui-file state="error" [file]="file" (remove)="removeFile()" />
+                                }
+                                @if (loadedFile$ | async; as file) {
+                                    <tui-file [file]="file" (remove)="removeFile()" />
+                                }
+                            </tui-files>
                         </div>
                     </div>
                 </div>
@@ -213,7 +211,7 @@
                         <input
                             type="checkbox"
                             [formControl]="form.controls.is_available"
-                            class="w-6 h-6 rounded accent-lh-accent-3"
+                            class="lh-checkbox"
                         />
                         <span class="text-lg font-semibold text-lh-primary">Доступен для покупки</span>
                     </label>
@@ -222,7 +220,7 @@
                         <input
                             type="checkbox"
                             [formControl]="form.controls.has_discount"
-                            class="w-6 h-6 rounded accent-lh-accent-3"
+                            class="lh-checkbox"
                         />
                         <span class="text-lg font-semibold text-lh-primary">Скидка</span>
                     </label>
@@ -240,8 +238,8 @@
                     }
                 </div>
 
-                <!-- Entries для набора -->
-                @if (form.controls.item_type.value === 'ITEM_TYPE_KIT') {
+                <!-- Entries для набора / привилегии -->
+                @if (form.controls.item_type.value === 'ITEM_TYPE_KIT' || form.controls.item_type.value === 'ITEM_TYPE_PRIVILEGE') {
                     <div class="flex flex-col gap-5 p-5 rounded-2xl border border-lh-primary-2/10 bg-lh-primary-2/5">
                         <div class="flex items-center justify-between">
                             <h3 class="text-xl font-bold text-lh-primary">Состав набора</h3>
@@ -285,7 +283,7 @@
 
                                 <div class="flex items-center gap-4">
                                     <div class="w-20 h-20 rounded-lg overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0">
-                                        @if (entryPreviewUrls()[i]; as url) {
+                                        @if (entry.controls.image_url.value; as url) {
                                             <img [src]="url" class="w-full h-full object-cover" alt="Превью" />
                                         } @else {
                                             <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
@@ -293,12 +291,22 @@
                                             </div>
                                         }
                                     </div>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        (change)="onEntryImageSelected(i, $any($event.target).files?.[0] ?? null)"
-                                        class="text-lg text-lh-primary file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-lh-primary-2/10 file:text-lh-primary file:font-semibold hover:file:bg-lh-primary-2/20"
-                                    />
+                                    <div class="flex flex-col gap-2 flex-1">
+                                        <label tuiInputFiles>
+                                            <ng-template tuiInputFilesContent>
+                                                <span class="text-[#5c554a] text-base">Добавить изображение...</span>
+                                                <input accept="image/*" tuiInputFiles [formControl]="entry.controls.image" />
+                                            </ng-template>
+                                        </label>
+                                        <tui-files>
+                                            @if (entry.controls.image.value | tuiFileRejected: { accept: 'image/*' } | async; as file) {
+                                                <tui-file state="error" [file]="file" (remove)="removeEntryFile(i)" />
+                                            }
+                                            @if (entry.controls.image.value; as file) {
+                                                <tui-file [file]="file" (remove)="removeEntryFile(i)" />
+                                            }
+                                        </tui-files>
+                                    </div>
                                 </div>
                             </div>
                         }
@@ -341,7 +349,7 @@
                 >
                     @if (previewItem().hasDiscount && previewItem().discountPercent) {
                         <div
-                            class="absolute top-4 left-4 bg-white text-[#c35a17] text-sm font-extrabold px-3 py-1.5 rounded-br-xl shadow-md -rotate-3 z-10"
+                            class="absolute top-4 left-4 bg-white text-[#c35a17] text-base font-extrabold px-3 py-1.5 rounded-br-xl shadow-md -rotate-3 z-10"
                         >
                             -{{ previewItem().discountPercent }}%
                         </div>

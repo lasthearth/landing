@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TuiButton, TuiIcon, TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
+import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 
 /**
  * Данные для диалога покупки товара.
@@ -69,7 +70,7 @@ export interface PurchaseDialogData {
 @Component({
     selector: 'app-purchase-dialog',
     standalone: true,
-    imports: [CommonModule, FormsModule, TuiButton, TuiIcon, KitItemComponent],
+    imports: [CommonModule, FormsModule, TuiButton, TuiIcon, KitItemComponent, LHInputComponent],
     templateUrl: './purchase-dialog.component.html',
     styleUrl: './purchase-dialog.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, output } from '
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+
 import { Subject, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RuleQuestionApiService } from '@entities/rule-question';
@@ -22,7 +22,6 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
         FormsModule,
         TuiFieldErrorPipe,
         AsyncPipe,
-        TuiTextfieldControllerModule,
         LHInputComponent,
     ],
     templateUrl: './create-question-from.component.html',

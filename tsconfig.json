@@ -6,11 +6,8 @@
         "outDir": "./dist/out-tsc",
         "paths": {
             "@app/*": ["./src/app/*"],
-            "@services/*": ["./src/app/services/*"],
             "@routes/*": ["./src/app/routes/*"],
-            "@profile/*": ["./src/app/profile/*"],
             "@layout/*": ["./src/app/layout/*"],
-            "@market/*": ["./src/app/market/*"],
             "@core/*": ["./src/app/core/*"],
             "@shared/*": ["./src/app/shared/*"],
             "@entities/*": ["./src/app/entities/*"],
