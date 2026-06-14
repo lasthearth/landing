@@ -3,15 +3,17 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
 import { AsyncPipe, DecimalPipe, NgIf } from '@angular/common';
+import { HttpContext } from '@angular/common/http';
 import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
 import { RouterOutlet } from '@angular/router';
 import { VerificationService } from '@features/verification';
 import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
-import { catchError, combineLatest, forkJoin, map, Observable, of, startWith, switchMap, take, tap } from 'rxjs';
+import { catchError, combineLatest, defaultIfEmpty, forkJoin, map, Observable, of, startWith, switchMap, take, tap } from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { RequestStatusService } from '@core/services/request-status.service';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
 import { ProfileSkeletonComponent } from '@shared/ui/skeletons';
 import { DonateService } from '@entities/donate';
@@ -50,12 +52,33 @@ export class ProfileComponent {
 
     private readonly verificationService = inject(VerificationService);
 
+    /**
+     * Код верификации текущего пользователя.
+     * При ошибке возвращает null, чтобы не ломать UI.
+     */
     protected readonly code$ = this.userService.authState$.pipe(
-        switchMap((isAuth) => (isAuth ? this.verificationService.getCode() : of(null)))
+        switchMap((isAuth) => {
+            if (!isAuth) {
+                return of(null);
+            }
+
+            return this.verificationService.getCode().pipe(catchError(() => of(null)), defaultIfEmpty(null));
+        })
     );
 
+    /**
+     * Детали верификации текущего пользователя.
+     * При отсутствии заявки на верификацию (404) возвращает null,
+     * чтобы не блокировать загрузку профиля.
+     */
     protected readonly details$ = this.userService.authState$.pipe(
-        switchMap((isAuth) => (isAuth ? this.verificationService.getDetails() : of(null)))
+        switchMap((isAuth) => {
+            if (!isAuth) {
+                return of(null);
+            }
+
+            return this.verificationService.getDetails().pipe(catchError(() => of(null)), defaultIfEmpty(null));
+        })
     );
 
     protected readonly player$ = this.userService.authState$.pipe(
@@ -63,7 +86,7 @@ export class ProfileComponent {
             if (!isAuth || !this.isVerifiedUser() || !this.userService.userId) {
                 return of(null);
             }
-            return this.userService.getPlayer$(this.userService.userId).pipe(catchError(() => of(null)));
+            return this.userService.getPlayer$(this.userService.userId).pipe(catchError(() => of(null)), defaultIfEmpty(null));
         })
     );
 
@@ -85,7 +108,8 @@ export class ProfileComponent {
             }
             return this.donateService.getMyBalance$().pipe(
                 map((response) => response.coins),
-                catchError(() => of(null))
+                catchError(() => of(null)),
+                defaultIfEmpty(null)
             );
         })
     );
@@ -98,7 +122,7 @@ export class ProfileComponent {
             if (!name) {
                 return of(null);
             }
-            return this.serverInfoService.getPlayerStats$(name).pipe(catchError(() => of(null)));
+            return this.serverInfoService.getPlayerStats$(name).pipe(catchError(() => of(null)), defaultIfEmpty(null));
         })
     );
 
@@ -110,7 +134,7 @@ export class ProfileComponent {
             if (!isAuth || !this.isVerifiedUser()) {
                 return of([]);
             }
-            return this.donateService.getMyPurchases$().pipe(catchError(() => of([])));
+            return this.donateService.getMyPurchases$().pipe(catchError(() => of([])), defaultIfEmpty([]));
         })
     );
 
@@ -122,7 +146,12 @@ export class ProfileComponent {
             if (!isAuth || !this.isVerifiedUser() || !this.userService.userId) {
                 return of(null);
             }
-            return this.settlementService.getSettlementInfo(this.userService.userId).pipe(catchError(() => of(null)));
+            return this.settlementService
+                .getSettlementInfo(
+                    this.userService.userId,
+                    new HttpContext().set(SKIP_ERROR_ALERT, true)
+                )
+                .pipe(catchError(() => of(null)), defaultIfEmpty(null));
         })
     );
 
@@ -196,7 +225,7 @@ export class ProfileComponent {
             }
             return this.hungerGamesService
                 .getPlayerSeasonStats$(season.id, this.userService.userId)
-                .pipe(catchError(() => of(null)));
+                .pipe(catchError(() => of(null)), defaultIfEmpty(null));
         })
     );
 

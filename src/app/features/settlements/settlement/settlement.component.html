@@ -4,10 +4,10 @@
 @let sentInvitations = sentInvitations$ | async;
 @let sentUsers = sentInvitationUsers$ | async;
 
-@if (settlement === null || settlement === undefined) {
+@if (settlement === null) {
     <app-settlement-detail-skeleton />
-} @else {
-    @if (invitations?.length && settlement === undefined) {
+} @else if (settlement === undefined) {
+    @if (invitations?.length) {
         @for (item of invitations; track $index) {
             <div class="self-center flex flex-col gap-3 items-center">
                 <p class="text-3xl font-semibold">
@@ -30,14 +30,13 @@
                 </div>
             </div>
         }
-    }
-    @if (status?.status === "pending" && settlement === undefined) {
+    } @else if (status?.status === "pending") {
         <div class="size-full flex justify-center items-center">
             <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
                 Ваша заявка на рассмотрении...
             </p>
         </div>
-    } @else if (status?.status === "rejected" && settlement === undefined) {
+    } @else if (status?.status === "rejected") {
         <div class="size-full text-center flex flex-col gap-4 justify-center items-center">
             <p class="text-2xl/7.5 my-6 uppercase font-bold text-lh-danger self-center">
                 Заявка отклонена.
@@ -48,167 +47,161 @@
 
             <button
                 (click)="createSettlement()"
-                class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-4 border hover:bg-[#e2d7bb] hover:text-lh-primary hover:font-bold text-base"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
             >
                 Основать
             </button>
         </div>
     } @else {
-        <div class="flex flex-col gap-6 w-full">
-            <p class="text-3xl lg:text-4xl font-bold text-[#2d201a]">Ваше селение</p>
-
-            @if (settlement === undefined) {
-                <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-8 text-center flex flex-col gap-4 items-center">
-                    <p class="text-2xl/7.5 uppercase font-bold text-[#bdb093]">
-                        Вы не владеете и не состоите в поселении...
-                    </p>
-                    <button
-                        (click)="createSettlement()"
-                        class="text-white transition-all duration-300 font-bold cursor-pointer bg-lh-primary-2 rounded-lg py-2.5 px-6 border hover:bg-[#e2d7bb] hover:text-lh-primary hover:font-bold text-lg"
+        <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-8 text-center flex flex-col gap-4 items-center">
+            <p class="text-2xl/7.5 uppercase font-bold text-[#bdb093]">
+                Вы не владеете и не состоите в поселении...
+            </p>
+            <button
+                (click)="createSettlement()"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+            >
+                Основать
+            </button>
+        </div>
+    }
+} @else {
+    <!-- Основная информация -->
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
+        <div class="flex xl:flex-row flex-col gap-6">
+            <div class="flex flex-col gap-3 flex-1">
+                <p class="text-3xl font-bold uppercase text-[#2d201a]">{{ settlement.name }}</p>
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="bg-[#3d5381]/15 uppercase font-bold text-base md:text-base px-3 p-1.5 rounded-2xl text-[#3d5381]">
+                        {{ getSettlementType(settlement.type) }}
+                    </span>
+                    <span
+                        [class]="
+                            'uppercase font-bold text-base md:text-base px-3 p-1.5 rounded-2xl ' +
+                            (settlement.diplomacy === 'Миролюбивый' ? 'bg-[#16a34a]/15 text-[#16a34a]' :
+                             settlement.diplomacy === 'Нейтральный' ? 'bg-[#3b3c36]/15 text-[#3b3c36]' :
+                             'bg-[#720000]/15 text-[#720000]')
+                        "
                     >
-                        Основать
-                    </button>
-                </div>
-            } @else {
-                <!-- Основная информация -->
-                <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
-                    <div class="flex xl:flex-row flex-col gap-6">
-                        <div class="flex flex-col gap-3 flex-1">
-                            <p class="text-3xl font-bold uppercase text-[#2d201a]">{{ settlement.name }}</p>
-                            <div class="flex flex-wrap gap-2 items-center">
-                                <span class="bg-[#3d5381]/15 uppercase font-bold text-base md:text-base px-3 p-1.5 rounded-2xl text-[#3d5381]">
-                                    {{ getSettlementType(settlement.type) }}
-                                </span>
-                                <span
-                                    [class]="
-                                        'uppercase font-bold text-base md:text-base px-3 p-1.5 rounded-2xl ' +
-                                        (settlement.diplomacy === 'Миролюбивый' ? 'bg-[#16a34a]/15 text-[#16a34a]' :
-                                         settlement.diplomacy === 'Нейтральный' ? 'bg-[#3b3c36]/15 text-[#3b3c36]' :
-                                         'bg-[#720000]/15 text-[#720000]')
-                                    "
-                                >
-                                    {{ settlement.diplomacy }}
-                                </span>
-                                @for (tag of settlement.tags; track $index) {
-                                    <app-settlement-tag
-                                        [text]="getTag(tag.id)?.text || ''"
-                                        [type]="getTag(tag.id)?.type || 'east'"
-                                    />
-                                }
-                            </div>
-                            <div class="flex flex-wrap gap-3 items-center text-[18px] text-[#5c554a] font-medium">
-                                <span>Создано: {{ formatTimestamp(settlement.created_at) }}</span>
-                                <span class="w-px h-4 bg-[#c4b89e]"></span>
-                                <span>Обновлено: {{ formatTimestamp(settlement.updated_at) }}</span>
-                                <span class="w-px h-4 bg-[#c4b89e]"></span>
-                                <span>Координаты: {{ settlement.coordinates.x }}, {{ settlement.coordinates.y }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex xl:flex-row flex-col gap-6 items-start">
-                        <!-- Описание -->
-                        <div class="flex-1">
-                            <p class="text-lg font-semibold text-[#2d201a] mb-2">О поселении</p>
-                            <p class="text-lg text-[#5c4030] break-words leading-7 text-justify">{{ settlement.description }}</p>
-                        </div>
-
-                        <!-- Изображение -->
-                        <img
-                            [src]="settlement.attachments[0].url"
-                            class="hidden xl:block w-full xl:max-w-[40%] object-cover rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+                        {{ settlement.diplomacy }}
+                    </span>
+                    @for (tag of settlement.tags; track $index) {
+                        <app-settlement-tag
+                            [text]="getTag(tag.id)?.text || ''"
+                            [type]="getTag(tag.id)?.type || 'east'"
                         />
-                    </div>
+                    }
                 </div>
-
-                <!-- Население -->
-                <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
-                    <p class="text-xl font-semibold text-[#2d201a]">Население</p>
-                    <div class="flex flex-wrap gap-3">
-                        <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base md:text-base px-3 p-1.5 rounded-2xl items-center">
-                            @if (leader?.is_online === true) {
-                                <tui-pulse class="self-center mr-2.5 online" />
-                            } @else {
-                                <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
-                            }
-                            <span>{{ leader?.user_game_name }}</span>
-                        </div>
-
-                        @for (item of users; track $index) {
-                            <div class="flex gap-0.5 justify-center items-center">
-                                <div
-                                    [class.rounded-l-2xl]="userId === settlement.leader.user_id"
-                                    [class.rounded-2xl]="userId !== settlement.leader.user_id"
-                                    class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base md:text-base px-3 p-1.5 items-center"
-                                >
-                                    @if (item?.is_online === true) {
-                                        <tui-pulse class="self-center mr-2.5 online" />
-                                    } @else {
-                                        <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
-                                    }
-                                    <span>{{ item?.user_game_name }}</span>
-                                </div>
-                                @if (userId === settlement.leader.user_id) {
-                                    <div
-                                        (click)="settlementLeave(settlement.id, item.user_id)"
-                                        class="flex cursor-pointer hover:opacity-65 transition-all duration-300 bg-[#86523b]/15 h-full justify-center items-center text-[#86523b] font-bold text-base md:text-base px-3 p-1.5 rounded-r-2xl"
-                                    >
-                                        <tui-icon icon="@tui.user-round-x" class="!text-base md:!text-base" />
-                                    </div>
-                                }
-                            </div>
-                        }
-                    </div>
+                <div class="flex flex-wrap gap-3 items-center text-[18px] text-[#5c554a] font-medium">
+                    <span>Создано: {{ formatTimestamp(settlement.created_at) }}</span>
+                    <span class="w-px h-4 bg-[#c4b89e]"></span>
+                    <span>Обновлено: {{ formatTimestamp(settlement.updated_at) }}</span>
+                    <span class="w-px h-4 bg-[#c4b89e]"></span>
+                    <span>Координаты: {{ settlement.coordinates.x }}, {{ settlement.coordinates.y }}</span>
                 </div>
+            </div>
+        </div>
 
-                <!-- Отправленные приглашения -->
-                @if (userId === settlement.leader.user_id && sentInvitations?.length) {
-                    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
-                        <p class="text-xl font-semibold text-[#2d201a]">Отправленные приглашения</p>
-                        <div class="flex flex-wrap gap-3">
-                            @for (invitation of sentInvitations; track invitation.id; let idx = $index) {
-                                <div class="flex gap-0.5 justify-center items-center">
-                                    <div class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base md:text-base px-3 p-1.5 rounded-l-2xl items-center">
-                                        <span>{{ sentUsers?.[idx]?.user_game_name ?? "Загрузка..." }}</span>
-                                    </div>
-                                    <div
-                                        (click)="revokeInvitation(settlement.id, invitation.id)"
-                                        class="flex cursor-pointer hover:opacity-65 transition-all duration-300 bg-[#720000]/15 h-full justify-center items-center text-[#720000] font-bold text-base md:text-base px-3 p-1.5 rounded-r-2xl"
-                                    >
-                                        <tui-icon icon="@tui.circle-arrow-left" class="!text-base md:!text-base" />
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
+        <div class="flex xl:flex-row flex-col gap-6 items-start">
+            <!-- Описание -->
+            <div class="flex-1">
+                <p class="text-lg font-semibold text-[#2d201a] mb-2">О поселении</p>
+                <p class="text-lg text-[#5c4030] break-words leading-7 text-justify">{{ settlement.description }}</p>
+            </div>
+
+            <!-- Изображение -->
+            <img
+                [src]="settlement.attachments[0].url"
+                class="hidden xl:block w-full xl:max-w-[40%] object-cover rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+            />
+        </div>
+    </div>
+
+    <!-- Население -->
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
+        <p class="text-xl font-semibold text-[#2d201a]">Население</p>
+        <div class="flex flex-wrap gap-3">
+            <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base md:text-base px-3 p-1.5 rounded-2xl items-center">
+                @if (leader?.is_online === true) {
+                    <tui-pulse class="self-center mr-2.5 online" />
+                } @else {
+                    <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
                 }
+                <span>{{ leader?.user_game_name }}</span>
+            </div>
 
-                <!-- Кнопки управления -->
-                <div class="flex w-full justify-between flex-wrap gap-3">
+            @for (item of users; track $index) {
+                <div class="flex gap-0.5 justify-center items-center">
+                    <div
+                        [class.rounded-l-2xl]="userId === settlement.leader.user_id"
+                        [class.rounded-2xl]="userId !== settlement.leader.user_id"
+                        class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base md:text-base px-3 p-1.5 items-center"
+                    >
+                        @if (item?.is_online === true) {
+                            <tui-pulse class="self-center mr-2.5 online" />
+                        } @else {
+                            <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
+                        }
+                        <span>{{ item?.user_game_name }}</span>
+                    </div>
                     @if (userId === settlement.leader.user_id) {
-                        <button
-                            (click)="invitePlayer(settlement)"
-                            class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+                        <div
+                            (click)="settlementLeave(settlement.id, item.user_id)"
+                            class="flex cursor-pointer hover:opacity-65 transition-all duration-300 bg-[#86523b]/15 h-full justify-center items-center text-[#86523b] font-bold text-base md:text-base px-3 p-1.5 rounded-r-2xl"
                         >
-                            Пригласить игроков
-                        </button>
-
-                        <button
-                            (click)="levelUp(settlement.type)"
-                            class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
-                        >
-                            Повысить уровень
-                        </button>
-                    } @else {
-                        <button
-                            (click)="settlementLeave(settlement.id, userId)"
-                            class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
-                        >
-                            Покинуть селение
-                        </button>
+                            <tui-icon icon="@tui.user-round-x" class="!text-base md:!text-base" />
+                        </div>
                     }
                 </div>
             }
         </div>
+    </div>
+
+    <!-- Отправленные приглашения -->
+    @if (userId === settlement.leader.user_id && sentInvitations?.length) {
+        <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
+            <p class="text-xl font-semibold text-[#2d201a]">Отправленные приглашения</p>
+            <div class="flex flex-wrap gap-3">
+                @for (invitation of sentInvitations; track invitation.id; let idx = $index) {
+                    <div class="flex gap-0.5 justify-center items-center">
+                        <div class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base md:text-base px-3 p-1.5 rounded-l-2xl items-center">
+                            <span>{{ sentUsers?.[idx]?.user_game_name ?? "Загрузка..." }}</span>
+                        </div>
+                        <div
+                            (click)="revokeInvitation(settlement.id, invitation.id)"
+                            class="flex cursor-pointer hover:opacity-65 transition-all duration-300 bg-[#720000]/15 h-full justify-center items-center text-[#720000] font-bold text-base md:text-base px-3 p-1.5 rounded-r-2xl"
+                        >
+                            <tui-icon icon="@tui.circle-arrow-left" class="!text-base md:!text-base" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     }
+
+    <!-- Кнопки управления -->
+    <div class="flex w-full justify-between flex-wrap gap-3">
+        @if (userId === settlement.leader.user_id) {
+            <button
+                (click)="invitePlayer(settlement)"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+            >
+                Пригласить игроков
+            </button>
+
+            <button
+                (click)="levelUp(settlement.type)"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+            >
+                Повысить уровень
+            </button>
+        } @else {
+            <button
+                (click)="settlementLeave(settlement.id, userId)"
+                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+            >
+                Покинуть селение
+            </button>
+        }
+    </div>
 }

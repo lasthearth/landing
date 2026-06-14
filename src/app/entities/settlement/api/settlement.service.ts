@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { map, Observable } from 'rxjs';
@@ -85,13 +85,14 @@ export class SettlementService {
      * Получает информацию о поселении пользователя.
      *
      * @param userId Идентификатор пользователя.
+     * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
      * @returns Observable с данными поселения.
      */
-    public getSettlementInfo(userId: string): Observable<ISettlement> {
+    public getSettlementInfo(userId: string, context?: HttpContext): Observable<ISettlement> {
         return this.http
             .get<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/users/${userId}/settlements`)
+            }>(`${this.baseUrl}/users/${userId}/settlements`, { context })
             .pipe(map((data) => data.settlement));
     }
 

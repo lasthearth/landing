@@ -1,7 +1,7 @@
 import { UserService } from '@entities/user';
 import { inject, Injectable } from '@angular/core';
 import { VerificationService } from '@features/verification';
-import { Observable, of, Subject, startWith, switchMap } from 'rxjs';
+import { Observable, of, Subject, startWith, switchMap, catchError, defaultIfEmpty } from 'rxjs';
 import { ISettlementInvitation } from '@entities/settlement';
 import { IVerifyRequest } from '@features/verification';
 import { SettlementService } from '@entities/settlement';
@@ -34,7 +34,11 @@ export class NotificationService {
         startWith(null),
         switchMap(() =>
             this.userService.authState$.pipe(
-                switchMap((isAuth) => (isAuth ? this.userService.getInvitations$() : of([])))
+                switchMap((isAuth) =>
+                    isAuth
+                        ? this.userService.getInvitations$().pipe(catchError(() => of([])), defaultIfEmpty([]))
+                        : of([])
+                )
             )
         )
     );

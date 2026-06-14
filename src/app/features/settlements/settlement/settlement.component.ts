@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { HttpContext } from '@angular/common/http';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '@entities/settlement';
@@ -7,7 +8,7 @@ import { UserService } from '@entities/user';
 import { PlayerInviteComponent } from '../player-invite/player-invite.component';
 import { ISettlement } from '@entities/settlement';
 import { NotificationService } from '@core/services/notification.service';
-import { BehaviorSubject, catchError, filter, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, defaultIfEmpty, filter, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateSettlementFormComponent } from '@app/features/profile/create-settlement-from/create-settlement-from.component';
 import { SettlementsTypes } from '@entities/settlement';
@@ -15,6 +16,7 @@ import { ISettlementInvitation } from '@entities/settlement';
 import { getSettlementTypeByKey } from '@entities/settlement/lib/get-settlement-type-by-key.function';
 import { TuiPulse } from '@taiga-ui/kit';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { IPlayer } from '@entities/user';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
@@ -85,8 +87,11 @@ export class SettlementComponent {
 
     /**
      * {@link Observable} Статуса заявки на создание поселения.
+     * При ошибке или пустом ответе возвращает null.
      */
-    protected requestStatus$ = this.settlementService.getRequestSettlementStatus$(this.userId);
+    protected requestStatus$ = this.settlementService
+        .getRequestSettlementStatus$(this.userId)
+        .pipe(catchError(() => of(null)), defaultIfEmpty(null));
 
     /**
      * Триггер для обновления списка отправленных приглашений.
@@ -99,7 +104,10 @@ export class SettlementComponent {
     protected readonly settlementInfo$: Observable<ISettlement | undefined> = !this.userService.userId
         ? of(undefined)
         : this.settlementService
-              .getSettlementInfo(this.userService.userId)
+              .getSettlementInfo(
+                  this.userService.userId,
+                  new HttpContext().set(SKIP_ERROR_ALERT, true)
+              )
               .pipe(
                   map((settlement) => {
                       if (settlement === null) return undefined;
@@ -133,7 +141,8 @@ export class SettlementComponent {
                   }),
                   catchError(() => {
                       return of(undefined);
-                  })
+                  }),
+                  defaultIfEmpty(undefined)
               );
 
     /**
