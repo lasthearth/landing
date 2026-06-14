@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-10 max-w-5xl mx-auto w-full">
     <!-- Сезон -->
     <div class="flex flex-col gap-6">
-        <h2 class="text-[32px] font-bold text-[#2d201a]">Текущий сезон</h2>
+        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Текущий сезон</h2>
 
         @if (isLoading()) {
             <app-admin-season-skeleton />
@@ -10,7 +10,7 @@
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
             >
                 <div class="flex flex-col gap-4">
-                    <span class="text-[32px] font-bold text-[#2d201a] leading-none">Сезон {{ season.number }}</span>
+                    <span class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] leading-none">Сезон {{ season.number }}</span>
                     <div class="flex flex-col gap-2">
                         <span class="text-[18px] text-[#5c554a]">
                             Начало: <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedStartedAt }}</span>
@@ -60,7 +60,7 @@
                 >
                     <div class="flex items-center gap-2">
                         <tui-icon icon="@tui.gift" class="size-5! text-lh-accent" />
-                        <p class="text-[32px] font-bold text-[#2d201a]">Награды за сезон</p>
+                        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Награды за сезон</p>
                     </div>
                     <p class="text-[18px] leading-[28px] text-[#5c554a]">
                         При завершении сезона топ-игроки получают осколки искры.
@@ -142,12 +142,12 @@
 
     <!-- Запись матча -->
     <div class="flex flex-col gap-6">
-        <h2 class="text-[32px] font-bold text-[#2d201a]">Запись матча</h2>
+        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Запись матча</h2>
 
         <div class="flex flex-col gap-5 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
             <!-- Поиск игрока -->
             <div class="flex flex-col gap-4">
-                <label class="text-[32px] font-bold text-[#2d201a]">Добавить участника</label>
+                <label class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Добавить участника</label>
                 <lh-input
                     type="input"
                     [formControl]="searchControl"
@@ -244,7 +244,7 @@
     <!-- Лидерборд -->
     <div class="flex flex-col gap-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 class="text-[32px] font-bold text-[#2d201a]">Лидерборд</h2>
+            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Лидерборд</h2>
             <div class="min-w-[220px]">
                 <lh-input
                     type="select"

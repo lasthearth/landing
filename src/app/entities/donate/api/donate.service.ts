@@ -4,6 +4,7 @@ import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { IShopItemDto, ICreateShopItemRequest, IUpdateShopItemRequest } from '../model/shop-item.interface';
 import { IPurchaseDto } from '../model/purchase.interface';
+import { IPendingPurchaseDto } from '../model/pending-purchase-dto.interface';
 import { ITransactionDto } from '../model/transaction.interface';
 import { IBalanceResponseDto } from '../model/balance-response.interface';
 import {
@@ -12,8 +13,10 @@ import {
     mapDtoToTransaction,
     mapDtoToBalanceResponse,
 } from '../model/donate.mapper';
+import { mapDtoToPendingPurchase } from '../model/pending-purchase.mapper';
 import { IShopItem } from '../model/shop-item.interface';
 import { IPurchase } from '../model/purchase.interface';
+import { IPendingPurchase } from '../model/pending-purchase.interface';
 import { ITransaction } from '../model/transaction.interface';
 import { IBalanceResponse } from '../model/balance-response.interface';
 
@@ -180,6 +183,34 @@ export class DonateService {
     public refundPurchase$(purchaseId: string): Observable<unknown> {
         return this.http.post<unknown>(
             `${this.baseUrl}/donate/purchases/${purchaseId}:refund`,
+            {}
+        );
+    }
+
+    /**
+     * Получает список покупок, ожидающих выдачи.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @returns Observable с массивом ожидающих покупок.
+     */
+    public getPendingPurchases$(): Observable<IPendingPurchase[]> {
+        return this.http
+            .get<{ purchases: IPendingPurchaseDto[] }>(`${this.baseUrl}/donate/purchases/pending`)
+            .pipe(map((response) => response.purchases.map(mapDtoToPendingPurchase)));
+    }
+
+    /**
+     * Отмечает покупку как выданную.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param purchaseId Идентификатор покупки.
+     * @returns Observable с результатом операции.
+     */
+    public markPurchaseIssued$(purchaseId: string): Observable<unknown> {
+        return this.http.post<unknown>(
+            `${this.baseUrl}/donate/purchases/${purchaseId}:mark-issued`,
             {}
         );
     }

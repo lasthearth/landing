@@ -2,7 +2,7 @@
     <div id="privacy-scroll-sentinel" class="absolute top-0 left-0 w-px h-px pointer-events-none"></div>
 
     <div class="flex justify-between items-center gap-4">
-        <p class="text-3xl lg:text-4xl font-bold text-[#2d201a]">Политика конфиденциальности</p>
+        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">Политика конфиденциальности</p>
         <button
             (click)="toggleAll()"
             class="shrink-0 rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e]"
@@ -17,7 +17,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isBase = !isBase"
         >
-            <p class="text-[32px] font-bold text-[#2d201a]">1. Общие положения</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">1. Общие положения</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isBase }"
@@ -55,7 +55,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isPersonalInformation = !isPersonalInformation"
         >
-            <p class="text-[32px] font-bold text-[#2d201a]">
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">
                 2. Персональная информация Пользователя, которую получает и обрабатывает Сайт
             </p>
             <tui-icon
@@ -128,7 +128,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isPurposes = !isPurposes"
         >
-            <p class="text-[32px] font-bold text-[#2d201a]">
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">
                 3. Цели сбора и обработки персональной информации Пользователей
             </p>
             <tui-icon
@@ -174,7 +174,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isLegalGrounds = !isLegalGrounds"
         >
-            <p class="text-[32px] font-bold text-[#2d201a]">4. Правовые основания обработки персональных данных</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">4. Правовые основания обработки персональных данных</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isLegalGrounds }"
@@ -206,7 +206,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isProcedure = !isProcedure"
         >
-            <p class="text-[32px] font-bold text-[#2d201a]">
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">
                 5. Порядок сбора, хранения, передачи и других видов обработки персональных данных
             </p>
             <tui-icon
@@ -273,7 +273,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isSecurityMeasures = !isSecurityMeasures"
         >
-            <p class="text-[32px] font-bold text-[#2d201a]">
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">
                 6. Меры, применяемые для защиты персональных данных Пользователей
             </p>
             <tui-icon
@@ -300,7 +300,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isFinalProvisions = !isFinalProvisions"
         >
-            <p class="text-[32px] font-bold text-[#2d201a]">7. Заключительные положения Политики</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">7. Заключительные положения Политики</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isFinalProvisions }"

@@ -46,6 +46,7 @@ function getConfig() {
             'donate:transaction:list',
             'donate:purchase:list',
             'donate:purchase:issue',
+            'donate:wallet:read',
             'kit:assign',
             'kit:list',
             'kit:read',

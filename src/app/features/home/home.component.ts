@@ -209,6 +209,11 @@ export class HomeComponent {
     );
 
     /**
+     * Флаг, указывающий, авторизован ли текущий пользователь.
+     */
+    readonly isAuthenticated = toSignal(this.userService.authState$, { initialValue: false });
+
+    /**
      * Производит переключение изображений в карусели.
      *
      * @param direction Направление (1 - вправо, -1 влево).

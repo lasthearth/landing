@@ -12,7 +12,7 @@ import { IBalanceResponseDto, IBalanceResponse } from './balance-response.interf
  * @param rawDate Исходная строка даты в формате ISO 8601.
  * @returns Объект Date или `null`.
  */
-function parseDate(rawDate: string | undefined): Date | null {
+export function parseDate(rawDate: string | undefined): Date | null {
     if (!rawDate) {
         return null;
     }
@@ -32,7 +32,7 @@ function parseDate(rawDate: string | undefined): Date | null {
  * @param date Объект Date.
  * @returns Строка в формате "DD.MM.YY - HH:mm".
  */
-function formatDate(date: Date): string {
+export function formatDate(date: Date): string {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = String(date.getFullYear()).slice(-2);
@@ -48,7 +48,7 @@ function formatDate(date: Date): string {
  * @param rawDate Исходная строка даты.
  * @returns Строка в формате "DD.MM.YY - HH:mm" или "—".
  */
-function formatDateOrFallback(rawDate: string | undefined): string {
+export function formatDateOrFallback(rawDate: string | undefined): string {
     const date = parseDate(rawDate);
 
     return date ? formatDate(date) : '—';

@@ -1,5 +1,5 @@
 <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-    <p class="text-[32px] font-bold text-[#2d201a]">Придумайте вопрос на знание правил</p>
+    <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Придумайте вопрос на знание правил</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-4 mt-6">
         <lh-input formControlName="question" placeholder="Придумайте вопрос..." />
         <tui-error formControlName="question" [error]="[] | tuiFieldError | async" />

@@ -61,8 +61,8 @@
 | 4 | `POST` | `/donate/players/{player_id}/coins:deduct` | Списать коины (админ) | ✅ + admin | ✅ `deductCoins$()` |
 | 5 | `GET` | `/donate/players/{player_id}/purchases` | Покупки игрока (админ) | ✅ + admin | ✅ `getPlayerPurchases$()` |
 | 6 | `GET` | `/donate/players/{player_id}/transactions` | Транзакции игрока (админ) | ✅ + admin | ✅ `getPlayerTransactions$()` |
-| 7 | `GET` | `/donate/purchases/pending` | Ожидающие выдачи покупки (админ) | ✅ + admin | ❌ |
-| 8 | `POST` | `/donate/purchases/{purchase_id}:mark-issued` | Отметить выданной (админ) | ✅ + admin | ❌ |
+| 7 | `GET` | `/donate/purchases/pending` | Ожидающие выдачи покупки (админ) | ✅ + admin | ✅ `getPendingPurchases$()` |
+| 8 | `POST` | `/donate/purchases/{purchase_id}:mark-issued` | Отметить выданной (админ) | ✅ + admin | ✅ `markPurchaseIssued$()` |
 | 9 | `POST` | `/donate/purchases/{purchase_id}:refund` | Возврат покупки (админ) | ✅ + admin | ✅ `refundPurchase$()` |
 | 10 | `GET` | `/donate/shop/items` | Список товаров магазина | ✅ | ✅ `getShopItems$()` (кэш) |
 | 11 | `POST` | `/donate/shop/items` | Создать товар (админ) | ✅ + admin | ❌ |
@@ -920,7 +920,6 @@ interface CreateUploadUrlsResponse {
 | **Высокий** | `NotificationService` — уведомления пользователей (`/notifications`) | `entities/notification` или `features/notification` |
 | **Высокий** | `SettlementTagService` — полный CRUD тегов + batch | `entities/settlement-tag` |
 
-| **Средний** | `DonateService` — pending purchases, mark-issued | `entities/donate` |
 | **Средний** | `KitService` — киты и назначения | `entities/kit` или `features/admin` |
 | **Средний** | `StatsService` — статистика игроков и онлайна | `entities/stats` |
 | **Средний** | `UserService.searchUsers$` — вынести из `SettlementService` в `entities/user` | `entities/user` |

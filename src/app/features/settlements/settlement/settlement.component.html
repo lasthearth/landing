@@ -10,7 +10,7 @@
     @if (invitations?.length) {
         @for (item of invitations; track $index) {
             <div class="self-center flex flex-col gap-3 items-center">
-                <p class="text-3xl font-semibold">
+                <p class="text-xl md:text-2xl lg:text-3xl font-semibold">
                     Вас приглашают вступить в селение
                     <span class="font-bold">{{ getSettlementName$(item.settlement_id) | async }}</span>
                 </p>
@@ -70,7 +70,7 @@
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
         <div class="flex xl:flex-row flex-col gap-6">
             <div class="flex flex-col gap-3 flex-1">
-                <p class="text-3xl font-bold uppercase text-[#2d201a]">{{ settlement.name }}</p>
+                <p class="text-xl md:text-2xl lg:text-3xl font-bold uppercase text-[#2d201a]">{{ settlement.name }}</p>
                 <div class="flex flex-wrap gap-2 items-center">
                     <span class="bg-[#3d5381]/15 uppercase font-bold text-base md:text-base px-3 p-1.5 rounded-2xl text-[#3d5381]">
                         {{ getSettlementType(settlement.type) }}

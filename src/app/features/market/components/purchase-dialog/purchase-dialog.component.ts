@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TuiButton, TuiIcon, TuiDialogContext, TuiAlertService } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DonateService } from '@entities/donate';
 import { RequestStatusService } from '@core/services/request-status.service';
-import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 
 /**
  * Данные для диалога покупки товара.
@@ -70,13 +68,13 @@ export interface PurchaseDialogData {
 /**
  * Диалог подтверждения покупки товара.
  *
- * Отображает информацию о товаре, его содержимое,
- * поле для комментария и кнопки подтверждения/отмены.
+ * Отображает информацию о товаре, его содержимое
+ * и кнопки подтверждения/отмены.
  */
 @Component({
     selector: 'app-purchase-dialog',
     standalone: true,
-    imports: [FormsModule, TuiButton, TuiIcon, LHInputComponent],
+    imports: [TuiButton, TuiIcon],
     templateUrl: './purchase-dialog.component.html',
     styleUrl: './purchase-dialog.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -116,11 +114,6 @@ export class PurchaseDialogComponent {
      * Выбранный срок подписки: месяц или навсегда.
      */
     protected readonly selectedTerm = signal<'month' | 'season'>(this.data.initialTerm ?? 'month');
-
-    /**
-     * Комментарий пользователя к заказу.
-     */
-    protected comment = '';
 
     /**
      * Возвращает актуальную цену в зависимости от выбранного срока.

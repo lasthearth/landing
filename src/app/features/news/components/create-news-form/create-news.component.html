@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-6">
     <!-- Форма создания -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <p class="text-[32px] font-bold text-[#2d201a]">Создание новостей</p>
+        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Создание новостей</p>
         <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-4 mt-6">
             <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">Заголовок новости</p>
             <lh-input formControlName="title" placeholder="Придумайте заголовок новости..." />
@@ -57,7 +57,7 @@
 
     <!-- Предпросмотр -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <p class="text-[32px] font-bold text-[#2d201a] text-center">Предпросмотр новости</p>
+        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] text-center">Предпросмотр новости</p>
         <div class="mt-6">
             <app-news-card
                 title="{{ form.controls.title.value || 'Введите заголовок новости...' }}"

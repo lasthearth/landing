@@ -9,7 +9,7 @@
             <img [src]="data.image" [alt]="data.title" class="w-full h-full object-cover" />
         </div>
         <div class="flex flex-col gap-2 justify-center h-24">
-            <h3 class="text-[22px] font-bold text-[#1c1a16] leading-tight">{{ data.title }}</h3>
+            <h3 class="text-lg md:text-[22px] font-bold text-[#1c1a16] leading-tight">{{ data.title }}</h3>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-7 w-7 object-contain" />
                 <span class="text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
@@ -76,12 +76,6 @@
             <span class="font-bold text-lh-accent">{{ activePrice }}</span>
             осколков, а в течение суток с вами свяжутся и выдадут товар на сервере.
         </p>
-    </div>
-
-    <!-- Comment -->
-    <div class="flex flex-col gap-3">
-        <label class="text-[18px] font-bold uppercase tracking-wide text-[#5c554a]">Комментарий к заказу</label>
-        <lh-input type="textarea" [(ngModel)]="comment" placeholder="Например: выдайте вечером после 20:00..." />
     </div>
 
     <!-- Actions -->
