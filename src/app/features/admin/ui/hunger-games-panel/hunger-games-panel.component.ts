@@ -240,7 +240,8 @@ export class HungerGamesPanelComponent implements OnInit {
                 .getSeasonLeaderboard$(seasonId)
                 .pipe(
                     takeUntilDestroyed(this.destroyRef),
-                    catchError(() => of([]))
+                    catchError(() => of([])),
+                    finalize(() => this.isLeaderboardLoading.set(false))
                 )
                 .subscribe((list) => {
                     this.archiveLeaderboard.set(list);
@@ -251,7 +252,8 @@ export class HungerGamesPanelComponent implements OnInit {
                 .getLeaderboard$()
                 .pipe(
                     takeUntilDestroyed(this.destroyRef),
-                    catchError(() => of([]))
+                    catchError(() => of([])),
+                    finalize(() => this.isLeaderboardLoading.set(false))
                 )
                 .subscribe((list) => {
                     this.currentLeaderboard.set(list);

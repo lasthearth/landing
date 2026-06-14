@@ -7,30 +7,57 @@
     <p class="text-3xl lg:text-4xl font-bold">Кабинет администратора</p>
     <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 !font-semibold !w-full content-tabs">
         <button tuiTab type="button">
-            <p class="relative lg:px-3">
-                Анкеты игроков
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Анкеты игроков</span>
+                <tui-icon icon="@tui.user-check" class="size-5! lg:hidden!" />
                 <tui-pulse
                     *ngIf="!requestExist"
                     tuiHintAppearance="floating"
-                    class="!absolute !top-0.5 !right-0.5 !scale-110"
+                    class="!absolute !-top-1.5 !-right-1.5 !scale-110"
                 />
-            </p>
+            </span>
         </button>
         <button tuiTab type="button">
-            <p class="relative lg:px-3">
-                Анкеты селений
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Анкеты селений</span>
+                <tui-icon icon="@tui.castle" class="size-5! lg:hidden!" />
                 <tui-pulse
                     *ngIf="!settlementsRequest"
                     tuiHintAppearance="floating"
-                    class="!absolute !top-0.5 !right-0.5 !scale-110"
+                    class="!absolute !-top-1.5 !-right-1.5 !scale-110"
                 />
-            </p>
+            </span>
         </button>
-        <button tuiTab type="button">Вопросы</button>
-        <button tuiTab type="button">Создать новость</button>
-        <button tuiTab type="button">Начисления</button>
-        <button tuiTab type="button">Донат-магазин</button>
-        <button tuiTab type="button">Голодные игры</button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Вопросы</span>
+                <tui-icon icon="@tui.circle-help" class="size-5! lg:hidden!" />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Создать новость</span>
+                <tui-icon icon="@tui.newspaper" class="size-5! lg:hidden!" />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Покупки</span>
+                <tui-icon icon="@tui.coins" class="size-5! lg:hidden!" />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Товары</span>
+                <tui-icon icon="@tui.shopping-cart" class="size-5! lg:hidden!" />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Голодные игры</span>
+                <tui-icon icon="@tui.flame" class="size-5! lg:hidden!" />
+            </span>
+        </button>
     </tui-tabs>
 
     <div class="mt-2 flex flex-col gap-4">

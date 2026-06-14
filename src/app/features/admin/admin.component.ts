@@ -14,6 +14,7 @@ import { AdminCoinPanelComponent } from './ui/admin-coin-panel/admin-coin-panel.
 import { HungerGamesPanelComponent } from './ui/hunger-games-panel/hunger-games-panel.component';
 import { DonateShopPanelComponent } from './ui/donate-shop-panel/donate-shop-panel.component';
 import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
+import { TuiIcon } from '@taiga-ui/core';
 
 /**
  * Компонент страницы администратора.
@@ -27,6 +28,7 @@ import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
         SettlementVerificationRequestComponent,
         TuiTabs,
         CommonModule,
+        TuiIcon,
         TuiPulse,
         CreateQuestionFormComponent,
         QuestionListComponent,
