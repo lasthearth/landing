@@ -12,8 +12,8 @@ import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege
 /**
  * Компонент вкладки «Наборы» в магазине.
  *
- * Загружает реальные товары типа ITEM_TYPE_KIT и отображает
- * их состав в виде selectable карточек.
+ * Загружает реальные товары типа ITEM_TYPE_KIT, кроме помеченных
+ * описанием "привилегия", и отображает их состав в виде selectable карточек.
  */
 @Component({
     selector: 'app-kits',
@@ -83,7 +83,12 @@ export class KitsComponent {
      */
     private filterAndMapKits(items: IShopItem[]): PrivilegeCard[] {
         return items
-            .filter((item) => item.isAvailable && item.itemType === 'ITEM_TYPE_KIT')
+            .filter(
+                (item) =>
+                    item.isAvailable &&
+                    item.itemType === 'ITEM_TYPE_KIT' &&
+                    item.description !== 'привилегия'
+            )
             .map(mapShopItemToPrivilegeCard);
     }
 

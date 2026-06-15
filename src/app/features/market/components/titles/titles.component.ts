@@ -13,8 +13,8 @@ import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege
 /**
  * Компонент вкладки «Привилегии» в магазине.
  *
- * Загружает реальные товары типа ITEM_TYPE_ITEM с составом (entries)
- * и отображает их в виде selectable карточек с деталями.
+ * Загружает реальные товары типа ITEM_TYPE_KIT с описанием "привилегия"
+ * (и устаревшие ITEM_TYPE_ITEM с составом) и отображает их в виде selectable карточек с деталями.
  */
 @Component({
     selector: 'app-titles',
@@ -87,8 +87,8 @@ export class TitlesComponent {
             .filter(
                 (item) =>
                     item.isAvailable &&
-                    item.itemType === 'ITEM_TYPE_ITEM' &&
-                    (item.entries?.length ?? 0) > 0
+                    ((item.itemType === 'ITEM_TYPE_KIT' && item.description === 'привилегия') ||
+                        (item.itemType === 'ITEM_TYPE_ITEM' && (item.entries?.length ?? 0) > 0))
             )
             .map(mapShopItemToPrivilegeCard);
     }

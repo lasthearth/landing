@@ -75,16 +75,16 @@
 
                                 <div class="flex items-center justify-center gap-2">
                                     @if (item.effectivePrice && item.effectivePrice !== item.price) {
-                                        <span class="text-base text-lh-primary/50 line-through">{{ item.price }} ₽</span>
-                                        <span class="text-xl font-extrabold text-lh-accent-3">{{ item.effectivePrice }} ₽</span>
+                                        <span class="text-base text-lh-primary/50 line-through flex items-center gap-1">{{ item.price }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-4 w-4 object-contain" /></span>
+                                        <span class="text-xl font-extrabold text-lh-accent-3 flex items-center gap-1">{{ item.effectivePrice }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-5 w-5 object-contain" /></span>
                                     } @else {
-                                        <span class="text-xl font-extrabold text-lh-primary">{{ item.price }} ₽</span>
+                                        <span class="text-xl font-extrabold text-lh-primary flex items-center gap-1">{{ item.price }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-5 w-5 object-contain" /></span>
                                     }
                                 </div>
 
                                 <div class="flex flex-wrap items-center justify-center gap-2 mt-auto">
                                     <span class="px-2.5 py-1 rounded-lg bg-lh-primary-2/10 text-lh-primary text-base font-semibold">
-                                        {{ getItemTypeLabel(item.itemType) }}
+                                        {{ getItemTypeLabelForItem(item) }}
                                     </span>
                                     <span
                                         class="px-2.5 py-1 rounded-lg text-base font-semibold text-white"
@@ -139,7 +139,7 @@
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">Цена, ₽</label>
+                        <label class="text-lg font-semibold text-lh-primary">Цена</label>
                         <lh-input type="inputNumber" placeholder="100" [formControl]="form.controls.price" />
                     </div>
 
@@ -158,11 +158,6 @@
                             [formControl]="form.controls.item_type"
                         />
                     </div>
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <label class="text-lg font-semibold text-lh-primary">Описание</label>
-                    <lh-input type="textarea" placeholder="Описание товара" [formControl]="form.controls.description" />
                 </div>
 
                 <!-- Изображение -->
@@ -377,10 +372,10 @@
 
                     <div class="flex items-center justify-center gap-2">
                         @if (previewItem().hasDiscount && previewItem().discountPercent) {
-                            <span class="text-lg text-lh-primary/50 line-through">{{ previewItem().price }} ₽</span>
-                            <span class="text-2xl font-extrabold text-lh-accent-3">{{ previewEffectivePrice() }} ₽</span>
+                            <span class="text-lg text-lh-primary/50 line-through flex items-center gap-1">{{ previewItem().price }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-4 w-4 object-contain" /></span>
+                            <span class="text-2xl font-extrabold text-lh-accent-3 flex items-center gap-1">{{ previewEffectivePrice() }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-6 w-6 object-contain" /></span>
                         } @else {
-                            <span class="text-2xl font-extrabold text-lh-primary">{{ previewItem().price }} ₽</span>
+                            <span class="text-2xl font-extrabold text-lh-primary flex items-center gap-1">{{ previewItem().price }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-6 w-6 object-contain" /></span>
                         }
                     </div>
 

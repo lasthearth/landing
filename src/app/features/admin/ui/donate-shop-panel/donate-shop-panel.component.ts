@@ -121,6 +121,27 @@ export class DonateShopPanelComponent {
     }
 
     /**
+     * Возвращает отображаемый тип товара с учётом привилегий.
+     *
+     * Привилегия на бэкенде хранится как `ITEM_TYPE_ITEM` с непустым массивом `entries`,
+     * поэтому для таких товаров возвращается label псевдо-типа `ITEM_TYPE_PRIVILEGE`.
+     *
+     * @param item Товар магазина.
+     * @returns Локализованная строка типа.
+     */
+    protected getItemTypeLabelForItem(item: IShopItem): string {
+        if (item.itemType === 'ITEM_TYPE_KIT') {
+            return item.description === 'привилегия' ? 'Привилегия' : 'Набор';
+        }
+
+        if (item.itemType === 'ITEM_TYPE_ITEM' && (item.entries?.length ?? 0) > 0) {
+            return 'Привилегия';
+        }
+
+        return this.getItemTypeLabel(item.itemType);
+    }
+
+    /**
      * Отображаемое название типа товара.
      */
     protected readonly itemTypeLabels: Record<ShopItemType | 'ITEM_TYPE_PRIVILEGE', string> = {
@@ -135,7 +156,7 @@ export class DonateShopPanelComponent {
      */
     protected readonly form = new FormGroup({
         name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        description: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        description: new FormControl<string>('', { nonNullable: true }),
         price: new FormControl<string>('', {
             nonNullable: true,
             validators: [Validators.required, Validators.pattern(/^\d+\.?\d*$/)],
@@ -186,7 +207,6 @@ export class DonateShopPanelComponent {
 
         return {
             name: values.name || 'Название товара',
-            description: values.description || 'Описание товара',
             price: values.price || '0',
             code: values.code || '',
             itemType: values.item_type ?? 'ITEM_TYPE_ITEM',
@@ -237,8 +257,9 @@ export class DonateShopPanelComponent {
     }
 
     /**
-     * Конструктор. Подписывается на изменение типа товара
-     * и сбрасывает entries при переключении на ITEM_TYPE_ITEM.
+     * Конструктор. Подписывается на изменение типа товара,
+     * сбрасывает entries при переключении на ITEM_TYPE_ITEM и
+     * автоматически заполняет служебное описание для наборов / привилегий.
      */
     public constructor() {
         this.form.controls.item_type.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((type) => {
@@ -246,6 +267,15 @@ export class DonateShopPanelComponent {
                 this.entriesArray.clear();
                 this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
                 this.entryImageSubscriptions.clear();
+            }
+
+            const descriptionControl = this.form.controls.description;
+            if (type === 'ITEM_TYPE_PRIVILEGE') {
+                descriptionControl.setValue('привилегия', { emitEvent: false });
+            } else if (type === 'ITEM_TYPE_KIT') {
+                descriptionControl.setValue('набор', { emitEvent: false });
+            } else {
+                descriptionControl.setValue('', { emitEvent: false });
             }
         });
 
@@ -280,15 +310,16 @@ export class DonateShopPanelComponent {
         this.editingItemId.set(item.id);
         this.imagePreviewUrl.set(item.imageUrl);
 
-        const isPrivilege =
-            item.itemType === 'ITEM_TYPE_ITEM' && item.entries && item.entries.length > 0;
+        let itemType: ShopItemType | 'ITEM_TYPE_PRIVILEGE' = item.itemType;
+        if (item.itemType === 'ITEM_TYPE_KIT') {
+            itemType = item.description === 'привилегия' ? 'ITEM_TYPE_PRIVILEGE' : 'ITEM_TYPE_KIT';
+        }
 
         this.form.patchValue({
             name: item.name,
-            description: item.description,
             price: item.price,
             code: item.code,
-            item_type: isPrivilege ? 'ITEM_TYPE_PRIVILEGE' : item.itemType,
+            item_type: itemType,
             is_available: item.isAvailable,
             has_discount: item.hasDiscount ?? false,
             discount_percent: item.discountPercent ?? 0,
@@ -403,7 +434,7 @@ export class DonateShopPanelComponent {
                 this.requestStatus.handleSuccess('Товар удалён'),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(() => this.refresh$.next());
+            .subscribe(() => this.donateService.refreshShopItems$());
     }
 
     /**
@@ -421,7 +452,7 @@ export class DonateShopPanelComponent {
             const values = this.form.getRawValue();
             const imageUrl = await this.resolveImageUrl();
             const entries = await this.resolveEntries();
-            const itemType = values.item_type === 'ITEM_TYPE_PRIVILEGE' ? 'ITEM_TYPE_ITEM' : values.item_type;
+            const itemType = values.item_type === 'ITEM_TYPE_PRIVILEGE' ? 'ITEM_TYPE_KIT' : values.item_type;
             const shouldSendEntries =
                 values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE';
 
@@ -449,7 +480,7 @@ export class DonateShopPanelComponent {
                         takeUntilDestroyed(this.destroyRef)
                     )
                     .subscribe(() => {
-                        this.refresh$.next();
+                        this.donateService.refreshShopItems$();
                         this.backToList();
                     });
             } else {
@@ -474,7 +505,7 @@ export class DonateShopPanelComponent {
                         takeUntilDestroyed(this.destroyRef)
                     )
                     .subscribe(() => {
-                        this.refresh$.next();
+                        this.donateService.refreshShopItems$();
                         this.backToList();
                     });
             }

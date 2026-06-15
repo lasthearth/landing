@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, shareReplay, switchMap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { IShopItemDto, ICreateShopItemRequest, IUpdateShopItemRequest } from '../model/shop-item.interface';
 import { IPurchaseDto } from '../model/purchase.interface';
@@ -44,18 +44,28 @@ export class DonateService {
     private readonly baseUrl = environment.apiUrl;
 
     /**
+     * Триггер принудительного обновления кэша списка товаров.
+     */
+    private readonly shopItemsRefresh$ = new BehaviorSubject<void>(undefined);
+
+    /**
      * Кэшированный Observable со списком товаров магазина.
      *
      * Товары редко меняются, поэтому используется shareReplay(1)
      * для предотвращения лишних запросов.
+     * При вызове {@link refreshShopItems$} кэш сбрасывается и выполняется новый запрос.
      */
-    private readonly shopItems$ = this.http
-        .get<{ items: IShopItemDto[] }>(`${this.baseUrl}/donate/shop/items`)
-        .pipe(
-            map((response) => response.items.map(mapDtoToShopItem)),
-            catchError(() => of([])),
-            shareReplay(1)
-        );
+    private readonly shopItems$ = this.shopItemsRefresh$.pipe(
+        switchMap(() =>
+            this.http
+                .get<{ items: IShopItemDto[] }>(`${this.baseUrl}/donate/shop/items`)
+                .pipe(
+                    map((response) => response.items.map(mapDtoToShopItem)),
+                    catchError(() => of([]))
+                )
+        ),
+        shareReplay(1)
+    );
 
     /**
      * Получает текущий баланс донат-валюты авторизованного игрока.
@@ -88,6 +98,15 @@ export class DonateService {
      */
     public getShopItems$(): Observable<IShopItem[]> {
         return this.shopItems$;
+    }
+
+    /**
+     * Сбрасывает кэш списка товаров и инициирует новый запрос к API.
+     *
+     * Подписчики, использующие {@link getShopItems$}, автоматически получат актуальный список.
+     */
+    public refreshShopItems$(): void {
+        this.shopItemsRefresh$.next();
     }
 
     /**
