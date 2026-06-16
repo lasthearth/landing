@@ -2,7 +2,11 @@
     <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">Как начать играть?</p>
 
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
-        <p class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#2d201a]">1</p>
+        <p
+            class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300"
+        >
+            1
+        </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
             <p class="text-2xl font-bold text-[#2d201a]">Скачайте игру версии {{ environment.gameVersion }}</p>
             <p class="text-xl text-lh-primary leading-8">
@@ -28,24 +32,34 @@
     </div>
 
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
-        <p class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#2d201a]">2</p>
+        <p
+            class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300"
+        >
+            2
+        </p>
         <div class="flex flex-col gap-3 pt-2 flex-1">
             <p class="text-2xl font-bold text-[#2d201a]">Добавьте наш сервер</p>
-            <p class="text-xl text-lh-primary leading-8">
-                Во вкладке сетевая игра добавьте наш сервер используя:
-            </p>
-            <div class="bg-white/30 border border-lh-primary-2/10 rounded-xl p-4 flex flex-col gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+            <p class="text-xl text-lh-primary leading-8">Во вкладке сетевая игра добавьте наш сервер используя:</p>
+            <div
+                class="bg-white/30 border border-lh-primary-2/10 rounded-xl p-4 flex flex-col gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+            >
                 <div class="flex items-start gap-2">
                     <span class="text-xl text-neutral-500 font-medium leading-normal">IP:</span>
                     <div class="overflow-visible h-auto">
-                        <tui-copy><span class="text-xl text-[#2d201a] font-bold leading-normal">{{ environment.gameServerIp }}</span></tui-copy>
+                        <tui-copy>
+                            <span class="text-xl text-[#2d201a] font-bold leading-normal">
+                                {{ environment.gameServerIp }}
+                            </span>
+                        </tui-copy>
                     </div>
                 </div>
                 <div class="flex items-start gap-2">
                     <span class="text-xl text-neutral-500 font-medium leading-normal">Пароль:</span>
                     <div class="overflow-visible h-auto">
                         <tui-copy class="copy-word">
-                            <span class="text-xl text-[#2d201a] font-bold leading-normal whitespace-normal break-all">{{ environment.gameServerPassword }}</span>
+                            <span class="text-xl text-[#2d201a] font-bold leading-normal whitespace-normal break-all">
+                                {{ environment.gameServerPassword }}
+                            </span>
                         </tui-copy>
                     </div>
                 </div>
@@ -54,7 +68,11 @@
     </div>
 
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
-        <p class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#2d201a]">3</p>
+        <p
+            class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300"
+        >
+            3
+        </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
             <p class="text-2xl font-bold text-[#2d201a]">Играйте</p>
             <p class="text-xl text-lh-primary leading-8">
