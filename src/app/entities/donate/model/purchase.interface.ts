@@ -34,10 +34,10 @@ export interface IPurchaseDto {
     /**
      * Цена покупки.
      *
-     * ⚠️ Поле предполагаемое, требует подтверждения от бэкенда.
+     * Соответствует полю `price_paid` из protobuf-контракта.
      * Передаётся как строка (decimal as string).
      */
-    price?: string;
+    price_paid?: string;
 
     /**
      * Статус покупки (например, "COMPLETED", "REFUNDED").
@@ -83,7 +83,7 @@ export interface IPurchase {
     /**
      * Цена покупки как строка.
      */
-    price: string;
+    pricePaid: string;
 
     /**
      * Статус покупки.

@@ -239,6 +239,7 @@ export class ProfileComponent {
         this.settlement$,
         this.hungerGamesStats$,
         this.details$,
+        this.purchases$,
     ]).pipe(
         map(() => false),
         startWith(true)

@@ -248,63 +248,76 @@
                             </button>
                         </div>
 
-                        @for (entry of entriesArray.controls; track $index; let i = $index) {
-                            <div class="flex flex-col gap-4 p-4 rounded-xl border border-lh-primary-2/10 bg-lh-primary-2/5">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-lg font-semibold text-lh-primary">Позиция {{ i + 1 }}</span>
-                                    <button
-                                        type="button"
-                                        (click)="removeEntry(i)"
-                                        class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
-                                    >
-                                        <tui-icon icon="@tui.trash-2" class="size-5!" />
-                                    </button>
-                                </div>
+                        <div cdkDropList class="flex flex-col gap-5" [cdkDropListData]="entriesArray.controls" (cdkDropListDropped)="dropEntry($event)">
+                            @for (entry of entriesArray.controls; track entry; let i = $index) {
+                                <div cdkDrag class="flex flex-col gap-4 p-4 rounded-xl border border-lh-primary-2/10 bg-lh-primary-2/5">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-lg font-semibold text-lh-primary">Позиция {{ i + 1 }}</span>
+                                        <div class="flex items-center gap-1">
+                                            <button
+                                                type="button"
+                                                cdkDragHandle
+                                                class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors cursor-grab active:cursor-grabbing"
+                                                title="Перетащить"
+                                                aria-label="Перетащить позицию"
+                                            >
+                                                <tui-icon icon="@tui.grip-vertical" class="size-5!" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                (click)="removeEntry(i)"
+                                                class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
+                                            >
+                                                <tui-icon icon="@tui.trash-2" class="size-5!" />
+                                            </button>
+                                        </div>
+                                    </div>
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <lh-input type="input" placeholder="Название" [formControl]="entry.controls.name" />
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <lh-input type="input" placeholder="Название" [formControl]="entry.controls.name" />
+                                        <lh-input
+                                            type="inputNumber"
+                                            placeholder="Количество"
+                                            [formControl]="entry.controls.quantity"
+                                        />
+                                    </div>
+
                                     <lh-input
-                                        type="inputNumber"
-                                        placeholder="Количество"
-                                        [formControl]="entry.controls.quantity"
+                                        type="textarea"
+                                        placeholder="Описание позиции"
+                                        [formControl]="entry.controls.description"
                                     />
-                                </div>
 
-                                <lh-input
-                                    type="textarea"
-                                    placeholder="Описание позиции"
-                                    [formControl]="entry.controls.description"
-                                />
-
-                                <div class="flex items-center gap-4">
-                                    <div class="w-20 h-20 rounded-lg overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0">
-                                        @if (entry.controls.image_url.value; as url) {
-                                            <img [src]="url" class="w-full h-full object-cover" alt="Превью" />
-                                        } @else {
-                                            <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
-                                                <tui-icon icon="@tui.image" class="size-8!" />
-                                            </div>
-                                        }
-                                    </div>
-                                    <div class="flex flex-col gap-2 flex-1">
-                                        <label tuiInputFiles>
-                                            <ng-template tuiInputFilesContent>
-                                                <span class="text-[#5c554a] text-base">Добавить изображение...</span>
-                                                <input accept="image/*" tuiInputFiles [formControl]="entry.controls.image" />
-                                            </ng-template>
-                                        </label>
-                                        <tui-files>
-                                            @if (entry.controls.image.value | tuiFileRejected: { accept: 'image/*' } | async; as file) {
-                                                <tui-file state="error" [file]="file" (remove)="removeEntryFile(i)" />
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-20 h-20 rounded-lg overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0">
+                                            @if (entry.controls.image_url.value; as url) {
+                                                <img [src]="url" class="w-full h-full object-cover" alt="Превью" />
+                                            } @else {
+                                                <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
+                                                    <tui-icon icon="@tui.image" class="size-8!" />
+                                                </div>
                                             }
-                                            @if (entry.controls.image.value; as file) {
-                                                <tui-file [file]="file" (remove)="removeEntryFile(i)" />
-                                            }
-                                        </tui-files>
+                                        </div>
+                                        <div class="flex flex-col gap-2 flex-1">
+                                            <label tuiInputFiles>
+                                                <ng-template tuiInputFilesContent>
+                                                    <span class="text-[#5c554a] text-base">Добавить изображение...</span>
+                                                    <input accept="image/*" tuiInputFiles [formControl]="entry.controls.image" />
+                                                </ng-template>
+                                            </label>
+                                            <tui-files>
+                                                @if (entry.controls.image.value | tuiFileRejected: { accept: 'image/*' } | async; as file) {
+                                                    <tui-file state="error" [file]="file" (remove)="removeEntryFile(i)" />
+                                                }
+                                                @if (entry.controls.image.value; as file) {
+                                                    <tui-file [file]="file" (remove)="removeEntryFile(i)" />
+                                                }
+                                            </tui-files>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
 
                         @if (entriesArray.length === 0) {
                             <p class="text-lg text-lh-primary/50 text-center py-4">

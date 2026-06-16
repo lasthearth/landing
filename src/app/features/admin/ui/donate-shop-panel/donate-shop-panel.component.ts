@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList } from '@angular/cdk/drag-drop';
 import { RequestStatusService } from '@core/services/request-status.service';
 import {
     DonateService,
@@ -28,7 +29,7 @@ import { finalize, map, Observable, startWith, Subject, Subscription, switchMap,
 @Component({
     selector: 'app-donate-shop-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, FormsModule, AsyncPipe, LHInputComponent, TuiIcon, TuiLoader, TuiFiles, TuiFilesComponent, TuiFile, MarketGridSkeletonComponent],
+    imports: [ReactiveFormsModule, FormsModule, AsyncPipe, LHInputComponent, TuiIcon, TuiLoader, TuiFiles, TuiFilesComponent, TuiFile, MarketGridSkeletonComponent, CdkDropList, CdkDrag, CdkDragHandle],
     templateUrl: './donate-shop-panel.component.html',
     styleUrl: './donate-shop-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -387,6 +388,21 @@ export class DonateShopPanelComponent {
      */
     protected removeEntryFile(index: number): void {
         this.entriesArray.at(index).controls.image.setValue(null);
+    }
+
+    /**
+     * Перестраивает порядок entries в FormArray после drag-and-drop.
+     *
+     * @param event Событие перетаскивания из Angular CDK.
+     */
+    protected dropEntry(event: CdkDragDrop<FormGroup<KitEntryForm>[]>): void {
+        if (event.previousIndex === event.currentIndex) {
+            return;
+        }
+
+        const control = this.entriesArray.at(event.previousIndex);
+        this.entriesArray.removeAt(event.previousIndex);
+        this.entriesArray.insert(event.currentIndex, control);
     }
 
     /**

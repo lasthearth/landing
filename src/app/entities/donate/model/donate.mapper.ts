@@ -113,7 +113,7 @@ export function mapDtoToPurchase(dto: IPurchaseDto): IPurchase {
         playerId: dto.player_id,
         itemId: dto.item_id ?? '',
         itemName: dto.item_name ?? '',
-        price: dto.price ?? '',
+        pricePaid: dto.price_paid ?? '',
         status: dto.status ?? '',
         createdAt,
         formattedDate: createdAt ? formatDate(createdAt) : '—',

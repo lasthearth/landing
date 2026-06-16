@@ -5,6 +5,7 @@
 @let details = details$ | async;
 @let settlementOnline = settlementMembersOnline$ | async;
 @let hgStats = hungerGamesStats$ | async;
+@let purchases = purchases$ | async;
 @let isLoading = isLoading$ | async;
 
 @if (isLoading) {
@@ -245,6 +246,59 @@
             </div>
         }
     </div>
+
+    <!-- История покупок -->
+    @if (getRoleName() !== "Неверифицирован") {
+        <div class="flex flex-col gap-4 mt-8">
+            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">История покупок</h2>
+
+            @if (purchases; as list) {
+                @if (list.length > 0) {
+                    <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                        <table class="w-full text-left border-collapse text-[18px]">
+                            <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
+                                <tr>
+                                    <th class="p-4">Товар</th>
+                                    <th class="p-4 text-center">Цена</th>
+                                    <th class="p-4 text-center">Статус</th>
+                                    <th class="p-4 text-center">Дата</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (purchase of list; track purchase.id; let idx = $index) {
+                                    <tr
+                                        class="border-t border-[#bdb093] transition-colors"
+                                        [class.bg-[#f5eedd]]="idx % 2 === 0"
+                                        [class.bg-[#e2d7bb]]="idx % 2 === 1"
+                                    >
+                                        <td class="p-4 text-lh-primary font-medium">{{ purchase.itemName }}</td>
+                                        <td class="p-4 text-lh-accent text-center font-bold">{{ purchase.pricePaid }}</td>
+                                        <td class="p-4 text-center">
+                                            <span
+                                                class="px-2.5 py-1 rounded-lg text-base font-semibold text-white"
+                                                [class.bg-lh-success]="purchase.status === 'COMPLETED'"
+                                                [class.bg-lh-danger]="purchase.status === 'REFUNDED'"
+                                                [class.bg-lh-primary-2]="purchase.status !== 'COMPLETED' && purchase.status !== 'REFUNDED'"
+                                            >
+                                                {{ purchase.status || '—' }}
+                                            </span>
+                                        </td>
+                                        <td class="p-4 text-lh-primary text-center">{{ purchase.formattedDate }}</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                } @else {
+                    <p
+                        class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
+                    >
+                        История покупок пуста
+                    </p>
+                }
+            }
+        </div>
+    }
 
     <!-- Сообщения о верификации -->
     @if (details?.status === "pending") {
