@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { buildAngularAuthConfig } from '@logto/js';
-import { LogLevel, provideAuth } from 'angular-auth-oidc-client';
+import { AbstractSecurityStorage, DefaultLocalStorageService, LogLevel, provideAuth } from 'angular-auth-oidc-client';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideEventPlugins } from '@taiga-ui/event-plugins';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -86,6 +86,10 @@ export const appConfig: ApplicationConfig = {
         provideAuth({
             config: getConfig(),
         }),
+        {
+            provide: AbstractSecurityStorage,
+            useClass: DefaultLocalStorageService,
+        },
         {
             provide: TUI_VALIDATION_ERRORS,
             useValue: {

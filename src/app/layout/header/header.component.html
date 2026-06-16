@@ -72,13 +72,15 @@
                     <div class="rounded-2xl gap-1 p-1 sm:p-3 flex items-center">
                         <div class="flex flex-col items-start gap-0.5">
                             <p class="text-base sm:text-2xl/7.5 text-white">{{ userService.userName }}</p>
-                            <div class="flex items-center gap-0.5 bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 bg-clip-text text-transparent">
+                            <div
+                                class="flex items-center gap-0.5 bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 bg-clip-text text-transparent"
+                            >
                                 <img
                                     src="/splinter-of-spark.png"
                                     alt="Осколок Искры"
                                     class="h-6 w-6 sm:h-8 sm:w-8 object-contain spark-glow"
                                 />
-                                <span class="text-lg sm:text-2xl font-bold">{{ (balance$ | async) ?? '—' }}</span>
+                                <span class="text-lg sm:text-2xl font-bold">{{ (balance$ | async) ?? "—" }}</span>
                             </div>
                         </div>
                         @if (userService.userImage) {
@@ -148,17 +150,17 @@
                 <tui-icon icon="@tui.info" />
                 <span class="hidden md:block">FAQ</span>
             </button>
-            @if (isAuth && isVerified()) {
-                <button
-                    [routerLink]="['/settlements']"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
-                    class="nav-button md:w-auto md:min-w-20 px-4"
-                    aria-label="Поселения"
-                >
-                    <tui-icon icon="@tui.tent" />
-                    <span class="hidden md:block">СЕЛЕНИЯ</span>
-                </button>
-            }
+
+            <button
+                [routerLink]="['/settlements']"
+                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
+                class="nav-button md:w-auto md:min-w-20 px-4"
+                aria-label="Поселения"
+            >
+                <tui-icon icon="@tui.tent" />
+                <span class="hidden md:block">СЕЛЕНИЯ</span>
+            </button>
+
             <button
                 [routerLink]="['/market']"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'market' }"
