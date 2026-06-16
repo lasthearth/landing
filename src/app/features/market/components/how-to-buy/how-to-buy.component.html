@@ -83,11 +83,19 @@
             </p>
 
             <div class="flex flex-col items-center gap-3">
-                <div class="bg-white p-4 rounded-xl border border-[#d8cdb3] shadow-md">
+                <div class="relative bg-white p-4 rounded-xl border border-[#d8cdb3] shadow-md w-[220px] h-[220px]">
+                    @if (qrLoading()) {
+                        <div class="absolute inset-0 flex items-center justify-center bg-white rounded-xl z-10">
+                            <tui-loader [showLoader]="true" size="l" />
+                        </div>
+                    }
                     <img
                         [attr.src]="sberQrUrl()"
                         alt="QR-код для перевода через СБП"
-                        class="rounded-lg"
+                        class="rounded-lg w-full h-full object-contain transition-opacity duration-200"
+                        [class.opacity-0]="qrLoading()"
+                        (load)="qrLoading.set(false)"
+                        (error)="qrLoading.set(false)"
                     />
                 </div>
                 <p class="text-lh-primary/70 text-base text-center">

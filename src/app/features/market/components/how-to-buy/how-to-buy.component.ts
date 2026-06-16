@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime } from 'rxjs';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { TuiSlider } from '@taiga-ui/kit/components/slider';
-import { TuiAlertService, TuiIcon } from '@taiga-ui/core';
+import { TuiAlertService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { UserService } from '@entities/user/api/user.service';
 
@@ -18,7 +18,7 @@ import { UserService } from '@entities/user/api/user.service';
 @Component({
     selector: 'app-how-to-buy',
     standalone: true,
-    imports: [FormsModule, DecimalPipe, TuiSlider, TuiIcon, LHInputComponent],
+    imports: [FormsModule, DecimalPipe, TuiSlider, TuiIcon, TuiLoader, LHInputComponent],
     templateUrl: './how-to-buy.component.html',
     styleUrl: './how-to-buy.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -107,6 +107,22 @@ export class HowToBuyComponent {
         const data = this.buildSbpDetails(this.debouncedRubles());
         return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3f3c34&bgcolor=ffffff&data=${encodeURIComponent(data)}`;
     });
+
+    /**
+     * Признак загрузки QR-кода.
+     */
+    protected readonly qrLoading = signal(true);
+
+    /**
+     * Конструктор.
+     * Сбрасывает признак загрузки QR при изменении URL.
+     */
+    public constructor() {
+        effect(() => {
+            this.sberQrUrl();
+            this.qrLoading.set(true);
+        });
+    }
 
     /**
      * Обрабатывает изменение суммы в рублях из слайдера или инпута.
