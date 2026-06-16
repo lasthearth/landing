@@ -100,6 +100,11 @@ export class UserService {
     private readonly http: HttpClient = inject(HttpClient);
 
     /**
+     * Идентификатор платформы.
+     */
+    private readonly platformId = inject(PLATFORM_ID);
+
+    /**
      * Сервис локального хранилища.
      */
     private readonly localStorageService = inject(LocalStorageService);
@@ -113,7 +118,7 @@ export class UserService {
      * Инициализирует поток авторизации.
      */
     constructor() {
-        if (isPlatformBrowser(inject(PLATFORM_ID))) {
+        if (isPlatformBrowser(this.platformId)) {
             this.initAuthStream();
             this.checkAuthTrigger$.next(false);
             this.listenToAuthEvents();
@@ -131,6 +136,11 @@ export class UserService {
         this.checkAuthTrigger$
             .pipe(
                 switchMap((forceRefresh) => {
+                    if (isPlatformBrowser(this.platformId)) {
+                        console.debug('[Auth] URL:', window.location.href);
+                        console.debug('[Auth] redirectUri:', environment.redirectUri);
+                    }
+
                     const authRequest$ = forceRefresh
                         ? this.oidcSecurityService.forceRefreshSession()
                         : this.oidcSecurityService.checkAuth();
