@@ -129,9 +129,9 @@
 
     <!-- Форма создания/редактирования -->
     @if (activeTabIndex() === 1) {
-        <form [formGroup]="form" (ngSubmit)="saveItem()" class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
+        <form [formGroup]="form" (ngSubmit)="saveItem()" class="flex flex-col lg:flex-row gap-8 items-start">
             <!-- Левая колонка: форма -->
-            <div class="flex flex-col gap-6">
+            <div class="flex-1 min-w-0 flex flex-col gap-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="flex flex-col gap-2">
                         <label class="text-lg font-semibold text-lh-primary">Название</label>
@@ -315,7 +315,7 @@
                 }
 
                 <!-- Кнопки -->
-                <div class="flex gap-4 pt-2 sticky bottom-4 z-10 bg-[#e8dfc8] py-4 rounded-xl shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
+                <div class="flex gap-4 pt-2">
                     <button
                         type="button"
                         (click)="backToList()"
@@ -337,7 +337,7 @@
             </div>
 
             <!-- Правая колонка: предпросмотр карточки -->
-            <div class="lg:sticky lg:top-4 flex flex-col gap-4">
+            <div class="w-full lg:w-[360px] lg:sticky lg:top-20 self-start flex flex-col gap-4 preview-col lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto">
                 <p class="text-xl font-bold text-lh-primary uppercase tracking-wide">Предпросмотр карточки</p>
                 <div
                     class="relative flex flex-col gap-4 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-[103%] hover:border-[#ff7920]/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] group"

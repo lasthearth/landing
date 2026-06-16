@@ -294,6 +294,7 @@ export class DonateShopPanelComponent {
                 this.imagePreviewUrl.set(null);
             }
         });
+
     }
 
     /**
