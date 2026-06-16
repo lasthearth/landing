@@ -136,6 +136,9 @@ export class UserService {
                         : this.oidcSecurityService.checkAuth();
 
                     return authRequest$.pipe(
+                        tap((authResult) => {
+                            console.debug('[Auth] checkAuth result:', authResult.isAuthenticated, authResult.errorMessage);
+                        }),
                         switchMap((authResult) => {
                             if (!authResult.isAuthenticated) {
                                 console.warn('[Auth] Не аутентифицирован');
