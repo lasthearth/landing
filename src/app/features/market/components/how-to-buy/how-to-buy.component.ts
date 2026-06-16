@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { debounceTime } from 'rxjs';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -73,19 +75,37 @@ export class HowToBuyComponent {
      * Распознаётся всеми банковскими приложениями.
      */
     /**
-     * Реквизиты для перевода через СБП по ГОСТ Р 56042-2014.
+     * Сумма в рублях с задержкой для генерации QR-кода.
+     * Используется debounce, чтобы не спамить api.qrserver.com при движении слайдера.
      */
-    protected readonly sbpDetails = computed(() => {
-        const sumInKopecks = this.rubles() * 100;
-        const purpose = `Пополнение баланса Last Hearth, ник: ${this.username()}`;
-        return `ST00012|Name=БУРАКОВ ИВАН АЛЕКСАНДРОВИЧ|PersonalAcc=40817810017002268665|BankName=ПАО СБЕРБАНК|BIC=044525225|CorrespAcc=30101810400000000225|Sum=${sumInKopecks}|Purpose=${purpose}`;
+    private readonly debouncedRubles = toSignal(toObservable(this.rubles).pipe(debounceTime(300)), {
+        initialValue: 500,
     });
 
     /**
+     * Формирует реквизиты для перевода через СБП по ГОСТ Р 56042-2014.
+     *
+     * @param rubles Сумма в рублях.
+     * @returns Строка реквизитов для СБП.
+     */
+    private buildSbpDetails(rubles: number): string {
+        const sumInKopecks = rubles * 100;
+        const purpose = `Пополнение баланса Last Hearth, ник: ${this.username()}`;
+        return `ST00012|Name=БУРАКОВ ИВАН АЛЕКСАНДРОВИЧ|PersonalAcc=40817810017002268665|BankName=ПАО СБЕРБАНК|BIC=044525225|CorrespAcc=30101810400000000225|Sum=${sumInKopecks}|Purpose=${purpose}`;
+    }
+
+    /**
+     * Реквизиты для перевода через СБП по ГОСТ Р 56042-2014.
+     */
+    protected readonly sbpDetails = computed(() => this.buildSbpDetails(this.rubles()));
+
+    /**
      * URL QR-кода для перевода через СБП.
+     * Обновляется с debounce, чтобы не генерировать QR на каждое изменение слайдера.
      */
     protected readonly sberQrUrl = computed(() => {
-        return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3f3c34&bgcolor=ffffff&data=${encodeURIComponent(this.sbpDetails())}`;
+        const data = this.buildSbpDetails(this.debouncedRubles());
+        return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3f3c34&bgcolor=ffffff&data=${encodeURIComponent(data)}`;
     });
 
     /**
