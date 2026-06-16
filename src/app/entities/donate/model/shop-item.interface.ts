@@ -1,3 +1,5 @@
+import { IAbilityItem } from './ability-item.interface';
+
 /**
  * DTO товара магазина, получаемый от API.
  *
@@ -66,6 +68,13 @@ export interface IShopItemDto {
     entries?: IKitEntryDto[];
 
     /**
+     * Список возможностей / преимуществ товара.
+     *
+     * Основное применение — отображение в карточках привилегий.
+     */
+    privileges?: IAbilityItem[];
+
+    /**
      * Есть ли скидка на товар.
      */
     has_discount?: boolean;
@@ -84,10 +93,7 @@ export interface IShopItemDto {
 /**
  * Тип товара магазина.
  */
-export type ShopItemType =
-    | 'ITEM_TYPE_UNSPECIFIED'
-    | 'ITEM_TYPE_ITEM'
-    | 'ITEM_TYPE_KIT';
+export type ShopItemType = 'ITEM_TYPE_UNSPECIFIED' | 'ITEM_TYPE_ITEM' | 'ITEM_TYPE_KIT';
 
 /**
  * DTO составной части набора (kit entry).
@@ -222,6 +228,13 @@ export interface IShopItem {
     entries?: IKitEntry[];
 
     /**
+     * Список возможностей / преимуществ товара.
+     *
+     * Основное применение — отображение в карточках привилегий.
+     */
+    privileges?: IAbilityItem[];
+
+    /**
      * Есть ли скидка на товар.
      */
     hasDiscount?: boolean;
@@ -277,6 +290,11 @@ export interface ICreateShopItemRequest {
      * Составные части набора.
      */
     entries?: IKitEntryDto[];
+
+    /**
+     * Список возможностей / преимуществ товара.
+     */
+    privileges?: IAbilityItem[];
 
     /**
      * Есть ли скидка.
@@ -339,6 +357,11 @@ export interface IUpdateShopItemRequest {
      * Составные части набора.
      */
     entries?: IKitEntryDto[];
+
+    /**
+     * Список возможностей / преимуществ товара.
+     */
+    privileges?: IAbilityItem[];
 
     /**
      * Есть ли скидка.

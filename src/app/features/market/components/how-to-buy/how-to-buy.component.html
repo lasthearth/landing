@@ -96,6 +96,14 @@
                 <p class="text-lh-primary/60 text-sm text-center">
                     Отсканируйте QR-код в приложении банка
                 </p>
+                <button
+                    type="button"
+                    (click)="copySbpDetails()"
+                    class="flex items-center justify-center gap-2 w-full py-3 px-6 rounded-2xl bg-[#e8dfc8] hover:bg-[#efe6cf] border border-[rgba(51,44,38,0.12)] text-[#2a2722] font-bold text-lg cursor-pointer transition-all duration-200 hover:-translate-y-0.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                >
+                    <tui-icon icon="@tui.copy" class="size-5!" />
+                    Скопировать реквизиты СБП
+                </button>
             </div>
         </div>
     </div>

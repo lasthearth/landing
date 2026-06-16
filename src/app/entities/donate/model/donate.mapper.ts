@@ -1,4 +1,5 @@
 import { IShopItemDto, IShopItem, IKitEntryDto, IKitEntry } from './shop-item.interface';
+import { IAbilityItem } from './ability-item.interface';
 import { IPurchaseDto, IPurchase } from './purchase.interface';
 import { ITransactionDto, ITransaction } from './transaction.interface';
 import { IBalanceResponseDto, IBalanceResponse } from './balance-response.interface';
@@ -78,6 +79,7 @@ export function mapDtoToShopItem(dto: IShopItemDto): IShopItem {
         code: dto.code,
         itemType: dto.item_type,
         entries: dto.entries?.map(mapDtoToKitEntry),
+        privileges: dto.privileges?.map(mapDtoToAbilityItem),
         hasDiscount: dto.has_discount,
         discountPercent: dto.discount_percent,
         effectivePrice: dto.effective_price,
@@ -96,6 +98,19 @@ export function mapDtoToKitEntry(dto: IKitEntryDto): IKitEntry {
         description: dto.description,
         imageUrl: dto.image_url,
         quantity: dto.quantity,
+    };
+}
+
+/**
+ * Преобразует DTO возможности товара в UI-модель.
+ *
+ * @param dto DTO возможности от API.
+ * @returns UI-модель возможности.
+ */
+export function mapDtoToAbilityItem(dto: IAbilityItem): IAbilityItem {
+    return {
+        icon: dto.icon,
+        text: dto.text,
     };
 }
 

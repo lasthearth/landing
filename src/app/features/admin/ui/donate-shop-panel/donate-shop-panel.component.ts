@@ -6,6 +6,7 @@ import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList } from '@angular/cdk/d
 import { RequestStatusService } from '@core/services/request-status.service';
 import {
     DonateService,
+    IAbilityItem,
     ICreateShopItemRequest,
     IKitEntryDto,
     IShopItem,
@@ -17,6 +18,7 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
+import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
 import { TuiFile, TuiFiles, TuiFilesComponent } from '@taiga-ui/kit';
 import { finalize, map, Observable, startWith, Subject, Subscription, switchMap, tap, timer } from 'rxjs';
 
@@ -29,7 +31,22 @@ import { finalize, map, Observable, startWith, Subject, Subscription, switchMap,
 @Component({
     selector: 'app-donate-shop-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, FormsModule, AsyncPipe, LHInputComponent, TuiIcon, TuiLoader, TuiFiles, TuiFilesComponent, TuiFile, MarketGridSkeletonComponent, CdkDropList, CdkDrag, CdkDragHandle],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        AsyncPipe,
+        LHInputComponent,
+        TuiIcon,
+        TuiLoader,
+        TuiFiles,
+        TuiFilesComponent,
+        TuiFile,
+        MarketGridSkeletonComponent,
+        CdkDropList,
+        CdkDrag,
+        CdkDragHandle,
+        AbilityTagComponent,
+    ],
     templateUrl: './donate-shop-panel.component.html',
     styleUrl: './donate-shop-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -114,8 +131,7 @@ export class DonateShopPanelComponent {
      * @param type Тип товара.
      * @returns Локализованная строка.
      */
-    protected itemTypeDisplay = (type: ShopItemType | 'ITEM_TYPE_PRIVILEGE'): string =>
-        this.getItemTypeLabel(type);
+    protected itemTypeDisplay = (type: ShopItemType | 'ITEM_TYPE_PRIVILEGE'): string => this.getItemTypeLabel(type);
 
     /**
      * Возвращает локализованное название типа товара.
@@ -178,6 +194,7 @@ export class DonateShopPanelComponent {
         discount_percent: new FormControl<number>(0, { nonNullable: true }),
         image: new FormControl<File | null>(null),
         entries: new FormArray<FormGroup<KitEntryForm>>([]),
+        privileges: new FormArray<FormGroup<AbilityForm>>([]),
     });
 
     /**
@@ -210,7 +227,9 @@ export class DonateShopPanelComponent {
     protected readonly previewItem = computed(() => {
         const values = this.formValue();
         const entries = this.entriesArray.getRawValue();
+        const privileges = this.privilegesArray.getRawValue();
         const imageUrl = this.imagePreviewUrl() ?? '';
+        const isKitOrPrivilege = values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE';
 
         return {
             name: values.name || 'Название товара',
@@ -221,15 +240,20 @@ export class DonateShopPanelComponent {
             hasDiscount: values.has_discount ?? false,
             discountPercent: values.discount_percent ?? 0,
             imageUrl,
-            entries:
-                values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE'
-                    ? entries.map((entry, index) => ({
-                          name: entry.name || `Позиция ${index + 1}`,
-                          description: entry.description,
-                          quantity: entry.quantity,
-                          imageUrl: entry.image_url ?? '',
-                      }))
-                    : [],
+            entries: isKitOrPrivilege
+                ? entries.map((entry, index) => ({
+                      name: entry.name || `Позиция ${index + 1}`,
+                      description: entry.description,
+                      quantity: entry.quantity,
+                      imageUrl: entry.image_url ?? '',
+                  }))
+                : [],
+            privileges: isKitOrPrivilege
+                ? privileges.map((ability) => ({
+                      icon: ability.icon || '@tui.circle-help',
+                      text: ability.text || 'Возможность',
+                  }))
+                : [],
         };
     });
 
@@ -264,6 +288,13 @@ export class DonateShopPanelComponent {
     }
 
     /**
+     * Возвращает FormArray возможностей товара.
+     */
+    protected get privilegesArray(): FormArray<FormGroup<AbilityForm>> {
+        return this.form.controls.privileges;
+    }
+
+    /**
      * Конструктор. Подписывается на изменение типа товара,
      * сбрасывает entries при переключении на ITEM_TYPE_ITEM и
      * автоматически заполняет служебное описание для наборов / привилегий.
@@ -272,6 +303,7 @@ export class DonateShopPanelComponent {
         this.form.controls.item_type.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((type) => {
             if (type !== 'ITEM_TYPE_KIT' && type !== 'ITEM_TYPE_PRIVILEGE') {
                 this.entriesArray.clear();
+                this.privilegesArray.clear();
                 this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
                 this.entryImageSubscriptions.clear();
             }
@@ -295,7 +327,6 @@ export class DonateShopPanelComponent {
                 this.imagePreviewUrl.set(null);
             }
         });
-
     }
 
     /**
@@ -334,11 +365,16 @@ export class DonateShopPanelComponent {
         });
 
         this.entriesArray.clear();
+        this.privilegesArray.clear();
         this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
         this.entryImageSubscriptions.clear();
 
         item.entries?.forEach((entry) => {
             this.entriesArray.push(this.createEntryForm(entry));
+        });
+
+        item.privileges?.forEach((ability) => {
+            this.privilegesArray.push(this.createAbilityForm(ability));
         });
 
         this.activeTabIndex.set(1);
@@ -372,6 +408,22 @@ export class DonateShopPanelComponent {
             this.entryImageSubscriptions.delete(control);
         }
         this.entriesArray.removeAt(index);
+    }
+
+    /**
+     * Добавляет пустую возможность в товар.
+     */
+    protected addAbility(): void {
+        this.privilegesArray.push(this.createAbilityForm());
+    }
+
+    /**
+     * Удаляет возможность из товара.
+     *
+     * @param index Индекс возможности.
+     */
+    protected removeAbility(index: number): void {
+        this.privilegesArray.removeAt(index);
     }
 
     /**
@@ -484,6 +536,7 @@ export class DonateShopPanelComponent {
             const values = this.form.getRawValue();
             const imageUrl = await this.resolveImageUrl();
             const entries = await this.resolveEntries();
+            const privileges = this.resolveprivileges();
             const itemType = values.item_type === 'ITEM_TYPE_PRIVILEGE' ? 'ITEM_TYPE_KIT' : values.item_type;
             const shouldSendEntries =
                 values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE';
@@ -501,6 +554,7 @@ export class DonateShopPanelComponent {
                     discount_percent: values.has_discount ? values.discount_percent : undefined,
                     image_url: imageUrl,
                     entries: shouldSendEntries ? entries : undefined,
+                    privileges: shouldSendEntries ? privileges : undefined,
                 };
 
                 this.donateService
@@ -526,6 +580,7 @@ export class DonateShopPanelComponent {
                     has_discount: values.has_discount,
                     discount_percent: values.has_discount ? values.discount_percent : undefined,
                     entries: shouldSendEntries ? entries : undefined,
+                    privileges: shouldSendEntries ? privileges : undefined,
                 };
 
                 this.donateService
@@ -589,6 +644,19 @@ export class DonateShopPanelComponent {
     }
 
     /**
+     * Возвращает массив возможностей товара для отправки на сервер.
+     */
+    private resolveprivileges(): IAbilityItem[] {
+        return this.privilegesArray
+            .getRawValue()
+            .filter((ability) => ability.text.trim())
+            .map((ability) => ({
+                icon: ability.icon.trim() || '@tui.circle-help',
+                text: ability.text.trim(),
+            }));
+    }
+
+    /**
      * Создаёт FormGroup для одной entry набора.
      *
      * @param entry Существующая entry (при редактировании).
@@ -602,17 +670,15 @@ export class DonateShopPanelComponent {
         const imageControl = new FormControl<File | null>(null);
         const imageUrlControl = new FormControl<string | null>(entry?.imageUrl ?? null);
 
-        const subscription = imageControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((file) => {
-                if (file instanceof File) {
-                    const reader = new FileReader();
-                    reader.onload = () => imageUrlControl.setValue(reader.result as string);
-                    reader.readAsDataURL(file);
-                } else {
-                    imageUrlControl.setValue(null);
-                }
-            });
+        const subscription = imageControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((file) => {
+            if (file instanceof File) {
+                const reader = new FileReader();
+                reader.onload = () => imageUrlControl.setValue(reader.result as string);
+                reader.readAsDataURL(file);
+            } else {
+                imageUrlControl.setValue(null);
+            }
+        });
 
         this.entryImageSubscriptions.set(imageControl, subscription);
 
@@ -632,6 +698,21 @@ export class DonateShopPanelComponent {
     }
 
     /**
+     * Создаёт FormGroup для одной возможности товара.
+     *
+     * @param ability Существующая возможность (при редактировании).
+     */
+    private createAbilityForm(ability?: IAbilityItem): FormGroup<AbilityForm> {
+        return new FormGroup<AbilityForm>({
+            icon: new FormControl<string>(ability?.icon ?? '', { nonNullable: true }),
+            text: new FormControl<string>(ability?.text ?? '', {
+                nonNullable: true,
+                validators: [Validators.required],
+            }),
+        });
+    }
+
+    /**
      * Сбрасывает форму в начальное состояние.
      */
     private resetForm(): void {
@@ -647,6 +728,7 @@ export class DonateShopPanelComponent {
             image: null,
         });
         this.entriesArray.clear();
+        this.privilegesArray.clear();
         this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
         this.entryImageSubscriptions.clear();
         this.imagePreviewUrl.set(null);
@@ -662,4 +744,12 @@ interface KitEntryForm {
     quantity: FormControl<number>;
     image: FormControl<File | null>;
     image_url: FormControl<string | null>;
+}
+
+/**
+ * Тип формы одной возможности товара.
+ */
+interface AbilityForm {
+    icon: FormControl<string>;
+    text: FormControl<string>;
 }

@@ -1,3 +1,4 @@
+import { IAbilityItem } from '@entities/donate';
 import { KitItem } from './kit-item.interface';
 
 /**
@@ -47,7 +48,7 @@ export interface PrivilegeCard {
     /**
      * Преимущества привилегии.
      */
-    abilities?: any[];
+    privileges?: IAbilityItem[];
 
     /**
      * Набор игровых предметов привилегии.

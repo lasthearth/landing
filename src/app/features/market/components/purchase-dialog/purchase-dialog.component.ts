@@ -62,7 +62,7 @@ export interface PurchaseDialogData {
     /**
      * Список способностей/бонусов (для титулов).
      */
-    abilities?: Array<{ icon: string; text: string }>;
+    privileges?: Array<{ icon: string; text: string }>;
 }
 
 /**
@@ -121,7 +121,7 @@ export class PurchaseDialogComponent {
     protected get activePrice(): string {
         return this.selectedTerm() === 'season' && this.data.seasonPrice
             ? this.data.seasonPrice
-            : this.data.monthPrice ?? '';
+            : (this.data.monthPrice ?? '');
     }
 
     /**

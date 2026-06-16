@@ -3,7 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { TuiSlider } from '@taiga-ui/kit/components/slider';
-import { TuiIcon } from '@taiga-ui/core';
+import { TuiAlertService, TuiIcon } from '@taiga-ui/core';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { UserService } from '@entities/user/api/user.service';
 
@@ -48,6 +48,11 @@ export class HowToBuyComponent {
     private readonly userService = inject(UserService);
 
     /**
+     * Сервис уведомлений.
+     */
+    private readonly alertService = inject(TuiAlertService);
+
+    /**
      * Никнейм текущего пользователя.
      */
     protected readonly username = computed(() => this.userService.userName || 'Неизвестный');
@@ -67,11 +72,20 @@ export class HowToBuyComponent {
      * Содержит реквизиты получателя, сумму в копейках и ник игрока.
      * Распознаётся всеми банковскими приложениями.
      */
-    protected readonly sberQrUrl = computed(() => {
+    /**
+     * Реквизиты для перевода через СБП по ГОСТ Р 56042-2014.
+     */
+    protected readonly sbpDetails = computed(() => {
         const sumInKopecks = this.rubles() * 100;
         const purpose = `Пополнение баланса Last Hearth, ник: ${this.username()}`;
-        const data = `ST00012|Name=БУРАКОВ ИВАН АЛЕКСАНДРОВИЧ|PersonalAcc=40817810017002268665|BankName=ПАО СБЕРБАНК|BIC=044525225|CorrespAcc=30101810400000000225|Sum=${sumInKopecks}|Purpose=${purpose}`;
-        return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3f3c34&bgcolor=ffffff&data=${encodeURIComponent(data)}`;
+        return `ST00012|Name=БУРАКОВ ИВАН АЛЕКСАНДРОВИЧ|PersonalAcc=40817810017002268665|BankName=ПАО СБЕРБАНК|BIC=044525225|CorrespAcc=30101810400000000225|Sum=${sumInKopecks}|Purpose=${purpose}`;
+    });
+
+    /**
+     * URL QR-кода для перевода через СБП.
+     */
+    protected readonly sberQrUrl = computed(() => {
+        return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3f3c34&bgcolor=ffffff&data=${encodeURIComponent(this.sbpDetails())}`;
     });
 
     /**
@@ -94,5 +108,22 @@ export class HowToBuyComponent {
     private clampRubles(value: number): number {
         const rounded = Math.round(value / this.step) * this.step;
         return Math.max(this.minAmount, Math.min(this.maxAmount, rounded));
+    }
+
+    /**
+     * Копирует реквизиты СБП в буфер обмена.
+     *
+     * Поскольку QR-код СБП содержит реквизиты, а не веб-ссылку,
+     * это ближайший аналог «перейти туда же, куда QR-код».
+     */
+    protected copySbpDetails(): void {
+        navigator.clipboard
+            .writeText(this.sbpDetails())
+            .then(() => {
+                this.alertService.open('', { label: 'Реквизиты СБП скопированы. Вставьте их в приложение банка.', appearance: 'positive' }).subscribe();
+            })
+            .catch(() => {
+                this.alertService.open('', { label: 'Не удалось скопировать реквизиты. Попробуйте отсканировать QR-код.', appearance: 'negative' }).subscribe();
+            });
     }
 }

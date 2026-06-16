@@ -1,4 +1,4 @@
-import { Component, input, output, computed, inject, Provider, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, computed, inject, Provider, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
@@ -24,6 +24,7 @@ export const SECTION_ID_PROVIDER: Provider = {
     templateUrl: './rule-section.component.html',
     styleUrls: ['../../styles/rules.less'],
     providers: [SECTION_ID_PROVIDER],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RuleSectionComponent extends BaseExpandableSection {
     /**

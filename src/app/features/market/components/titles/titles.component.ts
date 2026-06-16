@@ -5,7 +5,7 @@ import { catchError, of } from 'rxjs';
 import { DonateService, IShopItem } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
-import { AbilityTagComponent } from '../../ui/ability-tag/ability-tag.component';
+import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
@@ -142,7 +142,7 @@ export class TitlesComponent {
             description: p.description,
             kitItems: p.kitItems,
             dailyKitItems: p.dailyKitItems,
-            abilities: p.abilities,
+            privileges: p.privileges,
         };
 
         this.dialogs.open(new PolymorpheusComponent(PurchaseDialogComponent), { size: 'auto', data }).subscribe();
