@@ -14,7 +14,6 @@ import {
     of,
     Subject,
     switchMap,
-    take,
     tap,
 } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -134,7 +133,7 @@ export class UserService {
                 switchMap((forceRefresh) => {
                     const authRequest$ = forceRefresh
                         ? this.oidcSecurityService.forceRefreshSession()
-                        : this.oidcSecurityService.checkAuthIncludingServer();
+                        : this.oidcSecurityService.checkAuth();
 
                     return authRequest$.pipe(
                         switchMap((authResult) => {
@@ -156,9 +155,11 @@ export class UserService {
                             return combineLatest([
                                 this.oidcSecurityService.getIdToken(),
                                 this.oidcSecurityService.getAccessToken(),
+                                this.oidcSecurityService.getRefreshToken(),
                             ]).pipe(
                                 first(),
-                                tap(([idToken, accessToken]) => {
+                                tap(([idToken, accessToken, refreshToken]) => {
+                                    console.debug('[Auth] Refresh token present:', !!refreshToken);
                                     this.accessToken = accessToken;
                                     try {
                                         if (idToken) {
@@ -189,11 +190,6 @@ export class UserService {
                         catchError((authError) => {
                             console.error('[Auth] Ошибка авторизации/обновления:', authError);
                             this.authStateChange$.next(false);
-
-                            if (this.isRefreshTokenMissingError(authError)) {
-                                this.redirectToLogin();
-                            }
-
                             return of(null);
                         }),
                         finalize(() => {
@@ -222,49 +218,9 @@ export class UserService {
                     case EventTypes.SilentRenewFailed:
                         console.error('[Auth] Silent renew не удался:', notification.value);
                         this.authStateChange$.next(false);
-                        this.redirectToLogin();
-                        break;
-                    case EventTypes.TokenExpired:
-                    case EventTypes.IdTokenExpired:
-                        console.warn('[Auth] Токен истёк, пробуем обновить сессию');
-                        this.tryRenewSession();
                         break;
                 }
             });
-    }
-
-    /**
-     * Проверяет, является ли ошибка результатом отсутствия refresh token.
-     *
-     * @param error Ошибка из OIDC-библиотеки.
-     * @returns `true`, если refresh token не найден.
-     */
-    private isRefreshTokenMissingError(error: unknown): boolean {
-        const message = error instanceof Error ? error.message : String(error);
-
-        return message.toLowerCase().includes('no refresh token found');
-    }
-
-    /**
-     * Пытается обновить сессию через refresh token.
-     * При неудаче перенаправляет пользователя на страницу входа.
-     */
-    private tryRenewSession(): void {
-        this.oidcSecurityService
-            .forceRefreshSession()
-            .pipe(take(1))
-            .subscribe((result) => {
-                if (!result.isAuthenticated) {
-                    this.redirectToLogin();
-                }
-            });
-    }
-
-    /**
-     * Перенаправляет пользователя на OIDC-страницу входа.
-     */
-    private redirectToLogin(): void {
-        this.oidcSecurityService.authorize();
     }
 
     /**
