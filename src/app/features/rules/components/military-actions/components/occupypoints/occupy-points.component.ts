@@ -1,11 +1,10 @@
 import { Component, output } from '@angular/core';
 import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/rule-paragraph.component';
-import { RuleLinkComponent } from '@app/features/rules/ui/rule-link/rule-link.component';
 
 @Component({
     selector: 'app-occupy-points',
     templateUrl: './occupy-points.component.html',
-    imports: [RuleParagraphComponent, RuleLinkComponent],
+    imports: [RuleParagraphComponent],
 })
 export class OccupyPointsComponent {
     /**

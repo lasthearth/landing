@@ -1,6 +1,6 @@
-<form [formGroup]="form" class="flex flex-col gap-6 w-full" (ngSubmit)="onSubmit.next()">
-    <div class="flex flex-col gap-1">
-        <p class="text-xl">
+<form [formGroup]="form" class="flex flex-col gap-6 w-full bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6" (ngSubmit)="onSubmit.next()">
+    <div class="flex flex-col gap-2">
+        <p class="text-xl text-[#2d201a] font-semibold">
             Какое будет название?
             <span class="text-lh-danger">*</span>
             <lh-hint
@@ -10,8 +10,8 @@
         <lh-input placeholder="Введите название..." formControlName="name" />
     </div>
 
-    <div class="flex flex-col gap-1">
-        <p class="text-xl">
+    <div class="flex flex-col gap-2">
+        <p class="text-xl text-[#2d201a] font-semibold">
             Координаты расположения
             <span class="text-lh-danger">*</span>
             <lh-hint hintText="Игровые координаты где располагается образование в виде: х: значение, y: значение." />
@@ -20,8 +20,8 @@
         <lh-input placeholder="Введите z..." type="inputNumber" formControlName="z" />
     </div>
 
-    <div class="flex flex-col gap-1">
-        <p class="text-xl">
+    <div class="flex flex-col gap-2">
+        <p class="text-xl text-[#2d201a] font-semibold">
             Выберите ваш дипломатический статус
             <span class="text-lh-danger">*</span>
             <lh-hint hintText="Дипломатический статус должен строго исполняться образованием." />
@@ -29,8 +29,8 @@
         <lh-input formControlName="diplomacy" type="select" [items]="diplomacy" placeholder="Выберите тип..." />
     </div>
 
-    <div class="flex flex-col gap-1">
-        <p class="text-xl">
+    <div class="flex flex-col gap-2">
+        <p class="text-xl text-[#2d201a] font-semibold">
             Описание или лор образования
             <span class="text-lh-danger">*</span>
             <lh-hint
@@ -41,7 +41,7 @@
     </div>
 
     <div *ngFor="let key of fileFields">
-        <p class="text-xl">
+        <p class="text-xl text-[#2d201a] font-semibold">
             {{ getLabelForKey(key) }}
             <span class="text-lh-danger">*</span>
         </p>
@@ -49,7 +49,7 @@
         <label *ngIf="!form.controls[key].value" tuiInputFiles>
             <input accept="image/*" tuiInputFiles [formControl]="form.controls[key]" class="border-lh-primary!" />
             <ng-template tuiInputFilesContent>
-                <span class="text-gray-600">Добавить изображение...</span>
+                <span class="text-neutral-500">Добавить изображение...</span>
             </ng-template>
         </label>
 
@@ -82,7 +82,7 @@
 
     <button
         type="submit"
-        class="text-white w-20 h-10 text-sm! self-start cursor-pointer bg-lh-primary-2 rounded-lg py-1.5 px-2.5 mt-2 font-bold hover:text-lh-primary hover:bg-[#e2d7bb] border transition-all duration-300 disabled:text-gray-300 disabled:bg-lh-primary disabled:cursor-not-allowed"
+        class="lh-secondary-button text-base py-2 px-4 mt-2 self-start disabled:text-neutral-400 disabled:bg-lh-primary-2/5 disabled:cursor-not-allowed"
         [disabled]="form.invalid || isLoading"
     >
         @if (isLoading) {

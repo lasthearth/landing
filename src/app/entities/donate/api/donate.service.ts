@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, shareReplay, switchMap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
-import { IShopItemDto } from '../model/shop-item.interface';
+import { IShopItemDto, ICreateShopItemRequest, IUpdateShopItemRequest } from '../model/shop-item.interface';
 import { IPurchaseDto } from '../model/purchase.interface';
+import { IPendingPurchaseDto } from '../model/pending-purchase-dto.interface';
 import { ITransactionDto } from '../model/transaction.interface';
 import { IBalanceResponseDto } from '../model/balance-response.interface';
 import {
@@ -12,8 +13,10 @@ import {
     mapDtoToTransaction,
     mapDtoToBalanceResponse,
 } from '../model/donate.mapper';
+import { mapDtoToPendingPurchase } from '../model/pending-purchase.mapper';
 import { IShopItem } from '../model/shop-item.interface';
 import { IPurchase } from '../model/purchase.interface';
+import { IPendingPurchase } from '../model/pending-purchase.interface';
 import { ITransaction } from '../model/transaction.interface';
 import { IBalanceResponse } from '../model/balance-response.interface';
 
@@ -41,18 +44,28 @@ export class DonateService {
     private readonly baseUrl = environment.apiUrl;
 
     /**
+     * Триггер принудительного обновления кэша списка товаров.
+     */
+    private readonly shopItemsRefresh$ = new BehaviorSubject<void>(undefined);
+
+    /**
      * Кэшированный Observable со списком товаров магазина.
      *
      * Товары редко меняются, поэтому используется shareReplay(1)
      * для предотвращения лишних запросов.
+     * При вызове {@link refreshShopItems$} кэш сбрасывается и выполняется новый запрос.
      */
-    private readonly shopItems$ = this.http
-        .get<{ items: IShopItemDto[] }>(`${this.baseUrl}/donate/shop/items`)
-        .pipe(
-            map((response) => response.items.map(mapDtoToShopItem)),
-            catchError(() => of([])),
-            shareReplay(1)
-        );
+    private readonly shopItems$ = this.shopItemsRefresh$.pipe(
+        switchMap(() =>
+            this.http
+                .get<{ items: IShopItemDto[] }>(`${this.baseUrl}/donate/shop/items`)
+                .pipe(
+                    map((response) => response.items.map(mapDtoToShopItem)),
+                    catchError(() => of([]))
+                )
+        ),
+        shareReplay(1)
+    );
 
     /**
      * Получает текущий баланс донат-валюты авторизованного игрока.
@@ -62,6 +75,18 @@ export class DonateService {
     public getMyBalance$(): Observable<IBalanceResponse> {
         return this.http
             .get<IBalanceResponseDto>(`${this.baseUrl}/donate/me/balance`)
+            .pipe(map(mapDtoToBalanceResponse));
+    }
+
+    /**
+     * Получает текущий баланс донат-валюты указанного игрока.
+     *
+     * @param playerId Идентификатор игрока.
+     * @returns Observable с балансом.
+     */
+    public getPlayerBalance$(playerId: string): Observable<IBalanceResponse> {
+        return this.http
+            .get<IBalanceResponseDto>(`${this.baseUrl}/donate/players/${playerId}/balance`)
             .pipe(map(mapDtoToBalanceResponse));
     }
 
@@ -85,6 +110,15 @@ export class DonateService {
      */
     public getShopItems$(): Observable<IShopItem[]> {
         return this.shopItems$;
+    }
+
+    /**
+     * Сбрасывает кэш списка товаров и инициирует новый запрос к API.
+     *
+     * Подписчики, использующие {@link getShopItems$}, автоматически получат актуальный список.
+     */
+    public refreshShopItems$(): void {
+        this.shopItemsRefresh$.next();
     }
 
     /**
@@ -118,10 +152,10 @@ export class DonateService {
      * @param amount Сумма для начисления (decimal as string).
      * @returns Observable с результатом операции.
      */
-    public addCoins$(playerId: string, amount: string): Observable<unknown> {
+    public addCoins$(playerId: string, amount: string, playerName: string, reason?: string): Observable<unknown> {
         return this.http.post<unknown>(
             `${this.baseUrl}/donate/players/${playerId}/coins:add`,
-            { amount }
+            { player_id: playerId, player_name: playerName, amount, ...(reason ? { reason } : {}) }
         );
     }
 
@@ -134,10 +168,10 @@ export class DonateService {
      * @param amount Сумма для списания (decimal as string).
      * @returns Observable с результатом операции.
      */
-    public deductCoins$(playerId: string, amount: string): Observable<unknown> {
+    public deductCoins$(playerId: string, amount: string, reason?: string): Observable<unknown> {
         return this.http.post<unknown>(
             `${this.baseUrl}/donate/players/${playerId}/coins:deduct`,
-            { amount }
+            { player_id: playerId, amount, ...(reason ? { reason } : {}) }
         );
     }
 
@@ -182,5 +216,74 @@ export class DonateService {
             `${this.baseUrl}/donate/purchases/${purchaseId}:refund`,
             {}
         );
+    }
+
+    /**
+     * Получает список покупок, ожидающих выдачи.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @returns Observable с массивом ожидающих покупок.
+     */
+    public getPendingPurchases$(): Observable<IPendingPurchase[]> {
+        return this.http
+            .get<{ purchases: IPendingPurchaseDto[] }>(`${this.baseUrl}/donate/purchases/pending`)
+            .pipe(map((response) => response.purchases.map(mapDtoToPendingPurchase)));
+    }
+
+    /**
+     * Отмечает покупку как выданную.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param purchaseId Идентификатор покупки.
+     * @returns Observable с результатом операции.
+     */
+    public markPurchaseIssued$(purchaseId: string): Observable<unknown> {
+        return this.http.post<unknown>(
+            `${this.baseUrl}/donate/purchases/${purchaseId}:mark-issued`,
+            {}
+        );
+    }
+
+    /**
+     * Создаёт товар в донат-магазине.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param request Данные для создания товара.
+     * @returns Observable с созданным товаром.
+     */
+    public createShopItem$(request: ICreateShopItemRequest): Observable<IShopItem> {
+        return this.http
+            .post<{ item: IShopItemDto }>(`${this.baseUrl}/donate/shop/items`, request)
+            .pipe(map((response) => mapDtoToShopItem(response.item)));
+    }
+
+    /**
+     * Обновляет товар в донат-магазине.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param id Идентификатор товара.
+     * @param request Данные для обновления товара.
+     * @returns Observable с обновлённым товаром.
+     */
+    public updateShopItem$(id: string, request: IUpdateShopItemRequest): Observable<IShopItem> {
+        return this.http
+            .put<{ item: IShopItemDto }>(`${this.baseUrl}/donate/shop/items/${id}`, request)
+            .pipe(map((response) => mapDtoToShopItem(response.item)));
+    }
+
+    /**
+     * Удаляет товар из донат-магазина.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param id Идентификатор товара.
+     * @returns Observable с пустым результатом.
+     */
+    public deleteShopItem$(id: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/donate/shop/items/${id}`);
     }
 }

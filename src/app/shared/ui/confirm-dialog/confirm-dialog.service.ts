@@ -27,7 +27,7 @@ export class ConfirmDialogService {
      */
     public open(data: ConfirmDialogData): Observable<boolean> {
         return this.dialogs.open(new PolymorpheusComponent(ConfirmDialogComponent), {
-            size: 's',
+            size: 'auto',
             data,
         });
     }

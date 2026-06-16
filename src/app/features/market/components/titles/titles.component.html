@@ -1,40 +1,200 @@
-<ng-template #cardTemplate let-item>
-    <app-privilege-card
-        [title]="item.title"
-        [image]="item.image"
-        [price]="item.price"
-        [selected]="item === selectedPrivilege"
-        class="flex justify-center"
-    />
-</ng-template>
-
-<privilege-carousel-template
-    [items]="titles"
-    [itemTemplate]="cardTemplate"
-    (selectedPrivilege)="selectedPrivilege = $event"
-/>
-
-<div class="flex flex-col gap-6 mt-6 justify-center items-center">
-    <p class="md:text-3xl text-2xl font-semibold text-lh-primary">Возможности титула «{{ selectedPrivilege.title }}»</p>
-    <div class="flex gap-4 flex-wrap items-center justify-center">
-        @for (abilityItem of selectedPrivilege.abilties; track $index) {
-            <app-ability-tag [data]="abilityItem" />
-        }
+@if (loading()) {
+    <app-market-grid-skeleton />
+} @else if (titles.length === 0) {
+    <div class="flex justify-center py-12">
+        <p class="text-2xl uppercase font-bold text-[#bdb093] self-center">СКОРО ПОЯВИТСЯ....</p>
     </div>
-    <p class="md:text-3xl text-2xl font-semibold text-lh-primary">Набор титула «{{ selectedPrivilege.title }}»</p>
-    <div class="flex gap-4 flex-wrap items-center justify-center">
-        @for (kitItem of selectedPrivilege.kitItems; track $index) {
-            <app-kit-item [data]="kitItem" />
-        }
-    </div>
-    @if (selectedPrivilege.dailyKitItems) {
-        <p class="md:text-3xl text-2xl font-semibold text-lh-primary">
-            Ежедневный набор титула «{{ selectedPrivilege.title }}»
-        </p>
-        <div class="flex gap-4 flex-wrap items-center justify-center">
-            @for (kitItem of selectedPrivilege.dailyKitItems; track $index) {
-                <app-kit-item [data]="kitItem" />
+} @else {
+    <div class="flex gap-6">
+        <!-- Left sidebar: list of titles -->
+        <div class="flex flex-col gap-2 w-64 shrink-0">
+            @for (title of titles; track title.id) {
+                <button
+                    (click)="selectPrivilege(title)"
+                    class="w-full text-left px-4 py-3 rounded-xl font-bold text-2xl leading-tight transition-all duration-300 border border-lh-primary-2/10 hover:translate-x-1 cursor-pointer relative overflow-hidden"
+                    [class.bg-gradient-to-r]="title === selectedPrivilege"
+                    [class.from-[#1a1510]]="title === selectedPrivilege"
+                    [class.via-[#3d2a1f]]="title === selectedPrivilege"
+                    [class.to-[#7a4a2a]]="title === selectedPrivilege"
+                    [class.text-[#f0e6d2]]="title === selectedPrivilege"
+                    [class.border-l-4]="title === selectedPrivilege"
+                    [class.border-[#8b5a2b]]="title === selectedPrivilege"
+                    [class.shadow-[0_0_16px_rgba(123,74,42,0.35)]]="title === selectedPrivilege"
+                    [class.bg-lh-primary-2/10]="title !== selectedPrivilege"
+                    [class.hover:bg-[#e2d7bb]/60]="title !== selectedPrivilege"
+                >
+                    {{ title.title }}
+                </button>
             }
         </div>
-    }
-</div>
+
+        <!-- Right content: details card -->
+        <div
+            class="flex-1 flex flex-col gap-5 bg-lh-primary-2/5 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+        >
+            <!-- Top: image + prices -->
+            <div class="flex gap-6 items-stretch">
+                <!-- Image with frame -->
+                <div
+                    class="w-56 h-56 shrink-0 rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.12)] border-2 border-[#bdb093] bg-[#e8dcc0]"
+                >
+                    <img
+                        [src]="selectedPrivilege!.image"
+                        [alt]="selectedPrivilege!.title"
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+
+                <!-- Prices column -->
+                <div class="flex flex-col gap-3 flex-1 justify-center">
+                    <!-- Monthly price block -->
+                    <button
+                        type="button"
+                        (click)="selectedTerm.set('month')"
+                        class="price-block relative rounded-xl px-5 py-4 flex items-center justify-between overflow-hidden cursor-pointer border-2 transition-colors duration-200"
+                        [class.bg-gradient-to-r]="selectedTerm() === 'month'"
+                        [class.from-[#c35a17]]="selectedTerm() === 'month'"
+                        [class.to-[#e07830]]="selectedTerm() === 'month'"
+                        [class.text-white]="selectedTerm() === 'month'"
+                        [class.shadow-lg]="selectedTerm() === 'month'"
+                        [class.bg-[#d8cdb3]]="selectedTerm() !== 'month'"
+                        [class.border-lh-accent]="selectedTerm() === 'month'"
+                        [class.border-[#c4b89e]]="selectedTerm() !== 'month'"
+                        [class.text-[#2a2722]]="selectedTerm() !== 'month'"
+                        [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'month'"
+                    >
+                        @if (selectedPrivilege!.monthPriceOriginal) {
+                            <div
+                                class="absolute -top-0.5 -left-0.5 bg-white text-[#c35a17] text-base font-extrabold px-3 py-1.5 rounded-br-xl shadow-md -rotate-3 "
+                            >
+                                −{{ getDiscountPercent(selectedPrivilege!.monthPrice, selectedPrivilege!.monthPriceOriginal) }}%
+                            </div>
+                        }
+
+                        <div class="flex items-center gap-2" [class.text-white/90]="selectedTerm() === 'month'" [class.text-[#5c554a]]="selectedTerm() !== 'month'">
+                            <tui-icon icon="@tui.calendar" class="size-6!" />
+                            <span class="text-2xl font-bold">1 месяц</span>
+                        </div>
+
+                        @if (selectedPrivilege!.monthPriceOriginal) {
+                            <div class="flex flex-col items-end">
+                                <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'month'" [class.text-[#9e9789]]="selectedTerm() !== 'month'">
+                                    <span class="strong-strike font-medium text-lg leading-none">{{ selectedPrivilege!.monthPriceOriginal }}</span>
+                                    <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-5 w-5 object-contain opacity-70 leading-none -ml-0.5" />
+                                </div>
+                                <div class="flex items-center gap-1 leading-none">
+                                    <span class="text-3xl font-extrabold leading-none">{{ selectedPrivilege!.monthPrice }}</span>
+                                    <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-8 w-8 object-contain leading-none -ml-0.5" />
+                                </div>
+                            </div>
+                        } @else {
+                            <div class="flex items-center gap-1 leading-none">
+                                <span class="text-3xl font-extrabold leading-none">{{ selectedPrivilege!.monthPrice }}</span>
+                                <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-8 w-8 object-contain leading-none -ml-0.5" />
+                            </div>
+                        }
+                    </button>
+
+                    <!-- Forever price block -->
+                    @if (selectedPrivilege!.seasonPrice) {
+                        <button
+                            type="button"
+                            (click)="selectedTerm.set('season')"
+                            class="price-block relative rounded-xl px-5 py-4 flex items-center justify-between overflow-hidden border-2 transition-colors duration-200 cursor-pointer"
+                            [class.bg-gradient-to-r]="selectedTerm() === 'season'"
+                            [class.from-[#c35a17]]="selectedTerm() === 'season'"
+                            [class.to-[#e07830]]="selectedTerm() === 'season'"
+                            [class.text-white]="selectedTerm() === 'season'"
+                            [class.shadow-lg]="selectedTerm() === 'season'"
+                            [class.border-lh-accent]="selectedTerm() === 'season'"
+                            [class.bg-[#d8cdb3]]="selectedTerm() !== 'season'"
+                            [class.border-[#c4b89e]]="selectedTerm() !== 'season'"
+                            [class.text-[#2a2722]]="selectedTerm() !== 'season'"
+                            [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'season'"
+                        >
+                            @if (selectedPrivilege!.seasonPriceOriginal) {
+                                <div
+                                    class="absolute -top-0.5 -left-0.5 bg-white text-[#c35a17] text-base font-extrabold px-3 py-1.5 rounded-br-xl shadow-md discount-badge"
+                                >
+                                    −{{ getDiscountPercent(selectedPrivilege!.seasonPrice, selectedPrivilege!.seasonPriceOriginal) }}%
+                                </div>
+                            }
+
+                            <div class="flex items-center gap-2" [class.text-white/90]="selectedTerm() === 'season'" [class.text-[#5c554a]]="selectedTerm() !== 'season'">
+                                <tui-icon icon="@tui.infinity" class="size-6!" />
+                                <span class="text-2xl font-bold">Навсегда</span>
+                            </div>
+
+                            @if (selectedPrivilege!.seasonPriceOriginal) {
+                                <div class="flex flex-col items-end">
+                                    <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'season'" [class.text-[#9e9789]]="selectedTerm() !== 'season'">
+                                        <span class="strong-strike font-medium text-lg leading-none">{{ selectedPrivilege!.seasonPriceOriginal }}</span>
+                                        <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-5 w-5 object-contain opacity-70 leading-none -ml-0.5" />
+                                    </div>
+                                    <div class="flex items-center gap-1 leading-none">
+                                        <span class="text-3xl font-extrabold leading-none">{{ selectedPrivilege!.seasonPrice }}</span>
+                                        <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-8 w-8 object-contain leading-none -ml-0.5" />
+                                    </div>
+                                </div>
+                            } @else {
+                                <div class="flex items-center gap-1 leading-none">
+                                    <span class="text-3xl font-extrabold leading-none">{{ selectedPrivilege!.seasonPrice }}</span>
+                                    <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-8 w-8 object-contain leading-none -ml-0.5" />
+                                </div>
+                            }
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- privileges -->
+            @if (selectedPrivilege!.privileges?.length) {
+                <div class="flex flex-col gap-3">
+                    <p class="text-lg font-bold text-lh-primary uppercase tracking-wide">
+                        Возможности титула «{{ selectedPrivilege!.title }}»
+                    </p>
+                    <div class="flex gap-3 flex-wrap">
+                        @for (abilityItem of selectedPrivilege!.privileges; track $index) {
+                            <app-ability-tag [data]="abilityItem" />
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Kit items -->
+            <div class="flex flex-col gap-3">
+                <p class="text-lg font-bold text-lh-primary uppercase tracking-wide">
+                    Набор титула «{{ selectedPrivilege!.title }}»
+                </p>
+                <div class="flex gap-2 flex-wrap">
+                    @for (kitItem of selectedPrivilege!.kitItems; track $index) {
+                        <app-kit-item [data]="kitItem" />
+                    }
+                </div>
+            </div>
+
+            <!-- Daily kit -->
+            @if (selectedPrivilege!.dailyKitItems?.length) {
+                <div class="flex flex-col gap-3">
+                    <p class="text-lg font-bold text-lh-primary uppercase tracking-wide">
+                        Ежедневный набор «{{ selectedPrivilege!.title }}»
+                    </p>
+                    <div class="flex gap-2 flex-wrap">
+                        @for (kitItem of selectedPrivilege!.dailyKitItems; track $index) {
+                            <app-kit-item [data]="kitItem" />
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Buy button -->
+            <button
+                (click)="openPurchaseDialog()"
+                class="shimmer-btn self-stretch text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-[#b55115] to-[#cc6e2a] hover:from-[#b85115] hover:to-[#d07028] rounded-xl py-4 px-8 text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
+            >
+                <tui-icon icon="@tui.shopping-cart" class="size-6!" />
+                <span>КУПИТЬ</span>
+            </button>
+        </div>
+    </div>
+}

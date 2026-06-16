@@ -1,0 +1,86 @@
+<div
+    class="flex flex-col gap-5 p-8 w-[32rem] bg-[#e2d7bb] rounded-2xl text-[#2a2722] shadow-[0_12px_40px_rgba(0,0,0,0.25)]"
+>
+    <!-- Header -->
+    <div class="flex items-center gap-5">
+        <div
+            class="w-24 h-24 rounded-xl overflow-hidden border-2 border-[#bdb093] bg-[#e8dcc0] shadow-[0_4px_12px_rgba(0,0,0,0.1)] shrink-0"
+        >
+            <img [src]="data.image" [alt]="data.title" class="w-full h-full object-cover" />
+        </div>
+        <div class="flex flex-col gap-2 justify-center h-24">
+            <h3 class="text-lg md:text-[22px] font-bold text-[#1c1a16] leading-tight">{{ data.title }}</h3>
+            <div class="flex items-center gap-2">
+                <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-7 w-7 object-contain" />
+                <span class="text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
+                @if (data.currency === "rubles") {
+                    <span class="text-[18px] text-[#5c554a]">руб.</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Term selector -->
+    @if (data.monthPrice && data.seasonPrice) {
+        <div class="flex flex-col gap-3">
+            <label class="text-[18px] font-bold uppercase tracking-wide text-[#5c554a]">Срок</label>
+            <div class="flex gap-3">
+                <button
+                    type="button"
+                    (click)="selectedTerm.set('month')"
+                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-3 text-[18px] font-bold transition-colors duration-200 cursor-pointer"
+                    [class.border-lh-accent]="selectedTerm() === 'month'"
+                    [class.bg-lh-accent]="selectedTerm() === 'month'"
+                    [class.text-white]="selectedTerm() === 'month'"
+                    [class.border-[#c4b89e]]="selectedTerm() !== 'month'"
+                    [class.bg-[#d8cdb3]]="selectedTerm() !== 'month'"
+                    [class.text-[#2a2722]]="selectedTerm() !== 'month'"
+                    [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'month'"
+                >
+                    <tui-icon icon="@tui.calendar" class="size-5!" />
+                    1 месяц
+                </button>
+                <button
+                    type="button"
+                    (click)="selectedTerm.set('season')"
+                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-3 text-[18px] font-bold transition-colors duration-200 cursor-pointer"
+                    [class.border-lh-accent]="selectedTerm() === 'season'"
+                    [class.bg-lh-accent]="selectedTerm() === 'season'"
+                    [class.text-white]="selectedTerm() === 'season'"
+                    [class.border-[#c4b89e]]="selectedTerm() !== 'season'"
+                    [class.bg-[#d8cdb3]]="selectedTerm() !== 'season'"
+                    [class.text-[#2a2722]]="selectedTerm() !== 'season'"
+                    [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'season'"
+                >
+                    <tui-icon icon="@tui.infinity" class="size-5!" />
+                    Навсегда
+                </button>
+            </div>
+        </div>
+    }
+
+    <!-- Payment info -->
+    <div class="flex flex-col gap-4 bg-[#d8cdb3] rounded-xl p-5 border border-[#c4b89e]">
+        <div class="flex items-center justify-between">
+            <span class="text-[18px] font-bold text-[#1c1a16]">К оплате</span>
+            <div class="flex items-center gap-2">
+                <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-6 w-6 object-contain" />
+                <span class="text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
+            </div>
+        </div>
+
+        <div class="h-px bg-[#b8aa8e]"></div>
+
+        <p class="text-[18px] leading-relaxed text-[#2a2722]">
+            При подтверждении с вас спишут
+            <span class="font-bold text-lh-accent">{{ activePrice }}</span>
+            осколков, а в течение суток с вами свяжутся и выдадут товар на сервере.
+        </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-4 pt-2">
+        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-[18px]">Отмена</button>
+        <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-[18px]">Приобрести</button>
+    </div>
+</div>

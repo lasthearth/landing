@@ -26,7 +26,7 @@ import { environment } from '@core/config/environments/environment';
     standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
-    imports: [CommonModule, TuiPulse, TuiIcon, SettlementTagComponent],
+    imports: [CommonModule, TuiPulse, TuiIcon],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent implements OnInit {
@@ -57,7 +57,7 @@ export class SettlementCardComponent implements OnInit {
     /**
      * Лидер поселения
      */
-    protected leader!: IPlayer;
+    protected leader: IPlayer | null = null;
 
     cdr = inject(ChangeDetectorRef);
 
@@ -67,14 +67,26 @@ export class SettlementCardComponent implements OnInit {
     protected users: IPlayer[] = [];
 
     /**
+     * Количество онлайн-участников селения.
+     */
+    protected onlineCount: number = 0;
+
+    /**
      * @inheritdoc
      */
     public ngOnInit(): void {
+        if (!this.userService.userId) {
+            return;
+        }
+
         this.userService
             .getPlayer$(this.data().leader.user_id)
             .pipe(
                 tap((u) => {
                     this.leader = u;
+                    if (u?.is_online) {
+                        this.onlineCount++;
+                    }
                     this.cdr.detectChanges();
                 })
             )
@@ -86,6 +98,9 @@ export class SettlementCardComponent implements OnInit {
                 .pipe(
                     tap((u) => {
                         this.users.push(u);
+                        if (u?.is_online) {
+                            this.onlineCount++;
+                        }
                         this.cdr.detectChanges();
                     })
                 )
@@ -101,7 +116,7 @@ export class SettlementCardComponent implements OnInit {
      * 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция'
      */
     protected getSettlementTypeByKey(
-        key: string | undefined
+        key: string | number | undefined
     ): 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция' {
         return getSettlementTypeByKey(key);
     }
@@ -109,7 +124,7 @@ export class SettlementCardComponent implements OnInit {
     protected openSetTagsDialog() {
         this.dialogs
             .open(new PolymorpheusComponent(SetTagsComponent), {
-                size: 'm',
+                size: 'auto',
                 data: { settlementId: this.data().id, settlementName: this.data().name, tagsIds: this.data().tags },
             })
             .subscribe();
@@ -118,7 +133,7 @@ export class SettlementCardComponent implements OnInit {
     protected openDetails() {
         this.dialogs
             .open(new PolymorpheusComponent(SettlementDetailedComponent), {
-                size: 'l',
+                size: 'auto',
                 data: { settlement: this.data() },
             })
             .subscribe();

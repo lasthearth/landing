@@ -4,7 +4,7 @@
     </button>
     <tui-carousel [itemsCount]="3" [(index)]="carouselIndex">
         @for (item of items(); track $index) {
-            <div *tuiItem (click)="selectedPrivilege.emit(item)">
+            <div *tuiItem (click)="selectedPrivilege.emit(item)" class="cursor-pointer">
                 <ng-container *ngTemplateOutlet="itemTemplate(); context: { $implicit: item }"></ng-container>
             </div>
         }

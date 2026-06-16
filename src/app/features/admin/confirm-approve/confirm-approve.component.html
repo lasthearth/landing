@@ -1,17 +1,19 @@
-<div class="flex flex-col gap-2">
-    <p class="text-4xl">Вы уверены?</p>
-    <div class="flex gap-4 justify-end">
-        <button
-            (click)="context.$implicit.complete()"
-            class="text-white text-sm font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active"
+<div class="lh-dialog-card">
+    <div class="flex items-center gap-4">
+        <div
+            class="flex items-center justify-center size-12 rounded-full bg-lh-accent/10 border border-lh-accent/20 shrink-0"
         >
-            ЕЩЕ ПОДУМАТЬ
+            <tui-icon icon="@tui.check" class="size-6! text-lh-accent" />
+        </div>
+        <p class="lh-dialog-title">Подтвердить одобрение?</p>
+    </div>
+
+    <div class="lh-dialog-actions">
+        <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
+            Отмена
         </button>
-        <button
-            (click)="confirmApprove()"
-            class="text-white text-sm font-bold cursor-pointer mt-2 self-end bg-lh-success rounded-lg py-2.5 px-4 hover:bg-lh-success-hover active:bg-lh-success-active"
-        >
-            ОДОБРИТЬ
+        <button type="button" (click)="confirmApprove()" class="lh-dialog-button lh-dialog-button-primary">
+            Одобрить
         </button>
     </div>
 </div>

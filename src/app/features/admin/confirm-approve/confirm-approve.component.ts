@@ -1,6 +1,6 @@
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
-import { TuiDialogContext } from '@taiga-ui/core';
+import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VerificationService } from '@features/verification';
 import { SettlementService } from '@entities/settlement';
@@ -13,7 +13,9 @@ import { RequestStatusService } from '@core/services/request-status.service';
     standalone: true,
     selector: 'app-confirm-approve',
     templateUrl: './confirm-approve.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [TuiIcon],
 })
 export class ConfirmApproveComponent {
     /**

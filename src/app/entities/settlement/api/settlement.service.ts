@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { map, Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { ICreateSettlement } from '../model/i-create-settlement';
 import { IRequestSettlement } from '../model/i-request-settlement';
 import { ISettlement } from '../model/i-settlement';
 import { ISettlementInvitation } from '../model/i-settlement-invitation';
+import { IUpdateSettlementRequest } from '../model/i-update-settlement';
 import { Tag } from '../model/tag';
 
 /**
@@ -85,13 +86,14 @@ export class SettlementService {
      * Получает информацию о поселении пользователя.
      *
      * @param userId Идентификатор пользователя.
+     * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
      * @returns Observable с данными поселения.
      */
-    public getSettlementInfo(userId: string): Observable<ISettlement> {
+    public getSettlementInfo(userId: string, context?: HttpContext): Observable<ISettlement> {
         return this.http
             .get<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/users/${userId}/settlements`)
+            }>(`${this.baseUrl}/users/${userId}/settlements`, { context })
             .pipe(map((data) => data.settlement));
     }
 
@@ -119,6 +121,26 @@ export class SettlementService {
             .get<{
                 settlement: ISettlement;
             }>(`${this.baseUrl}/settlements/${settlementId}`)
+            .pipe(map((data) => data.settlement));
+    }
+
+    /**
+     * Обновляет данные поселения.
+     *
+     * Доступно только лидеру поселения.
+     *
+     * @param settlementId Идентификатор поселения.
+     * @param request Данные для обновления.
+     * @returns Observable с обновлённым поселением.
+     */
+    public updateSettlement$(
+        settlementId: string,
+        request: IUpdateSettlementRequest
+    ): Observable<ISettlement> {
+        return this.http
+            .patch<{
+                settlement: ISettlement;
+            }>(`${this.baseUrl}/settlements/${settlementId}`, request)
             .pipe(map((data) => data.settlement));
     }
 
@@ -234,13 +256,23 @@ export class SettlementService {
      * @param key Ключ типа поселения.
      * @returns Локализованное название.
      */
-    public getSettlementTypeByKey(key: string | undefined) {
+    public getSettlementTypeByKey(key: string | number | undefined) {
         switch (key) {
+            case 1:
+            case 'CITY':
+                return 'Город';
+            case 2:
+            case 'FORTRESS':
+                return 'Крепость';
+            case 3:
+            case 'CAPITAL':
+                return 'Столица';
+            case 0:
             case 'CAMP':
             default:
                 return 'Лагерь';
-            }
         }
+    }
 
     /**
      * Хранилище системных тегов поселений.

@@ -1,0 +1,146 @@
+<div class="flex flex-col gap-6 max-w-4xl mx-auto w-full">
+    @if (!selectedPlayer()) {
+        <div class="flex flex-col gap-3">
+            <p class="text-xl font-semibold text-lh-primary">Поиск игрока</p>
+            <lh-input
+                type="input"
+                [formControl]="searchControl"
+                placeholder="Введите ник (от 2 символов)..."
+                icon="@tui.search"
+            />
+
+            @if (searchResults$ | async; as result) {
+                <div
+                    class="flex flex-col gap-1 max-h-72 overflow-y-auto hide-scrollbar rounded-xl border border-lh-primary-2 bg-lh-primary-2/10 backdrop-blur-sm p-2 shadow-lg"
+                >
+                    @for (user of result.users; track user.user_id) {
+                        <div
+                            class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-lh-primary-2/30 transition-colors"
+                            (click)="selectPlayer(user)"
+                        >
+                            @if (user.avatar?.original) {
+                                <tui-avatar size="s" [src]="user.avatar.original" />
+                            } @else {
+                                <tui-avatar size="s" src="/default-avatar.png" />
+                            }
+                            <span class="text-lh-primary font-medium">{{ user.user_game_name }}</span>
+                        </div>
+                    } @empty {
+                        <span class="text-lh-primary/50 p-3 text-center">Ничего не найдено</span>
+                    }
+                </div>
+            }
+        </div>
+    } @else {
+        <div class="flex flex-col gap-6">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2">
+                <div class="flex items-center gap-4">
+                    @if (selectedPlayer()?.avatar) {
+                        <tui-avatar size="m" [src]="selectedPlayer()!.avatar" />
+                    } @else {
+                        <tui-avatar size="m" src="/default-avatar.png" />
+                    }
+                    <div class="flex flex-col">
+                        <span class="text-xl font-bold text-lh-primary">{{ selectedPlayer()?.playerName }}</span>
+                        <span class="text-base text-lh-primary/60 font-mono">{{ selectedPlayer()?.playerId }}</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex flex-col items-end">
+                        <span class="text-base text-lh-primary/60">Баланс</span>
+                        <span class="text-xl font-bold text-lh-accent inline-flex items-center gap-1">
+                            {{ playerBalance() ?? '—' }}
+                            <img src="/splinter-of-spark.png" alt="Осколок" class="h-5 w-5 object-contain" />
+                        </span>
+                    </div>
+                    <button
+                        type="button"
+                        (click)="clearPlayer()"
+                        class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors"
+                    >
+                        <tui-icon icon="@tui.x" />
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <p class="text-xl font-semibold text-lh-primary">Сумма операции</p>
+                <lh-input type="inputNumber" placeholder="Введите сумму..." [formControl]="amountControl" />
+                <lh-input type="textarea" placeholder="Комментарий (необязательно)..." [formControl]="commentControl" />
+                <div class="flex gap-4 mt-2">
+                    <button
+                        type="button"
+                        [disabled]="amountControl.invalid || isLoading()"
+                        (click)="addCoins()"
+                        class="flex-1 py-3 px-4 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white font-bold uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                    >
+                        @if (isLoading()) {
+                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                        }
+                        Начислить
+                    </button>
+                    <button
+                        type="button"
+                        [disabled]="amountControl.invalid || isLoading()"
+                        (click)="deductCoins()"
+                        class="flex-1 py-3 px-4 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                    >
+                        @if (isLoading()) {
+                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                        }
+                        Списать
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <p class="text-xl font-semibold text-lh-primary">История операций</p>
+                @if (transactions(); as txs) {
+                    @if (txs.length > 0) {
+                        <div class="overflow-x-auto rounded-xl border border-lh-primary-2">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-lh-primary-2/20 text-lh-primary font-semibold uppercase text-base">
+                                    <tr>
+                                        <th class="p-4">Дата</th>
+                                        <th class="p-4">Тип</th>
+                                        <th class="p-4">Сумма</th>
+                                        <th class="p-4">Причина</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (tx of txs; track tx.id) {
+                                        <tr
+                                            class="border-t border-lh-primary-2/10 hover:bg-lh-primary-2/5 transition-colors"
+                                        >
+                                            <td class="p-4 text-lh-primary whitespace-nowrap text-base">
+                                                {{ tx.formattedDate }}
+                                            </td>
+                                            <td class="p-4 text-lh-primary text-base">
+                                                {{ formatTransactionType(tx.type) }}
+                                            </td>
+                                            <td
+                                                class="p-4 font-bold whitespace-nowrap text-base"
+                                                [class.text-green-400]="tx.type === 'CREDIT'"
+                                                [class.text-red-400]="tx.type === 'DEBIT'"
+                                            >
+                                                {{ tx.type === "CREDIT" ? "+" : "-" }}{{ tx.amount }}
+                                            </td>
+                                            <td class="p-4 text-lh-primary/70 text-base">{{ tx.reason }}</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    } @else {
+                        <p
+                            class="text-lh-primary/50 text-center py-8 bg-lh-primary-2/5 rounded-xl border border-dashed border-lh-primary-2"
+                        >
+                            История операций пуста
+                        </p>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>

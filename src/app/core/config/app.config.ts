@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { buildAngularAuthConfig } from '@logto/js';
-import { provideAuth } from 'angular-auth-oidc-client';
+import { LogLevel, provideAuth } from 'angular-auth-oidc-client';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideEventPlugins } from '@taiga-ui/event-plugins';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -37,18 +37,35 @@ function getConfig() {
             'tags:create',
             'tags:delete',
             'tags:manage',
-            'donate:manage',
+            'donate:coins:add',
+            'donate:coins:deduct',
+            'donate:shop:create',
+            'donate:shop:update',
+            'donate:shop:delete',
+            'donate:purchase:refund',
+            'donate:transaction:list',
+            'donate:purchase:list',
+            'donate:purchase:issue',
+            'donate:wallet:read',
+            'kit:assign',
+            'kit:list',
+            'kit:read',
             'hungergames:match:record',
             'hungergames:season:reset',
             'hungergames:season:create',
             'news:create',
             'news:delete',
+            'offline_access',
         ],
         resource: 'https://api.lasthearth.ru',
     });
 
     config.ignoreNonceAfterRefresh = true;
     config.disableIatOffsetValidation = true;
+    config.silentRenew = true;
+    config.useRefreshToken = true;
+    config.renewTimeBeforeTokenExpiresInSeconds = 120;
+    config.logLevel = environment.production ? LogLevel.Warn : LogLevel.Debug;
 
     return config;
 }

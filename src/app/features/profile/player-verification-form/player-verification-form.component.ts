@@ -2,16 +2,16 @@ import { RequestStatusService } from '@core/services/request-status.service';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { TuiDialogContext, TuiError, TuiLabel, TuiTextfield } from '@taiga-ui/core';
+import { TuiDialogContext, TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { TuiInputModule, TuiTextareaModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { RuleQuestionApiService } from '@entities/rule-question';
 import { VerificationService } from '@features/verification';
 import { filter, Observable, Subject, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { IVerifyData } from '@features/verification';
 import { UserService } from '@entities/user';
-import { TuiTextarea } from '@taiga-ui/kit';
+
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IVerificationQuestion } from '@entities/rule-question';
 
@@ -22,16 +22,12 @@ import { IVerificationQuestion } from '@entities/rule-question';
         TuiError,
         ReactiveFormsModule,
         FormsModule,
-        TuiTextareaModule,
-        TuiInputModule,
         TuiFieldErrorPipe,
         AsyncPipe,
-        TuiLabel,
-        TuiTextfieldControllerModule,
-        TuiTextarea,
-        TuiTextfield,
+        LHInputComponent,
     ],
     templateUrl: './player-verification-form.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerVerificationFormComponent {
@@ -51,6 +47,8 @@ export class PlayerVerificationFormComponent {
         answer4: new FormControl<string | null>(null, [Validators.required]),
         question5: new FormControl<string | null>(null, [Validators.required]),
         answer5: new FormControl<string | null>(null, [Validators.required]),
+        sourceQuestion: new FormControl<string | null>(null),
+        sourceAnswer: new FormControl<string | null>(null, [Validators.required]),
     });
 
     /**
@@ -80,10 +78,11 @@ export class PlayerVerificationFormComponent {
             this.form.controls.question3.setValue(questions[2].question);
             this.form.controls.question4.setValue(questions[3].question);
             this.form.controls.question5.setValue(questions[4].question);
+            this.form.controls.sourceQuestion.setValue('Как вы узнали о нас?');
         })
     );
 
-    private readonly context: TuiDialogContext = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
+    protected readonly context: TuiDialogContext = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
 
     /**
      * Ссылка уничтожения на компонент.
@@ -127,6 +126,10 @@ export class PlayerVerificationFormComponent {
                             {
                                 question: this.form.controls.question5.value,
                                 answer: this.form.controls.answer5.value,
+                            },
+                            {
+                                question: this.form.controls.sourceQuestion.value,
+                                answer: this.form.controls.sourceAnswer.value,
                             },
                         ],
                     } as IVerifyData;

@@ -11,9 +11,9 @@ export class SettlementTagComponent {
     uppercase = input<boolean>(true);
 
     private readonly colorMap: Record<TagKey, string> = {
-        east: 'bg-lh-tag-coral text-white',
-        west: 'bg-lh-tag-cyan text-white',
-        suzerain: 'bg-lh-tag-purple text-white',
+        east: 'bg-lh-tag-coral-bg text-lh-tag-coral',
+        west: 'bg-lh-tag-cyan-bg text-lh-tag-cyan',
+        suzerain: 'bg-lh-tag-purple-bg text-lh-tag-purple',
     };
 
     protected readonly tagClasses = computed(() => {

@@ -1,0 +1,11 @@
+/
+/home
+/rules
+/faq
+/market
+/settlements
+/start-game
+/privacy-policy
+/public-offer
+/unauthorized
+/404

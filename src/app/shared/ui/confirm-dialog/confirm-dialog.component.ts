@@ -27,6 +27,7 @@ export interface ConfirmDialogData {
     standalone: true,
     selector: 'app-confirm-dialog',
     templateUrl: './confirm-dialog.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmDialogComponent {

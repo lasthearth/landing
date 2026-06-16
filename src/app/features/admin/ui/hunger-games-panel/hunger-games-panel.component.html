@@ -1,0 +1,367 @@
+<div class="flex flex-col gap-10 max-w-5xl mx-auto w-full">
+    <!-- Сезон -->
+    <div class="flex flex-col gap-6">
+        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Текущий сезон</h2>
+
+        @if (isLoading()) {
+            <app-admin-season-skeleton />
+        } @else if (currentSeason(); as season) {
+            <div
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+            >
+                <div class="flex flex-col gap-4">
+                    <span class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] leading-none">Сезон {{ season.number }}</span>
+                    <div class="flex flex-col gap-2">
+                        <span class="text-[18px] text-[#5c554a]">
+                            Начало: <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedStartedAt }}</span>
+                        </span>
+                        @if (!season.isActive) {
+                            <span class="text-[18px] text-[#5c554a]">
+                                Окончание: <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedEndedAt }}</span>
+                            </span>
+                            <span class="text-[23px] font-semibold text-lh-danger">Сезон завершён</span>
+                        } @else {
+                            <span class="text-[23px] font-semibold text-lh-success">Сезон активен</span>
+                        }
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        type="button"
+                        [disabled]="isSeasonActionLoading()"
+                        (click)="createSeason()"
+                        class="py-2 px-4 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                        @if (isSeasonActionLoading()) {
+                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                        }
+                        <tui-icon icon="@tui.plus" class="!text-[16px]" />
+                        Создать сезон
+                    </button>
+                    <button
+                        type="button"
+                        [disabled]="isSeasonActionLoading() || !season.isActive"
+                        (click)="resetSeason()"
+                        class="py-2 px-4 rounded-xl border-2 border-lh-danger text-lh-danger bg-transparent hover:bg-lh-danger/15 font-bold uppercase transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2 shadow-sm"
+                    >
+                        @if (isSeasonActionLoading()) {
+                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                        }
+                        <tui-icon icon="@tui.rotate-ccw" class="!text-[16px]" />
+                        Завершить
+                    </button>
+                </div>
+            </div>
+
+            <!-- Настройка наград (только для активного сезона) -->
+            @if (season.isActive) {
+                <div
+                    class="flex flex-col gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                >
+                    <div class="flex items-center gap-2">
+                        <tui-icon icon="@tui.gift" class="size-5! text-lh-accent" />
+                        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Награды за сезон</p>
+                    </div>
+                    <p class="text-[18px] leading-[28px] text-[#5c554a]">
+                        При завершении сезона топ-игроки получают осколки искры.
+                        Укажите место и сумму награды для каждого призового места.
+                        Только записанные награды с заполненной суммой будут начислены.
+                    </p>
+
+                    @if (seasonRewards(); as rewards) {
+                        <div class="flex flex-col gap-3">
+                            <div class="grid grid-cols-[auto_1fr_auto] gap-2 text-[18px] text-[#5c554a] uppercase font-semibold px-2">
+                                <span class="text-center w-16">Место</span>
+                                <span>Осколков</span>
+                                <span class="w-10"></span>
+                            </div>
+                            @for (reward of rewards; track $index; let idx = $index) {
+                                <div
+                                    class="grid grid-cols-[auto_1fr_auto] gap-2 items-center p-2 rounded-lg bg-[#3f3c34]/5 border border-[#bdb093]/60"
+                                >
+                                    <div class="w-16 text-center">
+                                        <lh-input
+                                            type="inputNumber"
+                                            [ngModel]="reward.rank"
+                                            (ngModelChange)="updateRewardRank(idx, $event)"
+                                        />
+                                    </div>
+                                    <lh-input
+                                        type="inputNumber"
+                                        [ngModel]="reward.coins"
+                                        (ngModelChange)="updateRewardCoins(idx, $event)"
+                                        placeholder="Сумма в осколках"
+                                    />
+                                    <button
+                                        type="button"
+                                        (click)="removeReward(idx)"
+                                        class="p-2 rounded-lg hover:bg-lh-danger/15 text-lh-danger transition-colors"
+                                        title="Удалить"
+                                    >
+                                        <tui-icon icon="@tui.trash-2" class="!text-[16px]" />
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (rewardsValidationError(); as error) {
+                        <p class="text-lh-danger text-[18px] font-medium">{{ error }}</p>
+                    }
+
+                    <button
+                        type="button"
+                        (click)="addReward()"
+                        class="self-start py-2 px-4 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer flex items-center gap-2 text-[18px]"
+                    >
+                        <tui-icon icon="@tui.plus" class="!text-base" />
+                        Добавить награду
+                    </button>
+                </div>
+            }
+        } @else {
+            <div
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+            >
+                <span class="text-[23px] text-[#5c554a]">Нет активного сезона</span>
+                <button
+                    type="button"
+                    [disabled]="isSeasonActionLoading()"
+                    (click)="createSeason()"
+                    class="py-2 px-4 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                    @if (isSeasonActionLoading()) {
+                        <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                    }
+                    <tui-icon icon="@tui.plus" class="!text-[16px]" />
+                    Создать сезон
+                </button>
+            </div>
+        }
+    </div>
+
+    <!-- Запись матча -->
+    <div class="flex flex-col gap-6">
+        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Запись матча</h2>
+
+        <div class="flex flex-col gap-5 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+            <!-- Поиск игрока -->
+            <div class="flex flex-col gap-4">
+                <label class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Добавить участника</label>
+                <lh-input
+                    type="input"
+                    [formControl]="searchControl"
+                    placeholder="Введите ник (от 2 символов)..."
+                    icon="@tui.search"
+                />
+
+                @if (searchResults(); as users) {
+                    @if (users.length > 0) {
+                        <div
+                            class="flex flex-col gap-1 max-h-48 overflow-y-auto hide-scrollbar rounded-xl border border-[#a89a7e] bg-[#e2d7bb] p-2 shadow-lg"
+                        >
+                            @for (user of users; track user.user_id) {
+                                <div
+                                    class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-[#d8cca8] transition-colors"
+                                    (click)="addPlayer(user)"
+                                >
+                                    @if (user.avatar?.original) {
+                                        <tui-avatar size="s" [src]="user.avatar.original" />
+                                    } @else {
+                                        <tui-avatar size="s" src="/default-avatar.png" />
+                                    }
+                                    <span class="text-[23px] font-medium text-[#2a2722]">{{ user.user_game_name }}</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Список участников -->
+            @if (matchPlayers(); as players) {
+                @if (players.length > 0) {
+                    <div class="flex flex-col gap-3">
+                        <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-[18px] text-[#5c554a] uppercase font-semibold px-2">
+                            <span>Игрок</span>
+                            <span class="text-center">Место</span>
+                            <span class="text-center">Убийства</span>
+                            <span></span>
+                        </div>
+                        @for (player of players; track player.playerId; let idx = $index) {
+                            <div
+                                class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center p-2 rounded-lg bg-[#e2d7bb]/30 border border-[#a89a7e]/50"
+                            >
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <span class="text-[18px] font-medium truncate text-[#2a2722]">{{ player.playerName }}</span>
+                                </div>
+                                <div class="w-16 text-center">
+                                    <lh-input
+                                        type="inputNumber"
+                                        [ngModel]="player.place"
+                                        (ngModelChange)="updatePlace(idx, $event)"
+                                    />
+                                </div>
+                                <div class="w-20 text-center">
+                                    <lh-input
+                                        type="inputNumber"
+                                        [ngModel]="player.kills"
+                                        (ngModelChange)="updateKills(idx, $event)"
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    (click)="removePlayer(idx)"
+                                    class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
+                                    title="Удалить"
+                                >
+                                    <tui-icon icon="@tui.trash-2" class="!text-[18px]" />
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+
+            @if (matchValidationError(); as error) {
+                <p class="text-lh-danger text-[18px] font-medium">{{ error }}</p>
+            }
+
+            <button
+                type="button"
+                [disabled]="matchPlayers().length < 2 || isMatchLoading()"
+                (click)="recordMatch()"
+                class="self-start py-3 px-6 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+                @if (isMatchLoading()) {
+                    <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                }
+                Записать результат
+            </button>
+        </div>
+    </div>
+
+    <!-- Лидерборд -->
+    <div class="flex flex-col gap-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Лидерборд</h2>
+            <div class="min-w-[220px]">
+                <lh-input
+                    type="select"
+                    [items]="seasonOptions()"
+                    [displayWith]="displaySeason"
+                    [formControl]="seasonSelectControl"
+                    placeholder="Текущий сезон"
+                />
+            </div>
+        </div>
+
+        @if (selectedSeasonId(); as seasonId) {
+            <!-- Архивный сезон -->
+            @if (isLeaderboardLoading()) {
+                <app-admin-table-skeleton [columns]="6" [rows]="5" />
+            } @else if (archiveLeaderboard(); as list) {
+                @if (list.length > 0) {
+                    <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                        <table class="w-full text-left border-collapse text-[18px]">
+                            <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
+                                <tr>
+                                    <th class="p-4">#</th>
+                                    <th class="p-4">Игрок</th>
+                                    <th class="p-4 text-center">ELO</th>
+                                    <th class="p-4 text-center">Победы</th>
+                                    <th class="p-4 text-center">Убийства</th>
+                                    <th class="p-4 text-center">Награда</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (entry of list; track entry.playerId; let idx = $index) {
+                                    <tr
+                                        class="border-t border-[#bdb093] transition-colors"
+                                        [class.bg-[#d4af37]/10]="entry.rank === 1"
+                                        [class.bg-[#c0c0c0]/10]="entry.rank === 2"
+                                        [class.bg-[#cd7f32]/10]="entry.rank === 3"
+                                        [class.bg-[#f5eedd]]="entry.rank && entry.rank > 3 && idx % 2 === 0"
+                                        [class.bg-[#e2d7bb]]="entry.rank && entry.rank > 3 && idx % 2 === 1"
+                                        [class.hover:bg-[#d8cca8]]="entry.rank && entry.rank > 3"
+                                    >
+                                        <td class="p-4 font-bold"
+                                            [class.text-[#b8860b]]="entry.rank === 1"
+                                            [class.text-[#a0a0a0]]="entry.rank === 2"
+                                            [class.text-[#b87333]]="entry.rank === 3"
+                                            [class.text-lh-primary]="!entry.rank || entry.rank > 3"
+                                        >
+                                            {{ entry.rank ?? idx + 1 }}
+                                        </td>
+                                        <td class="p-4 text-lh-primary font-medium">{{ entry.playerName }}</td>
+                                        <td class="p-4 text-lh-accent text-center font-bold">{{ entry.elo }}</td>
+                                        <td class="p-4 text-lh-primary text-center">{{ entry.wins }}</td>
+                                        <td class="p-4 text-lh-primary text-center">{{ entry.kills }}</td>
+                                        <td class="p-4 text-lh-accent text-center font-bold">
+                                            @if (entry.rewardCoins) {
+                                                {{ entry.rewardCoins }}
+                                            } @else {
+                                                —
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                } @else {
+                    <p
+                        class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
+                    >
+                        Лидерборд пуст
+                    </p>
+                }
+            }
+        } @else {
+            <!-- Текущий сезон -->
+            @if (isLeaderboardLoading()) {
+                <app-admin-table-skeleton [columns]="5" [rows]="5" />
+            } @else if (currentLeaderboard(); as list) {
+                @if (list.length > 0) {
+                    <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                        <table class="w-full text-left border-collapse text-[18px]">
+                            <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
+                                <tr>
+                                    <th class="p-4">#</th>
+                                    <th class="p-4">Игрок</th>
+                                    <th class="p-4 text-center">Смерти</th>
+                                    <th class="p-4 text-center">Убийства</th>
+                                    <th class="p-4 text-center">Часы</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (entry of list; track entry.userId; let idx = $index) {
+                                    <tr
+                                        class="border-t border-[#bdb093] transition-colors"
+                                        [class.bg-[#f5eedd]]="idx % 2 === 0"
+                                        [class.bg-[#e2d7bb]]="idx % 2 === 1"
+                                        [class.hover:bg-[#d8cca8]]="true"
+                                    >
+                                        <td class="p-4 font-bold text-lh-primary">
+                                            {{ idx + 1 }}
+                                        </td>
+                                        <td class="p-4 text-lh-primary font-medium">{{ entry.name }}</td>
+                                        <td class="p-4 text-lh-primary text-center">{{ entry.deaths }}</td>
+                                        <td class="p-4 text-lh-accent text-center font-bold">{{ entry.kills }}</td>
+                                        <td class="p-4 text-lh-primary text-center">{{ entry.hoursPlayed }}</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                } @else {
+                    <p
+                        class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
+                    >
+                        Лидерборд пуст
+                    </p>
+                }
+            }
+        }
+    </div>
+</div>

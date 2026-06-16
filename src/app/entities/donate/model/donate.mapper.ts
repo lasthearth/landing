@@ -1,4 +1,5 @@
-import { IShopItemDto, IShopItem } from './shop-item.interface';
+import { IShopItemDto, IShopItem, IKitEntryDto, IKitEntry } from './shop-item.interface';
+import { IAbilityItem } from './ability-item.interface';
 import { IPurchaseDto, IPurchase } from './purchase.interface';
 import { ITransactionDto, ITransaction } from './transaction.interface';
 import { IBalanceResponseDto, IBalanceResponse } from './balance-response.interface';
@@ -12,7 +13,7 @@ import { IBalanceResponseDto, IBalanceResponse } from './balance-response.interf
  * @param rawDate Исходная строка даты в формате ISO 8601.
  * @returns Объект Date или `null`.
  */
-function parseDate(rawDate: string | undefined): Date | null {
+export function parseDate(rawDate: string | undefined): Date | null {
     if (!rawDate) {
         return null;
     }
@@ -32,7 +33,7 @@ function parseDate(rawDate: string | undefined): Date | null {
  * @param date Объект Date.
  * @returns Строка в формате "DD.MM.YY - HH:mm".
  */
-function formatDate(date: Date): string {
+export function formatDate(date: Date): string {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = String(date.getFullYear()).slice(-2);
@@ -48,7 +49,7 @@ function formatDate(date: Date): string {
  * @param rawDate Исходная строка даты.
  * @returns Строка в формате "DD.MM.YY - HH:mm" или "—".
  */
-function formatDateOrFallback(rawDate: string | undefined): string {
+export function formatDateOrFallback(rawDate: string | undefined): string {
     const date = parseDate(rawDate);
 
     return date ? formatDate(date) : '—';
@@ -76,6 +77,40 @@ export function mapDtoToShopItem(dto: IShopItemDto): IShopItem {
         updatedAt,
         formattedUpdatedAt: updatedAt ? formatDate(updatedAt) : '—',
         code: dto.code,
+        itemType: dto.item_type,
+        entries: dto.entries?.map(mapDtoToKitEntry),
+        privileges: dto.privileges?.map(mapDtoToAbilityItem),
+        hasDiscount: dto.has_discount,
+        discountPercent: dto.discount_percent,
+        effectivePrice: dto.effective_price,
+    };
+}
+
+/**
+ * Преобразует DTO составной части набора в UI-модель.
+ *
+ * @param dto DTO части набора от API.
+ * @returns UI-модель части набора.
+ */
+export function mapDtoToKitEntry(dto: IKitEntryDto): IKitEntry {
+    return {
+        name: dto.name,
+        description: dto.description,
+        imageUrl: dto.image_url,
+        quantity: dto.quantity,
+    };
+}
+
+/**
+ * Преобразует DTO возможности товара в UI-модель.
+ *
+ * @param dto DTO возможности от API.
+ * @returns UI-модель возможности.
+ */
+export function mapDtoToAbilityItem(dto: IAbilityItem): IAbilityItem {
+    return {
+        icon: dto.icon,
+        text: dto.text,
     };
 }
 
@@ -87,16 +122,20 @@ export function mapDtoToShopItem(dto: IShopItemDto): IShopItem {
  */
 export function mapDtoToPurchase(dto: IPurchaseDto): IPurchase {
     const createdAt = parseDate(dto.created_at);
+    const issuedAt = parseDate(dto.issued_at);
 
     return {
         id: dto.id,
         playerId: dto.player_id,
         itemId: dto.item_id ?? '',
         itemName: dto.item_name ?? '',
-        price: dto.price ?? '',
+        pricePaid: dto.price_paid ?? '',
         status: dto.status ?? '',
         createdAt,
         formattedDate: createdAt ? formatDate(createdAt) : '—',
+        issuedBy: dto.issued_by ?? '',
+        issuedAt,
+        formattedIssuedAt: issuedAt ? formatDate(issuedAt) : '—',
     };
 }
 
@@ -113,7 +152,7 @@ export function mapDtoToTransaction(dto: ITransactionDto): ITransaction {
         id: dto.id,
         playerId: dto.player_id,
         amount: dto.amount,
-        type: dto.type,
+        type: dto.type.toUpperCase(),
         reason: dto.reason,
         purchaseId: dto.purchase_id ?? '',
         createdAt,

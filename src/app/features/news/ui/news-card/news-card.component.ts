@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
+import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 
 /**
  * Компонент карточки новости.
@@ -12,9 +13,15 @@ import { TuiIcon } from '@taiga-ui/core';
     selector: 'app-news-card',
     imports: [TuiIcon],
     templateUrl: './news-card.component.html',
+    styleUrl: './news-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewsCardComponent {
+    /**
+     * Сервис диалогов подтверждения.
+     */
+    private readonly confirmDialog = inject(ConfirmDialogService);
+
     /**
      * Заголовок новости.
      */
@@ -60,31 +67,26 @@ export class NewsCardComponent {
     public readonly delete = output<void>();
 
     /**
-     * Событие открытия новости.
-     *
-     * Вызывается при клике на карточку.
-     * Используется для инкремента просмотров через API.
-     */
-    public readonly open = output<void>();
-
-    /**
      * Обрабатывает клик по кнопке удаления.
      *
-     * Предотвращает всплытие события и эмитит запрос на удаление.
+     * Показывает диалог подтверждения и эмитит запрос на удаление
+     * только после подтверждения пользователя.
      *
      * @param event Событие клика мыши.
      */
     protected onDeleteClick(event: MouseEvent): void {
         event.stopPropagation();
-        this.delete.emit();
+
+        this.confirmDialog
+            .open({
+                title: 'Удалить новость?',
+                text: `Вы уверены, что хотите удалить новость «${this.title()}»? Это действие нельзя отменить.`,
+            })
+            .subscribe((confirmed) => {
+                if (confirmed) {
+                    this.delete.emit();
+                }
+            });
     }
 
-    /**
-     * Обрабатывает клик по карточке новости.
-     *
-     * Эмитит событие открытия для инкремента просмотра.
-     */
-    protected onCardClick(): void {
-        this.open.emit();
-    }
 }

@@ -1,7 +1,8 @@
 <div class="relative">
     <button
         (click)="navigate(1)"
-        class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] transition-all duration-200 rounded-xl backdrop-blur-md shadow-2xl"
+        class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] hover:bg-[#c35a17] transition-all duration-200 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        aria-label="Следующий слайд"
     >
         <tui-icon icon="@tui.chevron-right" class="text-white" />
     </button>
@@ -18,25 +19,74 @@
                 <div
                     class="absolute flex flex-col justify-start left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white w-[90%] px-4 py-6"
                 >
-                    <h2 class="text-4xl lg:text-8xl font-bold mb-4 uppercase !text-shadow-lg">{{ item.header }}</h2>
-                    <p [innerHTML]="item.body" class="text-2xl lg:text-4xl font-medium !text-shadow-lg"></p>
+                    <h2 class="text-2xl md:text-4xl lg:text-8xl font-bold mb-4 uppercase !text-shadow-lg">
+                        {{ item.header }}
+                    </h2>
+                    <p [innerHTML]="item.body" class="text-lg md:text-2xl lg:text-4xl font-medium !text-shadow-lg"></p>
                 </div>
             </div>
         }
     </tui-carousel>
 
-    <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" class="mt-2" />
+    <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" class="mt-4" />
 
     <button
         (click)="navigate(-1)"
-        class="absolute nav-button hidden md:block size-12 z-40 left-8 cursor-pointer hover:scale-[105%] transition-all duration-200 top-1/2 -translate-y-1/2 rounded-xl backdrop-blur-md shadow-2xl"
+        class="absolute nav-button hidden md:block size-12 z-40 left-8 cursor-pointer hover:scale-[105%] hover:bg-[#c35a17] transition-all duration-200 top-1/2 -translate-y-1/2 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        aria-label="Предыдущий слайд"
     >
         <tui-icon icon="@tui.chevron-left" class="text-white" />
     </button>
 </div>
 
-@if (news().length > 0) {
-    <div class="flex flex-wrap items-center gap-7 pt-0 p-10 pb-4">
+<!-- Быстрые действия -->
+<div class="px-4 md:px-10 py-3">
+    <div
+        class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 rounded-2xl bg-[#d8cdb3] border border-[rgba(51,44,38,0.12)] p-3 md:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.08)]"
+    >
+        @for (action of quickActions; track action.label) {
+            @if (action.external) {
+                <a
+                    [href]="action.route"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex items-center gap-3 rounded-xl bg-[#e8dfc8] hover:bg-[#efe6cf] border border-[rgba(51,44,38,0.08)] px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md !no-underline !border-b-0"
+                >
+                    <span
+                        class="flex items-center justify-center size-10 rounded-lg bg-[#c35a17]/10 text-[#c35a17] group-hover:bg-[#c35a17]/20 transition-colors"
+                    >
+                        <tui-icon [icon]="action.icon" class="!text-xl" />
+                    </span>
+                    <span class="font-bold text-[#2a2722] text-base md:text-lg uppercase tracking-wide">
+                        {{ action.label }}
+                    </span>
+                </a>
+            } @else {
+                <a
+                    [routerLink]="action.route"
+                    class="group flex items-center gap-3 rounded-xl bg-[#e8dfc8] hover:bg-[#efe6cf] border border-[rgba(51,44,38,0.08)] px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md !no-underline !border-b-0"
+                >
+                    <span
+                        class="flex items-center justify-center size-10 rounded-lg bg-[#c35a17]/10 text-[#c35a17] group-hover:bg-[#c35a17]/20 transition-colors"
+                    >
+                        <tui-icon [icon]="action.icon" class="!text-xl" />
+                    </span>
+                    <span class="font-bold text-[#2a2722] text-base md:text-lg uppercase tracking-wide">
+                        {{ action.label }}
+                    </span>
+                </a>
+            }
+        }
+    </div>
+</div>
+
+@if (loading()) {
+    <div class="flex flex-wrap items-center gap-5 pt-0 px-6 pb-3">
+        <app-news-skeleton class="!h-auto w-full" />
+        <app-news-skeleton class="!h-auto w-full" />
+    </div>
+} @else if (news().length > 0) {
+    <div class="flex flex-wrap items-center gap-5 pt-0 px-6 pb-3">
         @for (item of pageNews(); track item.id) {
             <app-news-card
                 [title]="item.title"
@@ -44,10 +94,9 @@
                 [preview]="item.preview"
                 [date]="item.formattedDate"
                 [viewCount]="item.viewCount"
-                [createdBy]="item.createdBy"
+                [createdBy]="isAuthenticated() ? item.createdBy : ''"
                 [canDelete]="isAdmin()"
                 (delete)="deleteNews(item.id)"
-                (open)="openNews(item.id)"
                 class="!h-auto w-full"
             />
         }
@@ -55,7 +104,5 @@
 
     <tui-pagination [index]="pageIndex()" [length]="totalPages()" (indexChange)="goToPage($event)" class="mb-4" />
 } @else {
-    <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
-        Новостей пока нет...
-    </p>
+    <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Новостей пока нет...</p>
 }

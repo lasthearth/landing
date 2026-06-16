@@ -1,4 +1,4 @@
-import { Component, input, output, computed, inject, Provider, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, computed, inject, Provider, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
@@ -24,6 +24,7 @@ export const SECTION_ID_PROVIDER: Provider = {
     templateUrl: './rule-section.component.html',
     styleUrls: ['../../styles/rules.less'],
     providers: [SECTION_ID_PROVIDER],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RuleSectionComponent extends BaseExpandableSection {
     /**
@@ -81,7 +82,9 @@ export class RuleSectionComponent extends BaseExpandableSection {
      * Возвращает CSS класс для заголовка в зависимости от уровня.
      */
     protected readonly titleClass = computed(() => {
-        return this.level() === 0 ? 'rule-section-title' : 'text-2xl/7.5';
+        return this.level() === 0
+            ? 'text-xl md:text-2xl lg:text-[32px] font-bold leading-tight'
+            : 'text-lg md:text-xl lg:text-[26px] font-bold leading-tight';
     });
 
     /**

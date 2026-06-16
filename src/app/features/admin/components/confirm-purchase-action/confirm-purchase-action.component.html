@@ -1,0 +1,20 @@
+<div class="lh-dialog-card">
+    <div class="flex items-center gap-4">
+        <div
+            class="flex items-center justify-center size-12 rounded-full border shrink-0"
+            [class]="iconBg + ' ' + iconBorder"
+        >
+            <tui-icon [icon]="icon" class="size-6!" [class]="iconColor" />
+        </div>
+        <p class="lh-dialog-title">{{ title }}</p>
+    </div>
+
+    <div class="lh-dialog-actions">
+        <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
+            Отмена
+        </button>
+        <button type="button" (click)="confirmAction()" class="lh-dialog-button lh-dialog-button-primary">
+            {{ confirmText }}
+        </button>
+    </div>
+</div>

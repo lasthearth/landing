@@ -1,13 +1,13 @@
-<div class="p-6">
-    <p class="text-2xl/7.5">Придумайте вопрос на знание правил</p>
-    <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2 mt-4">
-        <lh-input formControlName="question" placeholder="Придумайте вопрос..." class="w-full">Вопрос</lh-input>
+<div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+    <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Придумайте вопрос на знание правил</p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-4 mt-6">
+        <lh-input formControlName="question" placeholder="Придумайте вопрос..." />
         <tui-error formControlName="question" [error]="[] | tuiFieldError | async" />
 
         <button
             [disabled]="!form.valid"
             type="submit"
-            class="text-white text-sm! cursor-pointer bg-lh-primary-2 hover:bg-lh-primary-2/50 rounded-lg self-start py-1.5 px-2.5 mt-2 disabled:text-lh-disabled disabled:bg-lh-primary"
+            class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e] self-start disabled:opacity-50 disabled:cursor-not-allowed"
         >
             Создать вопрос
         </button>

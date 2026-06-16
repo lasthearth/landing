@@ -1,0 +1,89 @@
+@let purchases = purchases$() | async;
+
+@if (purchases === null) {
+    <div class="flex justify-center my-8">
+        <tui-loader class="!text-lh-accent" />
+    </div>
+} @else if (!purchases.length) {
+    <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center text-center">
+        Ожидающие выдачи покупки отсутствуют...
+    </p>
+} @else {
+    <div class="flex flex-col gap-4">
+        @for (purchase of purchases; track purchase.id) {
+            <div
+                class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4"
+            >
+                <!-- Заголовок: игрок -->
+                <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
+                    <img
+                        [src]="purchase.playerAvatarUrl || '/default-avatar.png'"
+                        class="size-14 shrink-0 object-cover aspect-square"
+                        alt="Аватар"
+                    />
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-base text-neutral-500 leading-5">Игрок</span>
+                        <span class="text-2xl font-bold text-[#2d201a] truncate">{{ purchase.playerName }}</span>
+                    </div>
+                </div>
+
+                <!-- Информация о покупке -->
+                <div class="flex flex-col gap-3">
+                    <div
+                        class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-2"
+                    >
+                        <div class="flex items-start gap-2">
+                            <tui-icon
+                                icon="@tui.package"
+                                class="size-5! text-lh-accent shrink-0 mt-0.5"
+                            />
+                            <span class="text-lg font-semibold text-[#2d201a] leading-6">{{ purchase.itemName }}</span>
+                        </div>
+                        <div class="flex items-start gap-2 pl-7">
+                            <span class="text-base text-neutral-500 shrink-0 font-medium">Цена:</span>
+                            <span class="text-lg text-[#5c4030] leading-6 break-words">
+                                @if (purchase.discountPercent > 0 && purchase.basePrice) {
+                                    <span class="line-through text-neutral-500 mr-2">{{ purchase.basePrice }}</span>
+                                }
+                                {{ purchase.pricePaid }}
+                            </span>
+                        </div>
+                        @if (purchase.discountPercent > 0) {
+                            <div class="flex items-start gap-2 pl-7">
+                                <span class="text-base text-neutral-500 shrink-0 font-medium">Скидка:</span>
+                                <span class="text-lg text-lh-accent leading-6 break-words">{{ purchase.discountPercent }}%</span>
+                            </div>
+                        }
+                        @if (purchase.comment) {
+                            <div class="flex items-start gap-2 pl-7">
+                                <tui-icon icon="@tui.file-text" class="size-4! text-lh-accent shrink-0 mt-1" />
+                                <span class="text-base text-neutral-500 shrink-0 font-medium">Комментарий:</span>
+                                <span class="text-lg text-[#5c4030] leading-6 break-words">{{ purchase.comment }}</span>
+                            </div>
+                        }
+                        <div class="flex items-start gap-2 pl-7">
+                            <span class="text-base text-neutral-500 shrink-0 font-medium">Дата:</span>
+                            <span class="text-lg text-[#5c4030] leading-6 break-words">{{ purchase.formattedDate }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="flex gap-3 justify-end pt-1">
+                    <button
+                        (click)="refund(purchase)"
+                        class="text-lg font-bold cursor-pointer bg-transparent border border-lh-danger text-lh-danger rounded-xl py-2 px-5 hover:bg-lh-danger/10 transition-colors"
+                    >
+                        Возврат
+                    </button>
+                    <button
+                        (click)="issue(purchase)"
+                        class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-[#e66a1a] transition-colors"
+                    >
+                        Выдать
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}

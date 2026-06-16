@@ -3,19 +3,20 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputE
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
-import { getBase64Files } from '@shared/lib/get-base64-files.function';
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function';
+import { uploadSettlementAttachments } from '@shared/lib/upload-settlement-attachments.function';
 import { SettlementService } from '@entities/settlement';
 import { ICreateSettlement } from '@entities/settlement';
+import { MediaService } from '@entities/media';
 import { fileFields } from './village-form.types';
 import { FileKeyVillage } from './village-form.types';
 import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
-import { Subject, switchMap, Observable, forkJoin, map, tap, finalize } from 'rxjs';
+import { Subject, switchMap, Observable, map, tap, finalize } from 'rxjs';
 import { LHHintComponent } from '@shared/ui/lh-hint/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
-import { TuiError, TuiHintDirective, TuiLoader } from '@taiga-ui/core';
+import { TuiError, TuiLoader } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
 
 /**
@@ -35,7 +36,6 @@ import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.functi
         LHHintComponent,
         TuiLoader,
         TuiError,
-        TuiHintDirective,
         TuiFieldErrorPipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -116,11 +116,16 @@ export class VillageFormComponent {
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
 
+    /**
+     * Сервис загрузки медиафайлов.
+     */
+    private readonly mediaService: MediaService = inject(MediaService);
+
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
     // Подписка на событие отправки формы:
     // 1. Берёт данные формы
-    // 2. Конвертирует файлы в base64
+    // 2. Загружает файлы через MediaService
     // 3. Формирует объект запроса
     // 4. Отправляет его на сервер
     // 5. По завершении вызывает submitEvent.emit()
@@ -132,17 +137,10 @@ export class VillageFormComponent {
                 switchMap(() => {
                     const values = this.form.value;
 
-                    // Собираем массив Observable<string> для всех файлов
-                    const base64Files$: Observable<string | null>[] = getBase64Files(this.fileFields, this.form);
-
-                    // Ждём когда все base64 загрузятся
-                    return forkJoin(base64Files$).pipe(
-                        map((base64Files) => {
-                            const attachments = this.fileFields.map((key, i) => ({
-                                data: base64Files[i] ?? '',
-                                description: this.getLabelForKey(key),
-                            }));
-
+                    return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
+                        this.getLabelForKey(key)
+                    ).pipe(
+                        map((attachments) => {
                             const request: ICreateSettlement = {
                                 type: 'CAMP',
                                 name: values.name ?? '',

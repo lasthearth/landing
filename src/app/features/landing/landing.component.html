@@ -1,17 +1,18 @@
-<div class="xl:overflow-x-hidden">
-    <div class="flex justify-center xl:justify-start items-center xl:ml-[25%] xl:w-full">
-        <div class="main-panel xl:w-[50%] mb-10 size-full !rounded-2xl">
+<main class="xl:overflow-x-clip">
+    @let currentRouteKey = currentRouteKey$ | async;
+    @let isProfilePage = currentRouteKey === 3 || currentRouteKey === 4 || currentRouteKey === 5 || currentRouteKey === 7;
+
+    <div class="flex justify-center items-start xl:w-full">
+        <div class="main-panel xl:w-[60%] mb-10 size-full !rounded-2xl relative">
             <router-outlet />
+
+            @if (isProfilePage) {
+                <div
+                    class="bg-lh-primary-2 flex justify-center p-3 z-20 w-full xl:w-fit fixed xl:absolute bottom-0 xl:bottom-auto xl:bg-transparent xl:block xl:right-0 xl:top-6 xl:translate-x-full xl:ml-10"
+                >
+                    <app-profile-navigation />
+                </div>
+            }
         </div>
-
-        @let currentRouteKey = currentRouteKey$ | async;
-
-        @if (currentRouteKey === 3 || currentRouteKey === 4 || currentRouteKey === 5 || currentRouteKey === 7) {
-            <div
-                class="bg-lh-primary-2 flex justify-center p-3 z-20 w-full xl:w-fit absolute xl:static bottom-0 xl:bg-transparent xl:block xl:ml-2 self-start"
-            >
-                <app-profile-navigation />
-            </div>
-        }
     </div>
-</div>
+</main>

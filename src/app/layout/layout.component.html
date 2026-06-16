@@ -1,6 +1,7 @@
 @let isAuth = userAuth$ | async;
+@let authChecked = isAuthChecked$ | async;
 
-@if (!isAuth) {
+@if (!isAuth && authChecked) {
     <app-welcome
         [class.scroll]="isSetScrollClass"
         (onScroll)="onWelcomeScroll()"
@@ -8,16 +9,22 @@
     />
 }
 
-@if (isWelcomeHide || isAuth) {
+@if (isAuth || isWelcomeHide) {
     <div>
         <div class="flex justify-center">
-            <app-header class="w-full xl:w-[50%]" />
+            <header class="w-full xl:w-[60%]">
+                <app-header />
+            </header>
         </div>
 
-        <router-outlet />
+        <main id="main-content">
+            <router-outlet />
+        </main>
     </div>
 
     <div class="flex justify-center">
-        <app-footer class="w-full xl:w-[50%] main-panel rounded-t-xl! rounded-b-none!" />
+        <footer class="w-full xl:w-[60%] main-panel rounded-t-xl! rounded-b-none!">
+            <app-footer />
+        </footer>
     </div>
 }

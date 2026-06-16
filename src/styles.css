@@ -119,14 +119,30 @@ html body {
     font-optical-sizing: auto;
 }
 
+.almendra-regular {
+    font-family: 'Almendra', serif;
+}
+
+/**
+ * Отключает анимации для пользователей, предпочитающих уменьшенное движение.
+ * Улучшает доступность для людей с вестибулярными нарушениями.
+ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 a {
     cursor: pointer;
     color: var(--color-blue-400);
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
-    border-bottom: 1px;
-    --tw-border-style: dashed;
-    border-style: dashed;
     transition: all 0.1s ease-in-out;
 }
 
@@ -180,6 +196,23 @@ tui-dialog {
     font-family: 'Almendra', serif;
 }
 
+.spark-glow {
+    animation: spark-flicker 3s ease-in-out infinite;
+}
+
+@keyframes spark-flicker {
+    0%,
+    100% {
+        filter: drop-shadow(0 0 2px #ffaa00) drop-shadow(0 0 4px #ff6600);
+        opacity: 1;
+    }
+
+    50% {
+        filter: drop-shadow(0 0 1px #ff8800) drop-shadow(0 0 2px #ff4400);
+        opacity: 0.92;
+    }
+}
+
 tui-pulse {
     color: #ff7920 !important;
 }
@@ -216,8 +249,8 @@ tui-hint {
     background-color: var(--lh-success);
     color: white;
     cursor: pointer;
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
     border-radius: var(--radius-lg);
     align-self: flex-start;
     padding-block: calc(var(--spacing) * 1.5);
@@ -237,8 +270,8 @@ tui-hint {
     background-color: var(--lh-danger);
     color: white;
     cursor: pointer;
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
     border-radius: var(--radius-lg);
     align-self: flex-start;
     padding-block: calc(var(--spacing) * 1.5);
@@ -249,6 +282,37 @@ tui-hint {
         background-color: var(--color-lh-danger-hover);
     }
 }
+
+/**
+ * Вторичная кнопка проекта.
+ * Прозрачный фон + чёткая обводка, при наведении подсвечивается акцентом.
+ */
+.lh-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 2px solid rgba(51, 44, 38, 0.35);
+    color: var(--lh-primary);
+    background-color: transparent;
+    border-radius: var(--radius-xl);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.lh-secondary-button:hover:not(:disabled) {
+    border-color: var(--lh-accent);
+    color: var(--lh-accent);
+    background-color: rgba(255, 121, 32, 0.08);
+}
+
+.lh-secondary-button:disabled,
+.lh-secondary-button[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 tui-pulse.online {
     color: var(--color-lh-online) !important;
 }
@@ -260,4 +324,214 @@ tui-pulse.offline {
     -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
     box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
+}
+
+/**
+ * Глобальный курсор для интерактивных элементов.
+ * Убирает необходимость добавлять cursor-pointer в каждый шаблон.
+ */
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+a,
+input[type='checkbox'],
+input[type='radio'],
+input[type='file'],
+input[type='range'],
+select,
+summary {
+    cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled='true'] {
+    cursor: not-allowed;
+}
+
+/**
+ * Единая карточка диалогового окна.
+ * Используется как корневой контейнер для всех модальных компонентов.
+ */
+.lh-dialog-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 2rem;
+    min-width: auto;
+    max-width: 42rem;
+    background-color: #e2d7bb;
+    border-radius: 1rem;
+    color: #2a2722;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+/**
+ * Заголовок диалога.
+ */
+.lh-dialog-title {
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #1c1a16;
+}
+
+/**
+ * Описательный текст в диалоге.
+ */
+.lh-dialog-text {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #5c554a;
+}
+
+/**
+ * Панель кнопок действий диалога.
+ */
+.lh-dialog-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+/**
+ * Базовая кнопка диалога.
+ */
+.lh-dialog-button {
+    flex: 1 1 0%;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/**
+ * Первичная кнопка диалога.
+ */
+.lh-dialog-button-primary {
+    background-color: var(--lh-accent);
+    color: #ffffff;
+}
+
+.lh-dialog-button-primary:hover {
+    filter: brightness(1.1);
+}
+
+.lh-dialog-button-primary:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/**
+ * Вторичная кнопка диалога.
+ */
+.lh-dialog-button-secondary {
+    background-color: transparent;
+    border: 2px solid #6b6256;
+    color: #6b6256;
+}
+
+.lh-dialog-button-secondary:hover {
+    background-color: rgba(107, 98, 86, 0.1);
+}
+
+/**
+ * Опасная кнопка диалога.
+ */
+.lh-dialog-button-danger {
+    background-color: var(--lh-danger);
+    color: #ffffff;
+}
+
+.lh-dialog-button-danger:hover {
+    filter: brightness(1.1);
+}
+
+.lh-dialog-button-danger:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/**
+ * Информационный блок внутри диалога.
+ */
+.lh-dialog-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #d8cdb3;
+    border: 1px solid #c4b89e;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+}
+
+/**
+ * Кастомный чекбокс в стиле проекта.
+ * Скрывает нативный input и рисует квадрат с пергаментным фоном
+ * и градиентной заливкой в активном состоянии.
+ */
+.lh-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: 1.5rem;
+    border: 2px solid #a89a7e;
+    border-radius: 8px;
+    background-color: rgba(226, 215, 187, 0.4);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.lh-checkbox:checked {
+    background: linear-gradient(135deg, #c35a17, #e07830);
+    border-color: #c35a17;
+}
+
+.lh-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 0.35rem;
+    height: 0.65rem;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.lh-checkbox:focus-visible {
+    outline: 2px solid #c35a17;
+    outline-offset: 2px;
+}
+
+/* Angular CDK drag-and-drop */
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 0.75rem;
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.2),
+        0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    opacity: 0.95;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.25;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-handle {
+    cursor: grab;
+}
+
+.cdk-drag-dragging .cdk-drag-handle {
+    cursor: grabbing;
 }

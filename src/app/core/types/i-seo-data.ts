@@ -41,4 +41,14 @@ export interface ISeoData {
      * Название сайта (опционально).
      */
     siteName?: string;
+
+    /**
+     * URL изображения для Open Graph / Twitter Cards (опционально).
+     */
+    image?: string;
+
+    /**
+     * Alt-текст для изображения Open Graph (опционально).
+     */
+    imageAlt?: string;
 }

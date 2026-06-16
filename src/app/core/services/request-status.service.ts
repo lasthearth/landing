@@ -13,14 +13,48 @@ export class RequestStatusService {
     private readonly alertService: TuiAlertService = inject(TuiAlertService);
 
     /**
+     * Маппинг известных сообщений ошибок бэкенда на русский язык.
+     */
+    private readonly errorMap: Record<string, string> = {
+        'insufficient funds': 'Недостаточно средств',
+        'UNAUTHENTICATED': 'Требуется авторизация',
+        'PERMISSION_DENIED': 'Недостаточно прав',
+        'NOT_FOUND': 'Не найдено',
+        'ALREADY_EXISTS': 'Уже существует',
+        'INVALID_ARGUMENT': 'Неверные данные',
+        'INTERNAL': 'Внутренняя ошибка сервера',
+    };
+
+    /**
+     * Возвращает человекочитаемое сообщение об ошибке.
+     *
+     * @param error HTTP-ошибка.
+     * @param fallback Сообщение по умолчанию.
+     * @returns Локализованное сообщение.
+     */
+    private getErrorMessage(error: HttpErrorResponse, fallback: string): string {
+        const backendMessage = error.error?.message;
+
+        if (backendMessage && this.errorMap[backendMessage]) {
+            return this.errorMap[backendMessage];
+        }
+
+        if (backendMessage) {
+            return backendMessage;
+        }
+
+        return fallback;
+    }
+
+    /**
      *  Обрабатывает ошибку запроса.
      *
-     * @param errorMessage Сообщение ошибки.
+     * @param errorMessage Сообщение ошибки по умолчанию.
      */
     public handleError(errorMessage: string = 'Произошла непредвиденная ошибка.') {
         return catchError((error: HttpErrorResponse) => {
-            this.alertService.open('', { label: errorMessage, appearance: 'negative' }).subscribe();
-            this.alertService.open('', { label: `Код ошибки:${error.error.code}`, appearance: 'negative' }).subscribe();
+            const message = this.getErrorMessage(error, errorMessage);
+            this.alertService.open('', { label: message, appearance: 'negative' }).subscribe();
             return throwError(() => error);
         });
     }

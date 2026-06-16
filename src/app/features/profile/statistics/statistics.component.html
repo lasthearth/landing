@@ -1,19 +1,19 @@
 @let leaderBoard = (leaderBoard$ | async)?.entries;
 
-<p class="text-3xl lg:text-4xl font-bold mb-8">Рейтинг игроков</p>
+<p class="text-2xl md:text-3xl lg:text-4xl font-bold mb-8">Рейтинг игроков</p>
 
 @if (leaderBoard === null) {
-    <tui-loader />
+    <app-statistics-skeleton />
 }
 @if (leaderBoard) {
     <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 mb-16 !font-semibold !w-full content-tabs">
-        <button tuiTab type="button" (click)="getDeaths()" class="text-2xl/7.5 uppercase !font-bold">
+        <button tuiTab type="button" (click)="getDeaths()" class="text-lg md:text-2xl/7.5 uppercase !font-bold">
             {{ isMobile ? "Смерти" : "По смертям" }}
         </button>
-        <button tuiTab type="button" (click)="getHoursPlayed()" class="text-2xl/7.5 uppercase !font-bold">
+        <button tuiTab type="button" (click)="getHoursPlayed()" class="text-lg md:text-2xl/7.5 uppercase !font-bold">
             {{ isMobile ? "Онлайн" : "По онлайну" }}
         </button>
-        <button tuiTab type="button" (click)="getKills()" class="text-2xl/7.5 uppercase !font-bold">
+        <button tuiTab type="button" (click)="getKills()" class="text-lg md:text-2xl/7.5 uppercase !font-bold">
             {{ isMobile ? "Убийства" : "По убийствам" }}
         </button>
     </tui-tabs>
@@ -49,36 +49,35 @@
         @for (item of leaderBoard; track $index; let odd = $odd) {
             @if ($index > 2) {
                 <div
-                    class="h-36 test relative transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex size-full bg-cover bg-repeat rounded-2xl object-center shadow-2xl"
+                    class="ember-row h-24 relative transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex items-center size-full bg-[url('/br.webp')] bg-cover bg-center rounded-2xl object-center shadow-lg shadow-[#1a110d]/40 border border-[#8a5a3a]/25 overflow-hidden"
                 >
                     <p
-                        class="absolute lg:ml-12 ml-4 self-center justify-self-start text-5xl uppercase font-bold text-[#bdb093]"
+                        class="absolute left-4 lg:left-12 text-2xl md:text-4xl uppercase font-bold text-[#f5eedd]/15 z-10"
                     >
                         {{ $index + 1 }}
                     </p>
-                    <div class="flex w-full justify-center gap-6 items-center text-neutral-200 text-2xl/7.5">
-                        <div class="flex flex-col gap-4 justify-center items-center">
-                            <div class="flex bg-[#EEDFC9] rounded-2xl p-3 gap-4 items-center">
-                                @if (getUserAvatar(item.user_id)) {
-                                    <img
-                                        [src]="getUserAvatar(item.user_id)"
-                                        class="size-8 rounded-full"
-                                        alt="Аватар игрока"
-                                    />
-                                } @else {
-                                    <tui-icon icon="@tui.user" class="size-8 text-lh-primary-2" />
-                                }
-                                <p class="font-semibold text-lh-primary-2 text-base sm:text-2xl">{{ item.name }}</p>
-                            </div>
-                            <p class="font-extrabold text-4xl text-shadow-lg" *ngIf="activeItemIndex === 0">
-                                {{ item.deaths }}
-                            </p>
-                            <p class="font-bold text-4xl text-shadow-lg" *ngIf="activeItemIndex === 1">
-                                {{ item.hours_played }}
-                            </p>
-                            <p class="font-bold text-4xl text-shadow-lg" *ngIf="activeItemIndex === 2">
-                                {{ item.kills }}
-                            </p>
+                    <div class="flex w-full items-center justify-between px-16 lg:px-28 z-10">
+                        <div class="flex items-center gap-3">
+                            <img
+                                [src]="getUserAvatar(item.user_id)"
+                                class="size-10 sm:size-12 rounded-full object-cover aspect-square"
+                                alt="Аватар игрока"
+                            />
+                            <span class="font-semibold text-[#f5eedd] text-xl sm:text-2xl">{{ item.name }}</span>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            @if (activeItemIndex === 0) {
+                                <span class="font-extrabold text-3xl sm:text-4xl text-[#ff7920] text-shadow-lg">{{ item.deaths }}</span>
+                                <span class="text-base sm:text-base text-[#f5eedd]/50">Смертей</span>
+                            }
+                            @if (activeItemIndex === 1) {
+                                <span class="font-bold text-3xl sm:text-4xl text-[#ff7920] text-shadow-lg">{{ item.hours_played }}</span>
+                                <span class="text-base sm:text-base text-[#f5eedd]/50">Часов</span>
+                            }
+                            @if (activeItemIndex === 2) {
+                                <span class="font-bold text-3xl sm:text-4xl text-[#ff7920] text-shadow-lg">{{ item.kills }}</span>
+                                <span class="text-base sm:text-base text-[#f5eedd]/50">Убийств</span>
+                            }
                         </div>
                     </div>
                 </div>

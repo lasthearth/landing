@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { fileFieldsCamp, FileKeyCamp } from './camp-form.types';
-import { Subject, switchMap, Observable, map, forkJoin, tap, finalize } from 'rxjs';
+import { Subject, switchMap, map, tap, finalize } from 'rxjs';
 import { NgFor, AsyncPipe, NgIf } from '@angular/common';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ICreateSettlement } from '@entities/settlement';
 import { SettlementService } from '@entities/settlement';
+import { MediaService } from '@entities/media';
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function'; // Функция для работы со статусом файлов
-import { getBase64Files } from '@shared/lib/get-base64-files.function'; // Функция для перевода файла в Base64
+import { uploadSettlementAttachments } from '@shared/lib/upload-settlement-attachments.function';
 import { LHHintComponent } from '@shared/ui/lh-hint/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
-import { TuiLoader, TuiError, TuiHintDirective } from '@taiga-ui/core';
+import { TuiLoader, TuiError } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 /**
@@ -33,7 +34,6 @@ import { TuiFieldErrorPipe } from '@taiga-ui/kit';
         LHHintComponent,
         TuiLoader,
         TuiError,
-        TuiHintDirective,
         TuiFieldErrorPipe,
     ],
     templateUrl: './camp-form.component.html',
@@ -89,6 +89,11 @@ export class CampFormComponent {
     private readonly settlementService: SettlementService = inject(SettlementService);
 
     /**
+     * Сервис загрузки медиафайлов.
+     */
+    private readonly mediaService: MediaService = inject(MediaService);
+
+    /**
      * Сервис уведомлений.
      */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
@@ -107,7 +112,7 @@ export class CampFormComponent {
 
     // Подписка на событие отправки формы:
     // 1. Берёт данные формы
-    // 2. Конвертирует файлы в base64
+    // 2. Загружает файлы через MediaService
     // 3. Формирует объект запроса
     // 4. Отправляет его на сервер
     // 5. По завершении вызывает submitEvent.emit()
@@ -120,17 +125,10 @@ export class CampFormComponent {
                     this.isLoading = true;
                     const values = this.form.value;
 
-                    // Собираем массив Observable<string> для всех файлов
-                    const base64Files$: Observable<string | null>[] = getBase64Files(this.fileFields, this.form);
-
-                    // Ждём когда все base64 загрузятся
-                    return forkJoin(base64Files$).pipe(
-                        map((base64Files) => {
-                            const attachments = this.fileFields.map((key, i) => ({
-                                data: base64Files[i] ?? '',
-                                description: this.getLabelForKey(key),
-                            }));
-
+                    return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
+                        this.getLabelForKey(key)
+                    ).pipe(
+                        map((attachments) => {
                             const request: ICreateSettlement = {
                                 type: 'CAMP',
                                 name: values.name ?? '',

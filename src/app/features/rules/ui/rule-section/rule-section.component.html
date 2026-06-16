@@ -1,37 +1,39 @@
 <div
-    class="flex flex-col cursor-pointer gap-2 shadow-2xs"
+    class="flex flex-col cursor-pointer"
     [attr.sectionid]="sectionId()"
-    [class.mt-2]="needsMarginTop()"
+    [class.mt-4]="needsMarginTop()"
 >
     <div
-        class="flex w-full justify-between gap-2 cursor-pointer transition-all duration-300 hover:opacity-60"
+        class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
         (click)="toggle()"
     >
-        <p class="relative text-lh-primary cursor-pointer font-bold" [class]="titleClass() + ' ' + indentClass()">
-            @if (icon()) {
-                <tui-icon
-                    [icon]="icon() ?? ''"
-                    class="text-lh-primary"
-                    [ngClass]="{ 'mr-2': level() > 0 }"
-                />
-            }
-            {{ title() }}
-            @if (!isWatched()) {
-                <tui-pulse
-                    class="!absolute top-1/2 -translate-y-1/2"
-                    [ngClass]="{ 'ml-4': level() > 0, 'ml-6': level() === 0 }"
-                />
-            }
-        </p>
+        <div class="flex items-center gap-2 flex-1">
+            <p class="relative text-[#2d201a] cursor-pointer font-bold" [class]="titleClass() + ' ' + indentClass()">
+                @if (icon()) {
+                    <tui-icon
+                        [icon]="icon() ?? ''"
+                        class="text-lh-primary size-6!"
+                        [ngClass]="{ 'mr-2': level() > 0 }"
+                    />
+                }
+                {{ title() }}
+                @if (!isWatched()) {
+                    <tui-pulse
+                        class="!absolute top-1/2 -translate-y-1/2"
+                        [ngClass]="{ 'ml-4': level() > 0, 'ml-6': level() === 0 }"
+                    />
+                }
+            </p>
+        </div>
         <tui-icon
             icon="@tui.chevron-down"
             [ngClass]="{ 'rotate-180!': isExpanded() }"
-            class="text-lh-primary transition-all"
+            class="text-[#5c554a] transition-all size-6!"
         />
     </div>
 
     <tui-expand [expanded]="isExpanded()">
-        <div [class]="contentClass()">
+        <div [class]="contentClass()" class="mt-4">
             <ng-content />
         </div>
     </tui-expand>

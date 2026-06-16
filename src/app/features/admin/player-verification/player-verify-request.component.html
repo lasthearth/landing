@@ -1,34 +1,55 @@
-<div class="size-full rounded-xl border border-neutral-400 p-4 flex flex-col gap-2">
-    <div class="flex gap-2">
-        <tui-icon icon="@tui.user" />
-        <p class="text-xl">Игровой ник:</p>
-        <p class="text-xl font-bold">{{ data().user_game_name }}</p>
-    </div>
-    <hr class="w-full h-0.5" />
-    @for (item of data().answers; track $index) {
-    <div class="flex flex-col">
-        <p class="text-xl"><tui-icon icon="@tui.message-circle-question" />: {{ item.question }}</p>
-        <p class="text-xl break-words"><b>Ответ:</b> {{ item.answer }}</p>
-    </div>
-    <hr class="w-full h-0.5" />
-    }
-    <div class="flex gap-2">
-        <p class="text-xl">Способы связи с игроком:</p>
-        <p class="text-xl font-bold">{{ data().contacts }}</p>
+<div class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4">
+    <!-- Заголовок: ник игрока -->
+    <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
+        <img
+            src="/default-avatar.png"
+            class="size-14 shrink-0 object-cover aspect-square"
+            alt="Аватар"
+        />
+        <div class="flex flex-col min-w-0">
+            <span class="text-base text-neutral-500 leading-5">Игровой ник</span>
+            <span class="text-2xl font-bold text-[#2d201a] truncate">{{ data().user_game_name }}</span>
+        </div>
     </div>
 
-    <div class="flex gap-4 justify-end">
+    <!-- Вопросы и ответы -->
+    <div class="flex flex-col gap-3">
+        @for (item of data().answers; track $index) {
+            <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-2">
+                <div class="flex items-start gap-2">
+                    <tui-icon icon="@tui.message-circle-question" class="size-5! text-lh-accent shrink-0 mt-0.5" />
+                    <span class="text-lg font-semibold text-[#2d201a] leading-6">{{ item.question }}</span>
+                </div>
+                <div class="flex items-start gap-2 pl-7">
+                    <span class="text-base text-neutral-500 shrink-0 font-medium">Ответ:</span>
+                    <span class="text-lg text-[#5c4030] leading-6 break-words">{{ item.answer }}</span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Контакты -->
+    <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex items-center gap-3">
+        <tui-icon icon="@tui.phone" class="size-5! text-lh-accent shrink-0" />
+        <div class="flex flex-col min-w-0">
+            <span class="text-base text-neutral-500 leading-4">Способы связи</span>
+            <span class="text-lg font-semibold text-[#2d201a] truncate">{{ data().contacts }}</span>
+        </div>
+    </div>
+
+    <!-- Кнопки -->
+    <div class="flex gap-3 justify-end pt-1">
         <button
             (click)="reject()"
-            class="text-white font-bold cursor-pointer mt-2 self-end bg-lh-danger rounded-lg py-2.5 px-4 hover:bg-lh-danger-hover active:bg-lh-danger-active"
+            class="text-lg font-bold cursor-pointer bg-transparent border border-lh-danger text-lh-danger rounded-xl py-2 px-5 hover:bg-lh-danger/10 transition-colors"
         >
-            ОТКЛОНИТЬ
+            Отклонить
         </button>
         <button
             (click)="approve()"
-            class="text-white font-bold cursor-pointer mt-2 self-end bg-lh-success rounded-lg py-2.5 px-4 hover:bg-lh-success-hover active:bg-lh-success-active"
+            class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-[#e66a1a] transition-colors"
         >
-            ОДОБРИТЬ
+            Одобрить
         </button>
     </div>
 </div>

@@ -1,66 +1,72 @@
-<div class="p-6">
-    <p class="text-3xl/7.5 font-bold">Создание новостей</p>
-    <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-2 mt-4">
-        <p class="text-2xl/7.5">Заголовок новости</p>
-        <lh-input formControlName="title" placeholder="Придумайте заголовок новости..." class="w-full" />
-        <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />
+<div class="flex flex-col gap-6">
+    <!-- Форма создания -->
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Создание новостей</p>
+        <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-4 mt-6">
+            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">Заголовок новости</p>
+            <lh-input formControlName="title" placeholder="Придумайте заголовок новости..." />
+            <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />
 
-        <p class="text-2xl/7.5">Содержание новости</p>
-        <lh-input
-            formControlName="content"
-            placeholder="Придумайте содержание новости..."
-            class="w-full"
-            type="textarea"
-        />
-        <tui-error formControlName="content" [error]="[] | tuiFieldError | async" />
+            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">Содержание новости</p>
+            <lh-input
+                formControlName="content"
+                placeholder="Придумайте содержание новости..."
+                type="textarea"
+            />
+            <tui-error formControlName="content" [error]="[] | tuiFieldError | async" />
 
-        <p class="text-2xl/7.5">Изображение новости</p>
+            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">Изображение новости</p>
 
-        @if (!form.controls.preview.value) {
-            <label tuiInputFiles>
-                <ng-template tuiInputFilesContent>
-                    <span class="text-gray-600">Добавить изображение...</span>
-                    <input accept="image/*" tuiInputFiles formControlName="preview" />
-                </ng-template>
-            </label>
-        }
-
-        <tui-files>
-            @if (form.controls.preview.value | tuiFileRejected: { accept: "image/*" } | async; as file) {
-                <tui-file state="error" [file]="file" (remove)="removeFile()" />
+            @if (!form.controls.preview.value) {
+                <label tuiInputFiles>
+                    <ng-template tuiInputFilesContent>
+                        <span class="text-[#5c554a] text-[18px]">Добавить изображение...</span>
+                        <input accept="image/*" tuiInputFiles formControlName="preview" />
+                    </ng-template>
+                </label>
             }
 
-            @if (loadingFile$ | async; as file) {
-                <tui-file state="loading" [file]="file" (remove)="removeFile()" />
-            }
+            <tui-files>
+                @if (form.controls.preview.value | tuiFileRejected: { accept: "image/*" } | async; as file) {
+                    <tui-file state="error" [file]="file" (remove)="removeFile()" />
+                }
 
-            @if (failedFile$ | async; as file) {
-                <tui-file state="error" [file]="file" (remove)="removeFile()" />
-            }
+                @if (loadingFile$ | async; as file) {
+                    <tui-file state="loading" [file]="file" (remove)="removeFile()" />
+                }
 
-            @if (loadedFile$ | async; as file) {
-                <tui-file [file]="file" (remove)="removeFile()" />
-            }
-        </tui-files>
+                @if (failedFile$ | async; as file) {
+                    <tui-file state="error" [file]="file" (remove)="removeFile()" />
+                }
 
-        <tui-error formControlName="preview" [error]="[] | tuiFieldError | async" />
+                @if (loadedFile$ | async; as file) {
+                    <tui-file [file]="file" (remove)="removeFile()" />
+                }
+            </tui-files>
 
-        <button
-            type="submit"
-            class="text-white text-sm! cursor-pointer bg-lh-primary-2 rounded-lg self-end py-1.5 px-2.5 mt-2 disabled:text-lh-disabled disabled:bg-lh-primary"
-        >
-            Создать новость
-        </button>
+            <tui-error formControlName="preview" [error]="[] | tuiFieldError | async" />
 
-        <p class="text-2xl/7.5 text-center p-2">Предпросмотр новости</p>
+            <button
+                type="submit"
+                class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e] self-end disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                Создать новость
+            </button>
+        </form>
+    </div>
 
-        <app-news-card
-            title="{{ form.controls.title.value || 'Введите заголовок новости...' }}"
-            content="{{ form.controls.content.value || 'Введите содержание новости...' }}"
-            [preview]="previewUrl || '/7.png'"
-            date="{{ currentDate$ | async | date: 'dd.MM.yy - HH:mm' }}"
-            [viewCount]="0"
-            [createdBy]="userService.userName || ''"
-        />
-    </form>
+    <!-- Предпросмотр -->
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] text-center">Предпросмотр новости</p>
+        <div class="mt-6">
+            <app-news-card
+                title="{{ form.controls.title.value || 'Введите заголовок новости...' }}"
+                content="{{ form.controls.content.value || 'Введите содержание новости...' }}"
+                [preview]="previewUrl || '/7.png'"
+                date="{{ currentDate$ | async | date: 'dd.MM.yy - HH:mm' }}"
+                [viewCount]="0"
+                [createdBy]="userService.userName || ''"
+            />
+        </div>
+    </div>
 </div>

@@ -12,6 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NewsApiService, CreateNewsRequest } from '@entities/news';
+import { MediaService } from '@entities/media';
 import { UserService } from '@entities/user';
 
 import { RequestStatusService } from '@core/services/request-status.service';
@@ -108,6 +109,11 @@ export class CreateNewsComponent {
     private readonly newsApi = inject(NewsApiService);
 
     /**
+     * Сервис загрузки медиафайлов.
+     */
+    private readonly mediaService = inject(MediaService);
+
+    /**
      * Сервис пользователя для получения имени автора.
      */
     protected readonly userService: UserService = inject(UserService);
@@ -187,71 +193,39 @@ export class CreateNewsComponent {
 
         this.onSubmit
             .pipe(
-                switchMap(() => {
-                    let base64Files$: Observable<string | null> = of(null);
-                    if (this.form.controls.preview.value) {
-                        const file = this.form.controls.preview.value;
-                        if (file) {
-                            base64Files$ = this.convertTuiFileLikeToBase64(file);
-                        }
-                    }
+                switchMap(async () => {
+                    const file = this.form.controls.preview.value;
+                    const previewUrl = file
+                        ? await this.mediaService.uploadFile(file, 'UPLOAD_PURPOSE_NEWS')
+                        : '';
 
-                    // Ждём когда base64 загрузится
-                    return base64Files$.pipe(
-                        map((base64Files) => {
-                            const request: CreateNewsRequest = {
-                                title: this.form.controls.title.value,
-                                content: this.form.controls.content.value,
-                                preview: base64Files ?? '',
-                            };
+                    const request: CreateNewsRequest = {
+                        title: this.form.controls.title.value,
+                        content: this.form.controls.content.value,
+                        preview: previewUrl,
+                    };
 
-                            return request;
-                        })
-                    );
+                    return request;
                 }),
                 tap((request: CreateNewsRequest) => {
-                    if (request !== null) {
-                        this.newsApi
-                            .create(request)
-                            .pipe(
-                                this.requestStatusService.handleError(),
-                                this.requestStatusService.handleSuccess('Новость успешно создана!'),
-                                takeUntilDestroyed(this.destroyRef)
-                            )
-                            .subscribe({
-                                next: () => {
-                                    this.form.reset();
-                                    this.previewUrl = null;
-                                    this.cdr.markForCheck();
-                                    this.created.emit();
-                                },
-                            });
-                    }
+                    this.newsApi
+                        .create(request)
+                        .pipe(
+                            this.requestStatusService.handleError(),
+                            this.requestStatusService.handleSuccess('Новость успешно создана!'),
+                            takeUntilDestroyed(this.destroyRef)
+                        )
+                        .subscribe({
+                            next: () => {
+                                this.form.reset();
+                                this.previewUrl = null;
+                                this.cdr.markForCheck();
+                                this.created.emit();
+                            },
+                        });
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe();
-    }
-
-    /**
-     * Конвертация туи-файла в base64
-     */
-    convertTuiFileLikeToBase64(file: File): Observable<string> {
-        return new Observable<string>((observer) => {
-            const reader = new FileReader();
-
-            reader.onload = () => {
-                const result = reader.result as string;
-                const base64 = result.split(',')[1]; // убираем data:*/*;base64,
-                observer.next(base64);
-                observer.complete();
-            };
-
-            reader.onerror = (err) => {
-                observer.error(err);
-            };
-
-            reader.readAsDataURL(file);
-        });
     }
 }

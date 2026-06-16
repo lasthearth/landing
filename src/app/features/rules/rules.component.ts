@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TuiIcon } from '@taiga-ui/core';
 import { RuleSectionComponent } from './ui/rule-section/rule-section.component';
 import { TerminologyComponent } from './components/terminology/terminology.component';
 import { BaseComponent } from './components/base/base.component';
@@ -19,6 +20,7 @@ import { GlobalExpandService } from './services/global-expand.service';
     selector: 'app-rules',
     imports: [
         CommonModule,
+        TuiIcon,
         TerminologyComponent,
         RuleSectionComponent,
         BaseComponent,
@@ -32,7 +34,7 @@ import { GlobalExpandService } from './services/global-expand.service';
     styleUrls: ['./rules.component.less', './styles/rules.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RulesComponent {
+export class RulesComponent implements OnDestroy {
     /**
      * Сервис прокрутки.
      */
@@ -44,10 +46,66 @@ export class RulesComponent {
     protected readonly globalExpandService = inject(GlobalExpandService);
 
     /**
+     * Сервис обнаружения изменений.
+     */
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    /**
+     * Показывать ли кнопку прокрутки наверх.
+     */
+    protected showScrollTop = false;
+
+    /**
+     * Наблюдатель за пересечением верхнего маркера.
+     */
+    private readonly observer: IntersectionObserver;
+
+    constructor() {
+        this.observer = new IntersectionObserver(
+            ([entry]) => {
+                const shouldShow = !entry.isIntersecting;
+                if (this.showScrollTop !== shouldShow) {
+                    this.showScrollTop = shouldShow;
+                    this.cdr.markForCheck();
+                }
+            },
+            { threshold: 0 }
+        );
+
+        // Откладываем начало наблюдения до следующего рендера,
+        // чтобы маркер уже был в DOM.
+        queueMicrotask(() => {
+            const sentinel = document.getElementById('rules-scroll-sentinel');
+            if (sentinel) {
+                this.observer.observe(sentinel);
+            }
+        });
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public ngOnDestroy(): void {
+        this.observer.disconnect();
+    }
+
+    /**
      * Переключает состояние всех секций.
      */
     protected toggleAll(): void {
         this.globalExpandService.toggle();
+    }
+
+    /**
+     * Прокручивает страницу наверх.
+     */
+    protected scrollToTop(): void {
+        const layout = document.querySelector('app-layout');
+        if (layout) {
+            layout.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     }
 
     /**

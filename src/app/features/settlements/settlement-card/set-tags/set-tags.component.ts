@@ -15,6 +15,7 @@ import { catchError, finalize, forkJoin, map, of } from 'rxjs';
     selector: 'app-set-tags',
     imports: [ActiveTagComponent],
     templateUrl: './set-tags.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
 })
 export class SetTagsComponent implements OnInit {
     /**

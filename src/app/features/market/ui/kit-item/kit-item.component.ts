@@ -1,13 +1,20 @@
 import { Component, input, InputSignal } from '@angular/core';
-import { TuiBadgedContent, TuiBadgeNotification } from '@taiga-ui/kit';
 import { KitItem } from '../../interfaces/kit-item.interface';
-import { TuiHint, TuiHintDirective } from '@taiga-ui/core';
 
+/**
+ * Компонент ячейки предмета набора в стиле игрового инвентаря.
+ *
+ * Отображает иконку предмета с количеством в углу.
+ * При наведении увеличивается и подсвечивается акцентным цветом.
+ */
 @Component({
     selector: 'app-kit-item',
-    imports: [TuiBadgedContent, TuiBadgeNotification, TuiHintDirective, TuiHint],
+    imports: [],
     templateUrl: './kit-item.component.html',
 })
 export class KitItemComponent {
+    /**
+     * Данные предмета.
+     */
     public data: InputSignal<KitItem> = input.required();
 }

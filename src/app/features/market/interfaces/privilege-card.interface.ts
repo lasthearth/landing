@@ -1,3 +1,4 @@
+import { IAbilityItem } from '@entities/donate';
 import { KitItem } from './kit-item.interface';
 
 /**
@@ -5,9 +6,19 @@ import { KitItem } from './kit-item.interface';
  */
 export interface PrivilegeCard {
     /**
+     * Идентификатор товара магазина (для покупки).
+     */
+    id?: string;
+
+    /**
      * Название привилегии.
      */
     title: string;
+
+    /**
+     * Описание привилегии.
+     */
+    description?: string;
 
     /**
      * Изображение привилегии.
@@ -15,19 +26,39 @@ export interface PrivilegeCard {
     image: string;
 
     /**
-     * Стоимость привилегии.
+     * Стоимость привилегии за 1 месяц.
      */
-    price: string;
+    monthPrice: string;
+
+    /**
+     * Оригинальная стоимость за 1 месяц (до скидки) для зачёркивания.
+     */
+    monthPriceOriginal: string;
+
+    /**
+     * Стоимость привилегии за весь сезон.
+     */
+    seasonPrice: string;
+
+    /**
+     * Оригинальная стоимость за сезон (до скидки) для зачёркивания.
+     */
+    seasonPriceOriginal: string;
 
     /**
      * Преимущества привилегии.
      */
-    abilties?: any[];
+    privileges?: IAbilityItem[];
 
     /**
      * Набор игровых предметов привилегии.
      */
     kitItems: KitItem[];
+
+    /**
+     * Валюта цены: коины или рубли.
+     */
+    currency?: 'coins' | 'rubles';
 
     /**
      * Ежедневный набор привилегии.

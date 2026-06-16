@@ -1,79 +1,149 @@
-<div class="flex flex-col md:gap-8 gap-4">
-    <p class="md:text-4xl text-2xl/7.5 text-lh-primary font-bold">Как приобрести титул или набор?</p>
-    <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-10">
-            <p class="md:text-6xl text-5xl font-extrabold text-[#bdb093] min-w-12">1</p>
-            <p class="text-lh-primary md:text-2xl/7.5 text-xl font-bold">
-                Перейти на
-                <a
-                    class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                    href="https://boosty.to/lisov"
-                    target="_blank"
-                >
-                    Boosty
-                </a>
-                .
-            </p>
+<div class="lh-dialog-card">
+    <h2 class="lh-dialog-title text-center">Пополнить осколки</h2>
+
+    <!-- Блок выбора суммы -->
+    <div class="flex flex-col gap-4 p-5 rounded-2xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] shadow-sm">
+        <!-- Итоговая сумма осколков -->
+        <div class="flex flex-col items-center gap-1">
+            <span class="text-lh-primary/60 text-base font-semibold uppercase">Вы получите</span>
+            <div class="flex items-center gap-2">
+                <img src="/splinter-of-spark.png" alt="Осколок" class="h-8 w-auto" />
+                <span class="text-4xl font-extrabold text-lh-accent">
+                    {{ shards() | number }}
+                </span>
+            </div>
+            <span class="text-lh-primary/60 text-base font-medium">осколков</span>
         </div>
-        <div class="flex items-center gap-10">
-            <p class="md:text-6xl text-5xl font-extrabold text-[#bdb093] min-w-12">2</p>
-            <p class="text-lh-primary md:text-2xl/7.5 text-xl font-bold">
-                Отправить донат на сумму стоимости титула или набора с учетом комиссии платформы, указать его название и
-                свой игровой ник в сообщении.
-            </p>
+
+        <!-- Слайдер -->
+        <div class="flex flex-col gap-2">
+            <div class="flex justify-between text-lh-primary/70 text-base font-medium">
+                <span>{{ minAmount }} ₽</span>
+                <span>{{ maxAmount }} ₽</span>
+            </div>
+            <input
+                type="range"
+                tuiSlider
+                [min]="minAmount"
+                [max]="maxAmount"
+                [step]="step"
+                [ngModel]="rubles()"
+                (ngModelChange)="onRublesChange($event)"
+                class="w-full how-to-buy-slider"
+            />
         </div>
-        <div class="flex items-center gap-10">
-            <p class="md:text-6xl text-5xl font-extrabold text-[#bdb093] min-w-12">3</p>
-            <p class="text-lh-primary md:text-2xl/7.5 text-xl font-bold">Дождаться выдачи роли на сервере.</p>
-        </div>
-        <div class="flex items-center gap-10">
-            <p class="md:text-6xl text-5xl font-extrabold text-[#bdb093] min-w-12">4</p>
-            <p class="text-lh-primary md:text-2xl/7.5 text-xl font-bold">
-                Использовать на сервере команду
-                <tui-copy size="l">/help kit</tui-copy>
-                для получения информации о доступных командах системы китов.
+
+        <!-- Ручной ввод -->
+        <div class="flex flex-col gap-2">
+            <label class="text-lh-primary text-base font-semibold">Сумма пополнения, ₽</label>
+            <div class="flex items-center gap-3">
+                <div class="flex-1">
+                    <lh-input
+                        type="inputNumber"
+                        [ngModel]="rubles()"
+                        (ngModelChange)="onRublesChange($event)"
+                    />
+                </div>
+                <span class="text-lh-primary text-xl font-bold">₽</span>
+            </div>
+            <p class="text-lh-primary/50 text-base text-center">
+                Курс: <span class="text-lh-accent font-bold">1 ₽ = 10 осколков</span>
             </p>
         </div>
     </div>
-    <div class="md:text-xl text-base">
-        <p>
-            При покупке вы соглашаетесь с
+
+    <!-- Блок способов оплаты -->
+    <div class="flex flex-col gap-4">
+        <!-- Boosty — международный -->
+        <div class="flex flex-col gap-3 p-5 rounded-2xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] shadow-sm">
+            <span class="text-lh-primary text-base font-semibold uppercase text-center">Международные платежи</span>
+
+            <p class="text-lh-primary/70 text-base text-center">
+                При оплате через Boosty вы обязаны покрыть комиссию сервиса
+            </p>
+
             <a
-                href="https://lasthearth.ru/rules"
-                class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
+                [attr.href]="'https://boosty.to/lisov/single-payment/donation/amount/' + rubles()"
                 target="_blank"
+                class="flex items-center justify-center gap-3 self-center w-full py-3 px-6 rounded-2xl bg-lh-accent text-white !border-none !no-underline !text-white font-bold text-lg cursor-pointer transition-all duration-200 hover:brightness-105 shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
             >
-                правилами
+                <img src="/images/Boosty.svg" class="h-6 brightness-0 invert" alt="Boosty" />
+                Пополнить через Boosty
             </a>
-            и
-            <a
-                href="https://lasthearth.ru/public-offer"
-                class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
-                target="_blank"
-            >
-                публичной офертой
-            </a>
-            .
+        </div>
+
+        <!-- СБП — РФ и СНГ -->
+        <div class="flex flex-col gap-3 p-5 rounded-2xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] shadow-sm">
+            <div class="flex items-center justify-center gap-2">
+                <tui-icon icon="@tui.qr-code" class="size-5! text-lh-accent" />
+                <span class="text-lh-primary text-base font-semibold uppercase">Оплата по QR-коду</span>
+            </div>
+            <p class="text-lh-primary/70 text-base text-center">
+                Перевод через Систему быстрых платежей (СБП)
+            </p>
+
+            <div class="flex flex-col items-center gap-3">
+                <div class="bg-white p-4 rounded-xl border border-[#d8cdb3] shadow-md">
+                    <img
+                        [attr.src]="sberQrUrl()"
+                        alt="QR-код для перевода через СБП"
+                        class="rounded-lg"
+                    />
+                </div>
+                <p class="text-lh-primary/70 text-base text-center">
+                    Сумма: <span class="text-lh-accent font-bold">{{ rubles() }} ₽</span>
+                </p>
+                <p class="text-lh-primary/60 text-sm text-center">
+                    Отсканируйте QR-код в приложении банка
+                </p>
+                <button
+                    type="button"
+                    (click)="copySbpDetails()"
+                    class="flex items-center justify-center gap-2 w-full py-3 px-6 rounded-2xl bg-[#e8dfc8] hover:bg-[#efe6cf] border border-[rgba(51,44,38,0.12)] text-[#2a2722] font-bold text-lg cursor-pointer transition-all duration-200 hover:-translate-y-0.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                >
+                    <tui-icon icon="@tui.copy" class="size-5!" />
+                    Скопировать реквизиты СБП
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Информация о начислении -->
+    <div class="flex flex-col gap-2 text-center text-base">
+        <p class="text-lh-primary/70">
+            Осколки начисляются в течение суток с момента оплаты
         </p>
-        <p>
-            В случае возникновения вопросов обратитесь к администрации сервера в
+        <p class="text-lh-primary/70">
+            Если возникли трудности или проблемы — обратитесь в
             <a
-                class="text-blue-400 font-bold border-dashed border-b hover:text-blue-600 transition-all duration-100"
                 href="https://discord.com/invite/FZb7SGrSFy"
+                class="text-lh-accent font-bold"
                 target="_blank"
             >
                 Discord
             </a>
-            .
         </p>
     </div>
 
-    <a
-        href="https://boosty.to/lisov"
-        target="_blank"
-        class="flex gap-4 self-center !border-2 !text-lh-primary rounded-2xl !border-lh-accent md:p-4 p-2.5 bg-transparent hover:scale-[103%] transition-all duration-100 uppercase font-semibold cursor-pointer"
-    >
-        <img src="/images/Boosty.svg" />
-        Приобрести
-    </a>
+    <!-- Ссылки -->
+    <div class="flex flex-col gap-2 text-center text-base">
+        <p class="text-lh-primary/60">
+            Пополняя баланс, вы соглашаетесь с
+            <a
+                href="https://lasthearth.ru/privacy-policy"
+                class="text-lh-accent font-bold border-b border-dashed border-lh-accent hover:opacity-80 transition-opacity"
+                target="_blank"
+            >
+                политикой конфиденциальности
+            </a>
+            и
+            <a
+                href="https://lasthearth.ru/public-offer"
+                class="text-lh-accent font-bold border-b border-dashed border-lh-accent hover:opacity-80 transition-opacity"
+                target="_blank"
+            >
+                публичной офертой
+            </a>
+        </p>
+    </div>
 </div>

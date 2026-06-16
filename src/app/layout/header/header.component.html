@@ -9,7 +9,9 @@
     <div class="flex justify-center sm:justify-between px-4 sm:px-0">
         <!-- Логотип -->
         <div
-            class="hidden mt-8 z-10 sm:flex w-fit h-18 sm:h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+            class="hidden mt-8 z-10 sm:flex w-fit h-18 sm:h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)] cursor-pointer"
+            [routerLink]="['/home']"
+            (click)="select = 'home'"
         >
             <div class="rounded-2xl gap-4 flex items-center p-4 sm:py-3 sm:pl-3 sm:pr-4">
                 <img src="/logo.ico" alt="Логотип сервера" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14" />
@@ -30,18 +32,24 @@
                 <div class="flex flex-col gap-1">
                     <div class="flex w-full px-4 gap-4 justify-center items-center">
                         <div class="flex gap-0.5 items-center">
-                            <p class="text-3xl sm:text-5xl text-white">{{ online?.online ? online?.online : "-" }}</p>
+                            @if (online?.online) {
+                                <p class="text-3xl sm:text-5xl text-white">{{ online?.online }}</p>
+                            } @else {
+                                <p class="text-3xl sm:text-5xl text-white dash-animated">-</p>
+                            }
 
-                            <p class="text-xs sm:text-sm text-white opacity-70">/</p>
+                            <p class="text-base sm:text-base text-white opacity-70">/</p>
 
-                            <p class="text-xs sm:text-sm text-white opacity-70">
-                                {{ online?.max_online ? online?.max_online : "-" }}
-                            </p>
+                            @if (online?.max_online) {
+                                <p class="text-base sm:text-base text-white opacity-70">{{ online?.max_online }}</p>
+                            } @else {
+                                <p class="text-base sm:text-base text-white opacity-70 dash-animated">-</p>
+                            }
                         </div>
                         <div class="text-white">
                             <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">Игроков</p>
 
-                            <p class="text-sm sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
+                            <p class="text-base sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
                         </div>
                     </div>
                     <div class="w-full flex px-3.5">
@@ -63,7 +71,7 @@
                 >
                     <div class="rounded-2xl gap-1 p-1 sm:p-3 flex items-center">
                         <div class="flex flex-col items-start gap-0.5">
-                            <p class="text-sm sm:text-2xl/7.5 text-white">{{ userService.userName }}</p>
+                            <p class="text-base sm:text-2xl/7.5 text-white">{{ userService.userName }}</p>
                             <div class="flex items-center gap-0.5 bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 bg-clip-text text-transparent">
                                 <img
                                     src="/splinter-of-spark.png"
@@ -94,13 +102,14 @@
     </div>
 
     <!-- Блок навигации -->
-    <div class="flex gap-2 justify-center xl:justify-between md:gap-4 w-full mb-4">
+    <nav aria-label="Главное меню" class="flex gap-2 justify-center xl:justify-between md:gap-4 w-full mb-4">
         <div class="flex gap-2">
             <button
                 (click)="select = 'home'"
                 [routerLink]="['/home']"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'home' }"
                 class="nav-button"
+                aria-label="Главная"
             >
                 <tui-icon icon="@tui.house" />
             </button>
@@ -109,6 +118,7 @@
                     [routerLink]="['/start-game']"
                     [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'startGame' }"
                     class="nav-button relative md:w-auto md:min-w-20 px-4"
+                    aria-label="Начать игру"
                 >
                     <tui-icon icon="@tui.gamepad-2" />
 
@@ -124,6 +134,7 @@
                 [routerLink]="['/rules']"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'rules' }"
                 class="nav-button md:w-auto md:min-w-20 px-4"
+                aria-label="Правила"
             >
                 <tui-icon icon="@tui.file-text" />
                 <span class="hidden md:block">ПРАВИЛА</span>
@@ -132,15 +143,17 @@
                 [routerLink]="['/faq']"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'faq' }"
                 class="nav-button md:w-auto md:min-w-20 px-4"
+                aria-label="Часто задаваемые вопросы"
             >
                 <tui-icon icon="@tui.info" />
                 <span class="hidden md:block">FAQ</span>
             </button>
-            @if (isAuth) {
+            @if (isAuth && isVerified()) {
                 <button
                     [routerLink]="['/settlements']"
                     [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
                     class="nav-button md:w-auto md:min-w-20 px-4"
+                    aria-label="Поселения"
                 >
                     <tui-icon icon="@tui.tent" />
                     <span class="hidden md:block">СЕЛЕНИЯ</span>
@@ -150,6 +163,7 @@
                 [routerLink]="['/market']"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'market' }"
                 class="nav-button w-11 md:w-auto md:min-w-20 px-4"
+                aria-label="Магазин"
             >
                 <tui-icon icon="@tui.store" />
                 <span class="hidden md:block">МАГАЗИН</span>
@@ -165,6 +179,7 @@
                     '!rounded-r-none': isAuth,
                 }"
                 class="relative nav-button p-2.5"
+                [attr.aria-label]="isAuth ? 'Профиль' : 'Войти'"
             >
                 <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
                 @if (
@@ -176,11 +191,12 @@
             @if (isAuth) {
                 <button
                     (click)="signOut()"
-                    class="relative nav-button bg-red-800! hover:!bg-lh-danger-hover !rounded-l-none !p-1 w-8!"
+                    class="relative nav-button !text-[#c35a17] hover:!text-white hover:bg-[#9C4F24] !rounded-l-none !p-1 w-8! transition-all duration-300"
+                    aria-label="Выйти"
                 >
                     <tui-icon icon="@tui.log-out" />
                 </button>
             }
         </div>
-    </div>
+    </nav>
 </div>

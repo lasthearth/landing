@@ -1,30 +1,40 @@
 @let players = players$ | async;
 
-<div class="flex flex-col gap-8">
-    <p class="text-3xl font-semibold text-lh-primary">Пригласите игрока в ваше поселение</p>
-    <div class="flex flex-col gap-1">
-        <p class="text-xl">Ник игрока на сервере</p>
-        <lh-input placeholder="Введите ник игрока на сервере..." [formControl]="playerNickControl" />
-    </div>
-    <div class="flex flex-col gap-2 mt-4">
-        <span *ngIf="!players" class="text-3xl self-center text-[#bdb093] font-bold uppercase">Начните искать...</span>
-        @for (item of players?.users; track $index) {
-            <div class="w-full justify-between flex">
-                <div class="flex gap-2 items-center w-full">
-                    @if (item?.avatar?.original) {
-                        <tui-avatar size="s" [src]="item.avatar.original" />
-                    } @else {
-                        <tui-icon icon="@tui.user" class="!text-[32px]" />
-                    }
-                    <span>{{ item.user_game_name }}</span>
+<div class="lh-dialog-card">
+    <h2 class="lh-dialog-title">Пригласите игрока в ваше поселение</h2>
+
+    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+            <p class="text-xl text-[#2d201a] font-semibold">Ник игрока на сервере</p>
+            <lh-input placeholder="Введите ник игрока на сервере..." [formControl]="playerNickControl" />
+        </div>
+
+        <div class="flex flex-col">
+            <span *ngIf="!players" class="text-2xl self-center text-[#bdb093] font-bold uppercase py-4">Начните искать...</span>
+            @for (item of players?.users; track $index) {
+                <div class="w-full justify-between flex items-center py-3 border-b border-lh-primary-2/10 last:border-b-0">
+                    <div class="flex gap-3 items-center w-full">
+                        @if (item?.avatar?.original) {
+                            <img [src]="item.avatar.original" class="w-10 h-10 rounded-full object-cover aspect-square" />
+                        } @else {
+                            <img src="/default-avatar.png" class="w-10 h-10 rounded-full object-cover aspect-square" />
+                        }
+                        <span class="text-lg text-[#2d201a] font-semibold">{{ item.user_game_name }}</span>
+                    </div>
+                    <button
+                        (click)="playerInvite(item.user_id)"
+                        class="lh-secondary-button text-base py-1.5 px-3 shrink-0"
+                    >
+                        Пригласить
+                    </button>
                 </div>
-                <button
-                    (click)="playerInvite(item.user_id)"
-                    class="text-white transition-all text-nowrap duration-300 cursor-pointer bg-lh-primary-2 rounded-lg py-1 px-2 border hover:bg-[#e2d7bb] hover:text-lh-primary hover:font-bold text-sm"
-                >
-                    Пригласить игрока
-                </button>
-            </div>
-        }
+            }
+        </div>
+    </div>
+
+    <div class="lh-dialog-actions">
+        <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
+            Закрыть
+        </button>
     </div>
 </div>

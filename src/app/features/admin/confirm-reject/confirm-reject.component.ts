@@ -1,9 +1,9 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { TuiDialogContext, TuiError, TuiLabel, TuiTextfield } from '@taiga-ui/core';
-import { TuiFieldErrorPipe, TuiTextarea } from '@taiga-ui/kit';
-import { TuiTextareaModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { TuiDialogContext, TuiError, TuiIcon } from '@taiga-ui/core';
+import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { Subject, filter, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,14 +11,16 @@ import { VerificationService } from '@features/verification';
 import { SettlementService } from '@entities/settlement';
 import { RequestStatusService } from '@core/services/request-status.service';
 
+
 /**
  * Компонент подтверждения отклонения.
  */
 @Component({
     standalone: true,
     selector: 'app-confirm-reject',
-    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiTextareaModule, TuiInputModule, TuiFieldErrorPipe, AsyncPipe, TuiLabel, TuiTextfieldControllerModule, TuiTextarea, TuiTextfield],
+    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiFieldErrorPipe, AsyncPipe, TuiIcon, LHInputComponent],
     templateUrl: './confirm-reject.component.html',
+    styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmRejectComponent {
@@ -58,6 +60,26 @@ export class ConfirmRejectComponent {
      * {@link Subject} события отправки формы.
      */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
+
+    /**
+     * Типовые причины отклонения анкеты.
+     */
+    protected readonly quickReasons: string[] = [
+        'Пожалуйста, прочтите правила внимательнее и подайте анкету снова.',
+        'У вас вероятно указан не игровой ник.',
+        'Ваш ник не соответствует политике сервера.',
+        'Анкета заполнена недостаточно подробно.',
+        'Некорректные контактные данные.',
+    ];
+
+    /**
+     * Подставляет выбранную типовую причину в поле формы.
+     *
+     * @param reason Текст причины.
+     */
+    protected selectReason(reason: string): void {
+        this.form.controls.reason.setValue(reason);
+    }
 
     /**
      * Инициализирует экземпляр класса {@link ConfirmRejectComponent}.

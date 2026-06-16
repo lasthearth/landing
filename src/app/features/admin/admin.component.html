@@ -2,33 +2,75 @@
 @let requestExist = veriverificationRequests === null || veriverificationRequests?.length === 0;
 @let settlements = settlementsRequests$ | async;
 @let settlementsRequest = settlements === null || settlements?.length === 0;
+@let pendingPurchases = pendingPurchases$ | async;
+@let hasPendingPurchases = pendingPurchases && pendingPurchases.length > 0;
 
 <div class="w-full flex flex-col gap-3 lg:gap-6">
-    <p class="text-3xl lg:text-4xl font-bold">Кабинет администратора</p>
+    <p class="text-2xl md:text-3xl lg:text-4xl font-bold">Кабинет администратора</p>
     <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 !font-semibold !w-full content-tabs">
         <button tuiTab type="button">
-            <p class="relative lg:px-3">
-                Анкеты игроков
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Анкеты игроков</span>
+                <tui-icon icon="@tui.user-check" class="size-5! lg:hidden!" />
                 <tui-pulse
                     *ngIf="!requestExist"
                     tuiHintAppearance="floating"
-                    class="!absolute !top-0.5 !right-0.5 !scale-110"
+                    class="!absolute !-top-1.5 !-right-1.5 !scale-110"
                 />
-            </p>
+            </span>
         </button>
         <button tuiTab type="button">
-            <p class="relative lg:px-3">
-                Анкеты селений
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Анкеты селений</span>
+                <tui-icon icon="@tui.castle" class="size-5! lg:hidden!" />
                 <tui-pulse
                     *ngIf="!settlementsRequest"
                     tuiHintAppearance="floating"
-                    class="!absolute !top-0.5 !right-0.5 !scale-110"
+                    class="!absolute !-top-1.5 !-right-1.5 !scale-110"
                 />
-            </p>
+            </span>
         </button>
-        <button tuiTab type="button">Список вопросов</button>
-        <button tuiTab type="button">Создать вопрос</button>
-        <button tuiTab type="button">Создать новость</button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Вопросы</span>
+                <tui-icon icon="@tui.circle-help" class="size-5! lg:hidden!" />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Создать новость</span>
+                <tui-icon icon="@tui.newspaper" class="size-5! lg:hidden!" />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Монеты</span>
+                <tui-icon icon="@tui.wallet" class="size-5! lg:hidden!" />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Покупки</span>
+                <tui-icon icon="@tui.package" class="size-5! lg:hidden!" />
+                <tui-pulse
+                    *ngIf="hasPendingPurchases"
+                    tuiHintAppearance="floating"
+                    class="!absolute !-top-1.5 !-right-1.5 !scale-110"
+                />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Товары</span>
+                <tui-icon icon="@tui.shopping-cart" class="size-5! lg:hidden!" />
+            </span>
+        </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">Голодные игры</span>
+                <tui-icon icon="@tui.flame" class="size-5! lg:hidden!" />
+            </span>
+        </button>
     </tui-tabs>
 
     <div class="mt-2 flex flex-col gap-4">
@@ -50,13 +92,28 @@
                 }
             }
             @case (2) {
-                <app-question-list [refreshTrigger]="questionsUpdate$" />
+                <div class="flex flex-col gap-6">
+                    <app-create-question-form (created)="questionsUpdate$.next()" />
+                    <app-question-list [refreshTrigger]="questionsUpdate$" />
+                </div>
             }
             @case (3) {
-                <app-create-question-form (created)="questionsUpdate$.next()" />
+                <app-create-news />
             }
             @case (4) {
-                <app-create-news />
+                <app-admin-coin-panel />
+            }
+            @case (5) {
+                <app-pending-purchases-panel
+                    [purchases$]="pendingPurchases$"
+                    (listChanged)="updatePendingPurchases()"
+                />
+            }
+            @case (6) {
+                <app-donate-shop-panel />
+            }
+            @case (7) {
+                <app-hunger-games-panel />
             }
         }
     </div>

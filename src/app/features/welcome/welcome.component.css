@@ -4,10 +4,23 @@
     height: 100dvh;
 }
 
-.test {
-    -webkit-box-shadow: 0px 0px 16px 16px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 16px 16px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 0px 16px 16px rgba(0, 0, 0, 0.2);
+.welcome-card {
+    -webkit-box-shadow: 0 0 32px 12px rgba(0, 0, 0, 0.35);
+    -moz-box-shadow: 0 0 32px 12px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 0 32px 12px rgba(0, 0, 0, 0.35);
+}
+
+.hearth-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(
+        ellipse 80% 45% at 50% 85%,
+        rgba(195, 90, 23, 0.28) 0%,
+        rgba(151, 71, 27, 0.12) 35%,
+        transparent 70%
+    );
+    pointer-events: none;
 }
 
 video::-webkit-media-controls {

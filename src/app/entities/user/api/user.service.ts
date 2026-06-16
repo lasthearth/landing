@@ -1,6 +1,7 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { EventTypes, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { jwtDecode } from 'jwt-decode';
 import {
     BehaviorSubject,
@@ -16,6 +17,7 @@ import {
     tap,
 } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { convertTuiFileLikeToBase64 } from '@shared/lib/convert-file-to-base64.function';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { environment } from '@core/config/environments/environment';
 import { IJwtTokenLh } from '../model/i-jwt-token-lh';
@@ -36,6 +38,11 @@ export class UserService {
      * Сервис безопасности OIDC.
      */
     private oidcSecurityService: OidcSecurityService = inject(OidcSecurityService);
+
+    /**
+     * Сервис публичных событий OIDC.
+     */
+    private readonly publicEventsService: PublicEventsService = inject(PublicEventsService);
 
     /**
      * URL аватара пользователя.
@@ -78,6 +85,16 @@ export class UserService {
     public readonly authState$: Observable<boolean> = this.authStateChange$;
 
     /**
+     * Признак завершения первоначальной проверки авторизации.
+     */
+    private readonly authChecked$ = new BehaviorSubject(false);
+
+    /**
+     * Публичный поток признака завершения проверки авторизации.
+     */
+    public readonly isAuthChecked$: Observable<boolean> = this.authChecked$.asObservable();
+
+    /**
      * HTTP-клиент Angular.
      */
     private readonly http: HttpClient = inject(HttpClient);
@@ -96,13 +113,19 @@ export class UserService {
      * Инициализирует поток авторизации.
      */
     constructor() {
-        this.initAuthStream();
-        this.checkAuthTrigger$.next(false);
+        if (isPlatformBrowser(inject(PLATFORM_ID))) {
+            this.initAuthStream();
+            this.checkAuthTrigger$.next(false);
+            this.listenToAuthEvents();
+        }
     }
 
     /**
      * Инициализирует поток проверки авторизации.
      * При срабатывании триггера выполняет проверку или принудительное обновление сессии.
+     * В режиме обычной проверки сначала вызывает {@link OidcSecurityService.checkAuth},
+     * а при отсутствии действующего access token пытается обновить его через refresh token,
+     * чтобы стражи маршрутов получили финальное состояние без промежуточного редиректа.
      */
     public initAuthStream() {
         this.checkAuthTrigger$
@@ -110,7 +133,7 @@ export class UserService {
                 switchMap((forceRefresh) => {
                     const authRequest$ = forceRefresh
                         ? this.oidcSecurityService.forceRefreshSession()
-                        : this.oidcSecurityService.checkAuth();
+                        : this.oidcSecurityService.checkAuthIncludingServer();
 
                     return authRequest$.pipe(
                         switchMap((authResult) => {
@@ -168,12 +191,58 @@ export class UserService {
                             return of(null);
                         }),
                         finalize(() => {
-                            // Логика завершения
+                            this.authChecked$.next(true);
                         })
                     );
                 })
             )
             .subscribe();
+    }
+
+    /**
+     * Подписывается на публичные события OIDC.
+     * Обновляет локальные поля при silent renew и сбрасывает авторизацию при ошибках.
+     */
+    private listenToAuthEvents(): void {
+        this.publicEventsService
+            .registerForEvents()
+            .subscribe((notification) => {
+                switch (notification.type) {
+                    case EventTypes.NewAuthenticationResult:
+                        if (notification.value?.isAuthenticated) {
+                            this.updateUserDataFromTokens();
+                        }
+                        break;
+                    case EventTypes.SilentRenewFailed:
+                        console.error('[Auth] Silent renew не удался:', notification.value);
+                        this.authStateChange$.next(false);
+                        break;
+                }
+            });
+    }
+
+    /**
+     * Обновляет локальные данные пользователя из актуальных токенов.
+     * Используется после успешного silent renew.
+     */
+    private updateUserDataFromTokens(): void {
+        combineLatest([this.oidcSecurityService.getIdToken(), this.oidcSecurityService.getAccessToken()])
+            .pipe(first())
+            .subscribe(([idToken, accessToken]) => {
+                this.accessToken = accessToken;
+                try {
+                    if (idToken) {
+                        const decoded = jwtDecode<IJwtTokenLh>(idToken);
+                        this.userId = decoded.sub ?? '';
+                        this.roles = decoded.roles ?? [];
+                        this.authStateChange$.next(true);
+                        console.debug('[Auth] Данные обновлены после silent renew');
+                    }
+                } catch (decodeError) {
+                    console.error('[Auth] Ошибка декодирования токена после renew:', decodeError);
+                    this.authStateChange$.next(false);
+                }
+            });
     }
 
     /**
@@ -217,14 +286,21 @@ export class UserService {
     /**
      * Обновляет аватар пользователя.
      *
-     * @param base64Image Изображение в формате base64.
+     * ⚠️ В отличие от других медиа, аватар пока загружается через base64
+     * в эндпоинт `/users/{user_id}/avatar`.
+     *
+     * @param file Файл изображения аватара.
      * @returns Observable с URL нового аватара.
      */
-    public setProfileImage$(base64Image: string): Observable<{ avatar: string }> {
-        return this.http.post<{ avatar: string }>(
-            `${this.baseUrl}/users/${this.userId}/avatar`,
-            { avatar: base64Image },
-            { headers: this.getHeaders() }
+    public setProfileImage$(file: File): Observable<{ avatar: string }> {
+        return convertTuiFileLikeToBase64(file).pipe(
+            switchMap((base64Image) =>
+                this.http.post<{ avatar: string }>(
+                    `${this.baseUrl}/users/${this.userId}/avatar`,
+                    { avatar: base64Image, user_id: this.userId },
+                    { headers: this.getHeaders() }
+                )
+            )
         );
     }
 

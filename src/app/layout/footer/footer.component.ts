@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { environment } from '@core/config/environments/environment';
 
 /**
  * Компонент подвала.
@@ -12,4 +13,6 @@ import { RouterLink } from '@angular/router';
     styleUrl: './footer.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FooterComponent {}
+export class FooterComponent {
+    protected readonly environment = environment;
+}

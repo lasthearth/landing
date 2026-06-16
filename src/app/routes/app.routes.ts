@@ -3,6 +3,7 @@ import { LandingComponent } from '../features/landing/landing.component';
 import { RulesComponent } from '../features/rules/rules.component';
 import { HomeComponent } from '../features/home/home.component';
 import { RouteKeys } from './enums/route-keys';
+import { routeSeoData } from './seo-data';
 import { ProfileComponent } from '../features/profile/profile.component';
 import { AdminComponent } from '../features/admin/admin.component';
 import { adminGuard } from '../core/guards/admin.guard';
@@ -16,88 +17,93 @@ import { PublicOfferComponent } from '../features/public-offer/public-offer/publ
 import { FaqComponent } from '../features/faq/faq.component';
 import { SettlementsComponent } from '../features/settlements/settlements.component';
 import { MarketComponent } from '../features/market/market.component';
+import { NotFoundComponent } from '../features/not-found/not-found.component';
 
 export const routes: Routes = [
     {
         path: '',
         component: LandingComponent,
         children: [
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', component: HomeComponent, data: { route_keys: RouteKeys.home, seo: routeSeoData.home } },
             {
                 path: 'home',
                 component: HomeComponent,
-                data: { route_keys: RouteKeys.home },
+                data: { route_keys: RouteKeys.home, seo: routeSeoData.home },
             },
             {
                 path: 'rules',
                 component: RulesComponent,
-                data: { route_keys: RouteKeys.rules },
+                data: { route_keys: RouteKeys.rules, seo: routeSeoData.rules },
             },
             {
                 path: 'profile',
                 component: ProfileComponent,
                 canActivate: [userGuard],
-                data: { route_keys: RouteKeys.profile },
+                data: { route_keys: RouteKeys.profile, seo: routeSeoData.profile },
                 children: [
                     { path: '', redirectTo: 'how-play', pathMatch: 'full' },
                     {
                         path: 'stats',
                         component: StatisticsComponent,
-                        data: { route_keys: RouteKeys.stats },
+                        data: { route_keys: RouteKeys.stats, seo: routeSeoData.profile },
                     },
                     {
                         path: 'how-play',
                         component: HowPlayComponent,
-                        data: { route_keys: RouteKeys.howPlay },
+                        data: { route_keys: RouteKeys.howPlay, seo: routeSeoData.startGame },
                     },
                     {
                         path: 'settlement',
                         component: SettlementComponent,
-                        data: { route_keys: RouteKeys.settlement },
+                        data: { route_keys: RouteKeys.settlement, seo: routeSeoData.profile },
                     },
                     {
                         path: 'admin',
                         component: AdminComponent,
                         canActivate: [adminGuard],
-                        data: { route_keys: RouteKeys.admin },
+                        data: { route_keys: RouteKeys.admin, seo: routeSeoData.profile },
                     },
                 ],
             },
             {
                 path: 'start-game',
                 component: StartGameComponent,
-                data: { route_keys: RouteKeys.startGame },
+                data: { route_keys: RouteKeys.startGame, seo: routeSeoData.startGame },
             },
             {
                 path: 'market',
                 component: MarketComponent,
-                data: { route_keys: RouteKeys.market },
+                data: { route_keys: RouteKeys.market, seo: routeSeoData.market },
             },
             {
                 path: 'privacy-policy',
                 component: PrivacyPolicyComponent,
-                data: { route_keys: RouteKeys.privacyPolicy },
+                data: { route_keys: RouteKeys.privacyPolicy, seo: routeSeoData.privacyPolicy },
             },
             {
                 path: 'public-offer',
                 component: PublicOfferComponent,
-                data: { route_keys: RouteKeys.publicOffer },
+                data: { route_keys: RouteKeys.publicOffer, seo: routeSeoData.publicOffer },
             },
             {
                 path: 'faq',
                 component: FaqComponent,
-                data: { route_keys: RouteKeys.faq },
+                data: { route_keys: RouteKeys.faq, seo: routeSeoData.faq },
             },
             {
                 path: 'settlements',
-                canActivate: [userGuard],
                 component: SettlementsComponent,
-                data: { route_keys: RouteKeys.settlements },
+                data: { route_keys: RouteKeys.settlements, seo: routeSeoData.settlements },
             },
             {
                 path: 'unauthorized',
                 redirectTo: '/home',
                 pathMatch: 'full',
+            },
+            {
+                path: '**',
+                component: NotFoundComponent,
+                data: { seo: routeSeoData.notFound },
             },
         ],
     },

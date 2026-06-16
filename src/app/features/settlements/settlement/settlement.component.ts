@@ -1,19 +1,23 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
-import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { HttpContext } from '@angular/common/http';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '@entities/settlement';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { UserService } from '@entities/user';
 import { PlayerInviteComponent } from '../player-invite/player-invite.component';
 import { ISettlement } from '@entities/settlement';
 import { NotificationService } from '@core/services/notification.service';
-import { BehaviorSubject, catchError, filter, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, defaultIfEmpty, filter, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateSettlementFormComponent } from '@app/features/profile/create-settlement-from/create-settlement-from.component';
+import { EditSettlementFormComponent } from '../edit-settlement-form/edit-settlement-form.component';
 import { SettlementsTypes } from '@entities/settlement';
 import { ISettlementInvitation } from '@entities/settlement';
 import { getSettlementTypeByKey } from '@entities/settlement/lib/get-settlement-type-by-key.function';
 import { TuiPulse } from '@taiga-ui/kit';
+import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { IPlayer } from '@entities/user';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
@@ -25,7 +29,8 @@ import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, NgIf, TuiLoader, TuiPulse, TuiIcon, SettlementTagComponent],
+    imports: [AsyncPipe, TuiPulse, TuiIcon, SettlementTagComponent, SettlementDetailSkeletonComponent],
+    providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +72,11 @@ export class SettlementComponent {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     /**
+     * Пайп форматирования дат.
+     */
+    private readonly datePipe: DatePipe = inject(DatePipe);
+
+    /**
      * {@link Observable} Списка приглашений в селение (входящие).
      */
     protected readonly invitations$: Observable<ISettlementInvitation[]> = this.notificationService.invitations$;
@@ -78,8 +88,11 @@ export class SettlementComponent {
 
     /**
      * {@link Observable} Статуса заявки на создание поселения.
+     * При ошибке или пустом ответе возвращает null.
      */
-    protected requestStatus$ = this.settlementService.getRequestSettlementStatus$(this.userId);
+    protected requestStatus$ = this.settlementService
+        .getRequestSettlementStatus$(this.userId)
+        .pipe(catchError(() => of(null)), defaultIfEmpty(null));
 
     /**
      * Триггер для обновления списка отправленных приглашений.
@@ -87,45 +100,58 @@ export class SettlementComponent {
     private readonly settlementId$ = new BehaviorSubject<string | null>(null);
 
     /**
+     * Триггер для обновления информации о селении.
+     */
+    private readonly reloadSettlement$ = new BehaviorSubject<void>(undefined);
+
+    /**
      * {@link Observable} Информации о селении.
      */
-    protected readonly settlementInfo$: Observable<ISettlement | undefined> = this.settlementService
-        .getSettlementInfo(this.userService.userId)
-        .pipe(
-            map((settlement) => {
-                if (settlement === null) return undefined;
+    protected readonly settlementInfo$: Observable<ISettlement | undefined> = this.reloadSettlement$.pipe(
+        switchMap(() =>
+            !this.userService.userId
+                ? of(undefined)
+                : this.settlementService
+                      .getSettlementInfo(
+                          this.userService.userId,
+                          new HttpContext().set(SKIP_ERROR_ALERT, true)
+                      )
+                      .pipe(
+                          map((settlement) => {
+                              if (settlement === null) return undefined;
 
-                this.userService
-                    .getPlayer$(settlement.leader.user_id)
-                    .pipe(
-                        tap((user) => {
-                            this.leader = user;
-                            this.cdr.detectChanges();
-                        })
-                    )
-                    .subscribe();
+                              this.userService
+                                  .getPlayer$(settlement.leader.user_id)
+                                  .pipe(
+                                      tap((user) => {
+                                          this.leader = user;
+                                          this.cdr.detectChanges();
+                                      })
+                                  )
+                                  .subscribe();
 
-                settlement.members.forEach((member) => {
-                    this.userService
-                        .getPlayer$(member.user_id)
-                        .pipe(
-                            tap((user) => {
-                                this.users.push(user);
-                                this.cdr.detectChanges();
-                            })
-                        )
-                        .subscribe();
-                });
+                              settlement.members.forEach((member) => {
+                                  this.userService
+                                      .getPlayer$(member.user_id)
+                                      .pipe(
+                                          tap((user) => {
+                                              this.users.push(user);
+                                              this.cdr.detectChanges();
+                                          })
+                                      )
+                                      .subscribe();
+                              });
 
-                return settlement;
-            }),
-            tap((settlement) => {
-                this.settlementId$.next(settlement?.id ?? null);
-            }),
-            catchError(() => {
-                return of(undefined);
-            })
-        );
+                              return settlement;
+                          }),
+                          tap((settlement) => {
+                              this.settlementId$.next(settlement?.id ?? null);
+                          }),
+                          catchError(() => of(undefined)),
+                          defaultIfEmpty(undefined)
+                      )
+        )
+    );
 
     /**
      * {@link Observable} Списка отправленных приглашений (только для лидера).
@@ -156,7 +182,7 @@ export class SettlementComponent {
     /**
      * Имя лидера поселения.
      */
-    protected leader!: IPlayer;
+    protected leader: IPlayer | null = null;
 
     /**
      * Открывает диалоговое окно создания поселения.
@@ -170,11 +196,27 @@ export class SettlementComponent {
     }
 
     /**
+     * Открывает диалоговое окно редактирования поселения.
+     *
+     * @param settlement Информация о селении.
+     */
+    protected editSettlement(settlement: ISettlement): void {
+        this.dialogs
+            .open(new PolymorpheusComponent(EditSettlementFormComponent), {
+                data: { settlement },
+                size: 'auto',
+            })
+            .subscribe({
+                complete: () => this.reloadSettlement$.next(),
+            });
+    }
+
+    /**
      * Возвращает наименования типа селения по его ключу.
      *
      * @param key Ключ-типа селения.
      */
-    protected getSettlementType(key: string | undefined): string {
+    protected getSettlementType(key: string | number | undefined): string {
         return getSettlementTypeByKey(key);
     }
 
@@ -239,8 +281,8 @@ export class SettlementComponent {
      *
      * @param currentType Текущий тип поселения.
      */
-    protected levelUp(currentType: string): void {
-        const type = this.getSettlementsTypeEnumByKey(currentType);
+    protected levelUp(currentType: string | number): void {
+        const type = typeof currentType === 'number' ? currentType : this.getSettlementsTypeEnumByKey(currentType);
         this.dialogs
             .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: type } })
             .subscribe();
@@ -321,7 +363,10 @@ export class SettlementComponent {
      *
      * @param key Ключ-типа селения.
      */
-    protected getSettlementsTypeEnumByKey(key: string): SettlementsTypes {
+    protected getSettlementsTypeEnumByKey(key: string | number): SettlementsTypes {
+        if (typeof key === 'number') {
+            return key as SettlementsTypes;
+        }
         switch (key) {
             case 'CAMP':
             default:
@@ -344,5 +389,25 @@ export class SettlementComponent {
      */
     protected getTag(tagId: string) {
         return this.settlementService.getTagById(tagId);
+    }
+
+    /**
+     * Форматирует Unix timestamp (в секундах) в локальную дату.
+     *
+     * @param value Timestamp в виде строки/числа.
+     * @returns Строка в формате "dd.MM.yy" или "—".
+     */
+    protected formatTimestamp(value: string | number | null | undefined): string {
+        if (value === null || value === undefined || value === '') {
+            return '—';
+        }
+
+        const timestamp = Number(value);
+
+        if (Number.isNaN(timestamp)) {
+            return '—';
+        }
+
+        return this.datePipe.transform(timestamp * 1000, 'dd.MM.yy') ?? '—';
     }
 }
