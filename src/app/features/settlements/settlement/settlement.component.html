@@ -195,6 +195,14 @@
             >
                 Повысить уровень
             </button>
+
+            <button
+                disabled
+                title="Редактирование временно недоступно из-за CORS-ограничений на сервере"
+                class="lh-secondary-button text-lg leading-[27px] py-2 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                Редактировать
+            </button>
         } @else {
             <button
                 (click)="settlementLeave(settlement.id, userId)"

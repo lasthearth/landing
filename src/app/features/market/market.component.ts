@@ -4,14 +4,14 @@ import { TitlesComponent } from './components/titles/titles.component';
 import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
 import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
-import { TuiDialogService } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 
 /**
  * Компонент магазина привилегий.
  */
 @Component({
     selector: 'app-market',
-    imports: [TitlesComponent, KitsComponent, SpecialComponent],
+    imports: [TitlesComponent, KitsComponent, SpecialComponent, TuiIcon],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
 import { NewsCardComponent } from '@app/features/news/ui/news-card/news-card.component';
@@ -16,7 +17,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon],
+    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,50 +80,81 @@ export class HomeComponent {
         {
             image: `${this.imagesPath}/1.webp`,
             isLight: false,
-            header: 'Last Hearth',
-            body: 'Проект где вы можете воплотить свои мечты',
+            header: 'Последний очаг',
+            body: 'Ролевой сервер Vintage Story, где мир помнит каждого поселенца',
         },
         {
             image: `${this.imagesPath}/5.webp`,
             isLight: true,
             header: 'Огромный мир',
-            body: 'Исследуйте бескрайний мир и изучайте его красоты<br>Карта 256.000 блоков диаметром',
+            body: 'Карта 256 000 блоков диаметром — найди своё место у огня',
         },
         {
             image: `${this.imagesPath}/2.webp`,
             isLight: true,
             header: 'Поселения',
-            body: 'Создавайте свои города и империи<br>Воюйте, торгуйте и ведите дипломатию',
+            body: 'Создавай города, веди дипломатию, торгуй и влияй на историю мира',
         },
         {
             image: `${this.imagesPath}/3.webp`,
             isLight: true,
             header: 'Осады',
-            body: 'Захватывайте крепости и замки<br>Штурмуйте стены и разбивайте ворота',
+            body: 'Штурмуй крепости, защищай стены и пиши свои военные хроники',
         },
         {
             image: `${this.imagesPath}/4.webp`,
             isLight: false,
-            header: 'Нет приватов',
-            body: 'На сервере отсутствуют приваты<br>Игровой процесс приближен к реальности',
+            header: 'Без приватов',
+            body: 'Игровой процесс приближен к реальности — доверие и репутация решают всё',
         },
         {
             image: `${this.imagesPath}/6.webp`,
             isLight: true,
             header: 'Навигация',
-            body: 'Скрафтите средства навигации, чтобы получить карту и координаты<br>Ориентирование в мире - важный аспект',
+            body: 'Скрафть компас и карту, чтобы не заблудиться в диких землях',
         },
         {
             image: `${this.imagesPath}/7.webp`,
             isLight: true,
-            header: 'Моды',
-            body: 'Мы постоянно разрабатываем собственные моды<br>Все это делает игру у нас уникальной',
+            header: 'Собственные моды',
+            body: 'Уникальные механики, которые не найдёшь на других серверах',
         },
         {
             image: `${this.imagesPath}/8.webp`,
             isLight: true,
-            header: 'Система правил',
-            body: 'Продвинутая система правил<br>Собственная система логов дает гарантию их выполнения',
+            header: 'Честные правила',
+            body: 'Продуманная система правил и логов защищает игроков от токсичности',
+        },
+    ];
+
+    /**
+     * Быстрые действия на главной странице.
+     * Помогают новому игроку сразу найти путь в мир.
+     */
+    protected readonly quickActions = [
+        {
+            icon: '@tui.play',
+            label: 'Как начать',
+            route: '/start-game',
+            external: false,
+        },
+        {
+            icon: '@tui.map',
+            label: 'Поселения',
+            route: '/settlements',
+            external: false,
+        },
+        {
+            icon: '@tui.message-circle',
+            label: 'Discord',
+            route: 'https://discord.com/invite/FZb7SGrSFy',
+            external: true,
+        },
+        {
+            icon: '@tui.heart',
+            label: 'Поддержать',
+            route: '/market',
+            external: false,
         },
     ];
 

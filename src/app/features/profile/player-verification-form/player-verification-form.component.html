@@ -47,6 +47,11 @@
                 <lh-input type="textarea" placeholder="Ответ на вопрос" [formControl]="form.controls.answer5" [rows]="2" />
                 <tui-error formControlName="answer5" [error]="[] | tuiFieldError | async" />
             </div>
+            <div class="flex flex-col gap-1">
+                <p class="text-[#2a2722] font-medium">Как вы узнали о нас?</p>
+                <lh-input type="textarea" placeholder="Ответ на вопрос" [formControl]="form.controls.sourceAnswer" [rows]="2" />
+                <tui-error formControlName="sourceAnswer" [error]="[] | tuiFieldError | async" />
+            </div>
         </div>
 
         <div class="lh-dialog-actions">

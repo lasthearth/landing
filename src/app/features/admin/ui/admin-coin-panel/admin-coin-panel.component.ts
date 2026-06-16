@@ -88,6 +88,11 @@ export class AdminCoinPanelComponent {
     protected readonly transactions = signal<ITransaction[]>([]);
 
     /**
+     * Текущий баланс донат-валюты выбранного игрока.
+     */
+    protected readonly playerBalance = signal<string | null>(null);
+
+    /**
      * Признак выполнения запроса.
      */
     protected readonly isLoading = signal(false);
@@ -118,6 +123,7 @@ export class AdminCoinPanelComponent {
             avatar: user.avatar?.original,
         });
         this.searchControl.setValue('');
+        this.loadBalance(user.user_id);
         this.loadTransactions(user.user_id);
     }
 
@@ -127,7 +133,20 @@ export class AdminCoinPanelComponent {
     protected clearPlayer(): void {
         this.selectedPlayer.set(null);
         this.transactions.set([]);
+        this.playerBalance.set(null);
         this.amountControl.reset('');
+    }
+
+    /**
+     * Загружает текущий баланс игрока.
+     *
+     * @param playerId Идентификатор игрока.
+     */
+    private loadBalance(playerId: string): void {
+        this.donateService
+            .getPlayerBalance$(playerId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((response) => this.playerBalance.set(response.coins));
     }
 
     /**
@@ -201,6 +220,7 @@ export class AdminCoinPanelComponent {
                 tap(() => {
                     this.amountControl.reset('');
                     this.commentControl.reset('');
+                    this.loadBalance(player.playerId);
                     this.loadTransactions(player.playerId);
                 }),
                 catchError(() => of(null)),

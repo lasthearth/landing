@@ -119,6 +119,10 @@ html body {
     font-optical-sizing: auto;
 }
 
+.almendra-regular {
+    font-family: 'Almendra', serif;
+}
+
 /**
  * Отключает анимации для пользователей, предпочитающих уменьшенное движение.
  * Улучшает доступность для людей с вестибулярными нарушениями.
@@ -139,9 +143,6 @@ a {
     color: var(--color-blue-400);
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
-    border-bottom: 1px;
-    --tw-border-style: dashed;
-    border-style: dashed;
     transition: all 0.1s ease-in-out;
 }
 
@@ -509,7 +510,9 @@ button:disabled,
 .cdk-drag-preview {
     box-sizing: border-box;
     border-radius: 0.75rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.2),
+        0 4px 6px -2px rgba(0, 0, 0, 0.1);
     opacity: 0.95;
 }
 

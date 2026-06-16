@@ -7,6 +7,7 @@ import { ICreateSettlement } from '../model/i-create-settlement';
 import { IRequestSettlement } from '../model/i-request-settlement';
 import { ISettlement } from '../model/i-settlement';
 import { ISettlementInvitation } from '../model/i-settlement-invitation';
+import { IUpdateSettlementRequest } from '../model/i-update-settlement';
 import { Tag } from '../model/tag';
 
 /**
@@ -120,6 +121,26 @@ export class SettlementService {
             .get<{
                 settlement: ISettlement;
             }>(`${this.baseUrl}/settlements/${settlementId}`)
+            .pipe(map((data) => data.settlement));
+    }
+
+    /**
+     * Обновляет данные поселения.
+     *
+     * Доступно только лидеру поселения.
+     *
+     * @param settlementId Идентификатор поселения.
+     * @param request Данные для обновления.
+     * @returns Observable с обновлённым поселением.
+     */
+    public updateSettlement$(
+        settlementId: string,
+        request: IUpdateSettlementRequest
+    ): Observable<ISettlement> {
+        return this.http
+            .patch<{
+                settlement: ISettlement;
+            }>(`${this.baseUrl}/settlements/${settlementId}`, request)
             .pipe(map((data) => data.settlement));
     }
 

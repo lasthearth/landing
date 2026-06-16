@@ -47,6 +47,8 @@ export class PlayerVerificationFormComponent {
         answer4: new FormControl<string | null>(null, [Validators.required]),
         question5: new FormControl<string | null>(null, [Validators.required]),
         answer5: new FormControl<string | null>(null, [Validators.required]),
+        sourceQuestion: new FormControl<string | null>(null),
+        sourceAnswer: new FormControl<string | null>(null, [Validators.required]),
     });
 
     /**
@@ -76,6 +78,7 @@ export class PlayerVerificationFormComponent {
             this.form.controls.question3.setValue(questions[2].question);
             this.form.controls.question4.setValue(questions[3].question);
             this.form.controls.question5.setValue(questions[4].question);
+            this.form.controls.sourceQuestion.setValue('Как вы узнали о нас?');
         })
     );
 
@@ -123,6 +126,10 @@ export class PlayerVerificationFormComponent {
                             {
                                 question: this.form.controls.question5.value,
                                 answer: this.form.controls.answer5.value,
+                            },
+                            {
+                                question: this.form.controls.sourceQuestion.value,
+                                answer: this.form.controls.sourceAnswer.value,
                             },
                         ],
                     } as IVerifyData;

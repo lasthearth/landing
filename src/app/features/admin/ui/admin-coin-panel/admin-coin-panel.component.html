@@ -45,13 +45,23 @@
                         <span class="text-base text-lh-primary/60 font-mono">{{ selectedPlayer()?.playerId }}</span>
                     </div>
                 </div>
-                <button
-                    type="button"
-                    (click)="clearPlayer()"
-                    class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors"
-                >
-                    <tui-icon icon="@tui.x" />
-                </button>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex flex-col items-end">
+                        <span class="text-base text-lh-primary/60">Баланс</span>
+                        <span class="text-xl font-bold text-lh-accent inline-flex items-center gap-1">
+                            {{ playerBalance() ?? '—' }}
+                            <img src="/splinter-of-spark.png" alt="Осколок" class="h-5 w-5 object-contain" />
+                        </span>
+                    </div>
+                    <button
+                        type="button"
+                        (click)="clearPlayer()"
+                        class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors"
+                    >
+                        <tui-icon icon="@tui.x" />
+                    </button>
+                </div>
             </div>
 
             <div class="flex flex-col gap-3">

@@ -1,0 +1,62 @@
+<div class="flex flex-col gap-5 p-6 min-w-[600px] max-w-3xl">
+    <h2 class="text-2xl font-bold text-lh-primary">Редактирование поселения</h2>
+
+    <div class="flex flex-col gap-4">
+        <lh-input type="input" placeholder="Название" [formControl]="form.controls.name" />
+        <lh-input type="textarea" placeholder="Описание" [rows]="6" [formControl]="form.controls.description" />
+    </div>
+
+    <div class="flex flex-col gap-3">
+        <p class="text-lg font-semibold text-lh-primary">Архитектура поселения</p>
+
+        <div class="flex flex-col gap-3">
+            @for (attachment of attachmentsArray.controls; track $index; let i = $index) {
+                @if (!attachment.get('isExisting')?.value) {
+                    <div class="flex items-start gap-2">
+                        <div class="flex-1 flex flex-col gap-1">
+                            <lh-input
+                                type="input"
+                                placeholder="URL изображения"
+                                [formControl]="getAttachmentControl($index, 'url')"
+                            />
+                            <span class="text-sm text-neutral-500">Архитектура поселения</span>
+                        </div>
+                        <button
+                            type="button"
+                            (click)="removeAttachment(i)"
+                            class="p-2 rounded-lg hover:bg-red-100 text-red-700 transition-colors mt-0.5"
+                        >
+                            <tui-icon icon="@tui.trash-2" class="size-5!" />
+                        </button>
+                    </div>
+                }
+            }
+        </div>
+
+        <button
+            type="button"
+            (click)="addAttachment()"
+            class="py-2 px-4 rounded-xl border border-lh-primary-2/30 text-lh-primary font-semibold hover:bg-lh-primary-2/10 transition-colors"
+        >
+            Добавить архитектуру
+        </button>
+    </div>
+
+    <div class="flex gap-4 mt-2">
+        <button
+            type="button"
+            (click)="cancel()"
+            class="flex-1 py-3 px-4 rounded-xl border border-lh-primary-2/30 text-lh-primary font-bold hover:bg-lh-primary-2/10 transition-colors"
+        >
+            Отмена
+        </button>
+        <button
+            type="button"
+            [disabled]="form.invalid"
+            (click)="save()"
+            class="flex-1 py-3 px-4 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            Сохранить
+        </button>
+    </div>
+</div>

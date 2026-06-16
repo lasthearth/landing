@@ -15,34 +15,63 @@
         <code>video</code>
     </video>
 
-    <div
-        class="absolute backdrop-blur-md test flex flex-col justify-center items-center left-1/2 top-[40%] lg:top-[45%] backdrop-brightness-85 -translate-x-1/2 -translate-y-1/2 text-center text-white w-auto lg:w-auto rounded-4xl px-8 lg:px-12 pb-12 pt-12 lg:pt-24"
-    >
-        <h1 class="text-3xl md:text-5xl xl:text-8xl 2xl:text-[136px] font-bold mb-4 uppercase !text-shadow-lg">Last Hearth</h1>
+    <!-- Свет очага: мягкое свечение от нижней части экрана -->
+    <div class="hearth-glow pointer-events-none" aria-hidden="true"></div>
 
-        <p class="text-xl md:text-2xl/7.5 lg:text-5xl font-semibold mt-2 !text-shadow-lg">VINTAGE STORY СЕРВЕР</p>
+    <div
+        class="absolute backdrop-blur-md welcome-card flex flex-col justify-center items-center left-1/2 top-[40%] lg:top-[45%] backdrop-brightness-85 -translate-x-1/2 -translate-y-1/2 text-center text-white w-[92%] max-w-5xl rounded-3xl px-6 py-10 lg:px-12 lg:py-14"
+    >
+        <h1 class="text-4xl md:text-6xl xl:text-8xl 2xl:text-[120px] font-bold mb-3 uppercase !text-shadow-lg">
+            Last Hearth
+        </h1>
+
+        <p class="text-lg md:text-2xl/7.5 lg:text-3xl font-semibold mt-2 !text-shadow-lg text-[#f0e6d2]">
+            Сервер Vintage Story
+        </p>
+
+        <p class="text-base md:text-xl lg:text-2xl mt-4 max-w-3xl !text-shadow-md text-[#e8d8b8]">
+            Выживай у последнего очага, строй поселение и оставь след в мире, который помнит каждого игрока.
+        </p>
 
         <div
-            class="mt-12 lg:mt-20 w-full flex flex-col lg:flex-row gap-8 justify-center lg:justify-between items-start px-0 lg:px-12"
+            class="mt-8 lg:mt-12 w-full flex flex-col lg:flex-row gap-6 lg:gap-10 justify-center items-start lg:items-stretch px-0 lg:px-8"
         >
             <div class="flex flex-row lg:flex-col gap-3 px-2 justify-center items-center">
-                <tui-icon icon="@tui.skull" class="!text-3xl md:!text-5xl text-white" />
-                <p class="text-base lg:text-xl !text-shadow-lg min-w-48 max-w-72">
-                    Сервер с хардкорной сложностью, для истинных любителей выживания
+                <tui-icon icon="@tui.flame" class="!text-3xl md:!text-5xl text-[#ffaa5c] spark-glow" />
+                <p class="text-base lg:text-lg !text-shadow-lg min-w-48 max-w-72 text-[#f0e6d2]">
+                    Хардкорная сложность для истинных любителей выживания
                 </p>
             </div>
             <div class="flex flex-row lg:flex-col gap-3 px-2 justify-center items-center">
-                <tui-icon icon="@tui.swords" class="!text-3xl md:!text-5xl text-white" />
-                <p class="text-base lg:text-xl !text-shadow-lg text-wrap break-words min-w-48 max-w-72">
-                    Политический сервер с дипломатией, войнами, торговлей и интригами
+                <tui-icon icon="@tui.shield" class="!text-3xl md:!text-5xl text-[#ffaa5c] spark-glow" />
+                <p class="text-base lg:text-lg !text-shadow-lg text-wrap break-words min-w-48 max-w-72 text-[#f0e6d2]">
+                    Поселения, дипломатия интриги, войны и торговля
                 </p>
             </div>
             <div class="flex flex-row lg:flex-col gap-3 px-2 justify-center items-center">
-                <tui-icon icon="@tui.users" class="!text-3xl md:!text-5xl text-white" />
-                <p class="text-base lg:text-xl !text-shadow-lg min-w-48 max-w-72">
+                <tui-icon icon="@tui.users" class="!text-3xl md:!text-5xl text-[#ffaa5c] spark-glow" />
+                <p class="text-base lg:text-lg !text-shadow-lg min-w-48 max-w-72 text-[#f0e6d2]">
                     Одно из крупнейших коммьюнити по Vintage Story в СНГ
                 </p>
             </div>
+        </div>
+
+        <div class="mt-8 lg:mt-12 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center items-center">
+            <button
+                type="button"
+                (click)="scroll()"
+                class="px-8 py-3.5 rounded-xl bg-[#c35a17] hover:bg-[#d96d28] text-white text-lg md:text-xl font-bold uppercase tracking-wide transition-all duration-200 shadow-[0_0_24px_rgba(195,90,23,0.45)] hover:shadow-[0_0_32px_rgba(255,150,60,0.55)] hover:-translate-y-0.5"
+            >
+                Начать играть
+            </button>
+            <a
+                href="https://discord.com/invite/FZb7SGrSFy"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="px-8 py-3.5 rounded-xl border-2 border-[rgba(240,230,210,0.35)] bg-transparent hover:bg-[rgba(240,230,210,0.08)] !text-[#f0e6d2] text-lg md:text-xl font-bold uppercase tracking-wide transition-all duration-200 hover:border-[#ffaa5c] hover:text-white no-underline!"
+            >
+                Вступить в Discord
+            </a>
         </div>
     </div>
 

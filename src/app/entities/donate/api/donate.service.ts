@@ -79,6 +79,18 @@ export class DonateService {
     }
 
     /**
+     * Получает текущий баланс донат-валюты указанного игрока.
+     *
+     * @param playerId Идентификатор игрока.
+     * @returns Observable с балансом.
+     */
+    public getPlayerBalance$(playerId: string): Observable<IBalanceResponse> {
+        return this.http
+            .get<IBalanceResponseDto>(`${this.baseUrl}/donate/players/${playerId}/balance`)
+            .pipe(map(mapDtoToBalanceResponse));
+    }
+
+    /**
      * Получает историю покупок авторизованного игрока.
      *
      * @returns Observable с массивом покупок.

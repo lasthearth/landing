@@ -11,6 +11,7 @@ import { NotificationService } from '@core/services/notification.service';
 import { BehaviorSubject, catchError, defaultIfEmpty, filter, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateSettlementFormComponent } from '@app/features/profile/create-settlement-from/create-settlement-from.component';
+import { EditSettlementFormComponent } from '../edit-settlement-form/edit-settlement-form.component';
 import { SettlementsTypes } from '@entities/settlement';
 import { ISettlementInvitation } from '@entities/settlement';
 import { getSettlementTypeByKey } from '@entities/settlement/lib/get-settlement-type-by-key.function';
@@ -99,51 +100,58 @@ export class SettlementComponent {
     private readonly settlementId$ = new BehaviorSubject<string | null>(null);
 
     /**
+     * Триггер для обновления информации о селении.
+     */
+    private readonly reloadSettlement$ = new BehaviorSubject<void>(undefined);
+
+    /**
      * {@link Observable} Информации о селении.
      */
-    protected readonly settlementInfo$: Observable<ISettlement | undefined> = !this.userService.userId
-        ? of(undefined)
-        : this.settlementService
-              .getSettlementInfo(
-                  this.userService.userId,
-                  new HttpContext().set(SKIP_ERROR_ALERT, true)
-              )
-              .pipe(
-                  map((settlement) => {
-                      if (settlement === null) return undefined;
+    protected readonly settlementInfo$: Observable<ISettlement | undefined> = this.reloadSettlement$.pipe(
+        switchMap(() =>
+            !this.userService.userId
+                ? of(undefined)
+                : this.settlementService
+                      .getSettlementInfo(
+                          this.userService.userId,
+                          new HttpContext().set(SKIP_ERROR_ALERT, true)
+                      )
+                      .pipe(
+                          map((settlement) => {
+                              if (settlement === null) return undefined;
 
-                      this.userService
-                          .getPlayer$(settlement.leader.user_id)
-                          .pipe(
-                              tap((user) => {
-                                  this.leader = user;
-                                  this.cdr.detectChanges();
-                              })
-                          )
-                          .subscribe();
+                              this.userService
+                                  .getPlayer$(settlement.leader.user_id)
+                                  .pipe(
+                                      tap((user) => {
+                                          this.leader = user;
+                                          this.cdr.detectChanges();
+                                      })
+                                  )
+                                  .subscribe();
 
-                      settlement.members.forEach((member) => {
-                          this.userService
-                              .getPlayer$(member.user_id)
-                              .pipe(
-                                  tap((user) => {
-                                      this.users.push(user);
-                                      this.cdr.detectChanges();
-                                  })
-                              )
-                              .subscribe();
-                      });
+                              settlement.members.forEach((member) => {
+                                  this.userService
+                                      .getPlayer$(member.user_id)
+                                      .pipe(
+                                          tap((user) => {
+                                              this.users.push(user);
+                                              this.cdr.detectChanges();
+                                          })
+                                      )
+                                      .subscribe();
+                              });
 
-                      return settlement;
-                  }),
-                  tap((settlement) => {
-                      this.settlementId$.next(settlement?.id ?? null);
-                  }),
-                  catchError(() => {
-                      return of(undefined);
-                  }),
-                  defaultIfEmpty(undefined)
-              );
+                              return settlement;
+                          }),
+                          tap((settlement) => {
+                              this.settlementId$.next(settlement?.id ?? null);
+                          }),
+                          catchError(() => of(undefined)),
+                          defaultIfEmpty(undefined)
+                      )
+        )
+    );
 
     /**
      * {@link Observable} Списка отправленных приглашений (только для лидера).
@@ -185,6 +193,22 @@ export class SettlementComponent {
                 data: { level: SettlementsTypes.initial },
             })
             .subscribe();
+    }
+
+    /**
+     * Открывает диалоговое окно редактирования поселения.
+     *
+     * @param settlement Информация о селении.
+     */
+    protected editSettlement(settlement: ISettlement): void {
+        this.dialogs
+            .open(new PolymorpheusComponent(EditSettlementFormComponent), {
+                data: { settlement },
+                size: 'auto',
+            })
+            .subscribe({
+                complete: () => this.reloadSettlement$.next(),
+            });
     }
 
     /**
