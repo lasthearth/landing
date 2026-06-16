@@ -11,314 +11,342 @@
 @if (isLoading) {
     <app-profile-skeleton />
 } @else {
-
-<div class="text-lh-primary flex flex-col gap-2 p-6">
-    <!-- Шапка профиля -->
-    <div class="grid gap-4 grid-cols-[1fr_auto_auto] max-[1710px]:grid-cols-1">
-        <!-- Колонка 1: Профиль -->
-        <div class="flex gap-4 max-[640px]:flex-col">
-            <!-- Аватар -->
-            <div class="flex flex-col shrink-0 overflow-hidden rounded-2xl max-[640px]:hidden w-48">
-                @if (userData.image) {
-                    <img
-                        [src]="userData.image"
-                        [alt]="'Аватар пользователя ' + userName"
-                        (click)="show(userData.image, 'Изображение профиля')"
-                        class="w-full h-44 object-cover rounded-t-2xl transition-all duration-200 hover:opacity-85 cursor-pointer"
-                    />
-                } @else {
-                    <img
-                        src="/default-avatar.png"
-                        class="w-full h-44 object-cover rounded-t-2xl"
-                        alt="Аватар по умолчанию"
-                    />
-                }
-                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
-                <button
-                    (click)="triggerFileInput()"
-                    class="flex items-center justify-center gap-2 w-full text-base leading-[27px] font-bold cursor-pointer text-white bg-gradient-to-r from-lh-accent to-[#e07830] hover:brightness-105 transition-all duration-300 shadow-md py-2 px-2 whitespace-nowrap rounded-b-2xl"
-                >
-                    <tui-icon icon="@tui.camera" class="size-4!" />
-                    ИЗМЕНИТЬ ФОТО
-                </button>
-            </div>
-
-            <!-- Инфо -->
-            <div class="flex flex-col justify-between gap-3 min-w-0 flex-1">
-                <div class="flex items-stretch gap-3 max-[530px]:flex-col">
-                    <!-- Роль -->
-                    <div
-                        class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
+    <div class="text-lh-primary flex flex-col gap-2 p-6">
+        <!-- Шапка профиля -->
+        <div class="grid gap-4 grid-cols-[1fr_auto_auto] max-[1710px]:grid-cols-1">
+            <!-- Колонка 1: Профиль -->
+            <div class="flex gap-4 max-[640px]:flex-col">
+                <!-- Аватар -->
+                <div class="flex flex-col shrink-0 overflow-hidden rounded-2xl max-[640px]:hidden w-48">
+                    @if (userData.image) {
+                        <img
+                            [src]="userData.image"
+                            [alt]="'Аватар пользователя ' + userName"
+                            (click)="show(userData.image, 'Изображение профиля')"
+                            class="w-full h-44 object-cover rounded-t-2xl transition-all duration-200 hover:opacity-85 cursor-pointer"
+                        />
+                    } @else {
+                        <img
+                            src="/default-avatar.png"
+                            class="w-full h-44 object-cover rounded-t-2xl"
+                            alt="Аватар по умолчанию"
+                        />
+                    }
+                    <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
+                    <button
+                        (click)="triggerFileInput()"
+                        class="flex items-center justify-center gap-2 w-full text-base leading-[27px] font-bold cursor-pointer text-white bg-gradient-to-r from-lh-accent to-[#e07830] hover:brightness-105 transition-all duration-300 shadow-md py-2 px-2 whitespace-nowrap rounded-b-2xl"
                     >
-                        <p class="text-lg leading-[27px] text-neutral-500 mb-1">Роль</p>
-                        <p class="text-lg leading-[27px] font-bold">{{ getRoleName() }}</p>
-                    </div>
+                        <tui-icon icon="@tui.camera" class="size-4!" />
+                        ИЗМЕНИТЬ ФОТО
+                    </button>
+                </div>
 
-                    <!-- Ник -->
-                    @if (userName && getRoleName() !== "Неверифицирован") {
+                <!-- Инфо -->
+                <div class="flex flex-col justify-between gap-3 min-w-0 flex-1">
+                    <div class="flex items-stretch gap-3 max-[530px]:flex-col">
+                        <!-- Роль -->
                         <div
                             class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
                         >
-                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">Игровой ник</p>
-                            <div class="flex items-center justify-between gap-2">
-                                <p class="text-lg leading-[27px] font-bold truncate">{{ userName }}</p>
-                                <button
-                                    (click)="openDialogChangeUsername()"
-                                    class="shrink-0 border border-lh-accent/50 bg-lh-accent/10 text-lh-accent hover:bg-lh-accent hover:text-white hover:border-lh-accent transition-all duration-200 cursor-pointer rounded-lg p-1.5 shadow-sm"
-                                    title="Изменить ник"
-                                    aria-label="Изменить игровой ник"
-                                >
-                                    <tui-icon icon="@tui.pencil" class="size-5!" />
-                                </button>
+                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">Роль</p>
+                            <p class="text-lg leading-[27px] font-bold">{{ getRoleName() }}</p>
+                        </div>
+
+                        <!-- Ник -->
+                        @if (userName && getRoleName() !== "Неверифицирован") {
+                            <div
+                                class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
+                            >
+                                <p class="text-lg leading-[27px] text-neutral-500 mb-1">Игровой ник</p>
+                                <div class="flex items-center justify-between gap-2">
+                                    <p class="text-lg leading-[27px] font-bold truncate">{{ userName }}</p>
+                                    <button
+                                        (click)="openDialogChangeUsername()"
+                                        class="shrink-0 border border-lh-accent/50 bg-lh-accent/10 text-lh-accent hover:bg-lh-accent hover:text-white hover:border-lh-accent transition-all duration-200 cursor-pointer rounded-lg p-1.5 shadow-sm"
+                                        title="Изменить ник"
+                                        aria-label="Изменить игровой ник"
+                                    >
+                                        <tui-icon icon="@tui.pencil" class="size-5!" />
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Селение -->
+                    @if (settlement) {
+                        <div
+                            class="flex-1 shrink-1 flex gap-1 flex-col justify-start bg-lh-primary-2/10 rounded-xl px-4 py-3 border border-lh-primary-2/10 w-full"
+                        >
+                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">Поселение</p>
+                            <span class="font-bold truncate text-lg leading-[27px]">
+                                {{ settlement.leader.user_id === userService.userId ? "Глава" : "Житель" }}
+                                «{{ settlement.name }}»
+                            </span>
+                            <div class="flex items-start gap-2 flex-wrap text-lg leading-[27px]">
+                                <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
+                                    {{ settlementService.getSettlementTypeByKey(settlement.type) }}
+                                </span>
+                                <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
+                                    {{ settlement.members.length + 1 }} жит.
+                                </span>
+                                <span class="px-2 py-0.5 bg-[#a0b8d0]/30 text-[#5a7a9a] rounded-full">
+                                    {{ settlementOnline ?? 0 }} онлайн
+                                </span>
+                                @if (settlement.diplomacy) {
+                                    <span class="px-2 py-0.5 bg-lh-accent-3/20 text-lh-accent-3 rounded-full">
+                                        {{ settlement.diplomacy }}
+                                    </span>
+                                }
                             </div>
                         </div>
+                    } @else {
+                        <div
+                            class="bg-lh-primary-2/10 rounded-xl px-4 py-3 text-center border border-lh-primary-2/10 w-full"
+                        >
+                            <span class="text-lg leading-[27px] text-neutral-500">Нет поселения</span>
+                        </div>
+                    }
+
+                    @if (getRoleName() === "Неверифицирован" && (details?.status == "rejected" || !details)) {
+                        <button
+                            (click)="verification()"
+                            class="lh-secondary-button w-fit text-lg leading-[27px] py-2 px-4"
+                        >
+                            ПРОЙТИ ВЕРИФИКАЦИЮ
+                        </button>
                     }
                 </div>
+            </div>
 
-                <!-- Селение -->
-                @if (settlement) {
-                    <div
-                        class="flex-1 shrink-1 flex gap-1 flex-col justify-start bg-lh-primary-2/10 rounded-xl px-4 py-3 border border-lh-primary-2/10 w-full"
-                    >
-                        <p class="text-lg leading-[27px] text-neutral-500 mb-1">Поселение</p>
-                        <span class="font-bold truncate text-lg leading-[27px]">
-                            {{ settlement.leader.user_id === userService.userId ? "Глава" : "Житель" }}
-                            «{{ settlement.name }}»
-                        </span>
-                        <div class="flex items-start gap-2 flex-wrap text-lg leading-[27px]">
-                            <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
-                                {{ settlementService.getSettlementTypeByKey(settlement.type) }}
-                            </span>
-                            <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
-                                {{ settlement.members.length + 1 }} жит.
-                            </span>
-                            <span class="px-2 py-0.5 bg-[#a0b8d0]/30 text-[#5a7a9a] rounded-full">
-                                {{ settlementOnline ?? 0 }} онлайн
-                            </span>
-                            @if (settlement.diplomacy) {
-                                <span class="px-2 py-0.5 bg-lh-accent-3/20 text-lh-accent-3 rounded-full">
-                                    {{ settlement.diplomacy }}
+            <!-- Колонка 2: Голодные игры -->
+            <div
+                class="bg-lh-primary-2/10 shrink-0 rounded-xl px-4 py-3 border border-lh-primary-2/10 text-center flex flex-col justify-between"
+            >
+                <div class="flex items-center justify-center gap-2 mb-1">
+                    <tui-icon icon="@tui.flame" class="size-5! text-lh-accent" />
+                    <p class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Голодные игры</p>
+                </div>
+                @if (hungerGamesSeason(); as season) {
+                    <div class="flex items-center justify-center gap-2 mb-1">
+                        <button
+                            type="button"
+                            [disabled]="!(canPrevHgSeason$ | async)"
+                            (click)="prevHgSeason()"
+                            class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                            aria-label="Предыдущий сезон голодных игр"
+                        >
+                            <tui-icon icon="@tui.chevron-left" class="size-4!" />
+                        </button>
+                        <div class="flex items-center gap-1.5">
+                            <p class="text-lg leading-[27px] font-bold">Сезон {{ season.number }}</p>
+                            @if (season.ended_at) {
+                                <span
+                                    class="text-base px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold"
+                                >
+                                    Завершён
+                                </span>
+                            } @else {
+                                <span
+                                    class="text-base px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold"
+                                >
+                                    Активен
                                 </span>
                             }
                         </div>
+                        <button
+                            type="button"
+                            [disabled]="!(canNextHgSeason$ | async)"
+                            (click)="nextHgSeason()"
+                            class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                            aria-label="Следующий сезон голодных игр"
+                        >
+                            <tui-icon icon="@tui.chevron-right" class="size-4!" />
+                        </button>
                     </div>
-                } @else {
-                    <div
-                        class="bg-lh-primary-2/10 rounded-xl px-4 py-3 text-center border border-lh-primary-2/10 w-full"
-                    >
-                        <span class="text-lg leading-[27px] text-neutral-500">Нет поселения</span>
-                    </div>
-                }
-
-                @if (getRoleName() === "Неверифицирован" && (details?.status == "rejected" || !details)) {
-                    <button
-                        (click)="verification()"
-                        class="lh-secondary-button w-fit text-lg leading-[27px] py-2 px-4"
-                    >
-                        ПРОЙТИ ВЕРИФИКАЦИЮ
-                    </button>
-                }
-            </div>
-        </div>
-
-        <!-- Колонка 2: Голодные игры -->
-        <div
-            class="bg-lh-primary-2/10 shrink-0 rounded-xl px-4 py-3 border border-lh-primary-2/10 text-center flex flex-col justify-between"
-        >
-            <div class="flex items-center justify-center gap-2 mb-1">
-                <tui-icon icon="@tui.flame" class="size-5! text-lh-accent" />
-                <p class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Голодные игры</p>
-            </div>
-            @if (hungerGamesSeason(); as season) {
-                <div class="flex items-center justify-center gap-2 mb-1">
-                    <button
-                        type="button"
-                        [disabled]="!(canPrevHgSeason$ | async)"
-                        (click)="prevHgSeason()"
-                        class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                        aria-label="Предыдущий сезон голодных игр"
-                    >
-                        <tui-icon icon="@tui.chevron-left" class="size-4!" />
-                    </button>
-                    <div class="flex items-center gap-1.5">
-                        <p class="text-lg leading-[27px] font-bold">Сезон {{ season.number }}</p>
-                        @if (season.ended_at) {
-                            <span class="text-base px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold">Завершён</span>
-                        } @else {
-                            <span class="text-base px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold">Активен</span>
-                        }
-                    </div>
-                    <button
-                        type="button"
-                        [disabled]="!(canNextHgSeason$ | async)"
-                        (click)="nextHgSeason()"
-                        class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                        aria-label="Следующий сезон голодных игр"
-                    >
-                        <tui-icon icon="@tui.chevron-right" class="size-4!" />
-                    </button>
-                </div>
-                @if (!hasActiveSeason()) {
-                    <p class="text-base leading-4 text-lh-danger/80 font-medium">Сейчас нет текущего сезона</p>
-                }
-                @if (hgStats) {
-                    <div class="flex flex-col gap-0.5">
-                        <div class="flex items-center justify-center gap-1.5 text-base leading-5">
-                            <span><span class="text-neutral-500">ELO:</span> <span class="font-bold">{{ hgStats.elo }}</span></span>
-                            <span class="text-lh-primary-2/40">|</span>
-                            <span><span class="text-neutral-500">Побед:</span> <span class="font-bold">{{ hgStats.wins }}</span></span>
-                            <span class="text-lh-primary-2/40">|</span>
-                            <span><span class="text-neutral-500">Убийств:</span> <span class="font-bold">{{ hgStats.kills }}</span></span>
-                        </div>
-                        @if (hgStats.rank > 0) {
-                            <div class="flex items-center justify-center gap-1.5 text-base leading-5 text-neutral-500">
-                                <span>Место: <span class="font-bold text-lh-primary">{{ hgStats.rank }}</span></span>
-                                @if (hgStats.reward_coins) {
-                                    <span class="text-lh-primary-2/40">•</span>
-                                    <span>Награда: <span class="font-bold text-lh-accent">{{ hgStats.reward_coins }}</span></span>
-                                }
+                    @if (!hasActiveSeason()) {
+                        <p class="text-base leading-4 text-lh-danger/80 font-medium">Сейчас нет текущего сезона</p>
+                    }
+                    @if (hgStats) {
+                        <div class="flex flex-col gap-0.5">
+                            <div class="flex items-center justify-center gap-1.5 text-base leading-5">
+                                <span>
+                                    <span class="text-neutral-500">ELO:</span>
+                                    <span class="font-bold">{{ hgStats.elo }}</span>
+                                </span>
+                                <span class="text-lh-primary-2/40">|</span>
+                                <span>
+                                    <span class="text-neutral-500">Побед:</span>
+                                    <span class="font-bold">{{ hgStats.wins }}</span>
+                                </span>
+                                <span class="text-lh-primary-2/40">|</span>
+                                <span>
+                                    <span class="text-neutral-500">Убийств:</span>
+                                    <span class="font-bold">{{ hgStats.kills }}</span>
+                                </span>
                             </div>
-                        }
-                    </div>
+                            @if (hgStats.rank > 0) {
+                                <div
+                                    class="flex items-center justify-center gap-1.5 text-base leading-5 text-neutral-500"
+                                >
+                                    <span>
+                                        Место:
+                                        <span class="font-bold text-lh-primary">{{ hgStats.rank }}</span>
+                                    </span>
+                                    @if (hgStats.reward_coins) {
+                                        <span class="text-lh-primary-2/40">•</span>
+                                        <span>
+                                            Награда:
+                                            <span class="font-bold text-lh-accent">{{ hgStats.reward_coins }}</span>
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    } @else {
+                        <p class="text-base leading-5 text-neutral-500">Данные отсутствуют</p>
+                    }
                 } @else {
-                    <p class="text-base leading-5 text-neutral-500">
-                        Данные отсутствуют
-                    </p>
+                    <p class="text-base leading-5 text-neutral-500">Сейчас нет текущего сезона</p>
                 }
-            } @else {
-                <p class="text-base leading-5 text-neutral-500">Сейчас нет текущего сезона</p>
+            </div>
+
+            <!-- Колонка 3: Валюта и статистика -->
+            @if (getRoleName() !== "Неверифицирован") {
+                <div class="flex gap-2 flex-col">
+                    <!-- Баланс -->
+                    <div
+                        class="flex items-center justify-between gap-3 rounded-xl px-4 py-2 bg-gradient-to-r from-lh-accent/10 to-transparent border border-lh-accent/30 shadow-[0_2px_12px_rgba(255,121,32,0.12)]"
+                    >
+                        <div class="flex items-center gap-2">
+                            <img
+                                src="/splinter-of-spark.png"
+                                alt="Осколок Искры"
+                                class="h-10 w-10 object-contain spark-glow"
+                            />
+                            <span class="text-lg leading-[27px] font-bold">{{ balance ?? "—" }}</span>
+                        </div>
+                        <span class="text-lg leading-[27px] text-neutral-500 font-semibold">Осколков</span>
+                    </div>
+
+                    <!-- Кнопка пополнения -->
+                    <button
+                        (click)="howToBuy()"
+                        class="flex items-center justify-center gap-2 transition-all duration-300 text-lh-accent text-lg leading-[27px] font-bold cursor-pointer bg-lh-accent/10 border border-lh-accent rounded-xl py-2 px-4 w-full text-center hover:bg-lh-accent hover:text-white hover:shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
+                    >
+                        <tui-icon icon="@tui.circle-plus" class="size-5!" />
+                        Пополнить
+                    </button>
+
+                    <!-- Статистика -->
+                    <div class="flex gap-3 w-full">
+                        <div
+                            class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                        >
+                            <tui-icon icon="@tui.skull" class="size-6! text-[#c9a0a0] mb-1" />
+                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Смерти</span>
+                            <span class="text-lg leading-[27px] font-bold">{{ stats?.deaths ?? "—" }}</span>
+                        </div>
+                        <div
+                            class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                        >
+                            <tui-icon icon="@tui.swords" class="size-6! text-[#c9a880] mb-1" />
+                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">
+                                Убийства
+                            </span>
+                            <span class="text-lg leading-[27px] font-bold">{{ stats?.kills ?? "—" }}</span>
+                        </div>
+                        <div
+                            class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                        >
+                            <tui-icon icon="@tui.clock" class="size-6! text-[#8a9eb0] mb-1" />
+                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Часы</span>
+                            <span class="text-lg leading-[27px] font-bold">
+                                {{ stats ? (stats.hours_played | number: "1.0-1") : "—" }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
             }
         </div>
 
-        <!-- Колонка 3: Валюта и статистика -->
+        <!-- История покупок -->
         @if (getRoleName() !== "Неверифицирован") {
-            <div class="flex gap-2 flex-col">
-                <!-- Баланс -->
-                <div
-                    class="flex items-center justify-between gap-3 rounded-xl px-4 py-2 bg-gradient-to-r from-lh-accent/10 to-transparent border border-lh-accent/30 shadow-[0_2px_12px_rgba(255,121,32,0.12)]"
-                >
-                    <div class="flex items-center gap-2">
-                        <img
-                            src="/splinter-of-spark.png"
-                            alt="Осколок Искры"
-                            class="h-10 w-10 object-contain spark-glow"
-                        />
-                        <span class="text-lg leading-[27px] font-bold">{{ balance ?? "—" }}</span>
-                    </div>
-                    <span class="text-lg leading-[27px] text-neutral-500 font-semibold">Осколков</span>
-                </div>
+            <div class="flex flex-col gap-3 mt-6">
+                <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">История покупок</h2>
 
-                <!-- Кнопка пополнения -->
-                <button
-                    (click)="howToBuy()"
-                    class="flex items-center justify-center gap-2 transition-all duration-300 text-lh-accent text-lg leading-[27px] font-bold cursor-pointer bg-lh-accent/10 border border-lh-accent rounded-xl py-2 px-4 w-full text-center hover:bg-lh-accent hover:text-white hover:shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
-                >
-                    <tui-icon icon="@tui.circle-plus" class="size-5!" />
-                    Пополнить
-                </button>
+                @if (purchases; as list) {
+                    @if (list.length > 0) {
+                        <div class="flex flex-col gap-2">
+                            @for (purchase of list; track purchase.id) {
+                                @let meta = getPurchaseStatusMeta(purchase);
 
-                <!-- Статистика -->
-                <div class="flex gap-3 w-full">
-                    <div
-                        class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
-                    >
-                        <tui-icon icon="@tui.skull" class="size-6! text-[#c9a0a0] mb-1" />
-                        <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Смерти</span>
-                        <span class="text-lg leading-[27px] font-bold">{{ stats?.deaths ?? "—" }}</span>
-                    </div>
-                    <div
-                        class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
-                    >
-                        <tui-icon icon="@tui.swords" class="size-6! text-[#c9a880] mb-1" />
-                        <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Убийства</span>
-                        <span class="text-lg leading-[27px] font-bold">{{ stats?.kills ?? "—" }}</span>
-                    </div>
-                    <div
-                        class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
-                    >
-                        <tui-icon icon="@tui.clock" class="size-6! text-[#8a9eb0] mb-1" />
-                        <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Часы</span>
-                        <span class="text-lg leading-[27px] font-bold">
-                            {{ stats ? (stats.hours_played | number: "1.0-1") : "—" }}
-                        </span>
-                    </div>
-                </div>
+                                <div
+                                    class="flex items-center justify-between gap-4 px-4 py-3 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2/10"
+                                >
+                                    <div class="flex flex-col gap-1 min-w-0">
+                                        <span class="text-lg font-bold text-lh-primary truncate">
+                                            {{ purchase.itemName || "—" }}
+                                        </span>
+                                        <span class="text-base text-neutral-500">{{ purchase.formattedDate }}</span>
+                                    </div>
+
+                                    <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
+                                        <span class="inline-flex items-center gap-1 text-lg font-bold text-lh-primary">
+                                            {{ purchase.pricePaid }}
+                                            <img
+                                                src="/splinter-of-spark.png"
+                                                alt="Осколок Искры"
+                                                class="h-5 w-5 object-contain"
+                                            />
+                                        </span>
+
+                                        <span
+                                            [class]="
+                                                'inline-flex items-center gap-1.5 text-base font-medium ' +
+                                                meta.textClass
+                                            "
+                                        >
+                                            <span [class]="'w-2.5 h-2.5 rounded-full ' + meta.dotClass"></span>
+                                            {{ meta.label }}
+                                        </span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    } @else {
+                        <p
+                            class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
+                        >
+                            История покупок пуста
+                        </p>
+                    }
+                }
             </div>
         }
+
+        <!-- Сообщения о верификации -->
+        @if (details?.status === "pending") {
+            <p class="text-lg leading-[27px] font-bold">Ваша анкета отправлена. Ожидайте проверки.</p>
+        }
+        @if (details?.status === "rejected") {
+            <div>
+                <p class="text-lg leading-[27px] font-bold">Вашу анкету отклонили:</p>
+                <p class="text-lg leading-[27px] max-w-72 text-wrap break-words">{{ details?.rejection_reason }}</p>
+            </div>
+        }
+
+        @if (getRoleName() !== "Неверифицирован" || details?.status === "approved" || details?.status === "verified") {
+            <div class="mt-12">
+                <router-outlet />
+            </div>
+        } @else {
+            <p class="text-xl md:text-2xl lg:text-3xl leading-[30px] font-bold mt-8">
+                Что бы попасть на сервер, необходимо пройти верификацию.
+            </p>
+        }
     </div>
-
-    <!-- История покупок -->
-    @if (getRoleName() !== "Неверифицирован") {
-        <div class="flex flex-col gap-4 mt-8">
-            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">История покупок</h2>
-
-            @if (purchases; as list) {
-                @if (list.length > 0) {
-                    <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-                        <table class="w-full text-left border-collapse text-[18px]">
-                            <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
-                                <tr>
-                                    <th class="p-4">Товар</th>
-                                    <th class="p-4 text-center">Цена</th>
-                                    <th class="p-4 text-center">Статус</th>
-                                    <th class="p-4 text-center">Дата</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for (purchase of list; track purchase.id; let idx = $index) {
-                                    <tr
-                                        class="border-t border-[#bdb093] transition-colors"
-                                        [class.bg-[#f5eedd]]="idx % 2 === 0"
-                                        [class.bg-[#e2d7bb]]="idx % 2 === 1"
-                                    >
-                                        <td class="p-4 text-lh-primary font-medium">{{ purchase.itemName }}</td>
-                                        <td class="p-4 text-lh-accent text-center font-bold">{{ purchase.pricePaid }}</td>
-                                        <td class="p-4 text-center">
-                                            <span
-                                                class="px-2.5 py-1 rounded-lg text-base font-semibold text-white"
-                                                [class.bg-lh-success]="purchase.status === 'COMPLETED'"
-                                                [class.bg-lh-danger]="purchase.status === 'REFUNDED'"
-                                                [class.bg-lh-primary-2]="purchase.status !== 'COMPLETED' && purchase.status !== 'REFUNDED'"
-                                            >
-                                                {{ purchase.status || '—' }}
-                                            </span>
-                                        </td>
-                                        <td class="p-4 text-lh-primary text-center">{{ purchase.formattedDate }}</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                } @else {
-                    <p
-                        class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
-                    >
-                        История покупок пуста
-                    </p>
-                }
-            }
-        </div>
-    }
-
-    <!-- Сообщения о верификации -->
-    @if (details?.status === "pending") {
-        <p class="text-lg leading-[27px] font-bold">Ваша анкета отправлена. Ожидайте проверки.</p>
-    }
-    @if (details?.status === "rejected") {
-        <div>
-            <p class="text-lg leading-[27px] font-bold">Вашу анкету отклонили:</p>
-            <p class="text-lg leading-[27px] max-w-72 text-wrap break-words">{{ details?.rejection_reason }}</p>
-        </div>
-    }
-
-    @if (getRoleName() !== "Неверифицирован" || details?.status === "approved" || details?.status === "verified") {
-        <div class="mt-12">
-            <router-outlet />
-        </div>
-    } @else {
-        <p class="text-xl md:text-2xl lg:text-3xl leading-[30px] font-bold mt-8">Что бы попасть на сервер, необходимо пройти верификацию.</p>
-    }
-</div>
 }
 
 <ng-template #preview let-preview>

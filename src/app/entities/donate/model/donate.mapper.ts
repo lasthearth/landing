@@ -107,6 +107,7 @@ export function mapDtoToKitEntry(dto: IKitEntryDto): IKitEntry {
  */
 export function mapDtoToPurchase(dto: IPurchaseDto): IPurchase {
     const createdAt = parseDate(dto.created_at);
+    const issuedAt = parseDate(dto.issued_at);
 
     return {
         id: dto.id,
@@ -117,6 +118,9 @@ export function mapDtoToPurchase(dto: IPurchaseDto): IPurchase {
         status: dto.status ?? '',
         createdAt,
         formattedDate: createdAt ? formatDate(createdAt) : '—',
+        issuedBy: dto.issued_by ?? '',
+        issuedAt,
+        formattedIssuedAt: issuedAt ? formatDate(issuedAt) : '—',
     };
 }
 

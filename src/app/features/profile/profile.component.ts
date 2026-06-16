@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, computed, ElementRef, inject, signal, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    computed,
+    ElementRef,
+    inject,
+    signal,
+    TemplateRef,
+    ViewChild,
+} from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
@@ -10,19 +19,40 @@ import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to
 import { RouterOutlet } from '@angular/router';
 import { VerificationService } from '@features/verification';
 import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
-import { catchError, combineLatest, defaultIfEmpty, forkJoin, map, Observable, of, startWith, switchMap, take, tap } from 'rxjs';
+import {
+    catchError,
+    combineLatest,
+    defaultIfEmpty,
+    forkJoin,
+    map,
+    Observable,
+    of,
+    startWith,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
 import { ProfileSkeletonComponent } from '@shared/ui/skeletons';
-import { DonateService } from '@entities/donate';
+import { DonateService, IPurchase } from '@entities/donate';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { SettlementService } from '@entities/settlement';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
 @Component({
     standalone: true,
-    imports: [TuiIcon, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton, DecimalPipe, ProfileSkeletonComponent],
+    imports: [
+        TuiIcon,
+        RouterOutlet,
+        AsyncPipe,
+        PolymorpheusOutlet,
+        TuiPreview,
+        TuiButton,
+        DecimalPipe,
+        ProfileSkeletonComponent,
+    ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
 })
@@ -62,7 +92,10 @@ export class ProfileComponent {
                 return of(null);
             }
 
-            return this.verificationService.getCode().pipe(catchError(() => of(null)), defaultIfEmpty(null));
+            return this.verificationService.getCode().pipe(
+                catchError(() => of(null)),
+                defaultIfEmpty(null)
+            );
         })
     );
 
@@ -77,7 +110,10 @@ export class ProfileComponent {
                 return of(null);
             }
 
-            return this.verificationService.getDetails().pipe(catchError(() => of(null)), defaultIfEmpty(null));
+            return this.verificationService.getDetails().pipe(
+                catchError(() => of(null)),
+                defaultIfEmpty(null)
+            );
         })
     );
 
@@ -86,17 +122,16 @@ export class ProfileComponent {
             if (!isAuth || !this.isVerifiedUser() || !this.userService.userId) {
                 return of(null);
             }
-            return this.userService.getPlayer$(this.userService.userId).pipe(catchError(() => of(null)), defaultIfEmpty(null));
+            return this.userService.getPlayer$(this.userService.userId).pipe(
+                catchError(() => of(null)),
+                defaultIfEmpty(null)
+            );
         })
     );
 
-    protected readonly userGameName$ = this.player$.pipe(
-        map((data) => data?.user_game_name ?? '')
-    );
+    protected readonly userGameName$ = this.player$.pipe(map((data) => data?.user_game_name ?? ''));
 
-    protected readonly isOnline$ = this.player$.pipe(
-        map((data) => data?.is_online ?? false)
-    );
+    protected readonly isOnline$ = this.player$.pipe(map((data) => data?.is_online ?? false));
 
     /**
      * Баланс Осколков Искры текущего пользователя.
@@ -122,7 +157,10 @@ export class ProfileComponent {
             if (!name) {
                 return of(null);
             }
-            return this.serverInfoService.getPlayerStats$(name).pipe(catchError(() => of(null)), defaultIfEmpty(null));
+            return this.serverInfoService.getPlayerStats$(name).pipe(
+                catchError(() => of(null)),
+                defaultIfEmpty(null)
+            );
         })
     );
 
@@ -134,7 +172,10 @@ export class ProfileComponent {
             if (!isAuth || !this.isVerifiedUser()) {
                 return of([]);
             }
-            return this.donateService.getMyPurchases$().pipe(catchError(() => of([])), defaultIfEmpty([]));
+            return this.donateService.getMyPurchases$().pipe(
+                catchError(() => of([])),
+                defaultIfEmpty([])
+            );
         })
     );
 
@@ -147,11 +188,11 @@ export class ProfileComponent {
                 return of(null);
             }
             return this.settlementService
-                .getSettlementInfo(
-                    this.userService.userId,
-                    new HttpContext().set(SKIP_ERROR_ALERT, true)
-                )
-                .pipe(catchError(() => of(null)), defaultIfEmpty(null));
+                .getSettlementInfo(this.userService.userId, new HttpContext().set(SKIP_ERROR_ALERT, true))
+                .pipe(
+                    catchError(() => of(null)),
+                    defaultIfEmpty(null)
+                );
         })
     );
 
@@ -196,9 +237,7 @@ export class ProfileComponent {
     /**
      * Можно ли перейти к предыдущему сезону.
      */
-    protected readonly canPrevHgSeason$ = toObservable(this.selectedHgIndex).pipe(
-        map((idx) => idx > 0)
-    );
+    protected readonly canPrevHgSeason$ = toObservable(this.selectedHgIndex).pipe(map((idx) => idx > 0));
 
     /**
      * Можно ли перейти к следующему сезону.
@@ -211,9 +250,7 @@ export class ProfileComponent {
     /**
      * Есть ли активный (не завершённый) сезон в списке.
      */
-    protected readonly hasActiveSeason = computed(() =>
-        this.hgSeasonsList().some((s) => !s.ended_at)
-    );
+    protected readonly hasActiveSeason = computed(() => this.hgSeasonsList().some((s) => !s.ended_at));
 
     /**
      * Статистика игрока в выбранном сезоне голодных игр.
@@ -223,9 +260,10 @@ export class ProfileComponent {
             if (!season || !this.userService.userId || !this.isVerifiedUser()) {
                 return of(null);
             }
-            return this.hungerGamesService
-                .getPlayerSeasonStats$(season.id, this.userService.userId)
-                .pipe(catchError(() => of(null)), defaultIfEmpty(null));
+            return this.hungerGamesService.getPlayerSeasonStats$(season.id, this.userService.userId).pipe(
+                catchError(() => of(null)),
+                defaultIfEmpty(null)
+            );
         })
     );
 
@@ -322,6 +360,62 @@ export class ProfileComponent {
         }
 
         return 'Неверифицирован';
+    }
+
+    /**
+     * Возвращает спокойную мета-информацию для отображения статуса покупки.
+     * Если покупка выдана (есть issuedBy и issuedAt), отображается «Выдан».
+     * Иначе используется перевод статуса.
+     * @param purchase UI-модель покупки.
+     * @returns Объект с метаданными статуса.
+     */
+    protected getPurchaseStatusMeta(purchase: IPurchase) {
+        const isIssued = !!purchase.issuedBy || !!purchase.issuedAt;
+
+        if (isIssued) {
+            return {
+                label: 'Выдан',
+                dotClass: 'bg-[#4a7c8c]',
+                textClass: 'text-[#4a7c8c]',
+            };
+        }
+
+        const normalizedStatus = purchase.status?.toUpperCase();
+
+        switch (normalizedStatus) {
+            case 'COMPLETED':
+                return {
+                    label: 'Завершена',
+                    dotClass: 'bg-[#5a8c69]',
+                    textClass: 'text-[#5a8c69]',
+                };
+            case 'ISSUED':
+            case 'DELIVERED':
+                return {
+                    label: 'Выдан',
+                    dotClass: 'bg-[#4a7c8c]',
+                    textClass: 'text-[#4a7c8c]',
+                };
+            case 'REFUNDED':
+                return {
+                    label: 'Возвращён',
+                    dotClass: 'bg-[#8b4a4a]',
+                    textClass: 'text-[#8b4a4a]',
+                };
+            case 'PENDING':
+            case 'ACTIVE':
+                return {
+                    label: 'В обработке',
+                    dotClass: 'bg-[#9c6b3c]',
+                    textClass: 'text-[#9c6b3c]',
+                };
+            default:
+                return {
+                    label: purchase.status || '—',
+                    dotClass: 'bg-lh-primary-2/50',
+                    textClass: 'text-neutral-600',
+                };
+        }
     }
 
     /**
