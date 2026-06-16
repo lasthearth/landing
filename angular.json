@@ -20,6 +20,7 @@
                         "outputPath": "dist/last-hearth-landing",
                         "index": "src/index.html",
                         "browser": "src/main.ts",
+                        "server": "src/main.server.ts",
                         "polyfills": ["zone.js"],
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "less",
@@ -42,14 +43,18 @@
                             "src/app/shared/styles/variables.less",
                             "src/app/shared/styles/appearances/icon.appearance.css"
                         ],
-                        "scripts": []
+                        "scripts": [],
+                        "prerender": {
+                            "routesFile": "routes.txt",
+                            "discoverRoutes": false
+                        }
                     },
                     "configurations": {
                         "production": {
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "1MB",
+                                    "maximumWarning": "2MB",
                                     "maximumError": "5MB"
                                 },
                                 {

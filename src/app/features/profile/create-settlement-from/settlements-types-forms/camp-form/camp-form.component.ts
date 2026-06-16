@@ -15,7 +15,7 @@ import { LHHintComponent } from '@shared/ui/lh-hint/lh-hint.component/lh-hint.co
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
-import { TuiLoader, TuiError, TuiHintDirective } from '@taiga-ui/core';
+import { TuiLoader, TuiError } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 /**
@@ -34,7 +34,6 @@ import { TuiFieldErrorPipe } from '@taiga-ui/kit';
         LHHintComponent,
         TuiLoader,
         TuiError,
-        TuiHintDirective,
         TuiFieldErrorPipe,
     ],
     templateUrl: './camp-form.component.html',

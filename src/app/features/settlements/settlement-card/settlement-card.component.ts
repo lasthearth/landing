@@ -57,7 +57,7 @@ export class SettlementCardComponent implements OnInit {
     /**
      * Лидер поселения
      */
-    protected leader!: IPlayer;
+    protected leader: IPlayer | null = null;
 
     cdr = inject(ChangeDetectorRef);
 

@@ -1,10 +1,14 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
+    ElementRef,
     EventEmitter,
     forwardRef,
+    HostListener,
+    inject,
     input,
     Input,
     InputSignal,
@@ -12,6 +16,7 @@ import {
     signal,
     WritableSignal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 /**
@@ -38,6 +43,11 @@ export type LHInputType = 'input' | 'select' | 'textarea' | 'inputNumber';
     ],
 })
 export class LHInputComponent<T = string> implements ControlValueAccessor {
+    /**
+     * Ссылка на DOM-элемент компонента.
+     */
+    private readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+
     /**
      * Тип поля ввода.
      */
@@ -129,6 +139,23 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
     protected toggleDropdown() {
         if (this.type() === 'select' && !this.disabled) {
             this.dropdownOpen.update((state) => !state);
+        }
+    }
+
+    /**
+     * Закрывает выпадающий список при клике вне компонента.
+     *
+     * @param event Событие клика.
+     */
+    @HostListener('document:click', ['$event'])
+    protected onDocumentClick(event: MouseEvent): void {
+        if (!this.dropdownOpen()) {
+            return;
+        }
+
+        const target = event.target as HTMLElement;
+        if (!this.elementRef.nativeElement.contains(target)) {
+            this.dropdownOpen.set(false);
         }
     }
 

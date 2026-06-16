@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
+import { TuiDialogContext } from '@taiga-ui/core';
 import { ISettlement } from '@entities/settlement';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { UserService, IPlayer } from '@entities/user';
@@ -10,7 +10,7 @@ import { tap } from 'rxjs';
     selector: 'app-settlement-detailed',
     templateUrl: './settlement-detailed.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
-    imports: [TuiPulse, TuiIcon],
+    imports: [TuiPulse],
 })
 export class SettlementDetailedComponent implements OnInit {
     /**
@@ -24,7 +24,7 @@ export class SettlementDetailedComponent implements OnInit {
     private readonly userService: UserService = inject(UserService);
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-    protected leader!: IPlayer;
+    protected leader: IPlayer | null = null;
     protected users: IPlayer[] = [];
     protected onlineCount: number = 0;
 

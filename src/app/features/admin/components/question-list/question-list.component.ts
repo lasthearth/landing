@@ -3,8 +3,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { map, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { RuleQuestionApiService, mapDtoToRuleQuestion, RuleQuestion } from '@entities/rule-question';
 import { UserService } from '@entities/user';
-import { TuiButton } from '@taiga-ui/core';
-import { TuiButtonLoading } from '@taiga-ui/kit';
+import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 
 /**
  * Компонент списка вопросов правил для администратора.
@@ -15,7 +14,7 @@ import { TuiButtonLoading } from '@taiga-ui/kit';
 @Component({
     standalone: true,
     selector: 'app-question-list',
-    imports: [TuiButton, TuiButtonLoading],
+    imports: [],
     templateUrl: './question-list.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -29,6 +28,11 @@ export class QuestionListComponent {
      * Сервис пользователя для получения имён создателей.
      */
     private readonly userService = inject(UserService);
+
+    /**
+     * Сервис диалогов подтверждения.
+     */
+    private readonly confirmDialog = inject(ConfirmDialogService);
 
     /**
      * Ссылка уничтожения компонента.
@@ -103,14 +107,27 @@ export class QuestionListComponent {
     /**
      * Удаляет вопрос по идентификатору.
      *
+     * Перед удалением показывает диалог подтверждения.
+     *
      * @param id Идентификатор вопроса.
      */
     remove(id: string): void {
-        this.deletingId.set(id);
-        this.api
-            .delete(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.refresh());
+        this.confirmDialog
+            .open({
+                title: 'Удалить вопрос?',
+                text: 'Вы уверены, что хотите удалить этот вопрос? Это действие нельзя отменить.',
+            })
+            .subscribe((confirmed) => {
+                if (!confirmed) {
+                    return;
+                }
+
+                this.deletingId.set(id);
+                this.api
+                    .delete(id)
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe(() => this.refresh());
+            });
     }
 
     /**

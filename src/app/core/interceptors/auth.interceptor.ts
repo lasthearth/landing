@@ -1,7 +1,25 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { environment } from '@core/config/environments/environment';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { switchMap, take } from 'rxjs';
+import { catchError, switchMap, take, throwError } from 'rxjs';
+
+/**
+ * Базовый URL OIDC-эмиттента Logto.
+ * Используется для определения запросов к служебным OIDC-ендпоинтам,
+ * к которым нельзя добавлять заголовок `Authorization`.
+ */
+const OIDC_ISSUER = `${environment.logtoEndpoint}/oidc`;
+
+/**
+ * Проверяет, относится ли URL запроса к OIDC-ендпоинтам Logto.
+ *
+ * @param url URL исходящего HTTP-запроса.
+ * @returns `true`, если запрос направлен к `/oidc/*`.
+ */
+function isOidcEndpoint(url: string): boolean {
+    return url.startsWith(OIDC_ISSUER);
+}
 
 /**
  * HTTP-интерцептор для автоматического добавления авторизационного токена.
@@ -9,22 +27,57 @@ import { switchMap, take } from 'rxjs';
  * Получает access token из {@link OidcSecurityService}
  * и добавляет заголовок `Authorization: Bearer <token>` к запросу.
  * Если токен отсутствует, запрос отправляется без изменений.
+ *
+ * Запросы к OIDC-ендпоинтам Logto (например, `/oidc/token`) пропускаются
+ * без добавления токена и без повторной попытки при 401, чтобы не нарушать
+ * протокол обмена refresh token и избежать циклических обновлений.
+ *
+ * При получении 401 на API-запросы пытается обновить сессию через silent renew
+ * и повторить запрос один раз.
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const oidcSecurityService = inject(OidcSecurityService);
 
-    return oidcSecurityService.getAccessToken().pipe(
-        take(1),
-        switchMap((token) => {
-            if (token) {
-                req = req.clone({
-                    setHeaders: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+    /**
+     * Отправляет запрос с актуальным access-токеном.
+     */
+    const sendWithToken = () =>
+        oidcSecurityService.getAccessToken().pipe(
+            take(1),
+            switchMap((token) => {
+                const authReq = token
+                    ? req.clone({
+                          setHeaders: {
+                              Authorization: `Bearer ${token}`,
+                          },
+                      })
+                    : req;
+
+                return next(authReq);
+            })
+        );
+
+    if (isOidcEndpoint(req.url)) {
+        return next(req);
+    }
+
+    return sendWithToken().pipe(
+        catchError((error: HttpErrorResponse) => {
+            if (error.status === 401) {
+                return oidcSecurityService.forceRefreshSession().pipe(
+                    take(1),
+                    switchMap((loginResponse) => {
+                        if (!loginResponse.isAuthenticated) {
+                            return throwError(() => error);
+                        }
+
+                        return sendWithToken();
+                    }),
+                    catchError(() => throwError(() => error))
+                );
             }
 
-            return next(req);
+            return throwError(() => error);
         })
     );
 };

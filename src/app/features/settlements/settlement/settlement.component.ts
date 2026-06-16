@@ -174,7 +174,7 @@ export class SettlementComponent {
     /**
      * Имя лидера поселения.
      */
-    protected leader!: IPlayer;
+    protected leader: IPlayer | null = null;
 
     /**
      * Открывает диалоговое окно создания поселения.

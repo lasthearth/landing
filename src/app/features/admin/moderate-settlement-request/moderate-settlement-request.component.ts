@@ -4,12 +4,11 @@ import { RequestStatusService } from '@core/services/request-status.service';
 import { SettlementService } from '@entities/settlement';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { TagKey, ActiveTagComponent } from './active-tag/active-tag.component';
 import { Tag } from './interfaces/tag.interface';
 
 @Component({
     selector: 'app-moderate-settlement-request',
-    imports: [ActiveTagComponent],
+    imports: [],
     templateUrl: './moderate-settlement-request.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
 })

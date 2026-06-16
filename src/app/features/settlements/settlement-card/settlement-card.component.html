@@ -5,6 +5,7 @@
     <div class="hidden xl:block xl:w-2/5 w-full shrink-0 h-full">
         <img
             [src]="data().attachments[0].url ? data().attachments[0].url : '/images/screenshots/screen_1.png'"
+            alt="Изображение поселения {{ data().name }}"
             class="h-full w-full object-cover rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
         />
     </div>
@@ -13,11 +14,11 @@
     <div class="xl:w-3/5 w-full p-5 flex flex-col gap-3 justify-between overflow-hidden">
         <div class="flex flex-col gap-2">
             <div class="flex items-center gap-2 flex-wrap">
-                <h1 class="text-xl/7 md:text-2xl uppercase font-bold text-[#2d201a]">
+                <h2 class="text-xl/7 md:text-2xl uppercase font-bold text-[#2d201a]">
                     {{ data().name }}
-                </h1>
+                </h2>
                 <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-0.5 rounded-lg">
-                    {{ (data().members?.length ?? 0) + 1 }} жит.
+                    {{ data().members.length + 1 }} жит.
                 </span>
                 <span class="bg-[#16a34a]/15 text-[#16a34a] font-bold text-base px-2 py-0.5 rounded-lg">
                     {{ onlineCount }} онл.

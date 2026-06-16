@@ -47,7 +47,7 @@
 
             <button
                 (click)="createSettlement()"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
                 Основать
             </button>
@@ -59,7 +59,7 @@
             </p>
             <button
                 (click)="createSettlement()"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
                 Основать
             </button>
@@ -120,7 +120,7 @@
     <!-- Население -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
         <p class="text-xl font-semibold text-[#2d201a]">Население</p>
-        <div class="flex flex-wrap gap-3">
+        <div class="flex flex-wrap gap-4">
             <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base md:text-base px-3 p-1.5 rounded-2xl items-center">
                 @if (leader?.is_online === true) {
                     <tui-pulse class="self-center mr-2.5 online" />
@@ -137,12 +137,12 @@
                         [class.rounded-2xl]="userId !== settlement.leader.user_id"
                         class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base md:text-base px-3 p-1.5 items-center"
                     >
-                        @if (item?.is_online === true) {
+                        @if (item.is_online === true) {
                             <tui-pulse class="self-center mr-2.5 online" />
                         } @else {
                             <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
                         }
-                        <span>{{ item?.user_game_name }}</span>
+                        <span>{{ item.user_game_name }}</span>
                     </div>
                     @if (userId === settlement.leader.user_id) {
                         <div
@@ -180,25 +180,25 @@
     }
 
     <!-- Кнопки управления -->
-    <div class="flex w-full justify-between flex-wrap gap-3">
+    <div class="flex w-full justify-start flex-wrap gap-4">
         @if (userId === settlement.leader.user_id) {
             <button
                 (click)="invitePlayer(settlement)"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
                 Пригласить игроков
             </button>
 
             <button
                 (click)="levelUp(settlement.type)"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
                 Повысить уровень
             </button>
         } @else {
             <button
                 (click)="settlementLeave(settlement.id, userId)"
-                class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
                 Покинуть селение
             </button>

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TuiIcon } from '@taiga-ui/core';
 import { TuiCopy } from '@taiga-ui/kit';
 import { environment } from '@core/config/environments/environment';
 
@@ -11,7 +10,7 @@ import { environment } from '@core/config/environments/environment';
     selector: 'app-how-play',
     templateUrl: './how-play.component.html',
     styleUrl: './how-play.component.css',
-    imports: [TuiCopy, TuiIcon],
+    imports: [TuiCopy],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HowPlayComponent {

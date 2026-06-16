@@ -13,6 +13,7 @@ import {
 } from '@entities/donate';
 import { MediaService } from '@entities/media';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { TuiFile, TuiFiles, TuiFilesComponent } from '@taiga-ui/kit';
@@ -47,6 +48,11 @@ export class DonateShopPanelComponent {
      * Сервис уведомлений.
      */
     private readonly requestStatus = inject(RequestStatusService);
+
+    /**
+     * Сервис диалогов подтверждения.
+     */
+    private readonly confirmDialog = inject(ConfirmDialogService);
 
     /**
      * Ссылка на жизненный цикл компонента.
@@ -420,21 +426,30 @@ export class DonateShopPanelComponent {
     /**
      * Удаляет товар.
      *
+     * Перед удалением показывает диалог подтверждения.
+     *
      * @param item Товар для удаления.
      */
     protected deleteItem(item: IShopItem): void {
-        if (!confirm(`Удалить товар "${item.name}"?`)) {
-            return;
-        }
+        this.confirmDialog
+            .open({
+                title: 'Удалить товар?',
+                text: `Вы уверены, что хотите удалить товар «${item.name}»? Это действие нельзя отменить.`,
+            })
+            .subscribe((confirmed) => {
+                if (!confirmed) {
+                    return;
+                }
 
-        this.donateService
-            .deleteShopItem$(item.id)
-            .pipe(
-                this.requestStatus.handleError(),
-                this.requestStatus.handleSuccess('Товар удалён'),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(() => this.donateService.refreshShopItems$());
+                this.donateService
+                    .deleteShopItem$(item.id)
+                    .pipe(
+                        this.requestStatus.handleError(),
+                        this.requestStatus.handleSuccess('Товар удалён'),
+                        takeUntilDestroyed(this.destroyRef)
+                    )
+                    .subscribe(() => this.donateService.refreshShopItems$());
+            });
     }
 
     /**

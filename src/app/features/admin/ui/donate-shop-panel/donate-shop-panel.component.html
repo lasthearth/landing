@@ -76,7 +76,7 @@
                                 <div class="flex items-center justify-center gap-2">
                                     @if (item.effectivePrice && item.effectivePrice !== item.price) {
                                         <span class="text-base text-lh-primary/50 line-through flex items-center gap-1">{{ item.price }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-4 w-4 object-contain" /></span>
-                                        <span class="text-xl font-extrabold text-lh-accent-3 flex items-center gap-1">{{ item.effectivePrice }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-5 w-5 object-contain" /></span>
+                                        <span class="text-xl font-extrabold text-lh-accent flex items-center gap-1">{{ item.effectivePrice }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-5 w-5 object-contain" /></span>
                                     } @else {
                                         <span class="text-xl font-extrabold text-lh-primary flex items-center gap-1">{{ item.price }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-5 w-5 object-contain" /></span>
                                     }
@@ -129,7 +129,7 @@
 
     <!-- Форма создания/редактирования -->
     @if (activeTabIndex() === 1) {
-        <form [formGroup]="form" (ngSubmit)="saveItem()" class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
+        <form [formGroup]="form" (ngSubmit)="saveItem()" class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
             <!-- Левая колонка: форма -->
             <div class="flex flex-col gap-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -241,7 +241,7 @@
                             <button
                                 type="button"
                                 (click)="addEntry()"
-                                class="px-4 py-2 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
+                                class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-[#e07830] text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
                             >
                                 <tui-icon icon="@tui.plus" class="size-5!" />
                                 Добавить
@@ -315,7 +315,7 @@
                 }
 
                 <!-- Кнопки -->
-                <div class="flex gap-4 pt-2">
+                <div class="flex gap-4 pt-2 sticky bottom-4 z-10 bg-[#e8dfc8] py-4 rounded-xl shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
                     <button
                         type="button"
                         (click)="backToList()"
@@ -326,7 +326,7 @@
                     <button
                         type="submit"
                         [disabled]="form.invalid || isLoading()"
-                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white font-bold uppercase text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.12)]"
+                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-[#e07830] text-white font-bold uppercase text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
                     >
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -373,7 +373,7 @@
                     <div class="flex items-center justify-center gap-2">
                         @if (previewItem().hasDiscount && previewItem().discountPercent) {
                             <span class="text-lg text-lh-primary/50 line-through flex items-center gap-1">{{ previewItem().price }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-4 w-4 object-contain" /></span>
-                            <span class="text-2xl font-extrabold text-lh-accent-3 flex items-center gap-1">{{ previewEffectivePrice() }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-6 w-6 object-contain" /></span>
+                            <span class="text-2xl font-extrabold text-lh-accent flex items-center gap-1">{{ previewEffectivePrice() }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-6 w-6 object-contain" /></span>
                         } @else {
                             <span class="text-2xl font-extrabold text-lh-primary flex items-center gap-1">{{ previewItem().price }} <img src="/splinter-of-spark.png" alt="Осколок" class="h-6 w-6 object-contain" /></span>
                         }

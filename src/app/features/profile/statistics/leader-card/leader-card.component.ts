@@ -1,11 +1,10 @@
 import { NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
-import { TuiIcon } from '@taiga-ui/core';
 
 @Component({
     standalone: true,
     selector: 'app-leader-card',
-    imports: [TuiIcon],
+    imports: [],
     templateUrl: './leader-card.component.html',
     styleUrl: './leader-card.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

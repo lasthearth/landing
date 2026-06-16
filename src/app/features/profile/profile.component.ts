@@ -22,7 +22,7 @@ import { SettlementService } from '@entities/settlement';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
 @Component({
     standalone: true,
-    imports: [TuiIcon, NgIf, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton, DecimalPipe, ProfileSkeletonComponent],
+    imports: [TuiIcon, RouterOutlet, AsyncPipe, PolymorpheusOutlet, TuiPreview, TuiButton, DecimalPipe, ProfileSkeletonComponent],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
 })

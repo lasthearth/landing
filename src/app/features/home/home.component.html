@@ -2,6 +2,7 @@
     <button
         (click)="navigate(1)"
         class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] hover:bg-[#c35a17] transition-all duration-200 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        aria-label="Следующий слайд"
     >
         <tui-icon icon="@tui.chevron-right" class="text-white" />
     </button>
@@ -30,6 +31,7 @@
     <button
         (click)="navigate(-1)"
         class="absolute nav-button hidden md:block size-12 z-40 left-8 cursor-pointer hover:scale-[105%] hover:bg-[#c35a17] transition-all duration-200 top-1/2 -translate-y-1/2 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        aria-label="Предыдущий слайд"
     >
         <tui-icon icon="@tui.chevron-left" class="text-white" />
     </button>

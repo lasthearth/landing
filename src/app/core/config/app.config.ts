@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { buildAngularAuthConfig } from '@logto/js';
-import { provideAuth } from 'angular-auth-oidc-client';
+import { LogLevel, provideAuth } from 'angular-auth-oidc-client';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideEventPlugins } from '@taiga-ui/event-plugins';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -64,6 +64,8 @@ function getConfig() {
     config.disableIatOffsetValidation = true;
     config.silentRenew = true;
     config.useRefreshToken = true;
+    config.renewTimeBeforeTokenExpiresInSeconds = 120;
+    config.logLevel = environment.production ? LogLevel.Warn : LogLevel.Debug;
 
     return config;
 }

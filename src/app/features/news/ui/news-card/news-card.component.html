@@ -25,14 +25,15 @@
             >
                 <img
                     [src]="preview()"
+                    alt="Превью новости: {{ title() }}"
                     class="hidden md:block xl:hidden 2xl:block size-72 object-cover rounded-xl"
                 />
             </div>
             <div class="flex flex-col gap-6 w-full items-start">
                 <div class="flex flex-col gap-2 items-start">
-                    <h1 class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100">
+                    <h2 class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100">
                         {{ title() }}
-                    </h1>
+                    </h2>
                     <div class="flex flex-wrap gap-2 items-center">
                         @if (date() !== '—') {
                             <span

@@ -19,7 +19,7 @@ import {
 @Component({
     standalone: true,
     selector: 'app-pending-purchases-panel',
-    imports: [AsyncPipe, TuiIcon, TuiLoader, ConfirmPurchaseActionComponent],
+    imports: [AsyncPipe, TuiIcon, TuiLoader],
     templateUrl: './pending-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

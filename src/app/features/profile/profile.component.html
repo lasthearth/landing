@@ -3,7 +3,6 @@
 @let stats = playerStats$ | async;
 @let settlement = settlement$ | async;
 @let details = details$ | async;
-@let purchases = purchases$ | async;
 @let settlementOnline = settlementMembersOnline$ | async;
 @let hgStats = hungerGamesStats$ | async;
 @let isLoading = isLoading$ | async;
@@ -18,25 +17,27 @@
         <!-- Колонка 1: Профиль -->
         <div class="flex gap-4 max-[640px]:flex-col">
             <!-- Аватар -->
-            <div class="flex flex-col shrink-0 overflow-hidden rounded-2xl max-[640px]:hidden">
+            <div class="flex flex-col shrink-0 overflow-hidden rounded-2xl max-[640px]:hidden w-48">
                 @if (userData.image) {
                     <img
                         [src]="userData.image"
+                        [alt]="'Аватар пользователя ' + userName"
                         (click)="show(userData.image, 'Изображение профиля')"
-                        class="w-full h-full object-cover rounded-t-2xl max-h-44 max-w-40 transition-all duration-200 hover:opacity-85 cursor-pointer"
+                        class="w-full h-44 object-cover rounded-t-2xl transition-all duration-200 hover:opacity-85 cursor-pointer"
                     />
                 } @else {
                     <img
                         src="/default-avatar.png"
-                        class="w-full h-full object-cover rounded-t-2xl max-h-44 max-w-40"
+                        class="w-full h-44 object-cover rounded-t-2xl"
                         alt="Аватар по умолчанию"
                     />
                 }
                 <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
                 <button
                     (click)="triggerFileInput()"
-                    class="text-lg leading-[27px] border border-lh-primary-2/10 hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary font-bold cursor-pointer bg-lh-primary-2/10 py-2 px-4 text-center"
+                    class="flex items-center justify-center gap-2 w-full text-base leading-[27px] font-bold cursor-pointer text-white bg-gradient-to-r from-lh-accent to-[#e07830] hover:brightness-105 transition-all duration-300 shadow-md py-2 px-2 whitespace-nowrap rounded-b-2xl"
                 >
+                    <tui-icon icon="@tui.camera" class="size-4!" />
                     ИЗМЕНИТЬ ФОТО
                 </button>
             </div>
@@ -62,8 +63,9 @@
                                 <p class="text-lg leading-[27px] font-bold truncate">{{ userName }}</p>
                                 <button
                                     (click)="openDialogChangeUsername()"
-                                    class="shrink-0 hover:bg-lh-primary-2/30 text-lh-primary transition-all duration-200 cursor-pointer bg-lh-primary-2/20 rounded-lg p-1"
+                                    class="shrink-0 border border-lh-accent/50 bg-lh-accent/10 text-lh-accent hover:bg-lh-accent hover:text-white hover:border-lh-accent transition-all duration-200 cursor-pointer rounded-lg p-1.5 shadow-sm"
                                     title="Изменить ник"
+                                    aria-label="Изменить игровой ник"
                                 >
                                     <tui-icon icon="@tui.pencil" class="size-5!" />
                                 </button>
@@ -79,7 +81,7 @@
                     >
                         <p class="text-lg leading-[27px] text-neutral-500 mb-1">Поселение</p>
                         <span class="font-bold truncate text-lg leading-[27px]">
-                            {{ settlement.leader?.user_id === userService.userId ? "Глава" : "Житель" }}
+                            {{ settlement.leader.user_id === userService.userId ? "Глава" : "Житель" }}
                             «{{ settlement.name }}»
                         </span>
                         <div class="flex items-start gap-2 flex-wrap text-lg leading-[27px]">
@@ -87,7 +89,7 @@
                                 {{ settlementService.getSettlementTypeByKey(settlement.type) }}
                             </span>
                             <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
-                                {{ (settlement.members?.length ?? 0) + 1 }} жит.
+                                {{ settlement.members.length + 1 }} жит.
                             </span>
                             <span class="px-2 py-0.5 bg-[#a0b8d0]/30 text-[#5a7a9a] rounded-full">
                                 {{ settlementOnline ?? 0 }} онлайн
@@ -110,7 +112,7 @@
                 @if (getRoleName() === "Неверифицирован" && (details?.status == "rejected" || !details)) {
                     <button
                         (click)="verification()"
-                        class="w-fit hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4"
+                        class="lh-secondary-button w-fit text-lg leading-[27px] py-2 px-4"
                     >
                         ПРОЙТИ ВЕРИФИКАЦИЮ
                     </button>
@@ -133,6 +135,7 @@
                         [disabled]="!(canPrevHgSeason$ | async)"
                         (click)="prevHgSeason()"
                         class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                        aria-label="Предыдущий сезон голодных игр"
                     >
                         <tui-icon icon="@tui.chevron-left" class="size-4!" />
                     </button>
@@ -149,6 +152,7 @@
                         [disabled]="!(canNextHgSeason$ | async)"
                         (click)="nextHgSeason()"
                         class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                        aria-label="Следующий сезон голодных игр"
                     >
                         <tui-icon icon="@tui.chevron-right" class="size-4!" />
                     </button>
@@ -190,7 +194,7 @@
             <div class="flex gap-2 flex-col">
                 <!-- Баланс -->
                 <div
-                    class="flex items-center justify-between gap-3 bg-lh-primary-2/10 rounded-xl px-4 py-2 border border-lh-primary-2/10"
+                    class="flex items-center justify-between gap-3 rounded-xl px-4 py-2 bg-gradient-to-r from-lh-accent/10 to-transparent border border-lh-accent/30 shadow-[0_2px_12px_rgba(255,121,32,0.12)]"
                 >
                     <div class="flex items-center gap-2">
                         <img
@@ -206,8 +210,9 @@
                 <!-- Кнопка пополнения -->
                 <button
                     (click)="howToBuy()"
-                    class="hover:bg-lh-primary-2/30 transition-all duration-300 text-lh-primary text-lg leading-[27px] font-bold cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 rounded-xl py-2 px-4 w-full text-center"
+                    class="flex items-center justify-center gap-2 transition-all duration-300 text-lh-accent text-lg leading-[27px] font-bold cursor-pointer bg-lh-accent/10 border border-lh-accent rounded-xl py-2 px-4 w-full text-center hover:bg-lh-accent hover:text-white hover:shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
                 >
+                    <tui-icon icon="@tui.circle-plus" class="size-5!" />
                     Пополнить
                 </button>
 
@@ -265,7 +270,7 @@
 <ng-template #preview let-preview>
     <tui-preview [rotatable]="true">
         <tui-preview-title>{{ previewDesc }}</tui-preview-title>
-        <img *polymorpheusOutlet="previewContent as src" alt="preview" [src]="src" />
+        <img *polymorpheusOutlet="previewContent as src" alt="Просмотр изображения профиля" [src]="src" />
         <button iconStart="@tui.x" tuiIconButton tuiPreviewAction type="button" (click)="preview.complete()">
             Close
         </button>

@@ -119,6 +119,21 @@ html body {
     font-optical-sizing: auto;
 }
 
+/**
+ * Отключает анимации для пользователей, предпочитающих уменьшенное движение.
+ * Улучшает доступность для людей с вестибулярными нарушениями.
+ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 a {
     cursor: pointer;
     color: var(--color-blue-400);
@@ -266,6 +281,37 @@ tui-hint {
         background-color: var(--color-lh-danger-hover);
     }
 }
+
+/**
+ * Вторичная кнопка проекта.
+ * Прозрачный фон + чёткая обводка, при наведении подсвечивается акцентом.
+ */
+.lh-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 2px solid rgba(51, 44, 38, 0.35);
+    color: var(--lh-primary);
+    background-color: transparent;
+    border-radius: var(--radius-xl);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.lh-secondary-button:hover:not(:disabled) {
+    border-color: var(--lh-accent);
+    color: var(--lh-accent);
+    background-color: rgba(255, 121, 32, 0.08);
+}
+
+.lh-secondary-button:disabled,
+.lh-secondary-button[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 tui-pulse.online {
     color: var(--color-lh-online) !important;
 }

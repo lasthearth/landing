@@ -386,7 +386,7 @@
             (click)="isTeam = !isTeam"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">9. Как мне попасть в команду проекта Last Heath?</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">9. Как мне попасть в команду проекта Last Hearth?</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTeam }"
@@ -413,4 +413,53 @@
             <tui-icon icon="@tui.chevron-up" class="size-6!" />
         </button>
     }
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "Какая концепция сервера Last Hearth?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Last Hearth — это уникальный ролевой политико-экономический проект с глубокой системой PvP-взаимодействий, построенный на выживании в Vintage Story. Игроки развивают поселения, участвуют в дипломатии, ведут войны и заключают союзы."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Что делать, если я забыл пароль?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "В случае утраты доступа к сайту напишите в техподдержку в Discord-сервере Last Hearth."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Что делать если у меня не заходит на сервер?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Проверьте статус верификации, версию клиента Vintage Story, загрузку модификаций и кэш игры. Подробная инструкция доступна в разделе FAQ на сайте."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Когда вайп и сколько длятся сезоны?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Сезоны длятся по полгода. Приблизительно вайпы происходят 12 июня и 12 декабря."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Я зашел на сервер, с чего мне начать?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Освойтесь, изучите существующие поселения, определите свой путь — одиночка, член поселения или основатель. Сколотите первоначальное состояние и найдите союзников в Discord."
+                    }
+                }
+            ]
+        }
+    </script>
 </div>

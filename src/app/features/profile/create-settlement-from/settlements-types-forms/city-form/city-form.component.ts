@@ -15,7 +15,7 @@ import { LHHintComponent } from '@shared/ui/lh-hint/lh-hint.component/lh-hint.co
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
-import { TuiError, TuiHintDirective, TuiLoader } from '@taiga-ui/core';
+import { TuiError, TuiLoader } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
 
 /**
@@ -35,7 +35,6 @@ import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.functi
         LHHintComponent,
         TuiLoader,
         TuiError,
-        TuiHintDirective,
         TuiFieldErrorPipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,

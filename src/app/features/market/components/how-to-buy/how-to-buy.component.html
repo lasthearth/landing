@@ -65,7 +65,7 @@
             <a
                 [attr.href]="'https://boosty.to/lisov/single-payment/donation/amount/' + rubles()"
                 target="_blank"
-                class="flex items-center justify-center gap-3 self-center w-full py-3 px-6 rounded-2xl bg-lh-accent text-white !border-none !no-underline !text-white font-bold text-lg cursor-pointer transition-all duration-200 hover:brightness-105"
+                class="flex items-center justify-center gap-3 self-center w-full py-3 px-6 rounded-2xl bg-lh-accent text-white !border-none !no-underline !text-white font-bold text-lg cursor-pointer transition-all duration-200 hover:brightness-105 shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
             >
                 <img src="/images/Boosty.svg" class="h-6 brightness-0 invert" alt="Boosty" />
                 Пополнить через Boosty
@@ -74,16 +74,27 @@
 
         <!-- СБП — РФ и СНГ -->
         <div class="flex flex-col gap-3 p-5 rounded-2xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] shadow-sm">
-            <span class="text-lh-primary text-base font-semibold uppercase text-center">РФ и СНГ (СБП)</span>
+            <div class="flex items-center justify-center gap-2">
+                <tui-icon icon="@tui.qr-code" class="size-5! text-lh-accent" />
+                <span class="text-lh-primary text-base font-semibold uppercase">Оплата по QR-коду</span>
+            </div>
+            <p class="text-lh-primary/70 text-base text-center">
+                Перевод через Систему быстрых платежей (СБП)
+            </p>
 
             <div class="flex flex-col items-center gap-3">
-                <img
-                    [attr.src]="sberQrUrl()"
-                    alt="QR-код для перевода через СБП"
-                    class="rounded-xl"
-                />
+                <div class="bg-white p-4 rounded-xl border border-[#d8cdb3] shadow-md">
+                    <img
+                        [attr.src]="sberQrUrl()"
+                        alt="QR-код для перевода через СБП"
+                        class="rounded-lg"
+                    />
+                </div>
                 <p class="text-lh-primary/70 text-base text-center">
                     Сумма: <span class="text-lh-accent font-bold">{{ rubles() }} ₽</span>
+                </p>
+                <p class="text-lh-primary/60 text-sm text-center">
+                    Отсканируйте QR-код в приложении банка
                 </p>
             </div>
         </div>

@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService } from '@taiga-ui/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { debounceTime, distinctUntilChanged, filter, switchMap, catchError, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiAvatar } from '@taiga-ui/kit';
-import { TuiButton, TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { SettlementService } from '@entities/settlement';
 import { DonateService, ITransaction } from '@entities/donate';
 import { UserService } from '@entities/user';
@@ -24,7 +24,7 @@ import { ISelectedPlayer } from '../../model/selected-player.model';
 @Component({
     selector: 'app-admin-coin-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, AsyncPipe, NgIf, TuiAvatar, TuiButton, TuiIcon, TuiLoader, LHInputComponent],
+    imports: [ReactiveFormsModule, AsyncPipe, TuiAvatar, TuiIcon, TuiLoader, LHInputComponent],
     templateUrl: './admin-coin-panel.component.html',
     styleUrl: './admin-coin-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

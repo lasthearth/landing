@@ -3,6 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { TuiSlider } from '@taiga-ui/kit/components/slider';
+import { TuiIcon } from '@taiga-ui/core';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { UserService } from '@entities/user/api/user.service';
 
@@ -15,7 +16,7 @@ import { UserService } from '@entities/user/api/user.service';
 @Component({
     selector: 'app-how-to-buy',
     standalone: true,
-    imports: [FormsModule, DecimalPipe, TuiSlider, LHInputComponent],
+    imports: [FormsModule, DecimalPipe, TuiSlider, TuiIcon, LHInputComponent],
     templateUrl: './how-to-buy.component.html',
     styleUrl: './how-to-buy.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,7 +71,7 @@ export class HowToBuyComponent {
         const sumInKopecks = this.rubles() * 100;
         const purpose = `Пополнение баланса Last Hearth, ник: ${this.username()}`;
         const data = `ST00012|Name=БУРАКОВ ИВАН АЛЕКСАНДРОВИЧ|PersonalAcc=40817810017002268665|BankName=ПАО СБЕРБАНК|BIC=044525225|CorrespAcc=30101810400000000225|Sum=${sumInKopecks}|Purpose=${purpose}`;
-        return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3f3c34&bgcolor=e2d7bb&data=${encodeURIComponent(data)}`;
+        return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3f3c34&bgcolor=ffffff&data=${encodeURIComponent(data)}`;
     });
 
     /**

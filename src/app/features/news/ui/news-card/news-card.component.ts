@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
+import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 
 /**
  * Компонент карточки новости.
@@ -16,6 +17,11 @@ import { TuiIcon } from '@taiga-ui/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewsCardComponent {
+    /**
+     * Сервис диалогов подтверждения.
+     */
+    private readonly confirmDialog = inject(ConfirmDialogService);
+
     /**
      * Заголовок новости.
      */
@@ -63,13 +69,24 @@ export class NewsCardComponent {
     /**
      * Обрабатывает клик по кнопке удаления.
      *
-     * Предотвращает всплытие события и эмитит запрос на удаление.
+     * Показывает диалог подтверждения и эмитит запрос на удаление
+     * только после подтверждения пользователя.
      *
      * @param event Событие клика мыши.
      */
     protected onDeleteClick(event: MouseEvent): void {
         event.stopPropagation();
-        this.delete.emit();
+
+        this.confirmDialog
+            .open({
+                title: 'Удалить новость?',
+                text: `Вы уверены, что хотите удалить новость «${this.title()}»? Это действие нельзя отменить.`,
+            })
+            .subscribe((confirmed) => {
+                if (confirmed) {
+                    this.delete.emit();
+                }
+            });
     }
 
 }
