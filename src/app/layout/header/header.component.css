@@ -1,6 +1,7 @@
 .nav-button {
     transition: all 0.3s 0s;
     background-color: var(--color-lh-primary-2);
+    background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.3) 0%, transparent 60%);
     padding: calc(var(--spacing) * 2.5);
     border-radius: var(--radius-lg);
     height: 44px;
@@ -15,7 +16,8 @@
 }
 
 .nav-button:hover {
-    background-color: #c35a17;
+    background-color: #3d342d;
+    background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
 }
 
 .dash-animated {

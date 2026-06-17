@@ -2,7 +2,9 @@
     <h2 class="lh-dialog-title text-center text-xl sm:text-[22px]">Пополнить баланс осколков</h2>
 
     <!-- Блок выбора суммы -->
-    <div class="flex flex-col gap-4 p-4 sm:p-5 rounded-2xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] shadow-sm">
+    <div
+        class="flex flex-col gap-4 p-4 sm:p-5 rounded-2xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] shadow-sm"
+    >
         <!-- Итоговая сумма осколков -->
         <div class="flex flex-col items-center gap-1">
             <span class="text-lh-primary/60 text-base font-semibold uppercase">Вы получите</span>
@@ -38,11 +40,7 @@
             <label class="text-lh-primary text-base font-semibold">Сумма пополнения, ₽</label>
             <div class="flex items-center gap-3">
                 <div class="flex-1">
-                    <lh-input
-                        type="inputNumber"
-                        [ngModel]="rubles()"
-                        (ngModelChange)="onRublesChange($event)"
-                    />
+                    <lh-input type="inputNumber" [ngModel]="rubles()" (ngModelChange)="onRublesChange($event)" />
                 </div>
                 <span class="text-lh-primary text-xl font-bold">₽</span>
             </div>
@@ -68,7 +66,8 @@
             </div>
 
             <p class="text-lh-primary/50 text-base text-center">
-                Курс: <span class="text-lh-accent font-bold">1 ₽ = 10 осколков</span>
+                Курс:
+                <span class="text-lh-accent font-bold">1 ₽ = 10 осколков</span>
                 <span class="mx-1">•</span>
                 от {{ minAmount }} ₽ до {{ maxAmount | number }} ₽
             </p>
@@ -77,69 +76,150 @@
 
     <!-- Блок способов оплаты -->
     <div class="flex flex-col gap-4">
-        <h3 class="text-center text-lg font-bold text-lh-primary">Выберите способ оплаты</h3>
+        <h3 class="text-center text-xl sm:text-2xl font-bold text-lh-primary">Выберите способ оплаты</h3>
 
-        <!-- ЮMoney — РФ и СНГ, ссылка -->
-        <div class="relative flex flex-col gap-3 rounded-2xl bg-[#e9dec5] border border-[#bdb093] shadow-sm overflow-hidden">
-            <div class="h-1.5 bg-lh-accent"></div>
-            <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-lh-accent text-white text-xs font-bold uppercase tracking-wide shadow-sm lh-pulse-glow">
+        <!-- Сбербанк / СБП — основной способ -->
+        <div
+            class="relative flex flex-col gap-3 rounded-2xl bg-[#e9dec5] border border-[#bdb093] shadow-sm overflow-hidden"
+        >
+            <div class="h-1.5 bg-[#21A038]"></div>
+            <div
+                class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-[#21A038] text-white text-xs font-bold uppercase tracking-wide shadow-[0_2px_8px_rgba(33,160,56,0.35)]"
+            >
                 Рекомендуем
             </div>
-            <div class="p-4 pt-10 sm:p-5 sm:pt-10 flex flex-col gap-3">
+            <div class="p-4 pt-10 sm:p-5 sm:pt-10 flex flex-col gap-4">
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center justify-center w-11 h-11 rounded-full bg-lh-accent text-white shrink-0 shadow-sm">
-                        <tui-icon icon="@tui.wallet" class="size-5!" />
+                    <div
+                        class="flex items-center justify-center w-12 h-12 rounded-full bg-[#21A038] text-white shrink-0 shadow-sm"
+                    >
+                        <tui-icon icon="@tui.smartphone" class="size-6!" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-lh-primary text-base font-bold leading-tight">ЮMoney</span>
-                        <span class="text-lh-primary/60 text-sm">РФ и СНГ — быстро и без комиссии для вас</span>
+                        <span class="text-lh-primary text-xl sm:text-2xl font-bold leading-tight">Сбербанк / СБП</span>
+                        <span class="text-lh-primary/60 text-base sm:text-lg">Перевод по номеру телефона</span>
                     </div>
                 </div>
-                <p class="text-lh-primary/70 text-sm">
-                    Перевод на кошелёк. Сумма и ник подставляются автоматически — ничего заполнять не нужно.
-                </p>
-                <a
-                    [attr.href]="yoomoneyUrl()"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="flex items-center justify-center gap-2 w-full py-3 px-4 sm:px-6 rounded-2xl bg-lh-accent text-white !border-none !no-underline !text-white font-bold text-base sm:text-lg cursor-pointer transition-all duration-200 hover:brightness-105 shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
+
+                <div class="flex items-start gap-4 p-4 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-base">
+                    <tui-icon icon="@tui.badge-alert" class="size-8! text-lh-accent shrink-0 mt-0.5" />
+                    <span class="text-lh-primary/80">
+                        Отправьте ровно
+                        <strong class="text-lh-accent text-lg">{{ rubles() | number }} ₽</strong>
+                        . В комментарии к переводу обязательно укажите ник:
+                        <strong class="text-lh-accent text-lg">{{ username() }}</strong>
+                        .
+                    </span>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-lh-primary text-base font-semibold">Номер телефона получателя</label>
+                    <div class="flex items-center gap-3 p-4 rounded-xl bg-[#d8cdb3] border border-[#bdb093]">
+                        <span class="text-lh-primary text-2xl font-bold font-mono tracking-wide flex-1">
+                            {{ sbpPhone }}
+                        </span>
+                        <button
+                            type="button"
+                            (click)="copyPhone()"
+                            class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#21A038] text-white text-base font-semibold hover:brightness-105 transition-all cursor-pointer"
+                        >
+                            @if (phoneCopied()) {
+                                <tui-icon icon="@tui.check" class="size-4!" />
+                                Скопировано
+                            } @else {
+                                <tui-icon icon="@tui.copy" class="size-4!" />
+                                Копировать
+                            }
+                        </button>
+                    </div>
+                    <p class="text-lh-primary/60 text-sm">Банк: {{ sbpBank }} • Получатель: {{ sbpRecipient }}</p>
+                </div>
+
+                <button
+                    type="button"
+                    (click)="copySbpDetails()"
+                    class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl border-2 border-[#21A038] text-[#21A038] font-bold text-base hover:bg-[rgba(33,160,56,0.1)] transition-all cursor-pointer"
                 >
-                    <tui-icon icon="@tui.external-link" class="size-5!" />
-                    Перейти к оплате {{ rubles() }} ₽
-                </a>
+                    <tui-icon icon="@tui.copy" class="size-5!" />
+                    Скопировать все реквизиты
+                </button>
+
+                <div class="flex flex-col gap-2 text-lh-primary/80 text-base">
+                    <div class="flex items-start gap-2">
+                        <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
+                        <span>Скопируйте номер телефона.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
+                        <span>В приложении банка выберите перевод по номеру телефона / СБП.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
+                        <span>
+                            Укажите сумму
+                            <strong class="text-lh-primary">{{ rubles() | number }} ₽</strong>
+                            и банк
+                            <strong class="text-lh-primary">{{ sbpBank }}</strong>
+                            .
+                        </span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
+                        <span>
+                            В сообщении к переводу напишите ник
+                            <strong class="text-lh-primary">{{ username() }}</strong>
+                            .
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Boosty — международный, низкий приоритет -->
-        <div class="relative flex flex-col gap-3 rounded-2xl bg-[#e9dec5] border border-[#bdb093] shadow-sm overflow-hidden">
+        <div
+            class="relative flex flex-col gap-3 rounded-2xl bg-[#e9dec5] border border-[#bdb093] shadow-sm overflow-hidden"
+        >
             <div class="h-1.5 bg-lh-primary"></div>
             <div class="p-4 sm:p-5 flex flex-col gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center justify-center w-11 h-11 rounded-full bg-lh-primary text-white shrink-0 shadow-sm">
+                    <div
+                        class="flex items-center justify-center w-11 h-11 rounded-full bg-lh-primary text-white shrink-0 shadow-sm"
+                    >
                         <img src="/images/Boosty.svg" class="h-5 brightness-0 invert" alt="" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-lh-primary text-base font-bold leading-tight">Boosty</span>
-                        <span class="text-lh-primary/60 text-sm">Международные платежи</span>
+                        <span class="text-lh-primary text-lg sm:text-xl font-bold leading-tight">Boosty</span>
+                        <span class="text-lh-primary/60 text-base">Международные платежи</span>
                     </div>
                 </div>
-                <p class="text-lh-primary/70 text-sm">
-                    Для оплаты из-за рубежа. Комиссия сервиса оплачивается отдельно.
+                <p class="text-lh-primary/70 text-base">
+                    Для оплаты из-за рубежа. К сумме пакета добавляется 300 ₽ комиссии сервиса.
                 </p>
-                <div class="flex items-start gap-2 p-3 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-sm">
-                    <tui-icon icon="@tui.alert-triangle" class="size-4! text-lh-accent shrink-0 mt-0.5" />
-                    <span class="text-lh-primary/80">
-                        <strong class="text-lh-accent">Обязательно укажите ник</strong> в сообщении к платежу, иначе мы не сможем зачислить осколки.
-                    </span>
+                <div class="flex flex-col gap-3 p-4 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-base">
+                    <div class="flex items-start gap-3">
+                        <tui-icon icon="@tui.badge-alert" class="size-6! text-lh-accent shrink-0 mt-0.5" />
+                        <span class="text-lh-primary/80">
+                            К оплате:
+                            <strong class="text-lh-accent text-lg">{{ boostyTotal() | number }} ₽</strong>
+                            (включает 300 ₽ комиссии).
+                        </span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <tui-icon icon="@tui.badge-alert" class="size-6! text-lh-accent shrink-0 mt-0.5" />
+                        <span class="text-lh-primary/80">
+                            <strong class="text-lh-accent text-lg">Обязательно укажите ник {{ username() }}</strong>
+                            в сообщении к платежу, иначе мы не сможем зачислить осколки.
+                        </span>
+                    </div>
                 </div>
                 <a
-                    [attr.href]="'https://boosty.to/lisov/single-payment/donation/amount/' + rubles()"
+                    [attr.href]="boostyUrl()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="lh-secondary-button !no-underline w-full py-3 px-4 sm:px-6 text-base sm:text-lg font-bold"
+                    class="lh-secondary-button !no-underline w-full py-3 px-4 sm:px-6 text-lg sm:text-xl font-bold"
                 >
                     <tui-icon icon="@tui.external-link" class="size-5!" />
-                    Пополнить через Boosty
+                    Пополнить через Boosty {{ boostyTotal() | number }} ₽
                 </a>
             </div>
         </div>
@@ -147,18 +227,10 @@
 
     <!-- Информация о начислении -->
     <div class="flex flex-col gap-2 text-center text-base">
-        <p class="text-lh-primary/70">
-            Осколки поступят на счёт в течение 24 часов после оплаты
-        </p>
+        <p class="text-lh-primary/70">Осколки поступят на счёт в течение 24 часов после оплаты</p>
         <p class="text-lh-primary/70">
             Если возникли вопросы — напишите нам в
-            <a
-                href="https://discord.com/invite/FZb7SGrSFy"
-                class="text-lh-accent font-bold"
-                target="_blank"
-            >
-                Discord
-            </a>
+            <a href="https://discord.com/invite/FZb7SGrSFy" class="text-lh-accent font-bold" target="_blank">Discord</a>
         </p>
     </div>
 

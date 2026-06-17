@@ -1,12 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { catchError, filter, of, switchMap } from 'rxjs';
 
 import { TuiSlider } from '@taiga-ui/kit/components/slider';
 import { TuiIcon } from '@taiga-ui/core';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { UserService } from '@entities/user/api/user.service';
-import { YOOMONEY_WALLET_NUMBER } from './how-to-buy.config';
+import { IPlayer } from '@entities/user/model/i-player';
+import { SBP_REQUISITES } from './sbp.config';
 
 /**
  * Диалог пополнения осколков (донат-валюты).
@@ -22,7 +26,7 @@ import { YOOMONEY_WALLET_NUMBER } from './how-to-buy.config';
     styleUrl: './how-to-buy.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HowToBuyComponent {
+export class HowToBuyComponent implements OnInit {
     /**
      * Курс обмена: 1 рубль = 10 осколков.
      */
@@ -49,9 +53,15 @@ export class HowToBuyComponent {
     private readonly userService = inject(UserService);
 
     /**
-     * Никнейм текущего пользователя.
+     * Референс для автоматической отписки при уничтожении компонента.
      */
-    protected readonly username = computed(() => this.userService.userName || 'Неизвестный');
+    private readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Игровой никнейм текущего пользователя.
+     * По умолчанию используется имя из OIDC, затем заменяется на игровой ник из API.
+     */
+    protected readonly username = signal<string>(this.userService.userName || 'Неизвестный');
 
     /**
      * Текущая сумма в рублях.
@@ -69,23 +79,86 @@ export class HowToBuyComponent {
     protected readonly quickAmounts = [100, 500, 1000, 5000];
 
     /**
-     * URL формы оплаты ЮMoney с подставленной суммой и сообщением.
-     * Содержит номер кошелька, сумму, назначение платежа и ник игрока.
+     * Реквизиты для перевода через СБП.
      */
-    protected readonly yoomoneyUrl = computed(() => {
-        const amount = this.rubles();
-        const username = this.username();
-        const message = `Пополнение баланса Last Hearth, ник: ${username}`;
-        const params = new URLSearchParams({
-            receiver: YOOMONEY_WALLET_NUMBER,
-            'quickpay-form': 'button',
-            paymentType: 'AC',
-            sum: amount.toString(),
-            targets: message,
-            comment: message,
-        });
-        return `https://yoomoney.ru/quickpay/confirm?${params.toString()}`;
-    });
+    protected readonly sbpPhone = SBP_REQUISITES.phone;
+
+    /**
+     * Банк получателя для перевода через СБП.
+     */
+    protected readonly sbpBank = SBP_REQUISITES.bank;
+
+    /**
+     * Имя получателя для перевода через СБП.
+     */
+    protected readonly sbpRecipient = SBP_REQUISITES.recipient;
+
+    /**
+     * Признак успешного копирования номера телефона.
+     */
+    protected readonly phoneCopied = signal(false);
+
+    /**
+     * Итоговая сумма к оплате через Boosty, включая комиссию.
+     */
+    protected readonly boostyTotal = computed(() => this.rubles() + 300);
+
+    /**
+     * Ссылка на оплату через Boosty с учётом комиссии.
+     */
+    protected readonly boostyUrl = computed(
+        () => `https://boosty.to/lisov/single-payment/donation/amount/${this.boostyTotal()}`
+    );
+
+    /**
+     * Загружает игровой никнейм пользователя из API.
+     */
+    public ngOnInit(): void {
+        this.userService.authState$
+            .pipe(
+                filter(Boolean),
+                switchMap(() => this.userService.getPlayer$(this.userService.userId)),
+                catchError(() => of(null)),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((player: IPlayer | null) => {
+                const gameName = player?.user_game_name;
+                if (gameName) {
+                    this.username.set(gameName);
+                }
+            });
+    }
+
+    /**
+     * Копирует номер телефона получателя в буфер обмена.
+     */
+    protected async copyPhone(): Promise<void> {
+        try {
+            await navigator.clipboard.writeText(this.sbpPhone);
+            this.phoneCopied.set(true);
+            setTimeout(() => this.phoneCopied.set(false), 2000);
+        } catch {
+            // Если API буфера обмена недоступно, ничего не делаем.
+        }
+    }
+
+    /**
+     * Копирует полные реквизиты для перевода через СБП.
+     */
+    protected async copySbpDetails(): Promise<void> {
+        const details = [
+            `Телефон: ${this.sbpPhone}`,
+            `Банк: ${this.sbpBank}`,
+            `Получатель: ${this.sbpRecipient}`,
+            `Сумма: ${this.rubles()} ₽`,
+            `Ник: ${this.username()}`,
+        ].join('\n');
+        try {
+            await navigator.clipboard.writeText(details);
+        } catch {
+            // Если API буфера обмена недоступно, ничего не делаем.
+        }
+    }
 
     /**
      * Обрабатывает изменение суммы в рублях из слайдера или инпута.
