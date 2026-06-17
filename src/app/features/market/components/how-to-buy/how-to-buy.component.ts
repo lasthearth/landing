@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
-import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { debounceTime } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { TuiSlider } from '@taiga-ui/kit/components/slider';
-import { TuiAlertService, TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { TuiIcon } from '@taiga-ui/core';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { UserService } from '@entities/user/api/user.service';
+import { YOOMONEY_WALLET_NUMBER } from './how-to-buy.config';
 
 /**
  * Диалог пополнения осколков (донат-валюты).
@@ -18,7 +17,7 @@ import { UserService } from '@entities/user/api/user.service';
 @Component({
     selector: 'app-how-to-buy',
     standalone: true,
-    imports: [FormsModule, DecimalPipe, TuiSlider, TuiIcon, TuiLoader, LHInputComponent],
+    imports: [FormsModule, DecimalPipe, TuiSlider, TuiIcon, LHInputComponent],
     templateUrl: './how-to-buy.component.html',
     styleUrl: './how-to-buy.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,11 +49,6 @@ export class HowToBuyComponent {
     private readonly userService = inject(UserService);
 
     /**
-     * Сервис уведомлений.
-     */
-    private readonly alertService = inject(TuiAlertService);
-
-    /**
      * Никнейм текущего пользователя.
      */
     protected readonly username = computed(() => this.userService.userName || 'Неизвестный');
@@ -70,59 +64,28 @@ export class HowToBuyComponent {
     protected readonly shards = computed(() => this.rubles() * this.rate);
 
     /**
-     * URL QR-кода для перевода через СБП по ГОСТ Р 56042-2014.
-     * Содержит реквизиты получателя, сумму в копейках и ник игрока.
-     * Распознаётся всеми банковскими приложениями.
+     * Популярные суммы пополнения для быстрого выбора.
      */
-    /**
-     * Сумма в рублях с задержкой для генерации QR-кода.
-     * Используется debounce, чтобы не спамить api.qrserver.com при движении слайдера.
-     */
-    private readonly debouncedRubles = toSignal(toObservable(this.rubles).pipe(debounceTime(300)), {
-        initialValue: 500,
-    });
+    protected readonly quickAmounts = [100, 500, 1000, 5000];
 
     /**
-     * Формирует реквизиты для перевода через СБП по ГОСТ Р 56042-2014.
-     *
-     * @param rubles Сумма в рублях.
-     * @returns Строка реквизитов для СБП.
+     * URL формы оплаты ЮMoney с подставленной суммой и сообщением.
+     * Содержит номер кошелька, сумму, назначение платежа и ник игрока.
      */
-    private buildSbpDetails(rubles: number): string {
-        const sumInKopecks = rubles * 100;
-        const purpose = `Пополнение баланса Last Hearth, ник: ${this.username()}`;
-        return `ST00012|Name=БУРАКОВ ИВАН АЛЕКСАНДРОВИЧ|PersonalAcc=40817810017002268665|BankName=ПАО СБЕРБАНК|BIC=044525225|CorrespAcc=30101810400000000225|Sum=${sumInKopecks}|Purpose=${purpose}`;
-    }
-
-    /**
-     * Реквизиты для перевода через СБП по ГОСТ Р 56042-2014.
-     */
-    protected readonly sbpDetails = computed(() => this.buildSbpDetails(this.rubles()));
-
-    /**
-     * URL QR-кода для перевода через СБП.
-     * Обновляется с debounce, чтобы не генерировать QR на каждое изменение слайдера.
-     */
-    protected readonly sberQrUrl = computed(() => {
-        const data = this.buildSbpDetails(this.debouncedRubles());
-        return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&color=3f3c34&bgcolor=ffffff&data=${encodeURIComponent(data)}`;
-    });
-
-    /**
-     * Признак загрузки QR-кода.
-     */
-    protected readonly qrLoading = signal(true);
-
-    /**
-     * Конструктор.
-     * Сбрасывает признак загрузки QR при изменении URL.
-     */
-    public constructor() {
-        effect(() => {
-            this.sberQrUrl();
-            this.qrLoading.set(true);
+    protected readonly yoomoneyUrl = computed(() => {
+        const amount = this.rubles();
+        const username = this.username();
+        const message = `Пополнение баланса Last Hearth, ник: ${username}`;
+        const params = new URLSearchParams({
+            receiver: YOOMONEY_WALLET_NUMBER,
+            'quickpay-form': 'button',
+            paymentType: 'AC',
+            sum: amount.toString(),
+            targets: message,
+            comment: message,
         });
-    }
+        return `https://yoomoney.ru/quickpay/confirm?${params.toString()}`;
+    });
 
     /**
      * Обрабатывает изменение суммы в рублях из слайдера или инпута.
@@ -135,6 +98,15 @@ export class HowToBuyComponent {
     }
 
     /**
+     * Устанавливает одну из популярных сумм пополнения.
+     *
+     * @param value Сумма в рублях.
+     */
+    protected setRubles(value: number): void {
+        this.rubles.set(this.clampRubles(value));
+    }
+
+    /**
      * Ограничивает сумму в рублях допустимым диапазоном
      * и округляет до шага.
      *
@@ -144,22 +116,5 @@ export class HowToBuyComponent {
     private clampRubles(value: number): number {
         const rounded = Math.round(value / this.step) * this.step;
         return Math.max(this.minAmount, Math.min(this.maxAmount, rounded));
-    }
-
-    /**
-     * Копирует реквизиты СБП в буфер обмена.
-     *
-     * Поскольку QR-код СБП содержит реквизиты, а не веб-ссылку,
-     * это ближайший аналог «перейти туда же, куда QR-код».
-     */
-    protected copySbpDetails(): void {
-        navigator.clipboard
-            .writeText(this.sbpDetails())
-            .then(() => {
-                this.alertService.open('', { label: 'Реквизиты СБП скопированы. Вставьте их в приложение банка.', appearance: 'positive' }).subscribe();
-            })
-            .catch(() => {
-                this.alertService.open('', { label: 'Не удалось скопировать реквизиты. Попробуйте отсканировать QR-код.', appearance: 'negative' }).subscribe();
-            });
     }
 }

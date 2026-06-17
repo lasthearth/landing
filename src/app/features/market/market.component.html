@@ -6,7 +6,7 @@
         <button
             type="button"
             (click)="activeItemIndex.set(0)"
-            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
+            class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
             [class.border-[#8b5a2b]]="activeItemIndex() === 0"
             [class.bg-gradient-to-r]="activeItemIndex() === 0"
             [class.from-[#1a1510]]="activeItemIndex() === 0"
@@ -24,7 +24,7 @@
         <button
             type="button"
             (click)="activeItemIndex.set(1)"
-            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
+            class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
             [class.border-[#8b5a2b]]="activeItemIndex() === 1"
             [class.bg-gradient-to-r]="activeItemIndex() === 1"
             [class.from-[#1a1510]]="activeItemIndex() === 1"
@@ -42,7 +42,7 @@
         <button
             type="button"
             (click)="activeItemIndex.set(2)"
-            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
+            class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
             [class.border-[#8b5a2b]]="activeItemIndex() === 2"
             [class.bg-gradient-to-r]="activeItemIndex() === 2"
             [class.from-[#1a1510]]="activeItemIndex() === 2"
@@ -82,7 +82,7 @@
         <button
             type="button"
             (click)="howToBuy()"
-            class="px-8 py-3.5 rounded-xl border-2 border-[rgba(51,44,38,0.12)] bg-transparent hover:bg-[rgba(240,230,210,0.08)] !text-[#5c554a] text-lg md:text-xl font-bold uppercase tracking-wide transition-all duration-200 hover:border-[#ffaa5c] hover:text-white no-underline!"
+            class="w-full md:w-auto px-6 lg:px-8 py-3 lg:py-3.5 rounded-xl border-2 border-[rgba(51,44,38,0.12)] bg-transparent hover:bg-[rgba(240,230,210,0.08)] !text-[#5c554a] text-base md:text-lg lg:text-xl font-bold uppercase tracking-wide transition-all duration-200 hover:border-[#ffaa5c] hover:text-white no-underline!"
         >
             Как пополнить осколки
         </button>
@@ -99,7 +99,7 @@
                 <tui-icon icon="@tui.server" class="!text-xl" />
             </span>
             <div>
-                <p class="font-bold text-[#f0e6d2] text-[18px] uppercase tracking-wide">Хостинг</p>
+                <p class="font-bold text-[#f0e6d2] text-base lg:text-[18px] uppercase tracking-wide">Хостинг</p>
                 <p class="text-base md:text-[18px] text-[#e8d8b8]/80 mt-1">
                     Аренда мощностей для стабильной работы сервера
                 </p>
@@ -113,7 +113,7 @@
                 <tui-icon icon="@tui.code" class="!text-xl" />
             </span>
             <div>
-                <p class="font-bold text-[#f0e6d2] text-[18px] uppercase tracking-wide">Моды</p>
+                <p class="font-bold text-[#f0e6d2] text-base lg:text-[18px] uppercase tracking-wide">Моды</p>
                 <p class="text-base md:text-[18px] text-[#e8d8b8]/80 mt-1">Разработка уникальных механик и контента</p>
             </div>
         </div>
@@ -125,7 +125,7 @@
                 <tui-icon icon="@tui.trophy" class="!text-xl" />
             </span>
             <div>
-                <p class="font-bold text-[#f0e6d2] text-[18px] uppercase tracking-wide">События</p>
+                <p class="font-bold text-[#f0e6d2] text-base lg:text-[18px] uppercase tracking-wide">События</p>
                 <p class="text-base md:text-[18px] text-[#e8d8b8]/80 mt-1">
                     Проведение турниров, наград и сезонных активностей
                 </p>
@@ -139,7 +139,7 @@
                 <tui-icon icon="@tui.scale" class="!text-xl" />
             </span>
             <div>
-                <p class="font-bold text-[#f0e6d2] text-[18px] uppercase tracking-wide">Без pay-to-win</p>
+                <p class="font-bold text-[#f0e6d2] text-base lg:text-[18px] uppercase tracking-wide">Без pay-to-win</p>
                 <p class="text-base md:text-[18px] text-[#e8d8b8]/80 mt-1">
                     Мы не рушим баланс игры, выверяя предметы и цены.
                 </p>

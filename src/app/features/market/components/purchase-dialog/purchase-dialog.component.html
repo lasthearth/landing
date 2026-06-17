@@ -1,18 +1,18 @@
 <div
-    class="flex flex-col gap-5 p-8 w-[32rem] bg-[#e2d7bb] rounded-2xl text-[#2a2722] shadow-[0_12px_40px_rgba(0,0,0,0.25)]"
+    class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-8 w-full max-w-[32rem] bg-[#e2d7bb] rounded-2xl text-[#2a2722] shadow-[0_12px_40px_rgba(0,0,0,0.25)]"
 >
     <!-- Header -->
-    <div class="flex items-center gap-5">
+    <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
         <div
-            class="w-24 h-24 rounded-xl overflow-hidden border-2 border-[#bdb093] bg-[#e8dcc0] shadow-[0_4px_12px_rgba(0,0,0,0.1)] shrink-0"
+            class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border-2 border-[#bdb093] bg-[#e8dcc0] shadow-[0_4px_12px_rgba(0,0,0,0.1)] shrink-0"
         >
             <img [src]="data.image" [alt]="data.title" class="w-full h-full object-cover" />
         </div>
         <div class="flex flex-col gap-2 justify-center h-24">
-            <h3 class="text-lg md:text-[22px] font-bold text-[#1c1a16] leading-tight">{{ data.title }}</h3>
+            <h3 class="text-center sm:text-left text-lg md:text-[22px] font-bold text-[#1c1a16] leading-tight">{{ data.title }}</h3>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-7 w-7 object-contain" />
-                <span class="text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
+                <span class="text-lg sm:text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
                 @if (data.currency === "rubles") {
                     <span class="text-[18px] text-[#5c554a]">руб.</span>
                 }
@@ -28,7 +28,7 @@
                 <button
                     type="button"
                     (click)="selectedTerm.set('month')"
-                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-3 text-[18px] font-bold transition-colors duration-200 cursor-pointer"
+                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-2 sm:py-3 text-base sm:text-[18px] font-bold transition-colors duration-200 cursor-pointer"
                     [class.border-lh-accent]="selectedTerm() === 'month'"
                     [class.bg-lh-accent]="selectedTerm() === 'month'"
                     [class.text-white]="selectedTerm() === 'month'"
@@ -43,7 +43,7 @@
                 <button
                     type="button"
                     (click)="selectedTerm.set('season')"
-                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-3 text-[18px] font-bold transition-colors duration-200 cursor-pointer"
+                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-2 sm:py-3 text-base sm:text-[18px] font-bold transition-colors duration-200 cursor-pointer"
                     [class.border-lh-accent]="selectedTerm() === 'season'"
                     [class.bg-lh-accent]="selectedTerm() === 'season'"
                     [class.text-white]="selectedTerm() === 'season'"
@@ -60,18 +60,18 @@
     }
 
     <!-- Payment info -->
-    <div class="flex flex-col gap-4 bg-[#d8cdb3] rounded-xl p-5 border border-[#c4b89e]">
+    <div class="flex flex-col gap-4 bg-[#d8cdb3] rounded-xl p-4 sm:p-5 border border-[#c4b89e]">
         <div class="flex items-center justify-between">
-            <span class="text-[18px] font-bold text-[#1c1a16]">К оплате</span>
+            <span class="text-base sm:text-[18px] font-bold text-[#1c1a16]">К оплате</span>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-6 w-6 object-contain" />
-                <span class="text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
+                <span class="text-lg sm:text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
             </div>
         </div>
 
         <div class="h-px bg-[#b8aa8e]"></div>
 
-        <p class="text-[18px] leading-relaxed text-[#2a2722]">
+        <p class="text-base sm:text-[18px] leading-relaxed text-[#2a2722]">
             При подтверждении с вас спишут
             <span class="font-bold text-lh-accent">{{ activePrice }}</span>
             осколков, а в течение суток с вами свяжутся и выдадут товар на сервере.
@@ -80,7 +80,7 @@
 
     <!-- Actions -->
     <div class="flex gap-4 pt-2">
-        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-[18px]">Отмена</button>
-        <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-[18px]">Приобрести</button>
+        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-[18px]">Отмена</button>
+        <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-[18px]">Приобрести</button>
     </div>
 </div>
