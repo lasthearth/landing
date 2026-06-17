@@ -315,6 +315,7 @@ tui-hint {
 
 tui-pulse.online {
     color: var(--color-lh-online) !important;
+    filter: drop-shadow(0 0 3px var(--color-lh-online));
 }
 tui-pulse.offline {
     color: var(--color-lh-offline) !important;
@@ -534,4 +535,114 @@ button:disabled,
 
 .cdk-drag-dragging .cdk-drag-handle {
     cursor: grabbing;
+}
+
+/**
+ * Плавное появление контента при смене вкладок.
+ */
+.market-tab-content {
+    animation: market-tab-fade-in 0.35s ease-out both;
+}
+
+@keyframes market-tab-fade-in {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/**
+ * Свечение рамки карточки при наведении.
+ */
+.lh-card-glow {
+    transition:
+        box-shadow 0.3s ease,
+        transform 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.lh-card-glow:hover {
+    box-shadow:
+        0 0 0 1px rgba(255, 121, 32, 0.35),
+        0 8px 24px rgba(255, 121, 32, 0.12);
+}
+
+/**
+ * Мягкое пульсирование для акцентных индикаторов.
+ */
+.lh-pulse-soft {
+    animation: lh-pulse-soft 2s ease-in-out infinite;
+}
+
+@keyframes lh-pulse-soft {
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.75;
+        transform: scale(1.05);
+    }
+}
+
+/**
+ * Пульсирующее свечение для рекомендуемых элементов.
+ */
+.lh-pulse-glow {
+    animation: lh-pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes lh-pulse-glow {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 121, 32, 0.35);
+    }
+    50% {
+        box-shadow: 0 0 12px 2px rgba(255, 121, 32, 0.2);
+    }
+}
+
+/**
+ * Плавное появление элементов списка с задержкой.
+ * Применяется к родителю списка.
+ */
+.lh-stagger-list > * {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: lh-stagger-fade-in 0.4s ease-out forwards;
+}
+
+.lh-stagger-list > *:nth-child(1) { animation-delay: 0ms; }
+.lh-stagger-list > *:nth-child(2) { animation-delay: 60ms; }
+.lh-stagger-list > *:nth-child(3) { animation-delay: 120ms; }
+.lh-stagger-list > *:nth-child(4) { animation-delay: 180ms; }
+.lh-stagger-list > *:nth-child(5) { animation-delay: 240ms; }
+.lh-stagger-list > *:nth-child(6) { animation-delay: 300ms; }
+.lh-stagger-list > *:nth-child(7) { animation-delay: 360ms; }
+.lh-stagger-list > *:nth-child(8) { animation-delay: 420ms; }
+.lh-stagger-list > *:nth-child(9) { animation-delay: 480ms; }
+.lh-stagger-list > *:nth-child(10) { animation-delay: 540ms; }
+
+@keyframes lh-stagger-fade-in {
+    0% {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lh-stagger-list > * {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
 }

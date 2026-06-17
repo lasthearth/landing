@@ -2,8 +2,7 @@
 @let requestExist = veriverificationRequests === null || veriverificationRequests?.length === 0;
 @let settlements = settlementsRequests$ | async;
 @let settlementsRequest = settlements === null || settlements?.length === 0;
-@let pendingPurchases = pendingPurchases$ | async;
-@let hasPendingPurchases = pendingPurchases && pendingPurchases.length > 0;
+@let hasPendingPurchases = pendingPurchases().length > 0;
 
 <div class="w-full flex flex-col gap-3 lg:gap-6">
     <p class="text-2xl md:text-3xl lg:text-4xl font-bold">Кабинет администратора</p>
@@ -76,19 +75,33 @@
     <div class="mt-2 flex flex-col gap-4">
         @switch (activeItemIndex) {
             @case (0) {
-                <p *ngIf="requestExist" class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
-                    Анкеты игроков отсутствуют...
-                </p>
-                @for (item of veriverificationRequests; track $index) {
-                    <app-player-verify-request [data]="item" (requestWasWatched)="dataUpdate()" />
+                @if (veriverificationRequests === null) {
+                    <app-admin-list-skeleton [count]="3" />
+                } @else if (veriverificationRequests.length === 0) {
+                    <app-empty-state
+                        icon="@tui.user-check"
+                        title="Анкеты игроков отсутствуют"
+                        description="Новые заявки на верификацию появятся здесь."
+                    />
+                } @else {
+                    @for (item of veriverificationRequests; track $index) {
+                        <app-player-verify-request [data]="item" (requestWasWatched)="dataUpdate()" />
+                    }
                 }
             }
             @case (1) {
-                <p *ngIf="settlementsRequest" class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
-                    Анкеты селений отсутствуют...
-                </p>
-                @for (item of settlements; track $index) {
-                    <app-settlement-verification-request [data]="item" (requestWasWatched)="dataUpdate()" />
+                @if (settlements === null) {
+                    <app-admin-list-skeleton [count]="3" />
+                } @else if (settlements.length === 0) {
+                    <app-empty-state
+                        icon="@tui.castle"
+                        title="Анкеты селений отсутствуют"
+                        description="Новые заявки на верификацию поселений появятся здесь."
+                    />
+                } @else {
+                    @for (item of settlements; track $index) {
+                        <app-settlement-verification-request [data]="item" (requestWasWatched)="dataUpdate()" />
+                    }
                 }
             }
             @case (2) {
@@ -105,7 +118,10 @@
             }
             @case (5) {
                 <app-pending-purchases-panel
-                    [purchases$]="pendingPurchases$"
+                    [purchases]="pendingPurchases()"
+                    [loading]="pendingPurchasesLoading()"
+                    [error]="pendingPurchasesError()"
+                    (retry)="updatePendingPurchases()"
                     (listChanged)="updatePendingPurchases()"
                 />
             }

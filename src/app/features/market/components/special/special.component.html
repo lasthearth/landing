@@ -1,14 +1,21 @@
 @if (loading()) {
     <app-market-grid-skeleton />
+} @else if (error()) {
+    <app-error-state
+        description="Не удалось загрузить особые товары. Попробуйте ещё раз."
+        (retry)="retryLoad()"
+    />
 } @else if (items().length === 0) {
-    <div class="flex justify-center py-12">
-        <p class="text-2xl uppercase font-bold text-[#bdb093] self-center">СКОРО ПОЯВИТСЯ....</p>
-    </div>
+    <app-empty-state
+        icon="@tui.sparkles"
+        title="Скоро появится"
+        description="Особые товары ещё не добавлены в магазин. Загляните позже."
+    />
 } @else {
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4 lh-stagger-list">
         @for (item of items(); track item.id) {
             <div
-                class="flex flex-col gap-2 lg:gap-3 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-3 lg:p-4 items-center transition-all duration-300 hover:scale-[103%] hover:border-[#ff7920]/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] shadow-[0_2px_8px_rgba(0,0,0,0.06)] group"
+                class="flex flex-col gap-2 lg:gap-3 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-3 lg:p-4 items-center lh-card-glow transition-transform duration-300 hover:scale-[103%] shadow-[0_2px_8px_rgba(0,0,0,0.06)] group"
             >
                 <!-- Image -->
                 <div

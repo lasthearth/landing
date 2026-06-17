@@ -134,10 +134,20 @@
                 <app-settlement-card-skeleton class="card" />
             }
         </div>
+    } @else if (error()) {
+        <app-error-state
+            title="Не удалось загрузить поселения"
+            description="Проверьте подключение к интернету и попробуйте снова."
+            (retry)="retryLoad()"
+        />
     } @else if (sortedSettlements().length === 0) {
-        <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Здесь пока нет селений...</p>
+        <app-empty-state
+            icon="@tui.trees"
+            title="Здесь пока нет селений"
+            description="Станьте первым, кто основит поселение у очага."
+        />
     } @else {
-        <div class="flex flex-wrap justify-center items-stretch gap-6 pt-0">
+        <div class="flex flex-wrap justify-center items-stretch gap-6 pt-0 lh-stagger-list">
             @for (item of sortedSettlements(); track item.id) {
                 <app-settlement-card [data]="item" class="card" />
             }

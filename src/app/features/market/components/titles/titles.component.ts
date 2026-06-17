@@ -8,6 +8,8 @@ import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
 
@@ -19,7 +21,7 @@ import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege
  */
 @Component({
     selector: 'app-titles',
-    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent],
+    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent],
     templateUrl: './titles.component.html',
     styleUrl: './titles.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +53,11 @@ export class TitlesComponent {
     protected readonly loading = signal(true);
 
     /**
+     * Признак ошибки загрузки товаров.
+     */
+    protected readonly error = signal(false);
+
+    /**
      * Список привилегий.
      */
     protected titles: PrivilegeCard[] = [];
@@ -61,11 +68,21 @@ export class TitlesComponent {
     protected selectedPrivilege: PrivilegeCard | null = null;
 
     constructor() {
+        this.loadTitles();
+    }
+
+    /**
+     * Загружает список привилегий.
+     */
+    private loadTitles(): void {
+        this.loading.set(true);
+        this.error.set(false);
         this.donateService
             .getShopItems$()
             .pipe(
                 catchError(() => {
                     this.loading.set(false);
+                    this.error.set(true);
                     return of([]);
                 })
             )
@@ -75,6 +92,13 @@ export class TitlesComponent {
                 this.loading.set(false);
                 this.changeDetectorRef.markForCheck();
             });
+    }
+
+    /**
+     * Повторно загружает список привилегий после ошибки.
+     */
+    protected retryLoad(): void {
+        this.loadTitles();
     }
 
     /**

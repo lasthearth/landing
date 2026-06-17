@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { TuiLoader } from '@taiga-ui/core';
 import { IPendingPurchase } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 import {
     ConfirmPurchaseActionComponent,
     IConfirmPurchaseActionData,
@@ -18,9 +17,9 @@ import {
  * и позволяет отметить выдачу или оформить возврат.
  */
 @Component({
-    standalone: true,
     selector: 'app-pending-purchases-panel',
-    imports: [AsyncPipe, TuiIcon, TuiLoader, ImageLoaderComponent],
+    standalone: true,
+    imports: [TuiIcon, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent],
     templateUrl: './pending-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,10 +30,24 @@ export class PendingPurchasesPanelComponent {
     private readonly dialogService: TuiDialogService = inject(TuiDialogService);
 
     /**
-     * Поток со списком ожидающих покупок.
+     * Список ожидающих покупок.
      */
-    public readonly purchases$: InputSignal<Observable<IPendingPurchase[]>> =
-        input.required<Observable<IPendingPurchase[]>>();
+    public readonly purchases: InputSignal<IPendingPurchase[]> = input.required<IPendingPurchase[]>();
+
+    /**
+     * Признак загрузки списка.
+     */
+    public readonly loading: InputSignal<boolean> = input<boolean>(false);
+
+    /**
+     * Признак ошибки загрузки списка.
+     */
+    public readonly error: InputSignal<boolean> = input<boolean>(false);
+
+    /**
+     * Событие запроса на повторную загрузку.
+     */
+    public readonly retry = output<void>();
 
     /**
      * Событие изменения состояния списка покупок.
@@ -57,6 +70,13 @@ export class PendingPurchasesPanelComponent {
      */
     protected refund(purchase: IPendingPurchase): void {
         this.openConfirmDialog(purchase, 'refund');
+    }
+
+    /**
+     * Запрашивает повторную загрузку списка.
+     */
+    protected onRetry(): void {
+        this.retry.emit();
     }
 
     /**

@@ -7,6 +7,8 @@ import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
 
@@ -18,7 +20,7 @@ import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege
  */
 @Component({
     selector: 'app-kits',
-    imports: [KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent],
+    imports: [KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent],
     templateUrl: './kits.component.html',
     styleUrl: './kits.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,6 +52,11 @@ export class KitsComponent {
     protected readonly loading = signal(true);
 
     /**
+     * Признак ошибки загрузки товаров.
+     */
+    protected readonly error = signal(false);
+
+    /**
      * Список наборов.
      */
     protected kits: PrivilegeCard[] = [];
@@ -60,11 +67,21 @@ export class KitsComponent {
     protected selectedPrivilege: PrivilegeCard | null = null;
 
     constructor() {
+        this.loadKits();
+    }
+
+    /**
+     * Загружает список наборов.
+     */
+    private loadKits(): void {
+        this.loading.set(true);
+        this.error.set(false);
         this.donateService
             .getShopItems$()
             .pipe(
                 catchError(() => {
                     this.loading.set(false);
+                    this.error.set(true);
                     return of([]);
                 })
             )
@@ -74,6 +91,13 @@ export class KitsComponent {
                 this.loading.set(false);
                 this.changeDetectorRef.markForCheck();
             });
+    }
+
+    /**
+     * Повторно загружает список наборов после ошибки.
+     */
+    protected retryLoad(): void {
+        this.loadKits();
     }
 
     /**

@@ -28,14 +28,19 @@
                             <span class="text-lh-primary font-medium">{{ user.user_game_name }}</span>
                         </div>
                     } @empty {
-                        <span class="text-lh-primary/50 p-3 text-center">Ничего не найдено</span>
+                        <app-empty-state
+                            class="py-6"
+                            icon="@tui.search-x"
+                            title="Ничего не найдено"
+                            description="Попробуйте ввести другой ник."
+                        />
                     }
                 </div>
             }
         </div>
     } @else {
         <div class="flex flex-col gap-6">
-            <div class="flex items-center justify-between p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2 lh-card-glow">
                 <div class="flex items-center gap-4">
                     <app-image-loader
                         [src]="selectedPlayer()?.avatar || '/default-avatar.png'"
@@ -137,11 +142,11 @@
                             </table>
                         </div>
                     } @else {
-                        <p
-                            class="text-lh-primary/50 text-center py-8 bg-lh-primary-2/5 rounded-xl border border-dashed border-lh-primary-2"
-                        >
-                            История операций пуста
-                        </p>
+                        <app-empty-state
+                            icon="@tui.history"
+                            title="История пуста"
+                            description="У выбранного игрока пока нет операций с донат-валютой."
+                        />
                     }
                 }
             </div>

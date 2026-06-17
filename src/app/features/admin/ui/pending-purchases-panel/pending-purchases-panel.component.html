@@ -1,18 +1,40 @@
-@let purchases = purchases$() | async;
-
-@if (purchases === null) {
-    <div class="flex justify-center my-8">
-        <tui-loader class="!text-lh-accent" />
-    </div>
-} @else if (!purchases.length) {
-    <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center text-center">
-        Ожидающие выдачи покупки отсутствуют...
-    </p>
-} @else {
+@if (loading()) {
     <div class="flex flex-col gap-4">
-        @for (purchase of purchases; track purchase.id) {
+        @for (_ of [1, 2, 3]; track $index) {
             <div
-                class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4"
+                class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
+            >
+                <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
+                    <div class="size-14 rounded-full bg-lh-primary-2/20 shrink-0"></div>
+                    <div class="flex flex-col gap-2 min-w-0">
+                        <div class="h-4 w-24 rounded bg-lh-primary-2/20"></div>
+                        <div class="h-6 w-40 rounded bg-lh-primary-2/30"></div>
+                    </div>
+                </div>
+                <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-2">
+                    <div class="h-6 w-3/4 rounded bg-lh-primary-2/20"></div>
+                    <div class="h-4 w-1/2 rounded bg-lh-primary-2/20"></div>
+                </div>
+            </div>
+        }
+    </div>
+} @else if (error()) {
+    <app-error-state
+        title="Не удалось загрузить покупки"
+        description="Проверьте подключение к интернету и попробуйте снова."
+        (retry)="onRetry()"
+    />
+} @else if (!purchases().length) {
+    <app-empty-state
+        icon="@tui.check-check"
+        title="Всё выдано"
+        description="Ожидающие выдачи покупки отсутствуют."
+    />
+} @else {
+    <div class="flex flex-col gap-4 lh-stagger-list">
+        @for (purchase of purchases(); track purchase.id) {
+            <div
+                class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow"
             >
                 <!-- Заголовок: игрок -->
                 <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
@@ -20,6 +42,7 @@
                         [src]="purchase.playerAvatarUrl || '/default-avatar.png'"
                         class="size-14 shrink-0"
                         objectFit="cover"
+                        containerClass="rounded-full"
                         alt="Аватар"
                     />
                     <div class="flex flex-col min-w-0">

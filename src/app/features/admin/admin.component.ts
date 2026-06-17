@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { VerificationService } from '@features/verification';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { catchError, defaultIfEmpty, Observable, of, startWith, Subject, switchMap } from 'rxjs';
@@ -6,6 +6,8 @@ import { IVerifyRequest } from '@features/verification';
 import { SettlementService } from '@entities/settlement';
 import { DonateService, IPendingPurchase } from '@entities/donate';
 import { NotificationService } from '@core/services/notification.service';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { AdminListSkeletonComponent } from '@shared/ui/skeletons';
 import { PlayerVerifyRequestComponent } from './player-verification/player-verify-request.component';
 import { CreateQuestionFormComponent } from './components/create-question-form/create-question-form.component';
 import { QuestionListComponent } from './components/question-list/question-list.component';
@@ -39,6 +41,8 @@ import { TuiIcon } from '@taiga-ui/core';
         HungerGamesPanelComponent,
         DonateShopPanelComponent,
         PendingPurchasesPanelComponent,
+        EmptyStateComponent,
+        AdminListSkeletonComponent,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.css',
@@ -81,11 +85,6 @@ export class AdminComponent {
     readonly questionsUpdate$: Subject<void> = new Subject<void>();
 
     /**
-     * {@link Subject} Обновления списка ожидающих покупок.
-     */
-    private readonly pendingPurchasesUpdate$: Subject<void> = new Subject<void>();
-
-    /**
      * {@link Observable} Списка запросов верификации.
      */
     protected readonly verificationRequests$: Observable<IVerifyRequest[]> = this.verificationsUpdate$
@@ -100,23 +99,28 @@ export class AdminComponent {
         .pipe(switchMap(() => this.settlementService.getSettlementsRequests$()));
 
     /**
-     * {@link Observable} Списка ожидающих выдачи покупок.
+     * Список ожидающих выдачи покупок.
      */
-    protected readonly pendingPurchases$: Observable<IPendingPurchase[]> = this.pendingPurchasesUpdate$
-        .pipe(startWith(null))
-        .pipe(
-            switchMap(() =>
-                this.donateService.getPendingPurchases$().pipe(
-                    catchError(() => of([])),
-                    defaultIfEmpty([])
-                )
-            )
-        );
+    protected readonly pendingPurchases = signal<IPendingPurchase[]>([]);
+
+    /**
+     * Признак загрузки списка ожидающих покупок.
+     */
+    protected readonly pendingPurchasesLoading = signal<boolean>(false);
+
+    /**
+     * Признак ошибки загрузки списка ожидающих покупок.
+     */
+    protected readonly pendingPurchasesError = signal<boolean>(false);
 
     /**
      * Индекс открытой вкладки.
      */
     protected activeItemIndex: number = 0;
+
+    constructor() {
+        this.loadPendingPurchases();
+    }
 
     /**
      * Обновляет данные анкет и уведомлений.
@@ -131,6 +135,27 @@ export class AdminComponent {
      * Обновляет список ожидающих выдачи покупок.
      */
     protected updatePendingPurchases(): void {
-        this.pendingPurchasesUpdate$.next();
+        this.loadPendingPurchases();
+    }
+
+    /**
+     * Загружает список ожидающих выдачи покупок.
+     */
+    private loadPendingPurchases(): void {
+        this.pendingPurchasesLoading.set(true);
+        this.pendingPurchasesError.set(false);
+        this.donateService
+            .getPendingPurchases$()
+            .pipe(
+                catchError(() => {
+                    this.pendingPurchasesError.set(true);
+                    return of([]);
+                }),
+                defaultIfEmpty([])
+            )
+            .subscribe((list) => {
+                this.pendingPurchases.set(list);
+                this.pendingPurchasesLoading.set(false);
+            });
     }
 }

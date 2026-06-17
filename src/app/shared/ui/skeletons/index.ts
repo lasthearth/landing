@@ -7,3 +7,4 @@ export { ProfileSkeletonComponent } from './profile-skeleton.component';
 export { StatisticsSkeletonComponent } from './statistics-skeleton.component';
 export { AdminSeasonSkeletonComponent } from './admin-season-skeleton.component';
 export { AdminTableSkeletonComponent } from './admin-table-skeleton.component';
+export { AdminListSkeletonComponent } from './admin-list-skeleton.component';

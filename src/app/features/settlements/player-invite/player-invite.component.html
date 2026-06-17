@@ -10,7 +10,19 @@
         </div>
 
         <div class="flex flex-col">
-            <span *ngIf="!players" class="text-2xl self-center text-[#bdb093] font-bold uppercase py-4">Начните искать...</span>
+            @if (!players) {
+                <app-empty-state
+                    icon="@tui.search"
+                    title="Начните поиск"
+                    description="Введите ник игрока, чтобы найти его и пригласить в поселение."
+                />
+            } @else if (players.users.length === 0) {
+                <app-empty-state
+                    icon="@tui.user-x"
+                    title="Игроки не найдены"
+                    description="Попробуйте ввести другой ник."
+                />
+            }
             @for (item of players?.users; track $index) {
                 <div class="w-full justify-between flex items-center py-3 border-b border-lh-primary-2/10 last:border-b-0">
                     <div class="flex gap-3 items-center w-full">

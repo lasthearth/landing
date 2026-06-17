@@ -3,6 +3,8 @@ import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { SettlementCardComponent } from './settlement-card/settlement-card.component';
 import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 import { from, mergeMap, of, toArray } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ISettlement } from '@entities/settlement';
@@ -31,7 +33,7 @@ interface EnrichedSettlement extends ISettlement {
  */
 @Component({
     selector: 'app-settlements',
-    imports: [SettlementCardComponent, SettlementCardSkeletonComponent],
+    imports: [SettlementCardComponent, SettlementCardSkeletonComponent, EmptyStateComponent, ErrorStateComponent],
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,6 +45,7 @@ export class SettlementsComponent {
 
     protected readonly loading = signal<boolean>(false);
     protected readonly loadingOnline = signal<boolean>(false);
+    protected readonly error = signal<boolean>(false);
     protected readonly sortState = signal<{ field: SortField; direction: SortDirection }>({
         field: 'default',
         direction: 'desc',
@@ -86,11 +89,15 @@ export class SettlementsComponent {
      */
     private loadSettlements(): void {
         this.loading.set(true);
+        this.error.set(false);
         this.settlementService
             .getSettlements()
             .pipe(
                 map((s) => (s === null ? [] : s)),
-                catchError(() => of([]))
+                catchError(() => {
+                    this.error.set(true);
+                    return of([]);
+                })
             )
             .subscribe((list) => {
                 this.rawSettlements.set(list);
@@ -108,6 +115,13 @@ export class SettlementsComponent {
                 );
                 this.loading.set(false);
             });
+    }
+
+    /**
+     * Повторно загружает список селений после ошибки.
+     */
+    protected retryLoad(): void {
+        this.loadSettlements();
     }
 
     /**

@@ -5,6 +5,8 @@ import { catchError, of } from 'rxjs';
 import { DonateService, IShopItem } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 
 /**
@@ -15,7 +17,7 @@ import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/
  */
 @Component({
     selector: 'app-special',
-    imports: [TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent],
+    imports: [TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent],
     templateUrl: './special.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,6 +33,11 @@ export class SpecialComponent {
     protected readonly loading = signal(true);
 
     /**
+     * Признак ошибки загрузки товаров.
+     */
+    protected readonly error = signal(false);
+
+    /**
      * Сервис диалогов.
      */
     private readonly dialogs = inject(TuiDialogService);
@@ -41,11 +48,21 @@ export class SpecialComponent {
     protected readonly items = signal<IShopItem[]>([]);
 
     constructor() {
+        this.loadItems();
+    }
+
+    /**
+     * Загружает список особых товаров.
+     */
+    private loadItems(): void {
+        this.loading.set(true);
+        this.error.set(false);
         this.donateService
             .getShopItems$()
             .pipe(
                 catchError(() => {
                     this.loading.set(false);
+                    this.error.set(true);
                     return of([]);
                 })
             )
@@ -53,6 +70,13 @@ export class SpecialComponent {
                 this.items.set(this.filterSpecialItems(list));
                 this.loading.set(false);
             });
+    }
+
+    /**
+     * Повторно загружает список особых товаров после ошибки.
+     */
+    protected retryLoad(): void {
+        this.loadItems();
     }
 
     /**
