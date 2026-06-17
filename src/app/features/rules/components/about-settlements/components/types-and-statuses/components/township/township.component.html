@@ -1,124 +1,123 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="Township" [level]="3">
-        Посёлок — это
-        <app-rule-link target="Settlement">селение</app-rule-link>
-        , основанное после этапа «Деревня», состоящее из 5-ти и более игроков, зарегистрированное на сайте, имеющее все
-        основные постройки на поверхности и соответствующее следующим требованиям:
+        <span [innerHTML]="'rules.content.settlements.types.township.intro' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.township.introAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Требования:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Расположение: не далее 8.5 тыс. блоков от нулевой координаты.
+        <b>{{ 'rules.content.settlements.common.requirements' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Население: от 5-ти человек.
+        {{ 'rules.content.settlements.types.township.location' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        <app-rule-link target="Monument" class="ml-2">Монумент</app-rule-link>
-        : 1х1х1 блока (ш,д,в) (или согласно патенту на улучшение селения).
+        {{ 'rules.content.settlements.types.township.population' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Документы: от 5-ти купчих
-        <app-rule-link target="Volnost">вольности</app-rule-link>
-        .
+        <app-rule-link target="Monument" class="ml-2">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.township.monumentAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Инфраструктура:
+        {{ 'rules.content.settlements.types.township.libertiesBefore' | translate }}
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.liberties' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ сельская площадь;</app-rule-paragraph>
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.township.infrastructureHeading' | translate }}
+    </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ колодец с питьевой водой;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.square' | translate }}</app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.well' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ тропы между постройками шириной не менее 2-х блоков, где это возможно.
+        ◦ {{ 'rules.content.settlements.types.township.paths' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Хозяйство:
+        {{ 'rules.content.settlements.types.township.economyHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ склад, или складское помещение в уже имеющемся здании;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.storage' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ амбар;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.barn' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ грядки площадью от 36-ти блоков.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.farm' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Дополнительные строения:
+        {{ 'rules.content.settlements.types.township.additionalBuildingsHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 4-х одноэтажных строений;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.singleStory' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 1-го двухэтажного строения;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.twoStory' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ здание религиозного или научного или экономического или культурного направления.
+        ◦ {{ 'rules.content.settlements.types.township.specialBuilding' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Промышленность:
+        {{ 'rules.content.settlements.types.township.industryHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 1-й мастерской [кожевенная, углежог, ткацкая и т.п.];</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.workshop' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 1-й кузницы.</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>Преимущества:</b>
-    </app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.township.forge' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Наличие территориального блока [диаметр = 164 блока].
+        <b>{{ 'rules.content.settlements.common.advantages' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность объявлять набеги на:
-        <app-rule-link target="Homestead">хутора</app-rule-link>
-        ,
-        <app-rule-link target="Camp">лагеря</app-rule-link>
-        ,
-        <app-rule-link target="Village">деревни</app-rule-link>
-        ,
-        <app-rule-link target="Township">посёлки</app-rule-link>
-        ,
-        <app-rule-link target="City">города</app-rule-link>
-        .
+        {{ 'rules.content.settlements.types.township.territoryBlock' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность возведения
-        <app-rule-link target="Defend1">оборонительных построек</app-rule-link>
-        1-го уровня.
+        <span [innerHTML]="'rules.content.settlements.types.township.raidTargetsBefore' | translate"></span>
+        <app-rule-link target="Homestead">{{ 'rules.content.terms.homesteadAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Camp">{{ 'rules.content.terms.campAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Village">{{ 'rules.content.terms.villageAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Township">{{ 'rules.content.terms.townshipAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="City">{{ 'rules.content.terms.cityAccusativePlural' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Чертеж для улучшенных парусов.
+        <span [innerHTML]="'rules.content.settlements.types.township.defensesBefore' | translate"></span>
+        <app-rule-link target="Defend1">{{ 'rules.content.terms.defensiveStructures' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.township.defensesAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Право получить льготный кредит от
-        <app-rule-link target="Suzerain">сюзерена</app-rule-link>
-        под 10% годовых [Может быть не выполнено, в случае враждебности к сюзерену].
+        {{ 'rules.content.settlements.types.township.sailsBlueprint' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.township.credit' | translate }}
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.township.creditAfter' | translate"></span>
     </app-rule-paragraph>
 </div>

@@ -5,11 +5,11 @@
 @let hasPendingPurchases = pendingPurchases().length > 0;
 
 <div class="w-full flex flex-col gap-3 lg:gap-6">
-    <p class="text-2xl md:text-3xl lg:text-4xl font-bold">Кабинет администратора</p>
+    <p class="text-2xl md:text-3xl lg:text-4xl font-bold">{{ 'admin.title' | translate }}</p>
     <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 !font-semibold !w-full content-tabs">
         <button tuiTab type="button">
             <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">Анкеты игроков</span>
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.playerForms' | translate }}</span>
                 <tui-icon icon="@tui.user-check" class="size-5! lg:hidden!" />
                 <tui-pulse
                     *ngIf="!requestExist"
@@ -20,7 +20,7 @@
         </button>
         <button tuiTab type="button">
             <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">Анкеты селений</span>
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.settlementForms' | translate }}</span>
                 <tui-icon icon="@tui.castle" class="size-5! lg:hidden!" />
                 <tui-pulse
                     *ngIf="!settlementsRequest"
@@ -31,25 +31,25 @@
         </button>
         <button tuiTab type="button">
             <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">Вопросы</span>
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.questions' | translate }}</span>
                 <tui-icon icon="@tui.circle-help" class="size-5! lg:hidden!" />
             </span>
         </button>
         <button tuiTab type="button">
             <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">Создать новость</span>
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.createNews' | translate }}</span>
                 <tui-icon icon="@tui.newspaper" class="size-5! lg:hidden!" />
             </span>
         </button>
         <button tuiTab type="button">
             <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">Монеты</span>
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.coins' | translate }}</span>
                 <tui-icon icon="@tui.wallet" class="size-5! lg:hidden!" />
             </span>
         </button>
         <button tuiTab type="button">
             <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">Покупки</span>
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.purchases' | translate }}</span>
                 <tui-icon icon="@tui.package" class="size-5! lg:hidden!" />
                 <tui-pulse
                     *ngIf="hasPendingPurchases"
@@ -60,13 +60,13 @@
         </button>
         <button tuiTab type="button">
             <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">Товары</span>
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.goods' | translate }}</span>
                 <tui-icon icon="@tui.shopping-cart" class="size-5! lg:hidden!" />
             </span>
         </button>
         <button tuiTab type="button">
             <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">Голодные игры</span>
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.hungerGames' | translate }}</span>
                 <tui-icon icon="@tui.flame" class="size-5! lg:hidden!" />
             </span>
         </button>
@@ -80,8 +80,8 @@
                 } @else if (veriverificationRequests.length === 0) {
                     <app-empty-state
                         icon="@tui.user-check"
-                        title="Анкеты игроков отсутствуют"
-                        description="Новые заявки на верификацию появятся здесь."
+                        [title]="'admin.playerForms.emptyTitle' | translate"
+                        [description]="'admin.playerForms.emptyDescription' | translate"
                     />
                 } @else {
                     @for (item of veriverificationRequests; track $index) {
@@ -95,8 +95,8 @@
                 } @else if (settlements.length === 0) {
                     <app-empty-state
                         icon="@tui.castle"
-                        title="Анкеты селений отсутствуют"
-                        description="Новые заявки на верификацию поселений появятся здесь."
+                        [title]="'admin.settlementForms.emptyTitle' | translate"
+                        [description]="'admin.settlementForms.emptyDescription' | translate"
                     />
                 } @else {
                     @for (item of settlements; track $index) {

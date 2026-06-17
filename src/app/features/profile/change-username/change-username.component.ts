@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { UserService } from '@entities/user';
 import { TuiDialogContext, TuiError } from '@taiga-ui/core';
@@ -16,7 +17,7 @@ import { Subject, tap } from 'rxjs';
 @Component({
     selector: 'app-change-username',
     templateUrl: './change-username.component.html',
-    imports: [LHInputComponent, ReactiveFormsModule, FormsModule, TuiError, TuiFieldErrorPipe, AsyncPipe],
+    imports: [LHInputComponent, ReactiveFormsModule, FormsModule, TuiError, TuiFieldErrorPipe, AsyncPipe, TranslatePipe],
     styleUrl: './change-username.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -49,6 +50,11 @@ export class ChangeUsernameComponent {
     private readonly userService: UserService = inject(UserService);
 
     /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
      * Ссылка уничтожения на компонент.
      */
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
@@ -66,7 +72,7 @@ export class ChangeUsernameComponent {
                             .changeUsername$(newUsername.trim())
                             .pipe(
                                 this.requestStatusService.handleError(),
-                                this.requestStatusService.handleSuccess('Никнейм изменен!'),
+                                this.requestStatusService.handleSuccess(this.i18n.translate('profile.changeUsername.success')),
                                 takeUntilDestroyed(this.destroyRef)
                             )
                             .subscribe();

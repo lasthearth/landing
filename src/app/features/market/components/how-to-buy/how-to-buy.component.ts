@@ -7,6 +7,7 @@ import { catchError, filter, of, switchMap } from 'rxjs';
 
 import { TuiSlider } from '@taiga-ui/kit/components/slider';
 import { TuiIcon } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { UserService } from '@entities/user/api/user.service';
 import { IPlayer } from '@entities/user/model/i-player';
@@ -21,7 +22,7 @@ import { SBP_REQUISITES } from './sbp.config';
 @Component({
     selector: 'app-how-to-buy',
     standalone: true,
-    imports: [FormsModule, DecimalPipe, TuiSlider, TuiIcon, LHInputComponent],
+    imports: [FormsModule, DecimalPipe, TuiSlider, TuiIcon, LHInputComponent, TranslatePipe],
     templateUrl: './how-to-buy.component.html',
     styleUrl: './how-to-buy.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

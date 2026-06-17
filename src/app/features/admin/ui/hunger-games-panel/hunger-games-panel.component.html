@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-10 max-w-5xl mx-auto w-full">
     <!-- Сезон -->
     <div class="flex flex-col gap-6">
-        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Текущий сезон</h2>
+        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.currentSeason' | translate }}</h2>
 
         @if (isLoading()) {
             <app-admin-season-skeleton />
@@ -10,18 +10,18 @@
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
             >
                 <div class="flex flex-col gap-4">
-                    <span class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] leading-none">Сезон {{ season.number }}</span>
+                    <span class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] leading-none">{{ 'admin.hungerGames.seasonNumber' | translate:{number: season.number} }}</span>
                     <div class="flex flex-col gap-2">
                         <span class="text-[18px] text-[#5c554a]">
-                            Начало: <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedStartedAt }}</span>
+                            {{ 'admin.hungerGames.startedAt' | translate }} <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedStartedAt }}</span>
                         </span>
                         @if (!season.isActive) {
                             <span class="text-[18px] text-[#5c554a]">
-                                Окончание: <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedEndedAt }}</span>
+                                {{ 'admin.hungerGames.endedAt' | translate }} <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedEndedAt }}</span>
                             </span>
-                            <span class="text-[23px] font-semibold text-lh-danger">Сезон завершён</span>
+                            <span class="text-[23px] font-semibold text-lh-danger">{{ 'admin.hungerGames.seasonCompleted' | translate }}</span>
                         } @else {
-                            <span class="text-[23px] font-semibold text-lh-success">Сезон активен</span>
+                            <span class="text-[23px] font-semibold text-lh-success">{{ 'admin.hungerGames.seasonActive' | translate }}</span>
                         }
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                         }
                         <tui-icon icon="@tui.plus" class="!text-[16px]" />
-                        Создать сезон
+                        {{ 'admin.hungerGames.createSeason' | translate }}
                     </button>
                     <button
                         type="button"
@@ -48,7 +48,7 @@
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                         }
                         <tui-icon icon="@tui.rotate-ccw" class="!text-[16px]" />
-                        Завершить
+                        {{ 'admin.hungerGames.endSeason' | translate }}
                     </button>
                 </div>
             </div>
@@ -60,19 +60,17 @@
                 >
                     <div class="flex items-center gap-2">
                         <tui-icon icon="@tui.gift" class="size-5! text-lh-accent" />
-                        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Награды за сезон</p>
+                        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.rewardsTitle' | translate }}</p>
                     </div>
                     <p class="text-[18px] leading-[28px] text-[#5c554a]">
-                        При завершении сезона топ-игроки получают осколки искры.
-                        Укажите место и сумму награды для каждого призового места.
-                        Только записанные награды с заполненной суммой будут начислены.
+                        {{ 'admin.hungerGames.rewardsDescription' | translate }}
                     </p>
 
                     @if (seasonRewards(); as rewards) {
                         <div class="flex flex-col gap-3">
                             <div class="grid grid-cols-[auto_1fr_auto] gap-2 text-[18px] text-[#5c554a] uppercase font-semibold px-2">
-                                <span class="text-center w-16">Место</span>
-                                <span>Осколков</span>
+                                <span class="text-center w-16">{{ 'admin.hungerGames.rankColumn' | translate }}</span>
+                                <span>{{ 'admin.hungerGames.shardsColumn' | translate }}</span>
                                 <span class="w-10"></span>
                             </div>
                             @for (reward of rewards; track $index; let idx = $index) {
@@ -90,13 +88,13 @@
                                         type="inputNumber"
                                         [ngModel]="reward.coins"
                                         (ngModelChange)="updateRewardCoins(idx, $event)"
-                                        placeholder="Сумма в осколках"
+                                        [placeholder]="'admin.hungerGames.rewardPlaceholder' | translate"
                                     />
                                     <button
                                         type="button"
                                         (click)="removeReward(idx)"
                                         class="p-2 rounded-lg hover:bg-lh-danger/15 text-lh-danger transition-colors"
-                                        title="Удалить"
+                                        [title]="'admin.hungerGames.removeTitle' | translate"
                                     >
                                         <tui-icon icon="@tui.trash-2" class="!text-[16px]" />
                                     </button>
@@ -115,7 +113,7 @@
                         class="self-start py-2 px-4 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer flex items-center gap-2 text-[18px]"
                     >
                         <tui-icon icon="@tui.plus" class="!text-base" />
-                        Добавить награду
+                        {{ 'admin.hungerGames.addReward' | translate }}
                     </button>
                 </div>
             }
@@ -123,7 +121,7 @@
             <div
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
             >
-                <span class="text-[23px] text-[#5c554a]">Нет активного сезона</span>
+                <span class="text-[23px] text-[#5c554a]">{{ 'admin.hungerGames.noActiveSeason' | translate }}</span>
                 <button
                     type="button"
                     [disabled]="isSeasonActionLoading()"
@@ -134,7 +132,7 @@
                         <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                     }
                     <tui-icon icon="@tui.plus" class="!text-[16px]" />
-                    Создать сезон
+                    {{ 'admin.hungerGames.createSeason' | translate }}
                 </button>
             </div>
         }
@@ -142,16 +140,16 @@
 
     <!-- Запись матча -->
     <div class="flex flex-col gap-6">
-        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Запись матча</h2>
+        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.recordMatch' | translate }}</h2>
 
         <div class="flex flex-col gap-5 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
             <!-- Поиск игрока -->
             <div class="flex flex-col gap-4">
-                <label class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Добавить участника</label>
+                <label class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.addParticipant' | translate }}</label>
                 <lh-input
                     type="input"
                     [formControl]="searchControl"
-                    placeholder="Введите ник (от 2 символов)..."
+                    [placeholder]="'admin.hungerGames.searchPlaceholder' | translate"
                     icon="@tui.search"
                 />
 
@@ -170,7 +168,7 @@
                                         class="size-8 shrink-0"
                                         containerClass="rounded-full"
                                         objectFit="cover"
-                                        alt="Аватар"
+                                        [alt]="'admin.common.avatarAlt' | translate"
                                     />
                                     <span class="text-[23px] font-medium text-[#2a2722]">{{ user.user_game_name }}</span>
                                 </div>
@@ -185,9 +183,9 @@
                 @if (players.length > 0) {
                     <div class="flex flex-col gap-3">
                         <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-[18px] text-[#5c554a] uppercase font-semibold px-2">
-                            <span>Игрок</span>
-                            <span class="text-center">Место</span>
-                            <span class="text-center">Убийства</span>
+                            <span>{{ 'admin.hungerGames.playerColumn' | translate }}</span>
+                            <span class="text-center">{{ 'admin.hungerGames.placeColumn' | translate }}</span>
+                            <span class="text-center">{{ 'admin.hungerGames.killsColumn' | translate }}</span>
                             <span></span>
                         </div>
                         @for (player of players; track player.playerId; let idx = $index) {
@@ -215,7 +213,7 @@
                                     type="button"
                                     (click)="removePlayer(idx)"
                                     class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
-                                    title="Удалить"
+                                    [title]="'admin.hungerGames.removeTitle' | translate"
                                 >
                                     <tui-icon icon="@tui.trash-2" class="!text-[18px]" />
                                 </button>
@@ -238,7 +236,7 @@
                 @if (isMatchLoading()) {
                     <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                 }
-                Записать результат
+                {{ 'admin.hungerGames.recordResult' | translate }}
             </button>
         </div>
     </div>
@@ -246,14 +244,14 @@
     <!-- Лидерборд -->
     <div class="flex flex-col gap-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Лидерборд</h2>
+            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.leaderboard' | translate }}</h2>
             <div class="min-w-[220px]">
                 <lh-input
                     type="select"
                     [items]="seasonOptions()"
                     [displayWith]="displaySeason"
                     [formControl]="seasonSelectControl"
-                    placeholder="Текущий сезон"
+                    [placeholder]="'admin.hungerGames.currentSeason' | translate"
                 />
             </div>
         </div>
@@ -268,12 +266,12 @@
                         <table class="w-full text-left border-collapse text-[18px]">
                             <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
                                 <tr>
-                                    <th class="p-4">#</th>
-                                    <th class="p-4">Игрок</th>
-                                    <th class="p-4 text-center">ELO</th>
-                                    <th class="p-4 text-center">Победы</th>
-                                    <th class="p-4 text-center">Убийства</th>
-                                    <th class="p-4 text-center">Награда</th>
+                                    <th class="p-4">{{ 'admin.hungerGames.numberHeader' | translate }}</th>
+                                    <th class="p-4">{{ 'admin.hungerGames.playerColumn' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.eloHeader' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.winsHeader' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.killsHeader' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.rewardHeader' | translate }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -315,7 +313,7 @@
                     <p
                         class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
                     >
-                        Лидерборд пуст
+                        {{ 'admin.hungerGames.emptyLeaderboard' | translate }}
                     </p>
                 }
             }
@@ -329,11 +327,11 @@
                         <table class="w-full text-left border-collapse text-[18px]">
                             <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
                                 <tr>
-                                    <th class="p-4">#</th>
-                                    <th class="p-4">Игрок</th>
-                                    <th class="p-4 text-center">Смерти</th>
-                                    <th class="p-4 text-center">Убийства</th>
-                                    <th class="p-4 text-center">Часы</th>
+                                    <th class="p-4">{{ 'admin.hungerGames.numberHeader' | translate }}</th>
+                                    <th class="p-4">{{ 'admin.hungerGames.playerColumn' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.deathsHeader' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.killsHeader' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.hoursHeader' | translate }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -360,7 +358,7 @@
                     <p
                         class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
                     >
-                        Лидерборд пуст
+                        {{ 'admin.hungerGames.emptyLeaderboard' | translate }}
                     </p>
                 }
             }

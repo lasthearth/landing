@@ -22,6 +22,7 @@ import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { IPlayer } from '@entities/user';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент карточки селения.
@@ -30,7 +31,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, TuiPulse, TuiIcon, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent],
+    imports: [AsyncPipe, TuiPulse, TuiIcon, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe],
     providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
@@ -76,6 +77,11 @@ export class SettlementComponent {
      * Пайп форматирования дат.
      */
     private readonly datePipe: DatePipe = inject(DatePipe);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * {@link Observable} Списка приглашений в селение (входящие).
@@ -299,10 +305,12 @@ export class SettlementComponent {
      */
     protected settlementLeave(settlementId: string, targetUserId: string): void {
         const isSelfLeave = targetUserId === this.userId;
-        const title = isSelfLeave ? 'Покинуть селение' : 'Удаление участника';
+        const title = isSelfLeave
+            ? this.i18n.translate('settlements.settlement.confirm.leaveTitle')
+            : this.i18n.translate('settlements.settlement.confirm.removeMemberTitle');
         const text = isSelfLeave
-            ? 'Вы уверены, что хотите покинуть селение? Это действие нельзя отменить.'
-            : 'Вы уверены, что хотите удалить этого участника из селения?';
+            ? this.i18n.translate('settlements.settlement.confirm.leaveText')
+            : this.i18n.translate('settlements.settlement.confirm.removeMemberText');
 
         this.confirmDialog
             .open({ title, text })
@@ -342,8 +350,8 @@ export class SettlementComponent {
     protected revokeInvitation(settlementId: string, invitationId: string): void {
         this.confirmDialog
             .open({
-                title: 'Отмена приглашения',
-                text: 'Вы уверены, что хотите отменить это приглашение?',
+                title: this.i18n.translate('settlements.settlement.confirm.revokeTitle'),
+                text: this.i18n.translate('settlements.settlement.confirm.revokeText'),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

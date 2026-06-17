@@ -11,7 +11,7 @@
         @for (item of invitations; track $index) {
             <div class="self-center flex flex-col gap-3 items-center">
                 <p class="text-xl md:text-2xl lg:text-3xl font-semibold">
-                    Вас приглашают вступить в селение
+                    {{ 'settlements.settlement.inviteTitle' | translate }}
                     <span class="font-bold">{{ getSettlementName$(item.settlement_id) | async }}</span>
                 </p>
                 <div class="flex gap-3">
@@ -19,13 +19,13 @@
                         (click)="inviteAccept(item.id)"
                         class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#5c4030] rounded-2xl py-1.5 px-3"
                     >
-                        Вступить
+                        {{ 'settlements.settlement.join' | translate }}
                     </button>
                     <button
                         (click)="rejectAccept(item.id)"
                         class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-[#5c4030] rounded-2xl py-1.5 px-3"
                     >
-                        Отклонить
+                        {{ 'settlements.settlement.reject' | translate }}
                     </button>
                 </div>
             </div>
@@ -33,35 +33,35 @@
     } @else if (status?.status === "pending") {
         <div class="size-full flex justify-center items-center">
             <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">
-                Ваша заявка на рассмотрении...
+                {{ 'settlements.settlement.pending' | translate }}
             </p>
         </div>
     } @else if (status?.status === "rejected") {
         <div class="size-full text-center flex flex-col gap-4 justify-center items-center">
             <p class="text-2xl/7.5 my-6 uppercase font-bold text-lh-danger self-center">
-                Заявка отклонена.
+                {{ 'settlements.settlement.rejected' | translate }}
                 <br />
                 <br />
-                <span class="text-lh-primary">Причина: {{ status?.rejection_reason }}</span>
+                <span class="text-lh-primary">{{ 'settlements.settlement.reason' | translate }} {{ status?.rejection_reason }}</span>
             </p>
 
             <button
                 (click)="createSettlement()"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
-                Основать
+                {{ 'settlements.form.submit' | translate }}
             </button>
         </div>
     } @else {
         <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-8 text-center flex flex-col gap-4 items-center">
             <p class="text-2xl/7.5 uppercase font-bold text-[#bdb093]">
-                Вы не владеете и не состоите в поселении...
+                {{ 'settlements.settlement.noSettlement' | translate }}
             </p>
             <button
                 (click)="createSettlement()"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
-                Основать
+                {{ 'settlements.form.submit' | translate }}
             </button>
         </div>
     }
@@ -93,11 +93,11 @@
                     }
                 </div>
                 <div class="flex flex-wrap gap-3 items-center text-[18px] text-[#5c554a] font-medium">
-                    <span>Создано: {{ formatTimestamp(settlement.created_at) }}</span>
+                    <span>{{ 'settlements.settlement.created' | translate }} {{ formatTimestamp(settlement.created_at) }}</span>
                     <span class="w-px h-4 bg-[#c4b89e]"></span>
-                    <span>Обновлено: {{ formatTimestamp(settlement.updated_at) }}</span>
+                    <span>{{ 'settlements.settlement.updated' | translate }} {{ formatTimestamp(settlement.updated_at) }}</span>
                     <span class="w-px h-4 bg-[#c4b89e]"></span>
-                    <span>Координаты: {{ settlement.coordinates.x }}, {{ settlement.coordinates.y }}</span>
+                    <span>{{ 'settlements.settlement.coordinates' | translate }} {{ settlement.coordinates.x }}, {{ settlement.coordinates.y }}</span>
                 </div>
             </div>
         </div>
@@ -105,14 +105,14 @@
         <div class="flex xl:flex-row flex-col gap-6 items-start">
             <!-- Описание -->
             <div class="flex-1">
-                <p class="text-lg font-semibold text-[#2d201a] mb-2">О поселении</p>
+                <p class="text-lg font-semibold text-[#2d201a] mb-2">{{ 'settlements.settlement.about' | translate }}</p>
                 <p class="text-lg text-[#5c4030] break-words leading-7 text-justify">{{ settlement.description }}</p>
             </div>
 
             <!-- Изображение -->
             <app-image-loader
                 [src]="settlement.attachments[0].url"
-                alt="Изображение поселения"
+                [alt]="'settlements.detailed.imageAlt' | translate"
                 class="hidden xl:block w-full xl:max-w-[40%] rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden"
             />
         </div>
@@ -120,7 +120,7 @@
 
     <!-- Население -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
-        <p class="text-xl font-semibold text-[#2d201a]">Население</p>
+        <p class="text-xl font-semibold text-[#2d201a]">{{ 'settlements.settlement.population' | translate }}</p>
         <div class="flex flex-wrap gap-4">
             <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base md:text-base px-3 p-1.5 rounded-2xl items-center">
                 @if (leader?.is_online === true) {
@@ -161,12 +161,12 @@
     <!-- Отправленные приглашения -->
     @if (userId === settlement.leader.user_id && sentInvitations?.length) {
         <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
-            <p class="text-xl font-semibold text-[#2d201a]">Отправленные приглашения</p>
+            <p class="text-xl font-semibold text-[#2d201a]">{{ 'settlements.settlement.sentInvitations' | translate }}</p>
             <div class="flex flex-wrap gap-3">
                 @for (invitation of sentInvitations; track invitation.id; let idx = $index) {
                     <div class="flex gap-0.5 justify-center items-center">
                         <div class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base md:text-base px-3 p-1.5 rounded-l-2xl items-center">
-                            <span>{{ sentUsers?.[idx]?.user_game_name ?? "Загрузка..." }}</span>
+                            <span>{{ sentUsers?.[idx]?.user_game_name ?? ('settlements.settlement.loading' | translate) }}</span>
                         </div>
                         <div
                             (click)="revokeInvitation(settlement.id, invitation.id)"
@@ -187,29 +187,29 @@
                 (click)="invitePlayer(settlement)"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
-                Пригласить игроков
+                {{ 'settlements.settlement.invitePlayers' | translate }}
             </button>
 
             <button
                 (click)="levelUp(settlement.type)"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
-                Повысить уровень
+                {{ 'settlements.settlement.levelUp' | translate }}
             </button>
 
             <button
                 disabled
-                title="Редактирование временно недоступно из-за CORS-ограничений на сервере"
+                [title]="'settlements.settlement.editDisabledTitle' | translate"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                Редактировать
+                {{ 'settlements.settlement.edit' | translate }}
             </button>
         } @else {
             <button
                 (click)="settlementLeave(settlement.id, userId)"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
-                Покинуть селение
+                {{ 'settlements.settlement.leave' | translate }}
             </button>
         }
     </div>

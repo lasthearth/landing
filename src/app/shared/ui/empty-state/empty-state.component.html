@@ -4,8 +4,8 @@
     >
         <tui-icon [icon]="icon()" class="size-10!" />
     </div>
-    <p class="text-2xl md:text-3xl font-bold text-lh-primary uppercase tracking-wide">{{ title() }}</p>
-    @if (description()) {
-        <p class="text-xl md:text-2xl text-lh-primary/60 max-w-lg leading-relaxed">{{ description() }}</p>
+    <p class="text-2xl md:text-3xl font-bold text-lh-primary uppercase tracking-wide">{{ title() | translate }}</p>
+    @if (hasDescription()) {
+        <p class="text-xl md:text-2xl text-lh-primary/60 max-w-lg leading-relaxed">{{ description() | translate }}</p>
     }
 </div>

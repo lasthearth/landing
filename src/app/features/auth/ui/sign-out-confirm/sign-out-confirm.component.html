@@ -1,10 +1,12 @@
 <div class="lh-dialog-card">
-    <h2 class="lh-dialog-title text-center">Выйти в бешенстве?</h2>
+    <h2 class="lh-dialog-title text-center">{{ 'auth.signOutConfirm.title' | translate }}</h2>
 
     <div class="lh-dialog-actions">
         <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
-            Остаться
+            {{ 'auth.signOutConfirm.stay' | translate }}
         </button>
-        <button type="button" (click)="signOut()" class="lh-dialog-button lh-dialog-button-danger">Выйти</button>
+        <button type="button" (click)="signOut()" class="lh-dialog-button lh-dialog-button-danger">
+            {{ 'auth.signOutConfirm.signOut' | translate }}
+        </button>
     </div>
 </div>

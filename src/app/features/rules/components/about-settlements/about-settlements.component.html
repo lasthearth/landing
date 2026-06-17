@@ -1,9 +1,9 @@
 <div class="flex flex-col gap-3">
-    <app-rule-section sectionId="Types and statuses" parentId="settlements" title="2.1 Типы и статусы" [level]="1">
+    <app-rule-section sectionId="Types and statuses" parentId="settlements" title="rules.content.settlements.typesTitle" [level]="1">
         <app-types-and-statuses (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Defensive structures" parentId="settlements" title="2.2 Оборонительные сооружения" [level]="1">
+    <app-rule-section sectionId="Defensive structures" parentId="settlements" title="rules.content.settlements.defensiveTitle" [level]="1">
         <app-defensive-structures (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 </div>

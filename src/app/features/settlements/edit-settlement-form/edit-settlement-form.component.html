@@ -1,13 +1,13 @@
 <div class="flex flex-col gap-5 p-6 min-w-[600px] max-w-3xl">
-    <h2 class="text-2xl font-bold text-lh-primary">Редактирование поселения</h2>
+    <h2 class="text-2xl font-bold text-lh-primary">{{ 'settlements.editForm.title' | translate }}</h2>
 
     <div class="flex flex-col gap-4">
-        <lh-input type="input" placeholder="Название" [formControl]="form.controls.name" />
-        <lh-input type="textarea" placeholder="Описание" [rows]="6" [formControl]="form.controls.description" />
+        <lh-input type="input" [placeholder]="'settlements.editForm.namePlaceholder' | translate" [formControl]="form.controls.name" />
+        <lh-input type="textarea" [placeholder]="'settlements.editForm.descriptionPlaceholder' | translate" [rows]="6" [formControl]="form.controls.description" />
     </div>
 
     <div class="flex flex-col gap-3">
-        <p class="text-lg font-semibold text-lh-primary">Архитектура поселения</p>
+        <p class="text-lg font-semibold text-lh-primary">{{ 'settlements.editForm.architecture' | translate }}</p>
 
         <div class="flex flex-col gap-3">
             @for (attachment of attachmentsArray.controls; track $index; let i = $index) {
@@ -16,10 +16,10 @@
                         <div class="flex-1 flex flex-col gap-1">
                             <lh-input
                                 type="input"
-                                placeholder="URL изображения"
+                                [placeholder]="'settlements.editForm.urlPlaceholder' | translate"
                                 [formControl]="getAttachmentControl($index, 'url')"
                             />
-                            <span class="text-sm text-neutral-500">Архитектура поселения</span>
+                            <span class="text-sm text-neutral-500">{{ 'settlements.editForm.architectureDescription' | translate }}</span>
                         </div>
                         <button
                             type="button"
@@ -38,7 +38,7 @@
             (click)="addAttachment()"
             class="py-2 px-4 rounded-xl border border-lh-primary-2/30 text-lh-primary font-semibold hover:bg-lh-primary-2/10 transition-colors"
         >
-            Добавить архитектуру
+            {{ 'settlements.editForm.addArchitecture' | translate }}
         </button>
     </div>
 
@@ -48,7 +48,7 @@
             (click)="cancel()"
             class="flex-1 py-3 px-4 rounded-xl border border-lh-primary-2/30 text-lh-primary font-bold hover:bg-lh-primary-2/10 transition-colors"
         >
-            Отмена
+            {{ 'settlements.editForm.cancel' | translate }}
         </button>
         <button
             type="button"
@@ -56,7 +56,7 @@
             (click)="save()"
             class="flex-1 py-3 px-4 rounded-xl bg-lh-accent-3 hover:bg-[#c35a17] text-white font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-            Сохранить
+            {{ 'settlements.editForm.save' | translate }}
         </button>
     </div>
 </div>

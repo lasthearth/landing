@@ -1,69 +1,68 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="Camp" [level]="3">
-        Лагерь — это
-        <app-rule-link target="Settlement">селение</app-rule-link>
-        , состоящее из 3-х и более игроков, зарегистрированное на сайте, имеющее все основные постройки на поверхности и
-        соответствующее следующим требованиям:
+        <span [innerHTML]="'rules.content.settlements.types.camp.intro' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.camp.introAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Требования:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Расположение: не далее 8.5 тыс. блоков от нулевой координаты.
+        <b>{{ 'rules.content.settlements.common.requirements' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Население: от 3-х человек.
+        {{ 'rules.content.settlements.types.camp.location' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        <app-rule-link target="Monument" class="ml-2">Монумент</app-rule-link>
-        : 1х1х1 блока (ш,д,в) (или согласно патенту на улучшение селения).
+        {{ 'rules.content.settlements.types.camp.population' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Инфраструктура: оборудованное место с костром.
+        <app-rule-link target="Monument" class="ml-2">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.camp.monumentAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Хозяйство:
+        {{ 'rules.content.settlements.types.camp.infrastructure' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 3-х установленных кроватей;</app-rule-paragraph>
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.camp.economyHeading' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.camp.beds' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ отдельный крытый склад, или складское помещение в уже имеющемся здании.
+        ◦ {{ 'rules.content.settlements.types.camp.storage' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Оборонительные постройки: отсутствуют.
+        {{ 'rules.content.settlements.types.camp.defenses' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Преимущества:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Наличие территориального блока [диаметр = 64 блока].
+        <b>{{ 'rules.content.settlements.common.advantages' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность объявлять набеги на:
-        <app-rule-link target="Homestead">хутора</app-rule-link>
-        ,
-        <app-rule-link target="Camp">лагеря</app-rule-link>
-        ,
-        <app-rule-link target="Village">деревни</app-rule-link>
-        .
+        {{ 'rules.content.settlements.types.camp.territoryBlock' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        <span [innerHTML]="'rules.content.settlements.types.camp.raidTargetsBefore' | translate"></span>
+        <app-rule-link target="Homestead">{{ 'rules.content.terms.homesteadAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Camp">{{ 'rules.content.terms.campAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Village">{{ 'rules.content.terms.villageAccusativePlural' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 </div>

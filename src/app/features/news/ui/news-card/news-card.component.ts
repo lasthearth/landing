@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 
 /**
@@ -12,7 +13,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 @Component({
     standalone: true,
     selector: 'app-news-card',
-    imports: [TuiIcon, ImageLoaderComponent],
+    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe],
     templateUrl: './news-card.component.html',
     styleUrl: './news-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +23,11 @@ export class NewsCardComponent {
      * Сервис диалогов подтверждения.
      */
     private readonly confirmDialog = inject(ConfirmDialogService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Заголовок новости.
@@ -80,8 +86,8 @@ export class NewsCardComponent {
 
         this.confirmDialog
             .open({
-                title: 'Удалить новость?',
-                text: `Вы уверены, что хотите удалить новость «${this.title()}»? Это действие нельзя отменить.`,
+                title: this.i18n.translate('news.card.confirmDeleteTitle'),
+                text: this.i18n.translate('news.card.confirmDeleteText', { title: this.title() }),
             })
             .subscribe((confirmed) => {
                 if (confirmed) {

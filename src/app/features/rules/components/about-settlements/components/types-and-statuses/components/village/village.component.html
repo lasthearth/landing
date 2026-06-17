@@ -1,115 +1,114 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="Village" [level]="3">
-        Деревня — это
-        <app-rule-link target="Settlement">селение</app-rule-link>
-        , основанное после этапа «Лагерь», состоящее из 4-х и более игроков, зарегистрированное на сайте, имеющее все
-        основные постройки на поверхности и соответствующее следующим требованиям:
+        <span [innerHTML]="'rules.content.settlements.types.village.intro' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.village.introAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Требования:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Расположение: не далее 8.5 тыс. блоков от нулевой координаты.
+        <b>{{ 'rules.content.settlements.common.requirements' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Население: от 4-х человек.
+        {{ 'rules.content.settlements.types.village.location' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        <app-rule-link target="Monument" class="ml-2">Монумент</app-rule-link>
-        : 1х1х1 блока (ш,д,в) (или согласно патенту на улучшение селения).
+        {{ 'rules.content.settlements.types.village.population' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Документы:
+        <app-rule-link target="Monument" class="ml-2">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.village.monumentAfter' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.village.documentsHeading' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ подписанный
-        <app-rule-link target="Patent">патент</app-rule-link>
-        на разрешение основания деревни от
-        <app-rule-link target="Suzerain">сюзерена</app-rule-link>
-        ;
+        ◦ {{ 'rules.content.settlements.types.village.patentBefore' | translate }}
+        <app-rule-link target="Patent">{{ 'rules.content.terms.patent' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.village.patentAfter' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        <span>;</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ от 4-х купчих
-        <app-rule-link target="Volnost">вольности</app-rule-link>
-        .
+        ◦ {{ 'rules.content.settlements.types.village.libertiesBefore' | translate }}
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.liberties' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Инфраструктура:
+        {{ 'rules.content.settlements.types.village.infrastructureHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ деревенская площадь;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.village.square' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ колодец с питьевой водой;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.village.well' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ тропы между постройками шириной не менее 2-х блоков, где это возможно.
+        ◦ {{ 'rules.content.settlements.types.village.paths' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Хозяйство:
+        {{ 'rules.content.settlements.types.village.economyHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ склад, или складское помещение в уже имеющемся здании;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.village.storage' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ амбар;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.village.barn' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ грядки площадью от 25-ти блоков или загон с не менее чем 4-мя животными.
+        ◦ {{ 'rules.content.settlements.types.village.farm' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Дополнительные строения: от 4-х одноэтажных строений.
+        {{ 'rules.content.settlements.types.village.additionalBuildings' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Оборонительные постройки: отсутствуют.
+        {{ 'rules.content.settlements.types.village.defenses' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Преимущества:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Наличие территориального блока [диаметр = 128 блоков].
+        <b>{{ 'rules.content.settlements.common.advantages' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность объявлять набеги на:
-        <app-rule-link target="Homestead">хутора</app-rule-link>
-        ,
-        <app-rule-link target="Camp">лагеря</app-rule-link>
-        ,
-        <app-rule-link target="Village">деревни</app-rule-link>
-        ,
-        <app-rule-link target="Township">посёлки</app-rule-link>
-        .
+        {{ 'rules.content.settlements.types.village.territoryBlock' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность получить 1-го случайного торговца.
+        <span [innerHTML]="'rules.content.settlements.types.village.raidTargetsBefore' | translate"></span>
+        <app-rule-link target="Homestead">{{ 'rules.content.terms.homesteadAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Camp">{{ 'rules.content.terms.campAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Village">{{ 'rules.content.terms.villageAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Township">{{ 'rules.content.terms.townshipAccusativePlural' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Чертеж на упрощенный крафт ванильных парусов.
+        {{ 'rules.content.settlements.types.village.trader' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.village.sailsBlueprint' | translate }}
     </app-rule-paragraph>
 </div>

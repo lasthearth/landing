@@ -5,6 +5,7 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DonateService } from '@entities/donate';
 import { RequestStatusService } from '@core/services/request-status.service';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Данные для диалога покупки товара.
@@ -75,7 +76,7 @@ export interface PurchaseDialogData {
 @Component({
     selector: 'app-purchase-dialog',
     standalone: true,
-    imports: [TuiButton, TuiIcon, ImageLoaderComponent],
+    imports: [TuiButton, TuiIcon, ImageLoaderComponent, TranslatePipe],
     templateUrl: './purchase-dialog.component.html',
     styleUrl: './purchase-dialog.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -107,6 +108,11 @@ export class PurchaseDialogComponent {
     private readonly destroyRef = inject(DestroyRef);
 
     /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
      * Данные товара для отображения.
      */
     protected readonly data = this.context.data;
@@ -134,20 +140,23 @@ export class PurchaseDialogComponent {
     protected onBuy(): void {
         const itemId = this.data.itemId;
         if (!itemId) {
-            this.requestStatusService.showError('Не удалось определить товар для покупки.');
+            this.requestStatusService.showError(this.i18n.translate('market.purchaseDialog.unknownItemError'));
             return;
         }
 
         this.donateService
             .buyItem$(itemId)
             .pipe(
-                this.requestStatusService.handleError('Не удалось оформить покупку.'),
+                this.requestStatusService.handleError(this.i18n.translate('market.purchaseDialog.purchaseError')),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe({
                 next: () => {
                     this.alertService
-                        .open('', { label: 'Покупка успешно оформлена', appearance: 'positive' })
+                        .open('', {
+                            label: this.i18n.translate('market.purchaseDialog.successMessage'),
+                            appearance: 'positive',
+                        })
                         .subscribe();
                     this.context.completeWith();
                 },

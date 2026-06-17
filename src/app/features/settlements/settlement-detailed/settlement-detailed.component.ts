@@ -6,12 +6,13 @@ import { UserService, IPlayer } from '@entities/user';
 import { TuiPulse } from '@taiga-ui/kit';
 import { tap } from 'rxjs';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { TranslatePipe } from '@core/i18n';
 
 @Component({
     selector: 'app-settlement-detailed',
     templateUrl: './settlement-detailed.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
-    imports: [TuiPulse, ImageLoaderComponent],
+    imports: [TuiPulse, ImageLoaderComponent, TranslatePipe],
 })
 export class SettlementDetailedComponent implements OnInit {
     /**

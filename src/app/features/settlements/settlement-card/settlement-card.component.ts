@@ -22,12 +22,13 @@ import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-
 import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { TranslatePipe } from '@core/i18n';
 
 @Component({
     standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
-    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent],
+    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent implements OnInit {

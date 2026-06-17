@@ -2,33 +2,25 @@
     <div id="offer-scroll-sentinel" class="absolute top-0 left-0 w-px h-px pointer-events-none"></div>
 
     <div class="flex justify-between items-center gap-4">
-        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">Публичная оферта</p>
+        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">{{ 'legal.publicOffer.title' | translate }}</p>
         <button
             (click)="toggleAll()"
             class="shrink-0 rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e]"
         >
-            {{ expandAll ? 'Скрыть всё' : 'Раскрыть всё' }}
+            {{ expandAll ? ('legal.publicOffer.collapse' | translate) : ('legal.publicOffer.expand' | translate) }}
         </button>
     </div>
 
-    <p class="text-[23px] leading-[32px] text-[#2d201a]">
-        Настоящий документ является официальным предложением (публичной офертой) в соответствии со статьёй 435 и пунктом
-        2 статьи 437 Гражданского кодекса РФ, а также в рамках Федерального закона от 27.11.2018 № 422-ФЗ "О проведении
-        эксперимента по установлению специального налогового режима "Налог на профессиональный доход"".
-    </p>
-    <p class="text-[23px] leading-[32px] text-[#2d201a]">
-        Оферта регулирует отношения по оплате доступа к дополнительному цифровому функционалу игрового сервера Last Hearth.
-        Исполнитель не является юридическим лицом и применяет специальный налоговый режим "Налог на профессиональный доход"
-        (самозанятость).
-    </p>
+    <p class="text-[23px] leading-[32px] text-[#2d201a]">{{ 'legal.publicOffer.intro.p1' | translate }}</p>
+    <p class="text-[23px] leading-[32px] text-[#2d201a]">{{ 'legal.publicOffer.intro.p2' | translate }}</p>
 
-    <!-- 1. Термины и определения -->
+    <!-- 1. Terms and definitions -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isTerms = !isTerms"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">1. Термины и определения</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'legal.publicOffer.sections.terms.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTerms }"
@@ -37,68 +29,24 @@
         </div>
         <tui-expand [expanded]="isTerms">
             <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-[#2d201a] mt-4">
-                <p class="pl-4">
-                    <span class="font-bold">1.1</span> "Проект" — многопользовательский игровой сервер "Last Hearth" по
-                    игре Vintage Story, размещённый на домене
-                    <a
-                        href="https://lasthearth.ru"
-                        target="_blank"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                        >https://lasthearth.ru</a
-                    >.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">1.2</span> "Исполнитель" — физическое лицо, применяющее специальный налоговый
-                    режим "Налог на профессиональный доход" (самозанятость), предоставляющее Пользователям доступ к
-                    дополнительному функционалу игрового сервера Last Hearth на условиях настоящей Оферты.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">1.3</span> "Пользователь" — дееспособное физическое лицо, принявшее условия
-                    настоящей Оферты, Правил сервера и Политики обработки персональных данных.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">1.4</span> "Дополнительный функционал" — цифровые игровые возможности, бонусный
-                    баланс, титулы, декоративные элементы, косметические предметы, внутриигровые удобства и иные элементы,
-                    доступные Пользователю исключительно в рамках Проекта Last Hearth.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">1.5</span> "Внутриигровая валюта" / "бонусный баланс" — условные технические
-                    единицы учёта внутри Проекта Last Hearth, используемые для доступа к дополнительному функционалу.
-                    Внутриигровая валюта не является денежным средством, электронным денежным средством, ценной бумагой,
-                    имущественным правом или товаром, не имеет самостоятельной стоимости вне Проекта и не подлежит обмену
-                    на денежные средства.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">1.6</span> "Оплата" — перечисление Пользователем денежных средств Исполнителю
-                    в качестве поддержки Проекта и оплаты доступа к выбранному дополнительному функционалу.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">1.7</span> "Площадки оплаты" — внешние сервисы, через которые Пользователь может
-                    осуществить Оплату: платформа Boosty (
-                    <a
-                        href="https://boosty.to"
-                        target="_blank"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                        >https://boosty.to</a
-                    >) и сервис ЮMoney (
-                    <a
-                        href="https://yoomoney.ru"
-                        target="_blank"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                        >https://yoomoney.ru</a
-                    >).
-                </p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p1' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p2' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p4' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p5' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p6' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p7' | translate"></p>
             </div>
         </tui-expand>
     </div>
 
-    <!-- 2. Общие положения -->
+    <!-- 2. General provisions -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isGeneralProvisions = !isGeneralProvisions"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">2. Общие положения</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'legal.publicOffer.sections.generalProvisions.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isGeneralProvisions }"
@@ -107,53 +55,23 @@
         </div>
         <tui-expand [expanded]="isGeneralProvisions">
             <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-[#2d201a] mt-4">
-                <p class="pl-4">
-                    <span class="font-bold">2.1</span> Исполнитель публикует настоящий Договор-оферту, который является
-                    публичным предложением о заключении соглашения на условиях, изложенных ниже.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">2.2</span> Факт осуществления Пользователем Оплаты в пользу Исполнителя через
-                    Площадки оплаты или иным способом, указанным на сайте
-                    <a
-                        href="https://lasthearth.ru"
-                        target="_blank"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                        >https://lasthearth.ru</a
-                    >, является акцептом настоящей Оферты.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">2.3</span> Совершая Оплату, Пользователь подтверждает, что ознакомился с
-                    настоящей Офертой, Правилами сервера и Политикой обработки персональных данных, принимает их условия
-                    и выражает согласие на получение выбранного дополнительного функционала.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">2.4</span> Оплата по настоящей Оферте является оплатой доступа к дополнительному
-                    функционалу Проекта. Пользователь не приобретает право собственности на внутриигровую валюту, цифровые
-                    предметы, титулы, привилегии или иные элементы Проекта. Пользователю предоставляется ограниченное,
-                    непередаваемое, отзывное право использования соответствующего функционала в рамках сервера Last Hearth.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">2.5</span> Внутриигровая валюта, бонусный баланс, цифровые предметы и иные
-                    элементы Проекта не подлежат продаже, обмену на денежные средства, выводу за пределы Проекта или
-                    передаче третьим лицам вне предусмотренного функционала сервера.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">2.6</span> Исполнитель стремится соблюдать правила сообщества Vintage Story.
-                    Дополнительный функционал направлен преимущественно на косметические преимущества, удобства и
-                    декоративные элементы. Исполнитель вправе изменять, ограничивать или отзывать отдельные элементы
-                    функционала в целях соблюдения баланса игры и правил сообщества.
-                </p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p1' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p2' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p4' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p5' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p6' | translate"></p>
             </div>
         </tui-expand>
     </div>
 
-    <!-- 3. Права и обязанности сторон -->
+    <!-- 3. Rights and obligations of the parties -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isRightsAndObligations = !isRightsAndObligations"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">3. Права и обязанности сторон</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'legal.publicOffer.sections.rightsAndObligations.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRightsAndObligations }"
@@ -162,63 +80,30 @@
         </div>
         <tui-expand [expanded]="isRightsAndObligations">
             <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-[#2d201a] mt-4">
-                <p class="pl-4"><span class="font-bold">3.1</span> Исполнитель обязуется:</p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Обеспечить Пользователю предоставление выбранного функционала в
-                    течение 3 рабочих дней с момента поступления Оплаты.
-                </p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Не передавать третьим лицам персональные данные Пользователя, за
-                    исключением случаев, предусмотренных законодательством РФ.
-                </p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Формировать и передавать Пользователю чек в порядке, предусмотренном
-                    законодательством о налоге на профессиональный доход, при условии предоставления Пользователем
-                    контактных данных для его направления.
-                </p>
-                <p class="pl-4"><span class="font-bold">3.2</span> Исполнитель вправе:</p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Изменять настоящую Оферту в одностороннем порядке, публикуя
-                    обновлённый текст на сайте.
-                </p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Приостанавливать или ограничивать доступ к дополнительному
-                    функционалу при нарушении Пользователем Правил сервера, настоящей Оферты или законодательства РФ.
-                </p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Проводить технические работы, обновления, вайпы, изменение игрового
-                    баланса и состава дополнительного функционала, временно ограничивать доступ к серверу, а также
-                    прекращать поддержку отдельных игровых элементов без предварительного согласования с Пользователем.
-                </p>
-                <p class="pl-4"><span class="font-bold">3.3</span> Пользователь обязуется:</p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Ознакомиться с настоящей Офертой, Правилами сервера, Политикой
-                    обработки персональных данных и другими регламентами перед совершением Оплаты.
-                </p>
-                <p class="pl-8"><span class="font-bold">•</span> Указывать достоверные контактные данные и корректный
-                    игровой ник для идентификации платежа и предоставления функционала.</p>
-                <p class="pl-4"><span class="font-bold">3.4</span> Пользователь вправе:</p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Получить доступ к дополнительному функционалу, соответствующему
-                    объёму Оплаты, как описано на сайте
-                    <a
-                        href="https://lasthearth.ru"
-                        target="_blank"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                        >https://lasthearth.ru</a
-                    >.
-                </p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorObligationsTitle' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorObligationsItem1' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorObligationsItem2' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorObligationsItem3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorRightsTitle' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorRightsItem1' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorRightsItem2' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorRightsItem3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.userObligationsTitle' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.userObligationsItem1' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.userObligationsItem2' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.userRightsTitle' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.userRightsItem1' | translate"></p>
             </div>
         </tui-expand>
     </div>
 
-    <!-- 4. Ответственность сторон -->
+    <!-- 4. Liability of the parties -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isResponsibility = !isResponsibility"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">4. Ответственность сторон</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'legal.publicOffer.sections.responsibility.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isResponsibility }"
@@ -227,45 +112,24 @@
         </div>
         <tui-expand [expanded]="isResponsibility">
             <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-[#2d201a] mt-4">
-                <p class="pl-4">
-                    <span class="font-bold">4.1</span> Стороны несут ответственность в соответствии с действующим
-                    законодательством РФ.
-                </p>
-                <p class="pl-4"><span class="font-bold">4.2</span> Исполнитель не несёт ответственности за:</p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Перебои в доступе к Проекту, вызванные действиями хостинга,
-                    стороннего ПО или форс-мажорными обстоятельствами.
-                </p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Неоправданные ожидания Пользователя относительно качества или
-                    объёма функционала.
-                </p>
-                <p class="pl-8">
-                    <span class="font-bold">•</span> Утрату доступа к дополнительному функционалу вследствие бана,
-                    вайпа, изменения игрового баланса, технических работ или прекращения поддержки отдельных элементов
-                    Проекта, если иное не установлено Исполнителем отдельно.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">4.3</span> Пользователь несёт ответственность за предоставление
-                    недостоверной информации, включая неверный игровой ник, что может привести к невозможности
-                    предоставления функционала.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">4.4</span> В случае технической ошибки, позволившей получить функционал без
-                    Оплаты, Пользователь обязуется сообщить об этом Исполнителю и устранить последствия, либо произвести
-                    соответствующую Оплату.
-                </p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.responsibility.p1' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.responsibility.p2Title' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.responsibility.p2Item1' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.responsibility.p2Item2' | translate"></p>
+                <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.responsibility.p2Item3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.responsibility.p3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.responsibility.p4' | translate"></p>
             </div>
         </tui-expand>
     </div>
 
-    <!-- 5. Условия возврата -->
+    <!-- 5. Refund terms -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isTermsOfReturn = !isTermsOfReturn"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">5. Условия возврата</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'legal.publicOffer.sections.termsOfReturn.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTermsOfReturn }"
@@ -274,41 +138,21 @@
         </div>
         <tui-expand [expanded]="isTermsOfReturn">
             <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-[#2d201a] mt-4">
-                <p class="pl-4">
-                    <span class="font-bold">5.1</span> В случае если оплаченный дополнительный функционал не был
-                    предоставлен Пользователю по вине Исполнителя и техническая возможность предоставления отсутствует,
-                    Пользователь вправе обратиться к Исполнителю с требованием о повторном предоставлении функционала
-                    либо возврате оплаты.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">5.2</span> Если дополнительный функционал был предоставлен Пользователю
-                    надлежащим образом, а также если внутриигровая валюта, бонусный баланс или цифровые элементы были
-                    использованы Пользователем, возврат оплаты не производится, за исключением случаев, прямо
-                    предусмотренных законодательством РФ или настоящей Офертой.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">5.3</span> В случае ограничения доступа Пользователя к Проекту или
-                    дополнительному функционалу вследствие нарушения Пользователем Правил сервера, использования ошибок,
-                    мошеннических действий, попыток обхода ограничений, возврата платежа или иных нарушений настоящей
-                    Оферты, возврат оплаты не производится.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">5.4</span> Технические работы, обновления, изменение игрового баланса,
-                    временная недоступность сервера, вайпы, изменение состава дополнительного функционала или прекращение
-                    поддержки отдельных игровых элементов не являются основанием для возврата, если иное не установлено
-                    Исполнителем отдельно.
-                </p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.termsOfReturn.p1' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.termsOfReturn.p2' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.termsOfReturn.p3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.termsOfReturn.p4' | translate"></p>
             </div>
         </tui-expand>
     </div>
 
-    <!-- 6. Персональные данные -->
+    <!-- 6. Personal data -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isPersonalData = !isPersonalData"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">6. Персональные данные</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'legal.publicOffer.sections.personalData.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isPersonalData }"
@@ -317,38 +161,20 @@
         </div>
         <tui-expand [expanded]="isPersonalData">
             <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-[#2d201a] mt-4">
-                <p class="pl-4">
-                    <span class="font-bold">6.1</span> Пользователь предоставляет свободное, конкретное, информированное
-                    и сознательное согласие на обработку своих персональных данных (игровой ник, email, иные данные,
-                    необходимые для исполнения Оферты) исключительно для целей исполнения настоящего договора.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">6.2</span> Обработка персональных данных осуществляется в соответствии с
-                    Федеральным законом от 27.07.2006 № 152-ФЗ "О персональных данных" и Политикой обработки
-                    персональных данных, размещённой на сайте по адресу
-                    <a
-                        href="https://lasthearth.ru/privacy-policy"
-                        target="_blank"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                        >https://lasthearth.ru/privacy-policy</a
-                    >.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">6.3</span> Настоящая Оферта не является полноценной политикой обработки
-                    персональных данных. Подробные сведения о целях, сроках, порядке обработки и правах субъекта
-                    персональных данных содержатся в отдельной Политике обработки персональных данных.
-                </p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.personalData.p1' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.personalData.p2' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.personalData.p3' | translate"></p>
             </div>
         </tui-expand>
     </div>
 
-    <!-- 7. Применимое законодательство и разрешение споров -->
+    <!-- 7. Applicable law and dispute resolution -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isLegislation = !isLegislation"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">7. Применимое законодательство и разрешение споров</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'legal.publicOffer.sections.legislation.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isLegislation }"
@@ -357,26 +183,19 @@
         </div>
         <tui-expand [expanded]="isLegislation">
             <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-[#2d201a] mt-4">
-                <p class="pl-4">
-                    <span class="font-bold">7.1</span> К отношениям сторон применяется право Российской Федерации.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">7.2</span> Все споры и разногласия разрешаются путём переговоров. При
-                    невозможности урегулирования споров в досудебном порядке они подлежат рассмотрению в судебном
-                    порядке в соответствии с законодательством Российской Федерации с учётом прав потребителя на выбор
-                    подсудности.
-                </p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.legislation.p1' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.legislation.p2' | translate"></p>
             </div>
         </tui-expand>
     </div>
 
-    <!-- 8. Реквизиты Исполнителя -->
+    <!-- 8. Contractor details -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
             (click)="isRequisites = !isRequisites"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">8. Реквизиты Исполнителя</p>
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'legal.publicOffer.sections.requisites.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRequisites }"
@@ -385,47 +204,11 @@
         </div>
         <tui-expand [expanded]="isRequisites">
             <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-[#2d201a] mt-4">
-                <p class="pl-4">
-                    <span class="font-bold">8.1</span>
-                    Сайт проекта
-                    <a
-                        href="https://lasthearth.ru"
-                        target="_blank"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                    >
-                        https://lasthearth.ru</a
-                    >
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">8.2</span>
-                    Email для претензий и вопросов
-                    <a
-                        href="mailto:lisovfox2002@gmail.com"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                    >
-                        lisovfox2002&#64;gmail.com</a
-                    >
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">8.3</span>
-                    Boosty
-                    <a
-                        href="https://boosty.to/lisov"
-                        target="_blank"
-                        class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                    >
-                        https://boosty.to/lisov</a
-                    >
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">8.4</span>
-                    Исполнитель: <span class="font-bold">Бураков Иван Александрович</span>, физическое лицо, применяющее специальный
-                    налоговый режим "Налог на профессиональный доход" (самозанятость). ИНН: <span class="font-bold">371122287813</span>.
-                </p>
-                <p class="pl-4">
-                    <span class="font-bold">8.5</span>
-                    Кошелёк ЮMoney для приёма оплат: <span class="font-bold">4100119555346137</span>.
-                </p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.requisites.p1' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.requisites.p2' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.requisites.p3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.requisites.p4' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.requisites.p5' | translate"></p>
             </div>
         </tui-expand>
     </div>
@@ -434,7 +217,7 @@
         <button
             (click)="scrollToTop()"
             class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-[#d8cdb3] border border-[#c4b89e] text-[#2a2722] flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-[#c4b89e] shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
-            title="Наверх"
+            [title]="'legal.publicOffer.scrollTop' | translate"
         >
             <tui-icon icon="@tui.chevron-up" class="size-6!" />
         </button>

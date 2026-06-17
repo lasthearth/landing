@@ -11,7 +11,7 @@
             type="button"
             (click)="onDeleteClick($event)"
             class="absolute top-4 right-4 z-30 size-9 flex items-center justify-center rounded-lg bg-lh-primary-2/60 hover:bg-lh-danger/80 backdrop-blur-md transition-all duration-200 cursor-pointer"
-            title="Удалить новость"
+            [title]="'news.card.deleteTitle' | translate"
         >
             <tui-icon icon="@tui.trash-2" class="text-neutral-200 size-4" />
         </button>
@@ -24,7 +24,7 @@
             >
                 <app-image-loader
                     [src]="preview()"
-                    alt="Превью новости: {{ title() }}"
+                    [alt]="'news.card.previewAlt' | translate:{title: title()}"
                     class="size-64 lg:size-72"
                 />
             </div>

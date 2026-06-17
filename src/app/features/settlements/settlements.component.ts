@@ -8,6 +8,7 @@ import { ErrorStateComponent } from '@shared/ui/error-state';
 import { from, mergeMap, of, toArray } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ISettlement } from '@entities/settlement';
+import { TranslatePipe } from '@core/i18n';
 
 /**
  * Поле сортировки списка селений.
@@ -33,7 +34,7 @@ interface EnrichedSettlement extends ISettlement {
  */
 @Component({
     selector: 'app-settlements',
-    imports: [SettlementCardComponent, SettlementCardSkeletonComponent, EmptyStateComponent, ErrorStateComponent],
+    imports: [SettlementCardComponent, SettlementCardSkeletonComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

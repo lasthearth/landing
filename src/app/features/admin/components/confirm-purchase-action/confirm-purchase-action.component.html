@@ -11,7 +11,7 @@
 
     <div class="lh-dialog-actions">
         <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
-            Отмена
+            {{ 'common.cancel' | translate }}
         </button>
         <button type="button" (click)="confirmAction()" class="lh-dialog-button lh-dialog-button-primary">
             {{ confirmText }}

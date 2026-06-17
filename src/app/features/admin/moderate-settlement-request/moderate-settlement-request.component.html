@@ -1,12 +1,12 @@
 <div class="lh-dialog-card">
-    <h2 class="lh-dialog-title">Вы уверены в этом?</h2>
+    <h2 class="lh-dialog-title">{{ 'admin.verification.moderateTitle' | translate }}</h2>
 
     <div class="lh-dialog-actions">
         <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
-            Ещё подумать
+            {{ 'admin.verification.moderateThink' | translate }}
         </button>
         <button type="button" (click)="confirmApprove()" class="lh-dialog-button lh-dialog-button-primary">
-            Одобрить
+            {{ 'admin.verification.approve' | translate }}
         </button>
     </div>
 </div>

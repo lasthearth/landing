@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент состояния ошибки загрузки.
@@ -9,7 +10,7 @@ import { TuiButton, TuiIcon } from '@taiga-ui/core';
 @Component({
     selector: 'app-error-state',
     standalone: true,
-    imports: [TuiIcon, TuiButton],
+    imports: [TuiIcon, TuiButton, TranslatePipe],
     templateUrl: './error-state.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -17,17 +18,17 @@ export class ErrorStateComponent {
     /**
      * Заголовок ошибки.
      */
-    public title: InputSignal<string> = input<string>('Не удалось загрузить данные');
+    public title: InputSignal<string> = input<string>('shared.errorState.title');
 
     /**
      * Описание ошибки.
      */
-    public description: InputSignal<string> = input<string>('Проверьте подключение к интернету и попробуйте снова.');
+    public description: InputSignal<string> = input<string>('shared.errorState.description');
 
     /**
      * Текст кнопки повтора.
      */
-    public retryText: InputSignal<string> = input<string>('Повторить');
+    public retryText: InputSignal<string> = input<string>('shared.errorState.retry');
 
     /**
      * Событие нажатия на кнопку повтора.

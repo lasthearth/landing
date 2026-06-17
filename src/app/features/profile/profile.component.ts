@@ -33,6 +33,7 @@ import {
     tap,
 } from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
@@ -54,6 +55,7 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
         DecimalPipe,
         ProfileSkeletonComponent,
         ImageLoaderComponent,
+        TranslatePipe,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
@@ -324,6 +326,11 @@ export class ProfileComponent {
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
 
     /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
      * Сервис предпросмотра.
      */
     private readonly previewService = inject(TuiPreviewDialogService);
@@ -354,14 +361,14 @@ export class ProfileComponent {
 
     protected getRoleName() {
         if (this.userService.roles.includes('admin')) {
-            return 'Администратор';
+            return 'profile.role.admin';
         }
 
         if (this.userService.roles.includes('player')) {
-            return 'Игрок';
+            return 'profile.role.player';
         }
 
-        return 'Неверифицирован';
+        return 'profile.role.unverified';
     }
 
     /**
@@ -376,7 +383,7 @@ export class ProfileComponent {
 
         if (isIssued) {
             return {
-                label: 'Выдан',
+                label: 'profile.purchases.status.issued',
                 dotClass: 'bg-[#4a7c8c]',
                 textClass: 'text-[#4a7c8c]',
             };
@@ -387,27 +394,27 @@ export class ProfileComponent {
         switch (normalizedStatus) {
             case 'COMPLETED':
                 return {
-                    label: 'Завершена',
+                    label: 'profile.purchases.status.completed',
                     dotClass: 'bg-[#5a8c69]',
                     textClass: 'text-[#5a8c69]',
                 };
             case 'ISSUED':
             case 'DELIVERED':
                 return {
-                    label: 'Выдан',
+                    label: 'profile.purchases.status.issued',
                     dotClass: 'bg-[#4a7c8c]',
                     textClass: 'text-[#4a7c8c]',
                 };
             case 'REFUNDED':
                 return {
-                    label: 'Возвращён',
+                    label: 'profile.purchases.status.refunded',
                     dotClass: 'bg-[#8b4a4a]',
                     textClass: 'text-[#8b4a4a]',
                 };
             case 'PENDING':
             case 'ACTIVE':
                 return {
-                    label: 'В обработке',
+                    label: 'profile.purchases.status.pending',
                     dotClass: 'bg-[#9c6b3c]',
                     textClass: 'text-[#9c6b3c]',
                 };
@@ -449,7 +456,7 @@ export class ProfileComponent {
 
         if (file) {
             if (file.size > 3145728) {
-                this.requestStatusService.showError('Файл превышает 3МБ!');
+                this.requestStatusService.showError(this.i18n.translate('profile.errors.fileTooLarge'));
                 return;
             }
 
@@ -461,14 +468,14 @@ export class ProfileComponent {
                 this.userService
                     .setProfileImage$(file)
                     .pipe(
-                        this.requestStatusService.handleError('Файл не должен превышать 512х512!'),
+                        this.requestStatusService.handleError(this.i18n.translate('profile.errors.imageDimensions')),
                         tap(() => {
                             this.userService.userImage = dataUrl;
                             this.userData.image = dataUrl;
 
                             this.cdr.detectChanges();
                         }),
-                        this.requestStatusService.handleSuccess('Изображение обновлено!')
+                        this.requestStatusService.handleSuccess(this.i18n.translate('profile.success.imageUpdated'))
                     )
                     .subscribe({
                         error: () => {},

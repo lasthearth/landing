@@ -1,8 +1,4 @@
-<div
-    class="flex flex-col cursor-pointer"
-    [attr.sectionid]="sectionId()"
-    [class.mt-4]="needsMarginTop()"
->
+<div class="flex flex-col cursor-pointer" [attr.sectionid]="sectionId()" [class.mt-4]="needsMarginTop()">
     <div
         class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
         (click)="toggle()"
@@ -16,7 +12,7 @@
                         [ngClass]="{ 'mr-2': level() > 0 }"
                     />
                 }
-                {{ title() }}
+                {{ title() | translate }}
                 @if (!isWatched()) {
                     <tui-pulse
                         class="!absolute top-1/2 -translate-y-1/2"

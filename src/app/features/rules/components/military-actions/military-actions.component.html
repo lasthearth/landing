@@ -1,13 +1,13 @@
 <div class="flex flex-col gap-4">
-    <app-rule-section sectionId="Raid" title="5.1 Набег" [level]="1" [attr.id]="'P5_1'">
+    <app-rule-section sectionId="Raid" title="rules.content.military.titles.raid" [level]="1" [attr.id]="'P5_1'">
         <app-raid (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="War" title="5.2 Война" [level]="1">
+    <app-rule-section sectionId="War" title="rules.content.military.titles.war" [level]="1">
         <app-war (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="OccupyPoints" title="5.3 Захват точек" [level]="1">
+    <app-rule-section sectionId="OccupyPoints" title="rules.content.military.titles.points" [level]="1">
         <app-occupy-points (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 </div>

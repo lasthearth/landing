@@ -1,147 +1,124 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="Empire">
-        <b>Империя</b>
-        — обширное государство на землях которого происходит весь игровой процесс.
+        <span [innerHTML]="'rules.content.terminology.empire' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Settlement">
-        <b>Селение</b>
-        — группа игроков, объединенная в соответствии с одним из типов, установленных правилами.
+        <span [innerHTML]="'rules.content.terminology.settlement' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Neutral zone">
-        <b>Нейтральная зона</b>
-        — территория, обозначенная на карте в канале discord, где находятся
-        <app-rule-link target="Empire">Имперские</app-rule-link>
-        зоны влияния и запрещено основание селений типом выше хутора.
+        <span [innerHTML]="'rules.content.terminology.neutralZone.before' | translate"></span>
+        <app-rule-link target="Empire">{{ 'rules.content.terms.empireAdjective' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.neutralZone.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Key point">
-        <b>Ключевая точка</b>
-        — это 1 из 5-ти ключевых локаций находящихся на
-        <app-rule-link target="Neutral zone">нейтральной зоне,</app-rule-link>
-        и предоставляющая определенные выгоды контролирующей ее стороне.
+        <span [innerHTML]="'rules.content.terminology.keyPoint.before' | translate"></span>
+        <app-rule-link target="Neutral zone">{{ 'rules.content.terms.neutralZoneDative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.keyPoint.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Suzerain">
-        <b>Сюзерен</b>
-        — особый статус, присваиваемый
-        <app-rule-link target="Settlement">селению,</app-rule-link>
-        который может быть получен одним из трех способов:
+        <span [innerHTML]="'rules.content.terminology.suzerain.intro' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlementDative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.suzerain.introAfter' | translate"></span>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            по решению администрации в начале игрового сезона;
+            {{ 'rules.content.terminology.suzerain.way1' | translate }}
         </app-rule-paragraph>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            путем военной победы над действующим Сюзереном;
+            {{ 'rules.content.terminology.suzerain.way2' | translate }}
         </app-rule-paragraph>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            добровольной передачи статуса.
+            {{ 'rules.content.terminology.suzerain.way3' | translate }}
         </app-rule-paragraph>
-        Критерии для назначения статуса администрацией включают:
+        <span [innerHTML]="'rules.content.terminology.suzerain.criteriaIntro' | translate"></span>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            количество покоренных селений;
-        </app-rule-paragraph>
-        <app-rule-paragraph [level]="1">
-            <b>•</b>
-            силы дипломатического влияния;
+            {{ 'rules.content.terminology.suzerain.criterion1' | translate }}
         </app-rule-paragraph>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            уровень развития экономики;
+            {{ 'rules.content.terminology.suzerain.criterion2' | translate }}
         </app-rule-paragraph>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            общее время онлайна.
+            {{ 'rules.content.terminology.suzerain.criterion3' | translate }}
+        </app-rule-paragraph>
+        <app-rule-paragraph [level]="1">
+            <b>•</b>
+            {{ 'rules.content.terminology.suzerain.criterion4' | translate }}
         </app-rule-paragraph>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Great building">
-        <b>Великое строение</b>
-        — строение, которое было построено игроками по одному из доступных проектов, опубликованных в канале discord.
-        Оно имеет защиту от любых изменений, порчи внутри него и в радиусе 15 блоков от него, предоставляет определенные
-        выгоды построившей его группе лиц. Хранение ресурсов внутри Великого строения запрещается. Количество доступных
-        к постройке Великих строений на сезон ограничено. Завершенные строения сохраняются из сезона в сезон.
+        <span [innerHTML]="'rules.content.terminology.greatBuilding' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="BI">
-        <b>Благосклонность Император</b>
-        — уровень доверия Императора к тому или иному
-        <app-rule-link target="Suzerain">Сюзерену,</app-rule-link>
-        дающий определенные выгоды. Уровень измеряется в условных единицах, которые начисляются тому или иному Сюзерену
-        за:
+        <span [innerHTML]="'rules.content.terminology.imperialFavor.intro' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainDative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.imperialFavor.introAfter' | translate"></span>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            удержание и развитие
-            <app-rule-link target="Key point">ключевых точек интереса;</app-rule-link>
+            {{ 'rules.content.terminology.imperialFavor.item1' | translate }}
+            <app-rule-link target="Key point">{{ 'rules.content.terms.keyPointGenitivePlural' | translate }}</app-rule-link>
+            <span>;</span>
         </app-rule-paragraph>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            возведение
-            <app-rule-link target="Great buildings">великих строений;</app-rule-link>
+            {{ 'rules.content.terminology.imperialFavor.item2Before' | translate }}
+            <app-rule-link target="Great buildings">{{ 'rules.content.terms.greatBuildingGenitivePlural' | translate }}</app-rule-link>
+            <span>;</span>
         </app-rule-paragraph>
         <app-rule-paragraph [level]="1">
             <b>•</b>
-            выполнения особых поручений Императора.
+            {{ 'rules.content.terminology.imperialFavor.item3' | translate }}
         </app-rule-paragraph>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Defend land">
-        <b>Защищенная территория</b>
-        — зона, которую покрывает территориальный блок [игровой предмет], выдаваемый исключительно администрацией.
+        <span [innerHTML]="'rules.content.terminology.protectedLand' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Monument">
-        <b>Монумент селения</b>
-        — специально установленные вне помещения высеченные блоки, согласно требованиям селения.
+        <span [innerHTML]="'rules.content.terminology.monument' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph>
-        <b>Валюта сервера</b>
-        — игровые монеты использующиеся как средство обмена и оплаты товаров и услуг в игровом процессе.
+        <span [innerHTML]="'rules.content.terminology.serverCurrency' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Patent">
-        <b>Имперский служащий</b>
-        — Ивент аккаунт администратора, представляющий Империю (например: nonus).
+        <span [innerHTML]="'rules.content.terminology.imperialServant' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Patent">
-        <b>Патент на основание селения</b>
-        — книга-документ, предоставляемая и подписываемая Сюзереном или Имперским служащим, дающая право на основание
-        определенного типа селения.
+        <span [innerHTML]="'rules.content.terminology.patentFoundation' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Patent">
-        <b>Патент улучшение селения</b>
-        — книга-документ, предоставляемая и подписываемая Сюзереном или Имперским служащим, дающая право на улучшение
-        опредленного аспекта внутри селения (монумент, укрепление).
+        <span [innerHTML]="'rules.content.terminology.patentImprovement' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Volnost">
-        <b>Купчая вольности</b>
-        — книга-документ, предоставляемая Сюзереном, изменяющая ваш статус [роль] при её использовании.
+        <span [innerHTML]="'rules.content.terminology.charterOfLiberties' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Raid">
-        <b>Набег</b>
-        — кратковременное состояние, когда игроки одного селения совершают внезапное нападение на другое селение, с
-        целью уничтожения живой силы противника и/или разграбления его ресурсов.
+        <span [innerHTML]="'rules.content.terminology.raid' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="War">
-        <b>Война</b>
-        — долговременное состояние, когда игроки одного селения начинают военные действия против игроков другого
-        селения, с целью достижения своих требований.
+        <span [innerHTML]="'rules.content.terminology.war' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Political course">
-        <b>Политический курс</b>
-        — это выбранное селением стратегическое направление его ролевой деятельности, которое должно явно отражать
-        данную деятельность. Все возможные виды политических курсов представлены в разделе
-        <app-rule-link target="Diplomacy">дипломатия.</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.politicalCourse.before' | translate"></span>
+        <app-rule-link target="Diplomacy">{{ 'rules.content.terms.diplomacy' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 </div>

@@ -1,10 +1,14 @@
 <div class="lh-dialog-card">
-    <h2 class="lh-dialog-title text-center">{{ context.data.title }}</h2>
+    <h2 class="lh-dialog-title text-center">{{ context.data.title | translate }}</h2>
 
-    <p class="lh-dialog-text text-center">{{ context.data.text }}</p>
+    <p class="lh-dialog-text text-center">{{ context.data.text | translate }}</p>
 
     <div class="lh-dialog-actions">
-        <button type="button" (click)="cancel()" class="lh-dialog-button lh-dialog-button-secondary">Отмена</button>
-        <button type="button" (click)="confirm()" class="lh-dialog-button lh-dialog-button-primary">Подтвердить</button>
+        <button type="button" (click)="cancel()" class="lh-dialog-button lh-dialog-button-secondary">
+            {{ 'shared.confirmDialog.cancel' | translate }}
+        </button>
+        <button type="button" (click)="confirm()" class="lh-dialog-button lh-dialog-button-primary">
+            {{ 'shared.confirmDialog.confirm' | translate }}
+        </button>
     </div>
 </div>

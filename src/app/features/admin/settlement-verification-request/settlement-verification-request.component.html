@@ -7,7 +7,7 @@
             <tui-icon icon="@tui.home" class="size-5! text-lh-accent" />
         </div>
         <div class="flex flex-col min-w-0">
-            <span class="text-base text-neutral-500 leading-5">Наименование</span>
+            <span class="text-base text-neutral-500 leading-5">{{ 'admin.settlementForms.nameLabel' | translate }}</span>
             <span class="text-2xl font-bold text-[#2d201a] truncate">{{ data().name }}</span>
         </div>
     </div>
@@ -15,25 +15,25 @@
     <!-- Поля анкеты -->
     <div class="flex flex-col gap-3">
         <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-1">
-            <span class="text-base text-neutral-500 leading-4">Тип селения</span>
+            <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.typeLabel' | translate }}</span>
             <span class="text-lg font-semibold text-[#2d201a]">{{ getSettlementType(data().type) }}</span>
         </div>
 
         <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-1">
-            <span class="text-base text-neutral-500 leading-4">Описание</span>
+            <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.descriptionLabel' | translate }}</span>
             <span class="text-lg text-[#5c4030] leading-6 break-words">{{ data().description }}</span>
         </div>
 
         <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex items-center gap-4 flex-wrap">
             <div class="flex flex-col">
-                <span class="text-base text-neutral-500 leading-4">Координаты</span>
+                <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.coordinatesLabel' | translate }}</span>
                 <span class="text-lg font-semibold text-[#2d201a]">
                     x: {{ data().coordinates.x }}, z: {{ data().coordinates.y }}
                 </span>
             </div>
             <div class="w-px h-8 bg-lh-primary-2/20"></div>
             <div class="flex flex-col">
-                <span class="text-base text-neutral-500 leading-4">Дипломатический курс</span>
+                <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.diplomacyLabel' | translate }}</span>
                 <span class="text-lg font-semibold text-[#2d201a]">{{ data().diplomacy }}</span>
             </div>
         </div>
@@ -42,14 +42,14 @@
     <!-- Вложения / картинки -->
     @if (data().attachments.length) {
         <div class="flex flex-col gap-2">
-            <span class="text-base text-neutral-500 leading-4">Вложения</span>
+            <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.attachmentsLabel' | translate }}</span>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 @for (item of data().attachments; track $index) {
                     <div
                         (click)="show(item.url, item.desc)"
                         class="relative cursor-pointer hover:scale-[101%] transition-all hover:shadow-lg shadow-md duration-500 aspect-video rounded-xl overflow-hidden group border border-lh-primary-2/20"
                     >
-                        <app-image-loader [src]="item.url" alt="Вложение" />
+                        <app-image-loader [src]="item.url" [alt]="'admin.settlementForms.attachmentAlt' | translate" />
                         <div
                             class="absolute inset-0 bg-linear-to-t from-lh-primary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2"
                         >
@@ -67,13 +67,13 @@
             (click)="reject()"
             class="text-lg font-bold cursor-pointer bg-transparent border border-lh-danger text-lh-danger rounded-xl py-2 px-5 hover:bg-lh-danger/10 transition-colors"
         >
-            Отклонить
+            {{ 'admin.playerForms.reject' | translate }}
         </button>
         <button
             (click)="approve()"
             class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-[#e66a1a] transition-colors"
         >
-            Одобрить
+            {{ 'admin.playerForms.approve' | translate }}
         </button>
     </div>
 </div>
@@ -83,7 +83,7 @@
         <tui-preview-title>{{ previewDesc }}</tui-preview-title>
         <img *polymorpheusOutlet="previewContent as src" alt="preview" [src]="src" />
         <button iconStart="@tui.x" tuiIconButton tuiPreviewAction type="button" (click)="preview.complete()">
-            Close
+            {{ 'common.close' | translate }}
         </button>
     </tui-preview>
 </ng-template>

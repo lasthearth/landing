@@ -8,6 +8,7 @@ import { NewsApiService, mapDtoToNews } from '@entities/news';
 import { UserService, Role, IPlayer } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { catchError, defaultIfEmpty, finalize, forkJoin, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -18,7 +19,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent],
+    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,6 +44,11 @@ export class HomeComponent {
      * Сервис диалогов подтверждения.
      */
     private readonly confirmDialog = inject(ConfirmDialogService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Ссылка уничтожения на компонент.
@@ -81,50 +87,50 @@ export class HomeComponent {
         {
             image: `${this.imagesPath}/1.webp`,
             isLight: false,
-            header: 'Последний очаг',
-            body: 'Ролевой сервер Vintage Story, где мир помнит каждого поселенца',
+            header: 'home.carousel.slides.lastHearth.header',
+            body: 'home.carousel.slides.lastHearth.body',
         },
         {
             image: `${this.imagesPath}/5.webp`,
             isLight: true,
-            header: 'Огромный мир',
-            body: 'Карта 256 000 блоков диаметром — найди своё место у огня',
+            header: 'home.carousel.slides.hugeWorld.header',
+            body: 'home.carousel.slides.hugeWorld.body',
         },
         {
             image: `${this.imagesPath}/2.webp`,
             isLight: true,
-            header: 'Поселения',
-            body: 'Создавай города, веди дипломатию, торгуй и влияй на историю мира',
+            header: 'home.carousel.slides.settlements.header',
+            body: 'home.carousel.slides.settlements.body',
         },
         {
             image: `${this.imagesPath}/3.webp`,
             isLight: true,
-            header: 'Осады',
-            body: 'Штурмуй крепости, защищай стены и пиши свои военные хроники',
+            header: 'home.carousel.slides.sieges.header',
+            body: 'home.carousel.slides.sieges.body',
         },
         {
             image: `${this.imagesPath}/4.webp`,
             isLight: false,
-            header: 'Без приватов',
-            body: 'Игровой процесс приближен к реальности — доверие и репутация решают всё',
+            header: 'home.carousel.slides.noPrivates.header',
+            body: 'home.carousel.slides.noPrivates.body',
         },
         {
             image: `${this.imagesPath}/6.webp`,
             isLight: true,
-            header: 'Навигация',
-            body: 'Скрафть компас и карту, чтобы не заблудиться в диких землях',
+            header: 'home.carousel.slides.navigation.header',
+            body: 'home.carousel.slides.navigation.body',
         },
         {
             image: `${this.imagesPath}/7.webp`,
             isLight: true,
-            header: 'Собственные моды',
-            body: 'Уникальные механики, которые не найдёшь на других серверах',
+            header: 'home.carousel.slides.ownMods.header',
+            body: 'home.carousel.slides.ownMods.body',
         },
         {
             image: `${this.imagesPath}/8.webp`,
             isLight: true,
-            header: 'Честные правила',
-            body: 'Продуманная система правил и логов защищает игроков от токсичности',
+            header: 'home.carousel.slides.fairRules.header',
+            body: 'home.carousel.slides.fairRules.body',
         },
     ];
 
@@ -135,25 +141,25 @@ export class HomeComponent {
     protected readonly quickActions = [
         {
             icon: '@tui.play',
-            label: 'Как начать',
+            label: 'home.quickActions.start',
             route: '/start-game',
             external: false,
         },
         {
             icon: '@tui.map',
-            label: 'Поселения',
+            label: 'home.quickActions.settlements',
             route: '/settlements',
             external: false,
         },
         {
             icon: '@tui.message-circle',
-            label: 'Discord',
+            label: 'home.quickActions.discord',
             route: 'https://discord.com/invite/FZb7SGrSFy',
             external: true,
         },
         {
             icon: '@tui.heart',
-            label: 'Поддержать',
+            label: 'home.quickActions.donate',
             route: '/market',
             external: false,
         },
@@ -288,8 +294,8 @@ export class HomeComponent {
     protected deleteNews(id: string): void {
         this.confirmDialog
             .open({
-                title: 'Удаление новости',
-                text: 'Вы уверены, что хотите удалить эту новость? Это действие нельзя отменить.',
+                title: this.i18n.translate('home.news.deleteTitle'),
+                text: this.i18n.translate('home.news.deleteText'),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

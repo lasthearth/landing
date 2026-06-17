@@ -16,6 +16,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { ISelectedPlayer } from '../../model/selected-player.model';
 
 /**
@@ -27,7 +28,7 @@ import { ISelectedPlayer } from '../../model/selected-player.model';
 @Component({
     selector: 'app-admin-coin-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, AsyncPipe, TuiIcon, TuiLoader, LHInputComponent, ImageLoaderComponent, EmptyStateComponent],
+    imports: [ReactiveFormsModule, AsyncPipe, TuiIcon, TuiLoader, LHInputComponent, ImageLoaderComponent, EmptyStateComponent, TranslatePipe],
     templateUrl: './admin-coin-panel.component.html',
     styleUrl: './admin-coin-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,6 +58,11 @@ export class AdminCoinPanelComponent {
      * Сервис данных о пользователе.
      */
     private readonly userService = inject(UserService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Сервис диалогов Taiga UI.
@@ -222,8 +228,8 @@ export class AdminCoinPanelComponent {
                 this.requestStatus.handleError(),
                 this.requestStatus.handleSuccess(
                     type === 'add'
-                        ? `Начислено ${amount} монет игроку ${player.playerName}`
-                        : `Списано ${amount} монет у игрока ${player.playerName}`
+                        ? this.i18n.translate('admin.coins.addedSuccess', { amount, playerName: player.playerName })
+                        : this.i18n.translate('admin.coins.deductedSuccess', { amount, playerName: player.playerName })
                 ),
                 tap(() => {
                     this.amountControl.reset('');
@@ -247,9 +253,9 @@ export class AdminCoinPanelComponent {
         const upper = type.toUpperCase();
         switch (upper) {
             case 'CREDIT':
-                return 'Зачисление';
+                return this.i18n.translate('admin.coins.credit');
             case 'DEBIT':
-                return 'Списание';
+                return this.i18n.translate('admin.coins.debit');
             default:
                 return type;
         }

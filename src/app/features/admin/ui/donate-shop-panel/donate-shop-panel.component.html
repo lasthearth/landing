@@ -15,7 +15,7 @@
             [class.text-[#2a2722]]="activeTabIndex() !== 0"
             [class.hover:bg-[#c4b89e]]="activeTabIndex() !== 0"
         >
-            Список товаров
+            {{ 'admin.shop.listTab' | translate }}
         </button>
         <button
             type="button"
@@ -31,7 +31,7 @@
             [class.text-[#2a2722]]="activeTabIndex() !== 1"
             [class.hover:bg-[#c4b89e]]="activeTabIndex() !== 1"
         >
-            {{ isEditMode() ? "Редактировать товар" : "Создать товар" }}
+            {{ isEditMode() ? ('admin.shop.editTab' | translate) : ('admin.shop.createTab' | translate) }}
         </button>
     </div>
 
@@ -75,7 +75,7 @@
                                             {{ item.price }}
                                             <img
                                                 src="/splinter-of-spark.png"
-                                                alt="Осколок"
+                                                [alt]="'admin.common.shardAlt' | translate"
                                                 class="h-4 w-4 object-contain"
                                             />
                                         </span>
@@ -83,7 +83,7 @@
                                             {{ item.effectivePrice }}
                                             <img
                                                 src="/splinter-of-spark.png"
-                                                alt="Осколок"
+                                                [alt]="'admin.common.shardAlt' | translate"
                                                 class="h-5 w-5 object-contain"
                                             />
                                         </span>
@@ -92,7 +92,7 @@
                                             {{ item.price }}
                                             <img
                                                 src="/splinter-of-spark.png"
-                                                alt="Осколок"
+                                                [alt]="'admin.common.shardAlt' | translate"
                                                 class="h-5 w-5 object-contain"
                                             />
                                         </span>
@@ -110,7 +110,7 @@
                                         [class.bg-lh-success]="item.isAvailable"
                                         [class.bg-lh-danger]="!item.isAvailable"
                                     >
-                                        {{ item.isAvailable ? "Доступен" : "Скрыт" }}
+                                        {{ item.isAvailable ? ('admin.shop.availableStatus' | translate) : ('admin.shop.hiddenStatus' | translate) }}
                                     </span>
                                 </div>
 
@@ -121,7 +121,7 @@
                                         class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base transition-colors flex items-center justify-center gap-1"
                                     >
                                         <tui-icon icon="@tui.pencil" class="size-4!" />
-                                        Редактировать
+                                        {{ 'admin.shop.edit' | translate }}
                                     </button>
                                     <button
                                         type="button"
@@ -139,7 +139,7 @@
                         class="flex flex-col items-center justify-center gap-4 py-16 bg-lh-primary-2/5 rounded-2xl border border-dashed border-lh-primary-2/30"
                     >
                         <tui-icon icon="@tui.package" class="size-16! text-[#bdb093]" />
-                        <p class="text-xl font-bold text-lh-primary/50">Товары отсутствуют</p>
+                        <p class="text-xl font-bold text-lh-primary/50">{{ 'admin.shop.empty' | translate }}</p>
                     </div>
                 }
             } @else {
@@ -155,25 +155,25 @@
             <div class="flex-1 min-w-0 flex flex-col gap-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">Название</label>
-                        <lh-input type="input" placeholder="Название товара" [formControl]="form.controls.name" />
+                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.nameLabel' | translate }}</label>
+                        <lh-input type="input" [placeholder]="'admin.shop.namePlaceholder' | translate" [formControl]="form.controls.name" />
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">Цена</label>
-                        <lh-input type="inputNumber" placeholder="100" [formControl]="form.controls.price" />
+                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.priceLabel' | translate }}</label>
+                        <lh-input type="inputNumber" [placeholder]="'admin.shop.pricePlaceholder' | translate" [formControl]="form.controls.price" />
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">Код ассета</label>
-                        <lh-input type="input" placeholder="vip_pack" [formControl]="form.controls.code" />
+                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.codeLabel' | translate }}</label>
+                        <lh-input type="input" [placeholder]="'admin.shop.codePlaceholder' | translate" [formControl]="form.controls.code" />
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">Тип</label>
+                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.typeLabel' | translate }}</label>
                         <lh-input
                             type="select"
-                            placeholder="Выберите тип"
+                            [placeholder]="'admin.shop.typePlaceholder' | translate"
                             [items]="itemTypes"
                             [displayWith]="itemTypeDisplay"
                             [formControl]="form.controls.item_type"
@@ -183,13 +183,13 @@
 
                 <!-- Изображение -->
                 <div class="flex flex-col gap-3 p-5 rounded-2xl border border-lh-primary-2/10 bg-lh-primary-2/5">
-                    <label class="text-lg font-semibold text-lh-primary">Изображение товара</label>
+                    <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.imageLabel' | translate }}</label>
                     <div class="flex items-center gap-5">
                         <div
                             class="w-36 h-36 rounded-xl overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0"
                         >
                             @if (imagePreviewUrl(); as url) {
-                                <app-image-loader [src]="url" alt="Превью" />
+                                <app-image-loader [src]="url" [alt]="'admin.common.previewAlt' | translate" />
                             } @else {
                                 <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
                                     <tui-icon icon="@tui.image" class="size-12!" />
@@ -200,7 +200,7 @@
                             @if (!form.controls.image.value) {
                                 <label tuiInputFiles>
                                     <ng-template tuiInputFilesContent>
-                                        <span class="text-[#5c554a] text-[18px]">Добавить изображение...</span>
+                                        <span class="text-[#5c554a] text-[18px]">{{ 'admin.shop.addImage' | translate }}</span>
                                         <input accept="image/*" tuiInputFiles [formControl]="form.controls.image" />
                                     </ng-template>
                                 </label>
@@ -232,20 +232,20 @@
                 >
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" [formControl]="form.controls.is_available" class="lh-checkbox" />
-                        <span class="text-lg font-semibold text-lh-primary">Доступен для покупки</span>
+                        <span class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.available' | translate }}</span>
                     </label>
 
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" [formControl]="form.controls.has_discount" class="lh-checkbox" />
-                        <span class="text-lg font-semibold text-lh-primary">Скидка</span>
+                        <span class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.discount' | translate }}</span>
                     </label>
 
                     @if (form.controls.has_discount.value) {
                         <div class="flex items-center gap-3">
-                            <span class="text-lg text-lh-primary font-semibold">%</span>
+                            <span class="text-lg text-lh-primary font-semibold">{{ 'admin.shop.percent' | translate }}</span>
                             <lh-input
                                 type="inputNumber"
-                                placeholder="10"
+                                [placeholder]="'admin.shop.discountPlaceholder' | translate"
                                 class="w-28"
                                 [formControl]="form.controls.discount_percent"
                             />
@@ -260,14 +260,14 @@
                 ) {
                     <div class="flex flex-col gap-5 p-5 rounded-2xl border border-lh-primary-2/10 bg-lh-primary-2/5">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-bold text-lh-primary">Состав набора</h3>
+                            <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.entriesTitle' | translate }}</h3>
                             <button
                                 type="button"
                                 (click)="addEntry()"
                                 class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-[#e07830] text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
                             >
                                 <tui-icon icon="@tui.plus" class="size-5!" />
-                                Добавить
+                                {{ 'admin.common.add' | translate }}
                             </button>
                         </div>
 
@@ -283,14 +283,14 @@
                                     class="flex flex-col gap-4 p-4 rounded-xl border border-lh-primary-2/10 bg-lh-primary-2/5"
                                 >
                                     <div class="flex items-center justify-between">
-                                        <span class="text-lg font-semibold text-lh-primary">Позиция {{ i + 1 }}</span>
+                                        <span class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.position' | translate:{number: i + 1} }}</span>
                                         <div class="flex items-center gap-1">
                                             <button
                                                 type="button"
                                                 cdkDragHandle
                                                 class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors cursor-grab active:cursor-grabbing"
-                                                title="Перетащить"
-                                                aria-label="Перетащить позицию"
+                                                [title]="'admin.shop.dragTitle' | translate"
+                                                [attr.aria-label]="'admin.shop.dragAria' | translate"
                                             >
                                                 <tui-icon icon="@tui.grip-vertical" class="size-5!" />
                                             </button>
@@ -307,19 +307,19 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <lh-input
                                             type="input"
-                                            placeholder="Название"
+                                            [placeholder]="'admin.shop.entryNamePlaceholder' | translate"
                                             [formControl]="entry.controls.name"
                                         />
                                         <lh-input
                                             type="inputNumber"
-                                            placeholder="Количество"
+                                            [placeholder]="'admin.shop.entryQuantityPlaceholder' | translate"
                                             [formControl]="entry.controls.quantity"
                                         />
                                     </div>
 
                                     <lh-input
                                         type="textarea"
-                                        placeholder="Описание позиции"
+                                        [placeholder]="'admin.shop.entryDescriptionPlaceholder' | translate"
                                         [formControl]="entry.controls.description"
                                     />
 
@@ -328,7 +328,7 @@
                                             class="w-20 h-20 rounded-lg overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0"
                                         >
                                             @if (entry.controls.image_url.value; as url) {
-                                                <app-image-loader [src]="url" alt="Превью" />
+                                                <app-image-loader [src]="url" [alt]="'admin.common.previewAlt' | translate" />
                                             } @else {
                                                 <div
                                                     class="w-full h-full flex items-center justify-center text-[#bdb093]"
@@ -341,7 +341,7 @@
                                             <label tuiInputFiles>
                                                 <ng-template tuiInputFilesContent>
                                                     <span class="text-[#5c554a] text-base">
-                                                        Добавить изображение...
+                                                        {{ 'admin.shop.addImage' | translate }}
                                                     </span>
                                                     <input
                                                         accept="image/*"
@@ -375,7 +375,7 @@
 
                         @if (entriesArray.length === 0) {
                             <p class="text-lg text-lh-primary/50 text-center py-4">
-                                Набор пуст. Добавьте хотя бы одну позицию.
+                                {{ 'admin.shop.emptyEntries' | translate }}
                             </p>
                         }
                     </div>
@@ -388,14 +388,14 @@
                 ) {
                     <div class="flex flex-col gap-5 p-5 rounded-2xl border border-lh-primary-2/10 bg-lh-primary-2/5">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-bold text-lh-primary">Возможности</h3>
+                            <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.abilitiesTitle' | translate }}</h3>
                             <button
                                 type="button"
                                 (click)="addAbility()"
                                 class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-[#e07830] text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
                             >
                                 <tui-icon icon="@tui.plus" class="size-5!" />
-                                Добавить
+                                {{ 'admin.common.add' | translate }}
                             </button>
                         </div>
 
@@ -406,13 +406,13 @@
                                 >
                                     <lh-input
                                         type="input"
-                                        placeholder="@tui.heart"
+                                        [placeholder]="'admin.shop.abilityIconPlaceholder' | translate"
                                         class="w-48"
                                         [formControl]="ability.controls.icon"
                                     />
                                     <lh-input
                                         type="input"
-                                        placeholder="Описание возможности"
+                                        [placeholder]="'admin.shop.abilityTextPlaceholder' | translate"
                                         class="flex-1"
                                         [formControl]="ability.controls.text"
                                     />
@@ -428,7 +428,7 @@
                         </div>
 
                         @if (privilegesArray.length === 0) {
-                            <p class="text-lg text-lh-primary/50 text-center py-4">Возможности не добавлены.</p>
+                            <p class="text-lg text-lh-primary/50 text-center py-4">{{ 'admin.shop.emptyAbilities' | translate }}</p>
                         }
                     </div>
                 }
@@ -440,7 +440,7 @@
                         (click)="backToList()"
                         class="px-6 py-3.5 rounded-xl border border-lh-primary-2 text-lh-primary font-bold uppercase text-lg hover:bg-lh-primary-2/10 transition-all"
                     >
-                        Отмена
+                        {{ 'admin.common.cancel' | translate }}
                     </button>
                     <button
                         type="submit"
@@ -450,7 +450,7 @@
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                         }
-                        {{ isEditMode() ? "Сохранить изменения" : "Создать товар" }}
+                        {{ isEditMode() ? ('admin.shop.saveButton' | translate) : ('admin.shop.createTab' | translate) }}
                     </button>
                 </div>
             </div>
@@ -459,7 +459,7 @@
             <div
                 class="w-full lg:w-[360px] lg:sticky lg:top-20 self-start flex flex-col gap-4 preview-col lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto"
             >
-                <p class="text-xl font-bold text-lh-primary uppercase tracking-wide">Предпросмотр карточки</p>
+                <p class="text-xl font-bold text-lh-primary uppercase tracking-wide">{{ 'admin.shop.previewTitle' | translate }}</p>
                 <div
                     class="relative flex flex-col gap-4 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-[103%] hover:border-[#ff7920]/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] group"
                 >
@@ -491,16 +491,16 @@
                         @if (previewItem().hasDiscount && previewItem().discountPercent) {
                             <span class="text-lg text-lh-primary/50 line-through flex items-center gap-1">
                                 {{ previewItem().price }}
-                                <img src="/splinter-of-spark.png" alt="Осколок" class="h-4 w-4 object-contain" />
+                                <img src="/splinter-of-spark.png" [alt]="'admin.common.shardAlt' | translate" class="h-4 w-4 object-contain" />
                             </span>
                             <span class="text-2xl font-extrabold text-lh-accent flex items-center gap-1">
                                 {{ previewEffectivePrice() }}
-                                <img src="/splinter-of-spark.png" alt="Осколок" class="h-6 w-6 object-contain" />
+                                <img src="/splinter-of-spark.png" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                             </span>
                         } @else {
                             <span class="text-2xl font-extrabold text-lh-primary flex items-center gap-1">
                                 {{ previewItem().price }}
-                                <img src="/splinter-of-spark.png" alt="Осколок" class="h-6 w-6 object-contain" />
+                                <img src="/splinter-of-spark.png" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                             </span>
                         }
                     </div>
@@ -514,7 +514,7 @@
                             [class.bg-lh-success]="previewItem().isAvailable"
                             [class.bg-lh-danger]="!previewItem().isAvailable"
                         >
-                            {{ previewItem().isAvailable ? "Доступен" : "Скрыт" }}
+                            {{ previewItem().isAvailable ? ('admin.shop.availableStatus' | translate) : ('admin.shop.hiddenStatus' | translate) }}
                         </span>
                     </div>
 
@@ -522,14 +522,14 @@
                         type="button"
                         class="w-full text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-[#e56a18] hover:from-[#e56a18] hover:to-lh-accent rounded-xl py-3 text-lg shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
                     >
-                        Купить
+                        {{ 'admin.shop.buy' | translate }}
                     </button>
 
                     <!-- Предпросмотр возможностей -->
                     @if (previewItem().privileges.length) {
                         <div class="flex flex-col gap-3 pt-2 border-t border-lh-primary-2/10">
                             <p class="text-lg font-bold text-lh-primary uppercase tracking-wide text-center">
-                                Возможности
+                                {{ 'admin.shop.abilitiesTitle' | translate }}
                             </p>
                             <div class="flex gap-2 flex-wrap justify-center">
                                 @for (ability of previewItem().privileges; track $index) {
@@ -543,7 +543,7 @@
                     @if (previewItem().entries.length) {
                         <div class="flex flex-col gap-3 pt-2 border-t border-lh-primary-2/10">
                             <p class="text-lg font-bold text-lh-primary uppercase tracking-wide text-center">
-                                Состав набора
+                                {{ 'admin.shop.entriesTitle' | translate }}
                             </p>
                             <div class="flex gap-2 flex-wrap justify-center">
                                 @for (entry of previewItem().entries; track $index) {

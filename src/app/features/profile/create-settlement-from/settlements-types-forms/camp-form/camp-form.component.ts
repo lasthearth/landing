@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { fileFieldsCamp, FileKeyCamp } from './camp-form.types';
 import { Subject, switchMap, map, tap, finalize } from 'rxjs';
@@ -17,6 +17,7 @@ import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
 import { TuiLoader, TuiError } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 /**
  * Форма лагеря
@@ -35,6 +36,7 @@ import { TuiFieldErrorPipe } from '@taiga-ui/kit';
         TuiLoader,
         TuiError,
         TuiFieldErrorPipe,
+        TranslatePipe,
     ],
     templateUrl: './camp-form.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +55,12 @@ export class CampFormComponent {
     /**
      * Варианты дипломатического поведения.
      */
-    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    private readonly i18n = inject(I18nService);
+    protected readonly diplomacy = computed(() => [
+        this.i18n.translate('settlements.diplomacy.peaceful'),
+        this.i18n.translate('settlements.diplomacy.neutral'),
+        this.i18n.translate('settlements.diplomacy.aggressive'),
+    ]);
 
     /**
      * Основная форма создания.
@@ -152,7 +159,7 @@ export class CampFormComponent {
                         .postRequestSettlement$(request)
                         .pipe(
                             this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess('Отправлено!'),
+                            this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success')),
                             finalize(() => {
                                 this.isLoading = false;
                             }),
@@ -178,14 +185,7 @@ export class CampFormComponent {
      * @param key - ключ файла
      */
     protected getLabelForKey(key: FileKeyCamp): string {
-        return {
-            preview: 'Заглавное изображение вашего селения',
-            map: 'Вид с карты',
-            monument: 'Монумент поселения',
-            fireplace: 'Место костра',
-            warehouse: 'Склад или складское помещение',
-            beds: 'Кровати 3 шт.',
-        }[key];
+        return this.i18n.translate(`settlements.attachments.${key}`);
     }
 
     protected getControl(key: string): FormControl {

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input, output, computed, inject, Pr
 import { CommonModule } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
+import { TranslatePipe } from '@core/i18n';
 import { TuiPulse } from '@taiga-ui/kit';
 import { BaseExpandableSection } from '../../abstracts/base-expandable-section';
 import { SECTION_ID } from '../../tokens/section-id.token';
@@ -20,7 +21,7 @@ export const SECTION_ID_PROVIDER: Provider = {
 @Component({
     selector: 'app-rule-section',
     standalone: true,
-    imports: [CommonModule, TuiIcon, TuiExpand, TuiPulse],
+    imports: [CommonModule, TuiIcon, TuiExpand, TuiPulse, TranslatePipe],
     templateUrl: './rule-section.component.html',
     styleUrls: ['../../styles/rules.less'],
     providers: [SECTION_ID_PROVIDER],

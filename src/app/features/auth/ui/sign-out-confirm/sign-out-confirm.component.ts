@@ -1,6 +1,7 @@
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
 import { UserService } from '@entities/user';
 
 /**
@@ -8,6 +9,8 @@ import { UserService } from '@entities/user';
  */
 @Component({
     selector: 'app-sign-out-confirm',
+    standalone: true,
+    imports: [TranslatePipe],
     templateUrl: './sign-out-confirm.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,

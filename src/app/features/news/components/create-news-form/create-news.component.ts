@@ -20,6 +20,7 @@ import { TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe, TuiFile, TuiFilesComponent, TuiFiles } from '@taiga-ui/kit';
 import { finalize, interval, map, Observable, of, startWith, Subject, switchMap, tap, timer } from 'rxjs';
 import { NewsCardComponent } from '@app/features/news/ui/news-card/news-card.component';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 
 /**
@@ -40,6 +41,7 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
         TuiFilesComponent,
         NewsCardComponent,
         DatePipe,
+        TranslatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -117,6 +119,11 @@ export class CreateNewsComponent {
      * Сервис пользователя для получения имени автора.
      */
     protected readonly userService: UserService = inject(UserService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     currentTime: Date | undefined;
 
@@ -212,7 +219,7 @@ export class CreateNewsComponent {
                         .create(request)
                         .pipe(
                             this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess('Новость успешно создана!'),
+                            this.requestStatusService.handleSuccess(this.i18n.translate('news.create.success')),
                             takeUntilDestroyed(this.destroyRef)
                         )
                         .subscribe({

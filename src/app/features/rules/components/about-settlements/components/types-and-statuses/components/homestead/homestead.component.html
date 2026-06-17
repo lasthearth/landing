@@ -1,48 +1,48 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="Homestead" [level]="3">
-        Хутор — это
-        <app-rule-link target="Settlement">селение</app-rule-link>
-        состоящее из 1-го или 2-х игроков, не требующее оформления специальной анкеты.
+        <span [innerHTML]="'rules.content.settlements.types.homestead.intro' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.homestead.introAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Требования:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Расположение: не далее чем 10 тыс. блоков от нулевой координаты.
+        <b>{{ 'rules.content.settlements.common.requirements' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Население: 1-2 человека.
+        {{ 'rules.content.settlements.types.homestead.location' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Оборонительные постройки: отсутствуют.
+        {{ 'rules.content.settlements.types.homestead.population' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Указание в территориальном блоке ников игроков проживающих в хуторе.
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>Преимущества:</b>
-    </app-rule-paragraph>
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Наличие территориального блока [диаметр = 32 блока].
+        {{ 'rules.content.settlements.types.homestead.defenses' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность объявлять набеги на:
-        <app-rule-link target="Homestead">хутора</app-rule-link>
-        ,
-        <app-rule-link target="Camp">лагеря</app-rule-link>
-        .
+        {{ 'rules.content.settlements.types.homestead.blockNote' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>{{ 'rules.content.settlements.common.advantages' | translate }}</b>
+    </app-rule-paragraph>
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.homestead.territoryBlock' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        <span [innerHTML]="'rules.content.settlements.types.homestead.raidTargetsBefore' | translate"></span>
+        <app-rule-link target="Homestead">{{ 'rules.content.terms.homesteadAccusativePlural' | translate }}</app-rule-link>
+        <span>,</span>
+        <app-rule-link target="Camp">{{ 'rules.content.terms.campAccusativePlural' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 </div>

@@ -11,6 +11,7 @@ import { filter, Observable, Subject, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { IVerifyData } from '@features/verification';
 import { UserService } from '@entities/user';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IVerificationQuestion } from '@entities/rule-question';
@@ -25,6 +26,7 @@ import { IVerificationQuestion } from '@entities/rule-question';
         TuiFieldErrorPipe,
         AsyncPipe,
         LHInputComponent,
+        TranslatePipe,
     ],
     templateUrl: './player-verification-form.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
@@ -70,6 +72,11 @@ export class PlayerVerificationFormComponent {
      * Сервис пользователя.
      */
     private readonly userService = inject(UserService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     protected readonly questions$: Observable<IVerificationQuestion[]> = this.ruleQuestionApiService.getRandom().pipe(
         tap((questions) => {
@@ -139,7 +146,7 @@ export class PlayerVerificationFormComponent {
                         .pipe(
                             this.requestStatusService.handleError(),
                             this.requestStatusService.handleSuccess(
-                                'Анкета отправлена на модерацию!',
+                                this.i18n.translate('profile.verificationForm.success'),
                                 this.context.$implicit
                             ),
                             takeUntilDestroyed(this.destroyRef)

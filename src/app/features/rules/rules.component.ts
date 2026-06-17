@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
 import { RuleSectionComponent } from './ui/rule-section/rule-section.component';
 import { TerminologyComponent } from './components/terminology/terminology.component';
 import { BaseComponent } from './components/base/base.component';
@@ -21,6 +22,7 @@ import { GlobalExpandService } from './services/global-expand.service';
     imports: [
         CommonModule,
         TuiIcon,
+        TranslatePipe,
         TerminologyComponent,
         RuleSectionComponent,
         BaseComponent,
@@ -100,10 +102,7 @@ export class RulesComponent implements OnDestroy {
      * Прокручивает страницу наверх.
      */
     protected scrollToTop(): void {
-        const layout = document.querySelector('app-layout');
-        if (layout) {
-            layout.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
+        if (typeof window !== 'undefined') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }

@@ -1,5 +1,5 @@
 import { NgFor, AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
@@ -18,6 +18,7 @@ import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
 import { TuiError, TuiLoader } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Форма деревни
@@ -37,6 +38,7 @@ import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.functi
         TuiLoader,
         TuiError,
         TuiFieldErrorPipe,
+        TranslatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -54,12 +56,21 @@ export class VillageFormComponent {
     /**
      * Варианты дипломатического поведения.
      */
-    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    protected readonly diplomacy = computed(() => [
+        this.i18n.translate('settlements.diplomacy.peaceful'),
+        this.i18n.translate('settlements.diplomacy.neutral'),
+        this.i18n.translate('settlements.diplomacy.aggressive'),
+    ]);
 
     /**
      * Сервис уведомлений.
      */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Сервис локального хранилища.
@@ -164,7 +175,7 @@ export class VillageFormComponent {
                         .postRequestSettlement$(request)
                         .pipe(
                             this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess('Отправлено!'),
+                            this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success')),
                             finalize(() => {
                                 this.isLoading = false;
                             }),
@@ -191,24 +202,7 @@ export class VillageFormComponent {
      * @param key - ключ файла
      */
     protected getLabelForKey(key: FileKeyVillage): string {
-        return {
-            preview: 'Заглавное изображение поселения',
-            map: 'Вид с карты',
-            monument: 'Монумент поселения',
-            playersDocuments: 'Документы игроков',
-            document: 'Подписанный патент на разрешение основании деревни',
-            yardage: 'Деревенская площадь',
-            pit: 'Колодец',
-            roads: 'Дороги и тропы',
-            warehouse: 'Склад или складское помещение',
-            barn: 'Амбар',
-            seedbeds: 'Грядки',
-            house1: '1 этажный дом №1',
-            house2: '1 этажный дом №2',
-            house3: '1 этажный дом №3',
-            house4: '1 этажный дом №4',
-            beds: 'Кровати',
-        }[key];
+        return this.i18n.translate(`settlements.attachments.${key}`);
     }
     protected getControl(key: string): FormControl {
         return this.form.get(key) as FormControl;

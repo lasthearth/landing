@@ -1,11 +1,11 @@
 <div class="flex flex-col gap-6 max-w-4xl mx-auto w-full">
     @if (!selectedPlayer()) {
         <div class="flex flex-col gap-3">
-            <p class="text-xl font-semibold text-lh-primary">Поиск игрока</p>
+            <p class="text-xl font-semibold text-lh-primary">{{ 'admin.coins.searchTitle' | translate }}</p>
             <lh-input
                 type="input"
                 [formControl]="searchControl"
-                placeholder="Введите ник (от 2 символов)..."
+                [placeholder]="'admin.coins.searchPlaceholder' | translate"
                 icon="@tui.search"
             />
 
@@ -23,7 +23,7 @@
                                 class="size-8 shrink-0"
                                 containerClass="rounded-full"
                                 objectFit="cover"
-                                alt="Аватар"
+                                [alt]="'admin.common.avatarAlt' | translate"
                             />
                             <span class="text-lh-primary font-medium">{{ user.user_game_name }}</span>
                         </div>
@@ -31,8 +31,8 @@
                         <app-empty-state
                             class="py-6"
                             icon="@tui.search-x"
-                            title="Ничего не найдено"
-                            description="Попробуйте ввести другой ник."
+                            [title]="'admin.coins.noResultsTitle' | translate"
+                            [description]="'admin.coins.noResultsDescription' | translate"
                         />
                     }
                 </div>
@@ -47,7 +47,7 @@
                         class="size-10 shrink-0"
                         containerClass="rounded-full"
                         objectFit="cover"
-                        alt="Аватар"
+                        [alt]="'admin.common.avatarAlt' | translate"
                     />
                     <div class="flex flex-col">
                         <span class="text-xl font-bold text-lh-primary">{{ selectedPlayer()?.playerName }}</span>
@@ -57,10 +57,10 @@
 
                 <div class="flex items-center gap-4">
                     <div class="flex flex-col items-end">
-                        <span class="text-base text-lh-primary/60">Баланс</span>
+                        <span class="text-base text-lh-primary/60">{{ 'admin.coins.balance' | translate }}</span>
                         <span class="text-xl font-bold text-lh-accent inline-flex items-center gap-1">
                             {{ playerBalance() ?? '—' }}
-                            <img src="/splinter-of-spark.png" alt="Осколок" class="h-5 w-5 object-contain" />
+                            <img src="/splinter-of-spark.png" [alt]="'admin.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
                         </span>
                     </div>
                     <button
@@ -74,9 +74,9 @@
             </div>
 
             <div class="flex flex-col gap-3">
-                <p class="text-xl font-semibold text-lh-primary">Сумма операции</p>
-                <lh-input type="inputNumber" placeholder="Введите сумму..." [formControl]="amountControl" />
-                <lh-input type="textarea" placeholder="Комментарий (необязательно)..." [formControl]="commentControl" />
+                <p class="text-xl font-semibold text-lh-primary">{{ 'admin.coins.amountTitle' | translate }}</p>
+                <lh-input type="inputNumber" [placeholder]="'admin.coins.amountPlaceholder' | translate" [formControl]="amountControl" />
+                <lh-input type="textarea" [placeholder]="'admin.coins.commentPlaceholder' | translate" [formControl]="commentControl" />
                 <div class="flex gap-4 mt-2">
                     <button
                         type="button"
@@ -87,7 +87,7 @@
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                         }
-                        Начислить
+                        {{ 'admin.coins.add' | translate }}
                     </button>
                     <button
                         type="button"
@@ -98,23 +98,23 @@
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                         }
-                        Списать
+                        {{ 'admin.coins.deduct' | translate }}
                     </button>
                 </div>
             </div>
 
             <div class="flex flex-col gap-3">
-                <p class="text-xl font-semibold text-lh-primary">История операций</p>
+                <p class="text-xl font-semibold text-lh-primary">{{ 'admin.coins.historyTitle' | translate }}</p>
                 @if (transactions(); as txs) {
                     @if (txs.length > 0) {
                         <div class="overflow-x-auto rounded-xl border border-lh-primary-2">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-lh-primary-2/20 text-lh-primary font-semibold uppercase text-base">
                                     <tr>
-                                        <th class="p-4">Дата</th>
-                                        <th class="p-4">Тип</th>
-                                        <th class="p-4">Сумма</th>
-                                        <th class="p-4">Причина</th>
+                                        <th class="p-4">{{ 'admin.coins.date' | translate }}</th>
+                                        <th class="p-4">{{ 'admin.coins.type' | translate }}</th>
+                                        <th class="p-4">{{ 'admin.coins.amount' | translate }}</th>
+                                        <th class="p-4">{{ 'admin.coins.reason' | translate }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -144,8 +144,8 @@
                     } @else {
                         <app-empty-state
                             icon="@tui.history"
-                            title="История пуста"
-                            description="У выбранного игрока пока нет операций с донат-валютой."
+                            [title]="'admin.coins.emptyHistoryTitle' | translate"
+                            [description]="'admin.coins.emptyHistoryDescription' | translate"
                         />
                     }
                 }

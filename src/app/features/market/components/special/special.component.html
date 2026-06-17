@@ -2,14 +2,14 @@
     <app-market-grid-skeleton />
 } @else if (error()) {
     <app-error-state
-        description="Не удалось загрузить особые товары. Попробуйте ещё раз."
+        [description]="'market.special.loadError' | translate"
         (retry)="retryLoad()"
     />
 } @else if (items().length === 0) {
     <app-empty-state
         icon="@tui.sparkles"
-        title="Скоро появится"
-        description="Особые товары ещё не добавлены в магазин. Загляните позже."
+        [title]="'market.special.emptyTitle' | translate"
+        [description]="'market.special.emptyDescription' | translate"
     />
 } @else {
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4 lh-stagger-list">
@@ -37,7 +37,7 @@
 
                 <!-- Price -->
                 <div class="flex items-center gap-1.5">
-                    <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-6 w-6 object-contain" />
+                    <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                     <span class="text-lg lg:text-xl font-bold text-lh-primary">{{ getDisplayPrice(item) }}</span>
                 </div>
 
@@ -46,7 +46,7 @@
                     (click)="openPurchaseDialog(item)"
                     class="w-full text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-[#e56a18] hover:from-[#e56a18] hover:to-lh-accent rounded-xl py-2 lg:py-2.5 text-sm lg:text-base shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
                 >
-                    КУПИТЬ
+                    {{ 'market.common.buyButton' | translate }}
                 </button>
             </div>
         }

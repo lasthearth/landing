@@ -12,12 +12,13 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService } from '@entities/user';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 
 @Component({
     standalone: true,
     selector: 'app-player-invite',
-    imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, ImageLoaderComponent, EmptyStateComponent],
+    imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, ImageLoaderComponent, EmptyStateComponent, TranslatePipe],
     templateUrl: './player-invite.component.html',
     styleUrl: './player-invite.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +39,11 @@ export class PlayerInviteComponent {
      * Идентификатор пользователя.
      */
     protected readonly userId: string = inject(UserService).userId;
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Контекст открытого диалогового окна.
@@ -64,14 +70,14 @@ export class PlayerInviteComponent {
 
     protected playerInvite(userId: string) {
         if (userId === this.userId) {
-            this.requestStatus.showError('Нельзя пригласить себя!');
+            this.requestStatus.showError(this.i18n.translate('settlements.invite.selfError'));
             return;
         }
         this.settlementService
             .invitePlayer(this.context.data.settlementId, userId)
             .pipe(
                 this.requestStatus.handleError(),
-                this.requestStatus.handleSuccess('Игрок приглашен!', this.context.$implicit),
+                this.requestStatus.handleSuccess(this.i18n.translate('settlements.invite.success'), this.context.$implicit),
                 takeUntilDestroyed(this.destroyRef$)
             )
             .subscribe();

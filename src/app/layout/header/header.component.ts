@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, signal } from '@angular/core';
 import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { AsyncPipe, NgClass } from '@angular/common';
@@ -13,6 +13,7 @@ import { UserService } from '@entities/user';
 import { DonateService } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign-out-confirm.component';
+import { I18nService, Language, TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент заголовка.
@@ -20,12 +21,22 @@ import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterLink, TuiIcon, TuiPulse, ImageLoaderComponent],
+    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterLink, TuiPulse, ImageLoaderComponent, TranslatePipe],
     templateUrl: './header.component.html',
     styleUrl: './header.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
+     * Текущий язык интерфейса.
+     */
+    protected readonly language = this.i18n.language;
+
     /**
      * Сервис информации о сервере.
      */
@@ -193,6 +204,26 @@ export class HeaderComponent {
      */
     protected signOut(): void {
         this.dialogs.open(new PolymorpheusComponent(SignOutConfirmComponent), { size: 'auto' }).subscribe();
+    }
+
+    /**
+     * Признак открытого дропдауна выбора языка.
+     */
+    protected readonly showLangMenu = signal(false);
+
+    /**
+     * Признак открытого мобильного меню навигации.
+     */
+    protected readonly showMobileMenu = signal(false);
+
+    /**
+     * Переключает язык интерфейса и закрывает дропдаун.
+     *
+     * @param language Целевой язык.
+     */
+    protected selectLanguage(language: Language): void {
+        this.i18n.setLanguage(language);
+        this.showLangMenu.set(false);
     }
 
     /**

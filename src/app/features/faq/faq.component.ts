@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
+import { TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент "FAQ".
  */
 @Component({
     selector: 'app-faq',
-    imports: [TuiExpand, TuiIcon, CommonModule],
+    imports: [TuiExpand, TuiIcon, CommonModule, TranslatePipe],
     templateUrl: './faq.component.html',
     styleUrl: './faq.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

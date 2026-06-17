@@ -15,7 +15,7 @@
             class="size-12 lg:size-14 xl:size-16 2xl:size-20 z-30"
             containerClass="rounded-full"
             objectFit="cover"
-            alt="Аватар игрока"
+            [alt]="'profile.statistics.avatarAlt' | translate"
         />
         <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-[#f5eedd]">
             {{ playerName() }}

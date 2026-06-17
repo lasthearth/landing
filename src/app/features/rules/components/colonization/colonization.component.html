@@ -1,104 +1,97 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="1">
-        <b>4.1</b>
-        Колонизация — процесс основания новых поселений помимо основного. Колония считается неотъемлемой частью
-        основного селения, не смотря на ее местоположение. При объявлении набега или войны учитывается общая численность
-        игроков входящих в основное селение и колонии принадлежащие ему.
-        <br />
-        Для проведения колонизации необходимо:
+        <span [innerHTML]="'rules.content.colonization.intro' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="2">• Иметь статус селения не ниже Города.</app-rule-paragraph>
+    <app-rule-paragraph [level]="2">{{ 'rules.content.colonization.req1' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="2">• Иметь дополнительную регистрацию на сайте.</app-rule-paragraph>
+    <app-rule-paragraph [level]="2">{{ 'rules.content.colonization.req2' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        • Колонию можно ограбить руководствуясь соответствующими правилами для совершения этого действия, согласно ее
-        типу. При воровстве учитывается исключительно количество людей в колонии.
+        <span [innerHTML]="'rules.content.colonization.req3' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        • Набег объявляется не колонии, а основному селению, учитывая их общее население находящееся в онлайне. Колония
-        может быть целью набега.
+        <span [innerHTML]="'rules.content.colonization.req4' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="2">• Допустимые уровни селений для колонизации:</app-rule-paragraph>
+    <app-rule-paragraph [level]="2">{{ 'rules.content.colonization.req5' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="2" class="font-bold">Лагерь:</app-rule-paragraph>
+    <app-rule-paragraph [level]="2" class="font-bold">{{ 'rules.content.colonization.campTitle' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="3" class="font-bold">Требования:</app-rule-paragraph>
+    <app-rule-paragraph [level]="3" class="font-bold">{{ 'rules.content.settlements.common.requirements' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Расположение: любое вне нейтральной зоны.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.location' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Население: от 1-го человека.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.population' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        •
-        <app-rule-link target="Monument">Монумент</app-rule-link>
-        : 1х1х2 блока (ш,д,в).
+        <span [innerHTML]="'rules.content.colonization.camp.monumentBefore' | translate"></span>
+        <app-rule-link target="Monument">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.camp.monumentAfter' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Инфраструктура: оборудованное место с костром.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.infrastructure' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Хозяйство:</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.economyHeading' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="5">◦ от 1-го строения-хранилища;</app-rule-paragraph>
+    <app-rule-paragraph [level]="5">◦ {{ 'rules.content.colonization.camp.storage' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Оборонительные постройки: отсутствуют.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.defenses' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="3" class="font-bold">Преимущества:</app-rule-paragraph>
+    <app-rule-paragraph [level]="3" class="font-bold">{{ 'rules.content.settlements.common.advantages' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Сохранены все преимущества с типа селения Лагерь.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.advantages' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="2" class="font-bold">Деревня:</app-rule-paragraph>
+    <app-rule-paragraph [level]="2" class="font-bold">{{ 'rules.content.colonization.villageTitle' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="3" class="font-bold">Требования:</app-rule-paragraph>
+    <app-rule-paragraph [level]="3" class="font-bold">{{ 'rules.content.settlements.common.requirements' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Расположение: любое вне нейтральной зоны.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.location' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Население: от 2-х человек.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.population' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        •
-        <app-rule-link target="Monument">Монумент</app-rule-link>
-        : 1х1х2 блока (ш,д,в).
+        <span [innerHTML]="'rules.content.colonization.village.monumentBefore' | translate"></span>
+        <app-rule-link target="Monument">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.village.monumentAfter' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Документы:</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.documentsHeading' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="5">
-        ◦ подписанный
-        <app-rule-link target="Patent">патент</app-rule-link>
-        на разрешение основания деревни от
-        <app-rule-link target="Suzerain">сюзерена</app-rule-link>
-        ;
+        ◦ {{ 'rules.content.colonization.village.patentBefore' | translate }}
+        <app-rule-link target="Patent">{{ 'rules.content.terms.patent' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.village.patentAfter' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        <span>;</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="5">
-        ◦ от 2-х купчих
-        <app-rule-link target="Volnost">вольности</app-rule-link>
-        .
+        ◦ {{ 'rules.content.colonization.village.libertiesBefore' | translate }}
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.liberties' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Инфраструктура:</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.infrastructureHeading' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="5">◦ колодец с питьевой водой;</app-rule-paragraph>
+    <app-rule-paragraph [level]="5">◦ {{ 'rules.content.colonization.village.well' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="5">
-        ◦ тропы между постройками шириной не менее 2-х блоков, где это возможно.
+        ◦ {{ 'rules.content.colonization.village.paths' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Хозяйство:</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.economyHeading' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="5">◦ от 2-х строений-хранилищ;</app-rule-paragraph>
+    <app-rule-paragraph [level]="5">◦ {{ 'rules.content.colonization.village.storage' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="5">◦ либо сельхоз угодья [грядки/загоны], либо мастерские.</app-rule-paragraph>
+    <app-rule-paragraph [level]="5">◦ {{ 'rules.content.colonization.village.economyChoice' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Дополнительные строения: от 1-го одноэтажного строения.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.additionalBuildings' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Оборонительные постройки: отсутствуют.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.defenses' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="3" class="font-bold">Преимущества:</app-rule-paragraph>
+    <app-rule-paragraph [level]="3" class="font-bold">{{ 'rules.content.settlements.common.advantages' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">• Сохранены все преимущества с типа селения Деревня.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.advantages' | translate }}</app-rule-paragraph>
 </div>

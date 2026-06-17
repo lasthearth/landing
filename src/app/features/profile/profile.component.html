@@ -21,8 +21,8 @@
                     @if (userData.image) {
                         <app-image-loader
                             [src]="userData.image"
-                            [alt]="'Аватар пользователя ' + userName"
-                            (click)="show(userData.image, 'Изображение профиля')"
+                            [alt]="'profile.avatar.alt' | translate:{name: userName ?? ''}"
+                            (click)="show(userData.image, 'profile.avatar.previewAlt')"
                             class="w-full h-44 cursor-pointer"
                             imageClass="rounded-t-2xl transition-all duration-200 hover:opacity-85"
                         />
@@ -31,7 +31,7 @@
                             src="/default-avatar.png"
                             class="w-full h-44"
                             imageClass="rounded-t-2xl"
-                            alt="Аватар по умолчанию"
+                            [alt]="'profile.avatar.defaultAlt' | translate"
                         />
                     }
                     <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
@@ -40,7 +40,7 @@
                         class="flex items-center justify-center gap-2 w-full text-base leading-[27px] font-bold cursor-pointer text-white bg-gradient-to-r from-lh-accent to-[#e07830] hover:brightness-105 transition-all duration-300 shadow-md py-2 px-2 whitespace-nowrap rounded-b-2xl"
                     >
                         <tui-icon icon="@tui.camera" class="size-4!" />
-                        ИЗМЕНИТЬ ФОТО
+                        {{ 'profile.avatar.changePhoto' | translate }}
                     </button>
                 </div>
 
@@ -51,23 +51,23 @@
                         <div
                             class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
                         >
-                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">Роль</p>
-                            <p class="text-lg leading-[27px] font-bold">{{ getRoleName() }}</p>
+                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">{{ 'profile.role.label' | translate }}</p>
+                            <p class="text-lg leading-[27px] font-bold">{{ getRoleName() | translate }}</p>
                         </div>
 
                         <!-- Ник -->
-                        @if (userName && getRoleName() !== "Неверифицирован") {
+                        @if (userName && getRoleName() !== 'profile.role.unverified') {
                             <div
                                 class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
                             >
-                                <p class="text-lg leading-[27px] text-neutral-500 mb-1">Игровой ник</p>
+                                <p class="text-lg leading-[27px] text-neutral-500 mb-1">{{ 'profile.nickname.label' | translate }}</p>
                                 <div class="flex items-center justify-between gap-2">
                                     <p class="text-lg leading-[27px] font-bold truncate">{{ userName }}</p>
                                     <button
                                         (click)="openDialogChangeUsername()"
                                         class="shrink-0 border border-lh-accent/50 bg-lh-accent/10 text-lh-accent hover:bg-lh-accent hover:text-white hover:border-lh-accent transition-all duration-200 cursor-pointer rounded-lg p-1.5 shadow-sm"
-                                        title="Изменить ник"
-                                        aria-label="Изменить игровой ник"
+                                        [title]="'profile.nickname.change' | translate"
+                                        [attr.aria-label]="'profile.nickname.changeAria' | translate"
                                     >
                                         <tui-icon icon="@tui.pencil" class="size-5!" />
                                     </button>
@@ -81,9 +81,9 @@
                         <div
                             class="flex-1 shrink-1 flex gap-1 flex-col justify-start bg-lh-primary-2/10 rounded-xl px-4 py-3 border border-lh-primary-2/10 w-full"
                         >
-                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">Поселение</p>
+                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">{{ 'profile.settlement.label' | translate }}</p>
                             <span class="font-bold truncate text-lg leading-[27px]">
-                                {{ settlement.leader.user_id === userService.userId ? "Глава" : "Житель" }}
+                                {{ (settlement.leader.user_id === userService.userId ? 'profile.settlement.role.leader' : 'profile.settlement.role.resident') | translate }}
                                 «{{ settlement.name }}»
                             </span>
                             <div class="flex items-start gap-2 flex-wrap text-lg leading-[27px]">
@@ -91,10 +91,10 @@
                                     {{ settlementService.getSettlementTypeByKey(settlement.type) }}
                                 </span>
                                 <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
-                                    {{ settlement.members.length + 1 }} жит.
+                                    {{ settlement.members.length + 1 }} {{ 'profile.settlement.residentsShort' | translate }}
                                 </span>
                                 <span class="px-2 py-0.5 bg-[#a0b8d0]/30 text-[#5a7a9a] rounded-full">
-                                    {{ settlementOnline ?? 0 }} онлайн
+                                    {{ settlementOnline ?? 0 }} {{ 'profile.settlement.onlineShort' | translate }}
                                 </span>
                                 @if (settlement.diplomacy) {
                                     <span class="px-2 py-0.5 bg-lh-accent-3/20 text-lh-accent-3 rounded-full">
@@ -107,16 +107,16 @@
                         <div
                             class="bg-lh-primary-2/10 rounded-xl px-4 py-3 text-center border border-lh-primary-2/10 w-full"
                         >
-                            <span class="text-lg leading-[27px] text-neutral-500">Нет поселения</span>
+                            <span class="text-lg leading-[27px] text-neutral-500">{{ 'profile.settlement.noSettlement' | translate }}</span>
                         </div>
                     }
 
-                    @if (getRoleName() === "Неверифицирован" && (details?.status == "rejected" || !details)) {
+                    @if (getRoleName() === 'profile.role.unverified' && (details?.status == "rejected" || !details)) {
                         <button
                             (click)="verification()"
                             class="lh-secondary-button w-fit text-lg leading-[27px] py-2 px-4"
                         >
-                            ПРОЙТИ ВЕРИФИКАЦИЮ
+                            {{ 'profile.verification.button' | translate }}
                         </button>
                     }
                 </div>
@@ -128,7 +128,7 @@
             >
                 <div class="flex items-center justify-center gap-2 mb-1">
                     <tui-icon icon="@tui.flame" class="size-5! text-lh-accent" />
-                    <p class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Голодные игры</p>
+                    <p class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">{{ 'profile.hungerGames.title' | translate }}</p>
                 </div>
                 @if (hungerGamesSeason(); as season) {
                     <div class="flex items-center justify-center gap-2 mb-1">
@@ -137,23 +137,23 @@
                             [disabled]="!(canPrevHgSeason$ | async)"
                             (click)="prevHgSeason()"
                             class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                            aria-label="Предыдущий сезон голодных игр"
+                            [attr.aria-label]="'profile.hungerGames.prevAria' | translate"
                         >
                             <tui-icon icon="@tui.chevron-left" class="size-4!" />
                         </button>
                         <div class="flex items-center gap-1.5">
-                            <p class="text-lg leading-[27px] font-bold">Сезон {{ season.number }}</p>
+                            <p class="text-lg leading-[27px] font-bold">{{ 'profile.hungerGames.season' | translate:{number: season.number} }}</p>
                             @if (season.ended_at) {
                                 <span
                                     class="text-base px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold"
                                 >
-                                    Завершён
+                                    {{ 'profile.hungerGames.completed' | translate }}
                                 </span>
                             } @else {
                                 <span
                                     class="text-base px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold"
                                 >
-                                    Активен
+                                    {{ 'profile.hungerGames.active' | translate }}
                                 </span>
                             }
                         </div>
@@ -162,29 +162,29 @@
                             [disabled]="!(canNextHgSeason$ | async)"
                             (click)="nextHgSeason()"
                             class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                            aria-label="Следующий сезон голодных игр"
+                            [attr.aria-label]="'profile.hungerGames.nextAria' | translate"
                         >
                             <tui-icon icon="@tui.chevron-right" class="size-4!" />
                         </button>
                     </div>
                     @if (!hasActiveSeason()) {
-                        <p class="text-base leading-4 text-lh-danger/80 font-medium">Сейчас нет текущего сезона</p>
+                        <p class="text-base leading-4 text-lh-danger/80 font-medium">{{ 'profile.hungerGames.noCurrentSeason' | translate }}</p>
                     }
                     @if (hgStats) {
                         <div class="flex flex-col gap-0.5">
                             <div class="flex items-center justify-center gap-1.5 text-base leading-5">
                                 <span>
-                                    <span class="text-neutral-500">ELO:</span>
+                                    <span class="text-neutral-500">{{ 'profile.hungerGames.elo' | translate }}</span>
                                     <span class="font-bold">{{ hgStats.elo }}</span>
                                 </span>
                                 <span class="text-lh-primary-2/40">|</span>
                                 <span>
-                                    <span class="text-neutral-500">Побед:</span>
+                                    <span class="text-neutral-500">{{ 'profile.hungerGames.wins' | translate }}</span>
                                     <span class="font-bold">{{ hgStats.wins }}</span>
                                 </span>
                                 <span class="text-lh-primary-2/40">|</span>
                                 <span>
-                                    <span class="text-neutral-500">Убийств:</span>
+                                    <span class="text-neutral-500">{{ 'profile.hungerGames.kills' | translate }}</span>
                                     <span class="font-bold">{{ hgStats.kills }}</span>
                                 </span>
                             </div>
@@ -193,13 +193,13 @@
                                     class="flex items-center justify-center gap-1.5 text-base leading-5 text-neutral-500"
                                 >
                                     <span>
-                                        Место:
+                                        {{ 'profile.hungerGames.rank' | translate }}
                                         <span class="font-bold text-lh-primary">{{ hgStats.rank }}</span>
                                     </span>
                                     @if (hgStats.reward_coins) {
                                         <span class="text-lh-primary-2/40">•</span>
                                         <span>
-                                            Награда:
+                                            {{ 'profile.hungerGames.reward' | translate }}
                                             <span class="font-bold text-lh-accent">{{ hgStats.reward_coins }}</span>
                                         </span>
                                     }
@@ -207,15 +207,15 @@
                             }
                         </div>
                     } @else {
-                        <p class="text-base leading-5 text-neutral-500">Данные отсутствуют</p>
+                        <p class="text-base leading-5 text-neutral-500">{{ 'profile.hungerGames.noData' | translate }}</p>
                     }
                 } @else {
-                    <p class="text-base leading-5 text-neutral-500">Сейчас нет текущего сезона</p>
+                    <p class="text-base leading-5 text-neutral-500">{{ 'profile.hungerGames.noCurrentSeason' | translate }}</p>
                 }
             </div>
 
             <!-- Колонка 3: Валюта и статистика -->
-            @if (getRoleName() !== "Неверифицирован") {
+            @if (getRoleName() !== 'profile.role.unverified') {
                 <div class="flex gap-2 flex-col">
                     <!-- Баланс -->
                     <div
@@ -224,12 +224,12 @@
                         <div class="flex items-center gap-2">
                             <img
                                 src="/splinter-of-spark.png"
-                                alt="Осколок Искры"
+                                [alt]="'profile.currency.shardAlt' | translate"
                                 class="h-10 w-10 object-contain spark-glow"
                             />
                             <span class="text-lg leading-[27px] font-bold">{{ balance ?? "—" }}</span>
                         </div>
-                        <span class="text-lg leading-[27px] text-neutral-500 font-semibold">Осколков</span>
+                        <span class="text-lg leading-[27px] text-neutral-500 font-semibold">{{ 'profile.currency.shards' | translate }}</span>
                     </div>
 
                     <!-- Кнопка пополнения -->
@@ -238,7 +238,7 @@
                         class="flex items-center justify-center gap-2 transition-all duration-300 text-lh-accent text-lg leading-[27px] font-bold cursor-pointer bg-lh-accent/10 border border-lh-accent rounded-xl py-2 px-4 w-full text-center hover:bg-lh-accent hover:text-white hover:shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
                     >
                         <tui-icon icon="@tui.circle-plus" class="size-5!" />
-                        Пополнить
+                        {{ 'profile.currency.topUp' | translate }}
                     </button>
 
                     <!-- Статистика -->
@@ -247,7 +247,7 @@
                             class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
                         >
                             <tui-icon icon="@tui.skull" class="size-6! text-[#c9a0a0] mb-1" />
-                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Смерти</span>
+                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">{{ 'profile.stats.deaths' | translate }}</span>
                             <span class="text-lg leading-[27px] font-bold">{{ stats?.deaths ?? "—" }}</span>
                         </div>
                         <div
@@ -255,7 +255,7 @@
                         >
                             <tui-icon icon="@tui.swords" class="size-6! text-[#c9a880] mb-1" />
                             <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">
-                                Убийства
+                                {{ 'profile.stats.kills' | translate }}
                             </span>
                             <span class="text-lg leading-[27px] font-bold">{{ stats?.kills ?? "—" }}</span>
                         </div>
@@ -263,7 +263,7 @@
                             class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
                         >
                             <tui-icon icon="@tui.clock" class="size-6! text-[#8a9eb0] mb-1" />
-                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">Часы</span>
+                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">{{ 'profile.stats.hours' | translate }}</span>
                             <span class="text-lg leading-[27px] font-bold">
                                 {{ stats ? (stats.hours_played | number: "1.0-1") : "—" }}
                             </span>
@@ -274,9 +274,9 @@
         </div>
 
         <!-- История покупок -->
-        @if (getRoleName() !== "Неверифицирован") {
+        @if (getRoleName() !== 'profile.role.unverified') {
             <div class="flex flex-col gap-3 mt-6">
-                <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">История покупок</h2>
+                <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'profile.purchases.title' | translate }}</h2>
 
                 @if (purchases; as list) {
                     @if (list.length > 0) {
@@ -299,7 +299,7 @@
                                             {{ purchase.pricePaid }}
                                             <img
                                                 src="/splinter-of-spark.png"
-                                                alt="Осколок Искры"
+                                                [alt]="'profile.currency.shardAlt' | translate"
                                                 class="h-5 w-5 object-contain"
                                             />
                                         </span>
@@ -311,7 +311,7 @@
                                             "
                                         >
                                             <span [class]="'w-2.5 h-2.5 rounded-full ' + meta.dotClass"></span>
-                                            {{ meta.label }}
+                                            {{ meta.label | translate }}
                                         </span>
                                     </div>
                                 </div>
@@ -321,7 +321,7 @@
                         <p
                             class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
                         >
-                            История покупок пуста
+                            {{ 'profile.purchases.empty' | translate }}
                         </p>
                     }
                 }
@@ -330,22 +330,22 @@
 
         <!-- Сообщения о верификации -->
         @if (details?.status === "pending") {
-            <p class="text-lg leading-[27px] font-bold">Ваша анкета отправлена. Ожидайте проверки.</p>
+            <p class="text-lg leading-[27px] font-bold">{{ 'profile.verification.pending' | translate }}</p>
         }
         @if (details?.status === "rejected") {
             <div>
-                <p class="text-lg leading-[27px] font-bold">Вашу анкету отклонили:</p>
+                <p class="text-lg leading-[27px] font-bold">{{ 'profile.verification.rejected' | translate }}</p>
                 <p class="text-lg leading-[27px] max-w-72 text-wrap break-words">{{ details?.rejection_reason }}</p>
             </div>
         }
 
-        @if (getRoleName() !== "Неверифицирован" || details?.status === "approved" || details?.status === "verified") {
+        @if (getRoleName() !== 'profile.role.unverified' || details?.status === "approved" || details?.status === "verified") {
             <div class="mt-12">
                 <router-outlet />
             </div>
         } @else {
             <p class="text-xl md:text-2xl lg:text-3xl leading-[30px] font-bold mt-8">
-                Что бы попасть на сервер, необходимо пройти верификацию.
+                {{ 'profile.verification.required' | translate }}
             </p>
         }
     </div>
@@ -353,8 +353,8 @@
 
 <ng-template #preview let-preview>
     <tui-preview [rotatable]="true">
-        <tui-preview-title>{{ previewDesc }}</tui-preview-title>
-        <img *polymorpheusOutlet="previewContent as src" alt="Просмотр изображения профиля" [src]="src" />
+        <tui-preview-title>{{ previewDesc | translate }}</tui-preview-title>
+        <img *polymorpheusOutlet="previewContent as src" [attr.alt]="'profile.avatar.previewAlt' | translate" [src]="src" />
         <button iconStart="@tui.x" tuiIconButton tuiPreviewAction type="button" (click)="preview.complete()">
             Close
         </button>

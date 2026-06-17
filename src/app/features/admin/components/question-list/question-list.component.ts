@@ -4,6 +4,7 @@ import { map, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { RuleQuestionApiService, mapDtoToRuleQuestion, RuleQuestion } from '@entities/rule-question';
 import { UserService } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент списка вопросов правил для администратора.
@@ -14,7 +15,7 @@ import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 @Component({
     standalone: true,
     selector: 'app-question-list',
-    imports: [],
+    imports: [TranslatePipe],
     templateUrl: './question-list.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -33,6 +34,11 @@ export class QuestionListComponent {
      * Сервис диалогов подтверждения.
      */
     private readonly confirmDialog = inject(ConfirmDialogService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Ссылка уничтожения компонента.
@@ -114,8 +120,8 @@ export class QuestionListComponent {
     remove(id: string): void {
         this.confirmDialog
             .open({
-                title: 'Удалить вопрос?',
-                text: 'Вы уверены, что хотите удалить этот вопрос? Это действие нельзя отменить.',
+                title: this.i18n.translate('admin.questions.deleteTitle'),
+                text: this.i18n.translate('admin.questions.deleteText'),
             })
             .subscribe((confirmed) => {
                 if (!confirmed) {

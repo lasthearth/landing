@@ -1,4 +1,5 @@
 import { Component, output } from '@angular/core';
+import { TranslatePipe } from '@core/i18n';
 import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/rule-paragraph.component';
 
 /**
@@ -7,7 +8,7 @@ import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/ru
 @Component({
     selector: 'app-defensive-structures',
     templateUrl: './defensive-structures.component.html',
-    imports: [RuleParagraphComponent],
+    imports: [RuleParagraphComponent, TranslatePipe],
 })
 export class DefensiveStructuresComponent {
     /**

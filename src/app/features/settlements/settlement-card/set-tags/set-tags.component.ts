@@ -10,10 +10,11 @@ import { SettlementService } from '@entities/settlement';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { catchError, finalize, forkJoin, map, of } from 'rxjs';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 @Component({
     selector: 'app-set-tags',
-    imports: [ActiveTagComponent],
+    imports: [ActiveTagComponent, TranslatePipe],
     templateUrl: './set-tags.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
 })
@@ -32,7 +33,7 @@ export class SetTagsComponent implements OnInit {
     protected tags: Tag[] = [
         {
             id: '6936e810061b4fa4e3467319',
-            text: 'Восток',
+            text: 'settlements.tags.east',
             action: 'add' as 'add' | 'remove' | 'custom',
             type: 'east' as TagKey,
             unique: true,
@@ -40,7 +41,7 @@ export class SetTagsComponent implements OnInit {
         },
         {
             id: '6936e848061b4fa4e346731a',
-            text: 'Запад',
+            text: 'settlements.tags.west',
             action: 'add' as 'add' | 'remove' | 'custom',
             type: 'west' as TagKey,
             unique: true,
@@ -48,7 +49,7 @@ export class SetTagsComponent implements OnInit {
         },
         {
             id: '6936e858061b4fa4e346731b',
-            text: 'Сюзерен',
+            text: 'settlements.tags.suzerain',
             action: 'add' as 'add' | 'remove' | 'custom',
             type: 'suzerain' as TagKey,
             disabled: false,
@@ -71,6 +72,11 @@ export class SetTagsComponent implements OnInit {
      * Сервис уведомлений.
      */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     isLoading = false;
 
@@ -183,7 +189,7 @@ export class SetTagsComponent implements OnInit {
 
                     if (successful.length > 0) {
                         this.requestStatusService.handleSuccess(
-                            `Успешно сохранено ${successful.length} тегов`,
+                            this.i18n.translate('settlements.tags.saved', { count: successful.length }),
                             this.context.$implicit
                         );
                     }

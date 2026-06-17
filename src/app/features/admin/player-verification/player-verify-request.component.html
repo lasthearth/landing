@@ -5,10 +5,10 @@
             src="/default-avatar.png"
             class="size-14 shrink-0"
             objectFit="cover"
-            alt="Аватар"
+            [alt]="'admin.common.avatarAlt' | translate"
         />
         <div class="flex flex-col min-w-0">
-            <span class="text-base text-neutral-500 leading-5">Игровой ник</span>
+            <span class="text-base text-neutral-500 leading-5">{{ 'admin.playerForms.gameNameLabel' | translate }}</span>
             <span class="text-2xl font-bold text-[#2d201a] truncate">{{ data().user_game_name }}</span>
         </div>
     </div>
@@ -22,7 +22,7 @@
                     <span class="text-lg font-semibold text-[#2d201a] leading-6">{{ item.question }}</span>
                 </div>
                 <div class="flex items-start gap-2 pl-7">
-                    <span class="text-base text-neutral-500 shrink-0 font-medium">Ответ:</span>
+                    <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.playerForms.answerLabel' | translate }}</span>
                     <span class="text-lg text-[#5c4030] leading-6 break-words">{{ item.answer }}</span>
                 </div>
             </div>
@@ -33,7 +33,7 @@
     <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex items-center gap-3">
         <tui-icon icon="@tui.phone" class="size-5! text-lh-accent shrink-0" />
         <div class="flex flex-col min-w-0">
-            <span class="text-base text-neutral-500 leading-4">Способы связи</span>
+            <span class="text-base text-neutral-500 leading-4">{{ 'admin.playerForms.contactsLabel' | translate }}</span>
             <span class="text-lg font-semibold text-[#2d201a] truncate">{{ data().contacts }}</span>
         </div>
     </div>
@@ -44,13 +44,13 @@
             (click)="reject()"
             class="text-lg font-bold cursor-pointer bg-transparent border border-lh-danger text-lh-danger rounded-xl py-2 px-5 hover:bg-lh-danger/10 transition-colors"
         >
-            Отклонить
+            {{ 'admin.playerForms.reject' | translate }}
         </button>
         <button
             (click)="approve()"
             class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-[#e66a1a] transition-colors"
         >
-            Одобрить
+            {{ 'admin.playerForms.approve' | translate }}
         </button>
     </div>
 </div>

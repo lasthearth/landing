@@ -1,5 +1,6 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
 import { IAbilityItem } from '@entities/donate';
 
 /**
@@ -9,8 +10,10 @@ import { IAbilityItem } from '@entities/donate';
  */
 @Component({
     selector: 'app-ability-tag',
-    imports: [TuiIcon],
+    standalone: true,
+    imports: [TuiIcon, TranslatePipe],
     templateUrl: './ability-tag.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AbilityTagComponent {
     /**

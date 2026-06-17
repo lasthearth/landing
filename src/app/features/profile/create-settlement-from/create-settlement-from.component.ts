@@ -4,6 +4,7 @@ import { TuiDialogContext } from '@taiga-ui/core';
 import { TuiFiles } from '@taiga-ui/kit';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { SettlementsTypes } from '@entities/settlement';
+import { TranslatePipe } from '@core/i18n';
 import { CampFormComponent } from './settlements-types-forms/camp-form/camp-form.component';
 import { VillageFormComponent } from './settlements-types-forms/village-form/village-form.component';
 import { RegionFormComponent } from './settlements-types-forms/region-form/region-form.component';
@@ -22,6 +23,7 @@ import { TownshipFormComponent } from './settlements-types-forms/township-form/t
         RegionFormComponent,
         CityFormComponent,
         TownshipFormComponent,
+        TranslatePipe,
     ],
     templateUrl: './create-settlement-from.component.html',
     styleUrl: './create-settlement-from.component.css',

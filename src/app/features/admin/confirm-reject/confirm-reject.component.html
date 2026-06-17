@@ -5,11 +5,11 @@
         >
             <tui-icon icon="@tui.x" class="size-6! text-lh-accent" />
         </div>
-        <p class="lh-dialog-title">Причина отклонения</p>
+        <p class="lh-dialog-title">{{ 'admin.verification.rejectTitle' | translate }}</p>
     </div>
 
     <div class="flex flex-col gap-3">
-        <span class="text-base text-[#8a7a6a] font-medium">Быстрый выбор:</span>
+        <span class="text-base text-[#8a7a6a] font-medium">{{ 'admin.verification.quickChoice' | translate }}</span>
         <div class="flex flex-wrap gap-2">
             @for (reason of quickReasons; track $index) {
                 <button
@@ -17,7 +17,7 @@
                     (click)="selectReason(reason)"
                     class="text-base cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 text-[#5c4030] rounded-lg py-1.5 px-3 hover:bg-lh-accent/10 hover:border-lh-accent/30 hover:text-lh-accent transition-all"
                 >
-                    {{ reason }}
+                    {{ reason | translate }}
                 </button>
             }
         </div>
@@ -25,17 +25,17 @@
 
     <lh-input
         type="textarea"
-        placeholder="Опишите причину отклонения..."
+        [placeholder]="'admin.verification.rejectPlaceholder' | translate"
         [formControl]="form.controls.reason"
     />
     <tui-error formControlName="reason" [error]="[] | tuiFieldError | async" />
 
     <div class="lh-dialog-actions">
         <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
-            Отмена
+            {{ 'common.cancel' | translate }}
         </button>
         <button type="submit" [disabled]="!form.valid" class="lh-dialog-button lh-dialog-button-danger">
-            Отклонить
+            {{ 'admin.verification.reject' | translate }}
         </button>
     </div>
 </form>

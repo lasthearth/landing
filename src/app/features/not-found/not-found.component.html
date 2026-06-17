@@ -1,25 +1,23 @@
 <div class="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center">
     <h1 class="text-6xl md:text-8xl font-bold text-lh-accent mb-4">404</h1>
 
-    <p class="text-2xl md:text-3xl font-bold text-lh-primary mb-2">Страница не найдена</p>
+    <p class="text-2xl md:text-3xl font-bold text-lh-primary mb-2">{{ 'notFound.title' | translate }}</p>
 
-    <p class="text-lg text-lh-primary-2/80 mb-8 max-w-md">
-        Похоже, вы заблудились в пустошах. Запрашиваемая страница не существует или была перенесена.
-    </p>
+    <p class="text-lg text-lh-primary-2/80 mb-8 max-w-md">{{ 'notFound.description' | translate }}</p>
 
     <div class="flex flex-wrap gap-4 justify-center">
         <a
             [routerLink]="['/home']"
             class="lh-secondary-button px-6 py-3 text-lg font-bold"
         >
-            На главную
+            {{ 'notFound.home' | translate }}
         </a>
 
         <a
             [routerLink]="['/market']"
             class="lh-secondary-button px-6 py-3 text-lg font-bold"
         >
-            В магазин
+            {{ 'notFound.market' | translate }}
         </a>
     </div>
 </div>

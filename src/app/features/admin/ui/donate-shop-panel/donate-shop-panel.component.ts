@@ -21,6 +21,7 @@ import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
 import { TuiFile, TuiFiles, TuiFilesComponent } from '@taiga-ui/kit';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { finalize, map, Observable, startWith, Subject, Subscription, switchMap, tap, timer } from 'rxjs';
 
 /**
@@ -48,6 +49,7 @@ import { finalize, map, Observable, startWith, Subject, Subscription, switchMap,
         CdkDragHandle,
         AbilityTagComponent,
         ImageLoaderComponent,
+        TranslatePipe,
     ],
     templateUrl: './donate-shop-panel.component.html',
     styleUrl: './donate-shop-panel.component.less',
@@ -78,6 +80,11 @@ export class DonateShopPanelComponent {
      * Ссылка на жизненный цикл компонента.
      */
     private readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Триггер обновления списка товаров.
@@ -142,7 +149,9 @@ export class DonateShopPanelComponent {
      * @returns Локализованная строка.
      */
     protected getItemTypeLabel(type: string): string {
-        return this.itemTypeLabels[type as ShopItemType | 'ITEM_TYPE_PRIVILEGE'] ?? 'Не указан';
+        return this.i18n.translate(
+            this.itemTypeLabels[type as ShopItemType | 'ITEM_TYPE_PRIVILEGE'] ?? 'admin.shop.types.unspecified'
+        );
     }
 
     /**
@@ -156,11 +165,13 @@ export class DonateShopPanelComponent {
      */
     protected getItemTypeLabelForItem(item: IShopItem): string {
         if (item.itemType === 'ITEM_TYPE_KIT') {
-            return item.description === 'привилегия' ? 'Привилегия' : 'Набор';
+            return item.description === 'привилегия'
+                ? this.i18n.translate('admin.shop.types.privilege')
+                : this.i18n.translate('admin.shop.types.kit');
         }
 
         if (item.itemType === 'ITEM_TYPE_ITEM' && (item.entries?.length ?? 0) > 0) {
-            return 'Привилегия';
+            return this.i18n.translate('admin.shop.types.privilege');
         }
 
         return this.getItemTypeLabel(item.itemType);
@@ -170,10 +181,10 @@ export class DonateShopPanelComponent {
      * Отображаемое название типа товара.
      */
     protected readonly itemTypeLabels: Record<ShopItemType | 'ITEM_TYPE_PRIVILEGE', string> = {
-        ITEM_TYPE_ITEM: 'Предмет',
-        ITEM_TYPE_KIT: 'Набор',
-        ITEM_TYPE_UNSPECIFIED: 'Не указан',
-        ITEM_TYPE_PRIVILEGE: 'Привилегия',
+        ITEM_TYPE_ITEM: 'admin.shop.types.item',
+        ITEM_TYPE_KIT: 'admin.shop.types.kit',
+        ITEM_TYPE_UNSPECIFIED: 'admin.shop.types.unspecified',
+        ITEM_TYPE_PRIVILEGE: 'admin.shop.types.privilege',
     };
 
     /**
@@ -234,7 +245,7 @@ export class DonateShopPanelComponent {
         const isKitOrPrivilege = values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE';
 
         return {
-            name: values.name || 'Название товара',
+            name: values.name || this.i18n.translate('admin.shop.defaultItemName'),
             price: values.price || '0',
             code: values.code || '',
             itemType: values.item_type ?? 'ITEM_TYPE_ITEM',
@@ -244,7 +255,7 @@ export class DonateShopPanelComponent {
             imageUrl,
             entries: isKitOrPrivilege
                 ? entries.map((entry, index) => ({
-                      name: entry.name || `Позиция ${index + 1}`,
+                      name: entry.name || this.i18n.translate('admin.shop.defaultPositionName', { number: index + 1 }),
                       description: entry.description,
                       quantity: entry.quantity,
                       imageUrl: entry.image_url ?? '',
@@ -253,7 +264,7 @@ export class DonateShopPanelComponent {
             privileges: isKitOrPrivilege
                 ? privileges.map((ability) => ({
                       icon: ability.icon || '@tui.circle-help',
-                      text: ability.text || 'Возможность',
+                      text: ability.text || this.i18n.translate('admin.shop.defaultAbility'),
                   }))
                 : [],
         };
@@ -504,8 +515,8 @@ export class DonateShopPanelComponent {
     protected deleteItem(item: IShopItem): void {
         this.confirmDialog
             .open({
-                title: 'Удалить товар?',
-                text: `Вы уверены, что хотите удалить товар «${item.name}»? Это действие нельзя отменить.`,
+                title: this.i18n.translate('admin.shop.deleteTitle'),
+                text: this.i18n.translate('admin.shop.deleteText', { name: item.name }),
             })
             .subscribe((confirmed) => {
                 if (!confirmed) {
@@ -516,7 +527,7 @@ export class DonateShopPanelComponent {
                     .deleteShopItem$(item.id)
                     .pipe(
                         this.requestStatus.handleError(),
-                        this.requestStatus.handleSuccess('Товар удалён'),
+                        this.requestStatus.handleSuccess(this.i18n.translate('admin.shop.deletedSuccess')),
                         takeUntilDestroyed(this.destroyRef)
                     )
                     .subscribe(() => this.donateService.refreshShopItems$());
@@ -563,7 +574,7 @@ export class DonateShopPanelComponent {
                     .updateShopItem$(this.editingItemId()!, request)
                     .pipe(
                         this.requestStatus.handleError(),
-                        this.requestStatus.handleSuccess('Товар обновлён'),
+                        this.requestStatus.handleSuccess(this.i18n.translate('admin.shop.updatedSuccess')),
                         finalize(() => this.isLoading.set(false)),
                         takeUntilDestroyed(this.destroyRef)
                     )
@@ -589,7 +600,7 @@ export class DonateShopPanelComponent {
                     .createShopItem$(request)
                     .pipe(
                         this.requestStatus.handleError(),
-                        this.requestStatus.handleSuccess('Товар создан'),
+                        this.requestStatus.handleSuccess(this.i18n.translate('admin.shop.createdSuccess')),
                         finalize(() => this.isLoading.set(false)),
                         takeUntilDestroyed(this.destroyRef)
                     )
@@ -600,7 +611,7 @@ export class DonateShopPanelComponent {
             }
         } catch (error) {
             this.isLoading.set(false);
-            this.requestStatus.showError('Ошибка загрузки изображения');
+            this.requestStatus.showError(this.i18n.translate('admin.shop.uploadError'));
         }
     }
 

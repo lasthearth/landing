@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VerificationService } from '@features/verification';
 import { SettlementService } from '@entities/settlement';
 import { RequestStatusService } from '@core/services/request-status.service';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 
 /**
@@ -18,7 +19,7 @@ import { RequestStatusService } from '@core/services/request-status.service';
 @Component({
     standalone: true,
     selector: 'app-confirm-reject',
-    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiFieldErrorPipe, AsyncPipe, TuiIcon, LHInputComponent],
+    imports: [TuiError, ReactiveFormsModule, FormsModule, TuiFieldErrorPipe, AsyncPipe, TuiIcon, LHInputComponent, TranslatePipe],
     templateUrl: './confirm-reject.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,19 +58,24 @@ export class ConfirmRejectComponent {
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
 
     /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
      * {@link Subject} события отправки формы.
      */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
 
     /**
-     * Типовые причины отклонения анкеты.
+     * Ключи переводов типовых причин отклонения анкеты.
      */
     protected readonly quickReasons: string[] = [
-        'Пожалуйста, прочтите правила внимательнее и подайте анкету снова.',
-        'У вас вероятно указан не игровой ник.',
-        'Ваш ник не соответствует политике сервера.',
-        'Анкета заполнена недостаточно подробно.',
-        'Некорректные контактные данные.',
+        'admin.verification.quickReasons.readRules',
+        'admin.verification.quickReasons.wrongNickname',
+        'admin.verification.quickReasons.policyMismatch',
+        'admin.verification.quickReasons.notDetailed',
+        'admin.verification.quickReasons.badContacts',
     ];
 
     /**
@@ -78,7 +84,7 @@ export class ConfirmRejectComponent {
      * @param reason Текст причины.
      */
     protected selectReason(reason: string): void {
-        this.form.controls.reason.setValue(reason);
+        this.form.controls.reason.setValue(this.i18n.translate(reason));
     }
 
     /**
@@ -94,7 +100,7 @@ export class ConfirmRejectComponent {
                     case 'settlement': {
                         this.settlementService.postVerifySettlementReject(this.context.data.userId, reason).pipe(
                             this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess('Анкета отклонена!', this.context.$implicit),
+                            this.requestStatusService.handleSuccess(this.i18n.translate('admin.verification.rejectSuccess'), this.context.$implicit),
                             takeUntilDestroyed(this.destroyRef))
                             .subscribe();
 
@@ -103,7 +109,7 @@ export class ConfirmRejectComponent {
                     case 'user': {
                         this.verificationService.postVerifyDeny(this.context.data.userId, reason).pipe(
                             this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess('Анкета отклонена!', this.context.$implicit),
+                            this.requestStatusService.handleSuccess(this.i18n.translate('admin.verification.rejectSuccess'), this.context.$implicit),
                             takeUntilDestroyed(this.destroyRef))
                             .subscribe();
 

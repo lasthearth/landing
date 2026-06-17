@@ -1,6 +1,6 @@
 @let isAuth = userService.authState$ | async;
 <div class="p-6 flex flex-col gap-6 w-full">
-    <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">Начать игру</p>
+    <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">{{ 'startGame.title' | translate }}</p>
 
     <!-- Шаг 1 -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
@@ -10,30 +10,8 @@
             1
         </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">Установите игру</p>
-            <p class="text-xl text-lh-primary leading-8">
-                Для установки игры воспользуйтесь
-                <a
-                    class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] transition-all duration-100"
-                    href="https://www.vintagestory.at/store/category/1-game-account-game-servers/"
-                    target="_blank"
-                >
-                    официальным сайтом
-                </a>
-                (рекомендуется) или
-                <a
-                    class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
-                    href="https://fplay.su/vs/"
-                    target="_blank"
-                >
-                    бесплатной версией от fplay
-                </a>
-                .
-                <br />
-                Затем создайте аккаунт в игре. Запомните ваш
-                <b>игровой ник</b>
-                , он потребуется для вашей верификации у нас на сервере.
-            </p>
+            <p class="text-2xl font-bold text-[#2d201a]">{{ 'startGame.step1.title' | translate }}</p>
+            <p class="text-xl text-lh-primary leading-8" [innerHTML]="'startGame.step1.body' | translate"></p>
         </div>
     </div>
 
@@ -45,26 +23,26 @@
             2
         </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">Создайте аккаунт</p>
+            <p class="text-2xl font-bold text-[#2d201a]">{{ 'startGame.step2.title' | translate }}</p>
             <p class="text-xl text-lh-primary leading-8">
-                Для безопасной и комфортной игры вам необходимо
+                {{ 'startGame.step2.bodyPart1' | translate }}
                 <a
                     class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
                     [routerLink]="isAuth ? ['/profile'] : ['/start-game']"
                     (click)="isAuth ? '' : signIn()"
                 >
-                    создать аккаунт
+                    {{ 'startGame.step2.linkAccount' | translate }}
                 </a>
-                , ознакомиться с
+                {{ 'startGame.step2.bodyPart2' | translate }}
                 <a
                     class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
                     [routerLink]="['/rules']"
                 >
-                    правилами
+                    {{ 'startGame.step2.linkRules' | translate }}
                 </a>
-                сервера и пройти верификацию в профиле.
+                {{ 'startGame.step2.bodyPart3' | translate }}
                 <br />
-                Проверьте при прохождении анкеты верификации правильность введенного игрового ника.
+                {{ 'startGame.step2.bodyPart4' | translate }}
             </p>
         </div>
     </div>
@@ -77,13 +55,8 @@
             3
         </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">Играйте</p>
-            <p class="text-xl text-lh-primary leading-8">
-                Войдите в игру и добавьте наш сервер. IP адрес и пароль доступны в профиле после прохождения
-                верификации.
-                <br />
-                Наслаждайтесь игрой.
-            </p>
+            <p class="text-2xl font-bold text-[#2d201a]">{{ 'startGame.step3.title' | translate }}</p>
+            <p class="text-xl text-lh-primary leading-8" [innerHTML]="'startGame.step3.body' | translate"></p>
         </div>
     </div>
 </div>

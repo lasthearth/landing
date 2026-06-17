@@ -14,7 +14,11 @@
             (click)="select = 'home'"
         >
             <div class="rounded-2xl gap-4 flex items-center p-4 sm:py-3 sm:pl-3 sm:pr-4">
-                <app-image-loader src="/logo.ico" alt="Логотип сервера" class="relative z-10 h-10 w-10 sm:h-14 sm:w-14" />
+                <app-image-loader
+                    src="/logo.ico"
+                    [alt]="'header.logoAlt' | translate"
+                    class="relative z-10 h-10 w-10 sm:h-14 sm:w-14"
+                />
                 <p
                     [ngClass]="{ 'hidden! 2xl:block!': isAuth }"
                     class="hidden sm:block text-2xl/7.5 sm:text-5xl text-white font-medium text-nowrap"
@@ -47,7 +51,9 @@
                             }
                         </div>
                         <div class="text-white">
-                            <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">Игроков</p>
+                            <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">
+                                {{ "header.players" | translate }}
+                            </p>
 
                             <p class="text-base sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
                         </div>
@@ -86,7 +92,7 @@
                         @if (userService.userImage) {
                             <img
                                 [src]="userService.userImage"
-                                alt="Аватар пользователя"
+                                [alt]="'header.avatarAlt' | translate"
                                 (click)="isAuth ? '' : signIn()"
                                 [routerLink]="isAuth ? ['/profile'] : ''"
                                 class="relative ml-2 cursor-pointer rounded-lg z-10 size-12 sm:size-16 shadow-md shadow-lh-primary-2"
@@ -104,74 +110,211 @@
     </div>
 
     <!-- Блок навигации -->
-    <nav aria-label="Главное меню" class="flex gap-2 justify-center xl:justify-between md:gap-4 w-full mb-4">
-        <div class="flex gap-2">
+    <nav
+        [attr.aria-label]="'header.mainMenu' | translate"
+        class="flex gap-1 md:gap-2 justify-center xl:justify-between w-full mb-4"
+    >
+        <div class="flex gap-1 md:gap-2">
+            <!-- Мобильное меню навигации -->
+            <div class="relative md:hidden">
+                <button
+                    type="button"
+                    (click)="showMobileMenu.set(!showMobileMenu())"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': showMobileMenu() }"
+                    class="nav-button"
+                    [attr.aria-label]="'header.mainMenu' | translate"
+                    [attr.aria-expanded]="showMobileMenu()"
+                >
+                    <tui-icon icon="@tui.align-justify" />
+                </button>
+
+                @if (showMobileMenu()) {
+                    <div
+                        class="absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-[#e9dec5] border border-[#bdb093] shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[180px]"
+                    >
+                        @if (!isAuth) {
+                            <button
+                                type="button"
+                                [routerLink]="['/start-game']"
+                                (click)="showMobileMenu.set(false)"
+                                [ngClass]="{
+                                    'bg-lh-accent text-white': select === 'startGame',
+                                    'text-lh-primary hover:bg-[#d8cdb3]': select !== 'startGame',
+                                }"
+                                class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                            >
+                                <tui-icon icon="@tui.gamepad-2" class="size-4!" />
+                                {{ "header.nav.startGame" | translate }}
+                            </button>
+                        }
+                        <button
+                            type="button"
+                            [routerLink]="['/rules']"
+                            (click)="showMobileMenu.set(false)"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': select === 'rules',
+                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'rules',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                            <tui-icon icon="@tui.file-text" class="size-4!" />
+                            {{ "header.nav.rules" | translate }}
+                        </button>
+                        <button
+                            type="button"
+                            [routerLink]="['/faq']"
+                            (click)="showMobileMenu.set(false)"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': select === 'faq',
+                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'faq',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                            <tui-icon icon="@tui.info" class="size-4!" />
+                            {{ "header.nav.faq" | translate }}
+                        </button>
+                        <button
+                            type="button"
+                            [routerLink]="['/settlements']"
+                            (click)="showMobileMenu.set(false)"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': select === 'settlements',
+                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'settlements',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                            <tui-icon icon="@tui.tent" class="size-4!" />
+                            {{ "header.nav.settlements" | translate }}
+                        </button>
+                        <button
+                            type="button"
+                            [routerLink]="['/market']"
+                            (click)="showMobileMenu.set(false)"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': select === 'market',
+                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'market',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                            <tui-icon icon="@tui.store" class="size-4!" />
+                            {{ "header.nav.market" | translate }}
+                        </button>
+                    </div>
+                }
+            </div>
+
             <button
                 (click)="select = 'home'"
                 [routerLink]="['/home']"
                 [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'home' }"
                 class="nav-button"
-                aria-label="Главная"
+                [attr.aria-label]="'header.nav.home' | translate"
             >
                 <tui-icon icon="@tui.house" />
             </button>
-            @if (!isAuth) {
+
+            <!-- Десктопная навигация -->
+            <div class="hidden md:flex gap-1 md:gap-2">
+                @if (!isAuth) {
+                    <button
+                        [routerLink]="['/start-game']"
+                        [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'startGame' }"
+                        class="nav-button relative md:w-auto md:min-w-20 px-2 md:px-4"
+                        [attr.aria-label]="'header.nav.startGame' | translate"
+                    >
+                        <tui-icon icon="@tui.gamepad-2" />
+
+                        <span class="hidden md:block">{{ "header.nav.startGame" | translate }}</span>
+
+                        <tui-pulse
+                            tuiHintAppearance="floating"
+                            class="!absolute !top-0.5 !right-0.5 !scale-110"
+                        ></tui-pulse>
+                    </button>
+                }
                 <button
-                    [routerLink]="['/start-game']"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'startGame' }"
-                    class="nav-button relative md:w-auto md:min-w-20 px-4"
-                    aria-label="Начать игру"
+                    [routerLink]="['/rules']"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'rules' }"
+                    class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                    [attr.aria-label]="'header.nav.rules' | translate"
                 >
-                    <tui-icon icon="@tui.gamepad-2" />
-
-                    <span class="hidden md:block">НАЧАТЬ ИГРУ</span>
-
-                    <tui-pulse
-                        tuiHintAppearance="floating"
-                        class="!absolute !top-0.5 !right-0.5 !scale-110"
-                    ></tui-pulse>
+                    <tui-icon icon="@tui.file-text" />
+                    <span class="hidden md:block">{{ "header.nav.rules" | translate }}</span>
                 </button>
-            }
-            <button
-                [routerLink]="['/rules']"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'rules' }"
-                class="nav-button md:w-auto md:min-w-20 px-4"
-                aria-label="Правила"
-            >
-                <tui-icon icon="@tui.file-text" />
-                <span class="hidden md:block">ПРАВИЛА</span>
-            </button>
-            <button
-                [routerLink]="['/faq']"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'faq' }"
-                class="nav-button md:w-auto md:min-w-20 px-4"
-                aria-label="Часто задаваемые вопросы"
-            >
-                <tui-icon icon="@tui.info" />
-                <span class="hidden md:block">FAQ</span>
-            </button>
+                <button
+                    [routerLink]="['/faq']"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'faq' }"
+                    class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                    [attr.aria-label]="'header.nav.faq' | translate"
+                >
+                    <tui-icon icon="@tui.info" />
+                    <span class="hidden md:block">{{ "header.nav.faq" | translate }}</span>
+                </button>
 
-            <button
-                [routerLink]="['/settlements']"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
-                class="nav-button md:w-auto md:min-w-20 px-4"
-                aria-label="Поселения"
-            >
-                <tui-icon icon="@tui.tent" />
-                <span class="hidden md:block">СЕЛЕНИЯ</span>
-            </button>
+                <button
+                    [routerLink]="['/settlements']"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
+                    class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                    [attr.aria-label]="'header.nav.settlements' | translate"
+                >
+                    <tui-icon icon="@tui.tent" />
+                    <span class="hidden md:block">{{ "header.nav.settlements" | translate }}</span>
+                </button>
 
-            <button
-                [routerLink]="['/market']"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'market' }"
-                class="nav-button w-11 md:w-auto md:min-w-20 px-4"
-                aria-label="Магазин"
-            >
-                <tui-icon icon="@tui.store" />
-                <span class="hidden md:block">МАГАЗИН</span>
-            </button>
+                <button
+                    [routerLink]="['/market']"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'market' }"
+                    class="nav-button w-11 md:w-auto md:min-w-20 px-2 md:px-4"
+                    [attr.aria-label]="'header.nav.market' | translate"
+                >
+                    <tui-icon icon="@tui.store" />
+                    <span class="hidden md:block">{{ "header.nav.market" | translate }}</span>
+                </button>
+            </div>
         </div>
         <div class="flex flex-row gap-1">
+            <div class="relative">
+                <button
+                    type="button"
+                    (click)="showLangMenu.set(!showLangMenu())"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': showLangMenu() }"
+                    class="nav-button !px-2.5 gap-1.5"
+                    [attr.aria-label]="'header.language.select' | translate"
+                >
+                    <tui-icon icon="@tui.globe" class="size-4!" />
+                    <span class="text-sm font-bold hidden md:inline">{{ language() === "ru" ? "RU" : "EN" }}</span>
+                </button>
+
+                @if (showLangMenu()) {
+                    <div
+                        class="absolute top-full right-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-[#e9dec5] border border-[#bdb093] shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[130px]"
+                    >
+                        <button
+                            type="button"
+                            (click)="selectLanguage('ru')"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': language() === 'ru',
+                                'text-lh-primary hover:bg-[#d8cdb3]': language() !== 'ru',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
+                        >
+                            Русский
+                        </button>
+                        <button
+                            type="button"
+                            (click)="selectLanguage('en')"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': language() === 'en',
+                                'text-lh-primary hover:bg-[#d8cdb3]': language() !== 'en',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
+                        >
+                            English
+                        </button>
+                    </div>
+                }
+            </div>
+
             <button
                 (click)="isAuth ? '' : signIn()"
                 [routerLink]="isAuth ? ['/profile'] : ''"
@@ -181,7 +324,7 @@
                     '!rounded-r-none': isAuth,
                 }"
                 class="relative nav-button p-2.5"
-                [attr.aria-label]="isAuth ? 'Профиль' : 'Войти'"
+                [attr.aria-label]="isAuth ? ('header.nav.profile' | translate) : ('header.nav.signIn' | translate)"
             >
                 <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
                 @if (
@@ -194,7 +337,7 @@
                 <button
                     (click)="signOut()"
                     class="relative nav-button !text-[#c35a17] hover:!text-white hover:bg-[#9C4F24] !rounded-l-none !p-1 w-8! transition-all duration-300"
-                    aria-label="Выйти"
+                    [attr.aria-label]="'header.nav.signOut' | translate"
                 >
                     <tui-icon icon="@tui.log-out" />
                 </button>

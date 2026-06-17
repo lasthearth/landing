@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function';
@@ -18,6 +18,7 @@ import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
 import { TuiError, TuiLoader } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Форма поселка
@@ -37,6 +38,7 @@ import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.functi
         TuiLoader,
         TuiError,
         TuiFieldErrorPipe,
+        TranslatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -54,12 +56,21 @@ export class TownshipFormComponent {
     /**
      * Варианты дипломатического поведения.
      */
-    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    protected readonly diplomacy = computed(() => [
+        this.i18n.translate('settlements.diplomacy.peaceful'),
+        this.i18n.translate('settlements.diplomacy.neutral'),
+        this.i18n.translate('settlements.diplomacy.aggressive'),
+    ]);
 
     /**
      * Сервис уведомлений.
      */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Сервис локального хранилища.
@@ -171,7 +182,7 @@ export class TownshipFormComponent {
                         .postRequestSettlement$(request)
                         .pipe(
                             this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess('Отправлено!'),
+                            this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success')),
                             finalize(() => {
                                 this.isLoading = false;
                             }),
@@ -199,26 +210,7 @@ export class TownshipFormComponent {
      * @param key - ключ файла
      */
     protected getLabelForKey(key: FileKeyTownship): string {
-        return {
-            preview: 'Заглавное изображение поселения',
-            map: 'Вид с карты',
-            monument: 'Монумент поселения',
-            playersDocuments: 'Документы игроков',
-            yardage: 'Сельская площадь',
-            pit: 'Колодец',
-            roads: 'Дороги и тропы',
-            warehouse: 'Склад или складское помещение',
-            barn: 'Амбар',
-            seedbeds: 'Грядки',
-            oneFloorHouse1: '1-этажный дом №1',
-            oneFloorHouse2: '1-этажный дом №2',
-            oneFloorHouse3: '1-этажный дом №3',
-            oneFloorHouse4: '1-этажный дом №4',
-            doubleFloorHouse1: '2-этажный дом №1',
-            workshop: 'Мастерская',
-            blacksmithShop: 'Кузница',
-            religionOrCultureOrEconomicHouse: 'Здание религиозного,научного,культурного или экономического направления',
-        }[key];
+        return this.i18n.translate(`settlements.attachments.${key}`);
     }
     protected getControl(key: string): FormControl {
         return this.form.get(key) as FormControl;

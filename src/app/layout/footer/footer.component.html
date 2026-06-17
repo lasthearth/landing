@@ -1,24 +1,24 @@
 <div class="flex w-full p-6 pb-20 xl:pb-3 justify-between">
     <div class="flex gap-10 items-center">
         <div class="md:flex font-semibold items-center shrink-0 hidden">
-            <app-image-loader src="/logo.ico" alt="Логотип Last Hearth" class="size-16" />
+            <app-image-loader src="/logo.ico" [alt]="'footer.logoAlt' | translate" class="size-16" />
         </div>
         <div class="flex flex-col justify-between">
             <div>
                 <p class="font-semibold">© lasthearth.ru 2025-2026</p>
-                <p>Все права сохранены. Копирование материалов без разрешения администрации запрещено.</p>
+                <p>{{ "footer.rights" | translate }}</p>
             </div>
             <div class="flex sm:gap-4 gap-2 flex-col sm:flex-row">
-                <a [routerLink]="['/privacy-policy']" class="self-start">Политика конфиденциальности</a>
+                <a [routerLink]="['/privacy-policy']" class="self-start">{{ "footer.privacyPolicy" | translate }}</a>
 
                 <span class="text-lh-primary hidden sm:block">•</span>
 
-                <a [routerLink]="['/public-offer']" class="self-start">Публичная оферта</a>
+                <a [routerLink]="['/public-offer']" class="self-start">{{ "footer.publicOffer" | translate }}</a>
 
                 <span class="text-lh-primary hidden sm:block">•</span>
 
                 <a href="https://docs.lasthearth.ru/" target="_blank" class="self-start">
-                    Версия {{ environment.siteVersion }} от 17.06.2026
+                    {{ "footer.version" | translate: { version: environment.siteVersion, date: "17.06.2026" } }}
                 </a>
             </div>
         </div>

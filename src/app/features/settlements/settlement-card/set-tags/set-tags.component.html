@@ -1,16 +1,16 @@
 <div class="lh-dialog-card">
     <h2 class="lh-dialog-title">
-        Добавить теги к селению
+        {{ 'settlements.tags.title' | translate }}
         <span class="uppercase">{{ context.data.settlementName }}</span>
     </h2>
 
     <div class="flex flex-col gap-3">
-        <p class="text-lg font-semibold text-[#2d201a]">Доступные теги:</p>
+        <p class="text-lg font-semibold text-[#2d201a]">{{ 'settlements.tags.available' | translate }}</p>
         <div class="flex flex-wrap gap-2">
             @for (tag of tags; track $index) {
                 <app-active-tag
                     [type]="tag.type"
-                    [text]="tag.text"
+                    [text]="tag.text | translate"
                     [action]="tag.action"
                     [disabled]="tag.disabled"
                     (tagWasClicked)="addTag($event, tag)"
@@ -20,17 +20,17 @@
     </div>
 
     <div class="flex flex-col gap-3">
-        <p class="text-lg font-semibold text-[#2d201a]">Выбранные теги:</p>
+        <p class="text-lg font-semibold text-[#2d201a]">{{ 'settlements.tags.selected' | translate }}</p>
         <div class="flex flex-wrap gap-2">
             @if (addedTags.length === 0) {
                 <p class="text-base h-8 -mt-2 uppercase font-bold text-[#bdb093] self-center">
-                    Теги селения отсутствуют...
+                    {{ 'settlements.tags.none' | translate }}
                 </p>
             }
             @for (tag of addedTags; track $index) {
                 <app-active-tag
                     [type]="tag.type"
-                    [text]="tag.text"
+                    [text]="tag.text | translate"
                     [action]="tag.action"
                     [disabled]="tag.disabled"
                     (tagWasClicked)="removeTag($event, tag)"
@@ -41,7 +41,7 @@
 
     <div class="lh-dialog-actions">
         <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
-            Отмена
+            {{ 'settlements.tags.cancel' | translate }}
         </button>
         <button
             type="button"
@@ -49,7 +49,7 @@
             [disabled]="addedTags.length === 0"
             class="lh-dialog-button lh-dialog-button-primary"
         >
-            Добавить
+            {{ 'settlements.tags.add' | translate }}
         </button>
     </div>
 </div>

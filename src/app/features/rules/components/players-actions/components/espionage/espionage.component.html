@@ -1,41 +1,31 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="2">
-        <b>3.3.1</b>
-        Шпионы — люди внедренные в чужие селения для выполнения агентурных действий.
+        <span [innerHTML]="'rules.content.actions.espionage.p3_3_1' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.3.2</b>
-        Шпионаж может проводиться при любом политическом курсе селения.
+        <span [innerHTML]="'rules.content.actions.espionage.p3_3_2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.3.3</b>
-        Шпион может быть участником во время любых военных действий на стороне селения на которое он работает, или на
-        стороне селения, где он является шпионом.
+        <span [innerHTML]="'rules.content.actions.espionage.p3_3_3' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.3.4</b>
-        Шпион может украсть у поселения в которое он внедрен ресурсы, но соблюдая:
-        <app-rule-link target="P3_1">Правила воровства</app-rule-link>
-        [При этом в сети и на территории должен находиться как минимум 1 игрок, входящий в состав селения, не являющийся
-        шпионом].
+        <span [innerHTML]="'rules.content.actions.espionage.p3_3_4.before' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.actions.espionage.theftRulesLink' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.espionage.p3_3_4.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.3.5</b>
-        Шпион может открыть ворота во время осады при ведении войны или набега. Подразумеваются только первые, внешние
-        ворота. Открытие ворот кроме них - запрещено.
+        <span [innerHTML]="'rules.content.actions.espionage.p3_3_5' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.3.6</b>
-        Шпион может передавать любую разведывательную информацию.
+        <span [innerHTML]="'rules.content.actions.espionage.p3_3_6' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.3.7</b>
-        Любые иные действия шпиона являются запрещенными.
+        <span [innerHTML]="'rules.content.actions.espionage.p3_3_7' | translate"></span>
     </app-rule-paragraph>
 </div>

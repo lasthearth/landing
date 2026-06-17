@@ -1,4 +1,5 @@
 import { Component, output } from '@angular/core';
+import { TranslatePipe } from '@core/i18n';
 import { RuleParagraphComponent } from '../../ui/rule-paragraph/rule-paragraph.component';
 import { RuleLinkComponent } from '../../ui/rule-link/rule-link.component';
 
@@ -8,7 +9,7 @@ import { RuleLinkComponent } from '../../ui/rule-link/rule-link.component';
 @Component({
     selector: 'app-terminology',
     templateUrl: './terminology.component.html',
-    imports: [RuleParagraphComponent, RuleLinkComponent],
+    imports: [RuleParagraphComponent, RuleLinkComponent, TranslatePipe],
 })
 export class TerminologyComponent {
     /**

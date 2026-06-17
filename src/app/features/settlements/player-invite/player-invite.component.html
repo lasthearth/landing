@@ -1,26 +1,26 @@
 @let players = players$ | async;
 
 <div class="lh-dialog-card">
-    <h2 class="lh-dialog-title">Пригласите игрока в ваше поселение</h2>
+    <h2 class="lh-dialog-title">{{ 'settlements.invite.title' | translate }}</h2>
 
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
         <div class="flex flex-col gap-2">
-            <p class="text-xl text-[#2d201a] font-semibold">Ник игрока на сервере</p>
-            <lh-input placeholder="Введите ник игрока на сервере..." [formControl]="playerNickControl" />
+            <p class="text-xl text-[#2d201a] font-semibold">{{ 'settlements.invite.nicknameLabel' | translate }}</p>
+            <lh-input [placeholder]="'settlements.invite.nicknamePlaceholder' | translate" [formControl]="playerNickControl" />
         </div>
 
         <div class="flex flex-col">
             @if (!players) {
                 <app-empty-state
                     icon="@tui.search"
-                    title="Начните поиск"
-                    description="Введите ник игрока, чтобы найти его и пригласить в поселение."
+                    [title]="'settlements.invite.searchEmpty.title' | translate"
+                    [description]="'settlements.invite.searchEmpty.description' | translate"
                 />
             } @else if (players.users.length === 0) {
                 <app-empty-state
                     icon="@tui.user-x"
-                    title="Игроки не найдены"
-                    description="Попробуйте ввести другой ник."
+                    [title]="'settlements.invite.notFound.title' | translate"
+                    [description]="'settlements.invite.notFound.description' | translate"
                 />
             }
             @for (item of players?.users; track $index) {
@@ -28,7 +28,7 @@
                     <div class="flex gap-3 items-center w-full">
                         <app-image-loader
                             [src]="resolveAvatarUrl(item?.avatar)"
-                            alt="Аватар"
+                            [alt]="'settlements.invite.avatarAlt' | translate"
                             objectFit="cover"
                             containerClass="rounded-full"
                             class="w-10 h-10"
@@ -39,7 +39,7 @@
                         (click)="playerInvite(item.user_id)"
                         class="lh-secondary-button text-base py-1.5 px-3 shrink-0"
                     >
-                        Пригласить
+                        {{ 'settlements.invite.invite' | translate }}
                     </button>
                 </div>
             }
@@ -48,7 +48,7 @@
 
     <div class="lh-dialog-actions">
         <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
-            Закрыть
+            {{ 'settlements.invite.close' | translate }}
         </button>
     </div>
 </div>

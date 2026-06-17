@@ -11,10 +11,10 @@
         <div class="flex flex-col gap-2 justify-center h-24">
             <h3 class="text-center sm:text-left text-lg md:text-[22px] font-bold text-[#1c1a16] leading-tight">{{ data.title }}</h3>
             <div class="flex items-center gap-2">
-                <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-7 w-7 object-contain" />
+                <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-7 w-7 object-contain" />
                 <span class="text-lg sm:text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
                 @if (data.currency === "rubles") {
-                    <span class="text-[18px] text-[#5c554a]">руб.</span>
+                    <span class="text-[18px] text-[#5c554a]">{{ 'market.purchaseDialog.currencyRub' | translate }}</span>
                 }
             </div>
         </div>
@@ -23,7 +23,9 @@
     <!-- Term selector -->
     @if (data.monthPrice && data.seasonPrice) {
         <div class="flex flex-col gap-3">
-            <label class="text-[18px] font-bold uppercase tracking-wide text-[#5c554a]">Срок</label>
+            <label class="text-[18px] font-bold uppercase tracking-wide text-[#5c554a]">
+                {{ 'market.purchaseDialog.termLabel' | translate }}
+            </label>
             <div class="flex gap-3">
                 <button
                     type="button"
@@ -38,7 +40,7 @@
                     [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'month'"
                 >
                     <tui-icon icon="@tui.calendar" class="size-5!" />
-                    1 месяц
+                    {{ 'market.common.month' | translate }}
                 </button>
                 <button
                     type="button"
@@ -53,7 +55,7 @@
                     [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'season'"
                 >
                     <tui-icon icon="@tui.infinity" class="size-5!" />
-                    Навсегда
+                    {{ 'market.common.forever' | translate }}
                 </button>
             </div>
         </div>
@@ -62,9 +64,11 @@
     <!-- Payment info -->
     <div class="flex flex-col gap-4 bg-[#d8cdb3] rounded-xl p-4 sm:p-5 border border-[#c4b89e]">
         <div class="flex items-center justify-between">
-            <span class="text-base sm:text-[18px] font-bold text-[#1c1a16]">К оплате</span>
+            <span class="text-base sm:text-[18px] font-bold text-[#1c1a16]">
+                {{ 'market.purchaseDialog.totalLabel' | translate }}
+            </span>
             <div class="flex items-center gap-2">
-                <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-6 w-6 object-contain" />
+                <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                 <span class="text-lg sm:text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
             </div>
         </div>
@@ -72,15 +76,17 @@
         <div class="h-px bg-[#b8aa8e]"></div>
 
         <p class="text-base sm:text-[18px] leading-relaxed text-[#2a2722]">
-            При подтверждении с вас спишут
-            <span class="font-bold text-lh-accent">{{ activePrice }}</span>
-            осколков, а в течение суток с вами свяжутся и выдадут товар на сервере.
+            {{ 'market.purchaseDialog.confirmation' | translate:{ price: activePrice } }}
         </p>
     </div>
 
     <!-- Actions -->
     <div class="flex gap-4 pt-2">
-        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-[18px]">Отмена</button>
-        <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-[18px]">Приобрести</button>
+        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-[18px]">
+            {{ 'market.purchaseDialog.cancel' | translate }}
+        </button>
+        <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-[18px]">
+            {{ 'market.purchaseDialog.buy' | translate }}
+        </button>
     </div>
 </div>

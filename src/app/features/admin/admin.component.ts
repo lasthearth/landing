@@ -19,6 +19,7 @@ import { DonateShopPanelComponent } from './ui/donate-shop-panel/donate-shop-pan
 import { PendingPurchasesPanelComponent } from './ui/pending-purchases-panel/pending-purchases-panel.component';
 import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент страницы администратора.
@@ -43,6 +44,7 @@ import { TuiIcon } from '@taiga-ui/core';
         PendingPurchasesPanelComponent,
         EmptyStateComponent,
         AdminListSkeletonComponent,
+        TranslatePipe,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.css',

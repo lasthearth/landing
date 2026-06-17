@@ -4,6 +4,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { catchError, of } from 'rxjs';
 import { DonateService, IShopItem } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
+import { TranslatePipe } from '@core/i18n';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
@@ -21,7 +22,7 @@ import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege
  */
 @Component({
     selector: 'app-titles',
-    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent],
+    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
     templateUrl: './titles.component.html',
     styleUrl: './titles.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

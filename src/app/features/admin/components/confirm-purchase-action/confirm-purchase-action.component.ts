@@ -4,6 +4,7 @@ import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DonateService } from '@entities/donate';
 import { RequestStatusService } from '@core/services/request-status.service';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Данные, передаваемые в диалог подтверждения действия с покупкой.
@@ -29,7 +30,7 @@ export interface IConfirmPurchaseActionData {
     templateUrl: './confirm-purchase-action.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TuiIcon],
+    imports: [TuiIcon, TranslatePipe],
 })
 export class ConfirmPurchaseActionComponent {
     /**
@@ -54,14 +55,25 @@ export class ConfirmPurchaseActionComponent {
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
 
     /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
      * Заголовок диалога в зависимости от действия.
      */
-    protected readonly title = this.context.data.action === 'issue' ? 'Подтвердить выдачу?' : 'Подтвердить возврат?';
+    protected readonly title =
+        this.context.data.action === 'issue'
+            ? this.i18n.translate('admin.purchases.confirmIssueTitle')
+            : this.i18n.translate('admin.purchases.confirmRefundTitle');
 
     /**
      * Текст кнопки подтверждения в зависимости от действия.
      */
-    protected readonly confirmText = this.context.data.action === 'issue' ? 'Выдать' : 'Вернуть';
+    protected readonly confirmText =
+        this.context.data.action === 'issue'
+            ? this.i18n.translate('admin.purchases.confirmIssueAction')
+            : this.i18n.translate('admin.purchases.confirmRefundAction');
 
     /**
      * Иконка диалога в зависимости от действия.
@@ -93,7 +105,9 @@ export class ConfirmPurchaseActionComponent {
                 : this.donateService.refundPurchase$(this.context.data.purchaseId);
 
         const successMessage =
-            this.context.data.action === 'issue' ? 'Покупка отмечена как выданная' : 'Покупка возвращена';
+            this.context.data.action === 'issue'
+                ? this.i18n.translate('admin.purchases.issuedSuccess')
+                : this.i18n.translate('admin.purchases.refundedSuccess');
 
         request$
             .pipe(

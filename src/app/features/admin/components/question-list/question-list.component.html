@@ -6,7 +6,7 @@
                     <div class="flex flex-col gap-2 flex-1 min-w-0">
                         <p class="text-[23px] leading-[32px] text-[#2d201a]">{{ q.text }}</p>
                         @if (q.createdBy) {
-                            <span class="text-[18px] text-[#5c554a]">Создано: {{ userNames()[q.createdBy] }}</span>
+                            <span class="text-[18px] text-[#5c554a]">{{ 'admin.questions.createdBy' | translate }} {{ userNames()[q.createdBy] }}</span>
                         }
                     </div>
                     <button
@@ -15,12 +15,12 @@
                         class="shrink-0 rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e] disabled:opacity-50 disabled:cursor-not-allowed"
                         (click)="remove(q.id)"
                     >
-                        Удалить
+                        {{ 'admin.questions.delete' | translate }}
                     </button>
                 </div>
             }
         </div>
     } @else {
-        <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Вопросов пока нет...</p>
+        <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">{{ 'admin.questions.noQuestions' | translate }}</p>
     }
 </div>

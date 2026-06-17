@@ -1,11 +1,12 @@
 import { NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { TranslatePipe } from '@core/i18n';
 
 @Component({
     standalone: true,
     selector: 'app-leader-card',
-    imports: [ImageLoaderComponent],
+    imports: [ImageLoaderComponent, TranslatePipe],
     templateUrl: './leader-card.component.html',
     styleUrl: './leader-card.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +18,7 @@ export class LeaderCardComponent {
 
     public ratingPlace: InputSignal<string> = input.required<string>();
 
-    public type: InputSignal<'Смертей' | 'Убийств' | 'Часов'> = input.required<'Смертей' | 'Убийств' | 'Часов'>();
+    public type: InputSignal<string> = input.required<string>();
 
     public count: InputSignal<number> = input.required<number>();
 

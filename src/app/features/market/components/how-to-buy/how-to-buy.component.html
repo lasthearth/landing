@@ -1,5 +1,5 @@
 <div class="lh-dialog-card w-full p-4 sm:p-6 lg:p-8">
-    <h2 class="lh-dialog-title text-center text-xl sm:text-[22px]">Пополнить баланс осколков</h2>
+    <h2 class="lh-dialog-title text-center text-xl sm:text-[22px]">{{ "market.howToBuy.title" | translate }}</h2>
 
     <!-- Блок выбора суммы -->
     <div
@@ -7,14 +7,20 @@
     >
         <!-- Итоговая сумма осколков -->
         <div class="flex flex-col items-center gap-1">
-            <span class="text-lh-primary/60 text-base font-semibold uppercase">Вы получите</span>
+            <span class="text-lh-primary/60 text-base font-semibold uppercase">
+                {{ "market.howToBuy.youGet" | translate }}
+            </span>
             <div class="flex items-center gap-2">
-                <img src="/splinter-of-spark.png" alt="Осколок" class="h-7 sm:h-8 w-auto" />
+                <img
+                    src="/splinter-of-spark.png"
+                    [alt]="'market.howToBuy.shardAlt' | translate"
+                    class="h-7 sm:h-8 w-auto"
+                />
                 <span class="text-3xl sm:text-4xl font-extrabold text-lh-accent">
                     {{ shards() | number }}
                 </span>
             </div>
-            <span class="text-lh-primary/60 text-base font-medium">осколков</span>
+            <span class="text-lh-primary/60 text-base font-medium">{{ "market.howToBuy.shards" | translate }}</span>
         </div>
 
         <!-- Слайдер -->
@@ -37,7 +43,9 @@
 
         <!-- Ручной ввод -->
         <div class="flex flex-col gap-2">
-            <label class="text-lh-primary text-base font-semibold">Сумма пополнения, ₽</label>
+            <label class="text-lh-primary text-base font-semibold">
+                {{ "market.howToBuy.amountLabel" | translate }}
+            </label>
             <div class="flex items-center gap-3">
                 <div class="flex-1">
                     <lh-input type="inputNumber" [ngModel]="rubles()" (ngModelChange)="onRublesChange($event)" />
@@ -66,17 +74,19 @@
             </div>
 
             <p class="text-lh-primary/50 text-base text-center">
-                Курс:
-                <span class="text-lh-accent font-bold">1 ₽ = 10 осколков</span>
+                {{ "market.howToBuy.rate" | translate }}:
+                <span class="text-lh-accent font-bold">{{ "market.howToBuy.rateValue" | translate }}</span>
                 <span class="mx-1">•</span>
-                от {{ minAmount }} ₽ до {{ maxAmount | number }} ₽
+                {{ "market.howToBuy.range" | translate: { min: minAmount, max: maxAmount } }}
             </p>
         </div>
     </div>
 
     <!-- Блок способов оплаты -->
     <div class="flex flex-col gap-4">
-        <h3 class="text-center text-xl sm:text-2xl font-bold text-lh-primary">Выберите способ оплаты</h3>
+        <h3 class="text-center text-xl sm:text-2xl font-bold text-lh-primary">
+            {{ "market.howToBuy.selectMethod" | translate }}
+        </h3>
 
         <!-- Сбербанк / СБП — основной способ -->
         <div
@@ -86,7 +96,7 @@
             <div
                 class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-[#21A038] text-white text-xs font-bold uppercase tracking-wide shadow-[0_2px_8px_rgba(33,160,56,0.35)]"
             >
-                Рекомендуем
+                {{ "common.recommended" | translate }}
             </div>
             <div class="p-4 pt-10 sm:p-5 sm:pt-10 flex flex-col gap-4">
                 <div class="flex items-center gap-3">
@@ -96,24 +106,26 @@
                         <tui-icon icon="@tui.smartphone" class="size-6!" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-lh-primary text-xl sm:text-2xl font-bold leading-tight">Сбербанк / СБП</span>
-                        <span class="text-lh-primary/60 text-base sm:text-lg">Перевод по номеру телефона</span>
+                        <span class="text-lh-primary text-xl sm:text-2xl font-bold leading-tight">
+                            {{ "market.howToBuy.sbp.title" | translate }}
+                        </span>
+                        <span class="text-lh-primary/60 text-base sm:text-lg">
+                            {{ "market.howToBuy.sbp.subtitle" | translate }}
+                        </span>
                     </div>
                 </div>
 
                 <div class="flex items-start gap-4 p-4 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-base">
                     <tui-icon icon="@tui.badge-alert" class="size-8! text-lh-accent shrink-0 mt-0.5" />
                     <span class="text-lh-primary/80">
-                        Отправьте ровно
-                        <strong class="text-lh-accent text-lg">{{ rubles() | number }} ₽</strong>
-                        . В комментарии к переводу обязательно укажите ник:
-                        <strong class="text-lh-accent text-lg">{{ username() }}</strong>
-                        .
+                        {{ "market.howToBuy.sbp.warning" | translate: { amount: rubles(), nickname: username() } }}
                     </span>
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <label class="text-lh-primary text-base font-semibold">Номер телефона получателя</label>
+                    <label class="text-lh-primary text-base font-semibold">
+                        {{ "market.howToBuy.sbp.phoneLabel" | translate }}
+                    </label>
                     <div class="flex items-center gap-3 p-4 rounded-xl bg-[#d8cdb3] border border-[#bdb093]">
                         <span class="text-lh-primary text-2xl font-bold font-mono tracking-wide flex-1">
                             {{ sbpPhone }}
@@ -125,14 +137,17 @@
                         >
                             @if (phoneCopied()) {
                                 <tui-icon icon="@tui.check" class="size-4!" />
-                                Скопировано
+                                {{ "common.copied" | translate }}
                             } @else {
                                 <tui-icon icon="@tui.copy" class="size-4!" />
-                                Копировать
+                                {{ "common.copy" | translate }}
                             }
                         </button>
                     </div>
-                    <p class="text-lh-primary/60 text-sm">Банк: {{ sbpBank }} • Получатель: {{ sbpRecipient }}</p>
+                    <p class="text-lh-primary/60 text-sm">
+                        {{ "market.howToBuy.sbp.bank" | translate }}: {{ sbpBank }} •
+                        {{ "market.howToBuy.sbp.recipient" | translate }}: {{ sbpRecipient }}
+                    </p>
                 </div>
 
                 <button
@@ -141,34 +156,28 @@
                     class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl border-2 border-[#21A038] text-[#21A038] font-bold text-base hover:bg-[rgba(33,160,56,0.1)] transition-all cursor-pointer"
                 >
                     <tui-icon icon="@tui.copy" class="size-5!" />
-                    Скопировать все реквизиты
+                    {{ "market.howToBuy.sbp.copyAll" | translate }}
                 </button>
 
                 <div class="flex flex-col gap-2 text-lh-primary/80 text-base">
                     <div class="flex items-start gap-2">
                         <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
-                        <span>Скопируйте номер телефона.</span>
+                        <span>{{ "market.howToBuy.sbp.step1" | translate }}</span>
                     </div>
                     <div class="flex items-start gap-2">
                         <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
-                        <span>В приложении банка выберите перевод по номеру телефона / СБП.</span>
+                        <span>{{ "market.howToBuy.sbp.step2" | translate }}</span>
                     </div>
                     <div class="flex items-start gap-2">
                         <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
                         <span>
-                            Укажите сумму
-                            <strong class="text-lh-primary">{{ rubles() | number }} ₽</strong>
-                            и банк
-                            <strong class="text-lh-primary">{{ sbpBank }}</strong>
-                            .
+                            {{ "market.howToBuy.sbp.step3" | translate: { amount: rubles(), bank: sbpBank } }}
                         </span>
                     </div>
                     <div class="flex items-start gap-2">
                         <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
                         <span>
-                            В сообщении к переводу напишите ник
-                            <strong class="text-lh-primary">{{ username() }}</strong>
-                            .
+                            {{ "market.howToBuy.sbp.step4" | translate: { nickname: username() } }}
                         </span>
                     </div>
                 </div>
@@ -188,27 +197,28 @@
                         <img src="/images/Boosty.svg" class="h-5 brightness-0 invert" alt="" />
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-lh-primary text-lg sm:text-xl font-bold leading-tight">Boosty</span>
-                        <span class="text-lh-primary/60 text-base">Международные платежи</span>
+                        <span class="text-lh-primary text-lg sm:text-xl font-bold leading-tight">
+                            {{ "market.howToBuy.boosty.title" | translate }}
+                        </span>
+                        <span class="text-lh-primary/60 text-base">
+                            {{ "market.howToBuy.boosty.subtitle" | translate }}
+                        </span>
                     </div>
                 </div>
                 <p class="text-lh-primary/70 text-base">
-                    Для оплаты из-за рубежа. К сумме пакета добавляется 300 ₽ комиссии сервиса.
+                    {{ "market.howToBuy.boosty.description" | translate }}
                 </p>
                 <div class="flex flex-col gap-3 p-4 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-base">
                     <div class="flex items-start gap-3">
                         <tui-icon icon="@tui.badge-alert" class="size-6! text-lh-accent shrink-0 mt-0.5" />
                         <span class="text-lh-primary/80">
-                            К оплате:
-                            <strong class="text-lh-accent text-lg">{{ boostyTotal() | number }} ₽</strong>
-                            (включает 300 ₽ комиссии).
+                            {{ "market.howToBuy.boosty.total" | translate: { total: boostyTotal() } }}
                         </span>
                     </div>
                     <div class="flex items-start gap-3">
                         <tui-icon icon="@tui.badge-alert" class="size-6! text-lh-accent shrink-0 mt-0.5" />
                         <span class="text-lh-primary/80">
-                            <strong class="text-lh-accent text-lg">Обязательно укажите ник {{ username() }}</strong>
-                            в сообщении к платежу, иначе мы не сможем зачислить осколки.
+                            {{ "market.howToBuy.boosty.nicknameWarning" | translate: { nickname: username() } }}
                         </span>
                     </div>
                 </div>
@@ -219,7 +229,7 @@
                     class="lh-secondary-button !no-underline w-full py-3 px-4 sm:px-6 text-lg sm:text-xl font-bold"
                 >
                     <tui-icon icon="@tui.external-link" class="size-5!" />
-                    Пополнить через Boosty {{ boostyTotal() | number }} ₽
+                    {{ "market.howToBuy.boosty.button" | translate: { total: boostyTotal() } }}
                 </a>
             </div>
         </div>
@@ -227,9 +237,9 @@
 
     <!-- Информация о начислении -->
     <div class="flex flex-col gap-2 text-center text-base">
-        <p class="text-lh-primary/70">Осколки поступят на счёт в течение 24 часов после оплаты</p>
+        <p class="text-lh-primary/70">{{ "market.howToBuy.delivery" | translate }}</p>
         <p class="text-lh-primary/70">
-            Если возникли вопросы — напишите нам в
+            {{ "market.howToBuy.questions" | translate }}
             <a href="https://discord.com/invite/FZb7SGrSFy" class="text-lh-accent font-bold" target="_blank">Discord</a>
         </p>
     </div>
@@ -237,13 +247,13 @@
     <!-- Ссылки -->
     <div class="flex flex-col gap-2 text-center text-base">
         <p class="text-lh-primary/60">
-            Пополняя баланс, вы соглашаетесь с
+            {{ "market.howToBuy.agreement" | translate }}
             <a
                 href="https://lasthearth.ru/privacy-policy"
                 class="text-lh-accent font-bold border-b border-dashed border-lh-accent hover:opacity-80 transition-opacity"
                 target="_blank"
             >
-                политикой конфиденциальности
+                {{ "market.howToBuy.privacyPolicy" | translate }}
             </a>
             и
             <a
@@ -251,7 +261,7 @@
                 class="text-lh-accent font-bold border-b border-dashed border-lh-accent hover:opacity-80 transition-opacity"
                 target="_blank"
             >
-                публичной офертой
+                {{ "market.howToBuy.publicOffer" | translate }}
             </a>
         </p>
     </div>

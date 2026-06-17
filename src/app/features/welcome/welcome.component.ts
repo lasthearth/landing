@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, HostListener, inject, output, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, HostListener, inject, output, ViewChild, ElementRef } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiSwipe, TuiSwipeEvent } from '@taiga-ui/cdk';
+import { TranslatePipe } from '@core/i18n';
 
 @Component({
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
-    imports: [TuiIcon, TuiSwipe],
+    imports: [TuiIcon, TuiSwipe, TranslatePipe],
     styleUrl: './welcome.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WelcomeComponent implements AfterViewInit {
     private readonly localStorageService = inject(LocalStorageService);

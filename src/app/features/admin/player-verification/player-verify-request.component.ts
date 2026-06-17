@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { IVerifyRequest } from '@features/verification';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { TranslatePipe } from '@core/i18n';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 
@@ -20,7 +21,7 @@ import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.compone
 @Component({
     standalone: true,
     selector: 'app-player-verify-request',
-    imports: [TuiIcon, ImageLoaderComponent],
+    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe],
     templateUrl: './player-verify-request.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

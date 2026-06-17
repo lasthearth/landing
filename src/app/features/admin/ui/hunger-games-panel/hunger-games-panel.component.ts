@@ -18,6 +18,7 @@ import {
 } from '@entities/hunger-games';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { AdminSeasonSkeletonComponent, AdminTableSkeletonComponent } from '@shared/ui/skeletons';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { ISeasonOption } from './model/season-option.model';
 
 
@@ -30,7 +31,7 @@ import { ISeasonOption } from './model/season-option.model';
 @Component({
     selector: 'app-hunger-games-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, FormsModule, TuiIcon, TuiLoader, LHInputComponent, AdminSeasonSkeletonComponent, AdminTableSkeletonComponent, ImageLoaderComponent],
+    imports: [ReactiveFormsModule, FormsModule, TuiIcon, TuiLoader, LHInputComponent, AdminSeasonSkeletonComponent, AdminTableSkeletonComponent, ImageLoaderComponent, TranslatePipe],
     templateUrl: './hunger-games-panel.component.html',
     styleUrl: './hunger-games-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +68,11 @@ export class HungerGamesPanelComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
 
     /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
      * Текущий активный сезон.
      */
     protected readonly currentSeason = signal<ISeasonInfo | null>(null);
@@ -97,10 +103,10 @@ export class HungerGamesPanelComponent implements OnInit {
      * Первый элемент — "Текущий сезон" с пустым идентификатором.
      */
     protected readonly seasonOptions = computed<ISeasonOption[]>(() => [
-        { id: '', label: 'Текущий сезон' },
+        { id: '', label: this.i18n.translate('admin.hungerGames.currentSeason') },
         ...this.seasons().map((season) => ({
             id: season.id,
-            label: `Сезон ${season.number}`,
+            label: this.i18n.translate('admin.hungerGames.seasonNumber', { number: season.number }),
         })),
     ]);
 
@@ -108,7 +114,7 @@ export class HungerGamesPanelComponent implements OnInit {
      * Поле управления выбором сезона для лидерборда.
      */
     protected readonly seasonSelectControl = new FormControl<ISeasonOption | null>(
-        { id: '', label: 'Текущий сезон' },
+        { id: '', label: this.i18n.translate('admin.hungerGames.currentSeason') },
         { nonNullable: false }
     );
 
@@ -283,8 +289,8 @@ export class HungerGamesPanelComponent implements OnInit {
     protected createSeason(): void {
         this.confirmDialog
             .open({
-                title: 'Создать новый сезон?',
-                text: 'Текущий активный сезон будет завершён, если он есть. Продолжить?',
+                title: this.i18n.translate('admin.hungerGames.createConfirmTitle'),
+                text: this.i18n.translate('admin.hungerGames.createConfirmText'),
             })
             .pipe(
                 filter((confirmed) => confirmed),
@@ -292,7 +298,7 @@ export class HungerGamesPanelComponent implements OnInit {
                 switchMap(() =>
                     this.hungerGamesService
                         .createSeason$()
-                        .pipe(this.requestStatus.handleError(), this.requestStatus.handleSuccess('Новый сезон создан'))
+                        .pipe(this.requestStatus.handleError(), this.requestStatus.handleSuccess(this.i18n.translate('admin.hungerGames.createSuccess')))
                 ),
                 catchError(() => of(null)),
                 takeUntilDestroyed(this.destroyRef)
@@ -314,14 +320,14 @@ export class HungerGamesPanelComponent implements OnInit {
         const rewards = this.seasonRewards();
 
         if (rewards.length === 0) {
-            this.rewardsValidationError.set('Добавьте хотя бы одну награду');
+            this.rewardsValidationError.set(this.i18n.translate('admin.hungerGames.errorAtLeastOne'));
             return false;
         }
 
         const validRewards = rewards.filter((r) => r.coins.trim() !== '');
 
         if (validRewards.length === 0) {
-            this.rewardsValidationError.set('Укажите сумму хотя бы для одной награды');
+            this.rewardsValidationError.set(this.i18n.translate('admin.hungerGames.errorOneAmount'));
             return false;
         }
 
@@ -329,17 +335,17 @@ export class HungerGamesPanelComponent implements OnInit {
         const uniqueRanks = new Set(ranks);
 
         if (uniqueRanks.size !== ranks.length) {
-            this.rewardsValidationError.set('Места наград не должны повторяться');
+            this.rewardsValidationError.set(this.i18n.translate('admin.hungerGames.errorUniqueRanks'));
             return false;
         }
 
         if (validRewards.some((r) => r.rank <= 0)) {
-            this.rewardsValidationError.set('Место должно быть положительным числом');
+            this.rewardsValidationError.set(this.i18n.translate('admin.hungerGames.errorPositiveRank'));
             return false;
         }
 
         if (validRewards.some((r) => Number(r.coins) < 0)) {
-            this.rewardsValidationError.set('Сумма награды не может быть отрицательной');
+            this.rewardsValidationError.set(this.i18n.translate('admin.hungerGames.errorNegativeAmount'));
             return false;
         }
 
@@ -359,8 +365,8 @@ export class HungerGamesPanelComponent implements OnInit {
 
         this.confirmDialog
             .open({
-                title: 'Сбросить текущий сезон?',
-                text: `Будет распределено ${rewards.length} наград. Это действие нельзя отменить.`,
+                title: this.i18n.translate('admin.hungerGames.endConfirmTitle'),
+                text: this.i18n.translate('admin.hungerGames.endConfirmText', { count: rewards.length }),
             })
             .pipe(
                 filter((confirmed) => confirmed),
@@ -368,7 +374,7 @@ export class HungerGamesPanelComponent implements OnInit {
                 switchMap(() =>
                     this.hungerGamesService
                         .resetSeason$(rewards)
-                        .pipe(this.requestStatus.handleError(), this.requestStatus.handleSuccess('Сезон завершён и награды распределены'))
+                        .pipe(this.requestStatus.handleError(), this.requestStatus.handleSuccess(this.i18n.translate('admin.hungerGames.endSuccess')))
                 ),
                 catchError(() => of(null)),
                 takeUntilDestroyed(this.destroyRef)
@@ -442,7 +448,7 @@ export class HungerGamesPanelComponent implements OnInit {
         const exists = this.matchPlayers().some((p) => p.playerId === userId);
 
         if (exists) {
-            this.matchValidationError.set('Игрок уже добавлен в матч');
+            this.matchValidationError.set(this.i18n.translate('admin.hungerGames.errorPlayerExists'));
             return;
         }
 
@@ -511,7 +517,7 @@ export class HungerGamesPanelComponent implements OnInit {
         const players = this.matchPlayers();
 
         if (players.length < 2) {
-            this.matchValidationError.set('Добавьте минимум 2 игрока');
+            this.matchValidationError.set(this.i18n.translate('admin.hungerGames.errorMinPlayers'));
             return false;
         }
 
@@ -519,17 +525,17 @@ export class HungerGamesPanelComponent implements OnInit {
         const uniquePlaces = new Set(places);
 
         if (uniquePlaces.size !== places.length) {
-            this.matchValidationError.set('Места участников не должны повторяться');
+            this.matchValidationError.set(this.i18n.translate('admin.hungerGames.errorUniquePlaces'));
             return false;
         }
 
         if (places.some((p) => p <= 0)) {
-            this.matchValidationError.set('Место должно быть положительным числом');
+            this.matchValidationError.set(this.i18n.translate('admin.hungerGames.errorPositivePlace'));
             return false;
         }
 
         if (players.some((p) => p.kills < 0)) {
-            this.matchValidationError.set('Количество убийств не может быть отрицательным');
+            this.matchValidationError.set(this.i18n.translate('admin.hungerGames.errorNegativeKills'));
             return false;
         }
 
@@ -550,7 +556,7 @@ export class HungerGamesPanelComponent implements OnInit {
             .recordMatch$(this.matchPlayers())
             .pipe(
                 this.requestStatus.handleError(),
-                this.requestStatus.handleSuccess('Результат матча записан'),
+                this.requestStatus.handleSuccess(this.i18n.translate('admin.hungerGames.recordSuccess')),
                 catchError(() => of(null)),
                 takeUntilDestroyed(this.destroyRef)
             )

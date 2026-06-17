@@ -1,11 +1,12 @@
 import { Component, output } from '@angular/core';
+import { TranslatePipe } from '@core/i18n';
 import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/rule-paragraph.component';
 import { RuleLinkComponent } from '@app/features/rules/ui/rule-link/rule-link.component';
 
 @Component({
     selector: 'app-raid',
     templateUrl: './raid.component.html',
-    imports: [RuleParagraphComponent, RuleLinkComponent],
+    imports: [RuleParagraphComponent, RuleLinkComponent, TranslatePipe],
 })
 export class RaidComponent {
     /**

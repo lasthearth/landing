@@ -5,6 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VerificationService } from '@features/verification';
 import { SettlementService } from '@entities/settlement';
 import { RequestStatusService } from '@core/services/request-status.service';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент подтверждения одобрения.
@@ -15,7 +16,7 @@ import { RequestStatusService } from '@core/services/request-status.service';
     templateUrl: './confirm-approve.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TuiIcon],
+    imports: [TuiIcon, TranslatePipe],
 })
 export class ConfirmApproveComponent {
     /**
@@ -44,6 +45,11 @@ export class ConfirmApproveComponent {
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
 
     /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
      * Подтверждает одобрение анкеты.
      */
     protected confirmApprove(): void {
@@ -51,7 +57,7 @@ export class ConfirmApproveComponent {
             case 'settlement': {
                 this.settlementService.postVerifySettlementApprove(this.context.data.userId).pipe(
                     this.requestStatusService.handleError(),
-                    this.requestStatusService.handleSuccess('Анкета одобрена!', this.context.$implicit),
+                    this.requestStatusService.handleSuccess(this.i18n.translate('admin.verification.approveSuccess'), this.context.$implicit),
                     takeUntilDestroyed(this.destroyRef))
                     .subscribe();
 
@@ -60,7 +66,7 @@ export class ConfirmApproveComponent {
             case 'user': {
                 this.verificationService.postVerifySuccess(this.context.data.userId).pipe(
                     this.requestStatusService.handleError(),
-                    this.requestStatusService.handleSuccess('Анкета одобрена!', this.context.$implicit),
+                    this.requestStatusService.handleSuccess(this.i18n.translate('admin.verification.approveSuccess'), this.context.$implicit),
                     takeUntilDestroyed(this.destroyRef))
                     .subscribe();
                 break;

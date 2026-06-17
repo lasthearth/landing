@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-6 p-6">
     <div class="flex flex-col gap-4">
-        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">Список поселений игроков</p>
+        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">{{ 'settlements.list.title' | translate }}</p>
 
         <div class="flex flex-wrap gap-2">
             <button
@@ -9,7 +9,7 @@
                 (click)="setSort('default')"
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
-                По умолчанию
+                {{ 'settlements.list.sort.default' | translate }}
                 <span class="text-base transition-all duration-300 origin-center">━</span>
             </button>
             <button
@@ -18,7 +18,7 @@
                 (click)="setSort('population')"
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
-                По населению
+                {{ 'settlements.list.sort.population' | translate }}
                 <span
                     class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('population') === 'asc'"
@@ -36,7 +36,7 @@
                 (click)="setSort('online')"
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
-                По онлайну
+                {{ 'settlements.list.sort.online' | translate }}
                 <span
                     class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('online') === 'asc'"
@@ -59,7 +59,7 @@
                 (click)="setSort('east')"
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
-                Восток
+                {{ 'settlements.list.sort.east' | translate }}
                 <span
                     class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('east') === 'asc'"
@@ -77,7 +77,7 @@
                 (click)="setSort('west')"
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
-                Запад
+                {{ 'settlements.list.sort.west' | translate }}
                 <span
                     class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('west') === 'asc'"
@@ -95,7 +95,7 @@
                 (click)="setSort('suzerain')"
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
-                Сюзеренство
+                {{ 'settlements.list.sort.suzerain' | translate }}
                 <span
                     class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('suzerain') === 'asc'"
@@ -113,7 +113,7 @@
                 (click)="setSort('diplomacy')"
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
-                Дипломатия
+                {{ 'settlements.list.sort.diplomacy' | translate }}
                 <span
                     class="text-base transition-all duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('diplomacy') === 'asc'"
@@ -136,15 +136,15 @@
         </div>
     } @else if (error()) {
         <app-error-state
-            title="Не удалось загрузить поселения"
-            description="Проверьте подключение к интернету и попробуйте снова."
+            [title]="'settlements.list.error.title' | translate"
+            [description]="'settlements.list.error.description' | translate"
             (retry)="retryLoad()"
         />
     } @else if (sortedSettlements().length === 0) {
         <app-empty-state
             icon="@tui.trees"
-            title="Здесь пока нет селений"
-            description="Станьте первым, кто основит поселение у очага."
+            [title]="'settlements.list.empty.title' | translate"
+            [description]="'settlements.list.empty.description' | translate"
         />
     } @else {
         <div class="flex flex-wrap justify-center items-stretch gap-6 pt-0 lh-stagger-list">

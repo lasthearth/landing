@@ -1,157 +1,155 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="City" [level]="3">
-        Город — это
-        <app-rule-link target="Settlement">селение</app-rule-link>
-        , основанное после этапа «Посёлок», состоящее из 6-ти и более игроков, зарегистрированное на сайте, имеющее все
-        основные постройки на поверхности и соответствующее следующим требованиям:
+        <span [innerHTML]="'rules.content.settlements.types.city.intro' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.city.introAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Требования:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Расположение: не далее 8.5 тыс. блоков от нулевой координаты.
+        <b>{{ 'rules.content.settlements.common.requirements' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Население: от 6-ти человек.
+        {{ 'rules.content.settlements.types.city.location' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        <app-rule-link target="Monument" class="ml-2">Монумент</app-rule-link>
-        : 1х1х1 блока (ш,д,в) (или согласно патенту на улучшение селения).
+        {{ 'rules.content.settlements.types.city.population' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Документы:
+        <app-rule-link target="Monument" class="ml-2">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.city.monumentAfter' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.city.documentsHeading' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ подписанный
-        <app-rule-link target="Patent">патент</app-rule-link>
-        на разрешение основания города от
-        <app-rule-link target="Suzerain">сюзерена</app-rule-link>
-        ;
+        ◦ {{ 'rules.content.settlements.types.city.patentBefore' | translate }}
+        <app-rule-link target="Patent">{{ 'rules.content.terms.patent' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.city.patentAfter' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        <span>;</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ от 6-ти купчих
-        <app-rule-link target="Volnost">вольности</app-rule-link>
-        .
+        ◦ {{ 'rules.content.settlements.types.city.libertiesBefore' | translate }}
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.liberties' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Инфраструктура:
+        {{ 'rules.content.settlements.types.city.infrastructureHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ городская площадь;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.square' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ колодец с питьевой водой;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.well' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ дороги между всеми постройками шириной не менее 3-х блоков, где это возможно;
+        ◦ {{ 'rules.content.settlements.types.city.roads' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ дорога шириной не менее 3-х блоков до
-        <app-rule-link target="Suzerain">сюзерена</app-rule-link>
-        и еще одного любого поселения при его наличии. При отсутствии сухопутного пути допускается размещение буйков.
+        ◦ {{ 'rules.content.settlements.types.city.suzerainRoadBefore' | translate }}
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.city.suzerainRoadAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Хозяйство:
+        {{ 'rules.content.settlements.types.city.economyHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ склад, или складское помещение в уже имеющемся здании;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.storage' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ амбар;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.barn' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ грядки площадью от 48-ми блоков.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.farm' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Дополнительные строения:
+        {{ 'rules.content.settlements.types.city.additionalBuildingsHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 4-х одноэтажных строений;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.singleStory' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 5-ти двухэтажных строений;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.twoStory' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ здание религиозного или научного или экономического или культурного направления;
+        ◦ {{ 'rules.content.settlements.types.city.specialBuilding' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 2-х действующих рыночных прилавков.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.marketStalls' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Промышленность:
+        {{ 'rules.content.settlements.types.city.industryHeading' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 1-й мастерской [кожевенная, углежог, ткацкая и т.п.];</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.workshop' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ от 1-й кузницы;</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.city.forge' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Проведение событий: не менее 1-го события [ивента], с участием не менее 4-х игроков, за все время до получения
-        данного типа.
+        {{ 'rules.content.settlements.types.city.events' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Преимущества:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Наличие территориального блока [диаметр = 256 блоков].
+        <b>{{ 'rules.content.settlements.common.advantages' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность объявлять набеги на
-        <app-rule-link target="TypesAndStatuses">все типы селений</app-rule-link>
-        .
+        {{ 'rules.content.settlements.types.city.territoryBlock' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность объявлять войну при наличии казус белли.
+        <span [innerHTML]="'rules.content.settlements.types.city.raidTargetsBefore' | translate"></span>
+        <app-rule-link target="TypesAndStatuses">{{ 'rules.content.terms.allSettlementTypes' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность возведения
-        <app-rule-link target="Defend2">оборонительных построек</app-rule-link>
-        2-го уровня.
+        {{ 'rules.content.settlements.types.city.war' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность получить 1-го случайного торговца.
+        <span [innerHTML]="'rules.content.settlements.types.city.defensesBefore' | translate"></span>
+        <app-rule-link target="Defend2">{{ 'rules.content.terms.defensiveStructures' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.city.defensesAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Право получить льготный кредит от
-        <app-rule-link target="Suzerain">сюзерена</app-rule-link>
-        под 10% годовых [Может быть не выполнено, в случае враждебности к сюзерену].
+        {{ 'rules.content.settlements.types.city.trader' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Право основать не более 1 колонии.
+        {{ 'rules.content.settlements.types.city.credit' | translate }}
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.city.creditAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Право получить чертеж на упрощенное создание сыродутных печей.
+        {{ 'rules.content.settlements.types.city.colony' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.city.bloomeryBlueprint' | translate }}
     </app-rule-paragraph>
 </div>

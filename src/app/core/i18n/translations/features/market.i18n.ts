@@ -1,0 +1,216 @@
+export const MARKET_I18N = {
+    ru: {
+        market: {
+            howToBuy: {
+                title: 'Пополнить баланс осколков',
+                shardAlt: 'Осколок',
+                youGet: 'Вы получите',
+                shards: 'осколков',
+                amountLabel: 'Сумма пополнения, ₽',
+                rate: 'Курс',
+                rateValue: '1 ₽ = 10 осколков',
+                range: 'от {{min}} ₽ до {{max}} ₽',
+                selectMethod: 'Выберите способ оплаты',
+                sbp: {
+                    title: 'Сбербанк / СБП',
+                    subtitle: 'Перевод по номеру телефона',
+                    warning:
+                        'Отправьте ровно {{amount}} ₽. В комментарии к переводу обязательно укажите ник: {{nickname}}.',
+                    phoneLabel: 'Номер телефона получателя',
+                    bank: 'Банк',
+                    recipient: 'Получатель',
+                    copyAll: 'Скопировать все реквизиты',
+                    step1: 'Скопируйте номер телефона.',
+                    step2: 'В приложении банка выберите перевод по номеру телефона / СБП.',
+                    step3: 'Укажите сумму {{amount}} ₽ и банк {{bank}}.',
+                    step4: 'В сообщении к переводу напишите ник {{nickname}}.',
+                },
+                boosty: {
+                    title: 'Boosty',
+                    subtitle: 'Международные платежи',
+                    description:
+                        'Для оплаты из-за рубежа. К сумме пакета добавляется 300 ₽ комиссии сервиса.',
+                    total: 'К оплате: {{total}} ₽ (включает 300 ₽ комиссии).',
+                    nicknameWarning:
+                        'Обязательно укажите ник {{nickname}} в сообщении к платежу, иначе мы не сможем зачислить осколки.',
+                    button: 'Пополнить через Boosty {{total}} ₽',
+                },
+                delivery: 'Осколки поступят на счёт в течение 24 часов после оплаты',
+                questions: 'Если возникли вопросы — напишите нам в',
+                agreement: 'Пополняя баланс, вы соглашаетесь с',
+                privacyPolicy: 'политикой конфиденциальности',
+                publicOffer: 'публичной офертой',
+            },
+            common: {
+                shardAlt: 'Осколок Искры',
+                month: '1 месяц',
+                forever: 'Навсегда',
+                buyButton: 'КУПИТЬ',
+            },
+            marketPage: {
+                title: 'Магазин очага',
+                tabPrivileges: 'Привилегии',
+                tabKits: 'Наборы',
+                tabSpecial: 'Особое',
+                supportTitle: 'Поддержка сервера',
+                supportDescription:
+                    'Ваш вклад помогает миру у очага оставаться живым. Любая покупка на сервере — помогает оплатить аренду хостинга, доменного имени и работу команды.',
+                howToBuyButton: 'Как пополнить осколки',
+                fundingHosting: {
+                    title: 'Хостинг',
+                    description: 'Аренда мощностей для стабильной работы сервера',
+                },
+                fundingMods: {
+                    title: 'Моды',
+                    description: 'Разработка уникальных механик и контента',
+                },
+                fundingEvents: {
+                    title: 'События',
+                    description: 'Проведение турниров, наград и сезонных активностей',
+                },
+                fundingFair: {
+                    title: 'Без pay-to-win',
+                    description: 'Мы не рушим баланс игры, выверяя предметы и цены',
+                },
+            },
+            purchaseDialog: {
+                currencyRub: 'руб.',
+                termLabel: 'Срок',
+                totalLabel: 'К оплате',
+                confirmation:
+                    'При подтверждении с вас спишут {{price}} осколков, а в течение суток с вами свяжутся и выдадут товар на сервере.',
+                cancel: 'Отмена',
+                buy: 'Приобрести',
+                unknownItemError: 'Не удалось определить товар для покупки.',
+                purchaseError: 'Не удалось оформить покупку.',
+                successMessage: 'Покупка успешно оформлена',
+            },
+            kits: {
+                loadError: 'Не удалось загрузить наборы. Попробуйте ещё раз.',
+                emptyTitle: 'Скоро появится',
+                emptyDescription: 'Наборы ещё не добавлены в магазин. Загляните позже.',
+                kitTitle: 'Набор «{{title}}»',
+            },
+            special: {
+                loadError: 'Не удалось загрузить особые товары. Попробуйте ещё раз.',
+                emptyTitle: 'Скоро появится',
+                emptyDescription: 'Особые товары ещё не добавлены в магазин. Загляните позже.',
+            },
+            titles: {
+                loadError: 'Не удалось загрузить привилегии. Попробуйте ещё раз.',
+                emptyTitle: 'Скоро появится',
+                emptyDescription: 'Привилегии ещё не добавлены в магазин. Загляните позже.',
+                titleAbilities: 'Возможности титула «{{title}}»',
+                titleKit: 'Набор титула «{{title}}»',
+                dailyKit: 'Ежедневный набор «{{title}}»',
+            },
+        },
+    },
+    en: {
+        market: {
+            howToBuy: {
+                title: 'Top up shard balance',
+                shardAlt: 'Shard',
+                youGet: 'You get',
+                shards: 'shards',
+                amountLabel: 'Top-up amount, ₽',
+                rate: 'Rate',
+                rateValue: '1 ₽ = 10 shards',
+                range: 'from {{min}} ₽ to {{max}} ₽',
+                selectMethod: 'Select payment method',
+                sbp: {
+                    title: 'Sberbank / SBP',
+                    subtitle: 'Transfer by phone number',
+                    warning:
+                        'Send exactly {{amount}} ₽. Be sure to include your nickname in the transfer comment: {{nickname}}.',
+                    phoneLabel: 'Recipient phone number',
+                    bank: 'Bank',
+                    recipient: 'Recipient',
+                    copyAll: 'Copy all details',
+                    step1: 'Copy the phone number.',
+                    step2: 'In your banking app, choose transfer by phone number / SBP.',
+                    step3: 'Enter {{amount}} ₽ and bank {{bank}}.',
+                    step4: 'Write nickname {{nickname}} in the transfer message.',
+                },
+                boosty: {
+                    title: 'Boosty',
+                    subtitle: 'International payments',
+                    description:
+                        'For payments from abroad. A 300 ₽ service fee is added to the package amount.',
+                    total: 'Total: {{total}} ₽ (includes 300 ₽ fee).',
+                    nicknameWarning:
+                        'Be sure to include nickname {{nickname}} in the payment message, otherwise we cannot credit shards.',
+                    button: 'Top up via Boosty {{total}} ₽',
+                },
+                delivery: 'Shards will be credited within 24 hours after payment',
+                questions: 'If you have questions, write to us in',
+                agreement: 'By topping up your balance, you agree to the',
+                privacyPolicy: 'Privacy Policy',
+                publicOffer: 'Public Offer',
+            },
+            common: {
+                shardAlt: 'Spark Splinter',
+                month: '1 month',
+                forever: 'Forever',
+                buyButton: 'BUY',
+            },
+            marketPage: {
+                title: 'Hearth Shop',
+                tabPrivileges: 'Privileges',
+                tabKits: 'Kits',
+                tabSpecial: 'Special',
+                supportTitle: 'Support the server',
+                supportDescription:
+                    'Your contribution helps the world by the Hearth stay alive. Every purchase on the server helps pay for hosting, the domain name, and the team\'s work.',
+                howToBuyButton: 'How to top up shards',
+                fundingHosting: {
+                    title: 'Hosting',
+                    description: 'Renting capacity for stable server operation',
+                },
+                fundingMods: {
+                    title: 'Mods',
+                    description: 'Development of unique mechanics and content',
+                },
+                fundingEvents: {
+                    title: 'Events',
+                    description: 'Hosting tournaments, rewards, and seasonal activities',
+                },
+                fundingFair: {
+                    title: 'No pay-to-win',
+                    description: 'We do not break game balance, carefully balancing items and prices',
+                },
+            },
+            purchaseDialog: {
+                currencyRub: 'rub.',
+                termLabel: 'Term',
+                totalLabel: 'Total',
+                confirmation:
+                    'Upon confirmation, {{price}} shards will be deducted, and within 24 hours you will be contacted and the item will be issued on the server.',
+                cancel: 'Cancel',
+                buy: 'Purchase',
+                unknownItemError: 'Could not determine the item to purchase.',
+                purchaseError: 'Could not complete the purchase.',
+                successMessage: 'Purchase successfully completed',
+            },
+            kits: {
+                loadError: 'Failed to load kits. Please try again.',
+                emptyTitle: 'Coming soon',
+                emptyDescription: 'Kits have not been added to the shop yet. Check back later.',
+                kitTitle: 'Kit «{{title}}»',
+            },
+            special: {
+                loadError: 'Failed to load special items. Please try again.',
+                emptyTitle: 'Coming soon',
+                emptyDescription: 'Special items have not been added to the shop yet. Check back later.',
+            },
+            titles: {
+                loadError: 'Failed to load privileges. Please try again.',
+                emptyTitle: 'Coming soon',
+                emptyDescription: 'Privileges have not been added to the shop yet. Check back later.',
+                titleAbilities: 'Abilities of title «{{title}}»',
+                titleKit: 'Title kit «{{title}}»',
+                dailyKit: 'Daily kit «{{title}}»',
+            },
+        },
+    },
+};

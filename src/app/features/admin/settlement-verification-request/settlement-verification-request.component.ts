@@ -17,7 +17,7 @@ import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.comp
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 import { SettlementService } from '@entities/settlement';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
-import { getSettlementTypeByKey } from '@entities/settlement/lib/get-settlement-type-by-key.function';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { ModerateSettlementRequestComponent } from '../moderate-settlement-request/moderate-settlement-request.component';
 
 /**
@@ -26,7 +26,7 @@ import { ModerateSettlementRequestComponent } from '../moderate-settlement-reque
 @Component({
     standalone: true,
     selector: 'app-settlement-verification-request',
-    imports: [PolymorpheusOutlet, TuiButton, TuiPreview, TuiIcon, ImageLoaderComponent],
+    imports: [PolymorpheusOutlet, TuiButton, TuiPreview, TuiIcon, ImageLoaderComponent, TranslatePipe],
     templateUrl: './settlement-verification-request.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,6 +50,11 @@ export class SettlementVerificationRequestComponent {
      * Сервис диалогов.
      */
     private readonly dialogService: TuiDialogService = inject(TuiDialogService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Сервис предпросмотра.
@@ -115,11 +120,24 @@ export class SettlementVerificationRequestComponent {
     }
 
     /**
-     *  Возвращает тип селения по ключу.
+     * Карта ключей типов селений на ключи переводов.
+     */
+    private readonly settlementTypeKeyMap: Record<string, string> = {
+        CAMP: 'camp',
+        VILLAGE: 'village',
+        TOWNSHIP: 'township',
+        CITY: 'city',
+        PROVINCE: 'province',
+    };
+
+    /**
+     * Возвращает локализованное название типа селения по ключу.
      *
-     * @param key Ключ.
+     * @param key Ключ типа селения.
+     * @returns Локализованная строка.
      */
     protected getSettlementType(key: string): string {
-        return getSettlementTypeByKey(key);
+        const typeKey = this.settlementTypeKeyMap[key] ?? 'camp';
+        return this.i18n.translate(`admin.settlementTypes.${typeKey}`);
     }
 }

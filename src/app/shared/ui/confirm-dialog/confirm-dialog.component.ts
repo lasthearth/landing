@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
+import { TranslatePipe } from '@core/i18n';
 
 /**
  * Данные для диалога подтверждения.
@@ -26,6 +27,7 @@ export interface ConfirmDialogData {
 @Component({
     standalone: true,
     selector: 'app-confirm-dialog',
+    imports: [TranslatePipe],
     templateUrl: './confirm-dialog.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
     changeDetection: ChangeDetectionStrategy.OnPush,

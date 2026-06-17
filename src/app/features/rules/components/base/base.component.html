@@ -1,103 +1,78 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="P1.1">
-        <b>1.1</b>
-        Эти правила действуют на всех участников нашего сервера.
+        <span [innerHTML]="'rules.content.base.p1_1' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.2">
-        <b>1.2</b>
-        Играя и вступая на наш сервер, вы соглашаетесь со всеми правилами проекта.
+        <span [innerHTML]="'rules.content.base.p1_2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.3">
-        <b>1.3</b>
-        Незнание правил не освобождает вас от ответственности.
+        <span [innerHTML]="'rules.content.base.p1_3' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.4">
-        <b>1.4</b>
-        Администрация проекта оставляет за собой право дополнять или редактировать правила.
+        <span [innerHTML]="'rules.content.base.p1_4' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.5">
-        <b>1.5</b>
-        Запрещается использование лазеек и пробелов в настоящих правилах.
+        <span [innerHTML]="'rules.content.base.p1_5' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.6">
-        <b>1.6</b>
-        Запрещены действия, направленные на дестабилизацию работы сервера, а также распространение провокационных тем,
-        разжигание конфликтов или создание раздора.
+        <span [innerHTML]="'rules.content.base.p1_6' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.7">
-        <b>1.7</b>
-        Игрок обязан соблюдать нормы конструктивного и уважительного общения, вести адекватный, последовательный игровой
-        процесс, понимать концепцию сервера и осознавать, что все происходящее вокруг — это игра. Запрещены оскорбления,
-        уничижительные высказывания, буллинг, травля и любые формы дискриминации, а также переход на личности.
+        <span [innerHTML]="'rules.content.base.p1_7' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.8">
-        <b>1.8</b>
-        Запрещено использование любых программ, эксплойтов, багов или иных методов, предоставляющих несправедливое
-        преимущество в игровом процессе.
+        <span [innerHTML]="'rules.content.base.p1_8' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.9">
-        <b>1.9</b>
-        Запрещается массовое размещение блоков, высеченных блоков/вокселей, воды, лавы и/или иных жидкостей без цели,
-        либо с целью затруднить игровой процесс другим игрокам и/или обойти правила сервера.
+        <span [innerHTML]="'rules.content.base.p1_9' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.10">
-        <b>1.10</b>
-        Запрещено разрушать, размещать, изменять любые блоки, сущности, объекты, в том числе ландшафт, на защищенной
-        территории, за исключением случаев прямо предусмотренных настоящими правилами, таких как:
-        <app-rule-link target="P3">п.3,</app-rule-link>
-        <app-rule-link target="P5">п.5,</app-rule-link>
-        или по согласованию с владельцем
-        <app-rule-link target="Settlement">селения.</app-rule-link>
+        <span [innerHTML]="'rules.content.base.p1_10.before' | translate"></span>
+        <app-rule-link target="P3">{{ 'rules.content.base.p1_10.linkP3' | translate }}</app-rule-link>
+        <app-rule-link target="P5">{{ 'rules.content.base.p1_10.linkP5' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.base.p1_10.after' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.11">
-        <b>1.11</b>
-        Запрещается устраивать поджоги любых блоков и объектов.
+        <span [innerHTML]="'rules.content.base.p1_11' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.12">
-        <b>1.12</b>
-        Запрещено использовать взрывчатку, способную разрушить блоки, вблизи [200 блоков]
-        <app-rule-link target="Settlement">селений</app-rule-link>
-        игроков.
+        <span [innerHTML]="'rules.content.base.p1_12.before' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlementGenitivePlural' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.base.p1_12.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.13">
-        <b>1.13</b>
-        Любое
-        <app-rule-link target="Settlement">селение</app-rule-link>
-        обязано соблюдать свой
-        <app-rule-link target="Political course">политический курс.</app-rule-link>
+        <span [innerHTML]="'rules.content.base.p1_13.start' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.base.p1_13.middle' | translate"></span>
+        <app-rule-link target="Political course">{{ 'rules.content.terms.politicalCourse' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.14">
-        <b>1.14</b>
-        Все проживающие в
-        <app-rule-link target="Settlement">селении</app-rule-link>
-        и участвующие в боевых действиях от него игроки обязаны быть в списке жителей этого селения. Не распространяется
-        на борьбу за ключевые точки.
+        <span [innerHTML]="'rules.content.base.p1_14.start' | translate"></span>
+        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlementPrepositional' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.base.p1_14.end' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="P1.15">
-        <b>1.15</b>
-        Запрещено использовать приваты типа Claim.
+        <span [innerHTML]="'rules.content.base.p1_15' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph anchor="P1.15">
-        <b>1.16</b>
-        Одному игроку запрещается создавать и использовать более 2 игровых аккаунтов на проекте. Любое превышение
-        установленного лимита рассматривается как нарушение с целью извлечения несправедливого преимущества. В случае
-        обнаружения у игрока более 2 аккаунтов, все аккаунты, принадлежащие нарушителю, подлежат перманентной
-        блокировке, кроме одного (на усмотрение Администрации). Блокировка одного из двух аккаунтов за нарушение правил
-        проекта приводит и к блокировке второго.
+    <app-rule-paragraph anchor="P1.16">
+        <span [innerHTML]="'rules.content.base.p1_16' | translate"></span>
     </app-rule-paragraph>
 </div>

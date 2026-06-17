@@ -1,18 +1,12 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="2">
-        <b>3.2.1</b>
-        Игроки могут быть убиты, где угодно, как угодно, когда угодно и кем угодно с учетом правил сервера, кроме своей
-        территории, данной преимуществом. Исключением являются целенаправленные нон-стоп убийства игроков на нулевой
-        координате и в радиусе сотни блоков от нее. Все выше описанное не действует в случаях состояния набег и война (в
-        случаях воровства убийство допускается согласно правилам
-        <app-rule-link target="P3_1">п.3.1</app-rule-link>
-        ).
+        <span [innerHTML]="'rules.content.actions.kills.p3_2_1.before' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.actions.kills.theftRulesLink' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.kills.p3_2_1.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="2">
-        <b>3.2.2</b>
-        Исключение: игроки имеют право убивать других игроков на территории селений с агрессивным политическим курсом
-        согласно правилам
-        <app-rule-link target="P3_4_5_3">п.3.4.5.3</app-rule-link>
-        .
+        <span [innerHTML]="'rules.content.actions.kills.p3_2_2.before' | translate"></span>
+        <app-rule-link target="P3_4_5_3">{{ 'rules.content.actions.kills.aggressiveCourseLink' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 </div>

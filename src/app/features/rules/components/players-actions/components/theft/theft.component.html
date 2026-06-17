@@ -1,116 +1,87 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="2">
-        <b>3.1.1</b>
-        Воровство — это скрытное проникновение не более 2-х или 3-х игроков, в зависимости от политического курса
-        селения инициатора, на территорию селения или ключевой точки с целью кражи ресурсов. Данное действие должно
-        осуществляться строго в соответствии с установленными правилами.
+        <span [innerHTML]="'rules.content.actions.theft.p3_1_1' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.1.2</b>
-        Вор имеет право:
+        <span [innerHTML]="'rules.content.actions.theft.p3_1_2' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="3">• Разбивать и открывать/вскрывать категорически только:</app-rule-paragraph>
+    <app-rule-paragraph [level]="3">{{ 'rules.content.actions.theft.canBreakHeading' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ Двери, люки, ворота.</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.actions.theft.canBreak1' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ Окна, балконы с окнами (в виде стекла, заборов и иных проявлений, которые можно считать окнами в строении и
-        выбить, взломать подручными средствами).
+        ◦ {{ 'rules.content.actions.theft.canBreak2' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ Сундуки, ящики, сосуды, бочки, корзинки, глыбы камня [из мода "Карьер"], кусты ягод.
+        ◦ {{ 'rules.content.actions.theft.canBreak3' | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="3">• Угонять/разбирать любые транспортные средства.</app-rule-paragraph>
+    <app-rule-paragraph [level]="3">{{ 'rules.content.actions.theft.canStealVehicles' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Размещать, но не снимать, исключительно веревочные лестницы только на рукотворных постройках, а так же в
-        открытых ямах и рвах.
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        • Во время грабежа вор может быть защищен исключительно кожаной, медвежьей, стеганой броней или стеганной броней
-        сшитой на заказ. Наличие брони не является обязательным.
+        {{ 'rules.content.actions.theft.canPlaceLadders' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вор может защищаться исключительно в случае обнаружения и получения первого урона, но не имеет права
-        инициировать нападение первым, а также вести преследование жертвы. Вор обязан при получении первого урона —
-        начать незамедлительное отступление с территории селения.
+        {{ 'rules.content.actions.theft.armorLimit' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вор имеет право на сбор любого урожая и кражу скота посредством клеток [убийство скота запрещается].
+        {{ 'rules.content.actions.theft.defenseRule' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        {{ 'rules.content.actions.theft.canHarvest' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.1.3</b>
-        Вор обязан:
+        <span [innerHTML]="'rules.content.actions.theft.p3_1_3' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Находиться онлайн на протяжении всего процесса воровства и не покидать игру, за исключением непредвиденных
-        крашей или рестартов сервера.
+        {{ 'rules.content.actions.theft.mustOnline' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Совершать грабеж одной и той же цели не чаще, чем 1 раз в реальные 4 часа. Откат действует на всех игроков
-        состоящих в селении вора.
+        {{ 'rules.content.actions.theft.cooldown' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Совершать грабеж исключительно при нахождении потенциальной цели в сети [для Хуторов, Лагерей, Деревень - 1
-        игрок в сети; для Поселков и Городов - минимум 2 игрока в сети, для Региональной провинции - минимум 3 игрока в
-        сети, для Ключевой точки - не менее 6-ти игроков от всей стороны Сюзерена]. Территориальное нахождение цели при
-        проведении грабежа не имеет значения.
+        {{ 'rules.content.actions.theft.targetOnline' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вор имеет право доводить до конца уже начатый грабеж, если в процессе цель вышла из сети, но после выхода
-        цели, вор не имеет право ломать абсолютно никакие блоки и объекты.
+        {{ 'rules.content.actions.theft.finishAfterLogout' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вору запрещается использовать любой инструмент чизла на чужой территории и в процессе воровства.
+        {{ 'rules.content.actions.theft.noChisel' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вору запрещается использовать темпоральные шестеренки в процессе воровства.
+        {{ 'rules.content.actions.theft.noTemporalGears' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вору запрещается укреплять любые объекты и блоки в процессе воровства.
+        {{ 'rules.content.actions.theft.noReinforce' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вору запрещается носить на спине сундуки, бочки, ящики, сосуды, дупла и другие блоки хранения.
+        {{ 'rules.content.actions.theft.noBackpackStorage' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вор обязан в начале совершения воровства сделать скриншоты: своего инвентаря; брони на своем персонаже; списка
-        игроков, которые находятся в онлайне; Приветствуются откаты совершения воровства.
+        {{ 'rules.content.actions.theft.screenshots' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        • Вору запрещен выход из своего селения для совершения воровства и возвращение обратно в свое селение, для
-        обхода дипломатического курса, отката на воровство и дипломатических заявлений селения. Предоставить данные о
-        заказчике и дате заключения контракта, в случае осуществления воровства по заказу от частного лица / селения.
+        {{ 'rules.content.actions.theft.noBypass' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <b>3.1.4</b>
-        Хранение и содержание контрактов.
-        <br />
-        Контракт должен содержать: цель для воровства (название селение/ник игрока) ник вора и заказчика, реальную дату
-        подписания контракта. Контракт на воровство обязан храниться в доступном для нахождения месте на территории
-        селения заказчика. В случае заключения контракта от имени селения (его главой, заместителем) – контракт должен
-        храниться в главном здании селения-заказчика (башня, донжон, замок, форт, жилье правителя т.д.). В случае
-        заключения контракта от частного лица (конкретного игрока) – контракт должен храниться в основном жилом здании
-        данного игрока. Запрещено прятать, закапывать, замуровывать, помещать в сундуки под землей / в стенах или иным
-        образом делать контракт недоступным для нахождения. Администрация имеет право в любой момент запросить доступ к
-        контракту. Контракт должен храниться минимум 30 реальных дней после подписания.
+        <span [innerHTML]="'rules.content.actions.theft.p3_1_4' | translate"></span>
     </app-rule-paragraph>
 </div>

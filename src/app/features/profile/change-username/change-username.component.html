@@ -1,17 +1,17 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="lh-dialog-card">
-    <h2 class="lh-dialog-title">Изменить игровой ник</h2>
+    <h2 class="lh-dialog-title">{{ 'profile.changeUsername.title' | translate }}</h2>
 
-    <p class="text-base text-lh-danger">Предупреждение! Игровой ник можно изменить 1 раз в 6 месяцев</p>
+    <p class="text-base text-lh-danger">{{ 'profile.changeUsername.warning' | translate }}</p>
 
-    <lh-input placeholder="Ваш новый никнейм" formControlName="newUsername"></lh-input>
+    <lh-input [placeholder]="'profile.changeUsername.placeholder' | translate" formControlName="newUsername"></lh-input>
     <tui-error formControlName="newUsername" [error]="[] | tuiFieldError | async" />
 
     <div class="lh-dialog-actions">
         <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
-            Отменить
+            {{ 'profile.changeUsername.cancel' | translate }}
         </button>
         <button type="submit" [disabled]="!form.valid" class="lh-dialog-button lh-dialog-button-primary">
-            Изменить
+            {{ 'profile.changeUsername.change' | translate }}
         </button>
     </div>
 </form>

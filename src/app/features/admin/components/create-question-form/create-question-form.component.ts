@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RuleQuestionApiService } from '@entities/rule-question';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент создания вопроса для верификации.
@@ -23,6 +24,7 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
         TuiFieldErrorPipe,
         AsyncPipe,
         LHInputComponent,
+        TranslatePipe,
     ],
     templateUrl: './create-question-from.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +53,11 @@ export class CreateQuestionFormComponent {
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
 
     /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
      * {@link Subject} события отправки формы.
      */
     protected readonly onSubmit: Subject<void> = new Subject<void>();
@@ -73,7 +80,7 @@ export class CreateQuestionFormComponent {
                             .create(question)
                             .pipe(
                                 this.requestStatusService.handleError(),
-                                this.requestStatusService.handleSuccess('Вопрос создан!'),
+                                this.requestStatusService.handleSuccess(this.i18n.translate('admin.questions.createdSuccess')),
                                 takeUntilDestroyed(this.destroyRef)
                             )
                             .subscribe(() => this.created.emit());

@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6 w-full">
-    <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">Как начать играть?</p>
+    <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">{{ 'profile.howToPlay.title' | translate }}</p>
 
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
         <p
@@ -8,7 +8,7 @@
             1
         </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">Скачайте игру версии {{ environment.gameVersion }}</p>
+            <p class="text-2xl font-bold text-[#2d201a]">{{ 'profile.howToPlay.step1Title' | translate:{version: environment.gameVersion} }}</p>
             <p class="text-xl text-lh-primary leading-8">
                 Приобрести игру можно на
                 <a
@@ -38,13 +38,13 @@
             2
         </p>
         <div class="flex flex-col gap-3 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">Добавьте наш сервер</p>
+            <p class="text-2xl font-bold text-[#2d201a]">{{ 'profile.howToPlay.step2Title' | translate }}</p>
             <p class="text-xl text-lh-primary leading-8">Во вкладке сетевая игра добавьте наш сервер используя:</p>
             <div
                 class="bg-white/30 border border-lh-primary-2/10 rounded-xl p-4 flex flex-col gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
             >
                 <div class="flex items-start gap-2">
-                    <span class="text-xl text-neutral-500 font-medium leading-normal">IP:</span>
+                    <span class="text-xl text-neutral-500 font-medium leading-normal">{{ 'profile.howToPlay.ipLabel' | translate }}</span>
                     <div class="overflow-visible h-auto">
                         <tui-copy>
                             <span class="text-xl text-[#2d201a] font-bold leading-normal">
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="flex items-start gap-2">
-                    <span class="text-xl text-neutral-500 font-medium leading-normal">Пароль:</span>
+                    <span class="text-xl text-neutral-500 font-medium leading-normal">{{ 'profile.howToPlay.passwordLabel' | translate }}</span>
                     <div class="overflow-visible h-auto">
                         <tui-copy class="copy-word">
                             <span class="text-xl text-[#2d201a] font-bold leading-normal whitespace-normal break-all">
@@ -74,7 +74,7 @@
             3
         </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">Играйте</p>
+            <p class="text-2xl font-bold text-[#2d201a]">{{ 'profile.howToPlay.step3Title' | translate }}</p>
             <p class="text-xl text-lh-primary leading-8">
                 Выполнив все шаги — вы можете приступить к полноценной игре. Если у вас возникнут какие-либо сложности,
                 вы всегда можете попросить помощи у других игроков или у администрации. Узнать свой ответ быстро можно у

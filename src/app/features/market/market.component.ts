@@ -1,17 +1,18 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
 import { TitlesComponent } from './components/titles/titles.component';
 import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
 import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
-import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 
 /**
  * Компонент магазина привилегий.
  */
 @Component({
     selector: 'app-market',
-    imports: [TitlesComponent, KitsComponent, SpecialComponent, TuiIcon],
+    imports: [TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

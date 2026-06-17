@@ -4,6 +4,7 @@ import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { IPendingPurchase } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { TranslatePipe } from '@core/i18n';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import {
     ConfirmPurchaseActionComponent,
@@ -19,7 +20,7 @@ import {
 @Component({
     selector: 'app-pending-purchases-panel',
     standalone: true,
-    imports: [TuiIcon, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent],
+    imports: [TuiIcon, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
     templateUrl: './pending-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,26 +1,26 @@
 <div class="flex flex-col gap-6">
     <!-- Форма создания -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">Создание новостей</p>
+        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'news.create.title' | translate }}</p>
         <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-4 mt-6">
-            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">Заголовок новости</p>
-            <lh-input formControlName="title" placeholder="Придумайте заголовок новости..." />
+            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">{{ 'news.create.newsTitleLabel' | translate }}</p>
+            <lh-input formControlName="title" [placeholder]="'news.create.titlePlaceholder' | translate" />
             <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />
 
-            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">Содержание новости</p>
+            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">{{ 'news.create.contentLabel' | translate }}</p>
             <lh-input
                 formControlName="content"
-                placeholder="Придумайте содержание новости..."
+                [placeholder]="'news.create.contentPlaceholder' | translate"
                 type="textarea"
             />
             <tui-error formControlName="content" [error]="[] | tuiFieldError | async" />
 
-            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">Изображение новости</p>
+            <p class="text-[23px] leading-[32px] font-bold text-[#2d201a]">{{ 'news.create.imageLabel' | translate }}</p>
 
             @if (!form.controls.preview.value) {
                 <label tuiInputFiles>
                     <ng-template tuiInputFilesContent>
-                        <span class="text-[#5c554a] text-[18px]">Добавить изображение...</span>
+                        <span class="text-[#5c554a] text-[18px]">{{ 'news.create.addImage' | translate }}</span>
                         <input accept="image/*" tuiInputFiles formControlName="preview" />
                     </ng-template>
                 </label>
@@ -50,18 +50,18 @@
                 type="submit"
                 class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e] self-end disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                Создать новость
+                {{ 'news.create.createButton' | translate }}
             </button>
         </form>
     </div>
 
     <!-- Предпросмотр -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] text-center">Предпросмотр новости</p>
+        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] text-center">{{ 'news.create.previewTitle' | translate }}</p>
         <div class="mt-6">
             <app-news-card
-                title="{{ form.controls.title.value || 'Введите заголовок новости...' }}"
-                content="{{ form.controls.content.value || 'Введите содержание новости...' }}"
+                title="{{ form.controls.title.value || ('news.create.titleFallback' | translate) }}"
+                content="{{ form.controls.content.value || ('news.create.contentFallback' | translate) }}"
                 [preview]="previewUrl || '/7.png'"
                 date="{{ currentDate$ | async | date: 'dd.MM.yy - HH:mm' }}"
                 [viewCount]="0"

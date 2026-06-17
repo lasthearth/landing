@@ -12,8 +12,9 @@ import { LeaderCardComponent } from './leader-card/leader-card.component';
 import { StatisticsSkeletonComponent } from '@shared/ui/skeletons';
 import { TUI_IS_MOBILE } from '@taiga-ui/cdk';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
-export type TypeLabel = 'Смертей' | 'Убийств' | 'Часов';
+export type TypeLabel = string;
 
 /**
  * Компонент страницы статистики игроков.
@@ -21,7 +22,7 @@ export type TypeLabel = 'Смертей' | 'Убийств' | 'Часов';
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [TuiTable, AsyncPipe, TuiTabs, LeaderCardComponent, StatisticsSkeletonComponent, ImageLoaderComponent],
+    imports: [TuiTable, AsyncPipe, TuiTabs, LeaderCardComponent, StatisticsSkeletonComponent, ImageLoaderComponent, TranslatePipe],
     styleUrl: './statistics.component.less',
     templateUrl: './statistics.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +42,11 @@ export class StatisticsComponent {
      * ChangeDetectorRef для обновления вида.
      */
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Кэш аватарок пользователей по user_id.
@@ -120,12 +126,12 @@ export class StatisticsComponent {
     protected getTypeLabel(): TypeLabel {
         switch (this.selectedTh) {
             case 'kills':
-                return 'Убийств';
+                return this.i18n.translate('profile.statistics.typeLabels.kills');
             case 'hours':
-                return 'Часов';
+                return this.i18n.translate('profile.statistics.typeLabels.hours');
             case 'deaths':
             default:
-                return 'Смертей';
+                return this.i18n.translate('profile.statistics.typeLabels.deaths');
         }
     }
 

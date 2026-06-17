@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { TuiExpand, TuiIcon } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
 
 /**
  * Компонент страницы "Публичная оферта".
@@ -10,7 +11,7 @@ import { TuiExpand, TuiIcon } from '@taiga-ui/core';
 @Component({
     selector: 'app-public-offer',
     standalone: true,
-    imports: [TuiIcon, CommonModule, TuiExpand],
+    imports: [TuiIcon, CommonModule, TuiExpand, TranslatePipe],
     templateUrl: './public-offer.component.html',
     styleUrl: './public-offer.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

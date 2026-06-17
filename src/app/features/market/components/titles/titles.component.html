@@ -2,14 +2,14 @@
     <app-market-grid-skeleton />
 } @else if (error()) {
     <app-error-state
-        description="Не удалось загрузить привилегии. Попробуйте ещё раз."
+        [description]="'market.titles.loadError' | translate"
         (retry)="retryLoad()"
     />
 } @else if (titles.length === 0) {
     <app-empty-state
         icon="@tui.crown"
-        title="Скоро появится"
-        description="Привилегии ещё не добавлены в магазин. Загляните позже."
+        [title]="'market.titles.emptyTitle' | translate"
+        [description]="'market.titles.emptyDescription' | translate"
     />
 } @else {
     <div class="flex flex-col lg:flex-row gap-4 lg:gap-6">
@@ -76,24 +76,24 @@
 
                         <div class="flex items-center gap-2" [class.text-white/90]="selectedTerm() === 'month'" [class.text-[#5c554a]]="selectedTerm() !== 'month'">
                             <tui-icon icon="@tui.calendar" class="size-5 lg:size-6!" />
-                            <span class="text-lg lg:text-2xl font-bold">1 месяц</span>
+                            <span class="text-lg lg:text-2xl font-bold">{{ 'market.common.month' | translate }}</span>
                         </div>
 
                         @if (selectedPrivilege!.monthPriceOriginal) {
                             <div class="flex flex-col items-end">
                                 <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'month'" [class.text-[#9e9789]]="selectedTerm() !== 'month'">
                                     <span class="strong-strike font-medium text-base lg:text-lg leading-none">{{ selectedPrivilege!.monthPriceOriginal }}</span>
-                                    <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-4 w-4 lg:h-5 lg:w-5 object-contain opacity-70 leading-none -ml-0.5" />
+                                    <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-4 w-4 lg:h-5 lg:w-5 object-contain opacity-70 leading-none -ml-0.5" />
                                 </div>
                                 <div class="flex items-center gap-1 leading-none">
                                     <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.monthPrice }}</span>
-                                    <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
+                                    <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
                                 </div>
                             </div>
                         } @else {
                             <div class="flex items-center gap-1 leading-none">
                                 <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.monthPrice }}</span>
-                                <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
+                                <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
                             </div>
                         }
                     </button>
@@ -125,24 +125,24 @@
 
                             <div class="flex items-center gap-2" [class.text-white/90]="selectedTerm() === 'season'" [class.text-[#5c554a]]="selectedTerm() !== 'season'">
                                 <tui-icon icon="@tui.infinity" class="size-5 lg:size-6!" />
-                                <span class="text-lg lg:text-2xl font-bold">Навсегда</span>
+                                <span class="text-lg lg:text-2xl font-bold">{{ 'market.common.forever' | translate }}</span>
                             </div>
 
                             @if (selectedPrivilege!.seasonPriceOriginal) {
                                 <div class="flex flex-col items-end">
                                     <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'season'" [class.text-[#9e9789]]="selectedTerm() !== 'season'">
                                         <span class="strong-strike font-medium text-base lg:text-lg leading-none">{{ selectedPrivilege!.seasonPriceOriginal }}</span>
-                                        <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-4 w-4 lg:h-5 lg:w-5 object-contain opacity-70 leading-none -ml-0.5" />
+                                        <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-4 w-4 lg:h-5 lg:w-5 object-contain opacity-70 leading-none -ml-0.5" />
                                     </div>
                                     <div class="flex items-center gap-1 leading-none">
                                         <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.seasonPrice }}</span>
-                                        <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
+                                        <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
                                     </div>
                                 </div>
                             } @else {
                                 <div class="flex items-center gap-1 leading-none">
                                     <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.seasonPrice }}</span>
-                                    <img src="/splinter-of-spark.png" alt="Осколок Искры" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
+                                    <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
                                 </div>
                             }
                         </button>
@@ -154,7 +154,7 @@
             @if (selectedPrivilege!.privileges?.length) {
                 <div class="flex flex-col gap-3">
                     <p class="text-base lg:text-lg font-bold text-lh-primary uppercase tracking-wide">
-                        Возможности титула «{{ selectedPrivilege!.title }}»
+                        {{ 'market.titles.titleAbilities' | translate:{ title: selectedPrivilege!.title } }}
                     </p>
                     <div class="flex gap-3 flex-wrap">
                         @for (abilityItem of selectedPrivilege!.privileges; track $index) {
@@ -167,7 +167,7 @@
             <!-- Kit items -->
             <div class="flex flex-col gap-3">
                 <p class="text-base lg:text-lg font-bold text-lh-primary uppercase tracking-wide">
-                    Набор титула «{{ selectedPrivilege!.title }}»
+                    {{ 'market.titles.titleKit' | translate:{ title: selectedPrivilege!.title } }}
                 </p>
                 <div class="flex gap-2 flex-wrap">
                     @for (kitItem of selectedPrivilege!.kitItems; track $index) {
@@ -180,7 +180,7 @@
             @if (selectedPrivilege!.dailyKitItems?.length) {
                 <div class="flex flex-col gap-3">
                     <p class="text-base lg:text-lg font-bold text-lh-primary uppercase tracking-wide">
-                        Ежедневный набор «{{ selectedPrivilege!.title }}»
+                        {{ 'market.titles.dailyKit' | translate:{ title: selectedPrivilege!.title } }}
                     </p>
                     <div class="flex gap-2 flex-wrap">
                         @for (kitItem of selectedPrivilege!.dailyKitItems; track $index) {
@@ -196,7 +196,7 @@
                 class="shimmer-btn self-stretch text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-[#b55115] to-[#cc6e2a] hover:from-[#b85115] hover:to-[#d07028] rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-lg lg:text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
             >
                 <tui-icon icon="@tui.shopping-cart" class="size-6!" />
-                <span>КУПИТЬ</span>
+                <span>{{ 'market.common.buyButton' | translate }}</span>
             </button>
         </div>
     </div>

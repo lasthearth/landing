@@ -5,15 +5,15 @@
         >
             <tui-icon icon="@tui.check" class="size-6! text-lh-accent" />
         </div>
-        <p class="lh-dialog-title">Подтвердить одобрение?</p>
+        <p class="lh-dialog-title">{{ 'admin.verification.approveConfirmTitle' | translate }}</p>
     </div>
 
     <div class="lh-dialog-actions">
         <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
-            Отмена
+            {{ 'common.cancel' | translate }}
         </button>
         <button type="button" (click)="confirmApprove()" class="lh-dialog-button lh-dialog-button-primary">
-            Одобрить
+            {{ 'admin.verification.approve' | translate }}
         </button>
     </div>
 </div>

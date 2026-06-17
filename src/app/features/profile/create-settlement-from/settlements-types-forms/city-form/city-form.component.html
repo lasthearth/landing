@@ -1,45 +1,45 @@
 <form [formGroup]="form" class="flex flex-col gap-6 w-full bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6" (ngSubmit)="onSubmit.next()">
-    <p class="text-2xl text-[#2d201a] font-bold self-center">Улучшение селения из "Посёлок" в "Город"</p>
+    <p class="text-2xl text-[#2d201a] font-bold self-center">{{ 'settlements.form.title.city' | translate }}</p>
 
     <div class="flex flex-col gap-2">
         <p class="text-xl text-[#2d201a] font-semibold">
-            Какое будет название?
+            {{ 'settlements.form.nameLabel' | translate }}
             <span class="text-lh-danger">*</span>
             <lh-hint
-                hintText="Это будет официальное название вашего образования. Оно должно быть логичным и не содержать нецензурной лексики."
+                [hintText]="'settlements.form.nameHint' | translate"
             />
         </p>
-        <lh-input placeholder="Введите название..." formControlName="name" />
+        <lh-input [placeholder]="'settlements.form.namePlaceholder' | translate" formControlName="name" />
     </div>
 
     <div class="flex flex-col gap-2">
         <p class="text-xl text-[#2d201a] font-semibold">
-            Координаты расположения
+            {{ 'settlements.form.coordinatesLabel' | translate }}
             <span class="text-lh-danger">*</span>
-            <lh-hint hintText="Игровые координаты где располагается образование в виде: х: значение, y: значение." />
+            <lh-hint [hintText]="'settlements.form.coordinatesHint' | translate" />
         </p>
-        <lh-input placeholder="Введите x..." type="inputNumber" formControlName="x" />
-        <lh-input placeholder="Введите z..." type="inputNumber" formControlName="z" />
+        <lh-input [placeholder]="'settlements.form.xPlaceholder' | translate" type="inputNumber" formControlName="x" />
+        <lh-input [placeholder]="'settlements.form.zPlaceholder' | translate" type="inputNumber" formControlName="z" />
     </div>
 
     <div class="flex flex-col gap-2">
         <p class="text-xl text-[#2d201a] font-semibold">
-            Выберите ваш дипломатический статус
+            {{ 'settlements.form.diplomacyLabel' | translate }}
             <span class="text-lh-danger">*</span>
-            <lh-hint hintText="Дипломатический статус должен строго исполняться образованием." />
+            <lh-hint [hintText]="'settlements.form.diplomacyHint' | translate" />
         </p>
-        <lh-input formControlName="diplomacy" type="select" [items]="diplomacy" placeholder="Выберите тип..." />
+        <lh-input formControlName="diplomacy" type="select" [items]="diplomacy()" [placeholder]="'settlements.form.diplomacyPlaceholder' | translate" />
     </div>
 
     <div class="flex flex-col gap-2">
         <p class="text-xl text-[#2d201a] font-semibold">
-            Описание или лор образования
+            {{ 'settlements.form.descriptionLabel' | translate }}
             <span class="text-lh-danger">*</span>
             <lh-hint
-                hintText="Опишите историю или то, чем является ваше образование. Это поможет новым игрокам вступить именно к вам."
+                [hintText]="'settlements.form.descriptionHint' | translate"
             />
         </p>
-        <lh-input placeholder="Введите историю..." type="textarea" formControlName="description" />
+        <lh-input [placeholder]="'settlements.form.descriptionPlaceholder' | translate" type="textarea" formControlName="description" />
     </div>
 
     <div *ngFor="let key of fileFields">
@@ -51,7 +51,7 @@
         <label *ngIf="!form.controls[key].value" tuiInputFiles>
             <input accept="image/*" tuiInputFiles [formControl]="form.controls[key]" class="border-lh-primary!" />
             <ng-template tuiInputFilesContent>
-                <span class="text-neutral-500">Добавить изображение...</span>
+                <span class="text-neutral-500">{{ 'settlements.form.addImage' | translate }}</span>
             </ng-template>
         </label>
 
@@ -90,7 +90,7 @@
         @if (isLoading) {
             <tui-loader [showLoader]="isLoading" />
         } @else {
-            Основать
+            {{ 'settlements.form.submit' | translate }}
         }
     </button>
 </form>

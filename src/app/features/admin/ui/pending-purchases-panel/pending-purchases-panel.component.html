@@ -20,15 +20,15 @@
     </div>
 } @else if (error()) {
     <app-error-state
-        title="Не удалось загрузить покупки"
-        description="Проверьте подключение к интернету и попробуйте снова."
+        [title]="'admin.purchases.loadErrorTitle' | translate"
+        [description]="'admin.purchases.loadErrorDescription' | translate"
         (retry)="onRetry()"
     />
 } @else if (!purchases().length) {
     <app-empty-state
         icon="@tui.check-check"
-        title="Всё выдано"
-        description="Ожидающие выдачи покупки отсутствуют."
+        [title]="'admin.purchases.allIssuedTitle' | translate"
+        [description]="'admin.purchases.allIssuedDescription' | translate"
     />
 } @else {
     <div class="flex flex-col gap-4 lh-stagger-list">
@@ -43,10 +43,10 @@
                         class="size-14 shrink-0"
                         objectFit="cover"
                         containerClass="rounded-full"
-                        alt="Аватар"
+                        [alt]="'admin.common.avatarAlt' | translate"
                     />
                     <div class="flex flex-col min-w-0">
-                        <span class="text-base text-neutral-500 leading-5">Игрок</span>
+                        <span class="text-base text-neutral-500 leading-5">{{ 'admin.common.player' | translate }}</span>
                         <span class="text-2xl font-bold text-[#2d201a] truncate">{{ purchase.playerName }}</span>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                             <span class="text-lg font-semibold text-[#2d201a] leading-6">{{ purchase.itemName }}</span>
                         </div>
                         <div class="flex items-start gap-2 pl-7">
-                            <span class="text-base text-neutral-500 shrink-0 font-medium">Цена:</span>
+                            <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
                             <span class="text-lg text-[#5c4030] leading-6 break-words">
                                 @if (purchase.discountPercent > 0 && purchase.basePrice) {
                                     <span class="line-through text-neutral-500 mr-2">{{ purchase.basePrice }}</span>
@@ -74,19 +74,19 @@
                         </div>
                         @if (purchase.discountPercent > 0) {
                             <div class="flex items-start gap-2 pl-7">
-                                <span class="text-base text-neutral-500 shrink-0 font-medium">Скидка:</span>
+                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.discount' | translate }}</span>
                                 <span class="text-lg text-lh-accent leading-6 break-words">{{ purchase.discountPercent }}%</span>
                             </div>
                         }
                         @if (purchase.comment) {
                             <div class="flex items-start gap-2 pl-7">
                                 <tui-icon icon="@tui.file-text" class="size-4! text-lh-accent shrink-0 mt-1" />
-                                <span class="text-base text-neutral-500 shrink-0 font-medium">Комментарий:</span>
+                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.comment' | translate }}</span>
                                 <span class="text-lg text-[#5c4030] leading-6 break-words">{{ purchase.comment }}</span>
                             </div>
                         }
                         <div class="flex items-start gap-2 pl-7">
-                            <span class="text-base text-neutral-500 shrink-0 font-medium">Дата:</span>
+                            <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
                             <span class="text-lg text-[#5c4030] leading-6 break-words">{{ purchase.formattedDate }}</span>
                         </div>
                     </div>
@@ -98,13 +98,13 @@
                         (click)="refund(purchase)"
                         class="text-lg font-bold cursor-pointer bg-transparent border border-lh-danger text-lh-danger rounded-xl py-2 px-5 hover:bg-lh-danger/10 transition-colors"
                     >
-                        Возврат
+                        {{ 'admin.purchases.refund' | translate }}
                     </button>
                     <button
                         (click)="issue(purchase)"
                         class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-[#e66a1a] transition-colors"
                     >
-                        Выдать
+                        {{ 'admin.purchases.issue' | translate }}
                     </button>
                 </div>
             </div>

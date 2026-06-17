@@ -1,73 +1,72 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="SuzerainStatus" [level]="3">
-        Сюзерен — это статус, накладывающий ряд требований и преимуществ:
+        {{ 'rules.content.settlements.types.suzerain.intro' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>Требования:</b>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        Являться одним из типов селений.
+        <b>{{ 'rules.content.settlements.common.requirements' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Выполнение обязательств
-        <app-rule-link target="Suzerain">сюзерена</app-rule-link>
-        по выдаче кредитов, при условии, что селение проситель не проявляет открыто-доказанную агрессию
-        <app-rule-link target="Suzerain">сюзерену</app-rule-link>
-        .
+        {{ 'rules.content.settlements.types.suzerain.req1' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Наличие действующих рынков, где продаются купчие вольности и патенты на селения необходимых типов.
+        <span [innerHTML]="'rules.content.settlements.types.suzerain.req2Before' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.suzerain.req2Middle' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainDativeLower' | translate }}</app-rule-link>
+        <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Обустроенная дорога от селения до нулевой координаты, шириной не менее 3-х блоков.
+        {{ 'rules.content.settlements.types.suzerain.req3' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Использование исключительно валюты сервера в качестве оплаты товаров и услуг.
+        {{ 'rules.content.settlements.types.suzerain.req4' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Поддержание экономики сервера в действующем состоянии.
+        {{ 'rules.content.settlements.types.suzerain.req5' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Справедливое распределение дотаций полученных за очки (БИ) среди подданных селений по средством голосования всех
-        селений.
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>Преимущества:</b>
+        {{ 'rules.content.settlements.types.suzerain.req6' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность получить 3-х случайных торговцев.
+        {{ 'rules.content.settlements.types.suzerain.req7' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>{{ 'rules.content.settlements.common.advantages' | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность получить территориальный блок типа «Город».
+        {{ 'rules.content.settlements.types.suzerain.adv1' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность управлять ключевыми точками интереса.
+        {{ 'rules.content.settlements.types.suzerain.adv2' | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        Возможность получить стартовый капитал в виде валюты.
+        {{ 'rules.content.settlements.types.suzerain.adv3' | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ 'rules.content.settlements.types.suzerain.adv4' | translate }}
     </app-rule-paragraph>
 </div>

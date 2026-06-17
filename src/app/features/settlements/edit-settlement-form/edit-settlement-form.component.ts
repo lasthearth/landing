@@ -14,6 +14,7 @@ import { catchError, of, tap } from 'rxjs';
 
 import { ISettlement, IUpdateSettlementRequest, SettlementService } from '@entities/settlement';
 import { RequestStatusService } from '@core/services/request-status.service';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 
 /**
@@ -24,7 +25,7 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 @Component({
     selector: 'app-edit-settlement-form',
     standalone: true,
-    imports: [ReactiveFormsModule, TuiIcon, LHInputComponent],
+    imports: [ReactiveFormsModule, TuiIcon, LHInputComponent, TranslatePipe],
     templateUrl: './edit-settlement-form.component.html',
     styleUrl: './edit-settlement-form.component.less',
 })
@@ -54,6 +55,11 @@ export class EditSettlementFormComponent {
      * Builder реактивных форм.
      */
     private readonly formBuilder = inject(FormBuilder);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Данные редактируемого поселения.
@@ -103,7 +109,9 @@ export class EditSettlementFormComponent {
      * Добавляет пустое вложение в форму.
      */
     protected addAttachment(): void {
-        this.attachmentsArray.push(this.createAttachmentGroup('', 'Архитектура поселения', false));
+        this.attachmentsArray.push(
+            this.createAttachmentGroup('', this.i18n.translate('settlements.editForm.architectureDescription'), false)
+        );
     }
 
     /**
@@ -151,8 +159,8 @@ export class EditSettlementFormComponent {
 
         this.settlementService.updateSettlement$(this.settlement.id, request)
             .pipe(
-                this.requestStatus.handleSuccess('Поселение обновлено'),
-                this.requestStatus.handleError('Не удалось обновить поселение'),
+                this.requestStatus.handleSuccess(this.i18n.translate('settlements.editForm.success')),
+                this.requestStatus.handleError(this.i18n.translate('settlements.editForm.error')),
                 tap(() => this.context.completeWith()),
                 catchError(() => of(null)),
                 takeUntilDestroyed(this.destroyRef)

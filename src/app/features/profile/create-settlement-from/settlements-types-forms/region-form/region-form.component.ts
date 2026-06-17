@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function';
@@ -17,6 +17,7 @@ import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
 import { TuiError, TuiLoader } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Форма провинции
@@ -36,6 +37,7 @@ import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.functi
         TuiLoader,
         TuiError,
         TuiFieldErrorPipe,
+        TranslatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -53,12 +55,21 @@ export class RegionFormComponent {
     /**
      * Варианты дипломатического поведения.
      */
-    protected readonly diplomacy: string[] = ['Миролюбивый', 'Нейтральный', 'Агрессивный'];
+    protected readonly diplomacy = computed(() => [
+        this.i18n.translate('settlements.diplomacy.peaceful'),
+        this.i18n.translate('settlements.diplomacy.neutral'),
+        this.i18n.translate('settlements.diplomacy.aggressive'),
+    ]);
 
     /**
      * Сервис уведомлений.
      */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Сервис локального хранилища.
@@ -194,7 +205,7 @@ export class RegionFormComponent {
                         .postRequestSettlement$(request)
                         .pipe(
                             this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess('Отправлено!'),
+                            this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success')),
                             finalize(() => {
                                 this.isLoading = false;
                             }),
@@ -221,49 +232,7 @@ export class RegionFormComponent {
      * @param key - ключ файла
      */
     protected getLabelForKey(key: FileKeyRegion): string {
-        return {
-            preview: 'Заглавное изображение поселения',
-            map: 'Вид с карты',
-            monument: 'Монумент поселения',
-            playersDocuments: 'Документы игроков',
-            loreBooks: '10-лорных книг',
-            yardage: 'Малая городская площадь',
-            bigYardage: 'Большая городская площадь',
-            pit: 'Колодец',
-            localRoads: 'Локальные дороги',
-            globalRoads: 'Глобальные дороги региона',
-            warehouse: 'Склад или складское помещение',
-            barn: 'Амбар',
-            seedbeds: 'Грядки',
-            oneFloorHouse1: '1-этажный дом №1',
-            oneFloorHouse2: '1-этажный дом №2',
-            oneFloorHouse3: '1-этажный дом №3',
-            oneFloorHouse4: '1-этажный дом №4',
-            doubleFloorHouse1: '2-этажный дом №1',
-            doubleFloorHouse2: '2-этажный дом №2',
-            doubleFloorHouse3: '2-этажный дом №3',
-            doubleFloorHouse4: '2-этажный дом №4',
-            doubleFloorHouse5: '2-этажный дом №5',
-            doubleFloorHouse6: '2-этажный дом №6',
-            thirdFloorHouse1: '3-этажный дом №1',
-            workshop1: 'Мастерская №1',
-            workshop2: 'Мастерская №2',
-            blacksmithShop: 'Кузница',
-            religionOrCultureOrEconomicHouse1:
-                'Здание религиозного,научного,культурного или экономического направления №1',
-            religionOrCultureOrEconomicHouse2:
-                'Здание религиозного,научного,культурного или экономического направления №2',
-            marketPlace1: 'Торговая площадь №1',
-            marketPlace2: 'Торговая площадь №2',
-            marketPlace3: 'Торговая площадь №3',
-            marketPlace4: 'Торговая площадь №4',
-            marketPlace5: 'Торговая площадь №5',
-            stablesOrHarbor: 'Конюшни / Гавань',
-            tavern: 'Таверна',
-            importantBuilding: 'Важное здание региона',
-            greateBuilding: 'Великое строение',
-            steelBuilding: 'Сталелитейное здание',
-        }[key];
+        return this.i18n.translate(`settlements.attachments.${key}`);
     }
     protected getControl(key: string): FormControl {
         return this.form.get(key) as FormControl;

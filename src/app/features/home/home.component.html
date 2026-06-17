@@ -2,7 +2,7 @@
     <button
         (click)="navigate(1)"
         class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] hover:bg-[#c35a17] transition-all duration-200 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
-        aria-label="Следующий слайд"
+        [attr.aria-label]="'home.carousel.nextAria' | translate"
     >
         <tui-icon icon="@tui.chevron-right" class="text-white" />
     </button>
@@ -12,7 +12,7 @@
             <div *tuiItem class="size-full relative">
                 <app-image-loader
                     [src]="item.image"
-                    [alt]="item.header"
+                    [alt]="item.header | translate"
                     class="h-full w-full md:h-[600px]"
                     [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
                 />
@@ -20,9 +20,9 @@
                     class="absolute flex flex-col justify-start left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white w-[90%] px-4 py-6"
                 >
                     <h2 class="text-2xl md:text-4xl lg:text-8xl font-bold mb-4 uppercase !text-shadow-lg">
-                        {{ item.header }}
+                        {{ item.header | translate }}
                     </h2>
-                    <p [innerHTML]="item.body" class="text-lg md:text-2xl lg:text-4xl font-medium !text-shadow-lg"></p>
+                    <p [innerHTML]="item.body | translate" class="text-lg md:text-2xl lg:text-4xl font-medium !text-shadow-lg"></p>
                 </div>
             </div>
         }
@@ -33,7 +33,7 @@
     <button
         (click)="navigate(-1)"
         class="absolute nav-button hidden md:block size-12 z-40 left-8 cursor-pointer hover:scale-[105%] hover:bg-[#c35a17] transition-all duration-200 top-1/2 -translate-y-1/2 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
-        aria-label="Предыдущий слайд"
+        [attr.aria-label]="'home.carousel.prevAria' | translate"
     >
         <tui-icon icon="@tui.chevron-left" class="text-white" />
     </button>
@@ -58,7 +58,7 @@
                         <tui-icon [icon]="action.icon" class="!text-xl" />
                     </span>
                     <span class="font-bold text-[#2a2722] text-base md:text-lg uppercase tracking-wide">
-                        {{ action.label }}
+                        {{ action.label | translate }}
                     </span>
                 </a>
             } @else {
@@ -72,7 +72,7 @@
                         <tui-icon [icon]="action.icon" class="!text-xl" />
                     </span>
                     <span class="font-bold text-[#2a2722] text-base md:text-lg uppercase tracking-wide">
-                        {{ action.label }}
+                        {{ action.label | translate }}
                     </span>
                 </a>
             }
@@ -104,5 +104,5 @@
 
     <tui-pagination [index]="pageIndex()" [length]="totalPages()" (indexChange)="goToPage($event)" class="mb-4" />
 } @else {
-    <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">Новостей пока нет...</p>
+    <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">{{ 'home.news.empty' | translate }}</p>
 }
