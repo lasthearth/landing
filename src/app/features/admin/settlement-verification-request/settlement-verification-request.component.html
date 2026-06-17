@@ -49,7 +49,7 @@
                         (click)="show(item.url, item.desc)"
                         class="relative cursor-pointer hover:scale-[101%] transition-all hover:shadow-lg shadow-md duration-500 aspect-video rounded-xl overflow-hidden group border border-lh-primary-2/20"
                     >
-                        <img [src]="item.url" class="w-full h-full object-cover object-center" />
+                        <app-image-loader [src]="item.url" alt="Вложение" />
                         <div
                             class="absolute inset-0 bg-linear-to-t from-lh-primary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2"
                         >

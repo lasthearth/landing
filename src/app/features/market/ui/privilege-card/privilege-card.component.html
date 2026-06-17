@@ -2,7 +2,7 @@
     <div
         class="lg:size-48 md:size-28 size-20 overflow-clip transition-all duration-300 hover:rotate-3 shadow-2xs rounded-2xl hover:shadow-2xl"
     >
-        <img [src]="image()" [alt]="title()" class="object-cover object-top size-full" />
+        <app-image-loader [src]="image()" [alt]="title()" />
     </div>
     <p class="md:text-2xl text-base font-semibold text-lh-primary">{{ title() }}</p>
     <span

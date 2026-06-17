@@ -16,9 +16,10 @@
             >
                 <!-- Заголовок: игрок -->
                 <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
-                    <img
+                    <app-image-loader
                         [src]="purchase.playerAvatarUrl || '/default-avatar.png'"
-                        class="size-14 shrink-0 object-cover aspect-square"
+                        class="size-14 shrink-0"
+                        objectFit="cover"
                         alt="Аватар"
                     />
                     <div class="flex flex-col min-w-0">

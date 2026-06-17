@@ -57,11 +57,7 @@
                                     class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-[#ff7920]/30 transition-colors"
                                 >
                                     @if (item.imageUrl) {
-                                        <img
-                                            [src]="item.imageUrl"
-                                            [alt]="item.name"
-                                            class="w-full h-full object-cover"
-                                        />
+                                        <app-image-loader [src]="item.imageUrl" [alt]="item.name" />
                                     } @else {
                                         <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
                                             <tui-icon icon="@tui.image" class="size-12!" />
@@ -193,7 +189,7 @@
                             class="w-36 h-36 rounded-xl overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0"
                         >
                             @if (imagePreviewUrl(); as url) {
-                                <img [src]="url" class="w-full h-full object-cover" alt="Превью" />
+                                <app-image-loader [src]="url" alt="Превью" />
                             } @else {
                                 <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
                                     <tui-icon icon="@tui.image" class="size-12!" />
@@ -332,7 +328,7 @@
                                             class="w-20 h-20 rounded-lg overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0"
                                         >
                                             @if (entry.controls.image_url.value; as url) {
-                                                <img [src]="url" class="w-full h-full object-cover" alt="Превью" />
+                                                <app-image-loader [src]="url" alt="Превью" />
                                             } @else {
                                                 <div
                                                     class="w-full h-full flex items-center justify-center text-[#bdb093]"
@@ -479,11 +475,7 @@
                         class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-[#ff7920]/30 transition-colors"
                     >
                         @if (previewItem().imageUrl) {
-                            <img
-                                [src]="previewItem().imageUrl"
-                                [alt]="previewItem().name"
-                                class="w-full h-full object-cover"
-                            />
+                            <app-image-loader [src]="previewItem().imageUrl" [alt]="previewItem().name" />
                         } @else {
                             <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
                                 <tui-icon icon="@tui.image" class="size-16!" />
@@ -560,11 +552,12 @@
                                         class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-[#8b7355] bg-[#d4c5a9] shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_2px_4px_rgba(0,0,0,0.15)] transition-all duration-150 hover:scale-110 hover:rotate-2 hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.25)] hover:border-[#ff7920] group/item"
                                     >
                                         @if (entry.imageUrl) {
-                                            <img
-                                                [src]="entry.imageUrl"
-                                                [alt]="entry.name"
-                                                class="w-full h-full object-contain p-1 drop-shadow-md"
-                                            />
+                                            <app-image-loader
+                                                    [src]="entry.imageUrl"
+                                                    [alt]="entry.name"
+                                                    objectFit="contain"
+                                                    imageClass="p-1 drop-shadow-md"
+                                                />
                                         } @else {
                                             <div class="w-full h-full flex items-center justify-center text-[#8b7355]">
                                                 <tui-icon icon="@tui.image" class="size-8!" />

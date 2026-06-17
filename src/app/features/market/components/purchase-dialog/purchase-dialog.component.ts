@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { TuiButton, TuiIcon, TuiDialogContext, TuiAlertService } from '@taiga-ui/core';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DonateService } from '@entities/donate';
@@ -74,7 +75,7 @@ export interface PurchaseDialogData {
 @Component({
     selector: 'app-purchase-dialog',
     standalone: true,
-    imports: [TuiButton, TuiIcon],
+    imports: [TuiButton, TuiIcon, ImageLoaderComponent],
     templateUrl: './purchase-dialog.component.html',
     styleUrl: './purchase-dialog.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

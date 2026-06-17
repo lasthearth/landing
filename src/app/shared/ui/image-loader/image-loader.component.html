@@ -1,0 +1,18 @@
+<div class="relative w-full h-full overflow-hidden bg-lh-primary-2/10" [ngClass]="containerClass()">
+    @if (!loaded() && src()) {
+        <div class="image-loader-skeleton absolute inset-0"></div>
+    }
+
+    <img
+        [src]="src()"
+        [alt]="alt()"
+        (load)="loaded.set(true)"
+        (error)="loaded.set(true)"
+        class="w-full h-full transition-opacity duration-500"
+        [ngClass]="imageClass()"
+        [class.object-cover]="objectFit() === 'cover'"
+        [class.object-contain]="objectFit() === 'contain'"
+        [class.opacity-0]="!loaded()"
+        [class.opacity-100]="loaded()"
+    />
+</div>

@@ -22,10 +22,10 @@
             <div
                 class="news-card__image-wrapper hidden md:block xl:hidden 2xl:block shrink-0 size-64 lg:size-72 shadow-2xl shadow-black/60 overflow-clip rounded-xl border-2 border-[rgba(232,216,184,0.12)]"
             >
-                <img
+                <app-image-loader
                     [src]="preview()"
                     alt="Превью новости: {{ title() }}"
-                    class="size-64 lg:size-72 object-cover rounded-xl"
+                    class="size-64 lg:size-72"
                 />
             </div>
             <div class="flex flex-col gap-3 items-start mb-5">

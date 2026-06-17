@@ -1,10 +1,11 @@
 import { NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 
 @Component({
     standalone: true,
     selector: 'app-leader-card',
-    imports: [],
+    imports: [ImageLoaderComponent],
     templateUrl: './leader-card.component.html',
     styleUrl: './leader-card.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

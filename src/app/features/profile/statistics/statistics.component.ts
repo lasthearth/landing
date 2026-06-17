@@ -11,6 +11,7 @@ import { TuiTabs } from '@taiga-ui/kit';
 import { LeaderCardComponent } from './leader-card/leader-card.component';
 import { StatisticsSkeletonComponent } from '@shared/ui/skeletons';
 import { TUI_IS_MOBILE } from '@taiga-ui/cdk';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 
 export type TypeLabel = 'Смертей' | 'Убийств' | 'Часов';
 
@@ -20,7 +21,7 @@ export type TypeLabel = 'Смертей' | 'Убийств' | 'Часов';
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [TuiTable, AsyncPipe, TuiTabs, LeaderCardComponent, StatisticsSkeletonComponent],
+    imports: [TuiTable, AsyncPipe, TuiTabs, LeaderCardComponent, StatisticsSkeletonComponent, ImageLoaderComponent],
     styleUrl: './statistics.component.less',
     templateUrl: './statistics.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

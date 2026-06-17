@@ -5,13 +5,15 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { debounceTime, distinctUntilChanged, filter, switchMap, catchError, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TuiAvatar } from '@taiga-ui/kit';
+
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { SettlementService } from '@entities/settlement';
 import { DonateService, ITransaction } from '@entities/donate';
 import { UserService } from '@entities/user';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
 import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
 import { ISelectedPlayer } from '../../model/selected-player.model';
 
@@ -24,7 +26,7 @@ import { ISelectedPlayer } from '../../model/selected-player.model';
 @Component({
     selector: 'app-admin-coin-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, AsyncPipe, TuiAvatar, TuiIcon, TuiLoader, LHInputComponent],
+    imports: [ReactiveFormsModule, AsyncPipe, TuiIcon, TuiLoader, LHInputComponent, ImageLoaderComponent],
     templateUrl: './admin-coin-panel.component.html',
     styleUrl: './admin-coin-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,6 +95,11 @@ export class AdminCoinPanelComponent {
     protected readonly playerBalance = signal<string | null>(null);
 
     /**
+     * Хелпер для получения URL аватара из разных форматов API.
+     */
+    protected readonly resolveAvatarUrl = resolveAvatarUrl;
+
+    /**
      * Признак выполнения запроса.
      */
     protected readonly isLoading = signal(false);
@@ -120,7 +127,7 @@ export class AdminCoinPanelComponent {
         this.selectedPlayer.set({
             playerId: user.user_id,
             playerName: user.user_game_name,
-            avatar: user.avatar?.original,
+            avatar: resolveAvatarUrl(user?.avatar),
         });
         this.searchControl.setValue('');
         this.loadBalance(user.user_id);

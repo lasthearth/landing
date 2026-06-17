@@ -3,10 +3,10 @@
 >
     <!-- Изображение -->
     <div class="hidden xl:block xl:w-2/5 w-full shrink-0 h-full">
-        <img
+        <app-image-loader
             [src]="data().attachments[0].url ? data().attachments[0].url : '/images/screenshots/screen_1.png'"
             alt="Изображение поселения {{ data().name }}"
-            class="h-full w-full object-cover rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
+            imageClass="h-full w-full rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
         />
     </div>
 

@@ -6,7 +6,7 @@
         <div
             class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border-2 border-[#bdb093] bg-[#e8dcc0] shadow-[0_4px_12px_rgba(0,0,0,0.1)] shrink-0"
         >
-            <img [src]="data.image" [alt]="data.title" class="w-full h-full object-cover" />
+            <app-image-loader [src]="data.image" [alt]="data.title" />
         </div>
         <div class="flex flex-col gap-2 justify-center h-24">
             <h3 class="text-center sm:text-left text-lg md:text-[22px] font-bold text-[#1c1a16] leading-tight">{{ data.title }}</h3>

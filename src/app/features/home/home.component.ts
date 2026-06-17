@@ -7,6 +7,7 @@ import { NewsSkeletonComponent } from '@app/features/news/ui/news-skeleton/news-
 import { NewsApiService, mapDtoToNews } from '@entities/news';
 import { UserService, Role, IPlayer } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { catchError, defaultIfEmpty, finalize, forkJoin, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -17,7 +18,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink],
+    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

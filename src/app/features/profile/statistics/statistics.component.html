@@ -58,9 +58,11 @@
                     </p>
                     <div class="flex w-full items-center justify-between px-16 lg:px-28 z-10">
                         <div class="flex items-center gap-3">
-                            <img
+                            <app-image-loader
                                 [src]="getUserAvatar(item.user_id)"
-                                class="size-10 sm:size-12 rounded-full object-cover aspect-square"
+                                class="size-10 sm:size-12"
+                                containerClass="rounded-full"
+                                objectFit="cover"
                                 alt="Аватар игрока"
                             />
                             <span class="font-semibold text-[#f5eedd] text-xl sm:text-2xl">{{ item.name }}</span>

@@ -15,7 +15,7 @@
                     class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-[#ff7920]/30 transition-colors"
                 >
                     @if (item.imageUrl) {
-                        <img [src]="item.imageUrl" [alt]="item.name" class="w-full h-full object-cover" />
+                        <app-image-loader [src]="item.imageUrl" [alt]="item.name" />
                     } @else {
                         <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
                             <tui-icon icon="@tui.image" class="size-12!" />

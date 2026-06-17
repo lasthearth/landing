@@ -7,6 +7,7 @@ import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
 
@@ -18,7 +19,7 @@ import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege
  */
 @Component({
     selector: 'app-titles',
-    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, MarketGridSkeletonComponent],
+    imports: [AbilityTagComponent, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent],
     templateUrl: './titles.component.html',
     styleUrl: './titles.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

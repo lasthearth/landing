@@ -6,6 +6,7 @@ import { DonateService, IShopItem } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
 
@@ -17,7 +18,7 @@ import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege
  */
 @Component({
     selector: 'app-kits',
-    imports: [KitItemComponent, TuiIcon, MarketGridSkeletonComponent],
+    imports: [KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent],
     templateUrl: './kits.component.html',
     styleUrl: './kits.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

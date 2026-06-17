@@ -16,6 +16,7 @@ import { IRequestSettlement } from '@entities/settlement';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 import { SettlementService } from '@entities/settlement';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { getSettlementTypeByKey } from '@entities/settlement/lib/get-settlement-type-by-key.function';
 import { ModerateSettlementRequestComponent } from '../moderate-settlement-request/moderate-settlement-request.component';
 
@@ -25,7 +26,7 @@ import { ModerateSettlementRequestComponent } from '../moderate-settlement-reque
 @Component({
     standalone: true,
     selector: 'app-settlement-verification-request',
-    imports: [PolymorpheusOutlet, TuiButton, TuiPreview, TuiIcon],
+    imports: [PolymorpheusOutlet, TuiButton, TuiPreview, TuiIcon, ImageLoaderComponent],
     templateUrl: './settlement-verification-request.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

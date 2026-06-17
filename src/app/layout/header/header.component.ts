@@ -11,6 +11,7 @@ import { NotificationService } from '@core/services/notification.service';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { UserService } from '@entities/user';
 import { DonateService } from '@entities/donate';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign-out-confirm.component';
 
 /**
@@ -19,7 +20,7 @@ import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterLink, TuiIcon, TuiPulse],
+    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterLink, TuiIcon, TuiPulse, ImageLoaderComponent],
     templateUrl: './header.component.html',
     styleUrl: './header.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

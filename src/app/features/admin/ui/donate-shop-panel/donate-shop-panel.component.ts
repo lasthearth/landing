@@ -18,6 +18,7 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
 import { TuiFile, TuiFiles, TuiFilesComponent } from '@taiga-ui/kit';
 import { finalize, map, Observable, startWith, Subject, Subscription, switchMap, tap, timer } from 'rxjs';
@@ -46,6 +47,7 @@ import { finalize, map, Observable, startWith, Subject, Subscription, switchMap,
         CdkDrag,
         CdkDragHandle,
         AbilityTagComponent,
+        ImageLoaderComponent,
     ],
     templateUrl: './donate-shop-panel.component.html',
     styleUrl: './donate-shop-panel.component.less',

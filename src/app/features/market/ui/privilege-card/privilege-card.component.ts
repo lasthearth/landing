@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 
 /**
  * Компонент карточки привилегии.
  */
 @Component({
     selector: 'app-privilege-card',
-    imports: [],
+    imports: [ImageLoaderComponent],
     templateUrl: './privilege-card.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -19,16 +19,18 @@
                 <!-- Аватар -->
                 <div class="flex flex-col shrink-0 overflow-hidden rounded-2xl max-[640px]:hidden w-48">
                     @if (userData.image) {
-                        <img
+                        <app-image-loader
                             [src]="userData.image"
                             [alt]="'Аватар пользователя ' + userName"
                             (click)="show(userData.image, 'Изображение профиля')"
-                            class="w-full h-44 object-cover rounded-t-2xl transition-all duration-200 hover:opacity-85 cursor-pointer"
+                            class="w-full h-44 cursor-pointer"
+                            imageClass="rounded-t-2xl transition-all duration-200 hover:opacity-85"
                         />
                     } @else {
-                        <img
+                        <app-image-loader
                             src="/default-avatar.png"
-                            class="w-full h-44 object-cover rounded-t-2xl"
+                            class="w-full h-44"
+                            imageClass="rounded-t-2xl"
                             alt="Аватар по умолчанию"
                         />
                     }

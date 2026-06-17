@@ -165,11 +165,13 @@
                                     class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-[#d8cca8] transition-colors"
                                     (click)="addPlayer(user)"
                                 >
-                                    @if (user.avatar?.original) {
-                                        <tui-avatar size="s" [src]="user.avatar.original" />
-                                    } @else {
-                                        <tui-avatar size="s" src="/default-avatar.png" />
-                                    }
+                                    <app-image-loader
+                                        [src]="resolveAvatarUrl(user?.avatar)"
+                                        class="size-8 shrink-0"
+                                        containerClass="rounded-full"
+                                        objectFit="cover"
+                                        alt="Аватар"
+                                    />
                                     <span class="text-[23px] font-medium text-[#2a2722]">{{ user.user_game_name }}</span>
                                 </div>
                             }

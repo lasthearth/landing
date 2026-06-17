@@ -10,9 +10,11 @@
             [class.particles-silver]="ratingPlace() === '2'"
             [class.particles-bronze]="ratingPlace() === '3'"
         ></div>
-        <img
+        <app-image-loader
             [src]="userImage() || '/default-avatar.png'"
-            class="size-12 lg:size-14 xl:size-16 2xl:size-20 z-30 rounded-full object-cover aspect-square"
+            class="size-12 lg:size-14 xl:size-16 2xl:size-20 z-30"
+            containerClass="rounded-full"
+            objectFit="cover"
             alt="Аватар игрока"
         />
         <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-[#f5eedd]">

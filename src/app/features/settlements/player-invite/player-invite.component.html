@@ -14,11 +14,13 @@
             @for (item of players?.users; track $index) {
                 <div class="w-full justify-between flex items-center py-3 border-b border-lh-primary-2/10 last:border-b-0">
                     <div class="flex gap-3 items-center w-full">
-                        @if (item?.avatar?.original) {
-                            <img [src]="item.avatar.original" class="w-10 h-10 rounded-full object-cover aspect-square" />
-                        } @else {
-                            <img src="/default-avatar.png" class="w-10 h-10 rounded-full object-cover aspect-square" />
-                        }
+                        <app-image-loader
+                            [src]="resolveAvatarUrl(item?.avatar)"
+                            alt="Аватар"
+                            objectFit="cover"
+                            containerClass="rounded-full"
+                            class="w-10 h-10"
+                        />
                         <span class="text-lg text-[#2d201a] font-semibold">{{ item.user_game_name }}</span>
                     </div>
                     <button

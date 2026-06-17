@@ -1,4 +1,5 @@
 import { Component, input, InputSignal } from '@angular/core';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { KitItem } from '../../interfaces/kit-item.interface';
 
 /**
@@ -9,7 +10,7 @@ import { KitItem } from '../../interfaces/kit-item.interface';
  */
 @Component({
     selector: 'app-kit-item',
-    imports: [],
+    imports: [ImageLoaderComponent],
     templateUrl: './kit-item.component.html',
 })
 export class KitItemComponent {

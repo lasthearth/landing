@@ -2,10 +2,11 @@
     [title]="data().hint"
     class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-[#8b7355] bg-[#d4c5a9] shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_2px_4px_rgba(0,0,0,0.15)] cursor-pointer transition-all duration-150 hover:scale-110 hover:rotate-2 hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.25)] hover:border-[#ff7920] group"
 >
-    <img
-        [src]="data().image"
+    <app-image-loader
+        [src]="data().image ?? ''"
         [alt]="data().hint"
-        class="w-full h-full object-contain p-1 drop-shadow-md"
+        objectFit="contain"
+        imageClass="p-1 drop-shadow-md"
     />
     @if (data().count > 1) {
         <span

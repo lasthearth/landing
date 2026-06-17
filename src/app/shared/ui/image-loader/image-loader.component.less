@@ -1,0 +1,23 @@
+/**
+ * Анимированный скелетон для загрузки изображения.
+ * Бегущий градиент, имитирующий блик на поверхности.
+ */
+.image-loader-skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(51, 44, 38, 0.06) 0%,
+        rgba(51, 44, 38, 0.14) 50%,
+        rgba(51, 44, 38, 0.06) 100%
+    );
+    background-size: 200% 100%;
+    animation: image-loader-shimmer 1.6s infinite linear;
+}
+
+@keyframes image-loader-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}

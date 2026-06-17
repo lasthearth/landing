@@ -7,6 +7,8 @@ import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { AsyncPipe, NgIf } from '@angular/common';
 
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService } from '@entities/user';
 import { RequestStatusService } from '@core/services/request-status.service';
@@ -14,13 +16,18 @@ import { RequestStatusService } from '@core/services/request-status.service';
 @Component({
     standalone: true,
     selector: 'app-player-invite',
-    imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, NgIf],
+    imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, NgIf, ImageLoaderComponent],
     templateUrl: './player-invite.component.html',
     styleUrl: './player-invite.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerInviteComponent {
     protected playerNickControl = new FormControl();
+
+    /**
+     * Хелпер для получения URL аватара из разных форматов API.
+     */
+    protected readonly resolveAvatarUrl = resolveAvatarUrl;
 
     private readonly destroyRef$ = inject(DestroyRef);
 

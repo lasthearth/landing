@@ -10,6 +10,7 @@ import {
     OutputEmitterRef,
 } from '@angular/core';
 import { IVerifyRequest } from '@features/verification';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 
@@ -19,7 +20,7 @@ import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.compone
 @Component({
     standalone: true,
     selector: 'app-player-verify-request',
-    imports: [TuiIcon],
+    imports: [TuiIcon, ImageLoaderComponent],
     templateUrl: './player-verify-request.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

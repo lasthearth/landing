@@ -21,6 +21,7 @@ import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { IPlayer } from '@entities/user';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 
 /**
  * Компонент карточки селения.
@@ -29,7 +30,7 @@ import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, TuiPulse, TuiIcon, SettlementTagComponent, SettlementDetailSkeletonComponent],
+    imports: [AsyncPipe, TuiPulse, TuiIcon, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent],
     providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',

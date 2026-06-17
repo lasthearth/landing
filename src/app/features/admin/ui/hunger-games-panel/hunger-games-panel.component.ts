@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnIni
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
-import { TuiAvatar } from '@taiga-ui/kit';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
 import { debounceTime, distinctUntilChanged, filter, switchMap, catchError, finalize, of, tap } from 'rxjs';
 
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
@@ -29,7 +30,7 @@ import { ISeasonOption } from './model/season-option.model';
 @Component({
     selector: 'app-hunger-games-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, FormsModule, TuiAvatar, TuiIcon, TuiLoader, LHInputComponent, AdminSeasonSkeletonComponent, AdminTableSkeletonComponent],
+    imports: [ReactiveFormsModule, FormsModule, TuiIcon, TuiLoader, LHInputComponent, AdminSeasonSkeletonComponent, AdminTableSkeletonComponent, ImageLoaderComponent],
     templateUrl: './hunger-games-panel.component.html',
     styleUrl: './hunger-games-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +45,11 @@ export class HungerGamesPanelComponent implements OnInit {
      * Сервис поселений для поиска пользователей.
      */
     private readonly settlementService = inject(SettlementService);
+
+    /**
+     * Хелпер для получения URL аватара из разных форматов API.
+     */
+    protected readonly resolveAvatarUrl = resolveAvatarUrl;
 
     /**
      * Сервис обработки статуса запросов.

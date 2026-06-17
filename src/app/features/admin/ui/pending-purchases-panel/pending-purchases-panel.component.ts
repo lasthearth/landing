@@ -5,6 +5,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { TuiLoader } from '@taiga-ui/core';
 import { IPendingPurchase } from '@entities/donate';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import {
     ConfirmPurchaseActionComponent,
     IConfirmPurchaseActionData,
@@ -19,7 +20,7 @@ import {
 @Component({
     standalone: true,
     selector: 'app-pending-purchases-panel',
-    imports: [AsyncPipe, TuiIcon, TuiLoader],
+    imports: [AsyncPipe, TuiIcon, TuiLoader, ImageLoaderComponent],
     templateUrl: './pending-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

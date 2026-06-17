@@ -10,11 +10,11 @@
     <tui-carousel [(index)]="carouselIndex" [duration]="3500" class="h-auto! !rounded-t-xl">
         @for (item of images; track $index) {
             <div *tuiItem class="size-full relative">
-                <img
+                <app-image-loader
                     [src]="item.image"
                     [alt]="item.header"
-                    [class.brightness-75!]="item.isLight"
-                    class="h-full w-full md:h-[600px] object-cover object-center"
+                    class="h-full w-full md:h-[600px]"
+                    [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
                 />
                 <div
                     class="absolute flex flex-col justify-start left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white w-[90%] px-4 py-6"

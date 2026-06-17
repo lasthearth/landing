@@ -110,9 +110,10 @@
             </div>
 
             <!-- Изображение -->
-            <img
+            <app-image-loader
                 [src]="settlement.attachments[0].url"
-                class="hidden xl:block w-full xl:max-w-[40%] object-cover rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+                alt="Изображение поселения"
+                class="hidden xl:block w-full xl:max-w-[40%] rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden"
             />
         </div>
     </div>

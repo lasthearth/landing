@@ -1,9 +1,9 @@
 <div class="lh-dialog-card min-w-[36rem]">
     <div class="flex flex-col gap-4 w-full bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
         <div class="shrink-0 relative w-full shadow-md shadow-black/10 overflow-clip rounded-xl">
-            <img
+            <app-image-loader
                 [src]="settlementData.attachments[0].url ? settlementData.attachments[0].url : '/images/screenshots/screen_1.png'"
-                class="w-full max-h-96 object-cover rounded-xl"
+                alt="Изображение поселения"
             />
         </div>
         <div class="flex flex-col gap-3">

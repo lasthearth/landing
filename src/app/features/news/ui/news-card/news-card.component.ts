@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 
 /**
  * Компонент карточки новости.
@@ -11,7 +12,7 @@ import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 @Component({
     standalone: true,
     selector: 'app-news-card',
-    imports: [TuiIcon],
+    imports: [TuiIcon, ImageLoaderComponent],
     templateUrl: './news-card.component.html',
     styleUrl: './news-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

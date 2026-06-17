@@ -37,6 +37,7 @@ import { RequestStatusService } from '@core/services/request-status.service';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
 import { ProfileSkeletonComponent } from '@shared/ui/skeletons';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { DonateService, IPurchase } from '@entities/donate';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { SettlementService } from '@entities/settlement';
@@ -52,6 +53,7 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
         TuiButton,
         DecimalPipe,
         ProfileSkeletonComponent,
+        ImageLoaderComponent,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',

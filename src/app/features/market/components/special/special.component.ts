@@ -4,6 +4,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { catchError, of } from 'rxjs';
 import { DonateService, IShopItem } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 
 /**
@@ -14,7 +15,7 @@ import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/
  */
 @Component({
     selector: 'app-special',
-    imports: [TuiIcon, MarketGridSkeletonComponent],
+    imports: [TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent],
     templateUrl: './special.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -5,12 +5,13 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { UserService, IPlayer } from '@entities/user';
 import { TuiPulse } from '@taiga-ui/kit';
 import { tap } from 'rxjs';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 
 @Component({
     selector: 'app-settlement-detailed',
     templateUrl: './settlement-detailed.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
-    imports: [TuiPulse],
+    imports: [TuiPulse, ImageLoaderComponent],
 })
 export class SettlementDetailedComponent implements OnInit {
     /**

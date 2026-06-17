@@ -21,12 +21,13 @@ import { SetTagsComponent } from './set-tags/set-tags.component';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 import { environment } from '@core/config/environments/environment';
+import { ImageLoaderComponent } from '@shared/ui/image-loader';
 
 @Component({
     standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
-    imports: [CommonModule, TuiPulse, TuiIcon],
+    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent implements OnInit {
