@@ -73,7 +73,8 @@ export const RULES_I18N = {
                         end: " и участвующие в боевых действиях от него игроки обязаны быть в списке жителей этого селения. Не распространяется на борьбу за ключевые точки."
                     },
                     p1_15: "<b>1.15</b> Запрещено использовать приваты типа Claim.",
-                    p1_16: "<b>1.16</b> Одному игроку запрещается создавать и использовать более 2 игровых аккаунтов на проекте. Любое превышение установленного лимита рассматривается как нарушение с целью извлечения несправедливого преимущества. В случае обнаружения у игрока более 2 аккаунтов, все аккаунты, принадлежащие нарушителю, подлежат перманентной блокировке, кроме одного (на усмотрение Администрации). Блокировка одного из двух аккаунтов за нарушение правил проекта приводит и к блокировке второго."
+                    p1_16: "<b>1.16</b> Одному игроку запрещается создавать и использовать более 2 игровых аккаунтов на проекте. Любое превышение установленного лимита рассматривается как нарушение с целью извлечения несправедливого преимущества. В случае обнаружения у игрока более 2 аккаунтов, все аккаунты, принадлежащие нарушителю, подлежат перманентной блокировке, кроме одного (на усмотрение Администрации). Блокировка одного из двух аккаунтов за нарушение правил проекта приводит и к блокировке второго.",
+                    p1_17: "<b>1.17</b> Игрок имеет право состоять и проживать не более чем в 1-м селении, а так же владеть не более чем 1-м хутором."
                 },
                 terminology: {
                     empire: "<b>Империя</b> — обширное государство на землях которого происходит весь игровой процесс.",
@@ -673,7 +674,8 @@ export const RULES_I18N = {
                         end: " and players participating in combat on its behalf must be on the list of inhabitants of that settlement. This does not apply to fighting for key points."
                     },
                     p1_15: "<b>1.15</b> The use of Claim-type protections is prohibited.",
-                    p1_16: "<b>1.16</b> A single player is prohibited from creating and using more than 2 game accounts on the project. Any excess over the established limit is considered a violation for the purpose of gaining an unfair advantage. If more than 2 accounts are discovered for a player, all accounts belonging to the violator are subject to a permanent ban, except for one (at the Administration's discretion). A ban of one of the two accounts for violating project rules also results in a ban of the second."
+                    p1_16: "<b>1.16</b> A single player is prohibited from creating and using more than 2 game accounts on the project. Any excess over the established limit is considered a violation for the purpose of gaining an unfair advantage. If more than 2 accounts are discovered for a player, all accounts belonging to the violator are subject to a permanent ban, except for one (at the Administration's discretion). A ban of one of the two accounts for violating project rules also results in a ban of the second.",
+                    p1_17: "<b>1.17</b> A player has the right to be a member and reside in no more than 1 settlement, and also to own no more than 1 homestead."
                 },
                 terminology: {
                     empire: "<b>Empire</b> — a vast state on whose lands the entire gameplay takes place.",
