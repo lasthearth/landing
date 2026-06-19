@@ -119,6 +119,20 @@ export interface News {
 }
 
 /**
+ * Ответ на регистрацию просмотра новости.
+ *
+ * Возвращается из POST /news/{id}/views.
+ */
+export interface NewsViewResponse {
+    /**
+     * Актуальное количество просмотров.
+     *
+     * Передаётся как строка (int64 as string в protobuf).
+     */
+    view_count: string;
+}
+
+/**
  * Запрос на создание новости.
  *
  * Отправляется в POST /news.

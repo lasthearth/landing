@@ -377,6 +377,7 @@ interface LeaderboardResponse {
 | 2   | `POST`   | `/news`                        | Создать новость | ✅ + admin | ✅ `NewsApiService.create()` / `NewsService.createNews$()` |
 | 3   | `GET`    | `/news/{id}`                   | Новость по ID   | —          | ✅ `NewsApiService.getById(id)`                            |
 | 4   | `DELETE` | `/news/{id}`                   | Удалить новость | ✅ + admin | ✅ `NewsApiService.delete(id)`                             |
+| 5   | `POST`   | `/news/{id}/views`             | Просмотр новости | ✅        | ✅ `NewsApiService.addView(id)`                            |
 
 #### DTO
 
@@ -413,8 +414,17 @@ interface ListNewsResponse {
 }
 ```
 
+**`NewsViewResponse`**
+
+```ts
+interface NewsViewResponse {
+    view_count: string; // int64 as string
+}
+```
+
 - `page_size`: по умолчанию 15, максимум 50.
 - При каждом `GET` счётчик просмотров инкрементируется.
+- `POST /news/{id}/views` увеличивает счётчик просмотров один раз для авторизованного пользователя. Ошибки не показываются в UI.
 
 ---
 

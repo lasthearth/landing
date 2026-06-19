@@ -89,6 +89,7 @@
     <div class="flex flex-wrap items-center gap-5 pt-0 px-6 pb-3">
         @for (item of pageNews(); track item.id) {
             <app-news-card
+                [id]="item.id"
                 [title]="item.title"
                 [content]="item.content"
                 [preview]="item.preview"
@@ -96,6 +97,7 @@
                 [viewCount]="item.viewCount"
                 [createdBy]="isAuthenticated() ? item.createdBy : ''"
                 [canDelete]="isAdmin()"
+                [trackViews]="true"
                 (delete)="deleteNews(item.id)"
                 class="!h-auto w-full"
             />

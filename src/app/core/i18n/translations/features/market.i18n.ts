@@ -90,11 +90,13 @@ export const MARKET_I18N = {
                 emptyTitle: 'Скоро появится',
                 emptyDescription: 'Наборы ещё не добавлены в магазин. Загляните позже.',
                 kitTitle: 'Набор «{{title}}»',
+                term: '1 набор',
             },
             special: {
                 loadError: 'Не удалось загрузить особые товары. Попробуйте ещё раз.',
                 emptyTitle: 'Скоро появится',
                 emptyDescription: 'Особые товары ещё не добавлены в магазин. Загляните позже.',
+                previewAlt: 'Просмотр изображения товара',
             },
             titles: {
                 loadError: 'Не удалось загрузить привилегии. Попробуйте ещё раз.',
@@ -197,11 +199,13 @@ export const MARKET_I18N = {
                 emptyTitle: 'Coming soon',
                 emptyDescription: 'Kits have not been added to the shop yet. Check back later.',
                 kitTitle: 'Kit «{{title}}»',
+                term: '1 kit',
             },
             special: {
                 loadError: 'Failed to load special items. Please try again.',
                 emptyTitle: 'Coming soon',
                 emptyDescription: 'Special items have not been added to the shop yet. Check back later.',
+                previewAlt: 'Item image preview',
             },
             titles: {
                 loadError: 'Failed to load privileges. Please try again.',

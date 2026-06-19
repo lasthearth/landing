@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TuiIcon, TuiDialogService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { ChangeDetectionStrategy, Component, inject, signal, TemplateRef, ViewChild } from '@angular/core';
+import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
+import { TuiIcon } from '@taiga-ui/core';
+import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
+import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { catchError, of } from 'rxjs';
 import { DonateService, IShopItem } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
@@ -18,8 +20,19 @@ import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/
  */
 @Component({
     selector: 'app-special',
-    imports: [TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
+    imports: [
+        TuiIcon,
+        TuiButton,
+        TuiPreview,
+        PolymorpheusOutlet,
+        MarketGridSkeletonComponent,
+        ImageLoaderComponent,
+        EmptyStateComponent,
+        ErrorStateComponent,
+        TranslatePipe,
+    ],
     templateUrl: './special.component.html',
+    styleUrl: './special.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpecialComponent {
@@ -27,6 +40,16 @@ export class SpecialComponent {
      * Сервис донат-валюты.
      */
     private readonly donateService = inject(DonateService);
+
+    /**
+     * Сервис предпросмотра изображений.
+     */
+    private readonly previewService = inject(TuiPreviewDialogService);
+
+    /**
+     * Сервис диалогов.
+     */
+    private readonly dialogs = inject(TuiDialogService);
 
     /**
      * Признак загрузки товаров.
@@ -39,14 +62,25 @@ export class SpecialComponent {
     protected readonly error = signal(false);
 
     /**
-     * Сервис диалогов.
-     */
-    private readonly dialogs = inject(TuiDialogService);
-
-    /**
      * Список товаров магазина.
      */
     protected readonly items = signal<IShopItem[]>([]);
+
+    /**
+     * Описание изображения, открытого в предпросмотре.
+     */
+    protected previewDesc: string | null = null;
+
+    /**
+     * Ссылка на шаблон окна предпросмотра.
+     */
+    @ViewChild('preview')
+    protected readonly preview?: TemplateRef<TuiDialogContext>;
+
+    /**
+     * Содержимое предпросмотра (URL изображения).
+     */
+    protected previewContent: PolymorpheusContent;
 
     constructor() {
         this.loadItems();
@@ -96,6 +130,20 @@ export class SpecialComponent {
     }
 
     /**
+     * Проверяет, действует ли на товар скидка.
+     *
+     * @param item Товар магазина.
+     * @returns true, если у товара есть скидка.
+     */
+    protected hasDiscount(item: IShopItem): boolean {
+        return (
+            item.hasDiscount === true &&
+            !!item.effectivePrice &&
+            item.effectivePrice !== item.price
+        );
+    }
+
+    /**
      * Возвращает актуальную цену товара с учётом скидки.
      *
      * @param item Товар магазина.
@@ -103,6 +151,31 @@ export class SpecialComponent {
      */
     protected getDisplayPrice(item: IShopItem): string {
         return item.effectivePrice && item.effectivePrice !== item.price ? item.effectivePrice : item.price;
+    }
+
+    /**
+     * Вычисляет процент скидки товара.
+     *
+     * @param item Товар магазина.
+     * @returns Процент скидки или 0.
+     */
+    protected getDiscountPercent(item: IShopItem): number {
+        if (item.discountPercent != null && item.discountPercent > 0) {
+            return item.discountPercent;
+        }
+
+        if (!this.hasDiscount(item)) {
+            return 0;
+        }
+
+        const original = parseInt(item.price.replace(/\D/g, ''), 10);
+        const current = parseInt(item.effectivePrice!.replace(/\D/g, ''), 10);
+
+        if (!original || !current) {
+            return 0;
+        }
+
+        return Math.round(((original - current) / original) * 100);
     }
 
     /**
@@ -120,5 +193,17 @@ export class SpecialComponent {
             description: item.description,
         };
         this.dialogs.open(new PolymorpheusComponent(PurchaseDialogComponent), { size: 'auto', data }).subscribe();
+    }
+
+    /**
+     * Открывает изображение товара в окне предпросмотра.
+     *
+     * @param url Ссылка на изображение.
+     * @param desc Ключ перевода для описания изображения.
+     */
+    protected show(url: string, desc: string): void {
+        this.previewContent = url;
+        this.previewDesc = desc;
+        this.previewService.open(this.preview || '').subscribe();
     }
 }

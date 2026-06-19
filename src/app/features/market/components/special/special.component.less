@@ -1,0 +1,28 @@
+/**
+ * Жирное зачёркивание для старой цены.
+ */
+.strong-strike {
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+}
+
+/**
+ * Анимация скидочного бейджа.
+ * Мягкое пульсирование масштаба с сохранением наклона.
+ * Анимируется только transform — не вызывает пересчёт layout и мерцания.
+ */
+.discount-badge {
+    animation: discount-pulse 1.2s ease-in-out infinite;
+    transform-origin: center center;
+}
+
+@keyframes discount-pulse {
+    0%,
+    100% {
+        transform: scale(1) rotate(-3deg) translateY(0);
+    }
+
+    50% {
+        transform: scale(1.15) rotate(-3deg) translateY(-3px);
+    }
+}

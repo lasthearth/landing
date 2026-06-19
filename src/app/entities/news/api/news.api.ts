@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpContext } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
-import { NewsDto, CreateNewsRequest } from '../model/news.types';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
+import { CreateNewsRequest, NewsDto, NewsViewResponse } from '../model/news.types';
 
 /**
  * API-сервис для работы с новостями.
@@ -62,5 +64,24 @@ export class NewsApiService {
      */
     delete(id: string): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/news/${id}`);
+    }
+
+    /**
+     * Регистрирует просмотр новости авторизованным пользователем.
+     *
+     * Увеличивает счётчик просмотров один раз для одного пользователя.
+     * Ошибки обрабатываются вызывающим кодом без показа уведомлений.
+     *
+     * @param id Идентификатор новости.
+     * @returns Observable с актуальным количеством просмотров.
+     */
+    addView(id: string): Observable<number> {
+        return this.http
+            .post<NewsViewResponse>(
+                `${this.baseUrl}/news/${id}/views`,
+                {},
+                { context: new HttpContext().set(SKIP_ERROR_ALERT, true) }
+            )
+            .pipe(map((response) => parseInt(response.view_count, 10) || 0));
     }
 }
