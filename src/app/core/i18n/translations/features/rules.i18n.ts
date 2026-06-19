@@ -320,8 +320,8 @@ export const RULES_I18N = {
                         p2_2_2: "<b>2.2.2</b> Запрещается рытье рвов друг за другом, глубиной более 64-х блоков и шириной более 12-ти блоков или рвов которые невозможно, либо затрудненно засыпать.",
                         p2_2_3: "<b>2.2.3</b> Запрещается использовать непроходимую оборону. Например: Тоннели - жаровни. [Оценивается администрацией]",
                         p2_2_4: "<b>2.2.4</b> Запрещается использовать в качестве обороны ресурсов скрывание их в места внутри защищенной территории, которые допускают «обход» защиты и никоем образом не предполагают хранение в них. Например: закапывать сундуки и сосуды под землю наглухо; замуровывать в стены наглухо; использовать для хранения кассы и торгоматы. [Спорные моменты оценивает администрация]",
-                        p2_2_5: "<b>2.2.5</b> Запрещается укреплять любые средства хранения более чем на 300 единиц прочности.",
-                        p2_2_6: "<b>2.2.6</b> Запрещается укреплять блоки монумента более чем на 300 единиц прочности.",
+                        p2_2_5: "<b>2.2.5</b> Запрещается укреплять любые средства хранения более чем на 50 единиц прочности, либо согласно патенту на улучшение.",
+                        p2_2_6: "<b>2.2.6</b> Запрещается укреплять блоки монумента более чем на 50 единиц прочности, либо согласно патенту на улучшение.",
                         p2_2_7: "<b>2.2.7</b> Запрещается использовать для хранения ресурсов кассы и торгоматы. Размещение торгоматов и касс должно соответствовать предусмотренным для этого местам, например: рыночные площади, торговые лавки.",
                         levelsHeading: "<b>Уровни оборонительных сооружений</b>",
                         level1: "<b>Уровень 1</b> — бревенчатые стены, не превышающие высоту 4-х блоков и окружающие площадь не более 36х36 блоков.<br />Составное оборонительное строение: деревянная башня, либо форт, возможные как хранилище главных ресурсов и жилье правителя, высотой не более 23-х блоков не считая кровлю, площадью не более 17х17 блоков. С предусмотренной возможностью для будущего расширения.",
@@ -455,7 +455,7 @@ export const RULES_I18N = {
                         p5_3_9: "<b>5.3.9</b> Сюзерен может отказаться от контролируемой им точки и оставить ее. Для этого необходимо написать тикет в дискорд и заявление в дипломатии. После чего точка будет сброшена к изначальному состоянию и считаться ничьей.",
                         p5_3_10: "<b>5.3.10</b> Начисление очков Благосклонности Императора (БИ) происходит с момента подтверждения администратором контроля стороной точки. Суммы начислений равны 2 очка за 1 реальный час с округлением в меньшую сторону.",
                         p5_3_11: "<b>5.3.11</b> Улучшение точек происходит путем написания тикет-запроса с указанием уровня повышения и тратой очков БИ на это.",
-                        p5_3_12: "<b>5.3.12</b> Прочность каждого блока монумента точки не может превышать 300 единиц."
+                        p5_3_12: "<b>5.3.12</b> Прочность каждого блока монумента точки не может превышать 50 единиц, либо согласно патенту на улучшение."
                     }
                 },
                 actions: {
@@ -921,8 +921,8 @@ export const RULES_I18N = {
                         p2_2_2: "<b>2.2.2</b> Digging ditches one after another deeper than 64 blocks and wider than 12 blocks, or ditches that are impossible or difficult to fill in, is prohibited.",
                         p2_2_3: "<b>2.2.3</b> It is forbidden to use impassable defense. For example: Tunnel - braziers. [Evaluated by the administration]",
                         p2_2_4: "<b>2.2.4</b> It is forbidden to use hiding resources in places inside protected territory that allow \"bypassing\" protection and in no way imply storage there as a defense. For example: burying chests and vessels underground solidly; walling them up in walls solidly; using cash registers and vending machines for storage. [Disputable moments are evaluated by the administration]",
-                        p2_2_5: "<b>2.2.5</b> It is forbidden to reinforce any storage means by more than 300 durability units.",
-                        p2_2_6: "<b>2.2.6</b> It is forbidden to reinforce monument blocks by more than 300 durability units.",
+                        p2_2_5: "<b>2.2.5</b> It is forbidden to reinforce any storage means by more than 50 durability units, or according to the improvement patent.",
+                        p2_2_6: "<b>2.2.6</b> It is forbidden to reinforce monument blocks by more than 50 durability units, or according to the improvement patent.",
                         p2_2_7: "<b>2.2.7</b> It is forbidden to use cash registers and vending machines for resource storage. The placement of vending machines and cash registers must correspond to the intended locations, for example: market squares, trading stalls.",
                         levelsHeading: "<b>Levels of defensive structures</b>",
                         level1: "<b>Level 1</b> — log walls no higher than 4 blocks, enclosing an area no larger than 36x36 blocks.<br />Composite defensive structure: a wooden tower or fort, usable as a storage for main resources and the ruler's residence, no higher than 23 blocks excluding the roof, with an area no larger than 17x17 blocks. With provision for future expansion.",
@@ -1056,7 +1056,7 @@ export const RULES_I18N = {
                         p5_3_9: "<b>5.3.9</b> A Suzerain may renounce a point he controls and abandon it. To do this, it is necessary to submit a ticket in Discord and a statement in diplomacy. After that, the point will be reset to its original state and considered neutral.",
                         p5_3_10: "<b>5.3.10</b> Imperial Favor (IF) points are accrued from the moment the administrator confirms control of the point by the side. The accrual amount is 2 points per 1 real hour, rounded down.",
                         p5_3_11: "<b>5.3.11</b> Upgrading points is done by submitting a ticket request indicating the level of increase and spending IF points on it.",
-                        p5_3_12: "<b>5.3.12</b> The durability of each block of the point's monument cannot exceed 300 units."
+                        p5_3_12: "<b>5.3.12</b> The durability of each block of the point's monument cannot exceed 50 units, or according to the improvement patent."
                     }
                 },
                 actions: {
