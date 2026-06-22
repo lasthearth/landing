@@ -14,6 +14,7 @@ import { DonateService } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign-out-confirm.component';
 import { I18nService, Language, TranslatePipe } from '@core/i18n';
+import { formatServerTime } from './lib/format-server-time.function';
 
 /**
  * Компонент заголовка.
@@ -62,10 +63,13 @@ export class HeaderComponent {
 
     /**
      * {@link Observable} Даты и времени сервера.
+     *
+     * Локализует игровое время, которое бэкенд отдаёт в фиксированном
+     * английском формате "DD. Month, Year Y, HH:mm".
      */
-    protected readonly time$: Observable<string> = this.serverInformationService
-        .getTime$()
-        .pipe(map((info) => info.time));
+    protected readonly time$: Observable<string> = this.serverInformationService.getTime$().pipe(
+        map((info) => formatServerTime(info.time, this.language()))
+    );
 
     /**
      * Объект с информацией о текущем роуте.

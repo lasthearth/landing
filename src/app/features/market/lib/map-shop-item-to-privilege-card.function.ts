@@ -28,5 +28,6 @@ export function mapShopItemToPrivilegeCard(item: IShopItem): PrivilegeCard {
         dailyKitItems: [],
         privileges: item.privileges ?? [],
         currency: 'coins',
+        discountPercent: item.discountPercent,
     };
 }

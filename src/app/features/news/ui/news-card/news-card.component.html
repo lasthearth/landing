@@ -17,6 +17,16 @@
         </button>
     }
 
+    @if (isNew()) {
+        <span
+            class="news-card__new-badge"
+            [class.news-card__new-badge--with-delete]="canDelete()"
+            [title]="'news.card.newLabel' | translate"
+        >
+            {{ 'news.card.newLabel' | translate }}
+        </span>
+    }
+
     <div class="news-card__content flex sm:flex-col justify-between gap-4 items-end sm:items-start sm:gap-0">
         <div class="news-card__inner p-6 md:p-8 w-full">
             <div

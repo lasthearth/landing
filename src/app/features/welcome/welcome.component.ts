@@ -34,6 +34,10 @@ export class WelcomeComponent implements AfterViewInit {
         }
     }
 
+    ngAfterViewInit() {
+        this.initializeVideo();
+    }
+
     /**
      * Обрабатывает событие swipe на мобильных устройствах.
      */
@@ -43,33 +47,23 @@ export class WelcomeComponent implements AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
-        this.initializeVideo();
-    }
-
     async initializeVideo() {
         const video = this.videoPlayer?.nativeElement;
 
-        try {
-            if (video) {
-                // Устанавливаем muted явно (требуется браузерами)
-                video.muted = true;
-                video.playsInline = true;
+        if (video) {
+            // Устанавливаем muted явно (требуется браузерами)
+            video.muted = true;
+            video.playsInline = true;
 
-                // Пытаемся запустить видео
-                await video.play();
-            }
-
-            console.log('Видео успешно запущено');
-        } catch (error) {
-            console.warn('Автозапуск видео заблокирован:', error);
+            // Пытаемся запустить видео
+            await video.play().catch(() => {});
         }
     }
 
     // Дополнительно: перезапуск видео при возврате на страницу
     onVisibilityChange() {
         if (!document.hidden && this.videoPlayer?.nativeElement.paused) {
-            this.videoPlayer.nativeElement.play().catch(console.warn);
+            this.videoPlayer.nativeElement.play().catch(() => {});
         }
     }
 

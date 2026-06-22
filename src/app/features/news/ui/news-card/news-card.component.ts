@@ -1,5 +1,5 @@
 
-import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, input, model, output } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, model, output } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { catchError, EMPTY, of, switchMap, take } from 'rxjs';
 import { NewsApiService } from '@entities/news';
@@ -81,6 +81,13 @@ export class NewsCardComponent {
     public readonly date = input.required<string>();
 
     /**
+     * Дата публикации новости как объект Date.
+     *
+     * Используется для определения, является ли новость недавней.
+     */
+    public readonly createdAt = input<Date | null>(null);
+
+    /**
      * Количество просмотров новости.
      */
     public readonly viewCount = model<number>(0);
@@ -106,6 +113,22 @@ export class NewsCardComponent {
      * Признак того, что просмотр уже был зарегистрирован для текущей карточки.
      */
     private viewRegistered = false;
+
+    /**
+     * Признак того, что новость опубликована не позднее 24 часов назад.
+     */
+    protected readonly isNew = computed(() => {
+        const date = this.createdAt();
+
+        if (!date) {
+            return false;
+        }
+
+        const dayInMs = 24 * 60 * 60 * 1000;
+        const diff = Date.now() - date.getTime();
+
+        return diff >= 0 && diff <= dayInMs;
+    });
 
     constructor() {
         afterNextRender(() => {

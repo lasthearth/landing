@@ -94,6 +94,7 @@
                 [content]="item.content"
                 [preview]="item.preview"
                 [date]="item.formattedDate"
+                [createdAt]="item.createdAt"
                 [viewCount]="item.viewCount"
                 [createdBy]="isAuthenticated() ? item.createdBy : ''"
                 [canDelete]="isAdmin()"

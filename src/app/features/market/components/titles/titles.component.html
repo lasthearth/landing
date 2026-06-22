@@ -30,7 +30,14 @@
                     [class.bg-lh-primary-2/10]="title !== selectedPrivilege"
                     [class.hover:bg-[#e2d7bb]/60]="title !== selectedPrivilege"
                 >
-                    {{ title.title }}
+                    @if (title.discountPercent) {
+                        <span
+                            class="absolute top-1 right-1 z-10 inline-flex items-center justify-center min-w-[1.75rem] h-5 px-1 rounded-md bg-white text-[#c35a17] text-[10px] lg:text-xs font-extrabold shadow-sm"
+                        >
+                            −{{ title.discountPercent }}%
+                        </span>
+                    }
+                    <span class="block truncate pr-6">{{ title.title }}</span>
                 </button>
             }
         </div>

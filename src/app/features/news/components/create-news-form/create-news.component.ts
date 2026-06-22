@@ -125,7 +125,7 @@ export class CreateNewsComponent {
      */
     private readonly i18n = inject(I18nService);
 
-    currentTime: Date | undefined;
+    protected currentTime: Date | null = null;
 
     /**
      * Удаляет загруженный файл

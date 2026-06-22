@@ -64,6 +64,7 @@
                 content="{{ form.controls.content.value || ('news.create.contentFallback' | translate) }}"
                 [preview]="previewUrl || '/7.png'"
                 date="{{ currentDate$ | async | date: 'dd.MM.yy - HH:mm' }}"
+                [createdAt]="currentTime"
                 [viewCount]="0"
                 [createdBy]="userService.userName || ''"
             />

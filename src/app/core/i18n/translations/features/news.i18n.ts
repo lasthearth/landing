@@ -6,6 +6,7 @@ export const NEWS_I18N = {
                 deleteTitle: 'Удалить новость',
                 confirmDeleteTitle: 'Удалить новость?',
                 confirmDeleteText: 'Вы уверены, что хотите удалить новость «{{title}}»? Это действие нельзя отменить.',
+                newLabel: 'NEW',
             },
             create: {
                 title: 'Создание новостей',
@@ -30,6 +31,7 @@ export const NEWS_I18N = {
                 deleteTitle: 'Delete news',
                 confirmDeleteTitle: 'Delete news?',
                 confirmDeleteText: 'Are you sure you want to delete the news "{{title}}"? This action cannot be undone.',
+                newLabel: 'NEW',
             },
             create: {
                 title: 'Create news',

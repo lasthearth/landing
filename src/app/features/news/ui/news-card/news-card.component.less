@@ -83,4 +83,60 @@
     &__text {
         overflow-wrap: break-word;
     }
+
+    &__new-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 30;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 1.75rem;
+        padding: 0 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #f0e6d2;
+        background: linear-gradient(90deg, #8b4a1f 0%, #c35a17 25%, #ffaa5c 50%, #c35a17 75%, #8b4a1f 100%);
+        background-size: 200% 100%;
+        box-shadow:
+            0 4px 14px rgba(195, 90, 23, 0.45),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        text-shadow: 0 1px 2px rgba(45, 32, 26, 0.4);
+        animation:
+            new-badge-pulse 2s ease-in-out infinite,
+            new-badge-shimmer 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        pointer-events: none;
+
+        &--with-delete {
+            right: 3.75rem;
+        }
+    }
+}
+
+@keyframes new-badge-pulse {
+    0%, 100% {
+        box-shadow:
+            0 4px 14px rgba(195, 90, 23, 0.45),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    50% {
+        box-shadow:
+            0 6px 22px rgba(255, 170, 92, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+}
+
+@keyframes new-badge-shimmer {
+    0%, 30% {
+        background-position: 200% 0;
+    }
+
+    70%, 100% {
+        background-position: -200% 0;
+    }
 }

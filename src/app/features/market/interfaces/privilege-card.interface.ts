@@ -64,4 +64,11 @@ export interface PrivilegeCard {
      * Ежедневный набор привилегии.
      */
     dailyKitItems?: KitItem[];
+
+    /**
+     * Процент скидки на товар.
+     *
+     * Может отсутствовать, если скидки нет.
+     */
+    discountPercent?: number;
 }

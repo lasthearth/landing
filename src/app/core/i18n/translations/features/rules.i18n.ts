@@ -440,7 +440,7 @@ export const RULES_I18N = {
                     points: {
                         notice: "Правила захвата точек являются нововведением и могут содержать неточности.",
                         p5_3_1: "<b>5.3.1</b> Управлением точки занимается Сюзерен, чья сторона ее контролирует.",
-                        p5_3_2: "<b>5.3.2</b> Одновременно можно контролировать не более 2-х точек.",
+                        p5_3_2: "<b>5.3.2</b> Одновременно можно контролировать не более 4-х точек.",
                         p5_3_3: "<b>5.3.3</b> Улучшение и стройка на точках происходит исключительно Имперскими мастерами, за исключением декоративной составляющей, укрепления существующих дверей/ворот и установки-восстановления дверей/ворот в том же объеме в котором они были до набега на точку.",
                         p5_3_4: "<b>5.3.4</b> Запрос на улучшение точки происходит через написание тикета в дискорд.",
                         p5_3_5: "<b>5.3.5</b> Боевые действия за точки, происходят идентично набегу, за исключением:",
@@ -1041,7 +1041,7 @@ export const RULES_I18N = {
                     points: {
                         notice: "The point capture rules are a new feature and may contain inaccuracies.",
                         p5_3_1: "<b>5.3.1</b> The point is managed by the Suzerain whose side controls it.",
-                        p5_3_2: "<b>5.3.2</b> No more than 2 points can be controlled simultaneously.",
+                        p5_3_2: "<b>5.3.2</b> No more than 4 points can be controlled simultaneously.",
                         p5_3_3: "<b>5.3.3</b> Upgrading and building on points is carried out exclusively by Imperial masters, except for decorative components, reinforcing existing doors/gates, and installing/restoring doors/gates in the same volume as they were before the raid on the point.",
                         p5_3_4: "<b>5.3.4</b> A request to upgrade a point is made by submitting a ticket in Discord.",
                         p5_3_5: "<b>5.3.5</b> Combat for points proceeds identically to a raid, except for:",

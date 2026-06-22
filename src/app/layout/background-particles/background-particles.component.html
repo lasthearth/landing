@@ -1,0 +1,18 @@
+<div class="background-particles" aria-hidden="true">
+    @for (particle of particles; track $index) {
+        <span
+            class="background-particles__spark"
+            [style.left]="particle.left"
+            [style.animation-delay]="particle.delay"
+            [style.animation-duration]="particle.duration"
+            [style.width]="particle.width"
+            [style.height]="particle.height"
+            [style.background-color]="particle.color"
+            [style.color]="particle.color"
+            [style.box-shadow]="'0 0 8px ' + particle.color + ', 0 0 18px ' + particle.color + ', 0 0 36px ' + particle.color"
+            [style.--spark-drift]="particle.drift"
+            [style.--spark-rotate]="particle.rotate"
+            [style.--spark-tail-length]="particle.tailLength"
+        ></span>
+    }
+</div>
