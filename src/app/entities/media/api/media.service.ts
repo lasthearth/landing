@@ -137,7 +137,6 @@ export class MediaService {
         return {
             purpose,
             count: files.length,
-            content_type: files[0]?.type,
         };
     }
 
@@ -155,7 +154,6 @@ export class MediaService {
             form.append(key, value);
         }
 
-        form.set('Content-Type', file.type);
         form.append('file', file);
 
         const controller = new AbortController();
