@@ -1,12 +1,35 @@
 import { Injectable } from '@angular/core';
 
+/**
+ * Сервис для работы с localStorage.
+ *
+ * Все методы защищены от обращения в серверном окружении (SSR/prerender),
+ * где `localStorage` не определён.
+ */
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class LocalStorageService {
+    /**
+     * Проверяет, доступен ли localStorage в текущем окружении.
+     *
+     * @returns true, если localStorage определён и доступен.
+     */
+    private isAvailable(): boolean {
+        return typeof localStorage !== 'undefined';
+    }
 
-    // Сохранить данные
-    setItem(key: string, value: any): void {
+    /**
+     * Сохраняет значение в localStorage.
+     *
+     * @param key Ключ.
+     * @param value Значение для сохранения.
+     */
+    public setItem(key: string, value: any): void {
+        if (!this.isAvailable()) {
+            return;
+        }
+
         try {
             const stringValue = JSON.stringify(value);
             localStorage.setItem(key, stringValue);
@@ -15,8 +38,17 @@ export class LocalStorageService {
         }
     }
 
-    // Получить данные
-    getItem<T>(key: string): T | null {
+    /**
+     * Получает значение из localStorage.
+     *
+     * @param key Ключ.
+     * @returns Сохранённое значение или null.
+     */
+    public getItem<T>(key: string): T | null {
+        if (!this.isAvailable()) {
+            return null;
+        }
+
         try {
             const item = localStorage.getItem(key);
             return item ? JSON.parse(item) : null;
@@ -26,8 +58,16 @@ export class LocalStorageService {
         }
     }
 
-    // Удалить данные
-    removeItem(key: string): void {
+    /**
+     * Удаляет значение из localStorage.
+     *
+     * @param key Ключ.
+     */
+    public removeItem(key: string): void {
+        if (!this.isAvailable()) {
+            return;
+        }
+
         try {
             localStorage.removeItem(key);
         } catch (error) {
@@ -35,8 +75,14 @@ export class LocalStorageService {
         }
     }
 
-    // Очистить все данные
-    clear(): void {
+    /**
+     * Очищает localStorage.
+     */
+    public clear(): void {
+        if (!this.isAvailable()) {
+            return;
+        }
+
         try {
             localStorage.clear();
         } catch (error) {
@@ -44,9 +90,17 @@ export class LocalStorageService {
         }
     }
 
-    // Проверить наличие ключа
-    hasKey(key: string): boolean {
+    /**
+     * Проверяет наличие ключа в localStorage.
+     *
+     * @param key Ключ.
+     * @returns true, если ключ существует.
+     */
+    public hasKey(key: string): boolean {
+        if (!this.isAvailable()) {
+            return false;
+        }
+
         return localStorage.getItem(key) !== null;
     }
-
 }

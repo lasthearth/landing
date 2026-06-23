@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
@@ -60,23 +60,25 @@ export class RulesComponent implements OnDestroy {
     /**
      * Наблюдатель за пересечением верхнего маркера.
      */
-    private readonly observer: IntersectionObserver;
+    private observer: IntersectionObserver | null = null;
 
     constructor() {
-        this.observer = new IntersectionObserver(
-            ([entry]) => {
-                const shouldShow = !entry.isIntersecting;
-                if (this.showScrollTop !== shouldShow) {
-                    this.showScrollTop = shouldShow;
-                    this.cdr.markForCheck();
-                }
-            },
-            { threshold: 0 }
-        );
+        afterNextRender(() => {
+            if (typeof IntersectionObserver === 'undefined') {
+                return;
+            }
 
-        // Откладываем начало наблюдения до следующего рендера,
-        // чтобы маркер уже был в DOM.
-        queueMicrotask(() => {
+            this.observer = new IntersectionObserver(
+                ([entry]) => {
+                    const shouldShow = !entry.isIntersecting;
+                    if (this.showScrollTop !== shouldShow) {
+                        this.showScrollTop = shouldShow;
+                        this.cdr.markForCheck();
+                    }
+                },
+                { threshold: 0 }
+            );
+
             const sentinel = document.getElementById('rules-scroll-sentinel');
             if (sentinel) {
                 this.observer.observe(sentinel);
@@ -88,7 +90,7 @@ export class RulesComponent implements OnDestroy {
      * @inheritdoc
      */
     public ngOnDestroy(): void {
-        this.observer.disconnect();
+        this.observer?.disconnect();
     }
 
     /**
