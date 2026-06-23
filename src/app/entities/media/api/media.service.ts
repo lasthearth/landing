@@ -34,6 +34,11 @@ export class MediaService {
     private readonly baseUrl = environment.apiUrl;
 
     /**
+     * Таймаут загрузки одного файла в S3 (мс).
+     */
+    private readonly uploadTimeoutMs = 60_000;
+
+    /**
      * Получает presigned-цели для загрузки файлов.
      *
      * @param request Параметры запроса: назначение, количество и MIME-тип.
@@ -111,14 +116,11 @@ export class MediaService {
             );
         }
 
-        const urls: string[] = [];
+        await Promise.all(
+            files.map((file, i) => this.executeUpload(file, targets[i]))
+        );
 
-        for (let i = 0; i < files.length; i++) {
-            await this.executeUpload(files[i], targets[i]);
-            urls.push(targets[i].public_url);
-        }
-
-        return urls;
+        return targets.map((target) => target.public_url);
     }
 
     /**
@@ -156,14 +158,31 @@ export class MediaService {
         form.set('Content-Type', file.type);
         form.append('file', file);
 
-        const response = await fetch(target.post_url, {
-            method: 'POST',
-            body: form,
-        });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), this.uploadTimeoutMs);
 
-        if (response.status !== 204) {
-            const errorText = await response.text();
-            throw new Error(`MediaService: ошибка загрузки файла (${response.status}): ${errorText}`);
+        try {
+            const response = await fetch(target.post_url, {
+                method: 'POST',
+                body: form,
+                signal: controller.signal,
+            });
+
+            if (response.status !== 204) {
+                const errorText = await response.text();
+                throw new Error(
+                    `MediaService: ошибка загрузки файла "${file.name}" на ${target.post_url} (${response.status}): ${errorText}`
+                );
+            }
+        } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new Error(
+                    `MediaService: превышен таймаут (${this.uploadTimeoutMs} мс) загрузки файла "${file.name}" на ${target.post_url}`
+                );
+            }
+            throw error;
+        } finally {
+            clearTimeout(timeoutId);
         }
     }
 }
