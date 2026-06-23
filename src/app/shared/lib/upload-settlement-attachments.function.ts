@@ -1,9 +1,13 @@
 import { FormGroup } from '@angular/forms';
-import { Observable, map, of } from 'rxjs';
+import { Observable, from, map, of, switchMap } from 'rxjs';
 import { MediaService } from '@entities/media';
+import { compressImage } from './compress-image.function';
 
 /**
  * Загружает файлы формы поселения через MediaService и формирует attachments.
+ *
+ * Перед загрузкой каждый файл сжимается через canvas с сохранением пропорций
+ * и перекодируется в WebP (или JPEG в браузерах без поддержки WebP).
  *
  * @param fileFields Массив ключей файлов формы.
  * @param form FormGroup с файловыми полями.
@@ -27,16 +31,17 @@ export function uploadSettlementAttachments<T extends string>(
         return of([]);
     }
 
-    return mediaService
-        .uploadFiles$(fileEntries.map((entry) => entry.file), 'UPLOAD_PURPOSE_SETTLEMENT')
-        .pipe(
-            map((urls) => {
-                const urlMap = new Map(fileEntries.map((entry, i) => [entry.key, urls[i]]));
+    return from(Promise.all(fileEntries.map((entry) => compressImage(entry.file)))).pipe(
+        switchMap((compressedFiles) =>
+            mediaService.uploadFiles$(compressedFiles, 'UPLOAD_PURPOSE_SETTLEMENT')
+        ),
+        map((urls) => {
+            const urlMap = new Map(fileEntries.map((entry, i) => [entry.key, urls[i]]));
 
-                return fileFields.map((key) => ({
-                    url: urlMap.get(key) ?? '',
-                    description: getLabelForKey(key),
-                }));
-            })
-        );
+            return fileFields.map((key) => ({
+                url: urlMap.get(key) ?? '',
+                description: getLabelForKey(key),
+            }));
+        })
+    );
 }

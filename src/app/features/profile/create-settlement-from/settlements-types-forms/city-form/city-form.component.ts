@@ -10,7 +10,7 @@ import { ICreateSettlement } from '@entities/settlement';
 import { MediaService } from '@entities/media';
 import { fileFieldsCity, FileKeyCity } from './city-form.types'; //Получения типов для формы
 import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
-import { Subject, switchMap, Observable, map, tap, finalize } from 'rxjs';
+import { Subject, switchMap, Observable, map, finalize, timeout } from 'rxjs';
 import { LHHintComponent } from '@shared/ui/lh-hint/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
@@ -160,6 +160,7 @@ export class CityFormComponent {
         this.onSubmit
             .pipe(
                 switchMap(() => {
+                    this.isLoading = true;
                     const values = this.form.value;
 
                     return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
@@ -182,26 +183,24 @@ export class CityFormComponent {
                         })
                     );
                 }),
-                tap((request) => {
+                switchMap((request) => {
                     clearSettlementDraft('settlement-draft-city', this.localStorageService);
 
-                    this.settlementService
-                        .postRequestSettlement$(request)
-                        .pipe(
-                            this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success')),
-                            finalize(() => {
-                                this.isLoading = false;
-                            }),
-                            takeUntilDestroyed(this.destroyRef)
-                        )
-                        .subscribe(() => {
-                            this.submitEvent.emit();
-                        });
+                    return this.settlementService.postRequestSettlement$(request).pipe(
+                        timeout(30_000),
+                        this.requestStatusService.handleError(),
+                        this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success'))
+                    );
+                }),
+                finalize(() => {
+                    this.isLoading = false;
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe();
+            .subscribe({
+                next: () => this.submitEvent.emit(),
+                error: () => {},
+            });
     }
     /**
      * Метод для удаления файла из формы

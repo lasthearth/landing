@@ -8,7 +8,7 @@ import { ICreateSettlement } from '@entities/settlement';
 import { MediaService } from '@entities/media';
 import { fileFieldsTownship } from './township-form.types';
 import { FileKeyTownship } from './township-form.types';
-import { Subject, switchMap, Observable, map, tap, finalize } from 'rxjs';
+import { Subject, switchMap, Observable, map, finalize, timeout } from 'rxjs';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
@@ -153,6 +153,7 @@ export class TownshipFormComponent {
         this.onSubmit
             .pipe(
                 switchMap(() => {
+                    this.isLoading = true;
                     const values = this.form.value;
 
                     return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
@@ -175,26 +176,24 @@ export class TownshipFormComponent {
                         })
                     );
                 }),
-                tap((request) => {
+                switchMap((request) => {
                     clearSettlementDraft('settlement-draft-township', this.localStorageService);
 
-                    this.settlementService
-                        .postRequestSettlement$(request)
-                        .pipe(
-                            this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success')),
-                            finalize(() => {
-                                this.isLoading = false;
-                            }),
-                            takeUntilDestroyed(this.destroyRef)
-                        )
-                        .subscribe(() => {
-                            this.submitEvent.emit();
-                        });
+                    return this.settlementService.postRequestSettlement$(request).pipe(
+                        timeout(30_000),
+                        this.requestStatusService.handleError(),
+                        this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success'))
+                    );
+                }),
+                finalize(() => {
+                    this.isLoading = false;
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe();
+            .subscribe({
+                next: () => this.submitEvent.emit(),
+                error: () => {},
+            });
     }
 
     /**

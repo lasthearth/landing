@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { fileFieldsCamp, FileKeyCamp } from './camp-form.types';
-import { Subject, switchMap, map, tap, finalize } from 'rxjs';
+import { Subject, switchMap, map, finalize, timeout } from 'rxjs';
 import { NgFor, AsyncPipe, NgIf } from '@angular/common';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
@@ -152,26 +152,24 @@ export class CampFormComponent {
                         })
                     );
                 }),
-                tap((request) => {
+                switchMap((request) => {
                     clearSettlementDraft('settlement-draft-camp', this.localStorageService);
 
-                    this.settlementService
-                        .postRequestSettlement$(request)
-                        .pipe(
-                            this.requestStatusService.handleError(),
-                            this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success')),
-                            finalize(() => {
-                                this.isLoading = false;
-                            }),
-                            takeUntilDestroyed(this.destroyRef)
-                        )
-                        .subscribe(() => {
-                            this.submitEvent.emit();
-                        });
+                    return this.settlementService.postRequestSettlement$(request).pipe(
+                        timeout(30_000),
+                        this.requestStatusService.handleError(),
+                        this.requestStatusService.handleSuccess(this.i18n.translate('settlements.form.success'))
+                    );
+                }),
+                finalize(() => {
+                    this.isLoading = false;
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe();
+            .subscribe({
+                next: () => this.submitEvent.emit(),
+                error: () => {},
+            });
     }
     /**
      * Метод для удаления файла из формы
