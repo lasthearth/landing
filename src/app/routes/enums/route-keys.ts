@@ -24,4 +24,6 @@ export enum RouteKeys {
     settlements = 11,
 
     market = 12,
+
+    referral = 13,
 }

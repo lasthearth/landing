@@ -10,6 +10,7 @@ export const fileFields = [
     'preview',
     'map',
     'monument',
+    'fireplace',
     'warehouse',
     'beds',
     'playersDocuments',

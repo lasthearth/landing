@@ -29,6 +29,13 @@
                 <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
             }
         </button>
+        <button
+            [routerLink]="['/profile/referral']"
+            [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'referral' }"
+            class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 hover:bg-[#c35a17] rounded-lg p-2.5 size-11!"
+        >
+            <tui-icon icon="@tui.user-plus" />
+        </button>
     }
     <button
         [routerLink]="isAuth && isAdmin() ? ['/profile/admin'] : ''"

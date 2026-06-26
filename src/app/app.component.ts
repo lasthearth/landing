@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LayoutComponent } from './layout/layout.component';
 import { SeoService } from '@core/services/seo.service';
 import { ISeoData } from '@core/types/i-seo-data';
+import { ReferralApplierService } from '@features/referral';
 
 /**
  * Корневой компонент приложения.
@@ -27,6 +28,11 @@ export class AppComponent {
      * Роутер приложения.
      */
     private readonly router: Router = inject(Router);
+
+    /**
+     * Сервис автоматического применения реферального кода из URL (?ref=).
+     */
+    private readonly referralApplier: ReferralApplierService = inject(ReferralApplierService);
 
     /**
      * Fallback SEO-данные, если роут не содержит своих.

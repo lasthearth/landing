@@ -1,0 +1,86 @@
+@let vm = vm$ | async;
+
+<div class="flex flex-col gap-6 text-lh-primary">
+    <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">
+        {{ 'referral.title' | translate }}
+    </h2>
+
+    @if (vm?.code) {
+        <div class="flex flex-col gap-4">
+            <p class="text-lg leading-[27px] text-neutral-500">
+                {{ 'referral.description' | translate }}
+            </p>
+
+            <div
+                class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10"
+            >
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm text-neutral-500 mb-1">{{ 'referral.yourCode' | translate }}</p>
+                    <p class="text-2xl font-bold truncate">{{ vm!.code }}</p>
+                </div>
+
+                <div class="flex gap-2">
+                    <button
+                        tuiButton
+                        type="button"
+                        size="m"
+                        appearance="primary"
+                        (click)="copyCode(vm!.code!)"
+                        class="flex-1 sm:flex-none"
+                    >
+                        @if (codeCopied()) {
+                            <tui-icon icon="@tui.check" class="mr-1.5" />
+                            {{ 'referral.copied' | translate }}
+                        } @else {
+                            <tui-icon icon="@tui.copy" class="mr-1.5" />
+                            {{ 'referral.copyCode' | translate }}
+                        }
+                    </button>
+
+                    <button
+                        tuiButton
+                        type="button"
+                        size="m"
+                        appearance="secondary"
+                        (click)="copyLink(vm!.code!)"
+                        class="flex-1 sm:flex-none"
+                    >
+                        @if (linkCopied()) {
+                            <tui-icon icon="@tui.check" class="mr-1.5" />
+                            {{ 'referral.copied' | translate }}
+                        } @else {
+                            <tui-icon icon="@tui.link" class="mr-1.5" />
+                            {{ 'referral.copyLink' | translate }}
+                        }
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div
+                    class="flex flex-col gap-1 p-4 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10"
+                >
+                    <p class="text-sm text-neutral-500">{{ 'referral.totalReferrals' | translate }}</p>
+                    <p class="text-2xl font-bold">{{ vm!.totalReferrals }}</p>
+                </div>
+                <div
+                    class="flex flex-col gap-1 p-4 rounded-2xl bg-lh-accent/10 border border-lh-accent/30"
+                >
+                    <p class="text-sm text-neutral-500">{{ 'referral.totalEarned' | translate }}</p>
+                    <p class="text-2xl font-bold text-lh-accent">
+                        {{ vm!.totalCoinsEarned }}
+                        <img
+                            src="/splinter-of-spark.png"
+                            [alt]="'profile.currency.shardAlt' | translate"
+                            class="inline-block h-6 w-6 object-contain -mt-1"
+                        />
+                    </p>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <p class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]">
+            {{ 'referral.unavailable' | translate }}
+        </p>
+    }
+</div>

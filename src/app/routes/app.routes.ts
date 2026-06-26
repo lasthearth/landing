@@ -18,6 +18,7 @@ import { FaqComponent } from '../features/faq/faq.component';
 import { SettlementsComponent } from '../features/settlements/settlements.component';
 import { MarketComponent } from '../features/market/market.component';
 import { NotFoundComponent } from '../features/not-found/not-found.component';
+import { ReferralWidgetComponent } from '@features/referral';
 
 export const routes: Routes = [
     {
@@ -56,6 +57,11 @@ export const routes: Routes = [
                         path: 'settlement',
                         component: SettlementComponent,
                         data: { route_keys: RouteKeys.settlement, seo: routeSeoData.profile },
+                    },
+                    {
+                        path: 'referral',
+                        component: ReferralWidgetComponent,
+                        data: { route_keys: RouteKeys.referral, seo: routeSeoData.profile },
                     },
                     {
                         path: 'admin',

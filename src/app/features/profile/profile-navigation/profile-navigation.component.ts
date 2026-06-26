@@ -72,6 +72,9 @@ export class ProfileNavigationComponent implements OnInit {
                         case RouteKeys.settlement:
                             this.select = 'settlement';
                             break;
+                        case RouteKeys.referral:
+                            this.select = 'referral';
+                            break;
                     }
                 }
 
