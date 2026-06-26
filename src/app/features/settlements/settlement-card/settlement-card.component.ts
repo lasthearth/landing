@@ -2,33 +2,35 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     inject,
     input,
     InputSignal,
     OnInit,
+    output,
+    OutputEmitterRef,
 } from '@angular/core';
-import { ISettlement } from '@entities/settlement';
-import { SettlementService } from '@entities/settlement';
-import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from '@entities/user';
 import { tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { TuiPulse } from '@taiga-ui/kit';
-import { IPlayer } from '@entities/user';
-import { getSettlementTypeByKey } from '@entities/settlement/lib/get-settlement-type-by-key.function';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { SetTagsComponent } from './set-tags/set-tags.component';
-import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
-import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
+import { ISettlement, getSettlementTypeByKey } from '@entities/settlement';
+import { IPlayer, UserService } from '@entities/user';
+import { SettlementTagStore } from '@entities/settlement-tag';
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { TranslatePipe } from '@core/i18n';
+import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
+import { SetTagsComponent } from './set-tags/set-tags.component';
+import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 
 @Component({
     standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
-    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent, TranslatePipe],
+    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent, TranslatePipe, SettlementTagComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent implements OnInit {
@@ -37,7 +39,15 @@ export class SettlementCardComponent implements OnInit {
      */
     public data: InputSignal<ISettlement> = input.required();
 
+    /**
+     * Режим управляющей карточки.
+     */
     public isControlCard: InputSignal<boolean> = input(false);
+
+    /**
+     * Событие изменения тегов поселения.
+     */
+    public tagsChanged: OutputEmitterRef<void> = output();
 
     /**
      * Сервис данных о пользователе.
@@ -50,9 +60,9 @@ export class SettlementCardComponent implements OnInit {
     private readonly dialogs: TuiDialogService = inject(TuiDialogService);
 
     /**
-     * Сервис поселений.
+     * Хранилище тегов поселений.
      */
-    protected readonly settlementService: SettlementService = inject(SettlementService);
+    protected readonly tagStore: SettlementTagStore = inject(SettlementTagStore);
 
     protected readonly environment = environment;
 
@@ -62,6 +72,11 @@ export class SettlementCardComponent implements OnInit {
     protected leader: IPlayer | null = null;
 
     cdr = inject(ChangeDetectorRef);
+
+    /**
+     * Ссылка уничтожения компонента.
+     */
+    private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
     /**
      * Список игроков
@@ -77,6 +92,8 @@ export class SettlementCardComponent implements OnInit {
      * @inheritdoc
      */
     public ngOnInit(): void {
+        this.tagStore.loadTags$().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+
         this.userService
             .getPlayer$(this.data().leader.user_id)
             .pipe(
@@ -125,7 +142,9 @@ export class SettlementCardComponent implements OnInit {
                 size: 'auto',
                 data: { settlementId: this.data().id, settlementName: this.data().name, tagsIds: this.data().tags },
             })
-            .subscribe();
+            .subscribe({
+                complete: () => this.tagsChanged.emit(),
+            });
     }
 
     protected openDetails() {
@@ -138,7 +157,7 @@ export class SettlementCardComponent implements OnInit {
     }
 
     protected getTag(tagId: string) {
-        return this.settlementService.getTagById(tagId);
+        return this.tagStore.getTagById(tagId);
     }
 
     /**
@@ -149,16 +168,16 @@ export class SettlementCardComponent implements OnInit {
     }
 
     protected isEastSuzerain(settlement: ISettlement): boolean {
-        const hasFirstTag = settlement.tags.some((tag) => tag.id === '6936e858061b4fa4e346731b');
-        const hasSecondTag = settlement.tags.some((tag) => tag.id === '6936e810061b4fa4e3467319');
-
-        return hasFirstTag && hasSecondTag;
+        return (
+            this.tagStore.hasSpecialTag(settlement.tags, 'suzerain') &&
+            this.tagStore.hasSpecialTag(settlement.tags, 'east')
+        );
     }
 
     protected isWestSuzerain(settlement: ISettlement): boolean {
-        const hasFirstTag = settlement.tags.some((tag) => tag.id === '6936e858061b4fa4e346731b');
-        const hasSecondTag = settlement.tags.some((tag) => tag.id === '6936e848061b4fa4e346731a');
-
-        return hasFirstTag && hasSecondTag;
+        return (
+            this.tagStore.hasSpecialTag(settlement.tags, 'suzerain') &&
+            this.tagStore.hasSpecialTag(settlement.tags, 'west')
+        );
     }
 }

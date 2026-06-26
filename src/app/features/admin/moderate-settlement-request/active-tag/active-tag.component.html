@@ -1,17 +1,23 @@
 <div
     [class.opacity-55]="disabled()"
     [class.pointer-events-none]="disabled()"
-    [class.brightness-85]="disabled()"
-    class="text-md flex justify-center items-center gap-0.5 text-neutral-200 font-medium"
+    class="inline-flex items-center h-7 font-bold uppercase text-base"
 >
-    <div [class]="tagClasses()" class="flex justify-center items-center rounded-l-full px-3 h-8">
-        {{ text() }}
-    </div>
     <div
-        (click)="tagWasClicked.emit(action())"
-        [class]="tagClasses()"
-        class="hover:opacity-70 active:scale-[95%] transition-all duration-300 cursor-pointer flex justify-center items-center text-center rounded-r-full px-2 h-8"
+        [style]="backgroundStyle()"
+        [class.rounded-lg]="action() === 'custom'"
+        [class.rounded-l-lg]="action() !== 'custom'"
+        class="flex items-center h-full px-2"
     >
-        <tui-icon [icon]="getIcon() ?? ''" class="!text-lg" />
+        {{ tag().name }}
     </div>
+    @if (action() !== 'custom') {
+        <div
+            (click)="tagWasClicked.emit(action())"
+            [style]="backgroundStyle()"
+            class="hover:opacity-70 active:scale-[95%] transition-all duration-300 cursor-pointer flex items-center justify-center h-full rounded-r-lg px-1.5"
+        >
+            <tui-icon [icon]="getIcon()" class="!text-base" />
+        </div>
+    }
 </div>

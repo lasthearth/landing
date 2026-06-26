@@ -1,22 +1,33 @@
-import { Component, computed, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
-import { TagKey } from '../active-tag/active-tag.component';
+import { Component, computed, input } from '@angular/core';
+import { colorToCss, ISettlementTag } from '@entities/settlement-tag';
 
+/**
+ * Пассивный бейдж тега поселения.
+ */
 @Component({
     selector: 'app-settlement-tag',
     templateUrl: './settlement-tag.component.html',
 })
 export class SettlementTagComponent {
-    type = input.required<TagKey>();
-    text = input.required<string>();
-    uppercase = input<boolean>(true);
+    /**
+     * Данные тега.
+     */
+    public tag = input.required<ISettlementTag>();
 
-    private readonly colorMap: Record<TagKey, string> = {
-        east: 'bg-lh-tag-coral-bg text-lh-tag-coral',
-        west: 'bg-lh-tag-cyan-bg text-lh-tag-cyan',
-        suzerain: 'bg-lh-tag-purple-bg text-lh-tag-purple',
-    };
+    /**
+     * Заглавные буквы текста.
+     */
+    public uppercase = input<boolean>(true);
 
-    protected readonly tagClasses = computed(() => {
-        return this.colorMap[this.type()];
+    /**
+     * Стиль бейджа в общем дизайне проекта: фон с прозрачностью 15% + насыщенный текст.
+     */
+    protected readonly tagStyle = computed(() => {
+        const color = this.tag().color;
+
+        return {
+            backgroundColor: colorToCss({ ...color, alpha: 0.15 }),
+            color: colorToCss({ ...color, alpha: 1 }),
+        };
     });
 }

@@ -8,8 +8,6 @@ import { IRequestSettlement } from '../model/i-request-settlement';
 import { ISettlement } from '../model/i-settlement';
 import { ISettlementInvitation } from '../model/i-settlement-invitation';
 import { IUpdateSettlementRequest } from '../model/i-update-settlement';
-import { Tag } from '../model/tag';
-
 /**
  * API-сервис для работы с поселениями.
  *
@@ -275,35 +273,6 @@ export class SettlementService {
     }
 
     /**
-     * Хранилище системных тегов поселений.
-     */
-    private tagsIds: Record<string, Tag> = {
-        '6936e810061b4fa4e3467319': {
-            id: '6936e810061b4fa4e3467319',
-            text: 'Восток',
-            action: 'add',
-            type: 'east',
-            unique: true,
-            disabled: false,
-        },
-        '6936e848061b4fa4e346731a': {
-            id: '6936e848061b4fa4e346731a',
-            text: 'Запад',
-            action: 'add',
-            type: 'west',
-            unique: true,
-            disabled: false,
-        },
-        '6936e858061b4fa4e346731b': {
-            id: '6936e858061b4fa4e346731b',
-            text: 'Сюзерен',
-            action: 'add',
-            type: 'suzerain',
-            disabled: false,
-        },
-    };
-
-    /**
      * Добавляет тег к поселению.
      *
      * @param tagId Идентификатор тега.
@@ -316,6 +285,17 @@ export class SettlementService {
             { settlement_id: settlementId, tag_id: tagId },
             
         );
+    }
+
+    /**
+     * Удаляет тег из поселения.
+     *
+     * @param tagId Идентификатор тега.
+     * @param settlementId Идентификатор поселения.
+     * @returns Observable с результатом операции.
+     */
+    public removeTagFromSettlement$(tagId: string, settlementId: string) {
+        return this.http.delete(`${this.baseUrl}/settlements/${settlementId}/tags/${tagId}`);
     }
 
     /**
@@ -332,14 +312,4 @@ export class SettlementService {
         );
     }
 
-    /**
-     * Возвращает тег по идентификатору.
-     *
-     * @param tagId Идентификатор тега.
-     * @returns Объект тега или undefined.
-     */
-    public getTagById(tagId: string): Tag | undefined {
-        const tag = this.tagsIds[tagId];
-        return tag ? { ...tag } : undefined;
-    }
 }

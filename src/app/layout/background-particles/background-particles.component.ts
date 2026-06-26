@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 /**
  * Количество искр на фоне.
  */
-const PARTICLE_COUNT = 40;
+const PARTICLE_COUNT = 24;
 
 /**
  * Параметры одной искры.

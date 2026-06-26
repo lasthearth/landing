@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { SettlementService } from '@entities/settlement';
+import { SettlementService, ISettlement } from '@entities/settlement';
 import { UserService } from '@entities/user';
+import { SettlementTagStore } from '@entities/settlement-tag';
 import { SettlementCardComponent } from './settlement-card/settlement-card.component';
 import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { from, mergeMap, of, toArray } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { ISettlement } from '@entities/settlement';
 import { TranslatePipe } from '@core/i18n';
 
 /**
@@ -43,6 +43,7 @@ export class SettlementsComponent {
     protected readonly skeletonItems = Array.from({ length: 3 });
     private readonly settlementService = inject(SettlementService);
     private readonly userService = inject(UserService);
+    private readonly tagStore = inject(SettlementTagStore);
 
     protected readonly loading = signal<boolean>(false);
     protected readonly loadingOnline = signal<boolean>(false);
@@ -82,13 +83,14 @@ export class SettlementsComponent {
     });
 
     constructor() {
+        this.tagStore.loadTags$().subscribe();
         this.loadSettlements();
     }
 
     /**
      * Загружает список селений и обогащает базовыми данными.
      */
-    private loadSettlements(): void {
+    protected loadSettlements(): void {
         this.loading.set(true);
         this.error.set(false);
         this.settlementService
@@ -107,11 +109,7 @@ export class SettlementsComponent {
                         ...s,
                         membersCount: s.members.length + 1,
                         onlineCount: 0,
-                        tagTypes: new Set(
-                            s.tags
-                                .map((t) => this.settlementService.getTagById(t.id)?.type)
-                                .filter(Boolean) as string[]
-                        ),
+                        tagTypes: this.getSpecialTagTypes(s.tags),
                     }))
                 );
                 this.loading.set(false);
@@ -164,6 +162,28 @@ export class SettlementsComponent {
     }
 
     private onlineLoaded = false;
+
+    /**
+     * Возвращает набор системных типов тегов, присутствующих у поселения.
+     *
+     * @param tags Список ссылок на теги поселения.
+     * @returns Набор строковых ключей системных типов.
+     */
+    private getSpecialTagTypes(tags: { id: string }[]): Set<string> {
+        const types = new Set<string>();
+
+        if (this.tagStore.hasSpecialTag(tags, 'east')) {
+            types.add('east');
+        }
+        if (this.tagStore.hasSpecialTag(tags, 'west')) {
+            types.add('west');
+        }
+        if (this.tagStore.hasSpecialTag(tags, 'suzerain')) {
+            types.add('suzerain');
+        }
+
+        return types;
+    }
 
     /**
      * Загружает онлайн-статусы всех участников селений.

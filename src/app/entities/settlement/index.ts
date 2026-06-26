@@ -10,4 +10,4 @@ export * from './model/i-settlement';
 export * from './model/i-update-settlement';
 export { SettlementsTypes } from './model/settlements-types';
 export { SettlementService } from './api/settlement.service';
-export type { Tag, TagKey } from './model/tag';
+export { getSettlementTypeByKey } from './lib/get-settlement-type-by-key.function';

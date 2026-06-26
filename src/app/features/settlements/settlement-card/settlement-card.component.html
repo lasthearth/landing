@@ -51,29 +51,9 @@
                 >
                     {{ data().diplomacy }}
                 </span>
-                @for (tag of data().tags; track $index) {
-                    @switch (getTag(tag.id)?.type) {
-                        @case ("east") {
-                            <span
-                                class="bg-[#ff6b6b]/15 text-[#ff6b6b] uppercase font-bold text-base px-2 py-0.5 rounded-lg"
-                            >
-                                {{ getTag(tag.id)?.text || "" }}
-                            </span>
-                        }
-                        @case ("west") {
-                            <span
-                                class="bg-[#2cb5b6]/15 text-[#2cb5b6] uppercase font-bold text-base px-2 py-0.5 rounded-lg"
-                            >
-                                {{ getTag(tag.id)?.text || "" }}
-                            </span>
-                        }
-                        @case ("suzerain") {
-                            <span
-                                class="bg-[#9d5bd2]/15 text-[#9d5bd2] uppercase font-bold text-base px-2 py-0.5 rounded-lg"
-                            >
-                                {{ getTag(tag.id)?.text || "" }}
-                            </span>
-                        }
+                @for (tag of data().tags; track tag.id) {
+                    @if (getTag(tag.id); as tagData) {
+                        <app-settlement-tag [tag]="tagData" />
                     }
                 }
                 @if (isAdmin()) {

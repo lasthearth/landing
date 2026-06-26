@@ -85,11 +85,10 @@
                     >
                         {{ settlement.diplomacy }}
                     </span>
-                    @for (tag of settlement.tags; track $index) {
-                        <app-settlement-tag
-                            [text]="getTag(tag.id)?.text || ''"
-                            [type]="getTag(tag.id)?.type || 'east'"
-                        />
+                    @for (tag of settlement.tags; track tag.id) {
+                        @if (getTag(tag.id); as tagData) {
+                            <app-settlement-tag [tag]="tagData" />
+                        }
                     }
                 </div>
                 <div class="flex flex-wrap gap-3 items-center text-[18px] text-[#5c554a] font-medium">

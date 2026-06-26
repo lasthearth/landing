@@ -10,6 +10,7 @@ import { ISettlement } from '@entities/settlement';
 import { NotificationService } from '@core/services/notification.service';
 import { BehaviorSubject, catchError, defaultIfEmpty, filter, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { CreateSettlementFormComponent } from '@app/features/profile/create-settlement-from/create-settlement-from.component';
 import { EditSettlementFormComponent } from '../edit-settlement-form/edit-settlement-form.component';
 import { SettlementsTypes } from '@entities/settlement';
@@ -20,6 +21,7 @@ import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { IPlayer } from '@entities/user';
+import { SettlementTagStore } from '@entities/settlement-tag';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
@@ -82,6 +84,15 @@ export class SettlementComponent {
      * Сервис интернационализации.
      */
     private readonly i18n = inject(I18nService);
+
+    /**
+     * Хранилище тегов поселений.
+     */
+    protected readonly tagStore: SettlementTagStore = inject(SettlementTagStore);
+
+    constructor() {
+        this.tagStore.loadTags$().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    }
 
     /**
      * {@link Observable} Списка приглашений в селение (входящие).
@@ -397,7 +408,7 @@ export class SettlementComponent {
      * @param tagId Идентификатор тега.
      */
     protected getTag(tagId: string) {
-        return this.settlementService.getTagById(tagId);
+        return this.tagStore.getTagById(tagId);
     }
 
     /**

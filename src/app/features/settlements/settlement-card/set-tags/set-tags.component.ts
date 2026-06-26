@@ -1,67 +1,75 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    TagKey,
-    ActiveTagComponent,
-} from '@app/features/admin/moderate-settlement-request/active-tag/active-tag.component';
-import { Tag } from '@app/features/admin/moderate-settlement-request/interfaces/tag.interface';
-import { RequestStatusService } from '@core/services/request-status.service';
-import { SettlementService } from '@entities/settlement';
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    inject,
+    signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiDialogContext } from '@taiga-ui/core';
+import { TuiIcon } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { catchError, finalize, forkJoin, map, of } from 'rxjs';
+import { RequestStatusService } from '@core/services/request-status.service';
 import { I18nService, TranslatePipe } from '@core/i18n';
+import { SettlementService } from '@entities/settlement';
+import { hexToColor, ISettlementTag, SettlementTagService, SettlementTagStore } from '@entities/settlement-tag';
+import { ActiveTagComponent } from '@app/features/admin/moderate-settlement-request/active-tag/active-tag.component';
+import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
+import { catchError, EMPTY, finalize, forkJoin, map, of } from 'rxjs';
 
+/**
+ * Данные, передаваемые в диалог управления тегами поселения.
+ */
+interface SetTagsDialogData {
+    /**
+     * Идентификатор поселения.
+     */
+    settlementId: string;
+
+    /**
+     * Название поселения.
+     */
+    settlementName: string;
+
+    /**
+     * Идентификаторы уже назначенных тегов.
+     */
+    tagsIds: { id: string }[];
+}
+
+/**
+ * Результат закрытия диалога.
+ */
+interface SetTagsDialogResult {
+    /**
+     * Актуальный список идентификаторов тегов поселения.
+     */
+    tags: { id: string }[];
+}
+
+/**
+ * Компонент диалога управления тегами поселения.
+ *
+ * Позволяет добавлять/удалять существующие теги,
+ * создавать новые теги и удалять глобальные теги.
+ */
 @Component({
     selector: 'app-set-tags',
-    imports: [ActiveTagComponent, TranslatePipe],
+    standalone: true,
+    imports: [ActiveTagComponent, TranslatePipe, ReactiveFormsModule, TuiIcon, LHInputComponent],
     templateUrl: './set-tags.component.html',
-    styles: [':host { display: block; padding-top: 32px; }'],
+    styles: [':host { display: block; }'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetTagsComponent implements OnInit {
+export class SetTagsComponent {
     /**
      * Контекст открытого диалогового окна.
      */
-    protected readonly context: TuiDialogContext<
-        void,
-        { settlementId: string; settlementName: string; tagsIds: { id: string }[] }
-    > =
-        inject<TuiDialogContext<void, { settlementId: string; settlementName: string; tagsIds: { id: string }[] }>>(
-            POLYMORPHEUS_CONTEXT
-        );
-
-    protected tags: Tag[] = [
-        {
-            id: '6936e810061b4fa4e3467319',
-            text: 'settlements.tags.east',
-            action: 'add' as 'add' | 'remove' | 'custom',
-            type: 'east' as TagKey,
-            unique: true,
-            disabled: false,
-        },
-        {
-            id: '6936e848061b4fa4e346731a',
-            text: 'settlements.tags.west',
-            action: 'add' as 'add' | 'remove' | 'custom',
-            type: 'west' as TagKey,
-            unique: true,
-            disabled: false,
-        },
-        {
-            id: '6936e858061b4fa4e346731b',
-            text: 'settlements.tags.suzerain',
-            action: 'add' as 'add' | 'remove' | 'custom',
-            type: 'suzerain' as TagKey,
-            disabled: false,
-        },
-    ];
-
-    protected addedTags: Tag[] = [];
-
-    /**
-     * Ссылка уничтожения на компонент.
-     */
-    private readonly destroyRef: DestroyRef = inject(DestroyRef);
+    protected readonly context: TuiDialogContext<SetTagsDialogResult, SetTagsDialogData> =
+        inject<TuiDialogContext<SetTagsDialogResult, SetTagsDialogData>>(POLYMORPHEUS_CONTEXT);
 
     /**
      * Сервис поселений.
@@ -69,145 +77,296 @@ export class SetTagsComponent implements OnInit {
     private readonly settlementService: SettlementService = inject(SettlementService);
 
     /**
+     * Сервис глобальных тегов.
+     */
+    private readonly tagService: SettlementTagService = inject(SettlementTagService);
+
+    /**
+     * Хранилище тегов.
+     */
+    protected readonly tagStore: SettlementTagStore = inject(SettlementTagStore);
+
+    /**
      * Сервис уведомлений.
      */
     private readonly requestStatusService: RequestStatusService = inject(RequestStatusService);
+
+    /**
+     * Сервис диалогов подтверждения.
+     */
+    private readonly confirmDialog: ConfirmDialogService = inject(ConfirmDialogService);
 
     /**
      * Сервис интернационализации.
      */
     private readonly i18n = inject(I18nService);
 
-    isLoading = false;
+    /**
+     * Ссылка уничтожения на компонент.
+     */
+    private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
-    ngOnInit() {
-        this.context.data.tagsIds.forEach((item) => {
-            debugger;
-            const tag = this.getTag(item.id);
+    /**
+     * Набор идентификаторов назначенных тегов.
+     */
+    protected readonly assignedIds = signal<Set<string>>(
+        new Set(this.context.data.tagsIds.map((item) => item.id))
+    );
 
-            if (tag) {
-                tag.action = 'remove';
-                tag.disabled = true;
-                this.addedTags.push(tag);
+    /**
+     * Исходный набор идентификаторов для вычисления diff при сохранении.
+     */
+    private readonly originalAssignedIds = new Set(this.assignedIds());
 
-                this.tags = this.tags.filter((item) => item.id !== tag.id);
+    /**
+     * Признак сохранения изменений.
+     */
+    protected readonly isSaving = signal<boolean>(false);
 
-                const hasUniqueTag = this.addedTags.some((addedTag) => addedTag.unique);
+    /**
+     * Признак создания нового тега.
+     */
+    protected readonly isCreating = signal<boolean>(false);
 
-                if (hasUniqueTag) {
-                    this.tags.forEach((item) => {
-                        if (item.unique) {
-                            item.disabled = true;
-                        }
-                    });
-                }
-            }
-        });
-    }
+    /**
+     * Палитра пастельных цветов для новых тегов.
+     */
+    protected readonly tagColorPalette: string[] = [
+        '#ff6b6b',
+        '#ff7920',
+        '#f59e0b',
+        '#16a34a',
+        '#2cb5b6',
+        '#3d5381',
+        '#9d5bd2',
+        '#86523b',
+        '#720000',
+        '#6b7280',
+    ];
 
-    addTag(type: any, tag: any) {
-        if (type === 'add') {
-            this.tags = this.tags.filter((item) => item !== tag);
+    /**
+     * Форма создания нового тега.
+     */
+    protected readonly newTagForm = new FormGroup({
+        name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        color: new FormControl<string>(this.tagColorPalette[0], {
+            nonNullable: true,
+            validators: [Validators.required],
+        }),
+        description: new FormControl<string>('', { nonNullable: true }),
+    });
 
-            tag.action = 'remove';
-            this.addedTags.push(tag);
+    /**
+     * Список назначенных тегов.
+     */
+    protected readonly assignedTags = computed(() =>
+        this.tagStore.tags().filter((tag) => this.assignedIds().has(tag.id))
+    );
 
-            const hasUniqueTag = this.addedTags.some((addedTag) => addedTag.unique);
+    /**
+     * Список доступных для добавления тегов.
+     */
+    protected readonly availableTags = computed(() =>
+        this.tagStore.tags().filter((tag) => !this.assignedIds().has(tag.id))
+    );
 
-            if (hasUniqueTag) {
-                this.tags.forEach((item) => {
-                    if (item.unique) {
-                        item.disabled = true;
-                    }
-                });
+    /**
+     * Признак наличия несохранённых изменений.
+     */
+    protected readonly hasChanges = computed(() => {
+        const current = this.assignedIds();
+
+        if (current.size !== this.originalAssignedIds.size) {
+            return true;
+        }
+
+        for (const id of current) {
+            if (!this.originalAssignedIds.has(id)) {
+                return true;
             }
         }
-    }
 
-    removeTag(type: any, tag: any) {
-        if (type === 'remove') {
-            this.addedTags = this.addedTags.filter((item) => item !== tag);
+        return false;
+    });
 
-            tag.action = 'add';
-            this.tags.push(tag);
-
-            const hasUniqueTag = this.addedTags.some((addedTag) => addedTag.unique);
-            if (!hasUniqueTag) {
-                this.tags.forEach((item) => {
-                    if (item.unique) {
-                        item.disabled = false;
-                    }
-                });
-            }
-        }
+    /**
+     * Загружает список тегов при инициализации.
+     */
+    constructor() {
+        this.tagStore.loadTags$().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     /**
-     * Подтверждает одобрение анкеты.
+     * Добавляет тег к поселению.
+     *
+     * @param tag Тег для добавления.
      */
-    protected saveTags(): void {
-        if (this.addedTags.length === 0) {
-            console.warn('Нет тегов для сохранения');
+    protected assignTag(tag: ISettlementTag): void {
+        this.assignedIds.update((set) => new Set(set).add(tag.id));
+    }
+
+    /**
+     * Убирает тег из поселения.
+     *
+     * @param tag Тег для удаления.
+     */
+    protected unassignTag(tag: ISettlementTag): void {
+        this.assignedIds.update((set) => {
+            const next = new Set(set);
+            next.delete(tag.id);
+
+            return next;
+        });
+    }
+
+    /**
+     * Выбирает цвет для нового тега из палитры.
+     *
+     * @param color HEX-код цвета.
+     */
+    protected selectColor(color: string): void {
+        this.newTagForm.controls.color.setValue(color);
+    }
+
+    /**
+     * Создаёт новый глобальный тег и сразу назначает его поселению.
+     */
+    protected createTag(): void {
+        if (this.newTagForm.invalid) {
+            this.newTagForm.markAllAsTouched();
             return;
         }
 
-        this.isLoading = true;
+        const { name, color, description } = this.newTagForm.getRawValue();
 
-        // Предполагаем, что settlementId есть в данных контекста
-        const settlementId = this.context.data.settlementId;
-        // Создаем массив запросов для каждого тега
-        const tagRequests = this.addedTags.map((tag) =>
-            this.settlementService.postSettlementTags(tag.id, settlementId).pipe(
-                catchError((error) => {
-                    console.error(`Ошибка при сохранении тега "${tag.text}":`, error);
-                    // Возвращаем объект с информацией об ошибке
-                    return of({
-                        success: false,
-                        tag: tag.text,
-                        error: error.message,
-                    });
-                }),
-                // При успехе возвращаем объект с информацией
-                map(() => ({
-                    success: true,
-                    tag: tag.text,
-                }))
-            )
-        );
+        this.isCreating.set(true);
 
-        // Отправляем все теги параллельно
-        forkJoin(tagRequests)
+        this.tagService
+            .createTag$( {
+                name,
+                color: hexToColor(color),
+                description: description || undefined,
+            })
             .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                finalize(() => (this.isLoading = false))
+                catchError((error) => {
+                    this.requestStatusService.showError(this.i18n.translate('settlements.tags.createError'));
+                    return EMPTY;
+                }),
+                finalize(() => this.isCreating.set(false))
             )
-            .subscribe({
-                next: (results) => {
-                    // Анализируем результаты
-                    const successful = results.filter((r) => r.success);
-                    const failed = results.filter((r) => !r.success);
-
-                    if (successful.length > 0) {
-                        this.requestStatusService.handleSuccess(
-                            this.i18n.translate('settlements.tags.saved', { count: successful.length }),
-                            this.context.$implicit
-                        );
-                    }
-
-                    if (failed.length > 0) {
-                        console.warn(`Не удалось сохранить ${failed.length} тегов`);
-                        // Можно показать отдельное предупреждение
-                    }
-
-                    console.log('Результаты сохранения тегов:', results);
-                },
-                error: (error) => {
-                    this.requestStatusService.handleError()(error);
-                },
+            .subscribe((tag) => {
+                this.tagStore.addTag(tag);
+                this.assignTag(tag);
+                this.newTagForm.reset({ name: '', color: this.tagColorPalette[0], description: '' });
+                this.requestStatusService.handleSuccess(
+                    this.i18n.translate('settlements.tags.createdSuccess', { name: tag.name })
+                );
             });
     }
 
-    protected getTag(tagId: string) {
-        return this.settlementService.getTagById(tagId);
+    /**
+     * Удаляет глобальный тег после подтверждения.
+     *
+     * @param tag Тег для удаления.
+     */
+    protected deleteTag(tag: ISettlementTag): void {
+        this.confirmDialog
+            .open({
+                title: this.i18n.translate('settlements.tags.deleteTitle'),
+                text: this.i18n.translate('settlements.tags.deleteText', { name: tag.name }),
+            })
+            .subscribe((confirmed) => {
+                if (!confirmed) {
+                    return;
+                }
+
+                this.tagService
+                    .deleteTag$(tag.id)
+                    .pipe(
+                        this.requestStatusService.handleError(
+                            this.i18n.translate('settlements.tags.deleteError')
+                        )
+                    )
+                    .subscribe(() => {
+                        this.tagStore.removeTag(tag.id);
+                        this.assignedIds.update((set) => {
+                            const next = new Set(set);
+                            next.delete(tag.id);
+
+                            return next;
+                        });
+                        this.requestStatusService.handleSuccess(
+                            this.i18n.translate('settlements.tags.deletedSuccess', { name: tag.name })
+                        );
+                    });
+            });
     }
+
+    /**
+     * Сохраняет изменения: добавляет и удаляет теги поселения.
+     */
+    protected saveTags(): void {
+        const current = this.assignedIds();
+        const addedIds: string[] = [];
+        const removedIds: string[] = [];
+
+        for (const id of current) {
+            if (!this.originalAssignedIds.has(id)) {
+                addedIds.push(id);
+            }
+        }
+
+        for (const id of this.originalAssignedIds) {
+            if (!current.has(id)) {
+                removedIds.push(id);
+            }
+        }
+
+        if (addedIds.length === 0 && removedIds.length === 0) {
+            this.context.$implicit.complete();
+            return;
+        }
+
+        this.isSaving.set(true);
+
+        const settlementId = this.context.data.settlementId;
+        const addRequests = addedIds.map((tagId) =>
+            this.settlementService.postSettlementTags(tagId, settlementId).pipe(
+                map(() => ({ success: true, tagId })),
+                catchError((error) => of({ success: false, tagId, error }))
+            )
+        );
+        const removeRequests = removedIds.map((tagId) =>
+            this.settlementService.removeTagFromSettlement$(tagId, settlementId).pipe(
+                map(() => ({ success: true, tagId })),
+                catchError((error) => of({ success: false, tagId, error }))
+            )
+        );
+
+        forkJoin([...addRequests, ...removeRequests])
+            .pipe(
+                finalize(() => this.isSaving.set(false)),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((results) => {
+                const failed = results.filter((r) => !r.success);
+
+                if (failed.length > 0) {
+                    this.requestStatusService.showError(
+                        this.i18n.translate('settlements.tags.saveError', { count: failed.length })
+                    );
+
+                    return;
+                }
+
+                this.requestStatusService.handleSuccess(
+                    this.i18n.translate('settlements.tags.saved', { count: results.length })
+                );
+
+                this.context.completeWith({
+                    tags: Array.from(current).map((id) => ({ id })),
+                });
+            });
+    }
+
 }

@@ -149,7 +149,7 @@
     } @else {
         <div class="flex flex-wrap justify-center items-stretch gap-6 pt-0 lh-stagger-list">
             @for (item of sortedSettlements(); track item.id) {
-                <app-settlement-card [data]="item" class="card" />
+                <app-settlement-card [data]="item" (tagsChanged)="loadSettlements()" class="card" />
             }
         </div>
     }

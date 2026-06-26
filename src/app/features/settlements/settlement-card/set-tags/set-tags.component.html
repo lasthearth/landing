@@ -1,55 +1,126 @@
-<div class="lh-dialog-card">
-    <h2 class="lh-dialog-title">
-        {{ 'settlements.tags.title' | translate }}
-        <span class="uppercase">{{ context.data.settlementName }}</span>
-    </h2>
-
-    <div class="flex flex-col gap-3">
-        <p class="text-lg font-semibold text-[#2d201a]">{{ 'settlements.tags.available' | translate }}</p>
-        <div class="flex flex-wrap gap-2">
-            @for (tag of tags; track $index) {
-                <app-active-tag
-                    [type]="tag.type"
-                    [text]="tag.text | translate"
-                    [action]="tag.action"
-                    [disabled]="tag.disabled"
-                    (tagWasClicked)="addTag($event, tag)"
-                />
-            }
+<div class="lh-dialog-card min-w-[32rem]">
+    <div class="flex items-center gap-4">
+        <div
+            class="flex items-center justify-center size-12 rounded-full bg-lh-accent/10 border border-lh-accent/20 shrink-0"
+        >
+            <tui-icon icon="@tui.tags" class="size-6! text-lh-accent" />
+        </div>
+        <div class="flex flex-col min-w-0">
+            <p class="lh-dialog-title">{{ 'settlements.tags.title' | translate }}</p>
+            <p class="text-lg font-semibold text-lh-primary truncate uppercase">{{ context.data.settlementName }}</p>
         </div>
     </div>
 
+    <!-- Выбранные теги -->
     <div class="flex flex-col gap-3">
-        <p class="text-lg font-semibold text-[#2d201a]">{{ 'settlements.tags.selected' | translate }}</p>
-        <div class="flex flex-wrap gap-2">
-            @if (addedTags.length === 0) {
-                <p class="text-base h-8 -mt-2 uppercase font-bold text-[#bdb093] self-center">
+        <p class="text-lg font-semibold text-lh-primary">{{ 'settlements.tags.selected' | translate }}</p>
+        <div
+            class="min-h-[4rem] flex flex-wrap gap-2 p-4 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10"
+        >
+            @if (assignedTags().length === 0) {
+                <p class="text-base uppercase font-bold text-lh-primary/50 self-center">
                     {{ 'settlements.tags.none' | translate }}
                 </p>
             }
-            @for (tag of addedTags; track $index) {
-                <app-active-tag
-                    [type]="tag.type"
-                    [text]="tag.text | translate"
-                    [action]="tag.action"
-                    [disabled]="tag.disabled"
-                    (tagWasClicked)="removeTag($event, tag)"
-                />
+            @for (tag of assignedTags(); track tag.id) {
+                <app-active-tag [tag]="tag" action="remove" (tagWasClicked)="unassignTag(tag)" />
             }
         </div>
     </div>
 
+    <!-- Доступные теги -->
+    <div class="flex flex-col gap-3">
+        <p class="text-lg font-semibold text-lh-primary">{{ 'settlements.tags.available' | translate }}</p>
+        <div
+            class="min-h-[4rem] flex flex-wrap gap-2 p-4 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10"
+        >
+            @if (availableTags().length === 0) {
+                <p class="text-base uppercase font-bold text-lh-primary/50 self-center">
+                    {{ 'settlements.tags.noAvailable' | translate }}
+                </p>
+            }
+            @for (tag of availableTags(); track tag.id) {
+                <div class="flex items-center gap-0.5">
+                    <app-active-tag [tag]="tag" action="add" (tagWasClicked)="assignTag(tag)" />
+                    <button
+                        type="button"
+                        (click)="deleteTag(tag)"
+                        [title]="'settlements.tags.deleteTag' | translate"
+                        class="h-7 w-7 flex items-center justify-center rounded-lg bg-lh-danger/10 hover:bg-lh-danger/30 text-lh-danger transition-colors"
+                    >
+                        <tui-icon icon="@tui.trash-2" class="size-4!" />
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Создание тега -->
+    <div class="lh-dialog-info">
+        <p class="text-lg font-semibold text-lh-primary">{{ 'settlements.tags.createTitle' | translate }}</p>
+        <div class="flex flex-col gap-3">
+            <lh-input
+                type="input"
+                [placeholder]="'settlements.tags.namePlaceholder' | translate"
+                [formControl]="newTagForm.controls.name"
+            />
+            <lh-input
+                type="textarea"
+                [rows]="2"
+                [placeholder]="'settlements.tags.descriptionPlaceholder' | translate"
+                [formControl]="newTagForm.controls.description"
+            />
+            <div class="flex flex-col gap-2">
+                <p class="text-base font-semibold text-lh-primary">{{ 'settlements.tags.colorLabel' | translate }}</p>
+                <div class="flex flex-wrap gap-2">
+                    @for (color of tagColorPalette; track color) {
+                        <button
+                            type="button"
+                            (click)="selectColor(color)"
+                            [class.ring-2]="newTagForm.controls.color.value === color"
+                            [class.ring-lh-primary]="newTagForm.controls.color.value === color"
+                            [class.ring-offset-2]="newTagForm.controls.color.value === color"
+                            [style.background-color]="color"
+                            class="h-8 w-8 rounded-full border border-lh-primary-2/20 transition-transform hover:scale-110"
+                        ></button>
+                    }
+                </div>
+            </div>
+            <button
+                type="button"
+                (click)="createTag()"
+                [disabled]="newTagForm.invalid || isCreating()"
+                class="lh-secondary-button text-base py-2 px-4 flex items-center gap-2 self-start"
+            >
+                    @if (isCreating()) {
+                        <span class="inline-block size-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+                    } @else {
+                        <tui-icon icon="@tui.plus" class="size-4!" />
+                    }
+                    {{ 'settlements.tags.createButton' | translate }}
+                </button>
+            </div>
+        </div>
+
+    <!-- Действия -->
     <div class="lh-dialog-actions">
-        <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
+        <button
+            type="button"
+            (click)="context.$implicit.complete()"
+            class="lh-dialog-button lh-dialog-button-secondary"
+        >
             {{ 'settlements.tags.cancel' | translate }}
         </button>
         <button
             type="button"
             (click)="saveTags()"
-            [disabled]="addedTags.length === 0"
+            [disabled]="!hasChanges() || isSaving()"
             class="lh-dialog-button lh-dialog-button-primary"
         >
-            {{ 'settlements.tags.add' | translate }}
+            @if (isSaving()) {
+                <span class="inline-block size-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            }
+            {{ 'settlements.tags.save' | translate }}
         </button>
     </div>
 </div>

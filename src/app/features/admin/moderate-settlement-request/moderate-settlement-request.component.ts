@@ -5,7 +5,6 @@ import { SettlementService } from '@entities/settlement';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { Tag } from './interfaces/tag.interface';
 
 @Component({
     selector: 'app-moderate-settlement-request',

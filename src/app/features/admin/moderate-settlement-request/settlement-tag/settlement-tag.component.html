@@ -1,5 +1,8 @@
-<div class="text-base md:text-base uppercase flex justify-center items-center gap-0.5 text-neutral-200 font-bold">
-    <div [class]="tagClasses()" class="flex justify-center items-center rounded-full px-3 p-1.5">
-        {{ text() }}
+<div class="inline-flex items-center h-7 font-bold uppercase text-base">
+    <div
+        [style]="tagStyle()"
+        class="flex items-center h-full rounded-lg px-2"
+    >
+        {{ tag().name }}
     </div>
 </div>

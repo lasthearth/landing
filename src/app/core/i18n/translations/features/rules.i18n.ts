@@ -81,7 +81,7 @@ export const RULES_I18N = {
                     settlement: "<b>Селение</b> — группа игроков, объединенная в соответствии с одним из типов, установленных правилами.",
                     neutralZone: {
                         before: "<b>Нейтральная зона</b> — территория, обозначенная на карте в канале discord, где находятся ",
-                        after: " зоны влияния и запрещено основание селений типом выше хутора."
+                        after: " зоны влияния. В ней разрешено основание хуторов, а также селений типом выше хутора по согласованию с наместником для владельцев Паспорта гражданина. Владельцы Паспорта гражданина также имеют право селиться непосредственно на территории Поместья наместника."
                     },
                     keyPoint: {
                         before: "<b>Ключевая точка</b> — это 1 из 5-ти ключевых локаций находящихся на ",
@@ -114,6 +114,8 @@ export const RULES_I18N = {
                     patentFoundation: "<b>Патент на основание селения</b> — книга-документ, предоставляемая и подписываемая Сюзереном или Имперским служащим, дающая право на основание определенного типа селения.",
                     patentImprovement: "<b>Патент улучшение селения</b> — книга-документ, предоставляемая и подписываемая Сюзереном или Имперским служащим, дающая право на улучшение опредленного аспекта внутри селения (монумент, укрепление).",
                     charterOfLiberties: "<b>Купчая вольности</b> — книга-документ, предоставляемая Сюзереном, изменяющая ваш статус [роль] при её использовании.",
+                    governorEstate: "<b>Поместье наместника</b> — стартовый город для одиночных игроков, управляемый наместником от имени Империи.",
+                    citizenPassport: "<b>Паспорт гражданина</b> — документ следующего статуса после Купчей вольности, предоставляемый наместником. Даёт право: селиться непосредственно на территории Поместья наместника; покупать жильё, которое будет построено для владельца; получать доступ к закрытым рынкам; открывать собственные рынки на территории Поместья; занимать должность Верховного судьи; получать работу и иные преференции. Также Паспорт гражданина позволяет основать селение в нейтральной зоне в месте, согласованном с наместником, при условии, что все жители такого селения имеют Паспорт, и с уплатой налога, установленного наместником.",
                     raid: "<b>Набег</b> — кратковременное состояние, когда игроки одного селения совершают внезапное нападение на другое селение, с целью уничтожения живой силы противника и/или разграбления его ресурсов.",
                     war: "<b>Война</b> — долговременное состояние, когда игроки одного селения начинают военные действия против игроков другого селения, с целью достижения своих требований.",
                     politicalCourse: {
@@ -186,7 +188,9 @@ export const RULES_I18N = {
                             introAfter: ", основанное после этапа «Деревня», состоящее из 5-ти и более игроков, зарегистрированное на сайте, имеющее все основные постройки на поверхности и соответствующее следующим требованиям:",
                             location: "Расположение: не далее 8.5 тыс. блоков от нулевой координаты.",
                             population: "Население: от 5-ти человек.",
+                            citizensRequirement: "Наличие минимум 1-го владельца Паспорта гражданина.",
                             monumentAfter: " : 1х1х1 блока (ш,д,в) (или согласно патенту на улучшение селения).",
+
                             libertiesBefore: "Документы: от 5-ти купчих",
                             infrastructureHeading: "Инфраструктура:",
                             square: "сельская площадь;",
@@ -217,7 +221,9 @@ export const RULES_I18N = {
                             introAfter: ", основанное после этапа «Посёлок», состоящее из 6-ти и более игроков, зарегистрированное на сайте, имеющее все основные постройки на поверхности и соответствующее следующим требованиям:",
                             location: "Расположение: не далее 8.5 тыс. блоков от нулевой координаты.",
                             population: "Население: от 6-ти человек.",
+                            citizensRequirement: "Наличие минимум 2-х владельцев Паспорта гражданина.",
                             monumentAfter: " : 1х1х1 блока (ш,д,в) (или согласно патенту на улучшение селения).",
+
                             documentsHeading: "Документы:",
                             patentBefore: "подписанный",
                             patentAfter: " на разрешение основания города от",
@@ -247,7 +253,7 @@ export const RULES_I18N = {
                             defensesBefore: "Возможность возведения",
                             defensesAfter: " 2-го уровня.",
                             trader: "Возможность получить 1-го случайного торговца.",
-                            credit: "Право получить льготный кредит от",
+                            credit: "Право получить льготный кредит от ",
                             creditAfter: "под 10% годовых [Может быть не выполнено, в случае враждебности к сюзерену].",
                             colony: "Право основать не более 1 колонии.",
                             bloomeryBlueprint: "Право получить чертеж на упрощенное создание сыродутных печей."
@@ -258,7 +264,9 @@ export const RULES_I18N = {
                             introAfter: ", основанное после этапа «Город», состоящее из 8-ми и более игроков, зарегистрированное на сайте, имеющее все основные постройки на поверхности и соответствующее следующим требованиям:",
                             location: "Расположение: не далее 8.5 тыс. блоков от нулевой координаты.",
                             population: "Население: от 8-ми человек.",
+                            citizensRequirement: "Наличие минимум 3-х владельцев Паспорта гражданина.",
                             monumentAfter: " : 1х1х1 блока (ш,д,в) (или согласно патенту на улучшение селения).",
+
                             documentsHeading: "Документы:",
                             libertiesBefore: "от 8-ми купчих ",
                             books: "от 10-ти книг [либо самописных, либо сюжетных] доступных для прочтения любым игрокам.",
@@ -293,7 +301,7 @@ export const RULES_I18N = {
                             war: "Возможность объявлять войну при наличии казус белли.",
                             defensesBefore: "Возможность возведения",
                             defensesAfter: " 3-го уровня.",
-                            credit: "Право получить льготный кредит от",
+                            credit: "Право получить льготный кредит от ",
                             creditAfter: "под 10% годовых [Может быть не выполнено, в случае враждебности к сюзерену].",
                             colonies: "Право основать не более 2-х колоний.",
                             steelFurnaceBlueprint: "Право получить чертеж на сталелитейную печь."
@@ -378,12 +386,12 @@ export const RULES_I18N = {
                         points: "5.3 Захват точек"
                     },
                     raid: {
-                        p5_1_1: "<b>5.1.1</b> «Набег» может совершаться только в том случае, если хотя бы 2 игрока из селения, на которое он планируется, находятся онлайн. В случае с набегом на Хутор или Лагерь, допустимо когда в онлайне 1 человек.",
-                        p5_1_2: "<b>5.1.2</b> «Набег» должен быть объявлен за N времени, соответствующее политическому курсу селения цели, до свершения, которое будет отсчитываться с момента объявления в чате «Дипломатия» в дискорд.",
-                        p5_1_3: "<b>5.1.3</b> Объявление должно быть передано людям селения используя не менее двух упоминаний его игроков.",
+                        p5_1_1: "<b>5.1.1</b> «Набег» может совершаться только в том случае, если хотя бы 2 игрока из селения, на которое он планируется, находятся онлайн. В случае с набегом на Хутор или Лагерь, допустимо когда в онлайне 1 человек. Для набега на ключевую точку на сервере должно находиться не менее 6 игроков противоположной стороны.",
+                        p5_1_2: "<b>5.1.2</b> «Набег» должен быть объявлен заранее: на селение — за время, соответствующее политическому курсу селения цели (миролюбивый — 40 минут, нейтральный — 20 минут, агрессивный — 10 минут); на хутор или ключевую точку — за 20 минут. Отсчёт ведётся с момента объявления в чате «Дипломатия» в Discord. После истечения указанного времени боевые действия должны быть начаты в течение 40 минут.",
+                        p5_1_3: "<b>5.1.3</b> Объявление должно быть передано людям селения используя не менее двух упоминаний его игроков. Если в селении цели менее двух игроков, допускается одно упоминание.",
                         p5_1_4: "<b>5.1.4</b> Сообщение о готовящемся «набеге» обязано быть подано либо в официальном стиле, либо в стиле намека, который нельзя истолковать иначе.",
-                        p5_1_5: "<b>5.1.5</b> Время возможности начать «набег» не должно превышать 1.5-а часов реального времени после объявления о нем.",
-                        p5_1_6: "<b>5.1.6</b> Длительность проведения «набега» не должна превышать N-часов реального времени, в соответствии с политическим курсом селения инициатора.",
+                        p5_1_5: "<b>5.1.5</b> Боевые действия должны быть начаты не позднее чем через 40 минут реального времени после окончания времени объявления «набега».",
+                        p5_1_6: "<b>5.1.6</b> Длительность проведения «набега» не должна превышать: 4 часов — для набега на селение, 3 часов — для набега на ключевую точку, 2 часов — для набега на хутор.",
                         p5_1_7: "<b>5.1.7</b> «Набег» запрещен в часы с 21:00 по 8:00 МСК. Проходящие набеги должны быть прекращены если наступило время запрета, за исключением согласования о продолжении набега со стороной противника.",
                         p5_1_8: "<b>5.1.8</b> «Набег» на одно и то же селение разрешено производить не чаще чем 1 раз в 2 реальных дня.",
                         p5_1_9: "<b>5.1.9</b> Обеим сторонам категорически запрещено ломать блоки под трупами, закапывать или застраивать их за исключением прямо предусмотренных механиками набега [пример: засыпание рва в котором оказался труп].",
@@ -403,7 +411,7 @@ export const RULES_I18N = {
                             after: " ], не более 10х10х12 блоков."
                         },
                         defendersRulesLink: "правилам ведения боевых действий для стороны защищающихся",
-                        p5_1_17: "<b>5.1.17</b> Лагерь обязан быть расположен не ближе чем в 100 блоках от территории противника. Если возможности установить лагерь нет [море], атакующим разрешается разбить свой лагерь сразу же на побережье, либо на созданной песчаной насыпи.",
+                        p5_1_17: "<b>5.1.17</b> Лагерь обязан быть расположен не ближе чем в 100 и не далее чем в 200 блоках от территории противника. Если возможности установить лагерь нет [море], атакующим разрешается разбить свой лагерь сразу же на побережье, либо на созданной песчаной насыпи.",
                         p5_1_18: "<b>5.1.18</b> Лагерем не может выступать селение.",
                         p5_1_19: "<b>5.1.19</b> Атакующие обязаны установить в лагере монумент 1x1x2 [ш, д, в].",
                         p5_1_20: "<b>5.1.20</b> Атакующие обязаны использовать темпоральные шестеренки исключительно внутри своего лагеря, либо вне зоны боевых действий [не менее чем за 300 блоков от селения противника/ключевой точки].",
@@ -441,7 +449,7 @@ export const RULES_I18N = {
                         notice: "Правила захвата точек являются нововведением и могут содержать неточности.",
                         p5_3_1: "<b>5.3.1</b> Управлением точки занимается Сюзерен, чья сторона ее контролирует.",
                         p5_3_2: "<b>5.3.2</b> Одновременно можно контролировать не более 4-х точек.",
-                        p5_3_3: "<b>5.3.3</b> Улучшение и стройка на точках происходит исключительно Имперскими мастерами, за исключением декоративной составляющей, укрепления существующих дверей/ворот и установки-восстановления дверей/ворот в том же объеме в котором они были до набега на точку.",
+                        p5_3_3: "<b>5.3.3</b> Улучшение и стройка на точках происходит исключительно Имперскими мастерами, за исключением декоративной составляющей, укрепления существующих дверей/ворот и установки-восстановления дверей/ворот в том же объеме, в котором они были до набега на точку, а также укрепления монументов согласно п. 5.3.13.",
                         p5_3_4: "<b>5.3.4</b> Запрос на улучшение точки происходит через написание тикета в дискорд.",
                         p5_3_5: "<b>5.3.5</b> Боевые действия за точки, происходят идентично набегу, за исключением:",
                         p5_3_5_b1: "• При объявлении набега любым селением со стороны Сюзерена он начинается для всей стороны. То есть участвовать в набеге может каждое селение от стороны. Для защиты распространяется тоже самое правило.",
@@ -455,7 +463,9 @@ export const RULES_I18N = {
                         p5_3_9: "<b>5.3.9</b> Сюзерен может отказаться от контролируемой им точки и оставить ее. Для этого необходимо написать тикет в дискорд и заявление в дипломатии. После чего точка будет сброшена к изначальному состоянию и считаться ничьей.",
                         p5_3_10: "<b>5.3.10</b> Начисление очков Благосклонности Императора (БИ) происходит с момента подтверждения администратором контроля стороной точки. Суммы начислений равны 2 очка за 1 реальный час с округлением в меньшую сторону.",
                         p5_3_11: "<b>5.3.11</b> Улучшение точек происходит путем написания тикет-запроса с указанием уровня повышения и тратой очков БИ на это.",
-                        p5_3_12: "<b>5.3.12</b> Прочность каждого блока монумента точки не может превышать 50 единиц, либо согласно патенту на улучшение."
+                        p5_3_12: "<b>5.3.12</b> Прочность каждого блока монумента точки не может превышать 50 единиц, либо значения, указанного в патенте на улучшение, но во всех случаях — не более 300 единиц.",
+                        p5_3_13: "<b>5.3.13</b> После адаптации точки администрацией монументы на ключевых точках должны быть укреплены стороной, захватившей точку, согласно патенту на улучшение монумента селения Сюзерена, либо, при отсутствии Сюзерена, селения, захватившего данную точку.",
+                        p5_3_14: "<b>5.3.14</b> Для захвата шахты, являющейся ключевой точкой с тремя монументами, необходимо разрушить 2 из 3 монументов."
                     }
                 },
                 actions: {
@@ -682,7 +692,7 @@ export const RULES_I18N = {
                     settlement: "<b>Settlement</b> — a group of players united in accordance with one of the types established by the rules.",
                     neutralZone: {
                         before: "<b>Neutral zone</b> — territory marked on the map in the Discord channel where ",
-                        after: "influence zones are located, and founding settlements of a type higher than a homestead is prohibited."
+                        after: "influence zones are located. Homesteads are allowed, as are settlements of a type higher than a homestead if founded by holders of a Citizen passport by agreement with the Governor. Holders of a Citizen passport also have the right to settle directly on the territory of the Governor's Estate."
                     },
                     keyPoint: {
                         before: "<b>Key point</b> — one of five key locations situated in the ",
@@ -715,6 +725,8 @@ export const RULES_I18N = {
                     patentFoundation: "<b>Patent for founding a settlement</b> — a book-document provided and signed by the Suzerain or an Imperial servant, granting the right to found a certain type of settlement.",
                     patentImprovement: "<b>Settlement improvement patent</b> — a book-document provided and signed by the Suzerain or an Imperial servant, granting the right to improve a certain aspect within the settlement (monument, fortification).",
                     charterOfLiberties: "<b>Charter of liberties</b> — a book-document provided by the Suzerain that changes your status [role] when used.",
+                    governorEstate: "<b>Governor's Estate</b> — a starter city for solo players, managed by the Governor on behalf of the Empire.",
+                    citizenPassport: "<b>Citizen passport</b> — the next status after the Charter of liberties, granted by the Governor. It grants the right to: settle directly on the territory of the Governor's Estate; buy a house that will be built for the owner; access closed markets; open your own markets on the territory of the Governor's Estate; hold the position of Chief Judge; get a job and other privileges. The Citizen passport also allows founding a settlement in the neutral zone in a place agreed with the Governor, provided that all residents of such settlement have a passport, and subject to the tax set by the Governor.",
                     raid: "<b>Raid</b> — a short-term state when players of one settlement launch a sudden attack on another settlement with the aim of destroying the enemy's manpower and/or looting its resources.",
                     war: "<b>War</b> — a long-term state when players of one settlement begin military actions against players of another settlement to achieve their demands.",
                     politicalCourse: {
@@ -787,7 +799,9 @@ export const RULES_I18N = {
                             introAfter: ", founded after the \"Village\" stage, consisting of 5 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:",
                             location: "Location: no farther than 8.5 thousand blocks from the zero coordinate.",
                             population: "Population: at least 5 people.",
+                            citizensRequirement: "At least 1 holder of a Citizen passport.",
                             monumentAfter: " : 1x1x1 block (w,d,h) (or according to the settlement improvement patent).",
+
                             libertiesBefore: "Documents: at least 5 purchased",
                             infrastructureHeading: "Infrastructure:",
                             square: "rural square;",
@@ -818,7 +832,9 @@ export const RULES_I18N = {
                             introAfter: ", founded after the \"Township\" stage, consisting of 6 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:",
                             location: "Location: no farther than 8.5 thousand blocks from the zero coordinate.",
                             population: "Population: at least 6 people.",
+                            citizensRequirement: "At least 2 holders of a Citizen passport.",
                             monumentAfter: " : 1x1x1 block (w,d,h) (or according to the settlement improvement patent).",
+
                             documentsHeading: "Documents:",
                             patentBefore: "signed",
                             patentAfter: " for permission to found a city from the",
@@ -848,7 +864,7 @@ export const RULES_I18N = {
                             defensesBefore: "Ability to erect",
                             defensesAfter: " of level 2.",
                             trader: "Ability to receive 1 random trader.",
-                            credit: "Right to receive a preferential loan from the",
+                            credit: "Right to receive a preferential loan from the ",
                             creditAfter: "at 10% per annum [May not be granted in case of hostility toward the Suzerain].",
                             colony: "Right to found no more than 1 colony.",
                             bloomeryBlueprint: "Right to receive a blueprint for simplified creation of bloomeries."
@@ -859,7 +875,9 @@ export const RULES_I18N = {
                             introAfter: ", founded after the \"City\" stage, consisting of 8 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:",
                             location: "Location: no farther than 8.5 thousand blocks from the zero coordinate.",
                             population: "Population: at least 8 people.",
+                            citizensRequirement: "At least 3 holders of a Citizen passport.",
                             monumentAfter: " : 1x1x1 block (w,d,h) (or according to the settlement improvement patent).",
+
                             documentsHeading: "Documents:",
                             libertiesBefore: "at least 8 purchased ",
                             books: "at least 10 books [either written by players or lore books] available for reading by any player.",
@@ -894,7 +912,7 @@ export const RULES_I18N = {
                             war: "Ability to declare war if there is a casus belli.",
                             defensesBefore: "Ability to erect",
                             defensesAfter: " of level 3.",
-                            credit: "Right to receive a preferential loan from the",
+                            credit: "Right to receive a preferential loan from the ",
                             creditAfter: "at 10% per annum [May not be granted in case of hostility toward the Suzerain].",
                             colonies: "Right to found no more than 2 colonies.",
                             steelFurnaceBlueprint: "Right to receive a blueprint for a steel furnace."
@@ -979,12 +997,12 @@ export const RULES_I18N = {
                         points: "5.3 Point capture"
                     },
                     raid: {
-                        p5_1_1: "<b>5.1.1</b> A \"Raid\" can be carried out only if at least 2 players from the settlement targeted by it are online. In the case of a raid on a Homestead or Camp, it is allowed if 1 person is online.",
-                        p5_1_2: "<b>5.1.2</b> A \"Raid\" must be declared N time in advance, corresponding to the political course of the target settlement, before it takes place; the countdown begins from the moment of declaration in the \"Diplomacy\" chat in Discord.",
-                        p5_1_3: "<b>5.1.3</b> The declaration must be conveyed to the people of the settlement using at least two mentions of its players.",
+                        p5_1_1: "<b>5.1.1</b> A \"Raid\" can be carried out only if at least 2 players from the settlement targeted by it are online. In the case of a raid on a Homestead or Camp, it is allowed if 1 person is online. For a raid on a key point, at least 6 players of the opposing side must be online on the server.",
+                        p5_1_2: "<b>5.1.2</b> A \"Raid\" must be declared in advance: on a settlement — for a time corresponding to the target settlement's political course (peaceful — 40 minutes, neutral — 20 minutes, aggressive — 10 minutes); on a homestead or key point — 20 minutes. The countdown begins from the moment of declaration in the \"Diplomacy\" chat in Discord. Combat must begin within 40 minutes after the declared time has elapsed.",
+                        p5_1_3: "<b>5.1.3</b> The declaration must be conveyed to the people of the settlement using at least two mentions of its players. If the target settlement has fewer than two players, one mention is allowed.",
                         p5_1_4: "<b>5.1.4</b> The message about an impending \"raid\" must be delivered either in an official style or in a hint style that cannot be interpreted otherwise.",
-                        p5_1_5: "<b>5.1.5</b> The time window to start a \"raid\" must not exceed 1.5 hours of real time after its declaration.",
-                        p5_1_6: "<b>5.1.6</b> The duration of a \"raid\" must not exceed N hours of real time, in accordance with the political course of the initiator settlement.",
+                        p5_1_5: "<b>5.1.5</b> Combat must begin no later than 40 minutes of real time after the end of the raid declaration period.",
+                        p5_1_6: "<b>5.1.6</b> The duration of a \"raid\" must not exceed: 4 hours for a raid on a settlement, 3 hours for a raid on a key point, and 2 hours for a raid on a homestead.",
                         p5_1_7: "<b>5.1.7</b> A \"Raid\" is prohibited between 21:00 and 08:00 MSK. Ongoing raids must be stopped if the prohibited time begins, except by agreement with the opposing side to continue the raid.",
                         p5_1_8: "<b>5.1.8</b> A \"Raid\" on the same settlement is allowed no more than once every 2 real days.",
                         p5_1_9: "<b>5.1.9</b> Both sides are strictly forbidden to break blocks under corpses, bury them, or wall them in, except as directly provided by raid mechanics [example: filling in a ditch where a corpse fell].",
@@ -1004,7 +1022,7 @@ export const RULES_I18N = {
                             after: " ], no larger than 10x10x12 blocks."
                         },
                         defendersRulesLink: "rules of combat for the defending side",
-                        p5_1_17: "<b>5.1.17</b> The camp must be located no closer than 100 blocks from the enemy territory. If it is impossible to set up a camp [sea], the attackers are allowed to set up their camp immediately on the coast or on a created sand embankment.",
+                        p5_1_17: "<b>5.1.17</b> The camp must be located no closer than 100 and no farther than 200 blocks from the enemy territory. If it is impossible to set up a camp [sea], the attackers are allowed to set up their camp immediately on the coast or on a created sand embankment.",
                         p5_1_18: "<b>5.1.18</b> A settlement cannot serve as a camp.",
                         p5_1_19: "<b>5.1.19</b> The attackers are obliged to install a 1x1x2 [w, d, h] monument in the camp.",
                         p5_1_20: "<b>5.1.20</b> The attackers are obliged to use temporal gears only inside their own camp or outside the combat zone [at least 300 blocks from the enemy settlement/key point].",
@@ -1042,7 +1060,7 @@ export const RULES_I18N = {
                         notice: "The point capture rules are a new feature and may contain inaccuracies.",
                         p5_3_1: "<b>5.3.1</b> The point is managed by the Suzerain whose side controls it.",
                         p5_3_2: "<b>5.3.2</b> No more than 4 points can be controlled simultaneously.",
-                        p5_3_3: "<b>5.3.3</b> Upgrading and building on points is carried out exclusively by Imperial masters, except for decorative components, reinforcing existing doors/gates, and installing/restoring doors/gates in the same volume as they were before the raid on the point.",
+                        p5_3_3: "<b>5.3.3</b> Upgrading and building on points is carried out exclusively by Imperial masters, except for decorative components, reinforcing existing doors/gates, installing/restoring doors/gates in the same volume as they were before the raid on the point, and reinforcing monuments in accordance with p. 5.3.13.",
                         p5_3_4: "<b>5.3.4</b> A request to upgrade a point is made by submitting a ticket in Discord.",
                         p5_3_5: "<b>5.3.5</b> Combat for points proceeds identically to a raid, except for:",
                         p5_3_5_b1: "• When a raid is declared by any settlement on the Suzerain's side, it begins for the entire side. That is, every settlement on the side may participate in the raid. The same rule applies to defense.",
@@ -1056,7 +1074,9 @@ export const RULES_I18N = {
                         p5_3_9: "<b>5.3.9</b> A Suzerain may renounce a point he controls and abandon it. To do this, it is necessary to submit a ticket in Discord and a statement in diplomacy. After that, the point will be reset to its original state and considered neutral.",
                         p5_3_10: "<b>5.3.10</b> Imperial Favor (IF) points are accrued from the moment the administrator confirms control of the point by the side. The accrual amount is 2 points per 1 real hour, rounded down.",
                         p5_3_11: "<b>5.3.11</b> Upgrading points is done by submitting a ticket request indicating the level of increase and spending IF points on it.",
-                        p5_3_12: "<b>5.3.12</b> The durability of each block of the point's monument cannot exceed 50 units, or according to the improvement patent."
+                        p5_3_12: "<b>5.3.12</b> The durability of each block of the point's monument cannot exceed 50 units, or the value specified in the improvement patent, but in no case more than 300 units.",
+                        p5_3_13: "<b>5.3.13</b> After the point has been adapted by the administration, monuments at key points must be reinforced by the side that captured the point, according to the patent for improving the monument of the Suzerain's settlement, or, in the absence of a Suzerain, the settlement that captured the point.",
+                        p5_3_14: "<b>5.3.14</b> To capture the mine, which is a key point with three monuments, it is necessary to destroy 2 out of 3 monuments."
                     }
                 },
                 actions: {
