@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { Observable, from, map, of, switchMap } from 'rxjs';
+import { Observable, from, map, of, switchMap, timeout } from 'rxjs';
 import { MediaService } from '@entities/media';
 import { compressImage } from './compress-image.function';
 
@@ -32,9 +32,11 @@ export function uploadSettlementAttachments<T extends string>(
     }
 
     return from(Promise.all(fileEntries.map((entry) => compressImage(entry.file)))).pipe(
+        timeout(60_000),
         switchMap((compressedFiles) =>
             mediaService.uploadFiles$(compressedFiles, 'UPLOAD_PURPOSE_SETTLEMENT')
         ),
+        timeout(60_000),
         map((urls) => {
             const urlMap = new Map(fileEntries.map((entry, i) => [entry.key, urls[i]]));
 

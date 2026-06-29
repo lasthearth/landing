@@ -39,6 +39,11 @@ export class MediaService {
     private readonly uploadTimeoutMs = 60_000;
 
     /**
+     * Максимальное количество файлов, которые можно загрузить одним запросом presigned-целей.
+     */
+    private readonly maxUploadCount = 20;
+
+    /**
      * Получает presigned-цели для загрузки файлов.
      *
      * @param request Параметры запроса: назначение, количество и MIME-тип.
@@ -106,21 +111,30 @@ export class MediaService {
             return [];
         }
 
-        const targets = await this.createUploadUrls$(
-            this.buildRequest(files, purpose)
-        ).toPromise();
+        const results: string[] = [];
 
-        if (!targets || targets.length !== files.length) {
-            throw new Error(
-                `MediaService: несоответствие количества целей (${targets?.length}) и файлов (${files.length})`
+        for (let i = 0; i < files.length; i += this.maxUploadCount) {
+            const chunk = files.slice(i, i + this.maxUploadCount);
+            const targets = await this.createUploadUrls$(
+                this.buildRequest(chunk, purpose)
+            ).toPromise();
+
+            if (!targets || targets.length !== chunk.length) {
+                throw new Error(
+                    `MediaService: несоответствие количества целей (${targets?.length}) и файлов (${chunk.length})`
+                );
+            }
+
+            await Promise.all(
+                chunk.map((file, index) => this.executeUpload(file, targets[index]))
             );
+
+            for (const target of targets) {
+                results.push(target.public_url);
+            }
         }
 
-        await Promise.all(
-            files.map((file, i) => this.executeUpload(file, targets[i]))
-        );
-
-        return targets.map((target) => target.public_url);
+        return results;
     }
 
     /**

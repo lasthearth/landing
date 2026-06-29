@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { fileFieldsCamp, FileKeyCamp } from './camp-form.types';
 import { Subject, switchMap, map, finalize, timeout } from 'rxjs';
@@ -110,7 +110,7 @@ export class CampFormComponent {
      */
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
 
-    protected isLoading = false;
+    protected readonly isLoading = signal(false);
 
     /**
      * Триггер отправки формы — запускает обработку данных и загрузку файлов
@@ -129,7 +129,7 @@ export class CampFormComponent {
         this.onSubmit
             .pipe(
                 switchMap(() => {
-                    this.isLoading = true;
+                    this.isLoading.set(true);
                     const values = this.form.value;
 
                     return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
@@ -162,7 +162,7 @@ export class CampFormComponent {
                     );
                 }),
                 finalize(() => {
-                    this.isLoading = false;
+                    this.isLoading.set(false);
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )

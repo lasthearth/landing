@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function';
@@ -77,7 +77,7 @@ export class TownshipFormComponent {
      */
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
 
-    protected isLoading = false;
+    protected readonly isLoading = signal(false);
 
     /**
      * Основная форма создания.
@@ -153,7 +153,7 @@ export class TownshipFormComponent {
         this.onSubmit
             .pipe(
                 switchMap(() => {
-                    this.isLoading = true;
+                    this.isLoading.set(true);
                     const values = this.form.value;
 
                     return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
@@ -186,7 +186,7 @@ export class TownshipFormComponent {
                     );
                 }),
                 finalize(() => {
-                    this.isLoading = false;
+                    this.isLoading.set(false);
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )

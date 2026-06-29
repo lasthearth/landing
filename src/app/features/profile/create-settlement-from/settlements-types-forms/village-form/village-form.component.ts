@@ -1,5 +1,5 @@
 import { NgFor, AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
@@ -77,7 +77,7 @@ export class VillageFormComponent {
      */
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
 
-    protected isLoading = false;
+    protected readonly isLoading = signal(false);
 
     /**
      * Основная форма создания.
@@ -146,7 +146,7 @@ export class VillageFormComponent {
         this.onSubmit
             .pipe(
                 switchMap(() => {
-                    this.isLoading = true;
+                    this.isLoading.set(true);
                     const values = this.form.value;
 
                     return uploadSettlementAttachments(this.fileFields, this.form, this.mediaService, (key) =>
@@ -179,7 +179,7 @@ export class VillageFormComponent {
                     );
                 }),
                 finalize(() => {
-                    this.isLoading = false;
+                    this.isLoading.set(false);
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )
