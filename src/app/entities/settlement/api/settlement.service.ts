@@ -114,7 +114,7 @@ export class SettlementService {
      * @param settlementId Идентификатор поселения.
      * @returns Observable с данными поселения.
      */
-    public getSettlementById(settlementId: string) {
+    public getSettlementById(settlementId: string): Observable<ISettlement> {
         return this.http
             .get<{
                 settlement: ISettlement;

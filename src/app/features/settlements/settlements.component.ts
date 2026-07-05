@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { SettlementService, ISettlement } from '@entities/settlement';
+import { SettlementService, ISettlement, getSettlementTypeByKey } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { SettlementTagStore } from '@entities/settlement-tag';
 import { SettlementCardComponent } from './settlement-card/settlement-card.component';
@@ -30,6 +30,16 @@ interface EnrichedSettlement extends ISettlement {
 }
 
 /**
+ * Имя селения, которое всегда отображается первым в списке.
+ */
+const PINNED_SETTLEMENT_NAME = 'Поместье Эренхольд';
+
+/**
+ * Отображаемый тип для закреплённого селения.
+ */
+const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
+
+/**
  * Компонент страницы списка селений.
  */
 @Component({
@@ -40,6 +50,16 @@ interface EnrichedSettlement extends ISettlement {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementsComponent {
+    /**
+     * Имя селения, закреплённого в начале списка.
+     */
+    protected readonly pinnedSettlementName = PINNED_SETTLEMENT_NAME;
+
+    /**
+     * Отображаемый тип закреплённого селения.
+     */
+    protected readonly pinnedSettlementTypeLabel = PINNED_SETTLEMENT_TYPE_LABEL;
+
     protected readonly skeletonItems = Array.from({ length: 3 });
     private readonly settlementService = inject(SettlementService);
     private readonly userService = inject(UserService);
@@ -64,22 +84,35 @@ export class SettlementsComponent {
         const { field, direction } = this.sortState();
         const dir = direction === 'asc' ? 1 : -1;
 
+        const pinnedIndex = list.findIndex((s) => s.name === PINNED_SETTLEMENT_NAME);
+        const pinned = pinnedIndex >= 0 ? list.splice(pinnedIndex, 1)[0] : null;
+
+        let sorted: EnrichedSettlement[];
+
         switch (field) {
             case 'population':
-                return list.sort((a, b) => dir * (a.membersCount - b.membersCount));
+                sorted = list.sort((a, b) => dir * (a.membersCount - b.membersCount));
+                break;
             case 'online':
-                return list.sort((a, b) => dir * (a.onlineCount - b.onlineCount));
+                sorted = list.sort((a, b) => dir * (a.onlineCount - b.onlineCount));
+                break;
             case 'east':
-                return list.sort((a, b) => dir * ((a.tagTypes.has('east') ? 1 : 0) - (b.tagTypes.has('east') ? 1 : 0)));
+                sorted = list.sort((a, b) => dir * ((a.tagTypes.has('east') ? 1 : 0) - (b.tagTypes.has('east') ? 1 : 0)));
+                break;
             case 'west':
-                return list.sort((a, b) => dir * ((a.tagTypes.has('west') ? 1 : 0) - (b.tagTypes.has('west') ? 1 : 0)));
+                sorted = list.sort((a, b) => dir * ((a.tagTypes.has('west') ? 1 : 0) - (b.tagTypes.has('west') ? 1 : 0)));
+                break;
             case 'suzerain':
-                return list.sort((a, b) => dir * ((a.tagTypes.has('suzerain') ? 1 : 0) - (b.tagTypes.has('suzerain') ? 1 : 0)));
+                sorted = list.sort((a, b) => dir * ((a.tagTypes.has('suzerain') ? 1 : 0) - (b.tagTypes.has('suzerain') ? 1 : 0)));
+                break;
             case 'diplomacy':
-                return list.sort((a, b) => dir * a.diplomacy.localeCompare(b.diplomacy));
+                sorted = list.sort((a, b) => dir * a.diplomacy.localeCompare(b.diplomacy));
+                break;
             default:
-                return list;
+                sorted = list;
         }
+
+        return pinned ? [pinned, ...sorted] : sorted;
     });
 
     constructor() {
@@ -183,6 +216,31 @@ export class SettlementsComponent {
         }
 
         return types;
+    }
+
+    /**
+     * Проверяет, является ли селение закреплённым.
+     *
+     * @param settlement Селение.
+     * @returns true, если селение — Поместье Эренхольд.
+     */
+    protected isPinned(settlement: ISettlement): boolean {
+        return settlement.name === PINNED_SETTLEMENT_NAME;
+    }
+
+    /**
+     * Возвращает отображаемый тип селения.
+     * Для закреплённого селения всегда возвращает "Поместье наместника".
+     *
+     * @param settlement Селение.
+     * @returns Локализованное название типа.
+     */
+    protected getSettlementTypeLabel(settlement: EnrichedSettlement): string {
+        if (this.isPinned(settlement)) {
+            return PINNED_SETTLEMENT_TYPE_LABEL;
+        }
+
+        return getSettlementTypeByKey(settlement.type);
     }
 
     /**

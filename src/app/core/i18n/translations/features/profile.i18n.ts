@@ -62,6 +62,8 @@ export const PROFILE_I18N = {
             purchases: {
                 title: 'История покупок',
                 empty: 'История покупок пуста',
+                expand: 'Показать все',
+                collapse: 'Свернуть',
                 status: {
                     issued: 'Выдан',
                     completed: 'Завершена',
@@ -191,6 +193,8 @@ export const PROFILE_I18N = {
             purchases: {
                 title: 'Purchase history',
                 empty: 'Purchase history is empty',
+                expand: 'Show all',
+                collapse: 'Collapse',
                 status: {
                     issued: 'Issued',
                     completed: 'Completed',

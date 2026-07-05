@@ -11,7 +11,6 @@ import { RequestStatusService } from '@core/services/request-status.service';
 import { SettlementService } from '@entities/settlement';
 import {
     HungerGamesService,
-    ILeaderboardEntry,
     IMatchPlayer,
     ISeasonInfo,
     ISeasonResultEntry,
@@ -85,7 +84,7 @@ export class HungerGamesPanelComponent implements OnInit {
     /**
      * Лидерборд текущего активного сезона.
      */
-    protected readonly currentLeaderboard = signal<ILeaderboardEntry[]>([]);
+    protected readonly currentLeaderboard = signal<ISeasonResultEntry[]>([]);
 
     /**
      * Лидерборд выбранного архивного сезона.

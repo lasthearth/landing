@@ -280,43 +280,75 @@
 
                 @if (purchases; as list) {
                     @if (list.length > 0) {
+                        <ng-template #purchaseItem let-purchase>
+                            @let meta = getPurchaseStatusMeta(purchase);
+
+                            <div
+                                class="flex items-center justify-between gap-4 px-4 py-3 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2/10"
+                            >
+                                <div class="flex flex-col gap-1 min-w-0">
+                                    <span class="text-lg font-bold text-lh-primary truncate">
+                                        {{ purchase.itemName || "—" }}
+                                    </span>
+                                    <span class="text-base text-neutral-500">{{ purchase.formattedDate }}</span>
+                                </div>
+
+                                <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
+                                    <span class="inline-flex items-center gap-1 text-lg font-bold text-lh-primary">
+                                        {{ purchase.pricePaid }}
+                                        <img
+                                            src="/splinter-of-spark.png"
+                                            [alt]="'profile.currency.shardAlt' | translate"
+                                            class="h-5 w-5 object-contain"
+                                        />
+                                    </span>
+
+                                    <span
+                                        [class]="
+                                            'inline-flex items-center gap-1.5 text-base font-medium ' +
+                                            meta.textClass
+                                        "
+                                    >
+                                        <span [class]="'w-2.5 h-2.5 rounded-full ' + meta.dotClass"></span>
+                                        {{ meta.label | translate }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+
                         <div class="flex flex-col gap-2">
-                            @for (purchase of list; track purchase.id) {
-                                @let meta = getPurchaseStatusMeta(purchase);
+                            <ng-container *ngTemplateOutlet="purchaseItem; context: { $implicit: list[0] }" />
 
+                            @if (list.length > purchasesCollapsedCount) {
                                 <div
-                                    class="flex items-center justify-between gap-4 px-4 py-3 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2/10"
+                                    class="purchases-list"
+                                    [class.purchases-list--expanded]="isPurchasesExpanded()"
                                 >
-                                    <div class="flex flex-col gap-1 min-w-0">
-                                        <span class="text-lg font-bold text-lh-primary truncate">
-                                            {{ purchase.itemName || "—" }}
-                                        </span>
-                                        <span class="text-base text-neutral-500">{{ purchase.formattedDate }}</span>
-                                    </div>
-
-                                    <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
-                                        <span class="inline-flex items-center gap-1 text-lg font-bold text-lh-primary">
-                                            {{ purchase.pricePaid }}
-                                            <img
-                                                src="/splinter-of-spark.png"
-                                                [alt]="'profile.currency.shardAlt' | translate"
-                                                class="h-5 w-5 object-contain"
+                                    <div class="purchases-list__inner">
+                                        @for (purchase of list.slice(purchasesCollapsedCount); track purchase.id) {
+                                            <ng-container
+                                                *ngTemplateOutlet="purchaseItem; context: { $implicit: purchase }"
                                             />
-                                        </span>
-
-                                        <span
-                                            [class]="
-                                                'inline-flex items-center gap-1.5 text-base font-medium ' +
-                                                meta.textClass
-                                            "
-                                        >
-                                            <span [class]="'w-2.5 h-2.5 rounded-full ' + meta.dotClass"></span>
-                                            {{ meta.label | translate }}
-                                        </span>
+                                        }
                                     </div>
                                 </div>
                             }
                         </div>
+
+                        @if (list.length > purchasesCollapsedCount) {
+                            <button
+                                type="button"
+                                (click)="isPurchasesExpanded.set(!isPurchasesExpanded())"
+                                class="self-center flex items-center gap-2 text-lg font-semibold text-lh-accent hover:text-[#e07830] transition-colors cursor-pointer"
+                            >
+                                {{ isPurchasesExpanded() ? ('profile.purchases.collapse' | translate) : ('profile.purchases.expand' | translate) }}
+                                <tui-icon
+                                    [icon]="isPurchasesExpanded() ? '@tui.chevron-up' : '@tui.chevron-down'"
+                                    class="size-5! purchases-toggle-icon"
+                                    [class.purchases-toggle-icon--expanded]="isPurchasesExpanded()"
+                                />
+                            </button>
+                        }
                     } @else {
                         <p
                             class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"

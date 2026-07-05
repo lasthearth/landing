@@ -109,11 +109,46 @@
             </div>
 
             <!-- Изображение -->
-            <app-image-loader
-                [src]="settlement.attachments[0].url"
-                [alt]="'settlements.detailed.imageAlt' | translate"
-                class="hidden xl:block w-full xl:max-w-[40%] rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden"
-            />
+            <div class="hidden xl:block w-full xl:max-w-[40%] relative group">
+                <div
+                    class="w-full rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] overflow-hidden transition-opacity duration-300"
+                    [class.opacity-40]="isImageUploading()"
+                >
+                    <app-image-loader
+                        [src]="settlement.attachments[0].url"
+                        [alt]="'settlements.detailed.imageAlt' | translate"
+                        class="w-full"
+                    />
+                </div>
+                @if (userId === settlement.leader.user_id) {
+                    <input
+                        #settlementImageInput
+                        type="file"
+                        accept="image/*"
+                        class="hidden"
+                        (change)="onSettlementImageSelected(settlement, $event)"
+                    />
+                    <button
+                        type="button"
+                        [disabled]="isImageUploading()"
+                        (click)="triggerImageUpload(settlementImageInput)"
+                        class="absolute inset-0 flex items-center justify-center bg-[#2d201a]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl cursor-pointer disabled:cursor-not-allowed disabled:opacity-100"
+                    >
+                        @if (isImageUploading()) {
+                            <div class="flex flex-col items-center gap-2">
+                                <tui-loader [showLoader]="true" [inheritColor]="true" size="m" />
+                                <span class="text-white font-semibold text-base drop-shadow-md"
+                                    >{{ 'settlements.settlement.imageUploading' | translate }}</span
+                                >
+                            </div>
+                        } @else {
+                            <span class="text-white font-bold text-lg drop-shadow-md"
+                                >{{ 'settlements.settlement.changeImage' | translate }}</span
+                            >
+                        }
+                    </button>
+                }
+            </div>
         </div>
     </div>
 

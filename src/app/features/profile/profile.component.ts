@@ -11,7 +11,7 @@ import {
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
-import { AsyncPipe, DecimalPipe, NgIf } from '@angular/common';
+import { AsyncPipe, DecimalPipe, NgIf, NgTemplateOutlet } from '@angular/common';
 import { HttpContext } from '@angular/common/http';
 import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
@@ -56,9 +56,11 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
         ProfileSkeletonComponent,
         ImageLoaderComponent,
         TranslatePipe,
+        NgTemplateOutlet,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
+    styleUrl: './profile.component.css',
 })
 export class ProfileComponent {
     protected readonly userService = inject(UserService);
@@ -168,6 +170,15 @@ export class ProfileComponent {
         })
     );
 
+    /**
+     * Признак развёрнутого состояния истории покупок.
+     */
+    protected readonly isPurchasesExpanded = signal<boolean>(false);
+
+    /**
+     * Количество покупок, отображаемых в свёрнутом состоянии.
+     */
+    protected readonly purchasesCollapsedCount = 1;
     /**
      * История покупок текущего пользователя.
      */

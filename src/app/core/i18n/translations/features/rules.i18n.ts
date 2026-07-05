@@ -73,8 +73,10 @@ export const RULES_I18N = {
                         end: " и участвующие в боевых действиях от него игроки обязаны быть в списке жителей этого селения. Не распространяется на борьбу за ключевые точки."
                     },
                     p1_15: "<b>1.15</b> Запрещено использовать приваты типа Claim.",
-                    p1_16: "<b>1.16</b> Одному игроку запрещается создавать и использовать более 2 игровых аккаунтов на проекте. Любое превышение установленного лимита рассматривается как нарушение с целью извлечения несправедливого преимущества. В случае обнаружения у игрока более 2 аккаунтов, все аккаунты, принадлежащие нарушителю, подлежат перманентной блокировке, кроме одного (на усмотрение Администрации). Блокировка одного из двух аккаунтов за нарушение правил проекта приводит и к блокировке второго.",
-                    p1_17: "<b>1.17</b> Игрок имеет право состоять и проживать не более чем в 1-м селении, а так же владеть не более чем 1-м хутором."
+                    p1_16: "<b>1.16</b> Одному игроку запрещается создавать и использовать более 2 игровых аккаунтов на проекте. Любое превышение установленного лимита рассматривается как нарушение с целью извлечения несправедливого преимущества. В случае обнаружения у игрока более 2 аккаунтов, все аккаунты, принадлежащие нарушителю, подлежат перманентной блокировке, кроме одного (на усмотрение Администрации). Блокировка одного из двух аккаунтов за нарушение правил проекта приводит и к блокировке второго. Предупреждения, выданные на один аккаунт, также распространяются и на второй.",
+                    p1_16_1: "<b>1.16.1</b> Вне зависимости от того, в каком селении физически находится персонаж, оба аккаунта считаются принадлежащими к одному дипломатическому статусу (миролюбивый, нейтральный, агрессивный). Запрещается использовать второй аккаунт для совершения действий, запрещённых для основного аккаунта в силу его дипломатического статуса (например, если основной аккаунт является жителем миролюбивого селения и не может воровать и участвовать в набегах, то и второй аккаунт не имеет права совершать эти действия в отношении других игроков, даже если он формально без селения). Второй аккаунт не может состоять в селении, которое находится в состоянии войны или вражды с селением первого аккаунта, а также не может претендовать на нейтралитет, если первый аккаунт является воюющей стороной.",
+                    p1_16_2: "<b>1.16.2</b> Второй аккаунт не может участвовать в тех же ивентах и (или) мероприятиях, что и первый, если это даёт двойную награду.",
+                    p1_17: "<b>1.17</b> Игрок имеет право проживать или владеть исключительно одним типом селения. То есть игрок не может одновременно иметь хутор и состоять в чьём-то селении, а также не может состоять в нескольких селениях одновременно."
                 },
                 terminology: {
                     empire: "<b>Империя</b> — обширное государство на землях которого происходит весь игровой процесс.",
@@ -120,7 +122,8 @@ export const RULES_I18N = {
                     war: "<b>Война</b> — долговременное состояние, когда игроки одного селения начинают военные действия против игроков другого селения, с целью достижения своих требований.",
                     politicalCourse: {
                         before: "<b>Политический курс</b> — это выбранное селением стратегическое направление его ролевой деятельности, которое должно явно отражать данную деятельность. Все возможные виды политических курсов представлены в разделе "
-                    }
+                    },
+                    imperialLegalForce: "<b>Имперская юридическая сила</b> — обязательность исполнения решения, вынесенного по итогам суда, инициированного и проведенного Центром Имперского эксклава."
                 },
                 settlements: {
                     common: {
@@ -297,7 +300,7 @@ export const RULES_I18N = {
                             greatBuilding: "Великое строение: взятый проект.",
                             events: "Проведение событий: не менее 3-х событий [ивентов], с участием не менее 6-ти игроков, за все время до получения данного типа.",
                             territoryBlock: "Наличие территориального блока [диаметр = 512 блоков].",
-                            raidTargetsBefore: "Возможность объявлять набеги на",
+                            raidTargetsBefore: "Возможность объявлять набеги на ",
                             war: "Возможность объявлять войну при наличии казус белли.",
                             defensesBefore: "Возможность возведения",
                             defensesAfter: " 3-го уровня.",
@@ -306,8 +309,27 @@ export const RULES_I18N = {
                             colonies: "Право основать не более 2-х колоний.",
                             steelFurnaceBlueprint: "Право получить чертеж на сталелитейную печь."
                         },
+                        exclaveCenter: {
+                            title: "2.1.7 Центр Имперского эксклава",
+                            intro: "Центр Имперского эксклава — это ",
+                            introAfter: ", находящееся в центре эксклава Имперских земель, с наместником во главе и представляющее власть Империи на этих землях, соответствующее следующим требованиям:",
+                            location: "Расположение: не далее 800 блоков от нулевой координаты.",
+                            population: "Население: от 3-х человек.",
+                            noKeyPoints: "Не имеет права владеть ключевыми точками.",
+                            aggressiveOnly: "Имеет право только на агрессивный политический курс.",
+                            courts: "Имеет право инициировать и проводить суды, решения которых имеют Имперскую юридическую силу (см. терминологию).",
+                            economy: "Обязаны поддерживать экономику и следить за торговлей. Должна быть только рыночная экономика с разделением частной и государственной собственности. Под рыночной экономикой понимается: свободная купля-продажа товаров и ресурсов между игроками и селениями по договорным ценам; наличие действующих торговых точек, рынков и обменных операций; запрет на бесконтрольное общее имущество — каждый ресурс, постройка или предмет должен иметь конкретного владельца (частное лицо, организация или государственная казна селения); государственная собственность формируется из налогов, пошлин, конфискованных ресурсов и внешних поступлений и расходуется исключительно на нужды селения (строительство, оборону, суды, дипломатия); частная собственность защищается и не может быть изъята без согласия владельца или решения суда, имеющего Имперскую юридическую силу.",
+                            currency: "Использование исключительно валюты сервера в качестве оплаты товаров и услуг.",
+                            architecture: "Постоянно заниматься крупными архитектурными проектами внутри территории.",
+                            territoryBlock: "Наличие территориального блока [«Региональная провинция»].",
+                            currencyGrant: "Выдается валюта как двум сюзеренам.",
+                            blueprints: "Доступны чертежи всех ступеней.",
+                            rpDuty: "Обязанность RP взаимодействий с игроками.",
+                            raidTargetsBefore: "Возможность объявлять набеги на ",
+                            war: "Возможность объявлять войну при наличии казус белли."
+                        },
                         suzerain: {
-                            title: "2.1.7 Статус «Сюзерен»",
+                            title: "2.1.8 Статус «Сюзерен»",
                             intro: "Сюзерен — это статус, накладывающий ряд требований и преимуществ:",
                             req1: "Являться одним из типов селений.",
                             req2Before: "Выполнение обязательств ",
@@ -354,7 +376,7 @@ export const RULES_I18N = {
                         monumentAfter: " : 1х1х2 блока (ш,д,в).",
                         infrastructure: "• Инфраструктура: оборудованное место с костром.",
                         economyHeading: "• Хозяйство:",
-                        storage: "◦ от 1-го строения-хранилища;",
+                        storage: "от 1-го строения-хранилища;",
                         defenses: "• Оборонительные постройки: отсутствуют.",
                         advantages: "• Сохранены все преимущества с типа селения Лагерь."
                     },
@@ -365,9 +387,9 @@ export const RULES_I18N = {
                         monumentBefore: "• ",
                         monumentAfter: ": 1х1х2 блока (ш,д,в).",
                         documentsHeading: "• Документы:",
-                        patentBefore: "◦ подписанный ",
+                        patentBefore: "подписанный ",
                         patentAfter: " на разрешение основания деревни от",
-                        libertiesBefore: "◦ от 2-х купчих ",
+                        libertiesBefore: "от 2-х купчих ",
                         infrastructureHeading: "• Инфраструктура:",
                         well: "◦ колодец с питьевой водой;",
                         paths: "◦ тропы между постройками шириной не менее 2-х блоков, где это возможно.",
@@ -481,9 +503,9 @@ export const RULES_I18N = {
                         p3_1_1: "<b>3.1.1</b> Воровство — это скрытное проникновение не более 2-х или 3-х игроков, в зависимости от политического курса селения инициатора, на территорию селения или ключевой точки с целью кражи ресурсов. Данное действие должно осуществляться строго в соответствии с установленными правилами.",
                         p3_1_2: "<b>3.1.2</b> Вор имеет право:",
                         canBreakHeading: "• Разбивать и открывать/вскрывать категорически только:",
-                        canBreak1: "◦ Двери, люки, ворота.",
-                        canBreak2: "◦ Окна, балконы с окнами (в виде стекла, заборов и иных проявлений, которые можно считать окнами в строении и выбить, взломать подручными средствами).",
-                        canBreak3: "◦ Сундуки, ящики, сосуды, бочки, корзинки, глыбы камня [из мода \"Карьер\"], кусты ягод.",
+                        canBreak1: "Двери, люки, ворота.",
+                        canBreak2: "Окна, балконы с окнами (в виде стекла, заборов и иных проявлений, которые можно считать окнами в строении и выбить, взломать подручными средствами).",
+                        canBreak3: "Сундуки, ящики, сосуды, бочки, корзинки, глыбы камня [из мода \"Карьер\"], кусты ягод.",
                         canStealVehicles: "• Угонять/разбирать любые транспортные средства.",
                         canPlaceLadders: "• Размещать, но не снимать, исключительно веревочные лестницы только на рукотворных постройках, а так же в открытых ямах и рвах.",
                         armorLimit: "• Во время грабежа вор может быть защищен исключительно кожаной, медвежьей, стеганой броней или стеганной броней сшитой на заказ. Наличие брони не является обязательным.",
@@ -492,13 +514,14 @@ export const RULES_I18N = {
                         p3_1_3: "<b>3.1.3</b> Вор обязан:",
                         mustOnline: "• Находиться онлайн на протяжении всего процесса воровства и не покидать игру, за исключением непредвиденных крашей или рестартов сервера.",
                         cooldown: "• Совершать грабеж одной и той же цели не чаще, чем 1 раз в реальные 4 часа. Откат действует на всех игроков состоящих в селении вора.",
-                        targetOnline: "• Совершать грабеж исключительно при нахождении потенциальной цели в сети [для Хуторов, Лагерей, Деревень - 1 игрок в сети; для Поселков и Городов - минимум 2 игрока в сети, для Региональной провинции - минимум 3 игрока в сети, для Ключевой точки - не менее 6-ти игроков от всей стороны Сюзерена]. Территориальное нахождение цели при проведении грабежа не имеет значения.",
+                        targetOnline: "• Совершать грабеж исключительно при нахождении потенциальной цели в сети [для Хуторов, Лагерей, Деревень - 1 игрок в сети; для Поселков и Городов - минимум 2 игрока в сети, для Региональной провинции - минимум 3 игрока в сети, для Центра Имперского эксклава - минимум 2 игрока в сети, для Ключевой точки - не менее 6-ти игроков от всей стороны Сюзерена]. Территориальное нахождение цели при проведении грабежа не имеет значения.",
                         finishAfterLogout: "• Вор имеет право доводить до конца уже начатый грабеж, если в процессе цель вышла из сети, но после выхода цели, вор не имеет право ломать абсолютно никакие блоки и объекты.",
                         noChisel: "• Вору запрещается использовать любой инструмент чизла на чужой территории и в процессе воровства.",
                         noTemporalGears: "• Вору запрещается использовать темпоральные шестеренки в процессе воровства.",
                         noReinforce: "• Вору запрещается укреплять любые объекты и блоки в процессе воровства.",
                         noBackpackStorage: "• Вору запрещается носить на спине сундуки, бочки, ящики, сосуды, дупла и другие блоки хранения.",
                         screenshots: "• Вор обязан в начале совершения воровства сделать скриншоты: своего инвентаря; брони на своем персонаже; списка игроков, которые находятся в онлайне; Приветствуются откаты совершения воровства.",
+                        noDespawn: "• Вору запрещается целенаправленно деспавнить ресурсы, в том числе путём специального выбрасывания их из сундуков и иных хранилищ. Случайные выпадения ресурсов, например при нехватке места в инвентаре во время сбора урожая, к данному правилу не относятся.",
                         noBypass: "• Вору запрещен выход из своего селения для совершения воровства и возвращение обратно в свое селение, для обхода дипломатического курса, отката на воровство и дипломатических заявлений селения. Предоставить данные о заказчике и дате заключения контракта, в случае осуществления воровства по заказу от частного лица / селения.",
                         p3_1_4: "<b>3.1.4</b> Хранение и содержание контрактов.<br />Контракт должен содержать: цель для воровства (название селение/ник игрока) ник вора и заказчика, реальную дату подписания контракта. Контракт на воровство обязан храниться в доступном для нахождения месте на территории селения заказчика. В случае заключения контракта от имени селения (его главой, заместителем) – контракт должен храниться в главном здании селения-заказчика (башня, донжон, замок, форт, жилье правителя т.д.). В случае заключения контракта от частного лица (конкретного игрока) – контракт должен храниться в основном жилом здании данного игрока. Запрещено прятать, закапывать, замуровывать, помещать в сундуки под землей / в стенах или иным образом делать контракт недоступным для нахождения. Администрация имеет право в любой момент запросить доступ к контракту. Контракт должен храниться минимум 30 реальных дней после подписания."
                     },
@@ -684,8 +707,10 @@ export const RULES_I18N = {
                         end: " and players participating in combat on its behalf must be on the list of inhabitants of that settlement. This does not apply to fighting for key points."
                     },
                     p1_15: "<b>1.15</b> The use of Claim-type protections is prohibited.",
-                    p1_16: "<b>1.16</b> A single player is prohibited from creating and using more than 2 game accounts on the project. Any excess over the established limit is considered a violation for the purpose of gaining an unfair advantage. If more than 2 accounts are discovered for a player, all accounts belonging to the violator are subject to a permanent ban, except for one (at the Administration's discretion). A ban of one of the two accounts for violating project rules also results in a ban of the second.",
-                    p1_17: "<b>1.17</b> A player has the right to be a member and reside in no more than 1 settlement, and also to own no more than 1 homestead."
+                    p1_16: "<b>1.16</b> A single player is prohibited from creating and using more than 2 game accounts on the project. Any excess over the established limit is considered a violation for the purpose of gaining an unfair advantage. If more than 2 accounts are discovered for a player, all accounts belonging to the violator are subject to a permanent ban, except for one (at the Administration's discretion). A ban of one of the two accounts for violating project rules also results in a ban of the second. Warnings issued to one account also apply to the second account.",
+                    p1_16_1: "<b>1.16.1</b> Regardless of which settlement the character is physically located in, both accounts are considered to belong to the same diplomatic status (peaceful, neutral, aggressive). It is forbidden to use the second account to perform actions prohibited for the main account due to its diplomatic status (for example, if the main account is a resident of a peaceful settlement and cannot steal or participate in raids, then the second account also has no right to perform these actions against other players, even if it is formally without a settlement). The second account cannot be a member of a settlement that is in a state of war or hostility with the settlement of the first account, nor can it claim neutrality if the first account is a warring party.",
+                    p1_16_2: "<b>1.16.2</b> The second account cannot participate in the same events and/or activities as the first if this results in a double reward.",
+                    p1_17: "<b>1.17</b> A player has the right to reside in or own only one type of settlement. That is, a player cannot simultaneously own a homestead and be a member of another settlement, nor can they be a member of several settlements at the same time."
                 },
                 terminology: {
                     empire: "<b>Empire</b> — a vast state on whose lands the entire gameplay takes place.",
@@ -731,7 +756,8 @@ export const RULES_I18N = {
                     war: "<b>War</b> — a long-term state when players of one settlement begin military actions against players of another settlement to achieve their demands.",
                     politicalCourse: {
                         before: "<b>Political course</b> — a strategic direction chosen by a settlement for its role-play activity, which must clearly reflect that activity. All possible types of political courses are presented in the section on "
-                    }
+                    },
+                    imperialLegalForce: "<b>Imperial legal force</b> — the obligation to execute a decision issued as a result of a court initiated and conducted by the Center of the Imperial Exclave."
                 },
                 settlements: {
                     common: {
@@ -908,7 +934,7 @@ export const RULES_I18N = {
                             greatBuilding: "Great building: an adopted project.",
                             events: "Holding events: at least 3 events, with at least 6 players participating, before obtaining this type.",
                             territoryBlock: "Possession of a territorial block [diameter = 512 blocks].",
-                            raidTargetsBefore: "Ability to declare raids on",
+                            raidTargetsBefore: "Ability to declare raids on ",
                             war: "Ability to declare war if there is a casus belli.",
                             defensesBefore: "Ability to erect",
                             defensesAfter: " of level 3.",
@@ -917,8 +943,27 @@ export const RULES_I18N = {
                             colonies: "Right to found no more than 2 colonies.",
                             steelFurnaceBlueprint: "Right to receive a blueprint for a steel furnace."
                         },
+                        exclaveCenter: {
+                            title: "2.1.7 Center of the Imperial Exclave",
+                            intro: "A Center of the Imperial Exclave is a ",
+                            introAfter: ", located at the center of an Imperial lands exclave, led by a Governor and representing the authority of the Empire on those lands, meeting the following requirements:",
+                            location: "Location: no farther than 800 blocks from the zero coordinate.",
+                            population: "Population: at least 3 people.",
+                            noKeyPoints: "No right to own key points of interest.",
+                            aggressiveOnly: "Only the aggressive political course is allowed.",
+                            courts: "Has the right to initiate and conduct courts whose decisions have Imperial legal force (see terminology).",
+                            economy: "Obliged to support the economy and monitor trade. Only a market economy with a clear separation of private and state property is allowed. A market economy means: free buying and selling of goods and resources between players and settlements at negotiated prices; active trading points, markets and exchange operations; a ban on uncontrolled communal property — every resource, building or item must have a specific owner (a private individual, an organization or the settlement's state treasury); state property is formed from taxes, duties, confiscated resources and external income and is spent exclusively on the settlement's needs (construction, defense, courts, diplomacy); private property is protected and cannot be seized without the owner's consent or a court decision that has Imperial legal force.",
+                            currency: "Using exclusively server currency as payment for goods and services.",
+                            architecture: "Constantly engage in large architectural projects within the territory.",
+                            territoryBlock: "Possession of a territorial block [\"Regional Province\"].",
+                            currencyGrant: "Currency is issued as to two Suzerains.",
+                            blueprints: "Blueprints of all levels are available.",
+                            rpDuty: "Obligation of RP interactions with players.",
+                            raidTargetsBefore: "Ability to declare raids on ",
+                            war: "Ability to declare war if there is a casus belli."
+                        },
                         suzerain: {
-                            title: "2.1.7 «Suzerain» Status",
+                            title: "2.1.8 «Suzerain» Status",
                             intro: "Suzerain is a status that imposes a number of requirements and advantages:",
                             req1: "Be one of the settlement types.",
                             req2Before: "Fulfilling the obligations of the ",
@@ -965,7 +1010,7 @@ export const RULES_I18N = {
                         monumentAfter: " : 1x1x2 blocks (w,d,h).",
                         infrastructure: "• Infrastructure: equipped place with a campfire.",
                         economyHeading: "• Economy:",
-                        storage: "◦ at least 1 storage building;",
+                        storage: "at least 1 storage building;",
                         defenses: "• Defensive structures: none.",
                         advantages: "• All advantages of the Camp settlement type are retained."
                     },
@@ -976,9 +1021,9 @@ export const RULES_I18N = {
                         monumentBefore: "•",
                         monumentAfter: ": 1x1x2 blocks (w,d,h).",
                         documentsHeading: "• Documents:",
-                        patentBefore: "◦ signed ",
+                        patentBefore: "signed ",
                         patentAfter: " for permission to found a village from the",
-                        libertiesBefore: "◦ at least 2 purchased ",
+                        libertiesBefore: "at least 2 purchased ",
                         infrastructureHeading: "• Infrastructure:",
                         well: "◦ well with drinking water;",
                         paths: "◦ paths between buildings at least 2 blocks wide, where possible.",
@@ -1092,9 +1137,9 @@ export const RULES_I18N = {
                         p3_1_1: "<b>3.1.1</b> Theft is the secret infiltration of no more than 2 or 3 players, depending on the political course of the initiator settlement, onto the territory of a settlement or key point with the aim of stealing resources. This action must be carried out strictly in accordance with the established rules.",
                         p3_1_2: "<b>3.1.2</b> A thief has the right to:",
                         canBreakHeading: "• Break and open/unlock only:",
-                        canBreak1: "◦ Doors, hatches, gates.",
-                        canBreak2: "◦ Windows, balconies with windows (in the form of glass, fences, and other manifestations that can be considered windows in a building and can be knocked out or broken with improvised means).",
-                        canBreak3: "◦ Chests, crates, vessels, barrels, baskets, stone chunks [from the \"Quarry\" mod], berry bushes.",
+                        canBreak1: "Doors, hatches, gates.",
+                        canBreak2: "Windows, balconies with windows (in the form of glass, fences, and other manifestations that can be considered windows in a building and can be knocked out or broken with improvised means).",
+                        canBreak3: "Chests, crates, vessels, barrels, baskets, stone chunks [from the \"Quarry\" mod], berry bushes.",
                         canStealVehicles: "• Steal/dismantle any vehicles.",
                         canPlaceLadders: "• Place, but not remove, rope ladders only on man-made structures, as well as in open pits and ditches.",
                         armorLimit: "• During looting, the thief may be protected only by leather, bear, quilted, or custom-tailored quilted armor. Wearing armor is optional.",
@@ -1103,13 +1148,14 @@ export const RULES_I18N = {
                         p3_1_3: "<b>3.1.3</b> A thief is obliged to:",
                         mustOnline: "• Be online throughout the entire theft process and not leave the game, except for unexpected crashes or server restarts.",
                         cooldown: "• Loot the same target no more than once every 4 real hours. The cooldown applies to all players in the thief's settlement.",
-                        targetOnline: "• Carry out looting only when the potential target is online [for Homesteads, Camps, Villages - 1 player online; for Townships and Cities - at least 2 players online; for Regional Province - at least 3 players online; for Key Point - at least 6 players from the entire Suzerain's side]. The territorial location of the target during looting does not matter.",
+                        targetOnline: "• Carry out looting only when the potential target is online [for Homesteads, Camps, Villages - 1 player online; for Townships and Cities - at least 2 players online; for Regional Province - at least 3 players online; for Center of the Imperial Exclave - at least 2 players online; for Key Point - at least 6 players from the entire Suzerain's side]. The territorial location of the target during looting does not matter.",
                         finishAfterLogout: "• The thief has the right to finish an already-started looting if the target logs out during the process, but after the target leaves, the thief has no right to break any blocks or objects at all.",
                         noChisel: "• The thief is prohibited from using any chisel tool on foreign territory and during theft.",
                         noTemporalGears: "• The thief is prohibited from using temporal gears during theft.",
                         noReinforce: "• The thief is prohibited from reinforcing any objects and blocks during theft.",
                         noBackpackStorage: "• The thief is prohibited from carrying chests, barrels, crates, vessels, hollows, and other storage blocks on their back.",
                         screenshots: "• The thief is obliged to take screenshots at the beginning of the theft: of their inventory; armor on their character; list of players who are online. Rollbacks of the theft are welcome.",
+                        noDespawn: "• The thief is prohibited from intentionally despawning resources, including by deliberately dropping them out of chests and other storage. Accidental resource drops, for example due to lack of inventory space while harvesting crops, are not covered by this rule.",
                         noBypass: "• The thief is prohibited from leaving their settlement to commit theft and returning to their settlement to bypass the diplomatic course, theft cooldown, and diplomatic statements of the settlement. Provide information about the customer and the date of contract conclusion in case of theft by order from a private individual / settlement.",
                         p3_1_4: "<b>3.1.4</b> Storage and maintenance of contracts.<br />A contract must contain: the target of theft (settlement name / player nickname), the thief's and customer's nicknames, the real date of signing the contract. A theft contract must be kept in an accessible place on the customer's settlement territory. If the contract is concluded on behalf of the settlement (by its head or deputy), the contract must be kept in the main building of the customer settlement (tower, donjon, castle, fort, ruler's residence, etc.). If the contract is concluded by a private individual (a specific player), the contract must be kept in the player's main residential building. It is forbidden to hide, bury, wall up, place in chests underground / in walls, or otherwise make the contract inaccessible to find. The Administration has the right to request access to the contract at any time. The contract must be kept for at least 30 real days after signing."
                     },

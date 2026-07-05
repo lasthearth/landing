@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, signal } from '@angular/core';
 import { HttpContext } from '@angular/common/http';
-import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '@entities/settlement';
 import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { UserService } from '@entities/user';
 import { PlayerInviteComponent } from '../player-invite/player-invite.component';
-import { ISettlement } from '@entities/settlement';
+import { ISettlement, IUpdateAttachment } from '@entities/settlement';
 import { NotificationService } from '@core/services/notification.service';
-import { BehaviorSubject, catchError, defaultIfEmpty, filter, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, defaultIfEmpty, filter, finalize, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { CreateSettlementFormComponent } from '@app/features/profile/create-settlement-from/create-settlement-from.component';
@@ -25,6 +25,9 @@ import { SettlementTagStore } from '@entities/settlement-tag';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
+import { MediaService } from '@entities/media';
+import { RequestStatusService } from '@core/services/request-status.service';
+import { compressImage } from '@shared/lib/compress-image.function';
 
 /**
  * Компонент карточки селения.
@@ -33,7 +36,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, TuiPulse, TuiIcon, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe],
+    imports: [AsyncPipe, TuiPulse, TuiIcon, TuiLoader, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe],
     providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
@@ -89,6 +92,21 @@ export class SettlementComponent {
      * Хранилище тегов поселений.
      */
     protected readonly tagStore: SettlementTagStore = inject(SettlementTagStore);
+
+    /**
+     * Сервис загрузки медиафайлов.
+     */
+    private readonly mediaService: MediaService = inject(MediaService);
+
+    /**
+     * Сервис обработки статуса запросов.
+     */
+    private readonly requestStatus: RequestStatusService = inject(RequestStatusService);
+
+    /**
+     * Признак загрузки изображения селения.
+     */
+    protected readonly isImageUploading = signal(false);
 
     constructor() {
         this.tagStore.loadTags$().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
@@ -164,8 +182,12 @@ export class SettlementComponent {
                           }),
                           tap((settlement) => {
                               this.settlementId$.next(settlement?.id ?? null);
+                              this.isImageUploading.set(false);
                           }),
-                          catchError(() => of(undefined)),
+                          catchError(() => {
+                              this.isImageUploading.set(false);
+                              return of(undefined);
+                          }),
                           defaultIfEmpty(undefined)
                       )
         )
@@ -409,6 +431,85 @@ export class SettlementComponent {
      */
     protected getTag(tagId: string) {
         return this.tagStore.getTagById(tagId);
+    }
+
+    /**
+     * Обрабатывает выбор нового изображения для селения.
+     *
+     * Сжимает файл, загружает через MediaService и обновляет attachments
+     * через PATCH /settlements/{id}. Доступно только лидеру селения.
+     *
+     * @param settlement Информация о селении.
+     * @param event Событие выбора файла.
+     */
+    protected async onSettlementImageSelected(settlement: ISettlement, event: Event): Promise<void> {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+
+        if (!file) {
+            return;
+        }
+
+        if (!file.type.startsWith('image/')) {
+            this.requestStatus.showError(this.i18n.translate('settlements.settlement.imageNotImage'));
+            input.value = '';
+            return;
+        }
+
+        this.isImageUploading.set(true);
+
+        try {
+            const compressed = await compressImage(file, { maxWidth: 1920, maxHeight: 1080, quality: 0.92 });
+            const url = await this.mediaService.uploadFile(compressed, 'UPLOAD_PURPOSE_SETTLEMENT');
+
+            const currentAttachment = settlement.attachments[0];
+            const updatedAttachments: IUpdateAttachment[] = [
+                {
+                    url,
+                    description: currentAttachment?.desc ?? this.i18n.translate('settlements.attachments.preview'),
+                },
+                ...settlement.attachments.slice(1).map((attachment) => ({
+                    url: attachment.url,
+                    description: attachment.desc,
+                })),
+            ];
+
+            this.settlementService
+                .updateSettlement$(settlement.id, {
+                    name: settlement.name,
+                    description: settlement.description,
+                    attachments: updatedAttachments,
+                })
+                .pipe(
+                    this.requestStatus.handleSuccess(this.i18n.translate('settlements.settlement.imageUpdated')),
+                    this.requestStatus.handleError(this.i18n.translate('settlements.settlement.imageUpdateError')),
+                    finalize(() => {
+                        input.value = '';
+                    }),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe({
+                    next: () => {
+                        this.reloadSettlement$.next();
+                    },
+                    error: () => {
+                        this.isImageUploading.set(false);
+                    },
+                });
+        } catch (error) {
+            this.isImageUploading.set(false);
+            input.value = '';
+            this.requestStatus.showError(this.i18n.translate('settlements.settlement.imageUpdateError'));
+        }
+    }
+
+    /**
+     * Открывает скрытый input[type=file] для выбора изображения селения.
+     *
+     * @param inputRef Ссылка на input-элемент.
+     */
+    protected triggerImageUpload(inputRef: HTMLInputElement): void {
+        inputRef.click();
     }
 
     /**

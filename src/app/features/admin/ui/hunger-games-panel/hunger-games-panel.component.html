@@ -329,26 +329,34 @@
                                 <tr>
                                     <th class="p-4">{{ 'admin.hungerGames.numberHeader' | translate }}</th>
                                     <th class="p-4">{{ 'admin.hungerGames.playerColumn' | translate }}</th>
-                                    <th class="p-4 text-center">{{ 'admin.hungerGames.deathsHeader' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.eloHeader' | translate }}</th>
+                                    <th class="p-4 text-center">{{ 'admin.hungerGames.winsHeader' | translate }}</th>
                                     <th class="p-4 text-center">{{ 'admin.hungerGames.killsHeader' | translate }}</th>
-                                    <th class="p-4 text-center">{{ 'admin.hungerGames.hoursHeader' | translate }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (entry of list; track entry.userId; let idx = $index) {
+                                @for (entry of list; track entry.playerId; let idx = $index) {
                                     <tr
                                         class="border-t border-[#bdb093] transition-colors"
-                                        [class.bg-[#f5eedd]]="idx % 2 === 0"
-                                        [class.bg-[#e2d7bb]]="idx % 2 === 1"
-                                        [class.hover:bg-[#d8cca8]]="true"
+                                        [class.bg-[#d4af37]/10]="entry.rank === 1"
+                                        [class.bg-[#c0c0c0]/10]="entry.rank === 2"
+                                        [class.bg-[#cd7f32]/10]="entry.rank === 3"
+                                        [class.bg-[#f5eedd]]="entry.rank && entry.rank > 3 && idx % 2 === 0"
+                                        [class.bg-[#e2d7bb]]="entry.rank && entry.rank > 3 && idx % 2 === 1"
+                                        [class.hover:bg-[#d8cca8]]="entry.rank && entry.rank > 3"
                                     >
-                                        <td class="p-4 font-bold text-lh-primary">
-                                            {{ idx + 1 }}
+                                        <td class="p-4 font-bold"
+                                            [class.text-[#b8860b]]="entry.rank === 1"
+                                            [class.text-[#a0a0a0]]="entry.rank === 2"
+                                            [class.text-[#b87333]]="entry.rank === 3"
+                                            [class.text-lh-primary]="!entry.rank || entry.rank > 3"
+                                        >
+                                            {{ entry.rank ?? idx + 1 }}
                                         </td>
-                                        <td class="p-4 text-lh-primary font-medium">{{ entry.name }}</td>
-                                        <td class="p-4 text-lh-primary text-center">{{ entry.deaths }}</td>
-                                        <td class="p-4 text-lh-accent text-center font-bold">{{ entry.kills }}</td>
-                                        <td class="p-4 text-lh-primary text-center">{{ entry.hoursPlayed }}</td>
+                                        <td class="p-4 text-lh-primary font-medium">{{ entry.playerName }}</td>
+                                        <td class="p-4 text-lh-accent text-center font-bold">{{ entry.elo }}</td>
+                                        <td class="p-4 text-lh-primary text-center">{{ entry.wins }}</td>
+                                        <td class="p-4 text-lh-primary text-center">{{ entry.kills }}</td>
                                     </tr>
                                 }
                             </tbody>

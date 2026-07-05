@@ -11,9 +11,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NewsApiService, CreateNewsRequest } from '@entities/news';
+import { NewsApiService, CreateNewsRequest, NewsDto } from '@entities/news';
 import { MediaService } from '@entities/media';
 import { UserService } from '@entities/user';
+import { DiscordWebhookService } from '@shared/lib/discord-webhook/discord-webhook.service';
 
 import { RequestStatusService } from '@core/services/request-status.service';
 import { TuiError } from '@taiga-ui/core';
@@ -125,6 +126,11 @@ export class CreateNewsComponent {
      */
     private readonly i18n = inject(I18nService);
 
+    /**
+     * Сервис отправки уведомлений в Discord.
+     */
+    private readonly discordWebhook = inject(DiscordWebhookService);
+
     protected currentTime: Date | null = null;
 
     /**
@@ -222,13 +228,24 @@ export class CreateNewsComponent {
                             this.requestStatusService.handleSuccess(this.i18n.translate('news.create.success')),
                             takeUntilDestroyed(this.destroyRef)
                         )
-                        .subscribe({
-                            next: () => {
-                                this.form.reset();
-                                this.previewUrl = null;
-                                this.cdr.markForCheck();
-                                this.created.emit();
-                            },
+                        .subscribe((createdNews) => {
+                            const newsDto = createdNews as NewsDto;
+                            this.form.reset();
+                            this.previewUrl = null;
+                            this.cdr.markForCheck();
+                            this.created.emit();
+
+                            const newsUrl = `${window.location.origin}/home`;
+                            this.discordWebhook
+                                .sendNewsEmbed(
+                                    newsDto.title,
+                                    newsDto.content,
+                                    newsDto.preview,
+                                    newsUrl,
+                                    newsDto.created_by ?? newsDto.createdBy ?? undefined
+                                )
+                                .pipe(takeUntilDestroyed(this.destroyRef))
+                                .subscribe();
                         });
                 }),
                 takeUntilDestroyed(this.destroyRef)

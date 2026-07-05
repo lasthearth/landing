@@ -86,7 +86,10 @@ export const SETTLEMENTS_I18N = {
                 levelUp: 'Повысить уровень',
                 edit: 'Редактировать',
                 editDisabledTitle: 'Редактирование временно недоступно из-за CORS-ограничений на сервере',
-                leave: 'Покинуть селение',
+                changeImage: 'Сменить изображение',
+                imageUpdated: 'Изображение поселения обновлено',
+                imageUpdateError: 'Не удалось обновить изображение поселения',
+                imageUploading: 'Загрузка изображения...',
                 confirm: {
                     leaveTitle: 'Покинуть селение',
                     leaveText: 'Вы уверены, что хотите покинуть селение? Это действие нельзя отменить.',
@@ -292,6 +295,11 @@ export const SETTLEMENTS_I18N = {
                 edit: 'Edit',
                 editDisabledTitle: 'Editing is temporarily unavailable due to CORS restrictions on the server',
                 leave: 'Leave settlement',
+                changeImage: 'Change image',
+                imageUpdated: 'Settlement image updated',
+                imageUpdateError: 'Failed to update settlement image',
+                imageNotImage: 'Please select an image file',
+                imageUploading: 'Uploading image...',
                 confirm: {
                     leaveTitle: 'Leave settlement',
                     leaveText: 'Are you sure you want to leave the settlement? This action cannot be undone.',

@@ -1,106 +1,129 @@
 <div
-    class="transform transition overflow-clip duration-500 hover:scale-[101%] flex xl:flex-row flex-col bg-lh-primary-2/10 border border-lh-primary-2/10 relative rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] h-full max-h-[400px] lh-card-glow"
+    class="settlement-card block w-full h-full max-h-[400px] relative rounded-2xl transition duration-500 hover:scale-[101%] overflow-hidden"
+    [ngClass]="[getBorderClass(data().type)]"
 >
-    <!-- Изображение -->
-    <div class="hidden xl:block xl:w-2/5 w-full shrink-0 h-full">
-        <app-image-loader
-            [src]="data().attachments[0].url ? data().attachments[0].url : '/images/screenshots/screen_1.png'"
-            [alt]="'settlements.card.imageAlt' | translate:{name: data().name}"
-            imageClass="h-full w-full rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
-        />
-    </div>
-
-    <!-- Контент -->
-    <div class="xl:w-3/5 w-full p-5 flex flex-col gap-3 justify-between overflow-hidden">
-        <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-2 flex-wrap">
-                <h2 class="text-xl/7 md:text-2xl uppercase font-bold text-[#2d201a]">
-                    {{ data().name }}
-                </h2>
-                <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-0.5 rounded-lg">
-                    {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
-                </span>
-                <span class="bg-[#16a34a]/15 text-[#16a34a] font-bold text-base px-2 py-0.5 rounded-lg">
-                    {{ onlineCount }} {{ 'settlements.card.onlineShort' | translate }}
-                </span>
-            </div>
-
-            <div class="flex gap-1.5 flex-wrap">
-                @if (isEastSuzerain(this.data())) {
-                    <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
-                        {{ 'settlements.card.suzerainShort' | translate }}: {{ environment.eastSuzerain }}
-                    </span>
-                }
-                @if (isWestSuzerain(this.data())) {
-                    <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
-                        {{ 'settlements.card.suzerainLabel' | translate }} {{ environment.westSuzerain }}
-                    </span>
-                }
-                <span class="bg-[#3d5381]/15 text-[#3d5381] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
-                    {{ getSettlementTypeByKey(data().type) }}
-                </span>
-                <span
-                    [class]="
-                        'uppercase font-bold text-base px-2 py-0.5 rounded-lg ' +
-                        (data().diplomacy === 'Миролюбивый'
-                            ? 'bg-[#16a34a]/15 text-[#16a34a]'
-                            : data().diplomacy === 'Нейтральный'
-                              ? 'bg-[#3b3c36]/15 text-[#3b3c36]'
-                              : 'bg-[#720000]/15 text-[#720000]')
-                    "
+    <div
+        class="settlement-card-inner transform flex xl:flex-row flex-col relative rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#bdb093]/30 h-full max-h-[400px]"
+    >
+        <!-- Изображение -->
+        <div class="hidden xl:block xl:w-2/5 w-full shrink-0 h-full relative">
+            @if (isPinned(data())) {
+                <div
+                    class="absolute top-3 right-3 z-10 bg-lh-accent text-white rounded-lg px-2 py-1 shadow-md flex items-center gap-1"
                 >
-                    {{ data().diplomacy }}
-                </span>
-                @for (tag of data().tags; track tag.id) {
-                    @if (getTag(tag.id); as tagData) {
-                        <app-settlement-tag [tag]="tagData" />
-                    }
-                }
-                @if (isAdmin()) {
-                    <div
-                        (click)="openSetTagsDialog()"
-                        class="bg-lh-primary-2/10 hover:bg-lh-primary-2/30 cursor-pointer transition-all duration-300 active:scale-[95%] flex justify-center items-center px-1 text-lh-primary rounded-full"
-                    >
-                        <tui-icon icon="@tui.circle-plus" class="size-4!" />
-                    </div>
-                }
-            </div>
-
-            <p class="text-lg text-[#5c4030] leading-6 line-clamp-3" [innerHTML]="data().description"></p>
+                    <tui-icon icon="@tui.pin" class="size-4!" />
+                </div>
+            }
+            <app-image-loader
+                [src]="data().attachments[0].url ? data().attachments[0].url : '/images/screenshots/screen_1.png'"
+                [alt]="'settlements.card.imageAlt' | translate:{name: data().name}"
+                imageClass="h-full w-full rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
+            />
         </div>
 
-        <div class="flex flex-col gap-2">
-            <hr class="h-px bg-[#bdb093]/30 w-full rounded-full" />
-            <div class="flex flex-wrap gap-1.5 max-h-[68px] overflow-hidden">
-                <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-1 rounded-lg items-center">
-                    @if (leader?.is_online === true) {
-                        <tui-pulse class="self-center mr-1.5 online" />
-                    } @else {
-                        <tui-pulse [playing]="false" class="self-center mr-1.5 offline" />
-                    }
-                    <span>{{ leader?.user_game_name }}</span>
+        <!-- Контент -->
+        <div class="xl:w-3/5 w-full p-5 flex flex-col gap-3 justify-between overflow-hidden">
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <h2 class="text-xl/7 md:text-2xl uppercase font-bold text-[#2d201a]">
+                        {{ data().name }}
+                    </h2>
+                    <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-0.5 rounded-lg">
+                        {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
+                    </span>
+                    <span class="bg-[#16a34a]/15 text-[#16a34a] font-bold text-base px-2 py-0.5 rounded-lg">
+                        {{ onlineCount }} {{ 'settlements.card.onlineShort' | translate }}
+                    </span>
                 </div>
 
-                @for (item of users; track $index) {
-                    <div
-                        class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base px-2 py-1 rounded-lg items-center"
+                <div class="flex gap-1.5 flex-wrap">
+                    @if (isEastSuzerain(this.data())) {
+                        <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                            {{ 'settlements.card.suzerainShort' | translate }}: {{ environment.eastSuzerain }}
+                        </span>
+                    }
+                    @if (isWestSuzerain(this.data())) {
+                        <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                            {{ 'settlements.card.suzerainLabel' | translate }} {{ environment.westSuzerain }}
+                        </span>
+                    }
+                    @if (isPinned(data())) {
+                        <span
+                            class="inline-flex items-center gap-1 bg-[#ffd700]/15 text-[#8a6e2f] border border-[#d4af37]/40 uppercase font-bold text-base px-2 py-0.5 rounded-lg"
+                        >
+                            <tui-icon icon="@tui.pin" class="size-4!" />
+                            {{ getSettlementTypeLabel(data()) }}
+                        </span>
+                    } @else {
+                        <span
+                            [class]="'uppercase font-bold text-base px-2 py-0.5 rounded-lg ' + getSettlementTypeBadgeClasses(data())"
+                        >
+                            {{ getSettlementTypeLabel(data()) }}
+                        </span>
+                    }
+                    <span
+                        [class]="
+                            'uppercase font-bold text-base px-2 py-0.5 rounded-lg ' +
+                            (data().diplomacy === 'Миролюбивый'
+                                ? 'bg-[#16a34a]/15 text-[#16a34a]'
+                                : data().diplomacy === 'Нейтральный'
+                                  ? 'bg-[#3b3c36]/15 text-[#3b3c36]'
+                                  : 'bg-[#720000]/15 text-[#720000]')
+                        "
                     >
-                        @if (item?.is_online === true) {
+                        {{ data().diplomacy }}
+                    </span>
+                    @for (tag of data().tags; track tag.id) {
+                        @if (getTag(tag.id); as tagData) {
+                            <app-settlement-tag [tag]="tagData" />
+                        }
+                    }
+                    @if (isAdmin()) {
+                        <div
+                            (click)="openSetTagsDialog()"
+                            class="bg-lh-primary-2/10 hover:bg-lh-primary-2/30 cursor-pointer transition-all duration-300 active:scale-[95%] flex justify-center items-center px-1 text-lh-primary rounded-full"
+                        >
+                            <tui-icon icon="@tui.circle-plus" class="size-4!" />
+                        </div>
+                    }
+                </div>
+
+                <p class="text-lg text-[#5c4030] leading-6 line-clamp-3" [innerHTML]="data().description"></p>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <hr class="h-px bg-[#bdb093]/30 w-full rounded-full" />
+                <div class="flex flex-wrap gap-1.5 max-h-[68px] overflow-hidden">
+                    <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-1 rounded-lg items-center">
+                        @if (leader?.is_online === true) {
                             <tui-pulse class="self-center mr-1.5 online" />
                         } @else {
                             <tui-pulse [playing]="false" class="self-center mr-1.5 offline" />
                         }
-                        <span>{{ item?.user_game_name }}</span>
+                        <span>{{ leader?.user_game_name }}</span>
                     </div>
-                }
-            </div>
 
-            <button
-                (click)="openDetails()"
-                class="text-[#5c4030] border-[#5c4030]/50 hover:border-[#5c4030] mt-1 transition-all self-end duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-[#2d201a] bg-transparent py-0.5 text-base"
-            >
-                {{ 'settlements.card.more' | translate }}
-            </button>
+                    @for (item of users; track $index) {
+                        <div
+                            class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base px-2 py-1 rounded-lg items-center"
+                        >
+                            @if (item?.is_online === true) {
+                                <tui-pulse class="self-center mr-1.5 online" />
+                            } @else {
+                                <tui-pulse [playing]="false" class="self-center mr-1.5 offline" />
+                            }
+                            <span>{{ item?.user_game_name }}</span>
+                        </div>
+                    }
+                </div>
+
+                <button
+                    (click)="openDetails()"
+                    class="text-[#5c4030] border-[#5c4030]/50 hover:border-[#5c4030] mt-1 transition-all self-end duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-[#2d201a] bg-transparent py-0.5 text-base"
+                >
+                    {{ 'settlements.card.more' | translate }}
+                </button>
+            </div>
         </div>
     </div>
 </div>

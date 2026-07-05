@@ -30,6 +30,7 @@ import { SettlementDetailedComponent } from '../settlement-detailed/settlement-d
     standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
+    styleUrl: './settlement-card.component.less',
     imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent, TranslatePipe, SettlementTagComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -124,6 +125,69 @@ export class SettlementCardComponent implements OnInit {
     }
 
     /**
+     * Имя закреплённого селения.
+     */
+    protected readonly pinnedSettlementName = 'Поместье Эренхольд';
+
+    /**
+     * Проверяет, является ли селение закреплённым.
+     *
+     * @param settlement Селение.
+     * @returns true, если селение — Поместье Эренхольд.
+     */
+    protected isPinned(settlement: ISettlement): boolean {
+        return settlement.name === this.pinnedSettlementName;
+    }
+
+    /**
+     * Возвращает отображаемый тип селения.
+     * Для закреплённого селения всегда возвращает "Поместье наместника".
+     *
+     * @param settlement Селение.
+     * @returns Локализованное название типа.
+     */
+    protected getSettlementTypeLabel(settlement: ISettlement): string {
+        if (this.isPinned(settlement)) {
+            return 'Поместье наместника';
+        }
+
+        return getSettlementTypeByKey(settlement.type);
+    }
+
+    /**
+     * Возвращает CSS-классы бейджа типа селения.
+     * Цвет бейджа соответствует tier селения, чтобы визуально отличать
+     * Лагерь, Деревню, Посёлок, Город и Региональную провинцию.
+     *
+     * @param settlement Селение.
+     * @returns Строка с Tailwind-классами фона и текста.
+     */
+    protected getSettlementTypeBadgeClasses(settlement: ISettlement): string {
+        if (this.isPinned(settlement)) {
+            return 'bg-[#ffd700]/15 text-[#8a6e2f] border border-[#d4af37]/40';
+        }
+
+        switch (settlement.type) {
+            case 'VILLAGE':
+            case 1:
+                return 'bg-[#8b5a2b]/15 text-[#8b5a2b]';
+            case 'TOWNSHIP':
+            case 2:
+                return 'bg-[#5a5a5a]/15 text-[#5a5a5a]';
+            case 'CITY':
+            case 3:
+                return 'bg-[#6e7a8b]/15 text-[#6e7a8b]';
+            case 'PROVINCE':
+            case 4:
+                return 'bg-[#b8860b]/15 text-[#b8860b]';
+            case 'CAMP':
+            case 0:
+            default:
+                return 'bg-[#3d5381]/15 text-[#3d5381]';
+        }
+    }
+
+    /**
      * Получает тип поселения по ключу.
      *
      * @param key - уникальный идентификатор поселения (может быть undefined)
@@ -179,5 +243,46 @@ export class SettlementCardComponent implements OnInit {
             this.tagStore.hasSpecialTag(settlement.tags, 'suzerain') &&
             this.tagStore.hasSpecialTag(settlement.tags, 'west')
         );
+    }
+
+    /**
+     * Возвращает CSS-класс окантовки карточки в зависимости от типа селения.
+     *
+     * @param type Тип селения (строка или число из enum).
+     * @returns Класс окантовки: settlement-card--camp | --village | --township | --city | --region.
+     */
+    protected getBorderClass(type: string | number | undefined): string {
+        if (this.isPinned(this.data())) {
+            return 'settlement-card--pinned';
+        }
+
+        switch (type) {
+            case 'VILLAGE':
+            case 1:
+                return 'settlement-card--village';
+            case 'TOWNSHIP':
+            case 2:
+                return 'settlement-card--township';
+            case 'CITY':
+            case 3:
+                return 'settlement-card--city';
+            case 'PROVINCE':
+            case 4:
+                return 'settlement-card--region';
+            case 'CAMP':
+            case 0:
+            default:
+                return 'settlement-card--camp';
+        }
+    }
+
+    /**
+     * Определяет, является ли селение лагерем (без окантовки).
+     *
+     * @param type Тип селения.
+     * @returns true, если тип соответствует лагерю.
+     */
+    protected isCampType(type: string | number | undefined): boolean {
+        return type === 'CAMP' || type === 0 || type === undefined;
     }
 }

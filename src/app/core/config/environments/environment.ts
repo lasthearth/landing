@@ -4,6 +4,8 @@ export const environment = {
     postLogoutRedirectUri: 'http://127.0.0.1:4200/home',
     apiUrl: 'https://api.lasthearth.ru/v1',
     logtoEndpoint: 'https://logto.lasthearth.ru',
+    discordNewsWebhookUrl:
+        'https://discord.com/api/webhooks/1523398446978175169/qDMfBe7_hiQG5Kbyn40RBIXTZKyi_vimxkh9aG5ubfEhxcDnf11N_dDIOFv1VisU_SRp',
     eastSuzerain: '2884 на 22.03 00:00',
     westSuzerain: '3420 на 22.03 00:00',
     gameVersion: '1.22.2',

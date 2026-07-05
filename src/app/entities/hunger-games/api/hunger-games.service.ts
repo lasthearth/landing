@@ -9,17 +9,12 @@ import {
     ISeasonResultEntryDto,
 } from '../model/season-result-entry.interface';
 import {
-    ILeaderboardEntry,
-    ILeaderboardEntryDto,
-} from '../model/leaderboard-entry.interface';
-import {
     IMatchPlayer,
     IMatchResultRequestDto,
 } from '../model/match-result-request.interface';
 import {
     mapDtoToSeasonInfo,
     mapDtoToSeasonResultEntry,
-    mapDtoToLeaderboardEntry,
     mapMatchPlayerToDto,
 } from '../model/hunger-games.mapper';
 
@@ -137,13 +132,13 @@ export class HungerGamesService {
      *
      * @returns Observable с записями лидерборда.
      */
-    public getLeaderboard$(): Observable<ILeaderboardEntry[]> {
+    public getLeaderboard$(): Observable<ISeasonResultEntry[]> {
         return this.http
-            .get<{ entries: ILeaderboardEntryDto[] }>(
+            .get<{ entries: ISeasonResultEntryDto[] }>(
                 `${this.baseUrl}/hungergames/leaderboard`
             )
             .pipe(
-                map((response) => response.entries.map(mapDtoToLeaderboardEntry)),
+                map((response) => response.entries.map(mapDtoToSeasonResultEntry)),
                 catchError(() => of([]))
             );
     }

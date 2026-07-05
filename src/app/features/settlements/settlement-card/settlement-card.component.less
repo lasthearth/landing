@@ -1,0 +1,80 @@
+:host {
+    display: block;
+}
+
+/**
+ * Внутренний пергаментный блок карточки.
+ */
+.settlement-card-inner {
+    position: relative;
+    overflow: hidden;
+    background-color: #e2d7bb;
+    background-image: url('/image_1.webp');
+    background-repeat: repeat;
+}
+
+/**
+ * Верхний акцентный бар, обозначающий tier селения.
+ *
+ * Выполнен в виде сплошной линии без анимации — сохраняет цветовое различие
+ * уровней, но органично вписывается в пергаментный стиль сайта.
+ */
+.settlement-card-inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.settlement-card--camp .settlement-card-inner::before {
+    opacity: 1;
+    background-color: #3d5381;
+}
+
+/**
+ * Деревянный акцент — Деревня.
+ */
+.settlement-card--village .settlement-card-inner::before {
+    opacity: 1;
+    background-color: #8b5a2b;
+    box-shadow: 0 1px 4px rgba(139, 90, 43, 0.25);
+}
+
+/**
+ * Железный акцент — Посёлок.
+ */
+.settlement-card--township .settlement-card-inner::before {
+    opacity: 1;
+    background-color: #5a5a5a;
+    box-shadow: 0 1px 4px rgba(90, 90, 90, 0.25);
+}
+
+/**
+ * Серебряный акцент — Город.
+ */
+.settlement-card--city .settlement-card-inner::before {
+    opacity: 1;
+    background-color: #6e7a8b;
+    box-shadow: 0 1px 4px rgba(110, 122, 139, 0.25);
+}
+
+/**
+ * Золотой акцент — Региональная провинция и закреплённое селение.
+ */
+.settlement-card--region .settlement-card-inner::before,
+.settlement-card--pinned .settlement-card-inner::before {
+    opacity: 1;
+    background-color: #b8860b;
+    box-shadow: 0 1px 4px rgba(184, 134, 11, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .settlement-card-inner::before {
+        transition: none;
+    }
+}
