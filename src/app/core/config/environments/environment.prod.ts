@@ -6,6 +6,8 @@ export const environment = {
     logtoEndpoint: 'https://logto.lasthearth.ru',
     discordNewsWebhookUrl:
         'https://discord.com/api/webhooks/1523398446978175169/qDMfBe7_hiQG5Kbyn40RBIXTZKyi_vimxkh9aG5ubfEhxcDnf11N_dDIOFv1VisU_SRp',
+    discordTicketWebhookUrl:
+        'https://discord.com/api/webhooks/1524003549652975637/TkZqTBvAixtvcpuzKV9R7iDGXV3UlZ8a3iqOmVxy2775Tl3GCKwHq-NtLCa_-ItmGtHY',
     eastSuzerain: '-',
     westSuzerain: '-',
     gameVersion: '1.22.2',

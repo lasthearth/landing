@@ -199,6 +199,18 @@
                             <tui-icon icon="@tui.store" class="size-4!" />
                             {{ "header.nav.market" | translate }}
                         </button>
+                        <button
+                            type="button"
+                            (click)="openTicketDialog(); showMobileMenu.set(false)"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': select === 'ticket',
+                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'ticket',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                            <tui-icon icon="@tui.ticket" class="size-4!" />
+                            {{ "ticket.button" | translate }}
+                        </button>
                     </div>
                 }
             </div>
@@ -269,6 +281,16 @@
                 >
                     <tui-icon icon="@tui.store" />
                     <span class="hidden md:block">{{ "header.nav.market" | translate }}</span>
+                </button>
+
+                <button
+                    (click)="openTicketDialog()"
+                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'ticket' }"
+                    class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                    [attr.aria-label]="'ticket.button' | translate"
+                >
+                    <tui-icon icon="@tui.ticket" />
+                    <span class="hidden md:block">{{ "ticket.button" | translate }}</span>
                 </button>
             </div>
         </div>

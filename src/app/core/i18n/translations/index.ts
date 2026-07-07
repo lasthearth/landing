@@ -12,6 +12,7 @@ import { PROFILE_I18N } from './features/profile.i18n';
 import { SETTLEMENTS_I18N } from './features/settlements.i18n';
 import { ADMIN_I18N } from './features/admin.i18n';
 import { REFERRAL_I18N } from './features/referral.i18n';
+import { TICKET_I18N } from './features/ticket.i18n';
 
 /**
  * Словари переводов для всех поддерживаемых языков.
@@ -32,6 +33,7 @@ export const ALL_TRANSLATIONS = {
         ...SETTLEMENTS_I18N.ru,
         ...ADMIN_I18N.ru,
         ...REFERRAL_I18N.ru,
+        ...TICKET_I18N.ru,
     },
     en: {
         ...COMMON_I18N.en,
@@ -48,5 +50,6 @@ export const ALL_TRANSLATIONS = {
         ...SETTLEMENTS_I18N.en,
         ...ADMIN_I18N.en,
         ...REFERRAL_I18N.en,
+        ...TICKET_I18N.en,
     },
 };

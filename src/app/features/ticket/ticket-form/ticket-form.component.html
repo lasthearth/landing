@@ -1,0 +1,50 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="lh-dialog-card">
+    <h2 class="lh-dialog-title">{{ 'ticket.title' | translate }}</h2>
+
+    <p class="lh-dialog-text">{{ 'ticket.description' | translate }}</p>
+
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+            <label class="text-lh-primary font-semibold">{{ 'ticket.discordTagLabel' | translate }}</label>
+            <lh-input
+                formControlName="discordTag"
+                [placeholder]="'ticket.discordTagPlaceholder' | translate"
+            />
+            <tui-error formControlName="discordTag" [error]="[] | tuiFieldError | async" />
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label class="text-lh-primary font-semibold">{{ 'ticket.gameNicknameLabel' | translate }}</label>
+            <lh-input
+                formControlName="gameNickname"
+                [placeholder]="'ticket.gameNicknamePlaceholder' | translate"
+            />
+            <tui-error formControlName="gameNickname" [error]="[] | tuiFieldError | async" />
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label class="text-lh-primary font-semibold">{{ 'ticket.reasonLabel' | translate }}</label>
+            <lh-input
+                formControlName="reason"
+                type="textarea"
+                [rows]="5"
+                [placeholder]="'ticket.reasonPlaceholder' | translate"
+            />
+            <tui-error formControlName="reason" [error]="[] | tuiFieldError | async" />
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label class="text-lh-primary font-semibold">{{ 'ticket.dateLabel' | translate }}</label>
+            <p class="text-lh-primary/70">{{ currentDate | date: 'dd.MM.yyyy - HH:mm' }}</p>
+        </div>
+    </div>
+
+    <div class="lh-dialog-actions">
+        <button type="button" (click)="context.$implicit.complete()" class="lh-dialog-button lh-dialog-button-secondary">
+            {{ 'ticket.cancel' | translate }}
+        </button>
+        <button type="submit" [disabled]="!form.valid || isSubmitting()" class="lh-dialog-button lh-dialog-button-primary">
+            {{ isSubmitting() ? ('common.loading' | translate) : ('ticket.submit' | translate) }}
+        </button>
+    </div>
+</form>

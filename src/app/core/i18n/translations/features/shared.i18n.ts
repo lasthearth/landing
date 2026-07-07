@@ -14,6 +14,12 @@ export const SHARED_I18N = {
                 cancel: 'Отмена',
                 confirm: 'Подтвердить',
             },
+            validation: {
+                required: 'Поле обязательно для заполнения',
+                minlength: 'Минимальная длина — {{requiredLength}} символов',
+                maxlength: 'Максимальная длина — {{requiredLength}} символов',
+                email: 'Введите корректный email',
+            },
         },
         notFound: {
             title: 'Страница не найдена',
@@ -74,6 +80,12 @@ export const SHARED_I18N = {
             confirmDialog: {
                 cancel: 'Cancel',
                 confirm: 'Confirm',
+            },
+            validation: {
+                required: 'This field is required',
+                minlength: 'Minimum length is {{requiredLength}} characters',
+                maxlength: 'Maximum length is {{requiredLength}} characters',
+                email: 'Please enter a valid email',
             },
         },
         notFound: {
