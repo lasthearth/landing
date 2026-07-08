@@ -57,16 +57,6 @@
                 </button>
             }
         </div>
-
-        @if (!allLoaded()) {
-            <div #sentinel class="gallery-sentinel mt-4 h-8 w-full"></div>
-        }
-
-        @if (isLoadingMore()) {
-            <div class="flex items-center justify-center py-8">
-                <tui-loader [showLoader]="true" [inheritColor]="true" size="m" />
-            </div>
-        }
     }
 </section>
 

@@ -1,7 +1,5 @@
 import { DatePipe } from '@angular/common';
 import {
-    afterNextRender,
-    afterRenderEffect,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -23,15 +21,10 @@ import {
 } from '@shared/lib/discord-gallery/discord-gallery.service';
 
 /**
- * Количество изображений, подгружаемых за один запрос.
- */
-const IMAGES_PER_PAGE = 50;
-
-/**
  * Компонент страницы галереи скриншотов.
  *
- * Загружает изображения из Discord-канала при каждом открытии страницы,
- * отображает их в адаптивной сетке и поддерживает бесконечную прокрутку.
+ * Загружает все изображения из Discord-канала при открытии страницы,
+ * отображает их в адаптивной сетке и открывает предпросмотр по клику.
  */
 @Component({
     selector: 'app-gallery',
@@ -39,7 +32,6 @@ const IMAGES_PER_PAGE = 50;
     imports: [
         DatePipe,
         TuiIcon,
-        TuiLoader,
         TuiPreview,
         PolymorpheusOutlet,
         TranslatePipe,
@@ -66,11 +58,6 @@ export class GalleryComponent {
     private readonly destroyRef = inject(DestroyRef);
 
     /**
-     * Ссылка на DOM-элемент компонента.
-     */
-    private readonly elementRef = inject(ElementRef);
-
-    /**
      * Список изображений галереи.
      */
     protected readonly images = signal<DiscordGalleryImage[]>([]);
@@ -81,35 +68,14 @@ export class GalleryComponent {
     protected readonly isLoading = signal(true);
 
     /**
-     * Признак дозагрузки следующей порции изображений.
-     */
-    protected readonly isLoadingMore = signal(false);
-
-    /**
      * Признак ошибки загрузки.
      */
     protected readonly hasError = signal(false);
 
     /**
-     * Признак того, что все изображения загружены.
-     */
-    protected readonly allLoaded = signal(false);
-
-    /**
      * Список индексов скелетонов для первичной загрузки.
      */
     protected readonly skeletons = signal(Array.from({ length: 16 }, (_, index) => index));
-
-    /**
-     * Текущий IntersectionObserver для бесконечной прокрутки.
-     */
-    private observer: IntersectionObserver | null = null;
-
-    /**
-     * Ссылка на sentinel для бесконечной прокрутки.
-     */
-    @ViewChild('sentinel')
-    private readonly sentinelRef?: ElementRef<HTMLElement>;
 
     /**
      * Ссылка на шаблон окна предпросмотра.
@@ -132,93 +98,36 @@ export class GalleryComponent {
      */
     public constructor() {
         this.loadImages();
-
-        afterRenderEffect(() => {
-            const loading = this.isLoading();
-            const loadedAll = this.allLoaded();
-            const sentinel = this.sentinelRef?.nativeElement;
-
-            if (loading || loadedAll || !sentinel || this.observer) {
-                return;
-            }
-
-            this.observer = new IntersectionObserver(
-                ([entry]) => {
-                    if (entry?.isIntersecting) {
-                        this.loadMoreImages();
-                    }
-                },
-                { rootMargin: '200px' }
-            );
-
-            this.observer.observe(sentinel);
-        });
     }
 
     /**
-     * Загружает первую порцию изображений из Discord-канала.
+     * Загружает все изображения из Discord-канала.
      */
     private loadImages(): void {
         this.isLoading.set(true);
         this.hasError.set(false);
-        this.allLoaded.set(false);
+
+        const cached = this.galleryService.getCachedImages();
+
+        if (cached) {
+            this.images.set(cached);
+            this.isLoading.set(false);
+        }
 
         this.galleryService
-            .getImages$(IMAGES_PER_PAGE)
+            .getAllImages$()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: (page) => {
-                    this.images.set(page.images);
+                next: (loadedImages) => {
+                    this.images.set(loadedImages);
+                    this.galleryService.saveCache(loadedImages);
                     this.isLoading.set(false);
-                    this.allLoaded.set(page.isLastPage);
                 },
                 error: () => {
                     this.hasError.set(true);
                     this.isLoading.set(false);
                 },
             });
-    }
-
-    /**
-     * Подгружает следующую порцию изображений при прокрутке.
-     */
-    private loadMoreImages(): void {
-        if (this.isLoadingMore() || this.allLoaded()) {
-            return;
-        }
-
-        this.isLoadingMore.set(true);
-
-        const lastImage = this.images()[this.images().length - 1];
-        const lastMessageId = lastImage?.id.split('-')[0];
-
-        this.galleryService
-            .getImages$(IMAGES_PER_PAGE, lastMessageId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: (page) => {
-                    if (page.images.length === 0) {
-                        this.allLoaded.set(true);
-                    } else {
-                        this.images.update((current) => current.concat(page.images));
-                        this.allLoaded.set(page.isLastPage);
-                    }
-
-                    this.isLoadingMore.set(false);
-                },
-                error: () => {
-                    this.isLoadingMore.set(false);
-                },
-            });
-    }
-
-    /**
-     * Инициализирует IntersectionObserver для бесконечной прокрутки.
-     *
-     * @deprecated Используется автоматически через {@link afterRenderEffect}.
-     */
-    private initIntersectionObserver(): void {
-        // Реализация больше не нужна, observer создаётся в afterRenderEffect.
     }
 
     /**

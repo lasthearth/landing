@@ -149,7 +149,7 @@ export class SettlementService {
      * @returns Observable с результатами поиска.
      */
     public searchUser$(name: string) {
-        const params = new HttpParams().set('query', name);
+        const params = new HttpParams().set('query', name.trim());
 
         return this.http.get<{
             users: any[];

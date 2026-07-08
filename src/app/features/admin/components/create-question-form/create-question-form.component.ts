@@ -77,7 +77,7 @@ export class CreateQuestionFormComponent {
                     const question = this.form.controls.question.value;
                     if (question !== null) {
                         this.api
-                            .create(question)
+                            .create(question.trim())
                             .pipe(
                                 this.requestStatusService.handleError(),
                                 this.requestStatusService.handleSuccess(this.i18n.translate('admin.questions.createdSuccess')),

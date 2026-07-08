@@ -112,31 +112,31 @@ export class PlayerVerificationFormComponent {
                     const data = {
                         user_name: this.userService.userName,
                         user_game_name: this.form.controls.gameName.value?.trim(),
-                        contacts: this.form.controls.contacts.value,
+                        contacts: this.form.controls.contacts.value?.trim(),
                         answers: [
                             {
                                 question: this.form.controls.question1.value,
-                                answer: this.form.controls.answer1.value,
+                                answer: this.form.controls.answer1.value?.trim(),
                             },
                             {
                                 question: this.form.controls.question2.value,
-                                answer: this.form.controls.answer2.value,
+                                answer: this.form.controls.answer2.value?.trim(),
                             },
                             {
                                 question: this.form.controls.question3.value,
-                                answer: this.form.controls.answer3.value,
+                                answer: this.form.controls.answer3.value?.trim(),
                             },
                             {
                                 question: this.form.controls.question4.value,
-                                answer: this.form.controls.answer4.value,
+                                answer: this.form.controls.answer4.value?.trim(),
                             },
                             {
                                 question: this.form.controls.question5.value,
-                                answer: this.form.controls.answer5.value,
+                                answer: this.form.controls.answer5.value?.trim(),
                             },
                             {
                                 question: this.form.controls.sourceQuestion.value,
-                                answer: this.form.controls.sourceAnswer.value,
+                                answer: this.form.controls.sourceAnswer.value?.trim(),
                             },
                         ],
                     } as IVerifyData;

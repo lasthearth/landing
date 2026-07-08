@@ -186,6 +186,7 @@ export class GameChatWidgetComponent implements OnInit {
 
         if (cached) {
             this.messages.set(sortMessagesByTime(cached));
+            this.scrollToBottomAfterRender();
         }
 
         this.chatService
@@ -235,6 +236,8 @@ export class GameChatWidgetComponent implements OnInit {
             }
 
             this.unreadCount.set(0);
+            this.isScrolledUp.set(false);
+            this.scrollToBottomAfterRender();
 
             return true;
         });
@@ -319,7 +322,8 @@ export class GameChatWidgetComponent implements OnInit {
 
         if (!this.isExpanded()) {
             this.unreadCount.update((count) => count + newMessages.length);
-        } else if (!this.isScrolledUp()) {
+        } else {
+            this.isScrolledUp.set(false);
             this.scrollToBottomAfterRender();
         }
 

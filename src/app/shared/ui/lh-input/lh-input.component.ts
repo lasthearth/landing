@@ -202,7 +202,8 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
             val = numericValue as unknown as T;
             input.value = numericValue;
         } else {
-            val = input.value as unknown as T;
+            val = input.value.trim() as unknown as T;
+            input.value = input.value.trim();
         }
 
         this.value = val;

@@ -213,8 +213,8 @@ export class CreateNewsComponent {
                         : '';
 
                     const request: CreateNewsRequest = {
-                        title: this.form.controls.title.value,
-                        content: this.form.controls.content.value,
+                        title: this.form.controls.title.value?.trim() ?? '',
+                        content: this.form.controls.content.value?.trim() ?? '',
                         preview: previewUrl,
                     };
 

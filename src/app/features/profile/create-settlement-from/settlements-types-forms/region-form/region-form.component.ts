@@ -185,8 +185,8 @@ export class RegionFormComponent {
                         map((attachments) => {
                             const request: ICreateSettlement = {
                                 type: 'CAMP',
-                                name: values.name ?? '',
-                                description: values.description ?? '',
+                                name: (values.name ?? '').trim(),
+                                description: (values.description ?? '').trim(),
                                 diplomacy: values.diplomacy ?? '',
                                 coordinates: {
                                     x: values.x ?? 0,

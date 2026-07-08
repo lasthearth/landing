@@ -4,7 +4,7 @@ import { ISettlement } from '@entities/settlement';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { UserService, IPlayer } from '@entities/user';
 import { TuiPulse } from '@taiga-ui/kit';
-import { tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { TranslatePipe } from '@core/i18n';
 
@@ -31,10 +31,6 @@ export class SettlementDetailedComponent implements OnInit {
     protected onlineCount: number = 0;
 
     public ngOnInit(): void {
-        if (!this.userService.userId) {
-            return;
-        }
-
         this.userService
             .getPlayer$(this.settlementData.leader.user_id)
             .pipe(
@@ -44,6 +40,10 @@ export class SettlementDetailedComponent implements OnInit {
                         this.onlineCount++;
                     }
                     this.cdr.detectChanges();
+                }),
+                catchError((error) => {
+                    console.error('[SettlementDetailed] Ошибка загрузки лидера:', error);
+                    return of(null);
                 })
             )
             .subscribe();
@@ -53,11 +53,17 @@ export class SettlementDetailedComponent implements OnInit {
                 .getPlayer$(m.user_id)
                 .pipe(
                     tap((u) => {
-                        this.users.push(u);
-                        if (u?.is_online) {
-                            this.onlineCount++;
+                        if (u) {
+                            this.users.push(u);
+                            if (u.is_online) {
+                                this.onlineCount++;
+                            }
                         }
                         this.cdr.detectChanges();
+                    }),
+                    catchError((error) => {
+                        console.error('[SettlementDetailed] Ошибка загрузки участника:', error);
+                        return of(null);
                     })
                 )
                 .subscribe();

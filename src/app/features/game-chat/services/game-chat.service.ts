@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { map, Observable, of, switchMap, timer } from 'rxjs';
+import { map, Observable, of, shareReplay, switchMap, timer } from 'rxjs';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import {
     DiscordApiService,
@@ -78,6 +78,13 @@ export class GameChatService {
     private readonly platformId = inject(PLATFORM_ID);
 
     /**
+     * Кэш активных polling-потоков по каналам.
+     * Позволяет избежать дублирования HTTP-запросов, когда несколько
+     * подписчиков слушают один и тот же канал.
+     */
+    private readonly activeStreams = new Map<string, Observable<GameChatMessage[]>>();
+
+    /**
      * Возвращает поток обновлений Discord-канала.
      *
      * При подписке сразу возвращает кэшированные сообщения (если они есть
@@ -92,12 +99,78 @@ export class GameChatService {
             return of([]);
         }
 
-        return timer(0, POLLING_INTERVAL).pipe(
+        const streamKey = `${channelId}:${limit}`;
+        const cachedStream = this.activeStreams.get(streamKey);
+
+        if (cachedStream) {
+            return cachedStream;
+        }
+
+        const stream = timer(0, POLLING_INTERVAL).pipe(
             switchMap(() => this.fetchMessages$(channelId, limit)),
             map((page) => {
                 this.saveCache(channelId, page.messages);
 
                 return page.messages;
+            }),
+            shareReplay({ bufferSize: 1, refCount: true })
+        );
+
+        this.activeStreams.set(streamKey, stream);
+
+        return stream;
+    }
+
+    /**
+     * Загружает все сообщения из Discord-канала.
+     *
+     * Рекурсивно дозагружает страницы до последней, чтобы на странице
+     * дипломатии отображались все заявления, а не только первая страница.
+     *
+     * @param channelId Идентификатор Discord-канала.
+     * @param limit Максимальное количество сообщений на страницу.
+     * @returns Observable со списком всех сообщений.
+     */
+    public fetchAllMessages$(channelId: string, limit: number = 100): Observable<GameChatMessage[]> {
+        if (!isPlatformBrowser(this.platformId) || !channelId) {
+            return of([]);
+        }
+
+        return this.fetchMessagesRecursive$(channelId, limit, undefined, []);
+    }
+
+    /**
+     * Рекурсивно загружает страницы сообщений.
+     *
+     * @param channelId Идентификатор Discord-канала.
+     * @param limit Максимальное количество сообщений на страницу.
+     * @param before Идентификатор сообщения, перед которым загружать.
+     * @param accumulated Накопленный список сообщений.
+     * @returns Observable со списком всех сообщений.
+     */
+    private fetchMessagesRecursive$(
+        channelId: string,
+        limit: number,
+        before: string | undefined,
+        accumulated: GameChatMessage[]
+    ): Observable<GameChatMessage[]> {
+        return this.discordApi.getMessages$(channelId, limit, before).pipe(
+            switchMap((page: DiscordMessagesPageDto) => {
+                const messages = page.messages.map((message: DiscordMessageDto) => this.mapMessage(message));
+                const allMessages = accumulated.concat(messages);
+
+                if (page.is_last_page || messages.length === 0) {
+                    return of(allMessages);
+                }
+
+                const lastMessage = page.messages[messages.length - 1];
+                const lastMessageId = lastMessage?.id;
+
+                if (!lastMessageId) {
+                    return of(allMessages);
+                }
+
+                return this.fetchMessagesRecursive$(channelId, limit, lastMessageId, allMessages);
             })
         );
     }
@@ -169,12 +242,39 @@ export class GameChatService {
         timestamp: string;
         type: string;
     }): GameChatMessage {
+        const generatedId = message.id || this.generateMessageId(message);
+
         return {
-            id: message.id,
+            id: generatedId,
             content: message.content,
             author: message.author_name,
             timestamp: message.timestamp,
             type: message.type as GameChatMessage['type'],
         };
+    }
+
+    /**
+     * Генерирует стабильный ID сообщения из его содержимого.
+     *
+     * Используется как fallback, если бэкенд не вернул id.
+     *
+     * @param message Сообщение без id.
+     * @returns Стабильный строковый id.
+     */
+    private generateMessageId(message: {
+        content: string;
+        author_name: string;
+        timestamp: string;
+    }): string {
+        const raw = `${message.timestamp}:${message.author_name}:${message.content}`;
+        let hash = 0;
+
+        for (let i = 0; i < raw.length; i++) {
+            const char = raw.charCodeAt(i);
+            hash = (hash << 5) - hash + char;
+            hash |= 0;
+        }
+
+        return `msg-${hash.toString(16)}`;
     }
 }

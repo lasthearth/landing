@@ -4,13 +4,13 @@ import {
     Component,
     computed,
     DestroyRef,
-    effect,
     inject,
     PLATFORM_ID,
     signal,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { switchMap, tap } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { GameChatMessage } from '@features/game-chat/model/game-chat-message';
 import { GameChatService } from '@features/game-chat/services/game-chat.service';
@@ -104,12 +104,18 @@ export class DiplomacyPageComponent {
         }
 
         this.chatService
-            .watchChat$(this.channelId, 50)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .fetchAllMessages$(this.channelId)
+            .pipe(
+                tap((allMessages) => {
+                    this.statements.set(sortMessagesByTimeDesc(allMessages));
+                    this.isLoading.set(false);
+                }),
+                switchMap(() => this.chatService.watchChat$(this.channelId, 50)),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe({
                 next: (freshMessages) => {
                     this.updateStatements(freshMessages);
-                    this.isLoading.set(false);
                 },
                 error: () => {
                     this.error.set('Не удалось загрузить заявления.');
@@ -130,7 +136,9 @@ export class DiplomacyPageComponent {
 
         this.statements.update((current) => {
             const merged = [...freshMessages, ...current];
-            const unique = Array.from(new Map(merged.map((m) => [m.id, m])).values());
+            const unique = Array.from(
+                new Map(merged.map((m) => [m.id || `${m.timestamp}:${m.author}`, m])).values()
+            );
 
             return sortMessagesByTimeDesc(unique).slice(0, MAX_STATEMENTS);
         });

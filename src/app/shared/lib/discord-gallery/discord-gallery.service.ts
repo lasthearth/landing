@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { catchError, map, Observable, of } from 'rxjs';
+import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { DiscordApiService, DiscordImageDto, DiscordImagesPageDto } from '@entities/discord';
@@ -14,6 +14,11 @@ const CACHE_TTL = 5 * 60 * 1000;
  * Ключ для хранения кэша галереи в localStorage.
  */
 const CACHE_KEY = 'lh_gallery_cache';
+
+/**
+ * Максимальное количество изображений, загружаемых за один запрос.
+ */
+const DISCORD_MAX_LIMIT = 100;
 
 /**
  * Запись кэша галереи.
@@ -31,16 +36,16 @@ interface GalleryCache {
 }
 
 /**
- * Результат страницы загрузки изображений.
+ * Результат загрузки изображений.
  */
 export interface DiscordGalleryPage {
     /**
-     * Список изображений на странице.
+     * Список изображений.
      */
     images: DiscordGalleryImage[];
 
     /**
-     * Признак того, что это последняя страница.
+     * Признак того, что все изображения загружены.
      */
     isLastPage: boolean;
 }
@@ -93,7 +98,8 @@ export interface DiscordGalleryImage {
 /**
  * Сервис получения скриншотов из Discord-канала через бэкенд.
  *
- * Запрашивает готовую страницу изображений у API.
+ * Загружает все изображения одним запросом до тех пор, пока бэкенд
+ * не сообщит, что страница последняя.
  */
 @Injectable({
     providedIn: 'root',
@@ -120,28 +126,80 @@ export class DiscordGalleryService {
     private readonly channelId = environment.discordScreenshotsChannelId;
 
     /**
-     * Возвращает страницу изображений из канала скриншотов.
-     *
-     * @param limit Максимальное количество изображений на странице.
-     * @param before Идентификатор сообщения, перед которым нужно загружать.
-     * @returns Observable со страницей изображений.
+     * Общий поток всех изображений галереи.
+     * Гарантирует, что повторные подписки не инициируют лишние запросы.
      */
-    public getImages$(limit: number, before?: string): Observable<DiscordGalleryPage> {
+    private allImages$: Observable<DiscordGalleryImage[]> | null = null;
+
+    /**
+     * Загружает все изображения из канала скриншотов.
+     *
+     * @returns Observable со списком всех изображений.
+     */
+    public getAllImages$(): Observable<DiscordGalleryImage[]> {
         if (!this.channelId || !isPlatformBrowser(this.platformId)) {
-            return of({ images: [], isLastPage: true });
+            return of([]);
         }
 
-        return this.discordApi.getImages$(this.channelId, limit, before).pipe(
+        if (!this.allImages$) {
+            this.allImages$ = this.fetchAllImages$(undefined, []).pipe(
+                shareReplay({ bufferSize: 1, refCount: false })
+            );
+        }
+
+        return this.allImages$;
+    }
+
+    /**
+     * Рекурсивно дозагружает изображения до последней страницы.
+     *
+     * @param before Идентификатор сообщения, перед которым нужно загружать.
+     * @param accumulated Накопленный список изображений.
+     * @returns Observable со списком всех изображений.
+     */
+    private fetchAllImages$(
+        before: string | undefined,
+        accumulated: DiscordGalleryImage[]
+    ): Observable<DiscordGalleryImage[]> {
+        return this.discordApi.getImages$(this.channelId, DISCORD_MAX_LIMIT, before).pipe(
             map((page: DiscordImagesPageDto) => ({
                 images: page.images.map((image: DiscordImageDto) => this.mapImage(image)),
                 isLastPage: page.is_last_page,
             })),
-            catchError((error) => {
-                console.error('[DiscordGalleryService] Ошибка загрузки изображений:', error);
+            switchMap((page: DiscordGalleryPage) => {
+                const allImages = accumulated.concat(page.images);
 
-                return of({ images: [], isLastPage: true });
+                if (page.isLastPage || page.images.length === 0) {
+                    return of(allImages);
+                }
+
+                const lastMessageId = this.extractLastMessageId(page.images);
+
+                if (!lastMessageId) {
+                    return of(allImages);
+                }
+
+                return this.fetchAllImages$(lastMessageId, allImages);
             })
         );
+    }
+
+    /**
+     * Извлекает id последнего сообщения из списка изображений.
+     *
+     * @param images Список изображений.
+     * @returns Id сообщения или `undefined`.
+     */
+    private extractLastMessageId(images: DiscordGalleryImage[]): string | undefined {
+        for (let i = images.length - 1; i >= 0; i--) {
+            const messageId = images[i].id.split('-')[0];
+
+            if (messageId) {
+                return messageId;
+            }
+        }
+
+        return undefined;
     }
 
     /**

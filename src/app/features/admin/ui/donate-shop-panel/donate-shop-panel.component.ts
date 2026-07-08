@@ -557,10 +557,10 @@ export class DonateShopPanelComponent {
             if (this.isEditMode() && this.editingItemId()) {
                 const request: IUpdateShopItemRequest = {
                     id: this.editingItemId()!,
-                    name: values.name,
-                    description: values.description,
+                    name: values.name.trim(),
+                    description: values.description.trim(),
                     price: values.price,
-                    code: values.code,
+                    code: values.code.trim(),
                     item_type: itemType,
                     is_available: values.is_available,
                     has_discount: values.has_discount,
@@ -584,10 +584,10 @@ export class DonateShopPanelComponent {
                     });
             } else {
                 const request: ICreateShopItemRequest = {
-                    name: values.name,
-                    description: values.description,
+                    name: values.name.trim(),
+                    description: values.description.trim(),
                     price: values.price,
-                    code: values.code,
+                    code: values.code.trim(),
                     item_type: itemType,
                     image_url: imageUrl ?? '',
                     has_discount: values.has_discount,
@@ -646,8 +646,8 @@ export class DonateShopPanelComponent {
             }
 
             result.push({
-                name: entry.name,
-                description: entry.description || undefined,
+                name: entry.name.trim(),
+                description: entry.description?.trim() || undefined,
                 quantity: entry.quantity,
                 image_url: imageUrl,
             });

@@ -243,9 +243,9 @@ export class SetTagsComponent {
 
         this.tagService
             .createTag$( {
-                name,
+                name: name.trim(),
                 color: hexToColor(color),
-                description: description || undefined,
+                description: description.trim() || undefined,
             })
             .pipe(
                 catchError((error) => {
