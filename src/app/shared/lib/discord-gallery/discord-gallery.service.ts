@@ -1,16 +1,9 @@
-import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
-import { SKIP_AUTH } from '@core/interceptors/auth.interceptor';
-import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
-
-/**
- * Количество сообщений, запрашиваемых за один раз из Discord.
- */
-const DISCORD_PAGE_SIZE = 100;
+import { DiscordApiService, DiscordImageDto, DiscordImagesPageDto } from '@entities/discord';
 
 /**
  * Время жизни кэша галереи в миллисекундах.
@@ -35,86 +28,6 @@ interface GalleryCache {
      * Сохранённые изображения.
      */
     images: DiscordGalleryImage[];
-}
-
-/**
- * Модель вложения сообщения Discord.
- */
-interface DiscordAttachment {
-    /**
-     * Идентификатор вложения.
-     */
-    id: string;
-
-    /**
-     * Имя файла.
-     */
-    filename: string;
-
-    /**
-     * MIME-тип содержимого.
-     */
-    content_type?: string;
-
-    /**
-     * Прямой URL к вложению.
-     */
-    url: string;
-
-    /**
-     * URL прокси-сервера Discord для вложения.
-     */
-    proxy_url: string;
-
-    /**
-     * Ширина изображения.
-     */
-    width?: number;
-
-    /**
-     * Высота изображения.
-     */
-    height?: number;
-}
-
-/**
- * Модель сообщения Discord.
- */
-interface DiscordMessage {
-    /**
-     * Идентификатор сообщения.
-     */
-    id: string;
-
-    /**
-     * Текст сообщения.
-     */
-    content: string;
-
-    /**
-     * Автор сообщения.
-     */
-    author: {
-        /**
-         * Имя пользователя Discord.
-         */
-        username: string;
-
-        /**
-         * Глобальное имя пользователя.
-         */
-        global_name?: string | null;
-    };
-
-    /**
-     * Дата отправки сообщения.
-     */
-    timestamp: string;
-
-    /**
-     * Список вложений.
-     */
-    attachments: DiscordAttachment[];
 }
 
 /**
@@ -178,20 +91,18 @@ export interface DiscordGalleryImage {
 }
 
 /**
- * Сервис получения скриншотов из Discord-канала.
+ * Сервис получения скриншотов из Discord-канала через бэкенд.
  *
- * Запрашивает сообщения через прокси `/discord`, который добавляет
- * авторизацию бота на стороне сервера. Возвращает только
- * изображения из вложений.
+ * Запрашивает готовую страницу изображений у API.
  */
 @Injectable({
     providedIn: 'root',
 })
 export class DiscordGalleryService {
     /**
-     * HTTP-клиент Angular.
+     * API-сервис Discord.
      */
-    private readonly http = inject(HttpClient);
+    private readonly discordApi = inject(DiscordApiService);
 
     /**
      * Сервис локального хранилища.
@@ -204,30 +115,12 @@ export class DiscordGalleryService {
     private readonly platformId = inject(PLATFORM_ID);
 
     /**
-     * Базовый URL к Discord API.
-     *
-     * В development и production запросы идут через локальный прокси `/discord`,
-     * который добавляет токен бота на стороне сервера.
-     */
-    private readonly baseUrl = '/discord';
-
-    /**
      * Идентификатор канала со скриншотами.
      */
     private readonly channelId = environment.discordScreenshotsChannelId;
 
     /**
-     * HTTP-контекст для обхода внутренних интерцепторов.
-     */
-    private readonly requestContext = new HttpContext()
-        .set(SKIP_AUTH, true)
-        .set(SKIP_ERROR_ALERT, true);
-
-    /**
      * Возвращает страницу изображений из канала скриншотов.
-     *
-     * Загружает сообщения из Discord до тех пор, пока не наберётся
-     * запрошенное количество изображений или не закончатся сообщения.
      *
      * @param limit Максимальное количество изображений на странице.
      * @param before Идентификатор сообщения, перед которым нужно загружать.
@@ -238,19 +131,13 @@ export class DiscordGalleryService {
             return of({ images: [], isLastPage: true });
         }
 
-        return this.fetchPage$(limit, before).pipe(
-            map((page) => ({
-                images: this.mapToImages(page.messages),
-                isLastPage: page.isLastPage,
+        return this.discordApi.getImages$(this.channelId, limit, before).pipe(
+            map((page: DiscordImagesPageDto) => ({
+                images: page.images.map((image: DiscordImageDto) => this.mapImage(image)),
+                isLastPage: page.is_last_page,
             })),
             catchError((error) => {
-                console.error('[DiscordGalleryService] Ошибка загрузки сообщений:', error);
-
-                if (error.status === 403) {
-                    console.error(
-                        '[DiscordGalleryService] 403 Forbidden: проверьте, что dev-сервер запущен с прокси (npm start) и токен бота корректен.'
-                    );
-                }
+                console.error('[DiscordGalleryService] Ошибка загрузки изображений:', error);
 
                 return of({ images: [], isLastPage: true });
             })
@@ -285,131 +172,30 @@ export class DiscordGalleryService {
     }
 
     /**
-     * Загружает сообщения из Discord, пока не наберётся нужное количество изображений.
+     * Преобразует DTO изображения Discord в элемент галереи.
      *
-     * @param limitNeeded Сколько изображений нужно.
-     * @param before Идентификатор сообщения, перед которым загружать.
-     * @param accumulatedMessages Накопленные сообщения.
-     * @returns Observable с сообщениями и признаком последней страницы.
+     * @param image DTO изображения.
+     * @returns Элемент галереи.
      */
-    private fetchPage$(
-        limitNeeded: number,
-        before?: string,
-        accumulatedMessages: DiscordMessage[] = []
-    ): Observable<{ messages: DiscordMessage[]; isLastPage: boolean }> {
-        let params = new HttpParams().set('limit', `${DISCORD_PAGE_SIZE}`);
-
-        if (before) {
-            params = params.set('before', before);
-        }
-
-        return this.http
-            .get<DiscordMessage[]>(`${this.baseUrl}/channels/${this.channelId}/messages`, {
-                params,
-                context: this.requestContext,
-            })
-            .pipe(
-                switchMap((messages) => {
-                    const combined = accumulatedMessages.concat(messages);
-                    const imageCount = this.countImages(combined);
-
-                    const noMoreMessages = messages.length === 0 || messages.length < DISCORD_PAGE_SIZE;
-                    const hasEnoughImages = imageCount >= limitNeeded;
-
-                    if (noMoreMessages || hasEnoughImages) {
-                        const trimmedMessages = this.trimToImageLimit(combined, limitNeeded);
-
-                        return of({
-                            messages: trimmedMessages,
-                            isLastPage:
-                                noMoreMessages ||
-                                this.countImages(trimmedMessages) < limitNeeded,
-                        });
-                    }
-
-                    const lastId = messages[messages.length - 1].id;
-
-                    return this.fetchPage$(limitNeeded, lastId, combined);
-                })
-            );
-    }
-
-    /**
-     * Считает количество изображений в списке сообщений.
-     *
-     * @param messages Список сообщений.
-     * @returns Количество изображений.
-     */
-    private countImages(messages: DiscordMessage[]): number {
-        return messages.reduce(
-            (count, message) =>
-                count +
-                message.attachments.filter((attachment) =>
-                    attachment.content_type?.startsWith('image/')
-                ).length,
-            0
-        );
-    }
-
-    /**
-     * Обрезает сообщения так, чтобы осталось не больше нужного количества изображений.
-     *
-     * @param messages Список сообщений.
-     * @param limit Максимальное количество изображений.
-     * @returns Обрезанный список сообщений.
-     */
-    private trimToImageLimit(messages: DiscordMessage[], limit: number): DiscordMessage[] {
-        let imageCount = 0;
-
-        const result: DiscordMessage[] = [];
-
-        for (const message of messages) {
-            const imageAttachments = message.attachments.filter((attachment) =>
-                attachment.content_type?.startsWith('image/')
-            );
-
-            if (imageCount + imageAttachments.length > limit) {
-                const needed = limit - imageCount;
-
-                if (needed <= 0) {
-                    break;
-                }
-
-                result.push({
-                    ...message,
-                    attachments: imageAttachments.slice(0, needed),
-                });
-                imageCount += needed;
-                break;
-            }
-
-            result.push(message);
-            imageCount += imageAttachments.length;
-        }
-
-        return result;
-    }
-
-    /**
-     * Преобразует сообщения Discord в элементы галереи.
-     *
-     * @param messages Список сообщений.
-     * @returns Список изображений.
-     */
-    private mapToImages(messages: DiscordMessage[]): DiscordGalleryImage[] {
-        return messages.flatMap((message) =>
-            message.attachments
-                .filter((attachment) => attachment.content_type?.startsWith('image/'))
-                .map((attachment) => ({
-                    id: `${message.id}-${attachment.id}`,
-                    url: attachment.url,
-                    proxyUrl: attachment.url,
-                    alt: message.content || attachment.filename,
-                    author: message.author.global_name || message.author.username,
-                    timestamp: message.timestamp,
-                    width: attachment.width,
-                    height: attachment.height,
-                }))
-        );
+    private mapImage(image: {
+        id: string;
+        url: string;
+        proxy_url: string;
+        alt: string;
+        author_name: string;
+        timestamp: string;
+        width?: number;
+        height?: number;
+    }): DiscordGalleryImage {
+        return {
+            id: image.id,
+            url: image.url,
+            proxyUrl: image.proxy_url,
+            alt: image.alt,
+            author: image.author_name,
+            timestamp: image.timestamp,
+            width: image.width,
+            height: image.height,
+        };
     }
 }

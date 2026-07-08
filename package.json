@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
-        "start": "node -r dotenv/config node_modules/@angular/cli/bin/ng serve --host 127.0.0.1 --proxy-config proxy.conf.js",
+        "start": "node -r dotenv/config node_modules/@angular/cli/bin/ng serve --host 127.0.0.1",
         "build": "ng build",
         "build-production": "ng build --prod",
         "watch": "ng build --watch --configuration development",

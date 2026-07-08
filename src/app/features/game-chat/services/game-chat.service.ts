@@ -1,21 +1,16 @@
-import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { map, Observable, of, switchMap, timer } from 'rxjs';
-import { SKIP_AUTH } from '@core/interceptors/auth.interceptor';
-import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import {
+    DiscordApiService,
+    DiscordMessageDto,
+    DiscordMessagesPageDto,
+} from '@entities/discord';
+import {
     GameChatMessage,
-    GameChatMessageType,
     GameChatPage,
 } from '@features/game-chat/model/game-chat-message';
-import { replaceDiscordEmojis } from '@features/game-chat/lib/discord-emoji';
-
-/**
- * Количество сообщений, запрашиваемых за один раз из Discord.
- */
-const DISCORD_PAGE_SIZE = 100;
 
 /**
  * Период обновления чата в миллисекундах.
@@ -48,85 +43,6 @@ interface ChatCache {
 }
 
 /**
- * Модель сообщения Discord.
- */
-interface DiscordMessage {
-    /**
-     * Идентификатор сообщения.
-     */
-    id: string;
-
-    /**
-     * Текст сообщения.
-     */
-    content: string;
-
-    /**
-     * Автор сообщения.
-     */
-    author: {
-        /**
-         * Имя пользователя Discord.
-         */
-        username: string;
-
-        /**
-         * Глобальное имя пользователя.
-         */
-        global_name?: string | null;
-    };
-
-    /**
-     * Дата отправки сообщения.
-     */
-    timestamp: string;
-}
-
-/**
- * Список Markdown-заголовков, которые могут прийти из Discord.
- */
-const MARKDOWN_HEADER_PATTERN = /^#{1,6}\s+/gm;
-
-/**
- * Очищает текст сообщения от Discord-разметки Markdown.
- *
- * Убирает заголовки, жирный/курсив (`*`, `_`), зачёркивание (`~~`), моноширинный текст
- * (``` ... ```, ` ... `), спойлеры (`||`), цитаты (`>`), ссылки `[text](url)`,
- * экранированные символы (`\`) и лишние пустые строки.
- *
- * @param content Исходный текст.
- * @returns Очищенный текст.
- */
-function cleanContent(content: string): string {
-    return (
-        content
-            // Заголовки # ... ######
-            .replace(MARKDOWN_HEADER_PATTERN, '')
-            // Блоки кода ``` ... ```
-            .replace(/```[\s\S]*?```/g, '')
-            // Строчный код ` ... `
-            .replace(/`[^`]*`/g, '')
-            // Спойлеры ||text||
-            .replace(/\|\|[\s\S]*?\|\|/g, '')
-            // Зачёркивание ~~text~~
-            .replace(/~~(.*?)~~/g, '$1')
-            // Жирный/курсив ***text***, **text**, *text*, ___text___, __text__, _text_
-            .replace(/\*{1,3}(.*?)\*{1,3}/g, '$1')
-            .replace(/_{1,3}(.*?)_{1,3}/g, '$1')
-            // Ссылки [text](url) и автоссылки <url>
-            .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-            .replace(/<(https?:\/\/[^>]+)>/g, '$1')
-            // Цитаты в начале строки
-            .replace(/^\s*>{1,3}\s?/gm, '')
-            // Экранирование Markdown: \*, \_, \~, \`, \|, \\, \[ и т.д.
-            .replace(/\\([*_~`|\[\]()<>#+\-=.!{}])/g, '$1')
-            // Сжимаем повторяющиеся пустые строки до одной
-            .replace(/\n{3,}/g, '\n\n')
-            .trim()
-    );
-}
-
-/**
  * Возвращает ключ кэша для указанного канала.
  *
  * @param channelId Идентификатор канала.
@@ -139,17 +55,17 @@ function getCacheKey(channelId: string): string {
 /**
  * Сервис игрового чата.
  *
- * Загружает сообщения из Discord-канала, в который бот ретранслирует
- * игровой чат сервера. Поддерживает кэширование и периодический polling.
+ * Загружает сообщения из Discord-канала через бэкенд.
+ * Поддерживает кэширование и периодический polling.
  */
 @Injectable({
     providedIn: 'root',
 })
 export class GameChatService {
     /**
-     * HTTP-клиент Angular.
+     * API-сервис Discord.
      */
-    private readonly http = inject(HttpClient);
+    private readonly discordApi = inject(DiscordApiService);
 
     /**
      * Сервис локального хранилища.
@@ -160,13 +76,6 @@ export class GameChatService {
      * Идентификатор платформы.
      */
     private readonly platformId = inject(PLATFORM_ID);
-
-    /**
-     * HTTP-контекст для обхода внутренних интерцепторов.
-     */
-    private readonly requestContext = new HttpContext()
-        .set(SKIP_AUTH, true)
-        .set(SKIP_ERROR_ALERT, true);
 
     /**
      * Возвращает поток обновлений Discord-канала.
@@ -194,7 +103,7 @@ export class GameChatService {
     }
 
     /**
-     * Загружает страницу сообщений из Discord-канала.
+     * Загружает страницу сообщений из Discord-канала через бэкенд.
      *
      * @param channelId Идентификатор Discord-канала.
      * @param limit Максимальное количество сообщений.
@@ -210,23 +119,12 @@ export class GameChatService {
             return of({ messages: [], isLastPage: true });
         }
 
-        let params = new HttpParams().set('limit', `${Math.min(limit, DISCORD_PAGE_SIZE)}`);
-
-        if (before) {
-            params = params.set('before', before);
-        }
-
-        return this.http
-            .get<DiscordMessage[]>(`${this.getBaseUrl()}/channels/${channelId}/messages`, {
-                params,
-                context: this.requestContext,
-            })
-            .pipe(
-                map((messages) => ({
-                    messages: messages.map((message) => this.mapMessage(message)),
-                    isLastPage: messages.length < DISCORD_PAGE_SIZE,
-                }))
-            );
+        return this.discordApi.getMessages$(channelId, limit, before).pipe(
+            map((page: DiscordMessagesPageDto) => ({
+                messages: page.messages.map((message: DiscordMessageDto) => this.mapMessage(message)),
+                isLastPage: page.is_last_page,
+            }))
+        );
     }
 
     /**
@@ -259,66 +157,24 @@ export class GameChatService {
     }
 
     /**
-     * Преобразует сообщение Discord в сообщение игрового чата.
+     * Преобразует DTO сообщения Discord в сообщение игрового чата.
      *
-     * @param message Сообщение Discord.
+     * @param message DTO сообщения Discord.
      * @returns Сообщение игрового чата.
      */
-    private mapMessage(message: DiscordMessage): GameChatMessage {
-        const { content, type } = this.parseContent(message.content);
-
+    private mapMessage(message: {
+        id: string;
+        content: string;
+        author_name: string;
+        timestamp: string;
+        type: string;
+    }): GameChatMessage {
         return {
             id: message.id,
-            content: replaceDiscordEmojis(cleanContent(content)),
-            author: message.author.global_name || message.author.username,
+            content: message.content,
+            author: message.author_name,
             timestamp: message.timestamp,
-            type,
+            type: message.type as GameChatMessage['type'],
         };
-    }
-
-    /**
-     * Определяет тип сообщения по его содержимому.
-     *
-     * @param content Исходный текст сообщения.
-     * @returns Обработанный текст и тип сообщения.
-     */
-    private parseContent(content: string): { content: string; type: GameChatMessageType } {
-        const trimmed = content.trim();
-
-        if (trimmed.startsWith('[')) {
-            const endIndex = trimmed.indexOf(']');
-
-            if (endIndex !== -1) {
-                const prefix = trimmed.slice(1, endIndex).toLowerCase();
-                const text = trimmed.slice(endIndex + 1).trim();
-
-                if (prefix.includes('global') || prefix.includes('глобал')) {
-                    return { content: text, type: 'global' };
-                }
-
-                if (prefix.includes('local') || prefix.includes('локал')) {
-                    return { content: text, type: 'local' };
-                }
-
-                if (prefix.includes('server') || prefix.includes('сервер')) {
-                    return { content: text, type: 'server' };
-                }
-
-                if (prefix.includes('event') || prefix.includes('событие')) {
-                    return { content: text, type: 'event' };
-                }
-
-                return { content: text, type: 'unknown' };
-            }
-        }
-
-        return { content: trimmed, type: 'global' };
-    }
-
-    /**
-     * Возвращает базовый URL для запросов к Discord API.
-     */
-    private getBaseUrl(): string {
-        return '/discord';
     }
 }

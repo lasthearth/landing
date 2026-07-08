@@ -75,20 +75,47 @@ src/app/
   - Воспроизведение, остановка, громкость, свёрнутый режим.
 
 ### 3.6 Навигация и layout
+
 - `src/app/layout/header/header.component.{ts,html}` — Дипломатия вынесена в отдельную кнопку рядом с Селениями; Галерея + Видео в меню «Медиа».
 - `src/app/layout/layout.component.{ts,html}` — убран плавающий FAB тикета.
 - `src/app/features/profile/profile-navigation/` — тикет добавлен в навигацию профиля.
 - `src/app/features/home/home.component.{ts,html,less}` — в быстрых действиях добавлена Галерея, убрано Видео.
 
-## 4. Текущая проблема: Discord Bot Token
+### 3.7 Discord-прокси на бэкенде (vsservice)
 
-- Токен бота сейчас используется на фронтенде через прокси:
-  - `proxy.conf.js` — для локальной разработки, читает `DISCORD_BOT_TOKEN` из `.env`.
-  - `nginx.conf` — для продакшена, подстановка через `envsubst` + `DISCORD_BOT_TOKEN` из `.env`.
-- **Рекомендуемое решение:** вынести логику работы с Discord API на бэкенд.
-  - Фронтенд должен ходить на бэкенд по `/api/discord/messages` (или аналогичному эндпоинту).
-  - Удалить `proxy.conf.js`, nginx-проксирование `/discord`, `.env` с токеном из фронтенд-репозитория.
-  - Обновить `GameChatService`, `DiscordGalleryService` и `DiplomacyPageComponent` для работы с бэкендом.
+- Файлы:
+  - `vsservice/proto/discord/v1/discord.proto`
+  - `vsservice/internal/discord/fx.go`
+  - `vsservice/internal/discord/internal/discord/client.go`
+  - `vsservice/internal/discord/internal/model/message.go`
+  - `vsservice/internal/discord/internal/service/service.go`, `mapper.go`, `client.go`
+  - `vsservice/internal/discord/internal/lib/clean.go`, `emoji.go`, `parse.go`
+- Функционал:
+  - `/v1/discord/channels/{channel_id}/messages` — сообщения канала.
+  - `/v1/discord/channels/{channel_id}/images` — изображения-вложения.
+  - `/v1/discord/news` — публикация новости в Discord (требуется scope `news:create`).
+
+### 3.8 Удалён фронтенд-прокси Discord
+
+- Удалены: `proxy.conf.js`, `.env.example`.
+- Обновлены: `Dockerfile`, `nginx.conf`, `compose.yaml` (убраны подстановка токена и nginx-прокси).
+- `environment.ts` / `environment.prod.ts`: убран `discordNewsWebhookUrl`.
+
+## 4. Текущая проблема: Discord Bot Token — РЕШЕНО
+
+- Логика Discord API вынесена на бэкенд `vsservice`:
+  - Домен `internal/discord` с сервисом `DiscordService`.
+  - REST-эндпоинты `/v1/discord/channels/{channel_id}/messages`, `/v1/discord/channels/{channel_id}/images`, `/v1/discord/news`.
+- Фронтенд теперь ходит на бэкенд:
+  - `entities/discord/api/discord.api.ts` — единый API-сервис.
+  - `GameChatService`, `DiscordGalleryService`, `DiscordWebhookService` обновлены.
+  - `DiplomacyPageComponent` использует `GameChatService` с `discordDiplomacyChannelId`.
+- Удалены:
+  - `proxy.conf.js`, `.env.example`.
+  - nginx-проксирование `/discord` и подстановка `DISCORD_BOT_TOKEN` в `Dockerfile`/`nginx.conf`.
+- Требования к развёртыванию:
+  - `DISCORD_BOT_TOKEN` и `DISCORD_NEWS_WEBHOOK_URL` добавлены в `vsservice/compose.yaml` и `compose.dev.yaml`.
+  - `DiscordBotToken` обязателен для запуска `vsservice`.
 
 ## 5. Конфигурация окружения
 
@@ -114,7 +141,6 @@ src/app/
 
 ## 8. TODO для следующей сессии
 
-- [ ] Вынести логику Discord API на бэкенд (требуется доступ к репозиторию бэкенда).
-- [ ] Удалить `proxy.conf.js`, `nginx.conf`-проксирование `/discord`, `.env.example` после миграции.
-- [ ] Обновить `GameChatService` и `DiscordGalleryService` для работы с бэкендом.
-- [ ] Обновить `Dockerfile` и `compose.yaml` после удаления Discord-прокси.
+- [ ] Сгенерировать proto-заглушки и goverter-мапперы в `vsservice` (`make proto && make generate`).
+- [ ] Проверить сборку и линтер `vsservice` (`make lint && make test && make build`).
+- [ ] Проверить интеграцию фронтенд ↔ бэкенд на dev-стенде.

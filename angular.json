@@ -84,8 +84,7 @@
                     "options": {
                         "host": "127.0.0.1",
                         "port": 4200,
-                        "open": false,
-                        "proxyConfig": "proxy.conf.js"
+                        "open": false
                     },
                     "configurations": {
                         "production": {

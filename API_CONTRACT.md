@@ -922,6 +922,82 @@ interface CreateUploadUrlsResponse {
 
 ---
 
+### 2.16 DiscordService — Прокси Discord-каналов и публикация новостей
+
+**Префикс:** `/v1/discord`
+**Frontend:** `entities/discord/api/discord.api.ts`
+
+| #   | Метод  | Путь                                          | Описание                                      | Auth            | Реализовано                          |
+| --- | ------ | --------------------------------------------- | --------------------------------------------- | --------------- | ------------------------------------ |
+| 1   | `GET`  | `/discord/channels/{channel_id}/messages`     | Сообщения канала (очищенные, с типом)         | —               | ✅ `DiscordApiService.getMessages$()` |
+| 2   | `GET`  | `/discord/channels/{channel_id}/images`       | Изображения-вложения из канала                | —               | ✅ `DiscordApiService.getImages$()`   |
+| 3   | `POST` | `/discord/news`                               | Отправить embed новости в Discord-канал       | ✅ + news:create | ✅ `DiscordApiService.sendNews$()`    |
+
+#### DTO
+
+**`Message`**
+
+```ts
+interface Message {
+    id: string;
+    content: string;
+    author_name: string;
+    timestamp: string; // ISO 8601
+    type: 'global' | 'local' | 'server' | 'event' | 'unknown';
+}
+```
+
+**`Image`**
+
+```ts
+interface Image {
+    id: string;
+    url: string;
+    proxy_url: string;
+    alt: string;
+    author_name: string;
+    timestamp: string; // ISO 8601
+    width?: number;
+    height?: number;
+}
+```
+
+**`ListMessagesResponse`** / **`ListImagesResponse`**
+
+```ts
+interface ListMessagesResponse {
+    messages: Message[];
+    is_last_page: boolean;
+}
+
+interface ListImagesResponse {
+    images: Image[];
+    is_last_page: boolean;
+}
+```
+
+**`SendNewsRequest`**
+
+```ts
+interface SendNewsRequest {
+    title: string;
+    content: string; // HTML; бэкенд очищает теги перед отправкой
+    preview_url?: string;
+    news_url: string;
+    author?: string;
+}
+```
+
+#### Особенности
+
+- `channel_id` передаётся в URL, `limit` и `before` — query-параметры.
+- `limit` по умолчанию 100, максимум 100.
+- `before` — ID сообщения, перед которым нужно загрузить страницу (пагинация от новых к старым).
+- Для `/discord/news` требуется Bearer-токен и scope `news:create`.
+- Бэкенд хранит `DISCORD_BOT_TOKEN` и `DISCORD_NEWS_WEBHOOK_URL`; фронтенд больше не обращается к Discord API напрямую.
+
+---
+
 ## 3. Сводная таблица реализации
 
 ### 3.1 По слоям FSD
@@ -939,6 +1015,7 @@ interface CreateUploadUrlsResponse {
 | SettlementService    | `entities/settlement`                             | `SettlementService`                              | **Частично** (~83%)  |
 | SettlementTagService | —                                                 | —                                                | **Не реализован**    |
 | MediaService         | `entities/media`                                  | `MediaService`                                   | **Готово**           |
+| DiscordService       | `entities/discord`                                | `DiscordApiService`                              | **Готово**           |
 | StatsService         | —                                                 | —                                                | **Не реализован**    |
 | TrademarketService   | —                                                 | —                                                | **Не реализован**    |
 | UserService          | `entities/user`                                   | `UserService`                                    | **Частично** (~60%)  |
