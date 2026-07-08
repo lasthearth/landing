@@ -1,0 +1,43 @@
+<div class="videos-page">
+    <header class="videos-page__header">
+        <h1 class="videos-page__title">Видео</h1>
+        <p class="videos-page__subtitle">Последние ролики с нашего YouTube-канала</p>
+    </header>
+
+    @if (error()) {
+        <div class="videos-page__error">{{ error() }}</div>
+    }
+
+    @if (videos().length === 0 && !error()) {
+        <div class="videos-page__empty">
+            <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
+            <span>Загрузка видео...</span>
+        </div>
+    }
+
+    @if (videos().length > 0) {
+        <div class="videos-page__grid">
+            @for (video of videos(); track video.id) {
+                <app-video-card [video]="video" (clickVideo)="openVideo(video.id)" />
+            }
+        </div>
+    }
+
+    @if (previewVideoId()) {
+        <div class="videos-page__overlay" (click)="closeVideo()">
+            <div class="videos-page__modal" (click)="$event.stopPropagation()">
+                <button type="button" class="videos-page__close" (click)="closeVideo()" aria-label="Закрыть">
+                    <tui-icon icon="@tui.x" class="size-6" />
+                </button>
+                <div class="videos-page__player">
+                    <iframe
+                        [src]="('https://www.youtube.com/embed/' + previewVideoId() + '?autoplay=1') | safeUrl"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media; fullscreen"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </div>
+        </div>
+    }
+</div>

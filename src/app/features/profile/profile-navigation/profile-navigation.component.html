@@ -50,4 +50,13 @@
             class="!absolute !top-0.5 !right-0.5 !scale-110"
         />
     </button>
+
+    <button
+        (click)="openTicketDialog()"
+        class="nav-button duration-300 transition-all text-white font-bold cursor-pointer bg-lh-primary-2 hover:bg-[#c35a17] rounded-lg p-2.5 size-11!"
+        [attr.aria-label]="'ticket.button' | translate"
+        title="{{ 'ticket.button' | translate }}"
+    >
+        <tui-icon icon="@tui.ticket" />
+    </button>
 </div>

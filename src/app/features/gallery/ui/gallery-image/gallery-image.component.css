@@ -1,0 +1,37 @@
+.gallery-image-wrapper {
+    background-color: #1a1816;
+}
+
+.gallery-image-placeholder {
+    z-index: 1;
+    background: linear-gradient(
+        110deg,
+        rgba(226, 215, 187, 0.06) 8%,
+        rgba(226, 215, 187, 0.14) 18%,
+        rgba(226, 215, 187, 0.06) 33%
+    );
+    background-size: 200% 100%;
+    animation: gallery-image-shimmer 1.5s linear infinite;
+}
+
+.gallery-image {
+    opacity: 0;
+    filter: blur(8px);
+    transform: scale(1.02);
+}
+
+.gallery-image--loaded {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+}
+
+@keyframes gallery-image-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

@@ -13,7 +13,6 @@ import { UserService } from '@entities/user';
 import { DonateService } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign-out-confirm.component';
-import { TicketFormComponent } from '@features/ticket/ticket-form/ticket-form.component';
 import { I18nService, Language, TranslatePipe } from '@core/i18n';
 import { formatServerTime } from './lib/format-server-time.function';
 
@@ -181,6 +180,15 @@ export class HeaderComponent {
                     case RouteKeys.settlements:
                         this.select = 'settlements';
                         break;
+                    case RouteKeys.gallery:
+                        this.select = 'gallery';
+                        break;
+                    case RouteKeys.videos:
+                        this.select = 'videos';
+                        break;
+                    case RouteKeys.diplomacy:
+                        this.select = 'diplomacy';
+                        break;
                 }
 
                 this.cdr.markForCheck();
@@ -211,22 +219,40 @@ export class HeaderComponent {
         this.dialogs.open(new PolymorpheusComponent(SignOutConfirmComponent), { size: 'auto' }).subscribe();
     }
 
-    /**
-     * Открывает диалоговое окно создания обращения (тикета).
-     */
-    protected openTicketDialog(): void {
-        this.dialogs.open(new PolymorpheusComponent(TicketFormComponent), { size: 'auto' }).subscribe();
+    protected toggleMediaMenu(): void {
+        this.showMediaMenu.update((value) => !value);
     }
 
     /**
-     * Признак открытого дропдауна выбора языка.
+     * Переключает видимость мобильного подменю раздела Медиа.
      */
+    protected toggleMobileMediaMenu(): void {
+        this.showMobileMediaMenu.update((value) => !value);
+    }
+
     protected readonly showLangMenu = signal(false);
 
     /**
      * Признак открытого мобильного меню навигации.
      */
     protected readonly showMobileMenu = signal(false);
+
+    /**
+     * Признак открытого мобильного подменю раздела Медиа.
+     */
+    protected readonly showMobileMediaMenu = signal(false);
+
+    /**
+     * Признак открытого дропдауна раздела Медиа.
+     */
+    protected readonly showMediaMenu = signal(false);
+
+    /**
+     * Возвращает признак, активен ли один из разделов Медиа.
+     */
+    protected get isMediaActive(): boolean {
+        return this.select === 'gallery' || this.select === 'videos';
+    }
 
     /**
      * Переключает язык интерфейса и закрывает дропдаун.

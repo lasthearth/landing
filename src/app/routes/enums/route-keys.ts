@@ -26,4 +26,10 @@ export enum RouteKeys {
     market = 12,
 
     referral = 13,
+
+    gallery = 14,
+
+    videos = 15,
+
+    diplomacy = 16,
 }

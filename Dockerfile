@@ -9,9 +9,9 @@ RUN ng build --configuration production
 
 FROM nginx:alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf.template
 
 COPY --from=build /app/dist/last-hearth-landing/browser /usr/share/nginx/html
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/bin/sh", "-c", "envsubst '\u003c\$DISCORD_BOT_TOKEN\u003e' \u003c /etc/nginx/nginx.conf.template \u003e /etc/nginx/nginx.conf \u0026\u0026 nginx -g 'daemon off;'"]

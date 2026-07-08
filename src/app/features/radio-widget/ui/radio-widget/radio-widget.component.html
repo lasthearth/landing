@@ -1,0 +1,93 @@
+<div class="radio-widget" [class.radio-widget--expanded]="isExpanded()">
+    <div class="radio-widget__panel">
+        <div class="radio-widget__header">
+            <div class="radio-widget__info">
+                <span class="radio-widget__title">Lo-fi Radio</span>
+                <span class="radio-widget__station" [title]="currentStation().name">{{ currentStation().name }}</span>
+            </div>
+            <button
+                type="button"
+                class="radio-widget__toggle"
+                (click)="toggleExpanded()"
+                [attr.aria-label]="'Свернуть радио'"
+            >
+                <tui-icon icon="@tui.chevron-down" class="size-4" />
+            </button>
+        </div>
+
+        @if (isExpanded()) {
+            <div class="radio-widget__body">
+                <div class="radio-widget__stations">
+                    @for (station of stations(); track station.id; let i = $index) {
+                        <button
+                            type="button"
+                            class="radio-widget__station-item"
+                            [class.radio-widget__station-item--active]="i === currentIndex()"
+                            (click)="selectStation(i)"
+                        >
+                            <img
+                                [src]="station.thumbnailUrl"
+                                [alt]="station.name"
+                                class="radio-widget__station-thumb"
+                                loading="lazy"
+                            />
+                            <span class="radio-widget__station-name">{{ station.name }}</span>
+                        </button>
+                    }
+                </div>
+
+                <div class="radio-widget__controls">
+                    <button
+                        type="button"
+                        class="radio-widget__play"
+                        (click)="togglePlay()"
+                        [attr.aria-label]="isPlaying() ? 'Пауза' : 'Играть'"
+                    >
+                        @if (isPlaying()) {
+                            <tui-icon icon="@tui.pause" class="size-5" />
+                        } @else {
+                            <tui-icon icon="@tui.play" class="size-5" />
+                        }
+                    </button>
+
+                    <div class="radio-widget__volume">
+                        <tui-icon [icon]="volumeIcon()" class="size-4" />
+                        <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.05"
+                            [value]="volume()"
+                            (input)="onVolumeChange($event)"
+                            class="radio-widget__slider"
+                            aria-label="Громкость"
+                        />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (iframeSrc()) {
+        <iframe
+            id="radio-player-iframe"
+            [src]="iframeSrc()"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            class="radio-widget__hidden-player"
+        ></iframe>
+    }
+
+    <button
+        type="button"
+        class="radio-widget__fab"
+        (click)="toggleExpanded()"
+        [attr.aria-label]="'Открыть радио'"
+    >
+        <tui-icon icon="@tui.music" class="size-6" />
+
+        @if (isPlaying()) {
+            <span class="radio-widget__playing-dot"></span>
+        }
+    </button>
+</div>

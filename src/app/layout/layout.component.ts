@@ -7,7 +7,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WelcomeComponent } from '@app/features/welcome/welcome.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { GameChatWidgetComponent } from '@features/game-chat/ui/game-chat-widget/game-chat-widget.component';
 import { BackgroundParticlesComponent } from './background-particles/background-particles.component';
+import { environment } from '@core/config/environments/environment';
 
 
 /**
@@ -16,7 +18,7 @@ import { BackgroundParticlesComponent } from './background-particles/background-
 @Component({
     standalone: true,
     selector: 'app-layout',
-    imports: [RouterOutlet, HeaderComponent, FooterComponent, AsyncPipe, WelcomeComponent, BackgroundParticlesComponent],
+    imports: [RouterOutlet, HeaderComponent, FooterComponent, AsyncPipe, WelcomeComponent, BackgroundParticlesComponent, GameChatWidgetComponent],
     templateUrl: './layout.component.html',
     styleUrl: './layout.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +33,11 @@ export class LayoutComponent {
      * {@link Observable} Признак завершения первоначальной проверки авторизации.
      */
     protected readonly isAuthChecked$: Observable<boolean> = inject(UserService).isAuthChecked$;
+
+    /**
+     * Окружение для доступа к идентификаторам Discord-каналов в шаблоне.
+     */
+    protected readonly environment = environment;
 
     /**
      * Объект детекции изменений.

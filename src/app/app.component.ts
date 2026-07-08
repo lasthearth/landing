@@ -61,15 +61,28 @@ export class AppComponent {
         this.router.events
             .pipe(
                 filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-                map(() => {
-                    const routeData = this.router.routerState.snapshot.root.firstChild?.firstChild?.data;
-
-                    return (routeData?.['seo'] as ISeoData) ?? this.defaultSeo;
-                }),
+                map(() => this.getActiveRouteSeoData()),
                 takeUntilDestroyed()
             )
             .subscribe((seoData) => {
                 this.seoService.setSeoTags(seoData);
             });
+    }
+
+    /**
+     * Возвращает SEO-данные активного роута.
+     *
+     * Проходит по дереву роутов до последнего активного child.
+     *
+     * @returns SEO-данные активного роута или fallback-данные.
+     */
+    private getActiveRouteSeoData(): ISeoData {
+        let route = this.router.routerState.snapshot.root;
+
+        while (route.firstChild) {
+            route = route.firstChild;
+        }
+
+        return (route.data?.['seo'] as ISeoData) ?? this.defaultSeo;
     }
 }

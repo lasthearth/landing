@@ -8,5 +8,13 @@ export default defineConfig({
     server: {
         port: 4200,
         allowedHosts: ['lasthearth.ru'],
+        proxy: {
+            '/radio': {
+                target: 'https://all.api.radio-browser.info',
+                changeOrigin: true,
+                secure: true,
+                rewrite: (path) => path.replace(/^\/radio/, ''),
+            },
+        },
     },
 });

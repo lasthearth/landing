@@ -7,3 +7,120 @@
 
     --tui-carousel-padding: 0;
 }
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 1rem;
+    background: #d8cdb3;
+    border: 1px solid rgba(51, 44, 38, 0.12);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.quick-actions__item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.75rem;
+    background: #e8dfc8;
+    border: 1px solid rgba(51, 44, 38, 0.08);
+    color: inherit;
+    text-decoration: none;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+    &:hover {
+        background: #efe6cf;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.quick-actions__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    background: rgba(195, 90, 23, 0.1);
+    color: #c35a17;
+    font-size: 1.125rem;
+    transition: background 0.2s ease;
+
+    .quick-actions__item:hover & {
+        background: rgba(195, 90, 23, 0.2);
+    }
+}
+
+.quick-actions__label {
+    font-weight: 700;
+    font-size: 0.8125rem;
+    color: #2a2722;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (min-width: 480px) {
+    .quick-actions {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .quick-actions__label {
+        font-size: 0.875rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .quick-actions {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .quick-actions__item {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 0.5rem;
+        min-height: 6.5rem;
+        padding: 0.875rem 0.5rem;
+    }
+
+    .quick-actions__icon {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.25rem;
+    }
+
+    .quick-actions__label {
+        font-size: 0.8125rem;
+        white-space: normal;
+    }
+}
+
+@media (min-width: 1024px) {
+    .quick-actions__item {
+        min-height: 7rem;
+        gap: 0.625rem;
+    }
+
+    .quick-actions__icon {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.5rem;
+    }
+
+    .quick-actions__label {
+        font-size: 0.875rem;
+    }
+}

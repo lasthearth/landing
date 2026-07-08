@@ -1,0 +1,15 @@
+<div class="gallery-image-wrapper relative w-full h-full overflow-hidden">
+    @if (!loaded()) {
+        <div class="gallery-image-placeholder absolute inset-0"></div>
+    }
+
+    <img
+        [src]="src()"
+        [alt]="alt()"
+        loading="lazy"
+        decoding="async"
+        (load)="onImageLoad()"
+        class="gallery-image block w-full h-full object-cover transition-all duration-700 ease-out"
+        [class.gallery-image--loaded]="loaded()"
+    />
+</div>

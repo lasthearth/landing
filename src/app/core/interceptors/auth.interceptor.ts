@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpContextToken, HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { environment } from '@core/config/environments/environment';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
@@ -12,6 +12,13 @@ import { catchError, switchMap, take, throwError } from 'rxjs';
 const OIDC_ISSUER = `${environment.logtoEndpoint}/oidc`;
 
 /**
+ * Токен контекста HTTP-запроса.
+ * Если установлен в `true`, `authInterceptor` не добавляет
+ * авторизационный Bearer-токен к запросу.
+ */
+export const SKIP_AUTH = new HttpContextToken<boolean>(() => false);
+
+/**
  * Проверяет, относится ли URL запроса к OIDC-ендпоинтам Logto.
  *
  * @param url URL исходящего HTTP-запроса.
@@ -19,6 +26,17 @@ const OIDC_ISSUER = `${environment.logtoEndpoint}/oidc`;
  */
 function isOidcEndpoint(url: string): boolean {
     return url.startsWith(OIDC_ISSUER);
+}
+
+/**
+ * Проверяет, относится ли URL запроса к сторонним публичным API,
+ * для которых не нужен авторизационный Bearer-токен проекта.
+ *
+ * @param url URL исходящего HTTP-запроса.
+ * @returns `true`, если запрос направлен к YouTube Data API.
+ */
+function isPublicApi(url: string): boolean {
+    return url.startsWith('https://www.googleapis.com/youtube/v3');
 }
 
 /**
@@ -57,7 +75,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             })
         );
 
-    if (isOidcEndpoint(req.url)) {
+    if (isOidcEndpoint(req.url) || isPublicApi(req.url) || req.context.get(SKIP_AUTH)) {
         return next(req);
     }
 

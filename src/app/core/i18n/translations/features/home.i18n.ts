@@ -42,6 +42,8 @@ export const HOME_I18N = {
             quickActions: {
                 start: 'Как начать',
                 settlements: 'Поселения',
+                gallery: 'Галерея',
+                videos: 'Видео',
                 discord: 'Discord',
                 donate: 'Поддержать',
             },
@@ -95,6 +97,8 @@ export const HOME_I18N = {
             quickActions: {
                 start: 'How to start',
                 settlements: 'Settlements',
+                gallery: 'Gallery',
+                videos: 'Videos',
                 discord: 'Discord',
                 donate: 'Support',
             },

@@ -13,6 +13,8 @@ import { SETTLEMENTS_I18N } from './features/settlements.i18n';
 import { ADMIN_I18N } from './features/admin.i18n';
 import { REFERRAL_I18N } from './features/referral.i18n';
 import { TICKET_I18N } from './features/ticket.i18n';
+import { GALLERY_I18N } from './features/gallery.i18n';
+import { DIPLOMACY_I18N } from './features/diplomacy.i18n';
 
 /**
  * Словари переводов для всех поддерживаемых языков.
@@ -34,11 +36,13 @@ export const ALL_TRANSLATIONS = {
         ...ADMIN_I18N.ru,
         ...REFERRAL_I18N.ru,
         ...TICKET_I18N.ru,
+        ...GALLERY_I18N.ru,
+        ...DIPLOMACY_I18N.ru,
     },
     en: {
         ...COMMON_I18N.en,
-        ...HEADER_I18N.en,
         ...FOOTER_I18N.en,
+        ...HEADER_I18N.en,
         ...MARKET_I18N.en,
         ...RULES_I18N.en,
         ...FAQ_I18N.en,
@@ -51,5 +55,7 @@ export const ALL_TRANSLATIONS = {
         ...ADMIN_I18N.en,
         ...REFERRAL_I18N.en,
         ...TICKET_I18N.en,
+        ...GALLERY_I18N.en,
+        ...DIPLOMACY_I18N.en,
     },
 };

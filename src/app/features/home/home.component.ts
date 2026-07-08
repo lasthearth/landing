@@ -152,6 +152,12 @@ export class HomeComponent {
             external: false,
         },
         {
+            icon: '@tui.image',
+            label: 'home.quickActions.gallery',
+            route: '/gallery',
+            external: false,
+        },
+        {
             icon: '@tui.message-circle',
             label: 'home.quickActions.discord',
             route: 'https://discord.com/invite/FZb7SGrSFy',

@@ -1,0 +1,12 @@
+<button type="button" class="video-card" (click)="clickVideo.emit()">
+    <div class="video-card__thumb">
+        <img [src]="video().thumbnailUrl" [alt]="video().title" loading="lazy" />
+        <span class="video-card__play">
+            <tui-icon icon="@tui.play" class="size-8" />
+        </span>
+    </div>
+    <div class="video-card__info">
+        <h3 class="video-card__title" [title]="video().title">{{ video().title }}</h3>
+        <span class="video-card__date">{{ formatDate(video().publishedAt) }}</span>
+    </div>
+</button>

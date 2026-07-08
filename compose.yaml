@@ -4,3 +4,5 @@ services:
         ports:
             - "4200:8080"
         restart: unless-stopped
+        environment:
+            - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}

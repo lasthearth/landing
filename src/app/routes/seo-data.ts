@@ -29,6 +29,9 @@ export const routeSeoData: {
     publicOffer: ISeoData;
     profile: ISeoData;
     notFound: ISeoData;
+    gallery: ISeoData;
+    videos: ISeoData;
+    diplomacy: ISeoData;
 } = {
     home: {
         title: 'Last Hearth — ролевой сервер Vintage Story',
@@ -148,5 +151,44 @@ export const routeSeoData: {
         locale: 'ru_RU',
         siteName,
         robots: 'noindex, follow',
+    },
+    gallery: {
+        title: 'Галерея скриншотов — Last Hearth',
+        description:
+            'Скриншоты игроков Last Hearth: постройки, события, битвы и живописные виды мира Vintage Story.',
+        keywords:
+            'скриншоты Last Hearth, галерея Vintage Story, постройки, события, скриншоты недели',
+        url: `${siteUrl}/gallery`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Галерея скриншотов Last Hearth',
+    },
+    videos: {
+        title: 'Видео — Last Hearth',
+        description:
+            'Видеоролики с YouTube-канала Last Hearth: летсплеи, события, обзоры мира Vintage Story.',
+        keywords:
+            'видео Last Hearth, YouTube Vintage Story, летсплей, игровые видео, Last Hearth канал',
+        url: `${siteUrl}/videos`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Видео Last Hearth',
+    },
+    diplomacy: {
+        title: 'Дипломатия — Last Hearth',
+        description:
+            'Заявления глав селений и дипломатические обращения сервера Last Hearth.',
+        keywords:
+            'дипломатия Last Hearth, заявления селений, политика Vintage Story, союзы, войны',
+        url: `${siteUrl}/diplomacy`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Дипломатия Last Hearth',
     },
 };

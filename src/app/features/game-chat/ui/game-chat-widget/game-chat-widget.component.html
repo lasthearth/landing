@@ -1,0 +1,59 @@
+<div class="game-chat-widget" [class.game-chat-widget--expanded]="isExpanded()">
+    <div class="game-chat-widget__panel">
+        <div class="game-chat-widget__header">
+            <span class="game-chat-widget__title">{{ title() }}</span>
+            <div class="game-chat-widget__actions">
+                <button
+                    type="button"
+                    class="game-chat-widget__action"
+                    (click)="toggleSound()"
+                    [attr.aria-label]="isSoundEnabled() ? 'Выключить звук' : 'Включить звук'"
+                >
+                    <tui-icon
+                        [icon]="isSoundEnabled() ? '@tui.volume-2' : '@tui.volume-off'"
+                        class="size-5"
+                    />
+                </button>
+                <button
+                    type="button"
+                    class="game-chat-widget__action"
+                    (click)="toggleExpanded()"
+                    [attr.aria-label]="'Свернуть ' + title()"
+                >
+                    <tui-icon icon="@tui.chevron-down" class="size-5" />
+                </button>
+            </div>
+        </div>
+
+        <div
+            #messagesContainer
+            class="game-chat-widget__messages"
+            (scroll)="onScroll($event)"
+        >
+            @if (isLoadingMore()) {
+                <div class="game-chat-widget__loader">Загрузка...</div>
+            }
+
+            @for (message of visibleMessages(); track message.id) {
+                <div class="game-chat-widget__message" [ngClass]="getTypeClass(message.type)">
+                    <span class="game-chat-widget__time">{{ message.timestamp | date: "HH:mm" }}</span>
+                    <span class="game-chat-widget__author">{{ message.author }}</span>
+                    <span class="game-chat-widget__text">{{ message.content }}</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <button
+        type="button"
+        class="game-chat-widget__fab"
+        (click)="toggleExpanded()"
+        [attr.aria-label]="'Открыть ' + title()"
+    >
+        <tui-icon [icon]="icon()" class="size-6" />
+
+        @if (unreadCount() > 0) {
+            <span class="game-chat-widget__badge">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
+        }
+    </button>
+</div>

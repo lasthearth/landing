@@ -82,9 +82,10 @@
                 "serve": {
                     "builder": "@angular/build:dev-server",
                     "options": {
-                        "host": "0.0.0.0",
+                        "host": "127.0.0.1",
                         "port": 4200,
-                        "open": false
+                        "open": false,
+                        "proxyConfig": "proxy.conf.js"
                     },
                     "configurations": {
                         "production": {

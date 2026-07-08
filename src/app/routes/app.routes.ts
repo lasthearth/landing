@@ -19,6 +19,9 @@ import { SettlementsComponent } from '../features/settlements/settlements.compon
 import { MarketComponent } from '../features/market/market.component';
 import { NotFoundComponent } from '../features/not-found/not-found.component';
 import { ReferralWidgetComponent } from '@features/referral';
+import { GalleryComponent } from '../features/gallery/gallery.component';
+import { VideosPageComponent } from '../features/videos/ui/videos-page/videos-page.component';
+import { DiplomacyPageComponent } from '../features/diplomacy/diplomacy-page.component';
 
 export const routes: Routes = [
     {
@@ -100,6 +103,21 @@ export const routes: Routes = [
                 path: 'settlements',
                 component: SettlementsComponent,
                 data: { route_keys: RouteKeys.settlements, seo: routeSeoData.settlements },
+            },
+            {
+                path: 'gallery',
+                component: GalleryComponent,
+                data: { route_keys: RouteKeys.gallery, seo: routeSeoData.gallery },
+            },
+            {
+                path: 'videos',
+                component: VideosPageComponent,
+                data: { route_keys: RouteKeys.videos, seo: routeSeoData.videos },
+            },
+            {
+                path: 'diplomacy',
+                component: DiplomacyPageComponent,
+                data: { route_keys: RouteKeys.diplomacy, seo: routeSeoData.diplomacy },
             },
             {
                 path: 'unauthorized',

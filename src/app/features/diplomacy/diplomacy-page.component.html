@@ -1,0 +1,61 @@
+<section class="diplomacy-page">
+    <header class="diplomacy-page__header">
+        <h1 class="text-4xl font-bold text-lh-primary-2">{{ "diplomacy.title" | translate }}</h1>
+        <p class="text-base md:text-lg text-lh-primary-2 max-w-3xl">{{ "diplomacy.subtitle" | translate }}</p>
+    </header>
+
+    @if (isLoading() && visibleStatements().length === 0) {
+        <div class="diplomacy-page__loading">
+            <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
+            <span>{{ "diplomacy.loading" | translate }}</span>
+        </div>
+    }
+
+    @if (error()) {
+        <div class="diplomacy-page__error">
+            <tui-icon icon="@tui.triangle-alert" class="size-8" />
+            <span>{{ error() }}</span>
+        </div>
+    }
+
+    @if (!isLoading() && visibleStatements().length === 0 && !error()) {
+        <div class="diplomacy-page__empty">
+            <tui-icon icon="@tui.scroll-text" class="size-16 opacity-60" />
+            <p class="diplomacy-page__empty-title">{{ "diplomacy.empty.title" | translate }}</p>
+            <p class="diplomacy-page__empty-description">{{ "diplomacy.empty.description" | translate }}</p>
+        </div>
+    }
+
+    @if (visibleStatements().length > 0) {
+        <div class="diplomacy-page__list">
+            @for (statement of visibleStatements(); track statement.id) {
+                <article class="diplomacy-card">
+                    <div class="diplomacy-card__seal">
+                        <tui-icon icon="@tui.scroll-text" class="size-6!" />
+                    </div>
+                    <div class="diplomacy-card__header">
+                        <div class="diplomacy-card__author">
+                            <span class="diplomacy-card__avatar">
+                                {{ statement.author.charAt(0).toUpperCase() }}
+                            </span>
+                            <div class="diplomacy-card__author-info">
+                                <span class="diplomacy-card__author-name">{{ statement.author }}</span>
+                                <span class="diplomacy-card__author-role">
+                                    {{ "diplomacy.card.leader" | translate }}
+                                </span>
+                            </div>
+                        </div>
+                        <time class="diplomacy-card__date" [attr.datetime]="statement.timestamp">
+                            <span class="diplomacy-card__date-day">{{ statement.timestamp | date: "dd.MM.yyyy" }}</span>
+                            <span class="diplomacy-card__date-time">{{ statement.timestamp | date: "HH:mm" }}</span>
+                        </time>
+                    </div>
+                    <div class="diplomacy-card__divider"></div>
+                    <div class="diplomacy-card__body">
+                        <p class="diplomacy-card__text" [innerHTML]="statement.content"></p>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>
