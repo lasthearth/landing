@@ -202,8 +202,9 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
             val = numericValue as unknown as T;
             input.value = numericValue;
         } else {
-            val = input.value.trim() as unknown as T;
-            input.value = input.value.trim();
+            // Значение не обрезается при вводе — хвостовые пробелы
+            // удаляются только при отправке формы (trimEnd на стороне формы).
+            val = input.value as unknown as T;
         }
 
         this.value = val;

@@ -26,7 +26,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
         LHInputComponent,
         TranslatePipe,
     ],
-    templateUrl: './create-question-from.component.html',
+    templateUrl: './create-question-form.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateQuestionFormComponent {
@@ -77,7 +77,7 @@ export class CreateQuestionFormComponent {
                     const question = this.form.controls.question.value;
                     if (question !== null) {
                         this.api
-                            .create(question.trim())
+                            .create(question.trimEnd())
                             .pipe(
                                 this.requestStatusService.handleError(),
                                 this.requestStatusService.handleSuccess(this.i18n.translate('admin.questions.createdSuccess')),

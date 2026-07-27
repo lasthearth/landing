@@ -214,7 +214,7 @@ export class AdminCoinPanelComponent {
 
         this.isLoading.set(true);
 
-        const rawComment = this.commentControl.value?.trim() ?? '';
+        const rawComment = this.commentControl.value?.trimEnd() ?? '';
         const adminName = this.userService.userName;
         const comment = rawComment ? `${rawComment} [${adminName}]` : `[${adminName}]`;
 

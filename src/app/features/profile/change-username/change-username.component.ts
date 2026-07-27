@@ -69,7 +69,7 @@ export class ChangeUsernameComponent {
                     const newUsername = this.form.controls.newUsername.value;
                     if (newUsername !== null) {
                         this.userService
-                            .changeUsername$(newUsername.trim())
+                            .changeUsername$(newUsername.trimEnd())
                             .pipe(
                                 this.requestStatusService.handleError(),
                                 this.requestStatusService.handleSuccess(this.i18n.translate('profile.changeUsername.success')),

@@ -149,11 +149,11 @@ export class EditSettlementFormComponent {
         };
 
         const request: IUpdateSettlementRequest = {
-            name: rawValue.name.trim(),
-            description: rawValue.description.trim(),
+            name: rawValue.name.trimEnd(),
+            description: rawValue.description.trimEnd(),
             attachments: rawValue.attachments.map((attachment) => ({
-                url: attachment.url.trim(),
-                description: attachment.description.trim(),
+                url: attachment.url.trimEnd(),
+                description: attachment.description.trimEnd(),
             })),
         };
 

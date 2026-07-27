@@ -14,7 +14,7 @@ export const HEADER_I18N = {
                 media: 'МЕДИА',
                 gallery: 'Галерея',
                 videos: 'Видео',
-                diplomacy: 'Дипломатия',
+                diplomacy: 'ДИПЛОМАТИЯ',
                 profile: 'Профиль',
                 signIn: 'Войти',
                 signOut: 'Выйти',
@@ -22,6 +22,9 @@ export const HEADER_I18N = {
             avatarAlt: 'Аватар пользователя',
             language: {
                 select: 'Выбор языка',
+            },
+            theme: {
+                toggle: 'Сменить тему',
             },
         },
     },
@@ -40,7 +43,7 @@ export const HEADER_I18N = {
                 media: 'MEDIA',
                 gallery: 'Gallery',
                 videos: 'Videos',
-                diplomacy: 'Diplomacy',
+                diplomacy: 'DIPLOMACY',
                 profile: 'Profile',
                 signIn: 'Sign in',
                 signOut: 'Sign out',
@@ -48,6 +51,9 @@ export const HEADER_I18N = {
             avatarAlt: 'User avatar',
             language: {
                 select: 'Language selection',
+            },
+            theme: {
+                toggle: 'Toggle theme',
             },
         },
     },

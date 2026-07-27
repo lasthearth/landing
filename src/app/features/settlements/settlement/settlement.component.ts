@@ -8,14 +8,14 @@ import { UserService } from '@entities/user';
 import { PlayerInviteComponent } from '../player-invite/player-invite.component';
 import { ISettlement, IUpdateAttachment } from '@entities/settlement';
 import { NotificationService } from '@core/services/notification.service';
-import { BehaviorSubject, catchError, defaultIfEmpty, filter, finalize, forkJoin, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, defaultIfEmpty, filter, finalize, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { CreateSettlementFormComponent } from '@app/features/profile/create-settlement-from/create-settlement-from.component';
 import { EditSettlementFormComponent } from '../edit-settlement-form/edit-settlement-form.component';
 import { SettlementsTypes } from '@entities/settlement';
 import { ISettlementInvitation } from '@entities/settlement';
-import { getSettlementTypeByKey } from '@entities/settlement/lib/get-settlement-type-by-key.function';
+import { getSettlementTypeByKey } from '@entities/settlement';
 import { TuiPulse } from '@taiga-ui/kit';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
@@ -157,26 +157,21 @@ export class SettlementComponent {
                               if (settlement === null) return undefined;
 
                               this.userService
-                                  .getPlayer$(settlement.leader.user_id)
+                                  .getPlayersBatch$([
+                                      settlement.leader.user_id,
+                                      ...settlement.members.map((m) => m.user_id),
+                                  ])
                                   .pipe(
-                                      tap((user) => {
-                                          this.leader = user;
+                                      tap((players) => {
+                                          this.leader =
+                                              players.find((p) => p.user_id === settlement.leader.user_id) ?? null;
+                                          this.users = players.filter(
+                                              (p) => p.user_id !== settlement.leader.user_id
+                                          );
                                           this.cdr.detectChanges();
                                       })
                                   )
                                   .subscribe();
-
-                              settlement.members.forEach((member) => {
-                                  this.userService
-                                      .getPlayer$(member.user_id)
-                                      .pipe(
-                                          tap((user) => {
-                                              this.users.push(user);
-                                              this.cdr.detectChanges();
-                                          })
-                                      )
-                                      .subscribe();
-                              });
 
                               return settlement;
                           }),
@@ -210,7 +205,7 @@ export class SettlementComponent {
                 return of([]);
             }
 
-            return forkJoin(invitations.map((inv) => this.userService.getPlayer$(inv.user_id)));
+            return this.userService.getPlayersBatch$(invitations.map((inv) => inv.user_id));
         })
     );
 

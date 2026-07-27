@@ -549,7 +549,7 @@ export class DonateShopPanelComponent {
             const values = this.form.getRawValue();
             const imageUrl = await this.resolveImageUrl();
             const entries = await this.resolveEntries();
-            const privileges = this.resolveprivileges();
+            const privileges = this.resolvePrivileges();
             const itemType = values.item_type === 'ITEM_TYPE_PRIVILEGE' ? 'ITEM_TYPE_KIT' : values.item_type;
             const shouldSendEntries =
                 values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE';
@@ -557,10 +557,10 @@ export class DonateShopPanelComponent {
             if (this.isEditMode() && this.editingItemId()) {
                 const request: IUpdateShopItemRequest = {
                     id: this.editingItemId()!,
-                    name: values.name.trim(),
-                    description: values.description.trim(),
+                    name: values.name.trimEnd(),
+                    description: values.description.trimEnd(),
                     price: values.price,
-                    code: values.code.trim(),
+                    code: values.code.trimEnd(),
                     item_type: itemType,
                     is_available: values.is_available,
                     has_discount: values.has_discount,
@@ -584,10 +584,10 @@ export class DonateShopPanelComponent {
                     });
             } else {
                 const request: ICreateShopItemRequest = {
-                    name: values.name.trim(),
-                    description: values.description.trim(),
+                    name: values.name.trimEnd(),
+                    description: values.description.trimEnd(),
                     price: values.price,
-                    code: values.code.trim(),
+                    code: values.code.trimEnd(),
                     item_type: itemType,
                     image_url: imageUrl ?? '',
                     has_discount: values.has_discount,
@@ -646,8 +646,8 @@ export class DonateShopPanelComponent {
             }
 
             result.push({
-                name: entry.name.trim(),
-                description: entry.description?.trim() || undefined,
+                name: entry.name.trimEnd(),
+                description: entry.description?.trimEnd() || undefined,
                 quantity: entry.quantity,
                 image_url: imageUrl,
             });
@@ -659,13 +659,13 @@ export class DonateShopPanelComponent {
     /**
      * Возвращает массив возможностей товара для отправки на сервер.
      */
-    private resolveprivileges(): IAbilityItem[] {
+    private resolvePrivileges(): IAbilityItem[] {
         return this.privilegesArray
             .getRawValue()
-            .filter((ability) => ability.text.trim())
+            .filter((ability) => ability.text.trimEnd())
             .map((ability) => ({
-                icon: ability.icon.trim() || '@tui.circle-help',
-                text: ability.text.trim(),
+                icon: ability.icon.trimEnd() || '@tui.circle-help',
+                text: ability.text.trimEnd(),
             }));
     }
 

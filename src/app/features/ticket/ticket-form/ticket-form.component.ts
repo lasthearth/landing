@@ -114,9 +114,9 @@ export class TicketFormComponent {
 
                     this.ticketWebhook
                         .sendTicket(
-                            discordTag.trim(),
-                            gameNickname.trim(),
-                            reason.trim(),
+                            discordTag.trimEnd(),
+                            gameNickname.trimEnd(),
+                            reason.trimEnd(),
                             dateDisplay,
                             siteUserId,
                             siteUsername

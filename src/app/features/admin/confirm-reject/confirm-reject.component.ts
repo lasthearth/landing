@@ -94,7 +94,7 @@ export class ConfirmRejectComponent {
         this.onSubmit.pipe(
             filter(() => this.form.valid),
             tap(() => {
-                const reason = (this.form.controls.reason.value ?? '').trim();
+                const reason = (this.form.controls.reason.value ?? '').trimEnd();
 
                 switch (this.context.data.type) {
                     case 'settlement': {
