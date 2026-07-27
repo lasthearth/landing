@@ -24,6 +24,16 @@
 }
 
 /**
+ * Заголовок секции правил.
+ *
+ * Остаётся на Advent Pro: содержимое свитков набрано Alegreya
+ * (наследуется от rules.component.less), заголовки контрастируют с ним.
+ */
+.rule-section-title {
+    font-family: 'Advent Pro', serif;
+}
+
+/**
  * Ссылка на другой элемент правила.
  *
  * Используется для навигации между терминами и пунктами правил.
@@ -57,30 +67,37 @@
 }
 
 /**
- * Анимация пульсации для подсветки элементов.
+ * Плавная подсветка элемента при переходе по якорю.
+ *
+ * Тёплое свечение очага: быстро вспыхивает, держится
+ * на пике, затем медленно гаснет — глаз успевает зацепиться.
  */
-@keyframes gentle-pulse {
+@keyframes anchor-highlight {
     0% {
-        box-shadow: 0 0 0 rgba(59, 130, 246, 0);
-        border-color: rgba(59, 130, 246, 0);
+        background-color: rgba(195, 90, 23, 0);
+        box-shadow: 0 0 0 0 rgba(195, 90, 23, 0);
     }
-    20% {
-        box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-        border-color: rgba(59, 130, 246, 0.6);
+
+    12% {
+        background-color: rgba(195, 90, 23, 0.25);
+        box-shadow: 0 0 0 4px rgba(195, 90, 23, 0.5);
     }
+
+    55% {
+        background-color: rgba(195, 90, 23, 0.2);
+        box-shadow: 0 0 0 4px rgba(195, 90, 23, 0.45);
+    }
+
     100% {
-        box-shadow: 0 0 0 rgba(59, 130, 246, 0);
-        border-color: rgba(59, 130, 246, 0);
+        background-color: rgba(195, 90, 23, 0);
+        box-shadow: 0 0 0 0 rgba(195, 90, 23, 0);
     }
 }
 
 /**
- * Класс для применения пульсации.
+ * Класс для применения подсветки якоря.
  */
 .shake-animation {
-    animation: gentle-pulse 1s ease-out;
     border-radius: 8px;
-    padding: 4px 8px;
-    border: 2px solid transparent;
-    transition: border-color 0.3s ease;
+    animation: anchor-highlight 3s ease-out;
 }

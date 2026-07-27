@@ -212,7 +212,7 @@ export class ScrollService {
 
                 setTimeout(() => {
                     element.classList.remove('shake-animation');
-                }, 500);
+                }, 3100);
             });
         });
     }

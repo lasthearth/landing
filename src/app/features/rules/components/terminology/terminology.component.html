@@ -10,7 +10,13 @@
     <app-rule-paragraph anchor="Neutral zone">
         <span [innerHTML]="'rules.content.terminology.neutralZone.before' | translate"></span>
         <app-rule-link target="Empire">{{ 'rules.content.terms.empireAdjective' | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.terminology.neutralZone.after' | translate"></span>
+        <span [innerHTML]="'rules.content.terminology.neutralZone.after1' | translate"></span>
+        <app-rule-link target="Homestead">{{ 'rules.content.terms.homesteadGenitivePluralLower' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.neutralZone.after2' | translate"></span>
+        <app-rule-link target="Passport">{{ 'rules.content.terms.passportGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.neutralZone.after3' | translate"></span>
+        <app-rule-link target="GovernorEstate">{{ 'rules.content.terms.governorEstateGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.neutralZone.after4' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Key point">
@@ -71,7 +77,7 @@
         <app-rule-paragraph [level]="1">
             <b>•</b>
             {{ 'rules.content.terminology.imperialFavor.item2Before' | translate }}
-            <app-rule-link target="Great buildings">{{ 'rules.content.terms.greatBuildingGenitivePlural' | translate }}</app-rule-link>
+            <app-rule-link target="Great building">{{ 'rules.content.terms.greatBuildingGenitivePlural' | translate }}</app-rule-link>
             <span>;</span>
         </app-rule-paragraph>
         <app-rule-paragraph [level]="1">
@@ -88,32 +94,46 @@
         <span [innerHTML]="'rules.content.terminology.monument' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph>
+    <app-rule-paragraph anchor="ServerCurrency">
         <span [innerHTML]="'rules.content.terminology.serverCurrency' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph anchor="Patent">
+    <app-rule-paragraph anchor="ImperialServant">
         <span [innerHTML]="'rules.content.terminology.imperialServant' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Patent">
-        <span [innerHTML]="'rules.content.terminology.patentFoundation' | translate"></span>
+        <span [innerHTML]="'rules.content.terminology.patentFoundation.before' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainInstrumental' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.patentFoundation.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Patent">
-        <span [innerHTML]="'rules.content.terminology.patentImprovement' | translate"></span>
+        <span [innerHTML]="'rules.content.terminology.patentImprovement.before' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainInstrumental' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.patentImprovement.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Volnost">
-        <span [innerHTML]="'rules.content.terminology.charterOfLiberties' | translate"></span>
+        <span [innerHTML]="'rules.content.terminology.charterOfLiberties.before' | translate"></span>
+        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainInstrumental' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.charterOfLiberties.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="GovernorEstate">
-        <span [innerHTML]="'rules.content.terminology.governorEstate' | translate"></span>
+        <span [innerHTML]="'rules.content.terminology.governorEstate.before' | translate"></span>
+        <app-rule-link target="Empire">{{ 'rules.content.terms.empireGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.governorEstate.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Passport">
-        <span [innerHTML]="'rules.content.terminology.citizenPassport' | translate"></span>
+        <span [innerHTML]="'rules.content.terminology.citizenPassport.before' | translate"></span>
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.libertiesGenitiveCapital' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.citizenPassport.mid1' | translate"></span>
+        <app-rule-link target="GovernorEstate">{{ 'rules.content.terms.governorEstateGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.citizenPassport.mid2' | translate"></span>
+        <app-rule-link target="Neutral zone">{{ 'rules.content.terms.neutralZonePrepositionalLower' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.citizenPassport.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="Raid">
@@ -131,6 +151,8 @@
     </app-rule-paragraph>
 
     <app-rule-paragraph anchor="ImperialLegalForce">
-        <span [innerHTML]="'rules.content.terminology.imperialLegalForce' | translate"></span>
+        <span [innerHTML]="'rules.content.terminology.imperialLegalForce.before' | translate"></span>
+        <app-rule-link target="ExclaveCenter">{{ 'rules.content.terms.exclaveCenterInstrumental' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.terminology.imperialLegalForce.after' | translate"></span>
     </app-rule-paragraph>
 </div>

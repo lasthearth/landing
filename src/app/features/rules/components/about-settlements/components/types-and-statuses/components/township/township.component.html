@@ -2,7 +2,9 @@
     <app-rule-paragraph anchor="Township" [level]="3">
         <span [innerHTML]="'rules.content.settlements.types.township.intro' | translate"></span>
         <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.township.introAfter' | translate"></span>
+        <span [innerHTML]="'rules.content.settlements.types.township.introAfter.before' | translate"></span>
+        <app-rule-link target="Village">{{ 'rules.content.terms.villageStage' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.township.introAfter.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
@@ -21,13 +23,17 @@
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.township.citizensRequirement' | translate }}
+        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.township.citizensRequirement.before' | translate"></span>
+        <app-rule-link target="Passport">{{ 'rules.content.terms.passportGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.township.citizensRequirement.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
         <app-rule-link target="Monument" class="ml-2">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.township.monumentAfter' | translate"></span>
+        <span [innerHTML]="'rules.content.settlements.types.township.monumentAfter.before' | translate"></span>
+        <app-rule-link target="Patent">{{ 'rules.content.terms.patentImprovementDative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.township.monumentAfter.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">

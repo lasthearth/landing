@@ -1,9 +1,15 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_1' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_1.before' | translate"></span>
+        <app-rule-link target="Political course">{{ 'rules.content.terms.politicalCourse' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_1.mid1' | translate"></span>
+        <app-rule-link target="Key point">{{ 'rules.content.terms.keyPointAccusativePlural' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_1.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_2' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_2.before' | translate"></span>
+        <app-rule-link target="Political course">{{ 'rules.content.terms.politicalCourse' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_2.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="2">
         <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_3' | translate"></span>
@@ -22,22 +28,68 @@
         <b>{{ 'rules.content.actions.diplomacy.common.advantages' | translate }}</b>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv1' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv1.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv1.mid1' | translate"></span>
+        <app-rule-link target="ServerCurrency">{{ 'rules.content.terms.serverCurrencyInstrumental' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv1.after' | translate"></span>
     </app-rule-paragraph>
-    <app-rule-paragraph [level]="5">{{ 'rules.content.actions.diplomacy.peaceful.ransomHomestead' | translate }}</app-rule-paragraph>
-    <app-rule-paragraph [level]="5">{{ 'rules.content.actions.diplomacy.peaceful.ransomCamp' | translate }}</app-rule-paragraph>
-    <app-rule-paragraph [level]="5">{{ 'rules.content.actions.diplomacy.peaceful.ransomVillage' | translate }}</app-rule-paragraph>
-    <app-rule-paragraph [level]="5">{{ 'rules.content.actions.diplomacy.peaceful.ransomTownship' | translate }}</app-rule-paragraph>
-    <app-rule-paragraph [level]="5">{{ 'rules.content.actions.diplomacy.peaceful.ransomCity' | translate }}</app-rule-paragraph>
-    <app-rule-paragraph [level]="5">{{ 'rules.content.actions.diplomacy.peaceful.ransomRegion' | translate }}</app-rule-paragraph>
-    <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv2' | translate"></span>
+    <app-rule-paragraph [level]="5">
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomHomestead.before' | translate"></span>
+        <app-rule-link target="Homestead">{{ 'rules.content.terms.homesteadDativePlural' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomHomestead.mid1' | translate"></span>
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.ransomLiberties' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomHomestead.after' | translate"></span>
+    </app-rule-paragraph>
+    <app-rule-paragraph [level]="5">
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomCamp.before' | translate"></span>
+        <app-rule-link target="Camp">{{ 'rules.content.terms.campDativePlural' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomCamp.mid1' | translate"></span>
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.ransomLiberties' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomCamp.after' | translate"></span>
+    </app-rule-paragraph>
+    <app-rule-paragraph [level]="5">
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomVillage.before' | translate"></span>
+        <app-rule-link target="Village">{{ 'rules.content.terms.villageDative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomVillage.mid1' | translate"></span>
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.ransomLiberties' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomVillage.after' | translate"></span>
+    </app-rule-paragraph>
+    <app-rule-paragraph [level]="5">
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomTownship.before' | translate"></span>
+        <app-rule-link target="Township">{{ 'rules.content.terms.townshipDative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomTownship.mid1' | translate"></span>
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.ransomLiberties' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomTownship.after' | translate"></span>
+    </app-rule-paragraph>
+    <app-rule-paragraph [level]="5">
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomCity.before' | translate"></span>
+        <app-rule-link target="City">{{ 'rules.content.terms.cityDative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomCity.mid1' | translate"></span>
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.ransomLiberties' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomCity.after' | translate"></span>
+    </app-rule-paragraph>
+    <app-rule-paragraph [level]="5">
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomRegion.before' | translate"></span>
+        <app-rule-link target="Region">{{ 'rules.content.terms.regionGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomRegion.mid1' | translate"></span>
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.ransomLiberties' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.ransomRegion.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv3' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv2.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv2.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv4' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv3.before' | translate"></span>
+        <app-rule-link target="Monument">{{ 'rules.content.terms.monumentGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv3.after' | translate"></span>
+    </app-rule-paragraph>
+    <app-rule-paragraph [level]="4">
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv4.before' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.terms.theftGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.adv4.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
         <b>{{ 'rules.content.actions.diplomacy.common.restrictions' | translate }}</b>
@@ -46,10 +98,16 @@
         <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.res1' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.res2' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.res2.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.initiateRaid' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.res2.mid1' | translate"></span>
+        <app-rule-link target="War">{{ 'rules.content.terms.initiateWar' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.res2.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.res3' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.res3.before' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.terms.theftGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.peaceful.res3.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
@@ -59,44 +117,68 @@
         <b>{{ 'rules.content.actions.diplomacy.common.advantages' | translate }}</b>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.adv1' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.adv1.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.adv1.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.adv2' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.adv2.before' | translate"></span>
+        <app-rule-link target="Monument">{{ 'rules.content.terms.monumentGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.adv2.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
         <b>{{ 'rules.content.actions.diplomacy.common.restrictions' | translate }}</b>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.res1' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.res1.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.initiateRaid' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.res1.mid1' | translate"></span>
+        <app-rule-link target="War">{{ 'rules.content.terms.initiateWar' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.res1.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.res2' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.res2.before' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.terms.theftAccusative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.neutral.res2.after' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="3">
+    <app-rule-paragraph anchor="P3_4_5_3" [level]="3">
         <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.intro' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
         <b>{{ 'rules.content.actions.diplomacy.common.advantages' | translate }}</b>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv1' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv1.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv1.mid1' | translate"></span>
+        <app-rule-link target="War">{{ 'rules.content.terms.warGenitivePlural' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv1.mid2' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.terms.theftGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv1.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv2' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv2.before' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.terms.theftAccusative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv2.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv3' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv3.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.adv3.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
         <b>{{ 'rules.content.actions.diplomacy.common.restrictions' | translate }}</b>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res1' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res1.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res1.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res2' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res2.before' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.terms.theftPrepositional' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res2.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
         <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res3' | translate"></span>
@@ -105,7 +187,11 @@
         <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res4' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="4">
-        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res5' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res5.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res5.mid1' | translate"></span>
+        <app-rule-link target="Monument">{{ 'rules.content.terms.monumentLower' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.aggressive.res5.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
@@ -115,7 +201,9 @@
         <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_3_statements' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_4_statements' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_4_statements.before' | translate"></span>
+        <app-rule-link target="ImperialServant">{{ 'rules.content.terms.imperialServantGenitivePlural' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_4_statements.after' | translate"></span>
     </app-rule-paragraph>
     <app-rule-paragraph [level]="2">
         <span [innerHTML]="'rules.content.actions.diplomacy.p3_4_5_statements' | translate"></span>

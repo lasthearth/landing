@@ -23,7 +23,11 @@
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.suzerain.req3' | translate }}
+        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.suzerain.req3.before' | translate"></span>
+        <app-rule-link target="Volnost">{{ 'rules.content.terms.libertiesFull' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.suzerain.req3.mid1' | translate"></span>
+        <app-rule-link target="Patent">{{ 'rules.content.terms.patentsPlural' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.suzerain.req3.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
@@ -33,7 +37,9 @@
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.suzerain.req5' | translate }}
+        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.suzerain.req5.before' | translate"></span>
+        <app-rule-link target="ServerCurrency">{{ 'rules.content.terms.serverCurrencyGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.suzerain.req5.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
@@ -43,7 +49,9 @@
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.suzerain.req7' | translate }}
+        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.suzerain.req7.before' | translate"></span>
+        <app-rule-link target="BI">{{ 'rules.content.terms.bi' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.suzerain.req7.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
@@ -57,12 +65,16 @@
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.suzerain.adv2' | translate }}
+        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.suzerain.adv2.before' | translate"></span>
+        <app-rule-link target="City">{{ 'rules.content.terms.cityStage' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.suzerain.adv2.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.suzerain.adv3' | translate }}
+        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.suzerain.adv3.before' | translate"></span>
+        <app-rule-link target="Key point">{{ 'rules.content.terms.keyPointInstrumentalPlural' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.suzerain.adv3.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">

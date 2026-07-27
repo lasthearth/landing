@@ -2,7 +2,9 @@
     <app-rule-paragraph anchor="Region" [level]="3">
         <span [innerHTML]="'rules.content.settlements.types.region.intro' | translate"></span>
         <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.region.introAfter' | translate"></span>
+        <span [innerHTML]="'rules.content.settlements.types.region.introAfter.before' | translate"></span>
+        <app-rule-link target="City">{{ 'rules.content.terms.cityStage' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.region.introAfter.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
@@ -21,13 +23,17 @@
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.citizensRequirement' | translate }}
+        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.region.citizensRequirement.before' | translate"></span>
+        <app-rule-link target="Passport">{{ 'rules.content.terms.passportGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.region.citizensRequirement.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
         <app-rule-link target="Monument" class="ml-2">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.region.monumentAfter' | translate"></span>
+        <span [innerHTML]="'rules.content.settlements.types.region.monumentAfter.before' | translate"></span>
+        <app-rule-link target="Patent">{{ 'rules.content.terms.patentImprovementDative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.region.monumentAfter.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
@@ -115,7 +121,8 @@
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.greatBuilding' | translate }}
+        <app-rule-link target="Great building" class="ml-2">{{ 'rules.content.terms.greatBuildingNominative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.region.greatBuildingAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
@@ -141,7 +148,9 @@
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.war' | translate }}
+        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.region.war.before' | translate"></span>
+        <app-rule-link target="War">{{ 'rules.content.terms.declareWar' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.types.region.war.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">

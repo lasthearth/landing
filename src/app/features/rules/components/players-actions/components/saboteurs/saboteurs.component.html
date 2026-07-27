@@ -1,9 +1,15 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.actions.sabotage.p3_6_1' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.sabotage.p3_6_1.before' | translate"></span>
+        <app-rule-link target="Defend land">{{ 'rules.content.terms.protectedLandGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.sabotage.p3_6_1.mid1' | translate"></span>
+        <app-rule-link target="Neutral zone">{{ 'rules.content.terms.neutralZoneGenitiveCapital' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.sabotage.p3_6_1.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.actions.sabotage.p3_6_2' | translate"></span>
+        <span [innerHTML]="'rules.content.actions.sabotage.p3_6_2.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.sabotage.p3_6_2.after' | translate"></span>
     </app-rule-paragraph>
 </div>

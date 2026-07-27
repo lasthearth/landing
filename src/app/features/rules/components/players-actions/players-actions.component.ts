@@ -7,6 +7,7 @@ import { RuleSectionComponent } from '../../ui/rule-section/rule-section.compone
 import { BaseScrollableComponent } from '../../abstracts/base-scrollable.component';
 import { SpecialInteractionComponent } from './components/special-interactions/special-interactions.component';
 import { SaboteursComponent } from './components/saboteurs/saboteurs.component';
+import { ScrollAnchorDirective } from '../../directives/scroll-anchor.directive';
 
 @Component({
     selector: 'app-players-actions',
@@ -19,6 +20,7 @@ import { SaboteursComponent } from './components/saboteurs/saboteurs.component';
         RuleSectionComponent,
         SpecialInteractionComponent,
         SaboteursComponent,
+        ScrollAnchorDirective,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

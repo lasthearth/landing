@@ -1,6 +1,7 @@
 import { Component, output } from '@angular/core';
 import { TranslatePipe } from '@core/i18n';
 import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/rule-paragraph.component';
+import { RuleLinkComponent } from '@app/features/rules/ui/rule-link/rule-link.component';
 
 /**
  * Компонент оборонительных сооружений поселений.
@@ -8,7 +9,7 @@ import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/ru
 @Component({
     selector: 'app-defensive-structures',
     templateUrl: './defensive-structures.component.html',
-    imports: [RuleParagraphComponent, TranslatePipe],
+    imports: [RuleParagraphComponent, RuleLinkComponent, TranslatePipe],
 })
 export class DefensiveStructuresComponent {
     /**

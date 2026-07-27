@@ -1,25 +1,25 @@
 <div class="flex flex-col gap-4">
-    <app-rule-section sectionId="Theft" title="rules.content.actions.titles.theft" [level]="1">
+    <app-rule-section sectionId="Theft" parentId="actions" title="rules.content.actions.titles.theft" [level]="1" appScrollAnchor="P3_1">
         <app-theft (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Kills" title="rules.content.actions.titles.kills" [level]="1">
+    <app-rule-section sectionId="Kills" parentId="actions" title="rules.content.actions.titles.kills" [level]="1">
         <app-kills (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Espionage" title="rules.content.actions.titles.espionage" [level]="1">
+    <app-rule-section sectionId="Espionage" parentId="actions" title="rules.content.actions.titles.espionage" [level]="1">
         <app-espionage (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Diplomacy" title="rules.content.actions.titles.diplomacy" [level]="1">
+    <app-rule-section sectionId="Diplomacy" parentId="actions" title="rules.content.actions.titles.diplomacy" [level]="1" appScrollAnchor="Diplomacy">
         <app-diplomacy (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Special Interactions" title="rules.content.actions.titles.special" [level]="1">
+    <app-rule-section sectionId="Special Interactions" parentId="actions" title="rules.content.actions.titles.special" [level]="1">
         <app-special-interactions (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Sabateurs" title="rules.content.actions.titles.sabotage" [level]="1">
+    <app-rule-section sectionId="Sabateurs" parentId="actions" title="rules.content.actions.titles.sabotage" [level]="1">
         <app-saboteurs (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 </div>

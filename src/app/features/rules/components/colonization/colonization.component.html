@@ -1,18 +1,30 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="1">
-        <span [innerHTML]="'rules.content.colonization.intro' | translate"></span>
+        <span [innerHTML]="'rules.content.colonization.intro.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.intro.mid1' | translate"></span>
+        <app-rule-link target="War">{{ 'rules.content.terms.warGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.intro.mid2' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="2">{{ 'rules.content.colonization.req1' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="2">
+        <span [innerHTML]="'rules.content.colonization.req1.before' | translate"></span>
+        <app-rule-link target="City">{{ 'rules.content.terms.cityGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.req1.after' | translate"></span>
+    </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">{{ 'rules.content.colonization.req2' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.colonization.req3' | translate"></span>
+        <span [innerHTML]="'rules.content.colonization.req3.before' | translate"></span>
+        <app-rule-link target="P3_1">{{ 'rules.content.terms.theftPrepositional' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.req3.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.colonization.req4' | translate"></span>
+        <span [innerHTML]="'rules.content.colonization.req4.before' | translate"></span>
+        <app-rule-link target="Raid">{{ 'rules.content.terms.raidNominative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.req4.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">{{ 'rules.content.colonization.req5' | translate }}</app-rule-paragraph>
@@ -21,7 +33,11 @@
 
     <app-rule-paragraph [level]="3" class="font-bold">{{ 'rules.content.settlements.common.requirements' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.location' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">
+        <span [innerHTML]="'rules.content.colonization.camp.location.before' | translate"></span>
+        <app-rule-link target="Neutral zone">{{ 'rules.content.terms.neutralZoneGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.camp.location.after' | translate"></span>
+    </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.population' | translate }}</app-rule-paragraph>
 
@@ -41,13 +57,21 @@
 
     <app-rule-paragraph [level]="3" class="font-bold">{{ 'rules.content.settlements.common.advantages' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.camp.advantages' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">
+        <span [innerHTML]="'rules.content.colonization.camp.advantages.before' | translate"></span>
+        <app-rule-link target="Camp">{{ 'rules.content.terms.campNominative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.camp.advantages.after' | translate"></span>
+    </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2" class="font-bold">{{ 'rules.content.colonization.villageTitle' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="3" class="font-bold">{{ 'rules.content.settlements.common.requirements' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.location' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">
+        <span [innerHTML]="'rules.content.colonization.village.location.before' | translate"></span>
+        <app-rule-link target="Neutral zone">{{ 'rules.content.terms.neutralZoneGenitive' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.village.location.after' | translate"></span>
+    </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.population' | translate }}</app-rule-paragraph>
 
@@ -93,5 +117,9 @@
 
     <app-rule-paragraph [level]="3" class="font-bold">{{ 'rules.content.settlements.common.advantages' | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">{{ 'rules.content.colonization.village.advantages' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">
+        <span [innerHTML]="'rules.content.colonization.village.advantages.before' | translate"></span>
+        <app-rule-link target="Village">{{ 'rules.content.terms.villageNominative' | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.colonization.village.advantages.after' | translate"></span>
+    </app-rule-paragraph>
 </div>

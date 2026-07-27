@@ -12,6 +12,7 @@ import { MilitaryActionsComponent } from './components/military-actions/military
 import { AdminRightsComponent } from './components/admin-rights/admin-rights.component';
 import { ScrollService } from './services/scroll.service';
 import { GlobalExpandService } from './services/global-expand.service';
+import { ScrollAnchorDirective } from './directives/scroll-anchor.directive';
 
 /**
  * Компонент правил сервера.
@@ -31,6 +32,7 @@ import { GlobalExpandService } from './services/global-expand.service';
         ColonizationComponent,
         MilitaryActionsComponent,
         AdminRightsComponent,
+        ScrollAnchorDirective,
     ],
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.less', './styles/rules.less'],

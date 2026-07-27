@@ -2,6 +2,43 @@ p {
     text-align: justify;
 }
 
+/**
+ * Тексты правил — книжная антиква Alegreya:
+ * читается легче Advent Pro, но сохраняет средневековый характер.
+ * Применяется по наследованию ко всему содержимому свитка,
+ * заголовки секций остаются на Advent Pro (см. .rule-section-title).
+ */
+.faq-scroll {
+    font-family: 'Alegreya', 'Advent Pro', serif;
+}
+
+/**
+ * Блок раздела правил в виде свитка: пергаментный фон
+ * и сургучная кромка слева (идентично странице FAQ).
+ */
+.faq-scroll {
+    background: linear-gradient(160deg, #f0e7ce 0%, #e3d7b9 100%);
+    border-left: 4px solid rgba(140, 35, 32, 0.5);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.faq-scroll:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(45, 32, 26, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .faq-scroll {
+        transition: none;
+    }
+
+    .faq-scroll:hover {
+        transform: none;
+    }
+}
+
 .old-paper-background {
     background-color: #e8dfc8;
     background-image: url('/old-paper.webp'), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
