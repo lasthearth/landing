@@ -61,6 +61,7 @@
 | 5   | `GET`    | `/donate/players/{player_id}/purchases`       | Покупки игрока (админ)           | ✅ + admin | ✅ `getPlayerPurchases$()`    |
 | 6   | `GET`    | `/donate/players/{player_id}/transactions`    | Транзакции игрока (админ)        | ✅ + admin | ✅ `getPlayerTransactions$()` |
 | 7   | `GET`    | `/donate/purchases/pending`                   | Ожидающие выдачи покупки (админ) | ✅ + admin | ✅ `getPendingPurchases$()`   |
+| 7.1 | `GET`    | `/donate/purchases`                           | Все покупки всех игроков, cursor-пагинация (админ) | ✅ + admin | ✅ `getAllPurchases$()`       |
 | 8   | `POST`   | `/donate/purchases/{purchase_id}:mark-issued` | Отметить выданной (админ)        | ✅ + admin | ✅ `markPurchaseIssued$()`    |
 | 9   | `POST`   | `/donate/purchases/{purchase_id}:refund`      | Возврат покупки (админ)          | ✅ + admin | ✅ `refundPurchase$()`        |
 | 10  | `GET`    | `/donate/shop/items`                          | Список товаров магазина          | ✅         | ✅ `getShopItems$()` (кэш)    |
@@ -743,6 +744,7 @@ interface CreateResponse {
 | --- | ------ | --------------------------- | ------------------------------- | --------- | --------------------------------------------------------------- |
 | 1   | `GET`  | `/users/search?query=`      | Поиск пользователей             | —         | ✅ `SettlementService.searchUser$()` ⚠️ _в `SettlementService`_ |
 | 2   | `GET`  | `/users/{user_id}`          | Профиль пользователя            | —         | ✅ `getPlayer$()`                                               |
+| 2.1 | `GET`  | `/users:batchGet`           | Пакетное получение профилей (до 100 ID) | — | ✅ `getPlayersBatch$()`                                         |
 | 3   | `POST` | `/users/{user_id}/avatar`   | Обновить аватар (self)          | ✅ (self) | ✅ `setProfileImage$()`                                         |
 | 4   | `PUT`  | `/users/{user_id}/nickname` | Сменить ник (self, cooldown 6м) | ✅ (self) | ✅ `changeUsername$()`                                          |
 

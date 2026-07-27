@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, map, of, shareReplay, switchMap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { IShopItemDto, ICreateShopItemRequest, IUpdateShopItemRequest } from '../model/shop-item.interface';
@@ -17,6 +17,7 @@ import { mapDtoToPendingPurchase } from '../model/pending-purchase.mapper';
 import { IShopItem } from '../model/shop-item.interface';
 import { IPurchase } from '../model/purchase.interface';
 import { IPendingPurchase } from '../model/pending-purchase.interface';
+import { IPurchasesPage } from '../model/purchases-page.interface';
 import { ITransaction } from '../model/transaction.interface';
 import { IBalanceResponse } from '../model/balance-response.interface';
 
@@ -229,6 +230,38 @@ export class DonateService {
         return this.http
             .get<{ purchases: IPendingPurchaseDto[] }>(`${this.baseUrl}/donate/purchases/pending`)
             .pipe(map((response) => response.purchases.map(mapDtoToPendingPurchase)));
+    }
+
+    /**
+     * Получает историю покупок всех игроков (сначала новые).
+     *
+     * Использует cursor-пагинацию: для получения следующей страницы
+     * нужно передать `pageToken` из ответа предыдущей.
+     *
+     * ⚠️ Требуются права администратора.
+     *
+     * @param limit Максимальное количество покупок на странице.
+     * @param pageToken Токен следующей страницы из предыдущего ответа.
+     * @returns Observable со страницей покупок.
+     */
+    public getAllPurchases$(limit: number = 20, pageToken?: string): Observable<IPurchasesPage> {
+        let params = new HttpParams().set('limit', limit);
+
+        if (pageToken) {
+            params = params.set('page_token', pageToken);
+        }
+
+        return this.http
+            .get<{ purchases?: IPurchaseDto[]; next_page_token?: string }>(
+                `${this.baseUrl}/donate/purchases`,
+                { params }
+            )
+            .pipe(
+                map((response) => ({
+                    purchases: (response.purchases ?? []).map(mapDtoToPurchase),
+                    nextPageToken: response.next_page_token ?? '',
+                }))
+            );
     }
 
     /**

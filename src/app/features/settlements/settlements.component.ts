@@ -6,8 +6,9 @@ import { SettlementCardComponent } from './settlement-card/settlement-card.compo
 import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
-import { from, mergeMap, of, toArray } from 'rxjs';
+import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 
 /**
@@ -44,7 +45,7 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
  */
 @Component({
     selector: 'app-settlements',
-    imports: [SettlementCardComponent, SettlementCardSkeletonComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
+    imports: [SettlementCardComponent, SettlementCardSkeletonComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe, TuiIcon],
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -268,20 +269,11 @@ export class SettlementsComponent {
             return;
         }
 
-        from(allUserIds)
-            .pipe(
-                mergeMap(
-                    (id) =>
-                        this.userService.getPlayer$(id).pipe(
-                            map((p) => ({ id, isOnline: p?.is_online ?? false })),
-                            catchError(() => of({ id, isOnline: false }))
-                        ),
-                    5
-                ),
-                toArray()
-            )
-            .subscribe((results) => {
-                const onlineMap = new Map(results.map((r) => [r.id, r.isOnline]));
+        this.userService
+            .getPlayersBatch$(allUserIds)
+            .pipe(catchError(() => of([])))
+            .subscribe((players) => {
+                const onlineMap = new Map(players.map((p) => [p.user_id, p?.is_online ?? false]));
                 this.enrichedSettlements.update((list) =>
                     list.map((s) => ({
                         ...s,

@@ -123,19 +123,25 @@ export function mapDtoToAbilityItem(dto: IAbilityItem): IAbilityItem {
 export function mapDtoToPurchase(dto: IPurchaseDto): IPurchase {
     const createdAt = parseDate(dto.created_at);
     const issuedAt = parseDate(dto.issued_at);
+    const refundedAt = parseDate(dto.refunded_at);
 
     return {
         id: dto.id,
         playerId: dto.player_id,
+        playerName: dto.player_name ?? '',
         itemId: dto.item_id ?? '',
         itemName: dto.item_name ?? '',
         pricePaid: dto.price_paid ?? '',
+        basePrice: dto.base_price ?? '',
+        discountPercent: dto.discount_percent ?? 0,
         status: dto.status ?? '',
         createdAt,
         formattedDate: createdAt ? formatDate(createdAt) : '—',
         issuedBy: dto.issued_by ?? '',
         issuedAt,
         formattedIssuedAt: issuedAt ? formatDate(issuedAt) : '—',
+        refundedAt,
+        formattedRefundedAt: refundedAt ? formatDate(refundedAt) : '—',
     };
 }
 

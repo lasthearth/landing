@@ -9,6 +9,7 @@ import {
     combineLatest,
     finalize,
     first,
+    forkJoin,
     map,
     Observable,
     of,
@@ -16,7 +17,7 @@ import {
     switchMap,
     tap,
 } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { convertTuiFileLikeToBase64 } from '@shared/lib/convert-file-to-base64.function';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { environment } from '@core/config/environments/environment';
@@ -24,6 +25,11 @@ import { IJwtTokenLh } from '../model/i-jwt-token-lh';
 import { IUser } from '../model/i-user';
 import { IPlayer } from '../model/i-player';
 import { ISettlementInvitation } from '@entities/settlement';
+
+/**
+ * Максимальное количество идентификаторов в одном запросе `users:batchGet`.
+ */
+const BATCH_GET_USERS_LIMIT = 100;
 
 /**
  * Сервис пользователя.
@@ -340,6 +346,42 @@ export class UserService {
      */
     public getPlayer$(userId: string) {
         return this.http.get<IPlayer>(`${this.baseUrl}/users/${userId}`, { headers: this.getHeaders() });
+    }
+
+    /**
+     * Получает данные нескольких игроков одним запросом.
+     *
+     * Обёртка над `GET /users:batchGet`. Дубликаты идентификаторов
+     * удаляются; при количестве больше 100 (лимит API) список
+     * разбивается на несколько параллельных запросов.
+     * Отсутствующие на сервере ID молча пропускаются.
+     *
+     * @param userIds Идентификаторы пользователей.
+     * @returns Observable с массивом данных игроков {@link IPlayer}.
+     */
+    public getPlayersBatch$(userIds: string[]): Observable<IPlayer[]> {
+        const uniqueIds = [...new Set(userIds.filter(Boolean))];
+
+        if (uniqueIds.length === 0) {
+            return of([]);
+        }
+
+        const chunks: string[][] = [];
+
+        for (let i = 0; i < uniqueIds.length; i += BATCH_GET_USERS_LIMIT) {
+            chunks.push(uniqueIds.slice(i, i + BATCH_GET_USERS_LIMIT));
+        }
+
+        return forkJoin(
+            chunks.map((chunk) => {
+                let params = new HttpParams();
+                chunk.forEach((id) => (params = params.append('user_ids', id)));
+
+                return this.http
+                    .get<{ users: IPlayer[] }>(`${this.baseUrl}/users:batchGet`, { params })
+                    .pipe(map((response) => response.users ?? []));
+            })
+        ).pipe(map((results) => results.flat()));
     }
 
     /**

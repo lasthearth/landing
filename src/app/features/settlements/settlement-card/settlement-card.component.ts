@@ -95,33 +95,20 @@ export class SettlementCardComponent implements OnInit {
     public ngOnInit(): void {
         this.tagStore.loadTags$().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 
+        const leaderId = this.data().leader.user_id;
+
         this.userService
-            .getPlayer$(this.data().leader.user_id)
+            .getPlayersBatch$([leaderId, ...this.data().members.map((m) => m.user_id)])
             .pipe(
-                tap((u) => {
-                    this.leader = u;
-                    if (u?.is_online) {
-                        this.onlineCount++;
-                    }
+                tap((players) => {
+                    this.leader = players.find((p) => p.user_id === leaderId) ?? null;
+                    this.users = players.filter((p) => p.user_id !== leaderId);
+                    this.onlineCount = players.filter((p) => p?.is_online).length;
                     this.cdr.detectChanges();
-                })
+                }),
+                takeUntilDestroyed(this.destroyRef)
             )
             .subscribe();
-
-        this.data().members.forEach((m) => {
-            this.userService
-                .getPlayer$(m.user_id)
-                .pipe(
-                    tap((u) => {
-                        this.users.push(u);
-                        if (u?.is_online) {
-                            this.onlineCount++;
-                        }
-                        this.cdr.detectChanges();
-                    })
-                )
-                .subscribe();
-        });
     }
 
     /**

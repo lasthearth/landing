@@ -31,42 +31,22 @@ export class SettlementDetailedComponent implements OnInit {
     protected onlineCount: number = 0;
 
     public ngOnInit(): void {
+        const leaderId = this.settlementData.leader.user_id;
+
         this.userService
-            .getPlayer$(this.settlementData.leader.user_id)
+            .getPlayersBatch$([leaderId, ...this.settlementData.members.map((m) => m.user_id)])
             .pipe(
-                tap((u) => {
-                    this.leader = u;
-                    if (u?.is_online) {
-                        this.onlineCount++;
-                    }
+                tap((players) => {
+                    this.leader = players.find((p) => p.user_id === leaderId) ?? null;
+                    this.users = players.filter((p) => p.user_id !== leaderId);
+                    this.onlineCount = players.filter((p) => p?.is_online).length;
                     this.cdr.detectChanges();
                 }),
                 catchError((error) => {
-                    console.error('[SettlementDetailed] Ошибка загрузки лидера:', error);
+                    console.error('[SettlementDetailed] Ошибка загрузки участников:', error);
                     return of(null);
                 })
             )
             .subscribe();
-
-        this.settlementData.members.forEach((m) => {
-            this.userService
-                .getPlayer$(m.user_id)
-                .pipe(
-                    tap((u) => {
-                        if (u) {
-                            this.users.push(u);
-                            if (u.is_online) {
-                                this.onlineCount++;
-                            }
-                        }
-                        this.cdr.detectChanges();
-                    }),
-                    catchError((error) => {
-                        console.error('[SettlementDetailed] Ошибка загрузки участника:', error);
-                        return of(null);
-                    })
-                )
-                .subscribe();
-        });
     }
 }

@@ -9,6 +9,7 @@
 export * from './model/shop-item.interface';
 export * from './model/ability-item.interface';
 export * from './model/purchase.interface';
+export * from './model/purchases-page.interface';
 export * from './model/pending-purchase-dto.interface';
 export * from './model/pending-purchase.interface';
 export {

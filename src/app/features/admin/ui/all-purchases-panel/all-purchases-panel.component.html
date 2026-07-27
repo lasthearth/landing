@@ -1,0 +1,125 @@
+@if (loading()) {
+    <div class="flex flex-col gap-4">
+        @for (_ of [1, 2, 3]; track $index) {
+            <div
+                class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
+            >
+                <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
+                    <div class="flex flex-col gap-2 min-w-0">
+                        <div class="h-4 w-24 rounded bg-lh-primary-2/20"></div>
+                        <div class="h-6 w-40 rounded bg-lh-primary-2/30"></div>
+                    </div>
+                </div>
+                <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-2">
+                    <div class="h-6 w-3/4 rounded bg-lh-primary-2/20"></div>
+                    <div class="h-4 w-1/2 rounded bg-lh-primary-2/20"></div>
+                </div>
+            </div>
+        }
+    </div>
+} @else if (error()) {
+    <app-error-state
+        [title]="'admin.purchases.loadErrorTitle' | translate"
+        [description]="'admin.purchases.loadErrorDescription' | translate"
+        (retry)="retry()"
+    />
+} @else if (!purchases().length) {
+    <app-empty-state
+        icon="@tui.receipt"
+        [title]="'admin.purchasesHistory.emptyTitle' | translate"
+        [description]="'admin.purchasesHistory.emptyDescription' | translate"
+    />
+} @else {
+    <div class="flex flex-col gap-4 lh-stagger-list">
+        @for (purchase of purchases(); track purchase.id) {
+            <div
+                class="bg-[#e2d7bb] border-2 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow"
+                [class.border-[#bdb093]/40]="!isExpiredPrivilege(purchase)"
+                [class.border-lh-danger]="isExpiredPrivilege(purchase)"
+            >
+                <!-- Заголовок: игрок и статус -->
+                <div class="flex items-center justify-between gap-3 pb-3 border-b border-lh-primary-2/20">
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-base text-neutral-500 leading-5">{{ 'admin.common.player' | translate }}</span>
+                        <span class="text-2xl font-bold text-[#2d201a] truncate">{{ purchase.playerName || purchase.playerId }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <span
+                            [class]="'uppercase font-bold text-base px-3 py-1 rounded-2xl ' + statusBadgeClass(displayStatus(purchase))"
+                        >
+                            {{ statusText(displayStatus(purchase)) }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Информация о покупке -->
+                <div class="flex flex-col gap-3">
+                    <div
+                        class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-2"
+                    >
+                        <div class="flex items-start gap-2">
+                            <tui-icon
+                                icon="@tui.package"
+                                class="size-5! text-lh-accent shrink-0 mt-0.5"
+                            />
+                            <span class="text-lg font-semibold text-[#2d201a] leading-6">{{ purchase.itemName }}</span>
+                        </div>
+                        <div class="flex items-start gap-2 pl-7">
+                            <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
+                            <span class="text-lg text-[#5c4030] leading-6 break-words">
+                                @if (purchase.discountPercent > 0 && purchase.basePrice) {
+                                    <span class="line-through text-neutral-500 mr-2">{{ purchase.basePrice }}</span>
+                                }
+                                {{ purchase.pricePaid }}
+                            </span>
+                        </div>
+                        @if (purchase.discountPercent > 0) {
+                            <div class="flex items-start gap-2 pl-7">
+                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.discount' | translate }}</span>
+                                <span class="text-lg text-lh-accent leading-6 break-words">{{ purchase.discountPercent }}%</span>
+                            </div>
+                        }
+                        <div class="flex items-start gap-2 pl-7">
+                            <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
+                            <span class="text-lg text-[#5c4030] leading-6 break-words">{{ purchase.formattedDate }}</span>
+                        </div>
+                        @if (purchase.issuedBy) {
+                            <div class="flex items-start gap-2 pl-7">
+                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchasesHistory.issuedBy' | translate }}</span>
+                                <span class="text-lg text-[#5c4030] leading-6 break-words">{{ adminName(purchase.issuedBy) }}</span>
+                            </div>
+                        }
+                        @if (purchase.refundedAt) {
+                            <div class="flex items-start gap-2 pl-7">
+                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchasesHistory.refundedAt' | translate }}</span>
+                                <span class="text-lg text-lh-danger leading-6 break-words">{{ purchase.formattedRefundedAt }}</span>
+                            </div>
+                        }
+                        @if (isExpiredPrivilege(purchase)) {
+                            <div class="flex items-start gap-2 pl-7">
+                                <tui-icon icon="@tui.triangle-alert" class="size-4! text-lh-danger shrink-0 mt-1" />
+                                <span class="text-base text-lh-danger font-medium leading-6">{{ 'admin.purchasesHistory.expiredHint' | translate }}</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (nextPageToken()) {
+        <button
+            type="button"
+            (click)="loadMore()"
+            [disabled]="loadingMore()"
+            class="self-center mt-4 py-2 px-6 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+            @if (loadingMore()) {
+                <span
+                    class="inline-block size-4 border-2 border-lh-primary border-t-transparent rounded-full animate-spin"
+                ></span>
+            }
+            {{ 'admin.purchasesHistory.loadMore' | translate }}
+        </button>
+    }
+}

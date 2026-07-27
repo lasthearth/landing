@@ -80,6 +80,12 @@ export class QuestionListComponent {
     readonly userNames = signal<Record<string, string>>({});
 
     /**
+     * Идентификаторы пользователей, для которых уже выполнен batch-запрос
+     * (предотвращает повторные запросы для отсутствующих на сервере ID).
+     */
+    private readonly requestedUserIds = new Set<string>();
+
+    /**
      * Инициализирует подписки компонента.
      */
     constructor() {
@@ -94,19 +100,23 @@ export class QuestionListComponent {
                 ...new Set(questions.map((q) => q.createdBy).filter((id): id is string => !!id)),
             ];
 
-            uniqueIds.forEach((id) => {
-                if (!this.userNames()[id]) {
-                    this.userService
-                        .getPlayer$(id)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe((player) => {
-                            this.userNames.update((names) => ({
-                                ...names,
-                                [id]: player.user_game_name,
-                            }));
-                        });
-                }
-            });
+            const missingIds = uniqueIds.filter((id) => !this.userNames()[id] && !this.requestedUserIds.has(id));
+
+            if (missingIds.length === 0) {
+                return;
+            }
+
+            missingIds.forEach((id) => this.requestedUserIds.add(id));
+
+            this.userService
+                .getPlayersBatch$(missingIds)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((players) => {
+                    this.userNames.update((names) => ({
+                        ...names,
+                        ...Object.fromEntries(players.map((p) => [p.user_id, p.user_game_name])),
+                    }));
+                });
         });
     }
 

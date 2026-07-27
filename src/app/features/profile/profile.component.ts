@@ -23,7 +23,6 @@ import {
     catchError,
     combineLatest,
     defaultIfEmpty,
-    forkJoin,
     map,
     Observable,
     of,
@@ -219,13 +218,9 @@ export class ProfileComponent {
             if (!settlement?.members?.length) {
                 return of(0);
             }
-            const requests = settlement.members.map((member) =>
-                this.userService.getPlayer$(member.user_id).pipe(
-                    map((player) => player?.is_online ?? false),
-                    catchError(() => of(false))
-                )
-            );
-            return forkJoin(requests).pipe(map((results) => results.filter(Boolean).length));
+            return this.userService
+                .getPlayersBatch$(settlement.members.map((member) => member.user_id))
+                .pipe(map((players) => players.filter((player) => player?.is_online).length));
         }),
         catchError(() => of(0))
     );

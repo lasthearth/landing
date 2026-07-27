@@ -1,10 +1,7 @@
 /**
  * DTO покупки, получаемый от API.
  *
- * ⚠️ Контракт обрезан в API_CONTRACT.md (указаны только id и player_id).
- * Поля item_id, item_name, price, status, created_at добавлены на основе
- * предположений о структуре protobuf-сообщения и могут отсутствовать
- * на бэкенде — требуется уточнение.
+ * Соответствует схеме `donate.v1.Purchase` OpenAPI-контракта.
  */
 export interface IPurchaseDto {
     /**
@@ -18,16 +15,17 @@ export interface IPurchaseDto {
     player_id: string;
 
     /**
+     * Игровой ник игрока.
+     */
+    player_name?: string;
+
+    /**
      * Идентификатор купленного товара.
-     *
-     * ⚠️ Поле предполагаемое, требует подтверждения от бэкенда.
      */
     item_id?: string;
 
     /**
      * Название купленного товара.
-     *
-     * ⚠️ Поле предполагаемое, требует подтверждения от бэкенда.
      */
     item_name?: string;
 
@@ -35,35 +33,42 @@ export interface IPurchaseDto {
      * Цена покупки.
      *
      * Соответствует полю `price_paid` из protobuf-контракта.
-     * Передаётся как строка (decimal as string).
+     * Передаётся как строка (int64 через grpc-gateway).
      */
     price_paid?: string;
 
     /**
+     * Базовая цена товара без скидки (int64 через grpc-gateway).
+     */
+    base_price?: string;
+
+    /**
+     * Процент скидки (int32).
+     */
+    discount_percent?: number;
+
+    /**
      * Статус покупки (например, "COMPLETED", "REFUNDED").
-     *
-     * ⚠️ Поле предполагаемое, требует подтверждения от бэкенда.
      */
     status?: string;
 
     /**
      * Дата создания в формате ISO 8601.
-     *
-     * ⚠️ Поле предполагаемое, требует подтверждения от бэкенда.
      */
     created_at?: string;
 
     /**
+     * Дата возврата в формате ISO 8601.
+     */
+    refunded_at?: string;
+
+    /**
      * Идентификатор или имя администратора, выдавшего товар.
-     *
-     * ⚠️ Поле предполагаемое, требует подтверждения от бэкенда.
      */
     issued_by?: string;
 
     /**
      * Дата выдачи товара в формате ISO 8601.
-     *
-     * ⚠️ Поле предполагаемое, требует подтверждения от бэкенда.
      */
     issued_at?: string;
 }
@@ -85,6 +90,11 @@ export interface IPurchase {
     playerId: string;
 
     /**
+     * Игровой ник игрока.
+     */
+    playerName: string;
+
+    /**
      * Идентификатор купленного товара.
      */
     itemId: string;
@@ -98,6 +108,16 @@ export interface IPurchase {
      * Цена покупки как строка.
      */
     pricePaid: string;
+
+    /**
+     * Базовая цена товара без скидки.
+     */
+    basePrice: string;
+
+    /**
+     * Процент скидки.
+     */
+    discountPercent: number;
 
     /**
      * Статус покупки.
@@ -136,4 +156,18 @@ export interface IPurchase {
      * Формат: "DD.MM.YY - HH:mm" или "—", если дата отсутствует.
      */
     formattedIssuedAt: string;
+
+    /**
+     * Дата возврата как объект Date.
+     *
+     * `null`, если покупка не возвращалась.
+     */
+    refundedAt: Date | null;
+
+    /**
+     * Дата возврата в человекочитаемом формате.
+     *
+     * Формат: "DD.MM.YY - HH:mm" или "—", если покупка не возвращалась.
+     */
+    formattedRefundedAt: string;
 }

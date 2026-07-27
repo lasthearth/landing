@@ -17,6 +17,7 @@ import { AdminCoinPanelComponent } from './ui/admin-coin-panel/admin-coin-panel.
 import { HungerGamesPanelComponent } from './ui/hunger-games-panel/hunger-games-panel.component';
 import { DonateShopPanelComponent } from './ui/donate-shop-panel/donate-shop-panel.component';
 import { PendingPurchasesPanelComponent } from './ui/pending-purchases-panel/pending-purchases-panel.component';
+import { AllPurchasesPanelComponent } from './ui/all-purchases-panel/all-purchases-panel.component';
 import { TuiPulse, TuiTabs } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
@@ -42,6 +43,7 @@ import { TranslatePipe } from '@core/i18n';
         HungerGamesPanelComponent,
         DonateShopPanelComponent,
         PendingPurchasesPanelComponent,
+        AllPurchasesPanelComponent,
         EmptyStateComponent,
         AdminListSkeletonComponent,
         TranslatePipe,
