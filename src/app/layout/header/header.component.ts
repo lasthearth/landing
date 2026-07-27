@@ -14,6 +14,7 @@ import { DonateService } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign-out-confirm.component';
 import { I18nService, Language, TranslatePipe } from '@core/i18n';
+import { ThemeService } from '@core/services/theme.service';
 import { formatServerTime } from './lib/format-server-time.function';
 
 /**
@@ -52,6 +53,11 @@ export class HeaderComponent {
      * Сервис диалогов.
      */
     private readonly dialogs = inject(TuiDialogService);
+
+    /**
+     * Сервис темы оформления.
+     */
+    protected readonly themeService = inject(ThemeService);
 
     /**
      * {@link Observable} Количества онлайна.

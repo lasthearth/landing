@@ -646,3 +646,418 @@ button:disabled,
         transform: none;
     }
 }
+
+/**
+ * Тематическое выделение текста в палитре проекта.
+ */
+::selection {
+    background-color: rgba(195, 90, 23, 0.35);
+    color: #2d201a;
+}
+
+/**
+ * Скроллбар в палитре проекта.
+ */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #b0a48a #e2d7bb;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #e2d7bb;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b0a48a;
+    border-radius: 8px;
+    border: 2px solid #e2d7bb;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c35a17;
+}
+
+/**
+ * Тактильный отклик проектных кнопок при нажатии.
+ */
+.lh-confirm-button:active:not(:disabled),
+.lh-cancel-button:active:not(:disabled),
+.lh-secondary-button:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/**
+ * Тёмная тема «ночь у очага».
+ *
+ * Затемняет поверхности и текст. Переключается через
+ * data-theme на <html> (см. ThemeService).
+ * Селектор html[data-theme] даёт специфичность выше компонентных стилей.
+ */
+html[data-theme='dark'] {
+    color-scheme: dark;
+    color: #e9dfc9;
+
+    /* Текстовые переменные Taiga UI */
+    --tui-text-primary: #e9dfc9;
+    --tui-text-secondary: #d6c9ae;
+    --tui-text-tertiary: #b3a68d;
+    --tui-text-action: #e07830;
+    --tui-text-action-hover: #ffaa5c;
+
+    /* Основные панели */
+    .main-panel {
+        background-color: #2a231c;
+        background-image: none;
+    }
+
+    tui-dialog .t-content {
+        background-color: #2a231c !important;
+        background-image: none !important;
+    }
+
+    /* Пергаментные поверхности → тёмное дерево */
+    [class*='bg-[#e2d7bb]'],
+    [class*='bg-[#e8dfc8]'],
+    [class*='bg-[#e9dec5]'] {
+        background-color: #2a231c;
+    }
+
+    [class*='bg-[#f6f0df]'],
+    [class*='bg-[#f0e7ce]'],
+    [class*='bg-[#ece1c8]'],
+    [class*='bg-[#e8dcc0]'] {
+        background-color: #332a21;
+    }
+
+    [class*='bg-[#d8cdb3]'],
+    [class*='bg-[#d4c5a9]'] {
+        background-color: #3d3329;
+    }
+
+    /* Тёмные полупрозрачные панели → светлая альфа */
+    [class*='bg-lh-primary-2/'] {
+        background-color: rgba(233, 223, 201, 0.08);
+    }
+
+    [class*='border-lh-primary-2'] {
+        border-color: rgba(233, 223, 201, 0.18);
+    }
+
+    /* Градиенты и текстуры пергамента */
+    [class*='from-[#e2d7bb]'] {
+        --tw-gradient-from: #2a231c;
+    }
+
+    [class*="bg-[url('/image_1.webp')]"] {
+        background-image: none;
+    }
+
+    /* Ховеры светлых кнопок → тёмные */
+    [class*='hover:bg-[#c4b89e]'],
+    [class*='hover:bg-[#d8cca8]'],
+    [class*='hover:bg-[#d8cdb3]'] {
+        &:hover {
+            background-color: rgba(233, 223, 201, 0.12);
+        }
+    }
+
+    /* Тёмный текст → пергаментный */
+    [class*='text-[#2d201a]'],
+    [class*='text-[#2a2722]'],
+    [class*='text-[#1c1a16]'],
+    [class*='text-lh-primary-2'],
+    [class*='text-lh-primary'] {
+        color: #e9dfc9;
+    }
+
+    [class*='text-[#3f3c34]'] {
+        color: #d6c9ae;
+    }
+
+    [class*='text-[#5c4030]'],
+    [class*='text-[#5c554a]'],
+    [class*='text-[#3b3c36]'],
+    [class*='text-[#7a6b58]'],
+    [class*='text-[#8a7a6a]'],
+    .text-neutral-500 {
+        color: #b3a68d;
+    }
+
+    /* Акцентные тёмные тексты → осветлённые */
+    [class*='text-[#3d5381]'],
+    [class*='text-[#5a7a9a]'] {
+        color: #8fa8d8;
+    }
+
+    [class*='text-[#720000]'],
+    [class*='text-lh-danger'] {
+        color: #e06a5a;
+    }
+
+    [class*='text-[#86523b]'] {
+        color: #c9a184;
+    }
+
+    [class*='text-[#8a6e2f]'] {
+        color: #d4af37;
+    }
+
+    [class*='text-[#9c4f24]'] {
+        color: #e07830;
+    }
+
+    /* Классы с !important (активные кнопки меню) */
+    [class*='bg-[#e2d7bb]!'] {
+        background-color: #3d3329 !important;
+    }
+
+    [class*='text-lh-primary!'] {
+        color: #e9dfc9 !important;
+    }
+
+    /* Границы */
+    [class*='border-[#bdb093]'],
+    [class*='border-[#c4b89e]'],
+    [class*='border-[#b0a48a]'],
+    [class*='border-[#a89a7e]'],
+    [class*='border-[#8b7355]'],
+    [class*='border-[#b8aa8e]'],
+    [class*='border-[rgba(51,44,38'] {
+        border-color: #4a3f31;
+    }
+
+    /* Компонентные поверхности */
+    .faq-scroll {
+        background: #332a21;
+        border-left-color: rgba(224, 106, 90, 0.6);
+    }
+
+    .faq-scroll > div:first-child > p:first-child::before {
+        color: rgba(224, 106, 90, 0.7);
+    }
+
+    .diplomacy-card {
+        background: #332a21;
+    }
+
+    .diplomacy-card::before {
+        background: repeating-linear-gradient(
+            45deg,
+            rgba(233, 223, 201, 0.03) 0,
+            rgba(233, 223, 201, 0.03) 2px,
+            transparent 2px,
+            transparent 12px
+        );
+    }
+
+    .diplomacy-card__text,
+    .diplomacy-card__author-name,
+    .diplomacy-card__date-day,
+    .diplomacy-card__empty-title {
+        color: #e9dfc9;
+    }
+
+    .diplomacy-card__author-role,
+    .diplomacy-card__text::first-letter {
+        color: #e07830;
+    }
+
+    .diplomacy-card__date-time,
+    .diplomacy-card__empty-description {
+        color: #b3a68d;
+    }
+
+    .diplomacy-page__loading,
+    .diplomacy-page__empty {
+        color: #e9dfc9;
+        background: rgba(233, 223, 201, 0.05);
+        border-color: rgba(233, 223, 201, 0.15);
+    }
+
+    .diplomacy-page__error {
+        color: #e06a5a;
+        background: rgba(224, 106, 90, 0.08);
+        border-color: rgba(224, 106, 90, 0.3);
+    }
+
+    .settlement-card-inner {
+        background-color: #2a231c;
+        background-image: none;
+    }
+
+    .recruit-panel {
+        background-color: #2a231c;
+        background-image: none;
+    }
+
+    .quick-actions {
+        background: #2a231c;
+    }
+
+    .quick-actions__item {
+        background: #332a21;
+        color: #e9dfc9;
+
+        &:hover {
+            background: #3d3329;
+        }
+    }
+
+    .quick-actions__label {
+        color: #e9dfc9;
+    }
+
+    .video-card {
+        background: #332a21;
+    }
+
+    .video-card__title,
+    .videos-page__title {
+        color: #e9dfc9;
+    }
+
+    .video-card__date,
+    .videos-page__subtitle {
+        color: #b3a68d;
+    }
+
+    .videos-page__error {
+        color: #e06a5a;
+    }
+
+    .videos-page__empty {
+        color: #b3a68d;
+    }
+
+    /* Поля ввода */
+    .flexible-input {
+        border-color: #4a3f31;
+        color: #e9dfc9;
+        background-color: rgba(233, 223, 201, 0.06);
+    }
+
+    .flexible-input:focus-within {
+        border-color: #c35a17;
+    }
+
+    .flexible-input input,
+    .flexible-input textarea {
+        color: #e9dfc9;
+    }
+
+    .flexible-input input::placeholder,
+    .flexible-input textarea::placeholder {
+        color: #b3a68d;
+    }
+
+    .flexible-input .dropdown {
+        background-color: #2a231c;
+        background-image: none;
+        border-color: #4a3f31;
+    }
+
+    .flexible-input .dropdown-option {
+        color: #e9dfc9;
+
+        &:hover {
+            background-color: rgba(233, 223, 201, 0.1);
+        }
+    }
+
+    /* Скелетон image-loader → светлый шиммер на тёмном */
+    .image-loader-skeleton {
+        background: linear-gradient(
+            110deg,
+            rgba(233, 223, 201, 0.06) 8%,
+            rgba(233, 223, 201, 0.14) 18%,
+            rgba(233, 223, 201, 0.06) 33%
+        );
+        background-size: 200% 100%;
+    }
+
+    .rule-link {
+        color: #d6c9ae;
+
+        &:hover {
+            color: #ece1c8;
+        }
+    }
+
+    /* Скроллбар */
+    & {
+        scrollbar-color: #4a3f31 #2a231c;
+    }
+
+    /* Ссылки: системный синий → тёплый акцент */
+    a {
+        color: #e07830;
+
+        &:hover {
+            color: #ffaa5c;
+        }
+    }
+
+    /* Табы Taiga */
+    button[tuiTab] {
+        color: #b3a68d;
+
+        &:hover,
+        &[data-state='active'],
+        &.tui-tab_active {
+            color: #e9dfc9;
+        }
+    }
+
+    /* Диалоги lh-dialog-* */
+    .lh-dialog-card {
+        background-color: #2a231c;
+        color: #e9dfc9;
+    }
+
+    .lh-dialog-title {
+        color: #e9dfc9;
+    }
+
+    .lh-dialog-text {
+        color: #b3a68d;
+    }
+
+    .lh-dialog-info {
+        background-color: #332a21;
+    }
+
+    .lh-dialog-button-secondary {
+        border-color: rgba(233, 223, 201, 0.4);
+        color: #e9dfc9;
+
+        &:hover {
+            background-color: rgba(233, 223, 201, 0.1);
+        }
+    }
+
+    /* Вторичные кнопки → заметные на тёмном */
+    .lh-secondary-button {
+        border-color: rgba(233, 223, 201, 0.35);
+        color: #e9dfc9;
+
+        &:hover:not(:disabled) {
+            border-color: #ff7920;
+            color: #ff7920;
+            background-color: rgba(255, 121, 32, 0.12);
+        }
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #2a231c;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #4a3f31;
+        border-color: #2a231c;
+    }
+}

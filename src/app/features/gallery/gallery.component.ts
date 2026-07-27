@@ -155,14 +155,42 @@ export class GalleryComponent {
     }
 
     /**
-     * Возвращает соотношение сторон для скелетона по его индексу.
+     * Возвращает соотношение сторон карточки изображения.
      *
-     * @param index Индекс скелетона.
+     * Использует реальные размеры изображения из API — без этого
+     * карточка с `object-cover` схлопывается до нулевой высоты.
+     *
+     * @param image Изображение галереи.
      * @returns Строка с CSS-соотношением сторон.
      */
-    protected getSkeletonAspect(index: number): string {
-        const aspects = ['4 / 3', '3 / 4', '1 / 1', '16 / 9', '3 / 2', '2 / 3'];
+    protected getImageAspect(image: DiscordGalleryImage): string {
+        return image.width && image.height ? `${image.width} / ${image.height}` : '4 / 3';
+    }
 
-        return aspects[index % aspects.length];
+    /**
+     * Возвращает высоту скелетона в пикселях по его индексу.
+     *
+     * Высоты чередуются, чтобы сетка скелетонов повторяла
+     * masonry-раскладку реальных изображений.
+     *
+     * @param index Индекс скелетона.
+     * @returns Высота в пикселях.
+     */
+    protected getSkeletonHeight(index: number): number {
+        const heights = [260, 380, 300, 220, 340, 280];
+
+        return heights[index % heights.length];
+    }
+
+    /**
+     * Возвращает задержку анимации скелетона в миллисекундах.
+     *
+     * Каскадная задержка не даёт всем скелетонам мерцать синхронно.
+     *
+     * @param index Индекс скелетона.
+     * @returns Задержка в миллисекундах.
+     */
+    protected getSkeletonDelay(index: number): number {
+        return (index % 6) * 120;
     }
 }

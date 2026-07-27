@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-6 p-6">
     <div class="flex flex-col gap-4">
-        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">{{ 'settlements.list.title' | translate }}</p>
+        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">{{ 'settlements.list.title' | translate }}</h1>
 
         <div class="flex flex-wrap gap-2">
             <button
@@ -10,7 +10,7 @@
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.default' | translate }}
-                <span class="text-base transition-all duration-300 origin-center">━</span>
+                <tui-icon icon="@tui.minus" class="size-4!" />
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('population')"
@@ -19,16 +19,11 @@
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.population' | translate }}
-                <span
-                    class="text-base transition-all duration-300 origin-center"
+                <tui-icon
+                    [icon]="isSortActive('population') ? '@tui.chevron-down' : '@tui.minus'"
+                    class="size-4! transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('population') === 'asc'"
-                >
-                    @if (isSortActive("population")) {
-                        ▼
-                    } @else {
-                        ━
-                    }
-                </span>
+                />
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('online')"
@@ -37,16 +32,11 @@
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.online' | translate }}
-                <span
-                    class="text-base transition-all duration-300 origin-center"
+                <tui-icon
+                    [icon]="isSortActive('online') ? '@tui.chevron-down' : '@tui.minus'"
+                    class="size-4! transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('online') === 'asc'"
-                >
-                    @if (isSortActive("online")) {
-                        ▼
-                    } @else {
-                        ━
-                    }
-                </span>
+                />
                 @if (loadingOnline()) {
                     <span
                         class="inline-block ml-1 size-3 border-2 border-lh-primary border-t-transparent rounded-full animate-spin"
@@ -60,16 +50,11 @@
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.east' | translate }}
-                <span
-                    class="text-base transition-all duration-300 origin-center"
+                <tui-icon
+                    [icon]="isSortActive('east') ? '@tui.chevron-down' : '@tui.minus'"
+                    class="size-4! transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('east') === 'asc'"
-                >
-                    @if (isSortActive("east")) {
-                        ▼
-                    } @else {
-                        ━
-                    }
-                </span>
+                />
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('west')"
@@ -78,16 +63,11 @@
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.west' | translate }}
-                <span
-                    class="text-base transition-all duration-300 origin-center"
+                <tui-icon
+                    [icon]="isSortActive('west') ? '@tui.chevron-down' : '@tui.minus'"
+                    class="size-4! transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('west') === 'asc'"
-                >
-                    @if (isSortActive("west")) {
-                        ▼
-                    } @else {
-                        ━
-                    }
-                </span>
+                />
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('suzerain')"
@@ -96,16 +76,11 @@
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.suzerain' | translate }}
-                <span
-                    class="text-base transition-all duration-300 origin-center"
+                <tui-icon
+                    [icon]="isSortActive('suzerain') ? '@tui.chevron-down' : '@tui.minus'"
+                    class="size-4! transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('suzerain') === 'asc'"
-                >
-                    @if (isSortActive("suzerain")) {
-                        ▼
-                    } @else {
-                        ━
-                    }
-                </span>
+                />
             </button>
             <button
                 [class.bg-lh-primary-2!]="isSortActive('diplomacy')"
@@ -114,16 +89,11 @@
                 class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.diplomacy' | translate }}
-                <span
-                    class="text-base transition-all duration-300 origin-center"
+                <tui-icon
+                    [icon]="isSortActive('diplomacy') ? '@tui.chevron-down' : '@tui.minus'"
+                    class="size-4! transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('diplomacy') === 'asc'"
-                >
-                    @if (isSortActive("diplomacy")) {
-                        ▼
-                    } @else {
-                        ━
-                    }
-                </span>
+                />
             </button>
         </div>
     </div>

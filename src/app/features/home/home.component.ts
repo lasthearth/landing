@@ -1,17 +1,29 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
-import { TuiIcon } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { NewsCardComponent } from '@app/features/news/ui/news-card/news-card.component';
 import { NewsSkeletonComponent } from '@app/features/news/ui/news-skeleton/news-skeleton.component';
 import { NewsApiService, mapDtoToNews } from '@entities/news';
-import { UserService, Role, IPlayer } from '@entities/user';
+import { UserService, Role } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { TicketFormComponent } from '@features/ticket/ticket-form/ticket-form.component';
 import { I18nService, TranslatePipe } from '@core/i18n';
-import { catchError, defaultIfEmpty, finalize, forkJoin, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
+import { environment } from '@core/config/environments/environment';
+import { ServerInformationService } from '@core/services/server-information.service';
+import { SettlementService } from '@entities/settlement';
+import { DiscordGalleryService } from '@shared/lib/discord-gallery/discord-gallery.service';
+import { formatServerTime } from '@app/layout/header/lib/format-server-time.function';
+import { catchError, finalize, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
+
+/**
+ * Роль участника команды проекта.
+ */
+type TeamRole = 'founder' | 'coFounder' | 'techAdmin' | 'admin' | 'moderator';
 
 /**
  * Компонент главной страницы.
@@ -46,6 +58,26 @@ export class HomeComponent {
     private readonly confirmDialog = inject(ConfirmDialogService);
 
     /**
+     * Сервис диалогов Taiga UI (открытие формы тикета).
+     */
+    private readonly dialogs = inject(TuiDialogService);
+
+    /**
+     * Сервис информации о сервере (онлайн, игровое время).
+     */
+    private readonly serverInfo = inject(ServerInformationService);
+
+    /**
+     * Сервис поселений (счётчик для пульса).
+     */
+    private readonly settlementService = inject(SettlementService);
+
+    /**
+     * Сервис галереи скриншотов.
+     */
+    private readonly galleryService = inject(DiscordGalleryService);
+
+    /**
      * Сервис интернационализации.
      */
     private readonly i18n = inject(I18nService);
@@ -68,7 +100,7 @@ export class HomeComponent {
     /**
      * Количество новостей на одной странице.
      */
-    readonly pageSize = 3;
+    readonly pageSize = 2;
 
     /**
      * Текущий индекс страницы новостей.
@@ -172,6 +204,121 @@ export class HomeComponent {
     ];
 
     /**
+     * Команда проекта.
+     *
+     * Роль задаётся ключом из `home.team.roles` и определяет
+     * цветовое оформление карточки участника.
+     *
+     * Фото участников задаются в `environment.teamPhotos` по имени —
+     * достаточно вставить ссылку на изображение.
+     * Без фото отображается инициал на фирменном фоне.
+     */
+    protected readonly teamMembers: { name: string; role: TeamRole; pos: number }[] = [
+        { name: 'Lisov', role: 'founder', pos: 1 },
+        { name: 'Yonhva', role: 'coFounder', pos: 2 },
+        { name: 'ripls', role: 'techAdmin', pos: 4 },
+        { name: 'Sunhell', role: 'techAdmin', pos: 5 },
+        { name: 'Hecker', role: 'admin', pos: 6 },
+        { name: 'Mr.Suslik', role: 'admin', pos: 7 },
+        { name: 'Myza', role: 'admin', pos: 3 },
+        { name: 'Errora', role: 'admin', pos: 8 },
+        { name: 'Anneta', role: 'admin', pos: 9 },
+        { name: '_NickRim_', role: 'admin', pos: 10 },
+        { name: 'Лягушка', role: 'moderator', pos: 11 },
+        { name: 'Glifider', role: 'moderator', pos: 12 },
+        { name: 'Minker', role: 'moderator', pos: 13 },
+    ];
+
+    /**
+     * Возвращает URL фото участника команды из `environment.teamPhotos`.
+     *
+     * @param name Имя участника.
+     * @returns URL фото или `undefined`, если фото не задано.
+     */
+    protected getTeamPhoto(name: string): string | undefined {
+        return environment.teamPhotos[name] || undefined;
+    }
+
+    /**
+     * Направления, по которым команда ищет людей.
+     */
+    protected readonly recruitRoles = [
+        { icon: '@tui.shield', key: 'moderator' },
+        { icon: '@tui.video', key: 'content' },
+        { icon: '@tui.flame', key: 'events' },
+        { icon: '@tui.users', key: 'promo' },
+    ] as const;
+
+    /**
+     * Открывает диалог отправки тикета.
+     */
+    protected openTicket(): void {
+        this.dialogs.open(new PolymorpheusComponent(TicketFormComponent), { size: 'auto' }).subscribe();
+    }
+
+    /**
+     * Текущий онлайн сервера.
+     */
+    protected readonly online = toSignal(
+        this.serverInfo.getOnlinePlayersCount$().pipe(catchError(() => of(null))),
+        { initialValue: null }
+    );
+
+    /**
+     * Текущее игровое время мира (локализованное).
+     */
+    protected readonly worldTime = toSignal(
+        this.serverInfo.getTime$().pipe(
+            map((data) => formatServerTime(data.time, this.i18n.language())),
+            catchError(() => of(null))
+        ),
+        { initialValue: null }
+    );
+
+    /**
+     * Количество одобренных поселений сервера.
+     */
+    protected readonly settlementsCount = toSignal(
+        this.settlementService.getSettlements().pipe(
+            map((list) => list.length),
+            catchError(() => of(null))
+        ),
+        { initialValue: null }
+    );
+
+    /**
+     * Последние скриншоты из галереи для ленты на главной.
+     */
+    protected readonly galleryStrip = toSignal(
+        this.galleryService.getAllImages$().pipe(
+            map((images) => images.slice(0, 4)),
+            catchError(() => of([]))
+        ),
+        { initialValue: [] }
+    );
+
+    /**
+     * Возвращает CSS-классы бейджа роли участника команды.
+     *
+     * @param role Роль участника.
+     * @returns Строка CSS-классов бейджа.
+     */
+    protected getTeamRoleBadgeClass(role: TeamRole): string {
+        switch (role) {
+            case 'founder':
+                return 'bg-[#d4af37]/90 text-[#2d201a]';
+            case 'coFounder':
+                return 'bg-lh-accent/90 text-white';
+            case 'techAdmin':
+                return 'bg-[#3d5381]/90 text-[#f0e6d2]';
+            case 'moderator':
+                return 'bg-[#16a34a]/90 text-white';
+            default:
+                return 'bg-lh-danger/90 text-white';
+        }
+    }
+
+    /**
      * Поток новостей из API.
      *
      * При первой подписке и по refresh$ загружает данные заново.
@@ -196,19 +343,10 @@ export class HomeComponent {
                         return of(news);
                     }
 
-                    return forkJoin(
-                        authorIds.map((id) =>
-                            this.userService.getPlayer$(id).pipe(
-                                defaultIfEmpty(null),
-                                catchError(() => of(null))
-                            )
-                        )
-                    ).pipe(
+                    return this.userService.getPlayersBatch$(authorIds).pipe(
                         map((players) => {
                             const playerMap = new Map(
-                                players
-                                    .filter((player): player is IPlayer => player !== null)
-                                    .map((player) => [player.user_id, player.user_game_name])
+                                players.map((player) => [player.user_id, player.user_game_name])
                             );
 
                             return news.map((item) => ({

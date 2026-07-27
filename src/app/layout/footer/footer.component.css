@@ -1,3 +1,19 @@
 :host {
     display: block;
+    position: relative;
+}
+
+/**
+ * Едва заметное тёплое свечение очага над футером.
+ */
+:host::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse 60% 100% at 50% 130%,
+        rgba(195, 90, 23, 0.12) 0%,
+        transparent 70%
+    );
 }

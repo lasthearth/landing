@@ -13,6 +13,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
+import { getRarityByPrice } from '../../lib/get-rarity-by-price.function';
 
 /**
  * Компонент вкладки «Привилегии» в магазине.
@@ -145,6 +146,28 @@ export class TitlesComponent {
             return 0;
         }
         return Math.round(((original - current) / original) * 100);
+    }
+
+    /**
+     * Возвращает CSS-классы рамки изображения по редкости товара.
+     *
+     * Редкость определяется ценой: обычный (пергамент), редкий (синий),
+     * эпический (фиолетовый), легендарный (золотой).
+     *
+     * @param price Цена товара строкой.
+     * @returns Строка CSS-классов рамки и свечения.
+     */
+    protected getRarityFrameClass(price: string): string {
+        switch (getRarityByPrice(price)) {
+            case 'legendary':
+                return 'border-[#d4af37] shadow-[0_0_18px_rgba(212,175,55,0.4)]';
+            case 'epic':
+                return 'border-[#8b5cf6]/80 shadow-[0_0_14px_rgba(139,92,246,0.3)]';
+            case 'rare':
+                return 'border-[#3d5381]/80 shadow-[0_0_12px_rgba(61,83,129,0.3)]';
+            default:
+                return 'border-[#bdb093] shadow-[0_4px_16px_rgba(0,0,0,0.12)]';
+        }
     }
 
     /**

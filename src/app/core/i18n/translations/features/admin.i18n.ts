@@ -11,6 +11,7 @@ export const ADMIN_I18N = {
                 purchases: 'Покупки',
                 goods: 'Товары',
                 hungerGames: 'Голодные игры',
+                purchasesHistory: 'История покупок',
             },
             common: {
                 avatarAlt: 'Аватар',
@@ -102,6 +103,22 @@ export const ADMIN_I18N = {
                 confirmRefundAction: 'Вернуть',
                 issuedSuccess: 'Покупка отмечена как выданная',
                 refundedSuccess: 'Покупка возвращена',
+            },
+            purchasesHistory: {
+                emptyTitle: 'Покупок пока нет',
+                emptyDescription: 'История покупок всех игроков появится здесь.',
+                loadMore: 'Загрузить ещё',
+                issuedBy: 'Выдал:',
+                refundedAt: 'Возвращена:',
+                expiredHint: 'Срок привилегии истёк (прошёл месяц с момента выдачи) — снимите права игрока вручную.',
+                status: {
+                    active: 'Активна',
+                    completed: 'Завершена',
+                    issued: 'Выдана',
+                    pending_issue: 'Ожидает выдачи',
+                    refunded: 'Возвращена',
+                    expired: 'Истекла',
+                },
             },
             shop: {
                 listTab: 'Список товаров',
@@ -241,6 +258,7 @@ export const ADMIN_I18N = {
                 purchases: 'Purchases',
                 goods: 'Goods',
                 hungerGames: 'Hunger Games',
+                purchasesHistory: 'Purchase history',
             },
             common: {
                 avatarAlt: 'Avatar',
@@ -332,6 +350,22 @@ export const ADMIN_I18N = {
                 confirmRefundAction: 'Refund',
                 issuedSuccess: 'Purchase marked as issued',
                 refundedSuccess: 'Purchase refunded',
+            },
+            purchasesHistory: {
+                emptyTitle: 'No purchases yet',
+                emptyDescription: 'The purchase history of all players will appear here.',
+                loadMore: 'Load more',
+                issuedBy: 'Issued by:',
+                refundedAt: 'Refunded:',
+                expiredHint: 'The privilege has expired (a month has passed since issuance) — revoke the player\'s rights manually.',
+                status: {
+                    active: 'Active',
+                    completed: 'Completed',
+                    issued: 'Issued',
+                    pending_issue: 'Pending issue',
+                    refunded: 'Refunded',
+                    expired: 'Expired',
+                },
             },
             shop: {
                 listTab: 'Item list',

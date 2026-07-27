@@ -57,6 +57,7 @@
 
     .quick-actions__item:hover & {
         background: rgba(195, 90, 23, 0.2);
+        box-shadow: 0 0 14px rgba(255, 121, 32, 0.35);
     }
 }
 
@@ -122,5 +123,194 @@
 
     .quick-actions__label {
         font-size: 0.875rem;
+    }
+}
+
+/**
+ * Карточка участника команды проекта.
+ * Фото (или инициал) с градиентной шторкой, именем и бейджем роли;
+ * рамка и свечение зависят от роли.
+ */
+.team-card {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    box-shadow: 0 4px 14px rgba(45, 32, 26, 0.12);
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+}
+
+.team-card__photo {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(150deg, #7a5631 0%, #3d2a1f 100%);
+}
+
+.team-card__initial {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: 800;
+    color: rgba(240, 230, 210, 0.85);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.team-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26, 20, 14, 0.75) 0%, transparent 45%);
+    pointer-events: none;
+}
+
+/**
+ * Внутренний блик сверху для объёма фото.
+ */
+.team-card__photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 0%, transparent 18%);
+    pointer-events: none;
+}
+
+/**
+ * Шторка с именем в цвете роли.
+ */
+.team-card--founder .team-card__overlay {
+    background: linear-gradient(to top, rgba(96, 72, 10, 0.8) 0%, transparent 45%);
+}
+
+.team-card--coFounder .team-card__overlay {
+    background: linear-gradient(to top, rgba(140, 60, 12, 0.8) 0%, transparent 45%);
+}
+
+.team-card--techAdmin .team-card__overlay {
+    background: linear-gradient(to top, rgba(32, 45, 74, 0.8) 0%, transparent 45%);
+}
+
+.team-card--admin .team-card__overlay {
+    background: linear-gradient(to top, rgba(70, 8, 8, 0.8) 0%, transparent 45%);
+}
+
+.team-card--moderator .team-card__overlay {
+    background: linear-gradient(to top, rgba(10, 70, 36, 0.8) 0%, transparent 45%);
+}
+
+.team-card__name {
+    position: absolute;
+    left: 0.875rem;
+    bottom: 0.625rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #f5eedd;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.team-card__role {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.team-card--founder {
+    box-shadow:
+        0 0 0 2px #d4af37,
+        0 6px 20px rgba(212, 175, 55, 0.35);
+
+    &:hover {
+        box-shadow:
+            0 0 0 2px #d4af37,
+            0 10px 28px rgba(212, 175, 55, 0.45);
+    }
+}
+
+.team-card--coFounder {
+    box-shadow:
+        0 0 0 2px rgba(255, 121, 32, 0.7),
+        0 6px 20px rgba(255, 121, 32, 0.25);
+}
+
+.team-card--techAdmin {
+    box-shadow:
+        0 0 0 2px rgba(61, 83, 129, 0.55),
+        0 4px 14px rgba(45, 32, 26, 0.12);
+}
+
+.team-card--moderator {
+    box-shadow:
+        0 0 0 2px rgba(22, 163, 74, 0.45),
+        0 4px 14px rgba(45, 32, 26, 0.12);
+}
+
+.team-card--admin {
+    box-shadow:
+        0 0 0 2px rgba(114, 0, 0, 0.55),
+        0 4px 14px rgba(45, 32, 26, 0.12);
+}
+
+/**
+ * Мозаичный коллаж команды на десктопе:
+ * 13 карточек разных размеров, образующих ровный прямоугольник 4×5.
+ * На мобильных — обычная сетка квадратов.
+ */
+@media (min-width: 1024px) {
+    .team-pos-1 { grid-area: 1 / 1 / 2 / 2; }
+    .team-pos-2 { grid-area: 1 / 2 / 3 / 3; }
+    .team-pos-3 { grid-area: 1 / 3 / 3 / 5; }
+    .team-pos-4 { grid-area: 2 / 1 / 3 / 2; }
+    .team-pos-5 { grid-area: 3 / 1 / 4 / 3; }
+    .team-pos-6 { grid-area: 3 / 3 / 5 / 4; }
+    .team-pos-7 { grid-area: 3 / 4 / 4 / 5; }
+    .team-pos-8 { grid-area: 4 / 1 / 5 / 2; }
+    .team-pos-9 { grid-area: 4 / 2 / 5 / 3; }
+    .team-pos-10 { grid-area: 4 / 4 / 5 / 5; }
+    .team-pos-11 { grid-area: 5 / 1 / 6 / 3; }
+    .team-pos-12 { grid-area: 5 / 3 / 6 / 4; }
+    .team-pos-13 { grid-area: 5 / 4 / 6 / 5; }
+
+    /**
+     * Карточки, занимающие несколько ячеек, заполняют
+     * свою область целиком — квадрат не применяется.
+     */
+    .team-pos-2,
+    .team-pos-3,
+    .team-pos-5,
+    .team-pos-6,
+    .team-pos-11 {
+        aspect-ratio: auto;
+    }
+}
+
+/**
+ * Панель блока приглашения в команду.
+ */
+.recruit-panel {
+    background-color: #e2d7bb;
+    background-image: url('/image_1.webp');
+    background-repeat: repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .team-card {
+        transition: none;
+
+        &:hover {
+            transform: none;
+        }
     }
 }

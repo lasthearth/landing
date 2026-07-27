@@ -12,18 +12,19 @@
         <div class="gallery-grid columns-1 sm:columns-2 md:columns-3 xl:columns-4">
             @for (skeleton of skeletons(); track skeleton) {
                 <div
-                    class="gallery-item gallery-item--skeleton relative block w-full rounded-2xl overflow-hidden border-2 border-[#e2d7bb]/10 bg-[#1a1816]"
-                    [style.aspect-ratio]="getSkeletonAspect(skeleton)"
+                    class="gallery-item gallery-item--skeleton relative block w-full rounded-2xl overflow-hidden border-2 border-[#e2d7bb]/10"
+                    [style.height.px]="getSkeletonHeight(skeleton)"
+                    [style.animation-delay.ms]="getSkeletonDelay(skeleton)"
                 ></div>
             }
         </div>
     } @else if (hasError()) {
-        <div class="flex flex-col items-center justify-center gap-4 py-20 text-[#e2d7bb]">
+        <div class="flex flex-col items-center justify-center gap-4 py-20 text-lh-primary-2">
             <tui-icon icon="@tui.triangle-alert" class="size-16 opacity-80" />
             <p class="text-lg">{{ "gallery.error" | translate }}</p>
         </div>
     } @else if (images().length === 0) {
-        <div class="flex flex-col items-center justify-center gap-4 py-20 text-[#e2d7bb]">
+        <div class="flex flex-col items-center justify-center gap-4 py-20 text-lh-primary-2">
             <tui-icon icon="@tui.image-off" class="size-16 opacity-80" />
             <p class="text-lg">{{ "gallery.empty" | translate }}</p>
         </div>
@@ -34,14 +35,10 @@
                     type="button"
                     (click)="openImage(image)"
                     class="gallery-item group relative block w-full rounded-2xl overflow-hidden border-2 border-[#e2d7bb]/20 bg-[#1a1816] hover:border-[#c35a17] transition-all duration-300 cursor-pointer text-left"
+                    [class.gallery-item--new]="isNew(image.timestamp)"
+                    [style.aspect-ratio]="getImageAspect(image)"
                     [attr.aria-label]="image.alt"
                 >
-                    @if (isNew(image.timestamp)) {
-                        <span class="gallery-item__new-badge" [title]="'gallery.newLabel' | translate">
-                            {{ "gallery.newLabel" | translate }}
-                        </span>
-                    }
-
                     <app-gallery-image [src]="image.proxyUrl" [alt]="image.alt" />
 
                     <div

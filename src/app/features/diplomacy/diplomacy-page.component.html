@@ -27,7 +27,7 @@
     }
 
     @if (visibleStatements().length > 0) {
-        <div class="diplomacy-page__list">
+        <div class="diplomacy-page__list lh-stagger-list">
             @for (statement of visibleStatements(); track statement.id) {
                 <article class="diplomacy-card">
                     <div class="diplomacy-card__seal">

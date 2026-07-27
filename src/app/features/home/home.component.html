@@ -1,4 +1,6 @@
 <div class="relative">
+    <h1 class="sr-only">{{ "home.carousel.slides.lastHearth.header" | translate }} — Last Hearth</h1>
+
     <button
         (click)="navigate(1)"
         class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] hover:bg-[#c35a17] transition-all duration-200 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
@@ -9,13 +11,16 @@
 
     <tui-carousel [(index)]="carouselIndex" [duration]="3500" class="h-auto! !rounded-t-xl">
         @for (item of images; track $index) {
-            <div *tuiItem class="size-full relative">
+            <div *tuiItem class="size-full relative overflow-hidden">
                 <app-image-loader
                     [src]="item.image"
                     [alt]="item.header | translate"
                     class="h-full w-full md:h-[600px]"
                     [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
                 />
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-black/40 pointer-events-none"
+                ></div>
                 <div
                     class="absolute flex flex-col justify-start left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white w-[90%] px-4 py-6"
                 >
@@ -102,4 +107,209 @@
     <tui-pagination [index]="pageIndex()" [length]="totalPages()" (indexChange)="goToPage($event)" class="mb-4" />
 } @else {
     <p class="text-2xl/7.5 my-6 uppercase font-bold text-[#bdb093] self-center">{{ 'home.news.empty' | translate }}</p>
+}
+
+<!-- Пульс сервера -->
+<section class="px-4 md:px-10 pb-6 flex flex-col gap-3">
+    <h2 class="text-2xl md:text-3xl uppercase font-bold text-[#2d201a]">{{ 'home.pulse.title' | translate }}</h2>
+
+    <div class="grid grid-cols-3 gap-3 md:gap-4">
+        <div
+            class="flex flex-col items-center gap-1 rounded-xl bg-[#e8dfc8] border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+        >
+            <tui-icon icon="@tui.users" class="size-6! text-[#c35a17]" />
+            <span class="text-2xl md:text-3xl font-bold text-[#2d201a] tabular-nums">
+                {{ online()?.online ?? '—' }}
+            </span>
+            <span class="text-sm md:text-base font-semibold text-[#5c554a] text-center uppercase tracking-wide">
+                {{ 'home.pulse.online' | translate }}
+            </span>
+        </div>
+
+        <div
+            class="flex flex-col items-center gap-1 rounded-xl bg-[#e8dfc8] border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+        >
+            <tui-icon icon="@tui.clock" class="size-6! text-[#c35a17]" />
+            <span class="text-2xl md:text-3xl font-bold text-[#2d201a] tabular-nums">
+                {{ worldTime() ?? '—' }}
+            </span>
+            <span class="text-sm md:text-base font-semibold text-[#5c554a] text-center uppercase tracking-wide">
+                {{ 'home.pulse.worldTime' | translate }}
+            </span>
+        </div>
+
+        <div
+            class="flex flex-col items-center gap-1 rounded-xl bg-[#e8dfc8] border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+        >
+            <tui-icon icon="@tui.castle" class="size-6! text-[#c35a17]" />
+            <span class="text-2xl md:text-3xl font-bold text-[#2d201a] tabular-nums">
+                {{ settlementsCount() ?? '—' }}
+            </span>
+            <span class="text-sm md:text-base font-semibold text-[#5c554a] text-center uppercase tracking-wide">
+                {{ 'home.pulse.settlements' | translate }}
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Команда проекта -->
+<section class="px-4 md:px-10 pb-6 flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+        <h2 class="text-2xl md:text-3xl uppercase font-bold text-[#2d201a]">{{ 'home.team.title' | translate }}</h2>
+        <p class="text-lg md:text-xl font-medium text-lh-primary">{{ 'home.team.subtitle' | translate }}</p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lh-stagger-list">
+        @for (member of teamMembers; track member.name) {
+            <div [class]="'team-card group team-card--' + member.role + ' team-pos-' + member.pos">
+                <div class="team-card__photo">
+                    @if (getTeamPhoto(member.name); as photo) {
+                        <app-image-loader
+                            [src]="photo"
+                            [alt]="member.name"
+                            class="block h-full w-full"
+                            [imageClass]="'h-full w-full object-cover transition-transform duration-500 group-hover:scale-105' + (member.role === 'founder' ? ' object-top' : '')"
+                        />
+                    } @else {
+                        <span class="team-card__initial">{{ member.name.charAt(0).toUpperCase() }}</span>
+                    }
+
+                    <div class="team-card__overlay"></div>
+
+                    <span
+                        [class]="'team-card__role backdrop-blur-sm ' + getTeamRoleBadgeClass(member.role)"
+                    >
+                        {{ 'home.team.roles.' + member.role | translate }}
+                    </span>
+
+                    <span class="team-card__name">{{ member.name }}</span>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Присоединиться к команде -->
+<section class="px-4 md:px-10 pt-6 pb-8">
+    <div
+        class="recruit-panel flex flex-col lg:flex-row gap-0 rounded-2xl shadow-[0_8px_28px_rgba(45,32,26,0.12)] overflow-hidden border-y-2 border-[#bdb093]/50"
+    >
+        <!-- Текст и роли -->
+        <div class="flex flex-col gap-6 p-6 lg:p-8 lg:w-3/5">
+            <div class="flex flex-col gap-2 pl-4 border-l-4 border-[#8c2320]/60">
+                <h2 class="text-2xl md:text-3xl uppercase font-bold text-[#2d201a]">
+                    {{ 'home.recruit.title' | translate }}
+                </h2>
+                <p class="text-xl font-medium text-[#3f3c34] max-w-2xl">
+                    {{ 'home.recruit.subtitle' | translate }}
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                @for (role of recruitRoles; track role.key) {
+                    <div
+                        class="flex items-start gap-3 rounded-xl bg-[#f6f0df] border border-[#bdb093]/60 p-4 shadow-[0_2px_8px_rgba(45,32,26,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(45,32,26,0.12)]"
+                    >
+                        <span
+                            class="flex shrink-0 items-center justify-center size-11 rounded-lg bg-gradient-to-br from-[#c35a17] to-[#97471b] text-[#f0e6d2] shadow-[0_3px_10px_rgba(195,90,23,0.35)]"
+                        >
+                            <tui-icon [icon]="role.icon" class="size-5!" />
+                        </span>
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-lg font-bold text-[#2d201a]">
+                                {{ 'home.recruit.roles.' + role.key + '.title' | translate }}
+                            </span>
+                            <span class="text-lg leading-6 text-[#5c4030]">
+                                {{ 'home.recruit.roles.' + role.key + '.description' | translate }}
+                            </span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="flex flex-col gap-3 mt-auto pt-2">
+                <span class="text-base font-bold uppercase tracking-wide text-[#5c554a]">
+                    {{ 'home.recruit.contactTitle' | translate }}
+                </span>
+                <div class="flex flex-wrap gap-3">
+                    <a
+                        href="https://discord.com/invite/FZb7SGrSFy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#c35a17] hover:bg-[#d96d28] !text-white text-lg font-bold transition-colors duration-200 no-underline! shadow-[0_0_18px_rgba(195,90,23,0.35)]"
+                    >
+                        <tui-icon icon="@tui.message-circle" class="size-5!" />
+                        {{ 'home.recruit.discord' | translate }}
+                    </a>
+                    <a
+                        href="https://t.me/lisovcd"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#3d5381] hover:bg-[#4a649a] !text-white text-lg font-bold transition-colors duration-200 no-underline!"
+                    >
+                        <tui-icon icon="@tui.send" class="size-5!" />
+                        {{ 'home.recruit.telegram' | translate }}
+                    </a>
+                    <button
+                        type="button"
+                        (click)="openTicket()"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-[#5c4030]/40 text-[#5c4030] hover:border-[#c35a17] hover:text-[#c35a17] text-lg font-bold transition-colors duration-200 cursor-pointer bg-transparent"
+                    >
+                        <tui-icon icon="@tui.file-text" class="size-5!" />
+                        {{ 'home.recruit.ticket' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Изображение -->
+        <div class="lg:w-2/5 min-h-64 lg:min-h-0 relative">
+            <app-image-loader
+                src="/castle-recruit.webp"
+                [alt]="'home.recruit.title' | translate"
+                class="block h-full w-full absolute inset-0"
+                imageClass="h-full w-full object-cover object-[center_30%]"
+            />
+            <div class="absolute inset-0 bg-gradient-to-r from-[#e2d7bb] via-transparent to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Лента последних скриншотов -->
+@if (galleryStrip().length > 0) {
+    <section class="px-4 md:px-10 pb-8 flex flex-col gap-4">
+        <div class="flex items-center justify-between gap-4">
+            <h2 class="text-2xl md:text-3xl uppercase font-bold text-[#2d201a]">{{ 'home.galleryStrip.title' | translate }}</h2>
+            <a
+                [routerLink]="['/gallery']"
+                class="shrink-0 inline-flex items-center gap-2 text-lg font-bold !text-[#c35a17] hover:!text-[#d96d28] transition-colors no-underline!"
+            >
+                {{ 'home.galleryStrip.more' | translate }}
+                <tui-icon icon="@tui.chevron-right" class="size-5!" />
+            </a>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lh-stagger-list">
+            @for (image of galleryStrip(); track image.id) {
+                <a
+                    [routerLink]="['/gallery']"
+                    class="group relative block rounded-2xl overflow-hidden border-2 border-[#e2d7bb]/20 bg-[#1a1816] hover:border-[#c35a17] transition-all duration-300 cursor-pointer aspect-square"
+                    [attr.aria-label]="image.alt"
+                >
+                    <app-image-loader
+                        [src]="image.proxyUrl"
+                        [alt]="image.alt"
+                        class="block h-full w-full"
+                        imageClass="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3"
+                    >
+                        <span class="text-white text-sm font-semibold truncate">{{ image.author }}</span>
+                    </div>
+                </a>
+            }
+        </div>
+    </section>
 }

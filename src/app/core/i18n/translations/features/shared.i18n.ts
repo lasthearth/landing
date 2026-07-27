@@ -30,6 +30,7 @@ export const SHARED_I18N = {
         },
         welcome: {
             subtitle: 'Сервер Vintage Story',
+            description: 'Выживай у последнего очага, строй поселение и оставь след в мире, который помнит каждого игрока.',
             feature1: 'Хардкорная сложность для истинных любителей выживания',
             feature2: 'Поселения, дипломатия, интриги, войны и торговля',
             feature3: 'Одно из крупнейших коммьюнити по Vintage Story в СНГ',
@@ -37,6 +38,7 @@ export const SHARED_I18N = {
             joinDiscord: 'Вступить в Discord',
             scrollDownAriaLabel: 'Прокрутить вниз к контенту',
             videoFallback: 'Ваш браузер не поддерживает элемент video',
+            pauseHint: 'Клик по видео — пауза',
         },
         startGame: {
             title: 'Начать игру',
@@ -97,6 +99,7 @@ export const SHARED_I18N = {
         },
         welcome: {
             subtitle: 'Vintage Story Server',
+            description: 'Survive by the last hearth, build a settlement and leave your mark in a world that remembers every player.',
             feature1: 'Hardcore difficulty for true survival enthusiasts',
             feature2: 'Settlements, diplomacy, intrigue, wars and trade',
             feature3: 'One of the largest Vintage Story communities in the CIS',
@@ -104,6 +107,7 @@ export const SHARED_I18N = {
             joinDiscord: 'Join Discord',
             scrollDownAriaLabel: 'Scroll down to content',
             videoFallback: 'Your browser does not support the video element',
+            pauseHint: 'Click the video to pause',
         },
         startGame: {
             title: 'Start game',

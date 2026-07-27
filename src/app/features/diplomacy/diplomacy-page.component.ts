@@ -16,6 +16,7 @@ import { GameChatMessage } from '@features/game-chat/model/game-chat-message';
 import { GameChatService } from '@features/game-chat/services/game-chat.service';
 import { environment } from '@core/config/environments/environment';
 import { TranslatePipe } from '@core/i18n';
+import { sanitizeDiscordContent } from './lib/sanitize-discord-content.function';
 
 /**
  * Максимальное количество отображаемых заявлений.
@@ -86,9 +87,18 @@ export class DiplomacyPageComponent {
 
     /**
      * Отсортированные заявления для отображения.
+     *
+     * Контент очищается от Discord-упоминаний и markdown-разметки;
+     * опустевшие после очистки сообщения скрываются.
      */
     protected readonly visibleStatements = computed(() =>
-        sortMessagesByTimeDesc(this.statements()).slice(0, MAX_STATEMENTS)
+        sortMessagesByTimeDesc(this.statements())
+            .map((statement) => ({
+                ...statement,
+                content: sanitizeDiscordContent(statement.content),
+            }))
+            .filter((statement) => statement.content.length > 0)
+            .slice(0, MAX_STATEMENTS)
     );
 
     public constructor() {

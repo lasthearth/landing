@@ -30,7 +30,7 @@
         </p>
 
         <p class="text-base md:text-xl lg:text-2xl mt-4 max-w-3xl !text-shadow-md text-[#e8d8b8]">
-            Выживай у последнего очага, строй поселение и оставь след в мире, который помнит каждого игрока.
+            {{ 'welcome.description' | translate }}
         </p>
 
         <div
@@ -75,9 +75,16 @@
         </div>
     </div>
 
+    <div
+        class="absolute bottom-6 left-6 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/35 backdrop-blur-sm text-white/70 text-sm pointer-events-none select-none"
+    >
+        <tui-icon icon="@tui.pause" class="size-4!" />
+        {{ 'welcome.pauseHint' | translate }}
+    </div>
+
     <button
         (click)="scroll()"
-        class="w-12 h-20 md:w-14 md:h-24 border border-neutral-500 rounded-full z-20 absolute top-[83%] left-1/2 -translate-x-1/2 bottom-20 cursor-pointer hover:shadow-2xl animate-bounce backdrop-blur-md"
+        class="w-12 h-20 md:w-14 md:h-24 border border-neutral-500 rounded-full z-20 absolute top-[83%] left-1/2 -translate-x-1/2 cursor-pointer hover:shadow-2xl animate-bounce backdrop-blur-md"
         [attr.aria-label]="'welcome.scrollDownAriaLabel' | translate"
     >
         <tui-icon icon="@tui.chevrons-down" class="!text-3xl md:!text-5xl text-white" />

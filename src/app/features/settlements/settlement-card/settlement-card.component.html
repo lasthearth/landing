@@ -6,7 +6,7 @@
         class="settlement-card-inner transform flex xl:flex-row flex-col relative rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#bdb093]/30 h-full max-h-[400px]"
     >
         <!-- Изображение -->
-        <div class="hidden xl:block xl:w-2/5 w-full shrink-0 h-full relative">
+        <div class="xl:w-2/5 w-full shrink-0 h-40 xl:h-full relative">
             @if (isPinned(data())) {
                 <div
                     class="absolute top-3 right-3 z-10 bg-lh-accent text-white rounded-lg px-2 py-1 shadow-md flex items-center gap-1"
@@ -17,7 +17,8 @@
             <app-image-loader
                 [src]="data().attachments[0].url ? data().attachments[0].url : '/images/screenshots/screen_1.png'"
                 [alt]="'settlements.card.imageAlt' | translate:{name: data().name}"
-                imageClass="h-full w-full rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
+                class="block h-full w-full"
+                imageClass="h-full w-full object-cover rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
             />
         </div>
 

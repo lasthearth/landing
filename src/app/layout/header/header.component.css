@@ -20,6 +20,32 @@
     background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
 }
 
+/**
+ * Плавное появление выпадающих меню хедера.
+ */
+.dropdown-enter {
+    animation: dropdown-enter 0.18s ease-out;
+    transform-origin: top center;
+}
+
+@keyframes dropdown-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dropdown-enter {
+        animation: none;
+    }
+}
+
 .dash-animated {
     animation: dash-spin 4s ease-in-out infinite;
     display: inline-block;
