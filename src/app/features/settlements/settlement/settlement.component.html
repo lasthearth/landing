@@ -57,12 +57,20 @@
             <p class="text-2xl/7.5 uppercase font-bold text-[#bdb093]">
                 {{ 'settlements.settlement.noSettlement' | translate }}
             </p>
-            <button
-                (click)="createSettlement()"
-                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
-            >
-                {{ 'settlements.form.submit' | translate }}
-            </button>
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button
+                    (click)="createSettlement()"
+                    class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
+                >
+                    {{ 'settlements.form.submit' | translate }}
+                </button>
+                <button
+                    (click)="createGuild()"
+                    class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
+                >
+                    {{ 'settlements.settlement.createGuild' | translate }}
+                </button>
+            </div>
         </div>
     }
 } @else {
@@ -70,10 +78,10 @@
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
         <div class="flex xl:flex-row flex-col gap-6">
             <div class="flex flex-col gap-3 flex-1">
-                <p class="text-xl md:text-2xl lg:text-3xl font-bold uppercase text-[#2d201a]">{{ settlement.name }}</p>
+                <p class="text-xl md:text-2xl lg:text-3xl font-bold uppercase text-[#2d201a]">{{ settlement | settlementDisplayName }}</p>
                 <div class="flex flex-wrap gap-2 items-center">
                     <span class="bg-[#3d5381]/15 uppercase font-bold text-base md:text-base px-3 p-1.5 rounded-2xl text-[#3d5381]">
-                        {{ getSettlementType(settlement.type) }}
+                        {{ getSettlementType(settlement) }}
                     </span>
                     <span
                         [class]="
@@ -83,7 +91,7 @@
                              'bg-[#720000]/15 text-[#720000]')
                         "
                     >
-                        {{ settlement.diplomacy }}
+                        {{ getDiplomacyLabel(settlement) }}
                     </span>
                     @for (tag of settlement.tags; track tag.id) {
                         @if (getTag(tag.id); as tagData) {
@@ -224,12 +232,14 @@
                 {{ 'settlements.settlement.invitePlayers' | translate }}
             </button>
 
-            <button
-                (click)="levelUp(settlement.type)"
-                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
-            >
-                {{ 'settlements.settlement.levelUp' | translate }}
-            </button>
+            @if (!isGuild(settlement)) {
+                <button
+                    (click)="levelUp(settlement.type)"
+                    class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
+                >
+                    {{ 'settlements.settlement.levelUp' | translate }}
+                </button>
+            }
 
             <button
                 disabled

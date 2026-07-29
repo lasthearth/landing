@@ -4,6 +4,27 @@
         <meta charset="utf-8" />
         <title>Last Hearth — ролевой сервер Vintage Story</title>
         <base href="/" />
+
+        <!--
+            Предотвращает промаргивание темы при перезагрузке.
+            Выставляет data-theme до загрузки Angular, считывая сохранённое значение.
+        -->
+        <script>
+            (function () {
+                try {
+                    var theme = localStorage.getItem('lh-theme');
+                    if (theme) {
+                        theme = JSON.parse(theme);
+                    }
+                    if (theme === 'dark') {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                    }
+                } catch (e) {
+                    // localStorage недоступен или значение повреждено — оставляем светлую тему
+                }
+            })();
+        </script>
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
             name="description"

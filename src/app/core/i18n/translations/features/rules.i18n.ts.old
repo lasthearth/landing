@@ -1170,27 +1170,23 @@ export const RULES_I18N = {
             content: {
                 terms: {
                     settlement: 'settlement',
-                    settlementAccusative: 'settlement',
                     settlementGenitivePlural: 'settlements',
-                    guildGenitivePlural: 'Guilds',
-                    guild: 'Guild',
                     settlementPrepositional: 'settlement',
                     politicalCourse: 'political course',
                     empireAdjective: 'Imperial',
                     neutralZoneDative: 'neutral zone,',
                     settlementDative: 'settlement,',
-                    governorGenitive: 'governor',
-                    centralSettlementNominative: 'center of the Imperial exclave',
-                    centralSettlementGenitive: 'center of the Imperial exclave',
-                    centralSettlementDative: 'center of the Imperial exclave',
-                    centralSettlementDativePlural: 'center of the Imperial exclave',
+                    governorGenitive: 'the governor',
+                    centralSettlementNominative: 'the central settlement',
+                    centralSettlementGenitive: 'central settlement',
+                    centralSettlementDative: 'the central settlement',
+                    centralSettlementDativePlural: 'central settlements',
                     keyPointGenitivePlural: 'key points of interest',
                     greatBuildingGenitivePlural: 'great buildings',
                     diplomacy: 'diplomacy',
                     homesteadAccusativePlural: 'homesteads',
                     campAccusativePlural: 'camps',
                     monument: 'Monument',
-                    monumentl: 'monument',
                     villageAccusativePlural: 'villages',
                     patent: 'patent',
                     liberties: 'liberties',
@@ -1202,10 +1198,10 @@ export const RULES_I18N = {
                     keyPointAccusative: 'key point',
                     keyPointAccusativePlural: 'key points',
                     keyPointGenitive: 'key point',
-                    keyPointGenitiveCapital: 'Key point',
+                    keyPointGenitiveCapital: 'Key Point',
                     keyPointDativePlural: 'key points',
                     keyPointInstrumental: 'key point',
-                    keyPointInstrumentalShort: 'key points',
+                    keyPointInstrumentalShort: 'key points of interest',
                     keyPointInstrumentalPlural: 'key points of interest',
                     politicalCourseGenitive: 'political course',
                     politicalCourseGenitiveAlt: 'diplomatic course',
@@ -1217,62 +1213,65 @@ export const RULES_I18N = {
                     empireGenitive: 'Empire',
                     empireAdjectiveGenitive: 'Imperial',
                     neutralZoneGenitive: 'neutral zone',
-                    neutralZoneGenitiveCapital: 'Neutral zone',
+                    neutralZoneGenitiveCapital: 'Neutral Zone',
                     neutralZonePrepositionalLower: 'neutral zone',
                     patentImprovementDative: 'settlement improvement patent',
                     patentDativeShort: 'improvement patent',
-                    patentDativeMonument: 'improvement patent',
+                    patentDativeMonument: 'patent for improving the monument',
                     patentPrepositional: 'improvement patent',
                     patentsPlural: 'patents',
                     libertiesGenitiveCapital: 'Charter of liberties',
-                    libertiesFull: 'charters of liberties',
+                    libertiesFull: 'liberties',
                     ransomLiberties: 'liberties',
                     governorEstateGenitive: "Governor's Estate",
                     passportGenitive: 'Citizen passport',
                     homesteadNominative: 'Homestead',
                     homesteadAccusative: 'homestead',
                     homesteadGenitivePlural: 'Homesteads',
-                    homesteadGenitivePluralLower: 'homesteads',
+                    homesteadGenitivePluralLower: 'Homesteads',
                     homesteadDativePlural: 'Homesteads',
                     campNominative: 'Camp',
-                    campStage: '«Camp»',
+                    campStage: '"Camp"',
                     campGenitivePlural: 'Camps',
                     campDativePlural: 'Camps',
                     villageNominative: 'Village',
-                    villageStage: '«Village»',
+                    villageStage: '"Village"',
                     villageGenitivePlural: 'Villages',
-                    villageDative: 'Village',
-                    townshipStage: '«Township»',
+                    villageDative: 'Villages',
+                    townshipStage: '"Township"',
                     townshipGenitivePlural: 'Townships',
-                    townshipDative: 'Township',
+                    townshipDative: 'Townships',
                     cityGenitive: 'City',
-                    cityStage: '«City»',
+                    cityStage: '"City"',
                     cityGenitivePlural: 'Cities',
-                    cityDative: 'City',
+                    cityDative: 'Cities',
                     regionGenitive: 'Regional Province',
-                    exclaveCenterGenitive: 'Center of the Imperial exclave',
-                    exclaveCenterInstrumental: 'Center of the Imperial exclave',
+                    exclaveCenterGenitive: 'Center of the Imperial Exclave',
+                    exclaveCenterInstrumental: 'Center of the Imperial Exclave',
                     greatBuildingNominative: 'Great building',
                     monumentLower: 'monument',
                     monumentGenitive: 'monument',
                     monumentGenitivePlural: 'monuments',
                     monumentInstrumentalPlural: 'monuments',
                     raidGenitive: 'raid',
-                    raidGenitivePlural: 'raid',
+                    raidGenitivePlural: 'raids',
                     raidState: 'raid',
-                    raidNominative: 'Raid',
+                    raidNominative: 'raid',
                     raidDative: 'raid',
                     raidPrepositionalPlural: 'raids',
-                    initiateRaid: 'raid',
+                    initiateRaid: 'raids',
                     warGenitive: 'war',
                     warState: 'war',
                     declareWar: 'war',
-                    initiateWar: 'war',
+                    initiateWar: 'wars',
                     warGenitivePlural: 'wars',
                     theftGenitive: 'theft',
                     theftAccusative: 'theft',
-                    theftPrepositional: 'theft',
+                    theftPrepositional: 'stealing',
                     diplomacyPrepositional: 'diplomacy',
+                    imperialFavorGenitive: 'Imperial Favor',
+                    bi: 'Imperial Favor',
+                    biShort: 'IF',
                     pointRuleRef: 'p. 5.3.13',
                     serverCurrencyInstrumental: 'currency',
                     imperialServantGenitivePlural: 'Imperial servants',
@@ -1297,8 +1296,8 @@ export const RULES_I18N = {
                     },
                     p1_11: '<b>1.11</b> Setting fire to any blocks and objects is prohibited.',
                     p1_12: {
-                        before: '<b>1.12</b> It is forbidden to use explosives capable of destroying blocks within [200 blocks] of ',
-                        after: ' players.',
+                        before: '<b>1.12</b> It is forbidden to use explosives capable of destroying blocks within [200 blocks] of player ',
+                        after: ' .',
                     },
                     p1_13: {
                         start: '<b>1.13</b> Any ',
@@ -1306,80 +1305,77 @@ export const RULES_I18N = {
                     },
                     p1_14: {
                         start: '<b>1.14</b> All residents of the ',
-                        end: ' and players participating in combat on its behalf must be on the list of inhabitants of that settlement. Does not apply to fighting for ',
+                        end: ' and players participating in combat on its behalf must be on the list of inhabitants of that settlement. This does not apply to fighting for ',
                         after: '.',
                     },
                     p1_15: '<b>1.15</b> The use of Claim-type protections is prohibited.',
-                    p1_16: "<b>1.16</b> A single player is prohibited from creating and using more than 2 game accounts on the project. Any excess over the established limit is considered a violation for the purpose of gaining an unfair advantage. If more than 2 accounts are discovered for a player, all accounts belonging to the violator are subject to a permanent ban, except for one [at the Administration's discretion]. A ban of one of the two accounts for violating project rules also results in a ban of the second. Warnings issued to one account also apply to the second account.",
+                    p1_16: "<b>1.16</b> A single player is prohibited from creating and using more than 2 game accounts on the project. Any excess over the established limit is considered a violation for the purpose of gaining an unfair advantage. If more than 2 accounts are discovered for a player, all accounts belonging to the violator are subject to a permanent ban, except for one (at the Administration's discretion). A ban of one of the two accounts for violating project rules also results in a ban of the second. Warnings issued to one account also apply to the second account.",
                     p1_16_1: {
-                        before: '<b>1.16.1</b> Regardless of which settlement the character is physically located in, both accounts are considered to belong to the same diplomatic status [peaceful, neutral, aggressive]. It is forbidden to use the second account to perform actions prohibited for the main account due to its diplomatic status [for example, if the main account is a resident of a peaceful settlement and cannot steal or participate in ',
-                        middle: ', then the second account also has no right to perform these actions against other players, even if it is formally without a settlement]. The second account cannot be a member of a settlement that is in a state of ',
+                        before: '<b>1.16.1</b> Regardless of which settlement the character is physically located in, both accounts are considered to belong to the same diplomatic status (peaceful, neutral, aggressive). It is forbidden to use the second account to perform actions prohibited for the main account due to its diplomatic status (for example, if the main account is a resident of a peaceful settlement and cannot steal or participate in ',
+                        middle: ', then the second account also has no right to perform these actions against other players, even if it is formally without a settlement). The second account cannot be a member of a settlement that is in a state of ',
                         after: ' or hostility with the settlement of the first account, nor can it claim neutrality if the first account is a warring party.',
                     },
                     p1_16_2:
                         '<b>1.16.2</b> The second account cannot participate in the same events and/or activities as the first if this results in a double reward.',
                     p1_17: {
-                        before: '<b>1.17</b> A player has the right to reside in or own only one type of settlement. That is, a player cannot simultaneously have a ',
-                        after: " and be a member of someone's settlement, nor can they be a member of several settlements at the same time.",
-                    },
-                    p1_18: {
-                        before: '<b>1.18</b> If a player addresses you in RP, you are obliged to interact with them strictly in RP format.',
-                    },
-                    p1_19: {
-                        before: '<b>1.19</b> If a player is the head of a settlement, they are obliged to conduct their gameplay strictly in RP format.',
-                    },
-                    p1_20: {
-                        before: '<b>1.20</b> Underground farming on settlement territory is prohibited if underground fields exceed a total area of 16 blocks.',
+                        before: '<b>1.17</b> A player has the right to reside in or own only one type of settlement. That is, a player cannot simultaneously own a ',
+                        after: ' and be a member of another settlement, nor can they be a member of several settlements at the same time.',
                     },
                 },
                 terminology: {
-                    empire: '<b>Ostmaren Empire</b> — an expansive state on whose lands the gameplay takes place.',
+                    empire: '<b>Empire</b> — a vast state on whose lands the entire gameplay takes place.',
                     settlement:
                         '<b>Settlement</b> — a group of players united in accordance with one of the types established by the rules.',
                     neutralZone: {
-                        before: '<b>Neutral zone</b> — territory marked on the map in the Discord channel "Server Info", where ',
-                        after1: ' influence zones and ',
-                        after2: ' are located. Founding ',
-                        after3: ' is permitted upon receiving a permit document from the governor.',
+                        before: '<b>Neutral zone</b> — territory marked on the map in the Discord channel where ',
+                        after1: ' influence zones are located. ',
+                        after2: ' are allowed, as are settlements of a type higher than a homestead if founded by holders of a ',
+                        after3: ' by agreement with the Governor. Holders of a Citizen passport also have the right to settle directly on the territory of the ',
+                        after4: '.',
                     },
                     keyPoint: {
-                        before: '<b>Key point</b> — 1 of 5 key locations situated in the ',
-                        after: ' and providing certain benefits to the settlement controlling it.',
+                        before: '<b>Key point</b> — one of five key locations situated in the ',
+                        after: ', granting certain benefits to the side controlling it.',
                     },
+                    greatBuilding:
+                        '<b>Great building</b> — a structure built by players according to one of the available projects published in the Discord channel. It is protected from any changes and damage inside it and within a 15-block radius, and grants certain benefits to the group that built it. Storing resources inside a Great building is prohibited. The number of Great buildings available for construction per season is limited. Completed buildings are preserved from season to season.',
                     protectedLand:
-                        '<b>Protected territory</b> — a zone covered by a territorial block [in-game item] issued by the governor or administration.',
-                    monument: {
-                        before: '<b>Settlement monument</b> — specially installed carved blocks outside a room, according to the requirements of ',
-                        after1: ' and its ',
-                        after2: '.',
-                    },
+                        '<b>Protected territory</b> — a zone covered by a territorial block [in-game item] issued exclusively by the administration.',
+                    monument:
+                        "<b>Settlement monument</b> — specially installed carved blocks outside a room, in accordance with the settlement's requirements.",
                     serverCurrency:
                         '<b>Server currency</b> — in-game coins used as a medium of exchange and payment for goods and services in gameplay.',
                     imperialServant:
-                        '<b>Imperial servant</b> — an event account of an administrator representing the Empire [for example: nonus].',
+                        '<b>Imperial servant</b> — an event account of an administrator representing the Empire (for example: nonus).',
                     patentFoundation: {
                         before: '<b>Patent for founding a settlement</b> — a book-document provided and signed by the ',
                         after: ' or an Imperial servant, granting the right to found a certain type of settlement.',
                     },
                     patentImprovement: {
                         before: '<b>Settlement improvement patent</b> — a book-document provided and signed by the ',
-                        after: ' or an Imperial servant, granting the right to improve a certain aspect within the settlement [monument, fortification].',
+                        after: ' or an Imperial servant, granting the right to improve a certain aspect within the settlement (monument, fortification).',
                     },
                     charterOfLiberties: {
                         before: '<b>Charter of liberties</b> — a book-document provided by the ',
-                        after: ', changing your status [role] when used.',
+                        after: ' that changes your status [role] when used.',
                     },
                     governorEstate: {
-                        before: '<b>Center of the Imperial Exclave</b> — central city for players, managed by the governor on behalf of the ',
+                        before: "<b>Governor's Estate</b> — a starter city for solo players, managed by the Governor on behalf of the ",
                         after: '.',
+                    },
+                    citizenPassport: {
+                        before: '<b>Citizen passport</b> — the next status after the ',
+                        mid1: ', granted by the Governor. It grants the right to: settle directly on the territory of the ',
+                        mid2: "; buy a house that will be built for the owner; access closed markets; open your own markets on the territory of the Governor's Estate; hold the position of Chief Judge; get a job and other privileges. The Citizen passport also allows founding a settlement in the ",
+                        after: ' in a place agreed with the Governor, provided that all residents of such settlement have a passport, and subject to the tax set by the Governor.',
                     },
                     raid: "<b>Raid</b> — a short-term state when players of one settlement launch a sudden attack on another settlement with the aim of destroying the enemy's manpower and/or looting its resources.",
                     war: '<b>War</b> — a long-term state when players of one settlement begin military actions against players of another settlement to achieve their demands.',
                     politicalCourse: {
-                        before: '<b>Political course</b> — a strategic direction chosen by a settlement for its role-play activity, which must clearly reflect that activity. All possible types of political courses are presented in the section ',
+                        before: '<b>Political course</b> — a strategic direction chosen by a settlement for its role-play activity, which must clearly reflect that activity. All possible types of political courses are presented in the section on ',
                     },
                     imperialLegalForce: {
-                        before: '<b>Imperial legal force</b> — the obligation to execute a decision issued as a result of a court initiated and conducted by ',
+                        before: '<b>Imperial legal force</b> — the obligation to execute a decision issued as a result of a court initiated and conducted by the ',
                         after: '.',
                     },
                 },
@@ -1397,15 +1393,11 @@ export const RULES_I18N = {
                             introAfter: ' consisting of 1 or 2 players, not requiring a special application.',
                             location: 'Location: no farther than 10 thousand blocks from the zero coordinate.',
                             population: 'Population: 1-2 people.',
-                            monumentAfter: {
-                                before: ' : 1x1x1 block (w,d,h) (or according to ',
-                                after: ').',
-                            },
                             defenses: 'Defensive structures: none.',
                             blockNote:
                                 'Specifying the nicknames of players living in the homestead in the territorial block.',
                             territoryBlock: 'Possession of a territorial block [diameter = 32 blocks].',
-                            raidTargetsBefore: ' Ability to declare raids on:  ',
+                            raidTargetsBefore: 'Ability to declare raids on:',
                         },
                         camp: {
                             title: '2.1.2 Camp',
@@ -1415,8 +1407,8 @@ export const RULES_I18N = {
                             location: 'Location: no farther than 8.5 thousand blocks from the zero coordinate.',
                             population: 'Population: at least 3 people.',
                             monumentAfter: {
-                                before: ' : 1x1x1 block [w,d,h] [or according to ',
-                                after: '].',
+                                before: ' : 1x1x1 block (w,d,h) (or according to the ',
+                                after: ').',
                             },
                             infrastructure: 'Infrastructure: equipped place with a campfire.',
                             economyHeading: 'Economy:',
@@ -1424,25 +1416,25 @@ export const RULES_I18N = {
                             storage: 'a separate covered warehouse, or storage room in an existing building.',
                             defenses: 'Defensive structures: none.',
                             territoryBlock: 'Possession of a territorial block [diameter = 64 blocks].',
-                            raidTargetsBefore: ' Ability to declare raids on: ',
+                            raidTargetsBefore: 'Ability to declare raids on:',
                         },
                         village: {
                             title: '2.1.3 Village',
                             intro: 'A Village is a ',
                             introAfter: {
-                                before: ', founded after the stage ',
-                                after: ', consisting of 4 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
+                                before: ', founded after the ',
+                                after: ' stage, consisting of 4 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
                             },
                             location: 'Location: no farther than 8.5 thousand blocks from the zero coordinate.',
                             population: 'Population: at least 4 people.',
                             monumentAfter: {
-                                before: ' : 1x1x1 block [w,d,h] [or according to ',
-                                after: '].',
+                                before: ' : 1x1x1 block (w,d,h) (or according to the ',
+                                after: ').',
                             },
                             documentsHeading: 'Documents:',
                             patentBefore: 'signed ',
                             patentAfter: ' for permission to found a village from the ',
-                            libertiesBefore: 'at least 4 charters of ',
+                            libertiesBefore: 'at least 4 purchased ',
                             infrastructureHeading: 'Infrastructure:',
                             square: 'village square;',
                             well: 'well with drinking water;',
@@ -1454,7 +1446,7 @@ export const RULES_I18N = {
                             additionalBuildings: 'Additional buildings: at least 4 single-story buildings.',
                             defenses: 'Defensive structures: none.',
                             territoryBlock: 'Possession of a territorial block [diameter = 128 blocks].',
-                            raidTargetsBefore: ' Ability to declare raids on:',
+                            raidTargetsBefore: 'Ability to declare raids on:',
                             trader: 'Ability to receive 1 random trader.',
                             sailsBlueprint: 'Blueprint for a simplified craft of vanilla sails.',
                         },
@@ -1462,17 +1454,21 @@ export const RULES_I18N = {
                             title: '2.1.4 Township',
                             intro: 'A Township is a ',
                             introAfter: {
-                                before: ', founded after the stage ',
-                                after: ', consisting of 5 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
+                                before: ', founded after the ',
+                                after: ' stage, consisting of 5 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
                             },
                             location: 'Location: no farther than 8.5 thousand blocks from the zero coordinate.',
                             population: 'Population: at least 5 people.',
+                            citizensRequirement: {
+                                before: 'At least 1 holder of a ',
+                                after: '.',
+                            },
                             monumentAfter: {
-                                before: ' : 1x1x1 block [w,d,h] [or according to ',
-                                after: '].',
+                                before: ' : 1x1x1 block (w,d,h) (or according to the ',
+                                after: ').',
                             },
 
-                            libertiesBefore: 'Documents: at least 5 charters of',
+                            libertiesBefore: 'Documents: at least 5 purchased',
                             infrastructureHeading: 'Infrastructure:',
                             square: 'rural square;',
                             well: 'well with drinking water;',
@@ -1484,13 +1480,13 @@ export const RULES_I18N = {
                             additionalBuildingsHeading: 'Additional buildings:',
                             singleStory: 'at least 4 single-story buildings;',
                             twoStory: 'at least 1 two-story building;',
-                            specialBuilding: 'a building of religious, scientific, economic, or cultural direction.',
+                            specialBuilding: 'a building of religious, scientific, economic, or cultural orientation.',
                             industryHeading: 'Industry:',
                             workshop: 'at least 1 workshop [tannery, charcoal burner, weaving, etc.];',
                             forge: 'at least 1 forge.',
                             territoryBlock: 'Possession of a territorial block [diameter = 164 blocks].',
-                            raidTargetsBefore: ' Ability to declare raids on:',
-                            defensesBefore: ' Ability to erect ',
+                            raidTargetsBefore: 'Ability to declare raids on:',
+                            defensesBefore: 'Ability to erect ',
                             defensesAfter: ' of level 1.',
                             sailsBlueprint: 'Blueprint for improved sails.',
                             credit: 'Right to receive a preferential loan from the ',
@@ -1501,20 +1497,24 @@ export const RULES_I18N = {
                             title: '2.1.5 City',
                             intro: 'A City is a ',
                             introAfter: {
-                                before: ', founded after the stage ',
-                                after: ', consisting of 6 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
+                                before: ', founded after the ',
+                                after: ' stage, consisting of 6 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
                             },
                             location: 'Location: no farther than 8.5 thousand blocks from the zero coordinate.',
                             population: 'Population: at least 6 people.',
+                            citizensRequirement: {
+                                before: 'At least 2 holders of a ',
+                                after: '.',
+                            },
                             monumentAfter: {
-                                before: ' : 1x1x1 block [w,d,h] [or according to ',
-                                after: ']. The number of monuments is determined by the level of defensive structures.',
+                                before: ' : 1x1x1 block (w,d,h) (or according to the ',
+                                after: ').',
                             },
 
                             documentsHeading: 'Documents:',
                             patentBefore: 'signed',
                             patentAfter: ' for permission to found a city from the ',
-                            libertiesBefore: 'at least 6 charters of',
+                            libertiesBefore: 'at least 6 purchased',
                             infrastructureHeading: 'Infrastructure:',
                             square: 'city square;',
                             well: 'well with drinking water;',
@@ -1529,19 +1529,19 @@ export const RULES_I18N = {
                             additionalBuildingsHeading: 'Additional buildings:',
                             singleStory: 'at least 4 single-story buildings;',
                             twoStory: 'at least 5 two-story buildings;',
-                            specialBuilding: 'a building of religious, scientific, economic, or cultural direction;',
+                            specialBuilding: 'a building of religious, scientific, economic, or cultural orientation;',
                             marketStalls: 'at least 2 operating market stalls.',
                             industryHeading: 'Industry:',
                             workshop: 'at least 1 workshop [tannery, charcoal burner, weaving, etc.];',
                             forge: 'at least 1 forge;',
                             events: 'Holding events: at least 1 event, with at least 4 players participating, before obtaining this type.',
                             territoryBlock: 'Possession of a territorial block [diameter = 256 blocks].',
-                            raidTargetsBefore: ' Ability to declare raids on ',
+                            raidTargetsBefore: 'Ability to declare raids on ',
                             war: {
                                 before: 'Ability to declare ',
                                 after: ' if there is a casus belli.',
                             },
-                            defensesBefore: ' Ability to erect ',
+                            defensesBefore: 'Ability to erect ',
                             defensesAfter: ' of level 2.',
                             trader: 'Ability to receive 1 random trader.',
                             credit: 'Right to receive a preferential loan from the ',
@@ -1554,18 +1554,22 @@ export const RULES_I18N = {
                             title: '2.1.6 Regional Province',
                             intro: 'A Regional Province is a ',
                             introAfter: {
-                                before: ', founded after the stage ',
-                                after: ', consisting of 8 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
+                                before: ', founded after the ',
+                                after: ' stage, consisting of 8 or more players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
                             },
                             location: 'Location: no farther than 8.5 thousand blocks from the zero coordinate.',
                             population: 'Population: at least 8 people.',
+                            citizensRequirement: {
+                                before: 'At least 3 holders of a ',
+                                after: '.',
+                            },
                             monumentAfter: {
-                                before: ' : 1x1x1 block [w,d,h] [or according to ',
-                                after: ']. The number of monuments is determined by the level of defensive structures.',
+                                before: ' : 1x1x1 block (w,d,h) (or according to the ',
+                                after: ').',
                             },
 
                             documentsHeading: 'Documents:',
-                            libertiesBefore: 'at least 8 charters of ',
+                            libertiesBefore: 'at least 8 purchased ',
                             books: 'at least 10 books [either written by players or lore books] available for reading by any player.',
                             infrastructureHeading: 'Infrastructure:',
                             smallSquare: 'small city square;',
@@ -1585,7 +1589,7 @@ export const RULES_I18N = {
                             twoStory: 'at least 6 two-story buildings;',
                             threeStory: 'at least 1 three-story building;',
                             specialBuilding:
-                                'at least 2 buildings of religious, scientific, economic, or cultural direction;',
+                                'at least 2 buildings of religious, scientific, economic, or cultural orientation;',
                             marketStalls: 'at least 5 operating market stalls;',
                             tavern: 'at least 1 tavern;',
                             entertainment:
@@ -1594,705 +1598,634 @@ export const RULES_I18N = {
                             workshop: 'at least 2 workshops [tannery, charcoal burner, weaving, etc.];',
                             forge: 'at least 1 forge;',
                             steelMillPrep: 'a preparatory building for a future steelworks.',
+                            greatBuildingAfter: ': an adopted project.',
                             events: 'Holding events: at least 3 events, with at least 6 players participating, before obtaining this type.',
                             territoryBlock: 'Possession of a territorial block [diameter = 512 blocks].',
-                            raidTargetsBefore: ' Ability to declare raids on ',
+                            raidTargetsBefore: 'Ability to declare raids on ',
                             war: {
                                 before: 'Ability to declare ',
                                 after: ' if there is a casus belli.',
                             },
-                            defensesBefore: ' Ability to erect ',
+                            defensesBefore: 'Ability to erect ',
                             defensesAfter: ' of level 3.',
                             credit: 'Right to receive a preferential loan from the ',
                             creditAfter:
                                 ' at 10% per annum [May not be granted in case of hostility toward the governor].',
-                            colonies: 'Right to found no more than 3 colonies.',
+                            colonies: 'Right to found no more than 2 colonies.',
                             steelFurnaceBlueprint: 'Right to receive a blueprint for a steel furnace.',
                         },
                         exclaveCenter: {
                             title: '2.1.7 Center of the Imperial Exclave',
                             intro: 'A Center of the Imperial Exclave is a ',
                             introAfter: {
-                                before: ', located at the center of the exclave of ',
-                                after: ' lands, with a governor at the head and representing the authority of the Empire on these lands, meeting the following requirements:',
+                                before: ', located at the center of an ',
+                                after: ' lands exclave, led by a Governor and representing the authority of the Empire on those lands, meeting the following requirements:',
                             },
                             location: 'Location: no farther than 800 blocks from the zero coordinate.',
                             population: 'Population: at least 3 people.',
                             monumentAfter: {
-                                before: ' : 1x1x1 block [w,d,h] [or according to ',
-                                after: '].',
+                                before: ' : 1x1x1 block (w,d,h) (or according to the ',
+                                after: ').',
                             },
                             noKeyPoints: {
                                 before: 'No right to own ',
                                 after: '.',
                             },
                             aggressiveOnly: {
-                                before: 'Has the right only to an ',
-                                after: '.',
+                                before: 'Only the ',
+                                after: ' is allowed.',
                             },
                             courts: {
                                 before: 'Has the right to initiate and conduct courts whose decisions have ',
+                                after: ' (see terminology).',
                             },
                             economy: {
-                                before: "Obliged to support the economy and monitor trade. Only a market economy with a clear separation of private and state property is allowed. A market economy means: free buying and selling of goods and resources between players and settlements at negotiated prices; active trading points, markets and exchange operations; a ban on uncontrolled communal property — every resource, building or item must have a specific owner [a private individual, an organization or the settlement's state treasury]; state property is formed from taxes, duties, confiscated resources and external income and is spent exclusively on the settlement's needs [construction, defense, courts, diplomacy]; private property is protected and cannot be seized without the owner's consent or a court decision that has ",
+                                before: "Obliged to support the economy and monitor trade. Only a market economy with a clear separation of private and state property is allowed. A market economy means: free buying and selling of goods and resources between players and settlements at negotiated prices; active trading points, markets and exchange operations; a ban on uncontrolled communal property — every resource, building or item must have a specific owner (a private individual, an organization or the settlement's state treasury); state property is formed from taxes, duties, confiscated resources and external income and is spent exclusively on the settlement's needs (construction, defense, courts, diplomacy); private property is protected and cannot be seized without the owner's consent or a court decision that has ",
+                                after: '.',
                             },
                             currency: {
-                                before: 'Obliged to use exclusively ',
+                                before: 'Using exclusively ',
                                 after: ' as payment for goods and services.',
                             },
-                            architecture: 'Obligation of conducting large architectural projects within the territory.',
-                            territoryBlock: 'Possession of a territorial block [«Regional Province»].',
+                            architecture: 'Constantly engage in large architectural projects within the territory.',
+                            territoryBlock: 'Possession of a territorial block ["Regional Province"].',
                             currencyGrant: {
-                                before: 'Receiving currency from the Empire for the development of the Exclave.',
+                                before: 'Currency is issued as to two ',
+                                after: '.',
                             },
-                            blueprints: 'Receiving blueprints of all levels.',
-                            rpDuty: 'Obligation of RP interactions with all players.',
-                            raidTargetsBefore: ' Ability to declare raids on ',
+                            blueprints: 'Blueprints of all levels are available.',
+                            rpDuty: 'Obligation of RP interactions with players.',
+                            raidTargetsBefore: 'Ability to declare raids on ',
                             war: {
                                 before: 'Ability to declare ',
                                 after: ' if there is a casus belli.',
                             },
                         },
-                        guild: {
-                            title: '2.1.8 Guild',
-                            intro: 'A Guild is a ',
-                            introAfter: {
-                                before: ', aimed at trade and prosperity of the exclave',
-                                after: ', consisting of players, registered on the website, having all main buildings on the surface and meeting the following requirements:',
+                        defensive: {
+                            p2_2_1: '<b>2.2.1</b> The placement of doors and gates must conform to architectural logic and the structures and locations intended for them. It is forbidden to install doors in random, non-functional, or illogical places. Placing two doors in a row is permitted only if architecturally justified: for example, they lead to different rooms or are at a fork, etc.',
+                            p2_2_2: '<b>2.2.2</b> Digging ditches one after another deeper than 64 blocks and wider than 12 blocks, or ditches that are impossible or difficult to fill in, is prohibited.',
+                            p2_2_3: '<b>2.2.3</b> It is forbidden to use impassable defense. For example: Tunnel - braziers. [Evaluated by the administration]',
+                            p2_2_4: {
+                                before: '<b>2.2.4</b> It is forbidden to use hiding resources in places inside ',
+                                after: ' that allow "bypassing" protection and in no way imply storage there as a defense. For example: burying chests and vessels underground solidly; walling them up in walls solidly; using cash registers and vending machines for storage. [Disputable moments are evaluated by the administration]',
                             },
-                            location: 'Location: no farther than 5 thousand blocks from the zero coordinate.',
-                            population: 'Population: at least 1 person.',
-                            monumentAfter: {
-                                before: ' : 1x1x1 block [w,d,h] [or according to ',
+                            p2_2_5: {
+                                before: '<b>2.2.5</b> It is forbidden to reinforce any storage means by more than 50 durability units, or according to the ',
+                                after: '.',
+                            },
+                            p2_2_6: {
+                                before: '<b>2.2.6</b> It is forbidden to reinforce ',
+                                mid1: ' blocks by more than 50 durability units, or according to the ',
+                                after: '.',
+                            },
+                            p2_2_7: '<b>2.2.7</b> It is forbidden to use cash registers and vending machines for resource storage. The placement of vending machines and cash registers must correspond to the intended locations, for example: market squares, trading stalls.',
+                            levelsHeading: '<b>Levels of defensive structures</b>',
+                            level1: "<b>Level 1</b> — log walls no higher than 4 blocks, enclosing an area no larger than 36x36 blocks.<br />Composite defensive structure: a wooden tower or fort, usable as a storage for main resources and the ruler's residence, no higher than 23 blocks excluding the roof, with an area no larger than 17x17 blocks. With provision for future expansion.",
+                            level2Heading: '<b>Level 2</b>',
+                            variant1:
+                                "<b>Variant 1</b> — stone walls no higher than 9 blocks, enclosing the entire settlement or part of it. Composite defensive structure: a stone tower, fort, donjon, castle, etc., usable as a storage for main resources and the ruler's residence, no higher than 29 blocks excluding the roof, with an area no larger than 29x29 blocks. With provision for future expansion.",
+                            variant2:
+                                '<b>Variant 2</b> — using mountain fortification by arranging its frontal artificial part, which must be at least 20x20 blocks in area with a clear entrance into it. Mountain arrangement is allowed from any stage, but until reaching defense level 2 it must not include storing resources inside the mountain and installing doors/gates.',
+                            level3: '<b>Level 3</b> — any defensive structures over the entire area of the settlement, not violating server rules.',
+                        },
+                    },
+                    colonization: {
+                        intro: {
+                            before: '<b>4.1</b> Colonization is the process of founding new settlements in addition to the main one. A colony is considered an integral part of the main settlement regardless of its location. When declaring a ',
+                            mid1: ' or ',
+                            mid2: ', the total number of players in the main settlement and colonies belonging to it is taken into account.<br />To carry out colonization, the following is required:',
+                        },
+                        req1: {
+                            before: '• Have a settlement status no lower than ',
+                            after: '.',
+                        },
+                        req2: '• Have additional registration on the website.',
+                        req3: {
+                            before: '• A colony can be robbed following the corresponding rules for this action, according to its type. When ',
+                            after: ', only the number of people in the colony is taken into account.',
+                        },
+                        req4: {
+                            before: '• A ',
+                            after: ' is declared not on the colony, but on the main settlement, taking into account their total population currently online. The colony can be the target of the raid.',
+                        },
+                        req5: '• Permitted settlement levels for colonization:',
+                        campTitle: 'Camp:',
+                        camp: {
+                            location: {
+                                before: '• Location: anywhere outside the ',
+                                after: '.',
+                            },
+                            population: '• Population: at least 1 person.',
+                            monumentBefore: '•',
+                            monumentAfter: ' : 1x1x2 blocks (w,d,h).',
+                            infrastructure: '• Infrastructure: equipped place with a campfire.',
+                            economyHeading: '• Economy:',
+                            storage: 'at least 1 storage building;',
+                            defenses: '• Defensive structures: none.',
+                            advantages: {
+                                before: '• All advantages of the ',
+                                after: ' settlement type are retained.',
+                            },
+                        },
+                        villageTitle: 'Village:',
+                        village: {
+                            location: {
+                                before: '• Location: anywhere outside the ',
+                                after: '.',
+                            },
+                            population: '• Population: at least 2 people.',
+                            monumentBefore: '•',
+                            monumentAfter: ': 1x1x2 blocks (w,d,h).',
+                            documentsHeading: '• Documents:',
+                            patentBefore: 'signed ',
+                            patentAfter: ' for permission to found a village from the ',
+                            libertiesBefore: 'at least 2 purchased ',
+                            infrastructureHeading: '• Infrastructure:',
+                            well: '◦ well with drinking water;',
+                            paths: '◦ paths between buildings at least 2 blocks wide, where possible.',
+                            economyHeading: '• Economy:',
+                            storage: '◦ at least 2 storage buildings;',
+                            economyChoice: '◦ either agricultural lands [garden beds/pens], or workshops.',
+                            additionalBuildings: '• Additional buildings: at least 1 single-story building.',
+                            defenses: '• Defensive structures: none.',
+                            advantages: {
+                                before: '• All advantages of the ',
+                                after: ' settlement type are retained.',
+                            },
+                        },
+                    },
+                    military: {
+                        titles: {
+                            raid: '5.1 Raid',
+                            war: '5.2 War',
+                            points: '5.3 Point capture',
+                        },
+                        raid: {
+                            p5_1_1: {
+                                before: '<b>5.1.1</b> A "Raid" can be carried out only if at least 2 players from the settlement targeted by it are online. In the case of a raid on a ',
+                                mid1: ' or ',
+                                mid2: ', it is allowed if 1 person is online. For a raid on a ',
+                                after: ', at least 6 players of the opposing side must be online on the server.',
+                            },
+                            p5_1_2: {
+                                before: '<b>5.1.2</b> A "Raid" must be declared in advance: on a settlement — for a time corresponding to the target settlement\'s ',
+                                mid1: ' (peaceful — 40 minutes, neutral — 20 minutes, aggressive — 10 minutes); on a ',
+                                mid2: ' or ',
+                                after: ' — 20 minutes. The countdown begins from the moment of declaration in the "Diplomacy" chat in Discord. Combat must begin within 40 minutes after the declared time has elapsed.',
+                            },
+                            p5_1_3: '<b>5.1.3</b> The declaration must be conveyed to the people of the settlement using at least two mentions of its players. If the target settlement has fewer than two players, one mention is allowed.',
+                            p5_1_4: '<b>5.1.4</b> The message about an impending "raid" must be delivered either in an official style or in a hint style that cannot be interpreted otherwise.',
+                            p5_1_5: '<b>5.1.5</b> Combat must begin no later than 40 minutes of real time after the end of the raid declaration period.',
+                            p5_1_6: {
+                                before: '<b>5.1.6</b> The duration of a "raid" must not exceed: 4 hours for a raid on a settlement, 3 hours for a raid on a ',
+                                mid1: ', and 2 hours for a raid on a ',
+                                after: '.',
+                            },
+                            p5_1_7: '<b>5.1.7</b> A "Raid" is prohibited between 21:00 and 08:00 MSK. Ongoing raids must be stopped if the prohibited time begins, except by agreement with the opposing side to continue the raid.',
+                            p5_1_8: '<b>5.1.8</b> A "Raid" on the same settlement is allowed no more than once every 2 real days.',
+                            p5_1_9: '<b>5.1.9</b> Both sides are strictly forbidden to break blocks under corpses, bury them, or wall them in, except as directly provided by raid mechanics [example: filling in a ditch where a corpse fell].',
+                            defendersHeading: 'Rules of combat during a "raid" for the defending side',
+                            p5_1_10:
+                                '<b>5.1.10</b> After a "raid" is declared, logging out to save and hide resources inside the player\'s inventory is prohibited.',
+                            p5_1_11:
+                                '<b>5.1.11</b> Placing any blocks and objects that create an advantage during a raid is prohibited, except for:',
+                            p5_1_11_b1:
+                                'Barricades provided by the game [game object: stakes, barricades, etc.] no more than 2 blocks high.',
+                            p5_1_11_b2:
+                                'Loose materials that can only be placed by dropping them from pre-prepared positions above.',
+                            p5_1_11_b3: 'Explosives of any kind.',
+                            p5_1_12: '<b>5.1.12</b> Despawning resources is prohibited.',
+                            p5_1_13:
+                                '<b>5.1.13</b> Reinforcing any barricades placed during a raid by more than 50 durability units is prohibited.',
+                            p5_1_14: '<b>5.1.14</b> No more than three barricade lines may be placed per raid.',
+                            p5_1_15:
+                                "<b>5.1.15</b> Installing temporal gears inside the attackers' camp is prohibited.",
+                            attackersHeading: 'Rules of combat during a "raid" for the attacking side',
+                            p5_1_16: {
+                                before: '<b>5.1.16</b> The attackers are obliged to build a small camp before the attack [its defense must also follow the ',
+                                after: ' ], no larger than 10x10x12 blocks.',
+                            },
+                            defendersRulesLink: 'rules of combat for the defending side',
+                            p5_1_17:
+                                '<b>5.1.17</b> The camp must be located no closer than 100 and no farther than 200 blocks from the enemy territory. If it is impossible to set up a camp [sea], the attackers are allowed to set up their camp immediately on the coast or on a created sand embankment.',
+                            p5_1_18: '<b>5.1.18</b> A settlement cannot serve as a camp.',
+                            p5_1_19: {
+                                before: '<b>5.1.19</b> The attackers are obliged to install a 1x1x2 [w, d, h] ',
+                                after: ' in the camp.',
+                            },
+                            p5_1_20: {
+                                before: '<b>5.1.20</b> The attackers are obliged to use temporal gears only inside their own camp or outside the combat zone [at least 300 blocks from the enemy settlement/',
                                 after: '].',
                             },
-                            documentsHeading: 'Documents:',
-                            patentBefore: 'signed ',
-                            patentAfter: ' for permission to found a guild from the ',
-                            libertiesBefore: 'possession of charters of ',
-                            infrastructureHeading: 'Infrastructure:',
-                            square: 'guild square;',
-                            well: 'well with drinking water;',
-                            paths: 'roads between buildings at least 2 blocks wide, where possible.',
-                            economyHeading: 'Market:',
-                            storage: 'food sales stalls at least 2 pieces;',
-                            barn: 'item purchase crates at least 6 pieces;',
-                            farm: 'various goods sales stalls at least 4 pieces.',
-                            additionalBuildings: 'Additional buildings: at least 3 single-story buildings.',
-                            politicalStatus: 'Exclusively trade-peaceful political status.',
-                            economicPosts:
-                                'Possession of a trading branch/market in at least 85% of existing settlements, including the Center of the Imperial Exclave, consisting of at least 4 sales stalls and 4 purchase stalls.',
-                            defenses: 'Defensive structures: none.',
-                            territoryBlock: 'Possession of a territorial block [diameter = 128 blocks].',
-                            raidTargetsBefore: ' Ability to have trade-peaceful status.',
-                            trader: ' Ability to receive 2 random traders.',
-                            law: ' Right to be elected judge at the Imperial Court.',
-                            bankrots:
-                                ' Right to receive interest-free money loans through the Imperial Court in case of proven bankruptcy.',
-                            marketsLaw:
-                                'Maintain economically realistic prices, relevance of goods, as well as fullness of stalls in all their markets.',
-                        },
-                    },
-                    defensive: {
-                        p2_2_1: '<b>2.2.1</b> The placement of doors and gates must conform to architectural logic and the structures and locations intended for them. It is forbidden to install doors in random, non-functional, or illogical places. Placing two doors in a row is permitted only if architecturally justified: for example, they lead to different rooms or are at a fork, etc.',
-                        p2_2_2: '<b>2.2.2</b> Digging ditches one after another deeper than 64 blocks and wider than 12 blocks, or ditches that are impossible or difficult to fill in, is prohibited.',
-                        p2_2_3: '<b>2.2.3</b> It is forbidden to use impassable defense. For example: Tunnel - braziers. [Evaluated by the administration]',
-                        p2_2_4: {
-                            before: '<b>2.2.4</b> It is forbidden to use hiding resources in places inside ',
-                            after: ' that allow "bypassing" protection and in no way imply storage there as a defense. For example: burying chests and vessels underground solidly; walling them up in walls solidly; using cash registers and vending machines for storage. [Disputable moments are evaluated by the administration]',
-                        },
-                        p2_2_5: {
-                            before: '<b>2.2.5</b> It is forbidden to reinforce any storage means by more than 50 durability units, or according to ',
-                            after: '.',
-                        },
-                        p2_2_6: {
-                            before: '<b>2.2.6</b> It is forbidden to reinforce blocks of ',
-                            mid1: ' by more than 50 durability units, or according to ',
-                            after: '.',
-                        },
-                        p2_2_6_1: {
-                            before: '<b>2.2.6.1</b> It is forbidden to use materials in blocks of ',
-                            mid1: ' that significantly complicate its destruction [meteoric iron and all similar materials]. ',
-                        },
-                        p2_2_6_2: {
-                            before1: '<b>2.2.6.2</b> ',
-                            before2:
-                                ' must be located outdoors, but may be enclosed by a fort [defensive structure with an inner courtyard] and other identically similar structures.',
-                        },
-                        p2_2_7: '<b>2.2.7</b> It is forbidden to use cash registers and vending machines for resource storage. The placement of vending machines and cash registers must correspond to the intended locations, for example: market squares, trading stalls.',
-                        levelsHeading: '<b>Levels of defensive structures</b>',
-                        level1: "<b>Level 1</b> — log walls no higher than 4 blocks, enclosing an area no larger than 36x36 blocks.<br />Composite defensive structure: a wooden tower or fort, usable as a storage for main resources and the ruler's residence, no higher than 23 blocks excluding the roof, with an area no larger than 17x17 blocks. With provision for future expansion.",
-                        level2Heading: '<b>Level 2</b>',
-                        level2monument:
-                            'This level adds an additional monument of identical size to the main one to the settlement, which must be installed at a distance of at least 80 blocks from the original.',
-                        variant1:
-                            "<b>Variant 1</b> — stone walls no higher than 9 blocks, enclosing the entire settlement or part of it. Composite defensive structure: a stone tower, fort, donjon, castle, etc., usable as a storage for main resources and the ruler's residence, no higher than 29 blocks excluding the roof, with an area no larger than 29x29 blocks. With provision for future expansion.",
-                        variant2:
-                            '<b>Variant 2</b> — using mountain fortification by arranging its frontal artificial part, which must be at least 20x20 blocks in area with a clear entrance into it. Mountain arrangement is allowed from any stage, but until reaching defense level 2 it must not include storing resources inside the mountain and installing doors/gates.',
-                        level3: '<b>Level 3</b> — any defensive structures over the entire area of the settlement, not violating server rules, as well as an additional 3rd monument complying with the monument installation rules of the second level.',
-                    },
-                },
-                colonization: {
-                    intro: {
-                        before: '<b>4.1</b> Colonization — process of founding new settlements in addition to the main one. A colony is considered an integral part of the main settlement regardless of its location. When declaring a ',
-                        mid1: ' or ',
-                        mid2: ', the total number of players in the main settlement and colonies belonging to it is taken into account.<br />To carry out colonization, the following is required:',
-                    },
-                    req1: {
-                        before: '• Have a settlement status no lower than ',
-                        after: '.',
-                    },
-                    req2: '• Have additional registration on the website.',
-                    req3: {
-                        before: '• A colony can be robbed following the corresponding rules for this action, according to its type. When ',
-                        after: ', only the number of people in the colony is taken into account.',
-                    },
-                    req4: {
-                        before: '• A ',
-                        after: ' is declared not on the colony, but on the main settlement, taking into account their total population currently online. The colony can be the target of the raid.',
-                    },
-                    req5: '• Permitted settlement levels for colonization:',
-                    campTitle: 'Camp:',
-                    camp: {
-                        location: {
-                            before: '• Location: anywhere outside the ',
-                            after: '.',
-                        },
-                        population: '• Population: at least 1 person.',
-                        monumentBefore: '• ',
-                        monumentAfter: ' : 1x1x2 blocks (w,d,h).',
-                        infrastructure: '• Infrastructure: equipped place with a campfire.',
-                        economyHeading: '• Economy:',
-                        storage: 'at least 1 storage building;',
-                        defenses: '• Defensive structures: none.',
-                        advantages: {
-                            before: '• All advantages of the ',
-                            after: ' settlement type are retained.',
-                        },
-                    },
-                    villageTitle: 'Village:',
-                    village: {
-                        location: {
-                            before: '• Location: anywhere outside the ',
-                            after: '.',
-                        },
-                        population: '• Population: at least 2 people.',
-                        monumentBefore: '• ',
-                        monumentAfter: ': 1x1x2 blocks (w,d,h).',
-                        documentsHeading: '• Documents:',
-                        patentBefore: 'signed ',
-                        patentAfter: ' for permission to found a village from the ',
-                        libertiesBefore: 'at least 2 charters of ',
-                        infrastructureHeading: '• Infrastructure:',
-                        well: '◦ well with drinking water;',
-                        paths: '◦ paths between buildings at least 2 blocks wide, where possible.',
-                        economyHeading: '• Economy:',
-                        storage: '◦ at least 2 storage buildings;',
-                        economyChoice: '◦ either agricultural lands [garden beds/pens], or workshops.',
-                        additionalBuildings: '• Additional buildings: at least 1 single-story building.',
-                        defenses: '• Defensive structures: none.',
-                        advantages: {
-                            before: '• All advantages of the ',
-                            after: ' settlement type are retained.',
-                        },
-                    },
-                },
-                military: {
-                    titles: {
-                        raid: '5.1 Raid',
-                        war: '5.2 War',
-                        points: '5.3 Point capture',
-                    },
-                    raid: {
-                        p5_1_1: {
-                            before: '<b>5.1.1</b> A "Raid" can be carried out only if at least 2 players from the settlement targeted by it are online. In the case of a raid on a ',
-                            mid1: ' or ',
-                            mid1_2: ' or ',
-                            mid2: ', it is allowed when 1 person is online. For a raid on a ',
-                            after: ', at least 2 players of the settlement controlling it must be online on the server.',
-                        },
-                        p5_1_2: {
-                            before: '<b>5.1.2</b> A "Raid" must be declared in advance: on a settlement — for a time corresponding to the ',
-                            mid1: ' of the target settlement [trade-peaceful — 60 minutes, peaceful — 40 minutes, neutral — 20 minutes, aggressive — 10 minutes]; on a ',
-                            mid2: ' or ',
-                            after: ' — 20 minutes. The countdown begins from the moment of declaration in the "Diplomacy" chat in Discord. Combat must begin within 40 minutes after the declared time has elapsed.',
-                        },
-                        p5_1_3: '<b>5.1.3</b> The declaration must be conveyed to the people of the settlement using at least two mentions of its players. If the target settlement has fewer than two players, one mention is allowed.',
-                        p5_1_4: '<b>5.1.4</b> The message about an impending "raid" must be delivered either in an official style or in a hint style that cannot be interpreted otherwise.',
-                        p5_1_5: '<b>5.1.5</b> Combat must begin no later than 40 minutes of real time after the end of the raid declaration period.',
-                        p5_1_6: {
-                            before: '<b>5.1.6</b> The duration of a "raid" must not exceed: 4 hours for a raid on a settlement, 3 hours for a raid on a ',
-                            mid1: ', 2 hours for a raid on a ',
-                            after: '.',
-                        },
-                        p5_1_7: '<b>5.1.7</b> A "Raid" is prohibited between 21:00 and 08:00 MSK. Ongoing raids must be stopped if the prohibited time begins, except by agreement with the opposing side to continue the raid.',
-                        p5_1_8: '<b>5.1.8</b> A "Raid" on the same settlement is allowed no more than once every 2 real days.',
-                        p5_1_9: '<b>5.1.9</b> Both sides are strictly forbidden to break blocks under corpses, bury them, or wall them in, except as directly provided by raid mechanics [example: filling in a ditch where a corpse fell].',
-                        defendersHeading: 'Rules of combat during a "raid" for the defending side',
-                        p5_1_10:
-                            '<b>5.1.10</b> After a "raid" is declared, logging out to save and hide resources inside the player\'s inventory is prohibited.',
-                        p5_1_11:
-                            '<b>5.1.11</b> Placing any blocks and objects that create an advantage during a raid is prohibited, except for:',
-                        p5_1_11_b1:
-                            'Barricades provided by the game [game object: stakes, barricades, etc.] no more than 2 blocks high.',
-                        p5_1_11_b2:
-                            'Loose materials that can only be placed by dropping them from pre-prepared positions above.',
-                        p5_1_11_b3: 'Explosives of any kind.',
-                        p5_1_12: '<b>5.1.12</b> Despawning resources is prohibited.',
-                        p5_1_13:
-                            '<b>5.1.13</b> Reinforcing any barricades placed during a raid by more than 50 durability units is prohibited.',
-                        p5_1_14: '<b>5.1.14</b> No more than three barricade lines may be placed per raid.',
-                        p5_1_15: "<b>5.1.15</b> Installing temporal gears inside the attackers' camp is prohibited.",
-                        attackersHeading: 'Rules of combat during a "raid" for the attacking side',
-                        p5_1_16: {
-                            before: '<b>5.1.16</b> The attackers are obliged to build a small camp before the attack [its defense must also follow the ',
-                            after: ' ], no larger than 10x10x12 blocks in size and having no more than 4 doors, gates, hatches.',
-                        },
-                        defendersRulesLink: 'rules of combat for the defending side',
-                        p5_1_17:
-                            '<b>5.1.17</b> The camp must be located no closer than 100 and no farther than 200 blocks from the enemy territory. If it is impossible to set up a camp [sea], the attackers are allowed to set up their camp immediately on the coast or on a created sand embankment.',
-                        p5_1_18: '<b>5.1.18</b> A settlement cannot serve as a camp.',
-                        p5_1_19: {
-                            before: '<b>5.1.19</b> The attackers are obliged to install a ',
-                            after: ' 1x1x2 [w, d, h] in the camp with reinforcement according to the settlement improvement patent.',
-                        },
-                        p5_1_20: {
-                            before: '<b>5.1.20</b> The attackers are obliged to use temporal gears only inside their own camp or outside the combat zone [at least 300 blocks from the enemy settlement/',
-                            after: '].',
-                        },
-                        p5_1_21: {
-                            before: '<b>5.1.21</b> When using a terminus teleport in a raid, the attackers are obliged to install it exclusively in the constructed camp, as well as reinforce any objects and blocks inside the camp, including the ',
-                            after: ', by no more than 300 durability units. Re-reinforcing during the raid is prohibited.',
-                        },
-                        p5_1_22: {
-                            before: '<b>5.1.22</b> The attackers are obliged to admit defeat and stop the raid as soon as the ',
-                            after: ' in the camp is completely destroyed.',
-                        },
-                        p5_1_23:
-                            '<b>5.1.23</b> The attackers are prohibited from placing any blocks during the assault, except for:',
-                        p5_1_23_b1:
-                            'Wooden ladders on man-made structures no more than 6 blocks high. At the same time, it is forbidden to place wooden ladders while in water, as well as to place a ladder "in mid-air", propping it under oneself and not attaching it to a side surface.',
-                        p5_1_23_b2:
-                            'Specially chiseled siege engines and structures that can only be placed outdoors. For example: a siege shield behind which archers can take cover, a trebuchet.',
-                        p5_1_23_b3:
-                            'Loose materials for the purpose of filling ditches and creating embankments in bodies of water. Overcoming such obstacles by placing dirt blocks or climbing up is strictly prohibited.',
-                        p5_1_23_b4:
-                            'Chests and vessels only on the floor or ground. Placing chests and vessels "in mid-air" is prohibited.',
-                        p5_1_23_b5: 'Explosives for destroying enemy manpower [that does not break blocks].',
-                        p5_1_24: '<b>5.1.24</b> The attackers are prohibited from using a glider.',
-                        p5_1_25: '<b>5.1.25</b> Despawning resources is prohibited.',
-                        p5_1_26: '<b>5.1.26</b> Breaking anything is prohibited, except for:',
-                        p5_1_26_b1: 'Doors and any of their variants.',
-                        p5_1_26_b2: 'Wicker and wooden fences; stone fences no higher than 1 block.',
-                        p5_1_26_b3: 'Fortress walls may only be broken at breach points.',
-                        p5_1_26_b4:
-                            'A breach point is a place chosen by the attackers for destruction and not exceeding an area of 3x3 blocks. Such points are limited by the number of siege engines of the "trebuchet" type available to the attackers. Chiseled "trebuchets" must be presented to the administration in advance for approval. During the attack, the trebuchet must be deployed no more than 30 blocks from the breach point. If there is no land for deploying the trebuchet, it is allowed to keep it in a chest on a sailboat at the same distance from the breach point [the sailboat cannot be moved].',
-                        p5_1_26_b5:
-                            'When attacking a mountain fortification with a trebuchet, a breach is allowed in the frontal artificial part of the mountain measuring 4x4 in area and from 1 to 40 blocks deep, provided that only the first wall of the mountain is pierced.',
-                        p5_1_26_b6: 'Barricades and embankments of sand and gravel installed by the defenders.',
-                        p5_1_27: {
-                            before: '<b>5.1.27</b> It is forbidden to loot industrial elements, for example: generators, batteries, motors, windmills, anvils, etc., if they are placed and not inside vessels/chests/crates, etc. Such loot can only be obtained during ',
-                            after: '.',
-                        },
-                    },
-                    war: {
-                        intro: 'The war rules are still under development and currently include:',
-                        p5_2_1: {
-                            before: '<b>5.2.1</b> All rules of combat in the ',
-                            after: ' state apply, except for the following:',
-                        },
-                        p5_2_2: '<b>5.2.2</b> To declare war, the following is required:',
-                        p5_2_2_b1:
-                            '• Present your specific demands and reasons to those you intend to attack in the #diplomacy channel (not required when responding to a declared war if the defending side does not wish to put forward counter-demands that will be fulfilled upon its victory). Demands must be backed by evidence or reasoned in an RP manner and carry sufficient weight. (Moderated by the administration in case of disputes)',
-                        p5_2_2_b2:
-                            '• After the demands are presented, the defending side has 1 hour of real time to either agree or reject the demands. After this hour, or after refusal to comply, the aggressor settlement is entitled to begin military actions.',
-                        p5_2_2_b3:
-                            '• If the defending side accepts the terms, it is obliged to fulfill them within 24 hours of real time, and military actions against it are not permitted.',
-                        p5_2_2_b4:
-                            '• After the war ends by any means, a cooldown of 5 real days is imposed on the settlement that started the war.',
-                        p5_2_2_b5:
-                            '• The advantage of war is that after victory, the loser is obliged to accept all the conditions put forward by the winner, up to the complete demolition of all their structures, etc. However, it should be remembered that performing actions after victory that were not included in the conditions and demands is unacceptable.',
-                        p5_2_2_b6: {
-                            before: "• The winner of the war is the one who completely destroyed the enemy's ",
-                            after: ' or officially forced them to admit defeat. After the enemy accepts defeat, military actions must be immediately stopped.',
-                        },
-                        p5_2_3: '<b>5.2.3</b> Military actions must take place during the following time intervals: <b>on weekdays from 16:00 MSK to 21:00 MSK, on weekends from 11:00 MSK to 23:30 MSK</b>.',
-                        p5_2_4: '<b>5.2.4</b> To conduct military actions after declaration, the presence of 1 resident of the settlement is sufficient.',
-                        p5_2_5: '<b>5.2.5</b> To win a war over a specific settlement, it is necessary to destroy: if the settlement has 1 monument - 1 monument; if 2 monuments - 1 monument; if 3 monuments - 2 monuments.',
-                        p5_2_6: "<b>5.2.6</b> If several allied settlements participate in the war, the destruction of a settlement's monument completely removes the ally from the war and allows imposing demands on them as the loser.",
-                        p5_2_7: '<b>5.2.7</b> Initiating direct military actions in war [raids] must not exceed 2 per day.',
-                        p5_2_8: '<b>5.2.8</b> During direct military actions in war, it is allowed to destroy [not take for oneself] enemy industry.',
-                    },
-                    points: {
-                        notice: 'The point capture rules are a new feature and may contain inaccuracies.',
-                        p5_3_1: {
-                            before: '<b>5.3.1</b> Management of a point is carried out by ',
-                            after: ' settlement that controls it.',
-                        },
-                        p5_3_2: '<b>5.3.2</b> No more than 4 points can be controlled simultaneously.',
-                        p5_3_3: {
-                            before: '<b>5.3.3</b> Upgrading and building on points is carried out exclusively by Imperial masters, except for decorative components, reinforcing existing doors/gates, and installing/restoring doors/gates in the same volume as they were before the ',
-                            mid1: ' on the point, as well as reinforcing ',
-                            mid2: ' according to ',
-                            after: '.',
-                        },
-                        p5_3_4: '<b>5.3.4</b> A request to upgrade a point is made by submitting a ticket in Discord.',
-                        p5_3_5: {
-                            before: '<b>5.3.5</b> Combat for points proceeds identically to ',
-                            after: '.',
-                        },
-                        p5_3_6: {
-                            before: '<b>5.3.6</b> To capture a neutral key point, a ',
-                            after: " must also be declared. In this case, several settlements may declare a raid simultaneously; then the point will be captured by whoever takes possession of the largest number of parts of the point's monument and provides evidence of this.",
-                        },
-                        p5_3_7: '<b>5.3.7</b> If a settlement loses a point and recaptures it, the point level is reduced by 1 step from the previous level to which that settlement had upgraded it.',
-                        p5_3_8: '<b>5.3.8</b> After capturing a point, the captors are obliged to submit a ticket request to adapt the point for themselves and observe the inviolability rule for any blocks and objects on the point until permission is received from the Administration.',
-                        p5_3_9: {
-                            before: '<b>5.3.9</b> ',
-                            mid1: 'A settlement may renounce a point it controls and abandon it. To do this, it is necessary to submit a ticket in Discord and a statement in ',
-                            after: '. After that, the point will be reset to its original state and considered neutral.',
-                        },
-                        p5_3_12: {
-                            before: "<b>5.3.12</b> The durability of each block of the point's monument cannot exceed 50 units, or the value specified in ",
-                            after: ', but in all cases — no more than 300 units.',
-                        },
-                        p5_3_13: {
-                            before: '<b>5.3.13</b> After the point has been adapted by the administration, monuments at key points must be reinforced by the settlement that captured the point, according to ',
-                            mid1: ' of the monument ',
-                            after: '.',
-                        },
-                        p5_3_14: {
-                            before: '<b>5.3.14</b> To capture a mine, which is a ',
-                            mid1: ' with three ',
-                            after: ', it is necessary to destroy 2 out of 3 monuments.',
-                        },
-                    },
-                },
-                actions: {
-                    titles: {
-                        theft: '3.1 Theft',
-                        kills: '3.2 Kills',
-                        espionage: '3.3 Espionage',
-                        diplomacy: '3.4 Diplomacy',
-                        special: '3.5 Special interactions',
-                        sabotage: '3.6 Sabotage',
-                    },
-                    theft: {
-                        p3_1_1: {
-                            before: '<b>3.1.1</b> Theft is the secret infiltration of no more than 2 or 3 players, depending on the ',
-                            mid1: ' of the initiator settlement, onto the territory of a settlement or ',
-                            after: ' with the aim of stealing resources. This action must be carried out strictly in accordance with the established rules.',
-                        },
-                        p3_1_2: '<b>3.1.2</b> A thief has the right to:',
-                        canBreakHeading: '• Break and open/unlock only:',
-                        canBreak1: 'Doors, hatches, gates.',
-                        canBreak2:
-                            'Windows, balconies with windows [in the form of glass, fences, and other manifestations that can be considered windows in a building and can be knocked out or broken with improvised means].',
-                        canBreak3:
-                            'Chests, crates, vessels, barrels, baskets, stone chunks [from the "Quarry" mod], berry bushes.',
-                        canStealVehicles: '• Steal/dismantle any vehicles.',
-                        canPlaceLadders:
-                            '• Place, but not remove, rope ladders only on man-made structures, as well as in open pits and ditches.',
-                        armorLimit:
-                            '• During looting, the thief may be protected only by leather, bear, quilted, or custom-tailored quilted armor. Wearing armor is optional.',
-                        defenseRule:
-                            '• The thief may defend only if discovered and receiving the first damage, but has no right to initiate an attack first, nor to pursue the victim. Upon receiving the first damage, the thief is obliged to immediately begin retreating from the settlement territory.',
-                        canHarvest:
-                            '• The thief has the right to harvest any crops and steal livestock using cages [killing livestock is prohibited].',
-                        p3_1_3: '<b>3.1.3</b> A thief is obliged to:',
-                        mustOnline:
-                            '• Be online throughout the entire theft process and not leave the game, except for unexpected crashes or server restarts.',
-                        cooldown:
-                            "• Loot the same target no more than once every 4 real hours. The cooldown applies to all players in the thief's settlement.",
-                        targetOnline: {
-                            before: '• Carry out looting only when the potential target is online [for ',
-                            m1: ', ',
-                            m2: ', ',
-                            m2_1: ', ',
-                            m3: ' - 1 player online; for ',
-                            m4: ' and ',
-                            m5: ' - minimum 2 players online, for ',
-                            m6: ' - minimum 3 players online, for ',
-                            m7: ' - minimum 2 players online, for ',
-                            m8: ' - at least 2 players from the settlement controlling it ',
-                            after: '. The territorial location of the target during looting does not matter.',
-                        },
-                        finishAfterLogout:
-                            '• The thief has the right to finish an already-started looting if the target logs out during the process, but after the target leaves, the thief has no right to break any blocks or objects at all.',
-                        noChisel:
-                            '• The thief is prohibited from using any chisel tool on foreign territory and during theft.',
-                        noTemporalGears: '• The thief is prohibited from using temporal gears during theft.',
-                        noReinforce: '• The thief is prohibited from reinforcing any objects and blocks during theft.',
-                        noBackpackStorage:
-                            '• The thief is prohibited from carrying chests, barrels, crates, vessels, hollows, and other storage blocks on their back.',
-                        screenshots:
-                            '• The thief is obliged to take screenshots at the beginning of the theft: of their inventory; armor on their character; list of players who are online. Rollbacks of the theft are welcome.',
-                        noDespawn:
-                            '• The thief is prohibited from intentionally despawning resources, including by deliberately dropping them out of chests and other storage. Accidental resource drops, for example due to lack of inventory space while harvesting crops, are not covered by this rule.',
-                        noBypass: {
-                            before: '• The thief is prohibited from leaving their settlement to commit theft and returning to their settlement to bypass the ',
-                            after: ', theft cooldown, and diplomatic statements of the settlement. Provide information about the customer and the date of contract conclusion in case of theft by order from a private individual / settlement.',
-                        },
-                        p3_1_4: "<b>3.1.4</b> Storage and maintenance of contracts.<br />A contract must contain: target of theft (settlement name / player nickname), thief's and customer's nicknames, real date of signing the contract. A theft contract must be kept in an accessible place on the territory of the customer's settlement. In case of concluding a contract on behalf of a settlement (by its head or deputy), the contract must be kept in the main building of the customer settlement (tower, donjon, castle, fort, ruler's residence, etc.). In case of concluding a contract from a private individual (a specific player), the contract must be kept in the main residential building of that player. It is forbidden to hide, bury, wall up, place in chests underground / in walls, or otherwise make the contract inaccessible to find. The Administration has the right to request access to the contract at any time. The contract must be kept for at least 30 real days after signing.",
-                    },
-                    kills: {
-                        p3_2_1: {
-                            before: '<b>3.2.1</b> Players may be killed anywhere, in any way, at any time, and by anyone, taking into account the server rules, except on their own territory by this advantage. The exception is targeted non-stop killing of players at the zero coordinate and within a hundred blocks of it. All of the above does not apply in cases of ',
-                            mid1: ' and ',
-                            mid2: ' states (in cases of theft, killing is allowed according to the rules of ',
-                            after: ').',
-                        },
-                        theftRulesLink: 'p. 3.1',
-                        p3_2_2: {
-                            before: '<b>3.2.2</b> Exception: players have the right to kill other players on the territory of settlements with an ',
-                            mid1: ' according to the rules of ',
-                            after: '',
-                        },
-                        aggressiveCourseLink: 'p. 3.4.5.3',
-                    },
-                    espionage: {
-                        p3_3_1: '<b>3.3.1</b> Spies are people infiltrated into other settlements to carry out agency actions.',
-                        p3_3_2: {
-                            before: '<b>3.3.2</b> Espionage can be conducted under any ',
-                            after: ' of a settlement.',
-                        },
-                        p3_3_3: '<b>3.3.3</b> A spy may participate during any military actions on the side of the settlement he works for, or on the side of the settlement where he is a spy.',
-                        p3_3_4: {
-                            before: '<b>3.3.4</b> A spy may steal resources from the settlement he has infiltrated, but in compliance with: ',
-                            after: ' [At the same time, at least 1 player who is part of the settlement and is not a spy must be online and on the territory].',
-                        },
-                        theftRulesLink: 'Theft rules',
-                        p3_3_5: {
-                            before: '<b>3.3.5</b> A spy may open gates during a siege while ',
-                            mid1: ' or ',
-                            after: ' is being waged. Only the first, outer gates are implied. Opening gates other than these is prohibited.',
-                        },
-                        p3_3_6: '<b>3.3.6</b> A spy may transmit any intelligence information.',
-                        p3_3_7: '<b>3.3.7</b> Any other actions of a spy are prohibited.',
-                    },
-                    diplomacy: {
-                        common: {
-                            advantages: 'Advantages:',
-                            restrictions: 'Restrictions:',
-                        },
-                        p3_4_1: {
-                            before: '<b>3.4.1</b> ',
-                            mid1: ' applies to all interactions of players belonging to any of the possible settlement types. ',
-                        },
-                        p3_4_2: {
-                            before: '<b>3.4.2</b> The ',
-                            after: ' can be changed once every 5 weeks of real time.',
-                        },
-                        p3_4_3: '<b>3.4.3</b> To change the political course, it is necessary to create a ticket request in Discord, and after the request is approved, make a diplomatic statement.',
-                        p3_4_4: '<b>3.4.4</b> After changing the political course, the settlement receives a 24-hour real-time cooldown on theft, military actions, and any political actions.',
-                        p3_4_5: '<b>3.4.5</b> Types of political courses:',
-                        peaceful: {
-                            intro: '<b>3.4.5.1</b> Peaceful:',
-                            adv1: {
-                                before: '• When a ',
-                                mid1: ' is declared on a peaceful settlement, that settlement has the right to buy off the attackers with ',
-                                after: " in an amount set according to the settlement type, until the next declaration. The attackers' agreement is not required. Buyout amount:",
+                            p5_1_21: {
+                                before: '<b>5.1.21</b> When using a terminus teleport in a raid, the attackers are obliged to reinforce any objects and blocks inside the camp, including the ',
+                                after: ', by no more than 300 durability units. Re-reinforcing during the raid is prohibited.',
                             },
-                            ransomHomestead: {
-                                before: '• ',
-                                mid1: ' price 5 ',
+                            p5_1_22: {
+                                before: '<b>5.1.22</b> The attackers are obliged to admit defeat and stop the raid as soon as the ',
+                                after: ' in the camp is completely destroyed.',
+                            },
+                            p5_1_23:
+                                '<b>5.1.23</b> The attackers are prohibited from placing any blocks during the assault, except for:',
+                            p5_1_23_b1:
+                                'Wooden ladders on man-made structures no more than 6 blocks high. At the same time, it is forbidden to place wooden ladders while in water, as well as to place a ladder "in mid-air", propping it under oneself and not attaching it to a side surface.',
+                            p5_1_23_b2:
+                                'Specially chiseled siege engines and structures that can only be placed outdoors. For example: a siege shield behind which archers can take cover, a trebuchet.',
+                            p5_1_23_b3:
+                                'Loose materials for the purpose of filling ditches and creating embankments in bodies of water. Overcoming such obstacles by placing dirt blocks or climbing up is strictly prohibited.',
+                            p5_1_23_b4:
+                                'Chests and vessels only on the floor or ground. Placing chests and vessels "in mid-air" is prohibited.',
+                            p5_1_23_b5: 'Explosives for destroying enemy manpower [that does not break blocks].',
+                            p5_1_24: '<b>5.1.24</b> The attackers are prohibited from using a glider.',
+                            p5_1_25: '<b>5.1.25</b> Despawning resources is prohibited.',
+                            p5_1_26: '<b>5.1.26</b> Breaking anything is prohibited, except for:',
+                            p5_1_26_b1: 'Doors and any of their variants.',
+                            p5_1_26_b2: 'Wicker and wooden fences; stone fences no higher than 1 block.',
+                            p5_1_26_b3: 'Fortress walls may only be broken at breach points.',
+                            p5_1_26_b4:
+                                'A breach point is a place chosen by the attackers for destruction and not exceeding an area of 3x3 blocks. Such points are limited by the number of siege engines of the "trebuchet" type available to the attackers. Chiseled "trebuchets" must be presented to the administration in advance for approval. During the attack, the trebuchet must be deployed no more than 30 blocks from the breach point. If there is no land for deploying the trebuchet, it is allowed to keep it in a chest on a sailboat at the same distance from the breach point [the sailboat cannot be moved].',
+                            p5_1_26_b5:
+                                'When attacking a mountain fortification with a trebuchet, a breach is allowed in the frontal artificial part of the mountain measuring 4x4 in area and from 1 to 40 blocks deep, provided that only the first wall of the mountain is pierced.',
+                            p5_1_26_b6: 'Barricades and embankments of sand and gravel installed by the defenders.',
+                            p5_1_27: {
+                                before: '<b>5.1.27</b> It is forbidden to loot industrial elements, for example: generators, batteries, motors, windmills, anvils, etc., if they are placed and not inside vessels/chests/crates, etc. Such loot can only be obtained during ',
                                 after: '.',
                             },
-                            ransomCamp: {
-                                before: '• ',
-                                mid1: ' 10 ',
+                        },
+                        war: {
+                            intro: 'The war rules are still under development and currently include:',
+                            p5_2_1: {
+                                before: '<b>5.2.1</b> All rules of combat in the ',
+                                after: ' state apply, except that combat is not limited in duration. The night ban on combat and the minimum player online requirements remain.',
+                            },
+                            p5_2_2: '<b>5.2.2</b> To declare war, the following is required:',
+                            p5_2_2_b1:
+                                '• Present your specific demands and reasons to those you intend to attack in the #diplomacy channel (not required when responding to a declared war if the defending side does not wish to put forward counter-demands that will be fulfilled upon its victory). Demands must be backed by evidence or reasoned in an RP manner and carry sufficient weight. (Moderated by the administration in case of disputes)',
+                            p5_2_2_b2:
+                                '• After the demands are presented, the defending side has 1 hour of real time to either agree or reject the demands. After this hour, or after refusal to comply, the aggressor settlement is entitled to begin military actions.',
+                            p5_2_2_b3:
+                                '• If the defending side accepts the terms, it is obliged to fulfill them within 24 hours of real time, and military actions against it are not permitted. If the demands are not met, the aggressor side is entitled to begin military actions.',
+                            p5_2_2_b4:
+                                '• After the war ends by any means, a cooldown of 5 real days is imposed on the settlement that started the war.',
+                            p5_2_2_b5:
+                                '• The advantage of war is that after victory, the loser is obliged to accept all the conditions put forward by the winner, up to the complete demolition of all their structures, etc. However, it should be remembered that performing actions after victory that were not included in the conditions and demands is unacceptable.',
+                            p5_2_2_b6: {
+                                before: "• The winner of the war is the one who completely destroyed the enemy's ",
+                                after: ' or officially forced them to admit defeat. After the enemy accepts defeat, military actions must be immediately stopped.',
+                            },
+                        },
+                        points: {
+                            notice: 'The point capture rules are a new feature and may contain inaccuracies.',
+                            p5_3_1: {
+                                before: '<b>5.3.1</b> The point is managed by the ',
+                                after: ' whose side controls it.',
+                            },
+                            p5_3_2: '<b>5.3.2</b> No more than 4 points can be controlled simultaneously.',
+                            p5_3_3: {
+                                before: '<b>5.3.3</b> Upgrading and building on points is carried out exclusively by Imperial masters, except for decorative components, reinforcing existing doors/gates, installing/restoring doors/gates in the same volume as they were before the ',
+                                mid1: ' on the point, and reinforcing ',
+                                mid2: ' in accordance with ',
                                 after: '.',
                             },
-                            ransomVillage: {
-                                before: '• ',
-                                mid1: ' 20 ',
+                            p5_3_4: '<b>5.3.4</b> A request to upgrade a point is made by submitting a ticket in Discord.',
+                            p5_3_5: {
+                                before: '<b>5.3.5</b> Combat for points proceeds identically to a ',
+                                after: ', except for:',
+                            },
+                            p5_3_5_b1:
+                                "• When a raid is declared by any settlement on the central settlement's side, it begins for the entire side. That is, every settlement on the side may participate in the raid. The same rule applies to defense.",
+                            p5_3_5_b2:
+                                '• Installing ladders during combat on structures that are not defensive outer walls is prohibited.',
+                            p5_3_5_b3: {
+                                before: "• To capture a point, it is necessary to destroy the point's ",
                                 after: '.',
                             },
-                            ransomTownship: {
-                                before: '• ',
-                                mid1: ' 30 ',
-                                after: '.',
+                            p5_3_5_b4:
+                                '• After a completed raid (successful or unsuccessful), both sides receive a cooldown of 6 real hours before it can be repeated on that particular point.',
+                            p5_3_5_b5:
+                                '• If, during the last 7 real calendar days, there has not been a single period of at least 1 hour of continuous time in which 4 or more players of the opposing faction were simultaneously present on the server, then it is permitted to initiate a raid to capture the key point of that faction. At the same time, the time of simultaneous presence of 4 or more players of the opposing faction between 19:00 and 08:00 MSK is not counted when determining the existence of the specified period.',
+                            p5_3_6: {
+                                before: '<b>5.3.6</b> To capture a neutral key point, a ',
+                                after: " must also be declared. In this case, both sides may declare a raid simultaneously; then the point will be captured by whoever takes possession of the largest number of parts of the point's monument and provides evidence of this.",
                             },
-                            ransomCity: {
-                                before: '• ',
-                                mid1: ' 50 ',
-                                after: '.',
+                            p5_3_7: '<b>5.3.7</b> If a side loses a point and recaptures it, the point level is reduced by 1 step from the previous level to which that side had upgraded it.',
+                            p5_3_8: '<b>5.3.8</b> After capturing a point, the captors are obliged to submit a ticket request to adapt the point for themselves and observe the inviolability rule for any blocks and objects on the point until permission is received from the Administration.',
+                            p5_3_9: {
+                                before: '<b>5.3.9</b> A ',
+                                mid1: ' may renounce a point he controls and abandon it. To do this, it is necessary to submit a ticket in Discord and a statement in ',
+                                after: '. After that, the point will be reset to its original state and considered neutral.',
                             },
-                            ransomRegion: {
-                                before: '• ',
-                                mid1: ' 100 ',
-                                after: '.',
+                            p5_3_12: {
+                                before: "<b>5.3.12</b> The durability of each block of the point's monument cannot exceed 50 units, or the value specified in the ",
+                                after: ', but in no case more than 300 units.',
                             },
-                            adv2: {
-                                before: '• When a ',
-                                after: ' is declared on a peaceful settlement, the minimum time from declaration to the start of combat must be at least 40 minutes.',
+                            p5_3_13: {
+                                before: '<b>5.3.13</b> After the point has been adapted by the administration, monuments at key points must be reinforced by the side that captured the point, according to the ',
+                                mid1: ' of the ',
+                                after: ', or, in its absence, the settlement that captured the point.',
                             },
-                            adv3: {
-                                before: "• When a raid is declared on a peaceful settlement, to begin looting resources, it is necessary to destroy at least 1/2 of the settlement's ",
-                                after: ' or more. If the number of monument blocks is odd, rounding is up.',
+                            p5_3_14: {
+                                before: '<b>5.3.14</b> To capture the mine, which is a ',
+                                mid1: ' with three ',
+                                after: ', it is necessary to destroy 2 out of 3 monuments.',
                             },
-                            adv4: {
-                                before: '• When committing ',
-                                after: ' against a peaceful settlement, the cooldown until the next theft against this settlement is doubled from the base value.',
+                        },
+                    },
+                    actions: {
+                        titles: {
+                            theft: '3.1 Theft',
+                            kills: '3.2 Kills',
+                            espionage: '3.3 Espionage',
+                            diplomacy: '3.4 Diplomacy',
+                            special: '3.5 Special interactions',
+                            sabotage: '3.6 Sabotage',
+                        },
+                        theft: {
+                            p3_1_1: {
+                                before: '<b>3.1.1</b> Theft is the secret infiltration of no more than 2 or 3 players, depending on the ',
+                                mid1: ' of the initiator settlement, onto the territory of a settlement or ',
+                                after: ' with the aim of stealing resources. This action must be carried out strictly in accordance with the established rules.',
                             },
-                            res1: '• It is forbidden to participate in any theft actions, as well as to commit theft "by other hands".',
-                            res2: {
-                                before: '• It is forbidden to initiate ',
+                            p3_1_2: '<b>3.1.2</b> A thief has the right to:',
+                            canBreakHeading: '• Break and open/unlock only:',
+                            canBreak1: 'Doors, hatches, gates.',
+                            canBreak2:
+                                'Windows, balconies with windows (in the form of glass, fences, and other manifestations that can be considered windows in a building and can be knocked out or broken with improvised means).',
+                            canBreak3:
+                                'Chests, crates, vessels, barrels, baskets, stone chunks [from the "Quarry" mod], berry bushes.',
+                            canStealVehicles: '• Steal/dismantle any vehicles.',
+                            canPlaceLadders:
+                                '• Place, but not remove, rope ladders only on man-made structures, as well as in open pits and ditches.',
+                            armorLimit:
+                                '• During looting, the thief may be protected only by leather, bear, quilted, or custom-tailored quilted armor. Wearing armor is optional.',
+                            defenseRule:
+                                '• The thief may defend only if discovered and receiving the first damage, but has no right to initiate an attack first, nor to pursue the victim. Upon receiving the first damage, the thief is obliged to immediately begin retreating from the settlement territory.',
+                            canHarvest:
+                                '• The thief has the right to harvest any crops and steal livestock using cages [killing livestock is prohibited].',
+                            p3_1_3: '<b>3.1.3</b> A thief is obliged to:',
+                            mustOnline:
+                                '• Be online throughout the entire theft process and not leave the game, except for unexpected crashes or server restarts.',
+                            cooldown:
+                                "• Loot the same target no more than once every 4 real hours. The cooldown applies to all players in the thief's settlement.",
+                            targetOnline: {
+                                before: '• Carry out looting only when the potential target is online [for ',
+                                m1: ', ',
+                                m2: ', ',
+                                m3: ' - 1 player online; for ',
+                                m4: ' and ',
+                                m5: ' - at least 2 players online; for ',
+                                m6: ' - at least 3 players online; for ',
+                                m7: ' - at least 2 players online; for ',
+                                m8: ' - at least 6 players from the entire side of the ',
+                                after: ']. The territorial location of the target during looting does not matter.',
+                            },
+                            finishAfterLogout:
+                                '• The thief has the right to finish an already-started looting if the target logs out during the process, but after the target leaves, the thief has no right to break any blocks or objects at all.',
+                            noChisel:
+                                '• The thief is prohibited from using any chisel tool on foreign territory and during theft.',
+                            noTemporalGears: '• The thief is prohibited from using temporal gears during theft.',
+                            noReinforce:
+                                '• The thief is prohibited from reinforcing any objects and blocks during theft.',
+                            noBackpackStorage:
+                                '• The thief is prohibited from carrying chests, barrels, crates, vessels, hollows, and other storage blocks on their back.',
+                            screenshots:
+                                '• The thief is obliged to take screenshots at the beginning of the theft: of their inventory; armor on their character; list of players who are online. Rollbacks of the theft are welcome.',
+                            noDespawn:
+                                '• The thief is prohibited from intentionally despawning resources, including by deliberately dropping them out of chests and other storage. Accidental resource drops, for example due to lack of inventory space while harvesting crops, are not covered by this rule.',
+                            noBypass: {
+                                before: '• The thief is prohibited from leaving their settlement to commit theft and returning to their settlement to bypass the ',
+                                after: ', theft cooldown, and diplomatic statements of the settlement. Provide information about the customer and the date of contract conclusion in case of theft by order from a private individual / settlement.',
+                            },
+                            p3_1_4: "<b>3.1.4</b> Storage and maintenance of contracts.<br />A contract must contain: the target of theft (settlement name / player nickname), the thief's and customer's nicknames, the real date of signing the contract. A theft contract must be kept in an accessible place on the customer's settlement territory. If the contract is concluded on behalf of the settlement (by its head or deputy), the contract must be kept in the main building of the customer settlement (tower, donjon, castle, fort, ruler's residence, etc.). If the contract is concluded by a private individual (a specific player), the contract must be kept in the player's main residential building. It is forbidden to hide, bury, wall up, place in chests underground / in walls, or otherwise make the contract inaccessible to find. The Administration has the right to request access to the contract at any time. The contract must be kept for at least 30 real days after signing.",
+                        },
+                        kills: {
+                            p3_2_1: {
+                                before: '<b>3.2.1</b> Players may be killed anywhere, in any way, at any time, and by anyone, taking into account the server rules, except on their own territory by this advantage. The exception is targeted non-stop killing of players at the zero coordinate and within a hundred blocks of it. All of the above does not apply in cases of ',
                                 mid1: ' and ',
-                                after: ', as well as to participate in combat on the side of allies in any role [including supply role].',
+                                mid2: ' states (in cases of theft, killing is allowed according to the rules of ',
+                                after: ').',
                             },
-                            res3: {
-                                before: '• Killing other players on your own territory is prohibited, except for combat and ',
-                                after: ', provided there is evidence.',
+                            theftRulesLink: 'p.3.1',
+                            p3_2_2: {
+                                before: '<b>3.2.2</b> Exception: players have the right to kill other players on the territory of settlements with an ',
+                                mid1: ' according to the rules of ',
+                                after: '',
                             },
+                            aggressiveCourseLink: 'p.3.4.5.3',
                         },
-                        neutral: {
-                            intro: '<b>3.4.5.2</b> Neutral:',
-                            adv1: {
-                                before: '• When a ',
-                                after: ' is declared on a neutral settlement, the minimum time from declaration to the start of combat must be at least 20 minutes.',
+                        espionage: {
+                            p3_3_1: '<b>3.3.1</b> Spies are people infiltrated into other settlements to carry out intelligence activities.',
+                            p3_3_2: {
+                                before: '<b>3.3.2</b> Espionage can be conducted under any ',
+                                after: ' of a settlement.',
                             },
-                            adv2: {
-                                before: "• When a raid is declared on a neutral settlement, to begin looting resources, it is necessary to destroy at least 1/3 of the settlement's ",
-                                after: ' or more. If the number of monument blocks is odd, rounding is up.',
+                            p3_3_3: '<b>3.3.3</b> A spy may participate during any military actions on the side of the settlement he works for, or on the side of the settlement where he is a spy.',
+                            p3_3_4: {
+                                before: '<b>3.3.4</b> A spy may steal resources from the settlement he has infiltrated, but in compliance with the ',
+                                after: ' [At the same time, at least 1 player who is part of the settlement and is not a spy must be online and on the territory].',
                             },
-                            res1: {
-                                before: '• It is forbidden to initiate ',
-                                mid1: ' and ',
-                                after: ', but participation in combat on the side of allies is allowed.',
+                            theftRulesLink: 'Theft rules',
+                            p3_3_5: {
+                                before: '<b>3.3.5</b> A spy may open gates during a siege while ',
+                                mid1: ' or ',
+                                after: ' is being waged. Only the first, outer gates are implied. Opening gates other than these is prohibited.',
                             },
-                            res2: {
-                                before: '• It is forbidden to initiate ',
-                                after: ' with your own hands, but theft "by other hands" is allowed if there is a physical document in the game — a signed contract by the customer with a real date and time [purchasing services externally].',
-                            },
+                            p3_3_6: '<b>3.3.6</b> A spy may transmit any intelligence information.',
+                            p3_3_7: '<b>3.3.7</b> Any other actions of a spy are prohibited.',
                         },
-                        aggressive: {
-                            intro: '<b>3.4.5.3</b> Aggressive:',
-                            adv1: {
-                                before: '• Initiating ',
-                                mid1: ', ',
-                                mid2: ', and ',
-                                after: ' is allowed, as well as participation in them on the side of allies.',
+                        diplomacy: {
+                            common: {
+                                advantages: 'Advantages:',
+                                restrictions: 'Restrictions:',
                             },
-                            adv2: {
-                                before: '• ',
-                                after: ' is allowed by a group of up to 3 people inclusive.',
-                            },
-                            adv3: {
-                                before: '• When a ',
-                                after: ' is declared by an aggressive settlement, the maximum duration of the raid is no more than 4 hours.',
-                            },
-                            res1: {
-                                before: '• When a ',
-                                after: ' is declared on an aggressive settlement, the minimum time from declaration to the start of combat must be at least 10 minutes.',
-                            },
-                            res2: {
-                                before: '• A player of an aggressive settlement may be killed and their corpse collected on their own territory under any circumstances, including during ',
+                            p3_4_1: {
+                                before: '<b>3.4.1</b> The ',
+                                mid1: ' does not apply to the struggle for ',
                                 after: '.',
                             },
-                            res3: "• A kill is considered complete when one of the following conditions is met: the initiator leaves the victim's territory to a distance of 100+ blocks OR 10 minutes have passed since the first kill. After the kill is completed, a 2-hour cooldown is imposed on the initiator settlement, in this aggressive settlement. No more than 3 kills of different players are allowed at one time on the territory of a settlement with an aggressive course.",
-                            res4: '• The cooldown is tied to the initiator settlement and applies to all its players.',
-                            res5: {
-                                before: '• When a ',
-                                mid1: " is declared on an aggressive settlement, there is no need to destroy the settlement's ",
-                                after: ' to begin looting resources.',
+                            p3_4_2: {
+                                before: '<b>3.4.2</b> The ',
+                                after: ' can be changed once every 5 weeks of real time.',
                             },
-                        },
-                        trade_peaceful: {
-                            intro: '<b>3.4.5.4</b> Trade-peaceful:',
-                            adv0: {
-                                before: '• May be adopted exclusively by a settlement of type ',
+                            p3_4_3: '<b>3.4.3</b> To change the political course, it is necessary to create a ticket request in Discord, and after the request is approved, make a diplomatic statement.',
+                            p3_4_4: '<b>3.4.4</b> After changing the political course, the settlement receives a 24-hour real-time cooldown on theft, military actions, and any political actions.',
+                            p3_4_5: '<b>3.4.5</b> Types of political courses:',
+                            peaceful: {
+                                intro: '<b>3.4.5.1</b> Peaceful:',
+                                adv1: {
+                                    before: '• When a ',
+                                    mid1: ' is declared on a peaceful settlement, that settlement has the right to buy off the attackers with ',
+                                    after: " in an amount set according to the settlement type, until the next declaration. The attackers' agreement is not required. Buyout amount:",
+                                },
+                                ransomHomestead: {
+                                    before: '• ',
+                                    mid1: ' cost 5 ',
+                                    after: '.',
+                                },
+                                ransomCamp: {
+                                    before: '• ',
+                                    mid1: ' 10 ',
+                                    after: '.',
+                                },
+                                ransomVillage: {
+                                    before: '• ',
+                                    mid1: ' 20 ',
+                                    after: '.',
+                                },
+                                ransomTownship: {
+                                    before: '• ',
+                                    mid1: ' 30 ',
+                                    after: '.',
+                                },
+                                ransomCity: {
+                                    before: '• ',
+                                    mid1: ' 50 ',
+                                    after: '.',
+                                },
+                                ransomRegion: {
+                                    before: '• ',
+                                    mid1: ' 100 ',
+                                    after: '.',
+                                },
+                                adv2: {
+                                    before: '• When a ',
+                                    after: ' is declared on a peaceful settlement, the minimum time from declaration to the start of combat must be at least 40 minutes.',
+                                },
+                                adv3: {
+                                    before: "• When a raid is declared on a peaceful settlement, to begin looting resources, it is necessary to destroy at least 1/2 of the settlement's ",
+                                    after: ' or more. If the number of monument blocks is odd, rounding is up.',
+                                },
+                                adv4: {
+                                    before: '• When committing ',
+                                    after: ' against a peaceful settlement, the cooldown until the next theft against this settlement is doubled from the base value.',
+                                },
+                                res1: '• It is forbidden to participate in any theft actions, as well as to commit theft "by other hands".',
+                                res2: {
+                                    before: '• It is forbidden to initiate ',
+                                    mid1: ' and ',
+                                    after: ', as well as to participate in combat on the side of allies in any role [including supply role].',
+                                },
+                                res3: {
+                                    before: '• Killing other players on your own territory is prohibited, except for combat and ',
+                                    after: ', provided there is evidence.',
+                                },
+                            },
+                            neutral: {
+                                intro: '<b>3.4.5.2</b> Neutral:',
+                                adv1: {
+                                    before: '• When a ',
+                                    after: ' is declared on a neutral settlement, the minimum time from declaration to the start of combat must be at least 20 minutes.',
+                                },
+                                adv2: {
+                                    before: "• When a raid is declared on a neutral settlement, to begin looting resources, it is necessary to destroy at least 1/3 of the settlement's ",
+                                    after: ' or more. If the number of monument blocks is odd, rounding is up.',
+                                },
+                                res1: {
+                                    before: '• It is forbidden to initiate ',
+                                    mid1: ' and ',
+                                    after: ', but participation in combat on the side of allies is allowed.',
+                                },
+                                res2: {
+                                    before: '• It is forbidden to initiate ',
+                                    after: ' with your own hands, but theft "by other hands" is allowed if there is a physical document in the game — a signed contract by the customer with a real date and time [purchasing services externally].',
+                                },
+                            },
+                            aggressive: {
+                                intro: '<b>3.4.5.3</b> Aggressive:',
+                                adv1: {
+                                    before: '• Initiating ',
+                                    mid1: ', ',
+                                    mid2: ', and ',
+                                    after: ' is allowed, as well as participation in them on the side of allies.',
+                                },
+                                adv2: {
+                                    before: '• ',
+                                    after: ' is allowed by a group of up to 3 people inclusive.',
+                                },
+                                adv3: {
+                                    before: '• When a ',
+                                    after: ' is declared by an aggressive settlement, the maximum duration of the raid is no more than 4 hours.',
+                                },
+                                res1: {
+                                    before: '• When a ',
+                                    after: ' is declared on an aggressive settlement, the minimum time from declaration to the start of combat must be at least 10 minutes.',
+                                },
+                                res2: {
+                                    before: '• A player of an aggressive settlement may be killed and their corpse collected on their own territory under any circumstances, including during ',
+                                    after: '.',
+                                },
+                                res3: "• A kill is considered complete when one of the following conditions is met: the initiator leaves the victim's territory to a distance of 100+ blocks OR 10 minutes have passed since the first kill. After the kill is completed, a 2-hour cooldown is imposed on the initiator settlement, in this aggressive settlement. No more than 3 kills of different players are allowed at one time on the territory of a settlement with an aggressive course.",
+                                res4: '• The cooldown is tied to the initiator settlement and applies to all its players.',
+                                res5: {
+                                    before: '• When a ',
+                                    mid1: " is declared on an aggressive settlement, there is no need to destroy the settlement's ",
+                                    after: ' to begin looting resources.',
+                                },
+                            },
+                            p3_4_2_statements:
+                                '<b>3.4.2</b> Diplomatic statements are statements exclusively from the heads of settlements or their confirmed deputies, in the diplomacy channel on Discord, observing official style and communication norms.',
+                            p3_4_3_statements:
+                                '<b>3.4.3</b> A diplomatic statement must contain: title, essence, signatures, and in-game date. A signature is considered a message in the statement thread "I sign, position, Nickname".',
+                            p3_4_4_statements: {
+                                before: '<b>3.4.4</b> Any diplomatic statement has its own force and consequences. If players are able to create a world court [decision accepted by 75% of the population of settlements from Camp level and above], then such a court has exclusive rights to punish players, up to issuing a decision with the help of ',
                                 after: '.',
                             },
-                            adv1: {
-                                before: '• When a ',
-                                mid1: ' is declared on a trade-peaceful settlement, that settlement has the right to buy off the attackers with ',
-                                after: ' in a buyout amount of 20 ',
-                                after2: ', until the next declaration.',
-                            },
-                            adv2: {
-                                before: '• When a ',
-                                after: ' is declared on a trade-peaceful settlement, the minimum time from declaration to the start of combat must be at least 60 minutes.',
-                            },
-                            adv3: {
-                                before: "• When a raid is declared on a trade-peaceful settlement, to begin looting resources, it is necessary to completely destroy the settlement's ",
+                            p3_4_5_statements:
+                                '<b>3.4.5</b> A diplomatic statement [document] in which the consequences of its violation by one of the signing parties are fixed provides for applying these consequences directly to the violator, even if such measures go beyond the established rules [within reason, in the opinion of the project administration in disputed situations].',
+                            p3_4_6_statements:
+                                '<b>3.4.6</b> A diplomatic statement [document] cannot be changed in circumvention of the agreements regarding changes to this document.',
+                        },
+                        special: {
+                            p3_5_1: '<b>3.5.1</b> A player has the right to agree with the administration in a ticket on exchanging items from a donation set for equivalent ones [material of manufacture, for example].',
+                            p3_5_2: {
+                                before: '<b>3.5.2</b> A player has the right to found a settlement. After submitting an application for a ',
+                                mid1: ' or settlement upgrade, the player creates a ticket in Discord to receive a territorial block [Herald], which will set the visible boundaries of the ',
                                 after: '.',
                             },
-                            adv4: {
-                                before: '• When committing ',
-                                after: ' against a trade-peaceful settlement, the cooldown until the next theft against this settlement is quadrupled from the base value.',
-                            },
-                            res1: '• It is forbidden to participate in any theft actions, as well as to commit theft "by other hands".',
-                            res2: {
-                                before: '• It is forbidden to initiate ',
-                                mid1: ' and ',
-                                after: ', as well as to participate in combat on the side of allies in any role [including supply role].',
-                            },
-                            res3: {
-                                before: '• Killing other players on your own and other territories is prohibited, except for combat and ',
-                                after: ', provided there is evidence.',
+                            p3_5_3: '<b>3.5.3</b> All residents of the settlement territory must be invited and accept the invitation to the settlement on the website.',
+                            p3_5_4: {
+                                before: '<b>3.5.4</b> A player has access to all ',
+                                mid1: ' of their side. [May not be granted in case of hostility toward the ',
+                                after: ']',
                             },
                         },
-                        p3_4_2_statements:
-                            '<b>3.4.2</b> Diplomatic statements are statements exclusively from the heads of settlements or their confirmed deputies, in the diplomacy channel on Discord, observing official style and communication norms.',
-                        p3_4_3_statements:
-                            '<b>3.4.3</b> A diplomatic statement must contain: title, essence, signatures, and in-game date. A signature is considered a message in the statement thread "I sign, position, Nickname".',
-                        p3_4_4_statements: {
-                            before: '<b>3.4.4</b> Any diplomatic statement has its force and consequences. Players have the right to assemble an Imperial Court in the Center of the Imperial Exclave. Its decisions are indisputable and in exceptional cases go as far as issuing a decision with the help of ',
-                            after: '.',
-                        },
-                        p3_4_5_statements:
-                            '<b>3.4.5</b> A diplomatic statement [document] in which the consequences of its violation by one of the signing parties are fixed provides for applying these consequences directly to the violator, even if such measures go beyond the established rules [within reason, in the opinion of the project administration in disputed situations].',
-                        p3_4_6_statements:
-                            '<b>3.4.6</b> A diplomatic statement [document] cannot be changed in circumvention of the agreements regarding changes to this document.',
-                        p3_4_7_statements:
-                            '<b>3.4.7</b> Concluding any alliances or aid agreements at the moment a raid has already been declared on your settlement is prohibited.',
-                    },
-                    special: {
-                        p3_5_1: '<b>3.5.1</b> A player has the right to agree with the administration in a ticket on exchanging items from a donation set for equivalent ones [material of manufacture, for example].',
-                        p3_5_2: {
-                            before: '<b>3.5.2</b> A player has the right to found a settlement. After submitting an application for a ',
-                            mid1: ' or settlement upgrade, the player creates a ticket in Discord to receive a territorial block [Herald], which will set the visible boundaries of the ',
-                            after: '.',
-                        },
-                        p3_5_3: '<b>3.5.3</b> All residents of the settlement territory must be invited and accept the invitation to the settlement on the website.',
-                    },
-                    sabotage: {
-                        p3_6_1: {
-                            before: '<b>3.6.1</b> Sabotage actions refer to the partial destruction or disabling of infrastructure outside ',
-                            mid1: ' and not related to the infrastructure of the ',
-                            after: '.',
-                        },
-                        p3_6_2: {
-                            before: '<b>3.6.2</b> There must be valid grounds for carrying out sabotage. The entire chain must have logical justification [Goal and substantial reason -> committing the sabotage action -> committing an action that benefits as a result of the sabotage]. For example: breaking a bridge to limit enemy mobility before conducting a ',
-                            after: ' on the territory where this bridge may lead. Breaking an aqueduct before attacking an enemy or their allies to disable industry. Etc.',
+                        sabotage: {
+                            p3_6_1: {
+                                before: '<b>3.6.1</b> Sabotage actions refer to the partial destruction or disabling of infrastructure outside ',
+                                mid1: ' and not related to the infrastructure of the ',
+                                after: '.',
+                            },
+                            p3_6_2: {
+                                before: '<b>3.6.2</b> There must be valid grounds for carrying out sabotage. The entire chain must have logical justification [Goal and substantial reason -> committing the sabotage action -> committing an action that benefits as a result of the sabotage]. For example: breaking a bridge to limit enemy mobility before conducting a ',
+                                after: ' on the territory where this bridge may lead. Breaking an aqueduct before attacking an enemy or their allies to disable industry. Etc.',
+                            },
                         },
                     },
-                },
-                admin: {
-                    p6_1: '<b>6.1</b> An administrator is obliged to make decisions and take actions exclusively for the benefit of the project. Administrators are always responsible for their actions.',
-                    p6_2: '<b>6.2</b> An administrator must be polite and welcoming. His task as an administrator is to resolve any situation he may encounter.',
-                    p6_3: '<b>6.3</b> An administrator is obliged to treat all players with respect, regardless of his personal opinion of them.',
-                    p6_4: '<b>6.4</b> An administrator is obliged to maintain confidentiality. Dissemination of any information discussed within the administration team is prohibited.',
-                    p6_5: '<b>6.5</b> Administrators must use their powers only for moderating the server. Any use of powers for personal purposes is prohibited.',
-                    p6_6: '<b>6.6</b> An administrator has no right to participate in resolving a conflict (disputed) situation if he is one of the parties involved in it.',
-                    p6_7: '<b>6.7</b> The administration is prohibited from playing on the server using technical accounts that have OP.',
-                    p6_8: '<b>6.8</b> Communication between the administration and players on issues of resolving game problems is carried out through the ticket system or in specialized channels. Discussion of such topics in private messages is prohibited.',
-                    p6_9: '<b>6.9</b> Tickets are reviewed within 3 days of opening. The relevance and freshness of the ticket topic affects whether it will be reviewed.',
-                    p6_10: '<b>6.10</b> Settlement registrations are reviewed within one day from the moment of submission.',
-                    p6_11: '<b>6.11</b> During checks, administrators strictly follow the current version of the rules described on the website. In exceptional or disputed situations (in the context of unintentional violation), administrators may deviate from the rules, relying on logic and objective analysis of the situation.',
-                    p6_12: '<b>6.12</b> Suggestions are accepted for consideration by the administration when they receive 10 reactions or more. The final decision on adding certain edits or modifications rests with the administration. In case of refusal, the player will receive a detailed response to their suggestion. The review period for suggestions is from 3 to 7 days.',
-                    p6_13: '<b>6.13</b> Suggestions and disputed situations are reviewed by a panel of at least 3 administrators. The decision made by the administration is indisputable.',
-                    p6_14: '<b>6.14</b> The procedure for choosing punishment for any administrator in case of regulation violation: analysis of the situation by the administrative team; issuing a decision in the form of a warning or removal from office.',
-                    p6_15: '<b>6.15</b> Player punishment is structured as follows. A total of 3 warnings may be issued per season, which are valid until the end of the season. The 1st warning results in a verbal conversation. The 2nd warning results in an instant ban for 1 week. The 3rd warning results in an instant ban until the end of the season. The Administration has the right to issue a ban immediately if the violation is deemed critical.',
-                    p6_16: '<b>6.16</b> Administrator ranks:<br />*One person may hold several roles.',
-                    p6_16_1:
-                        '<b>6.16.1</b> Administrator — the final authority, responsible for editing rules, priority vote for resolving game disputes, has all accesses in Discord, GM account.',
-                    p6_16_2:
-                        '<b>6.16.2</b> Tech Administrator — has a GM account, performs actions related to issuing items or resolving bugs, has access to logs.',
-                    p6_16_3: '<b>6.16.3</b> Moderator — monitors order in Discord and in-game chat.',
-                    p6_16_4:
-                        '<b>6.16.4</b> Event-maker — has a special GM account, works on creating events. Is subordinate to all the above ranks.',
+                    admin: {
+                        p6_1: '<b>6.1</b> An administrator is obliged to make decisions and take actions exclusively for the benefit of the project. Administrators are always responsible for their actions.',
+                        p6_2: '<b>6.2</b> An administrator must be polite and welcoming. His task as an administrator is to resolve any situation he may encounter.',
+                        p6_3: '<b>6.3</b> An administrator is obliged to treat all players with respect, regardless of his personal opinion of them.',
+                        p6_4: '<b>6.4</b> An administrator is obliged to maintain confidentiality. Dissemination of any information discussed within the administration team is prohibited.',
+                        p6_5: '<b>6.5</b> Administrators must use their powers only for moderating the server. Any use of powers for personal purposes is prohibited.',
+                        p6_6: '<b>6.6</b> An administrator has no right to participate in resolving a conflict (disputed) situation if he is one of the parties involved in it.',
+                        p6_7: '<b>6.7</b> The administration is prohibited from playing on the server using technical accounts that have OP.',
+                        p6_8: '<b>6.8</b> Communication between the administration and players on issues of resolving game problems is carried out through the ticket system or in specialized channels. Discussion of such topics in private messages is prohibited.',
+                        p6_9: '<b>6.9</b> Tickets are reviewed within 3 days of opening. The relevance and freshness of the ticket topic affects whether it will be reviewed.',
+                        p6_10: '<b>6.10</b> Settlement registrations are reviewed within one day from the moment of submission.',
+                        p6_11: '<b>6.11</b> During checks, administrators strictly follow the current version of the rules described on the website. In exceptional or disputed situations (in the context of unintentional violation), administrators may deviate from the rules, relying on logic and objective analysis of the situation.',
+                        p6_12: '<b>6.12</b> Suggestions are accepted for consideration by the administration when they receive 10 reactions or more. The final decision on adding certain edits or modifications rests with the administration. In case of refusal, the player will receive a detailed response to their suggestion. The review period for suggestions is from 3 to 7 days.',
+                        p6_13: '<b>6.13</b> Suggestions and disputed situations are reviewed by a panel of at least 3 administrators. The decision made by the administration is indisputable.',
+                        p6_14: '<b>6.14</b> The procedure for choosing punishment for any administrator in case of regulation violation: analysis of the situation by the administrative team; issuing a decision in the form of a warning or removal from office.',
+                        p6_15: '<b>6.15</b> Player punishment is structured as follows. A total of 3 warnings may be issued per season, which are valid until the end of the season. The 1st warning results in a verbal conversation. The 2nd warning results in an instant ban for 1 week. The 3rd warning results in an instant ban until the end of the season. The Administration has the right to issue a ban immediately if the violation is deemed critical.',
+                        p6_16: '<b>6.16</b> Administrator ranks:<br />*One person may hold several roles.',
+                        p6_16_1:
+                            '<b>6.16.1</b> Administrator — the final authority, responsible for editing rules, priority vote for resolving game disputes, has all accesses in Discord, GM account.',
+                        p6_16_2:
+                            '<b>6.16.2</b> Tech Administrator — has a GM account, performs actions related to issuing items or resolving bugs, has access to logs.',
+                        p6_16_3: '<b>6.16.3</b> Moderator — monitors order in Discord and in-game chat.',
+                        p6_16_4:
+                            '<b>6.16.4</b> Event-maker — has a special GM account, works on creating events. Is subordinate to all the above ranks.',
+                    },
                 },
             },
         },

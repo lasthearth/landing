@@ -51,6 +51,7 @@ export const ADMIN_I18N = {
                 township: 'Посёлок',
                 city: 'Город',
                 province: 'Региональная провинция',
+                guild: 'Гильдия',
             },
             questions: {
                 noQuestions: 'Вопросов пока нет...',
@@ -298,6 +299,7 @@ export const ADMIN_I18N = {
                 township: 'Township',
                 city: 'City',
                 province: 'Regional province',
+                guild: 'Guild',
             },
             questions: {
                 noQuestions: 'No questions yet...',

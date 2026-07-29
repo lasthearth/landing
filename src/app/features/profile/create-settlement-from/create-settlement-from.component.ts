@@ -10,6 +10,7 @@ import { VillageFormComponent } from './settlements-types-forms/village-form/vil
 import { RegionFormComponent } from './settlements-types-forms/region-form/region-form.component';
 import { CityFormComponent } from './settlements-types-forms/city-form/city-form.component';
 import { TownshipFormComponent } from './settlements-types-forms/township-form/township-form.component';
+import { GuildFormComponent } from './settlements-types-forms/guild-form/guild-form.component';
 
 @Component({
     standalone: true,
@@ -23,6 +24,7 @@ import { TownshipFormComponent } from './settlements-types-forms/township-form/t
         RegionFormComponent,
         CityFormComponent,
         TownshipFormComponent,
+        GuildFormComponent,
         TranslatePipe,
     ],
     templateUrl: './create-settlement-from.component.html',

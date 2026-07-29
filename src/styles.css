@@ -711,12 +711,12 @@ html[data-theme='dark'] {
 
     /* Основные панели */
     .main-panel {
-        background-color: #2a231c;
+        background-color: #212327;
         background-image: none;
     }
 
     tui-dialog .t-content {
-        background-color: #2a231c !important;
+        background-color: #212327 !important;
         background-image: none !important;
     }
 
@@ -724,19 +724,19 @@ html[data-theme='dark'] {
     [class*='bg-[#e2d7bb]'],
     [class*='bg-[#e8dfc8]'],
     [class*='bg-[#e9dec5]'] {
-        background-color: #2a231c;
+        background-color: #212327;
     }
 
     [class*='bg-[#f6f0df]'],
     [class*='bg-[#f0e7ce]'],
     [class*='bg-[#ece1c8]'],
     [class*='bg-[#e8dcc0]'] {
-        background-color: #332a21;
+        background-color: #2b2d31;
     }
 
     [class*='bg-[#d8cdb3]'],
     [class*='bg-[#d4c5a9]'] {
-        background-color: #3d3329;
+        background-color: #383a40;
     }
 
     /* Тёмные полупрозрачные панели → светлая альфа */
@@ -750,7 +750,7 @@ html[data-theme='dark'] {
 
     /* Градиенты и текстуры пергамента */
     [class*='from-[#e2d7bb]'] {
-        --tw-gradient-from: #2a231c;
+        --tw-gradient-from: #212327;
     }
 
     [class*="bg-[url('/image_1.webp')]"] {
@@ -813,7 +813,7 @@ html[data-theme='dark'] {
 
     /* Классы с !important (активные кнопки меню) */
     [class*='bg-[#e2d7bb]!'] {
-        background-color: #3d3329 !important;
+        background-color: #383a40 !important;
     }
 
     [class*='text-lh-primary!'] {
@@ -828,12 +828,12 @@ html[data-theme='dark'] {
     [class*='border-[#8b7355]'],
     [class*='border-[#b8aa8e]'],
     [class*='border-[rgba(51,44,38'] {
-        border-color: #4a3f31;
+        border-color: #3f4147;
     }
 
     /* Компонентные поверхности */
     .faq-scroll {
-        background: #332a21;
+        background: #2b2d31;
         border-left-color: rgba(224, 106, 90, 0.6);
     }
 
@@ -842,7 +842,7 @@ html[data-theme='dark'] {
     }
 
     .diplomacy-card {
-        background: #332a21;
+        background: #2b2d31;
     }
 
     .diplomacy-card::before {
@@ -886,25 +886,25 @@ html[data-theme='dark'] {
     }
 
     .settlement-card-inner {
-        background-color: #2a231c;
+        background-color: #212327;
         background-image: none;
     }
 
     .recruit-panel {
-        background-color: #2a231c;
+        background-color: #212327;
         background-image: none;
     }
 
     .quick-actions {
-        background: #2a231c;
+        background: #212327;
     }
 
     .quick-actions__item {
-        background: #332a21;
+        background: #2b2d31;
         color: #e9dfc9;
 
         &:hover {
-            background: #3d3329;
+            background: #383a40;
         }
     }
 
@@ -912,8 +912,19 @@ html[data-theme='dark'] {
         color: #e9dfc9;
     }
 
+    /* Кнопки навигации хедера */
+    .nav-button {
+        background-color: #2b2d31;
+        background-image: none;
+        color: #e9dfc9;
+    }
+
+    .nav-button:hover {
+        background-color: #383a40;
+    }
+
     .video-card {
-        background: #332a21;
+        background: #2b2d31;
     }
 
     .video-card__title,
@@ -936,7 +947,7 @@ html[data-theme='dark'] {
 
     /* Поля ввода */
     .flexible-input {
-        border-color: #4a3f31;
+        border-color: #3f4147;
         color: #e9dfc9;
         background-color: rgba(233, 223, 201, 0.06);
     }
@@ -956,9 +967,9 @@ html[data-theme='dark'] {
     }
 
     .flexible-input .dropdown {
-        background-color: #2a231c;
+        background-color: #212327;
         background-image: none;
-        border-color: #4a3f31;
+        border-color: #3f4147;
     }
 
     .flexible-input .dropdown-option {
@@ -990,7 +1001,7 @@ html[data-theme='dark'] {
 
     /* Скроллбар */
     & {
-        scrollbar-color: #4a3f31 #2a231c;
+        scrollbar-color: #3f4147 #212327;
     }
 
     /* Ссылки: системный синий → тёплый акцент */
@@ -1015,7 +1026,7 @@ html[data-theme='dark'] {
 
     /* Диалоги lh-dialog-* */
     .lh-dialog-card {
-        background-color: #2a231c;
+        background-color: #212327;
         color: #e9dfc9;
     }
 
@@ -1028,7 +1039,7 @@ html[data-theme='dark'] {
     }
 
     .lh-dialog-info {
-        background-color: #332a21;
+        background-color: #2b2d31;
     }
 
     .lh-dialog-button-secondary {
@@ -1053,11 +1064,11 @@ html[data-theme='dark'] {
     }
 
     ::-webkit-scrollbar-track {
-        background: #2a231c;
+        background: #212327;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #4a3f31;
-        border-color: #2a231c;
+        background: #3f4147;
+        border-color: #212327;
     }
 }

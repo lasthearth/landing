@@ -1,9 +1,11 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="2">
         <span [innerHTML]="'rules.content.actions.theft.p3_1_1.before' | translate"></span>
-        <app-rule-link target="Political course">{{ 'rules.content.terms.politicalCourseGenitive' | translate }}</app-rule-link>
+        <app-rule-link target="Political course">
+            {{ "rules.content.terms.politicalCourseGenitive" | translate }}
+        </app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.p3_1_1.mid1' | translate"></span>
-        <app-rule-link target="Key point">{{ 'rules.content.terms.keyPointGenitive' | translate }}</app-rule-link>
+        <app-rule-link target="Key point">{{ "rules.content.terms.keyPointGenitive" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.p3_1_1.after' | translate"></span>
     </app-rule-paragraph>
 
@@ -11,34 +13,32 @@
         <span [innerHTML]="'rules.content.actions.theft.p3_1_2' | translate"></span>
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="3">{{ 'rules.content.actions.theft.canBreakHeading' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="3">{{ "rules.content.actions.theft.canBreakHeading" | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.actions.theft.canBreak1' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ "rules.content.actions.theft.canBreak1" | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.actions.theft.canBreak2' | translate }}
-    </app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ "rules.content.actions.theft.canBreak2" | translate }}</app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.actions.theft.canBreak3' | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">{{ 'rules.content.actions.theft.canStealVehicles' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">◦ {{ "rules.content.actions.theft.canBreak3" | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.canPlaceLadders' | translate }}
+        {{ "rules.content.actions.theft.canStealVehicles" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.armorLimit' | translate }}
+        {{ "rules.content.actions.theft.canPlaceLadders" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.defenseRule' | translate }}
+        {{ "rules.content.actions.theft.armorLimit" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.canHarvest' | translate }}
+        {{ "rules.content.actions.theft.defenseRule" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        {{ "rules.content.actions.theft.canHarvest" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
@@ -46,66 +46,76 @@
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.mustOnline' | translate }}
+        {{ "rules.content.actions.theft.mustOnline" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.cooldown' | translate }}
+        {{ "rules.content.actions.theft.cooldown" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.before' | translate"></span>
-        <app-rule-link target="Homestead">{{ 'rules.content.terms.homesteadGenitivePlural' | translate }}</app-rule-link>
+        <app-rule-link target="Homestead">
+            {{ "rules.content.terms.homesteadGenitivePlural" | translate }}
+        </app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.m1' | translate"></span>
-        <app-rule-link target="Camp">{{ 'rules.content.terms.campGenitivePlural' | translate }}</app-rule-link>
+        <app-rule-link target="Camp">{{ "rules.content.terms.campGenitivePlural" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.m2' | translate"></span>
-        <app-rule-link target="Village">{{ 'rules.content.terms.villageGenitivePlural' | translate }}</app-rule-link>
+        <app-rule-link target="Village">{{ "rules.content.terms.villageGenitivePlural" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.actions.theft.targetOnline.m2_1' | translate"></span>
+        <app-rule-link target="Guild">{{ "rules.content.terms.guildGenitivePlural" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.m3' | translate"></span>
-        <app-rule-link target="Township">{{ 'rules.content.terms.townshipGenitivePlural' | translate }}</app-rule-link>
+        <app-rule-link target="Township">{{ "rules.content.terms.townshipGenitivePlural" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.m4' | translate"></span>
-        <app-rule-link target="City">{{ 'rules.content.terms.cityGenitivePlural' | translate }}</app-rule-link>
+        <app-rule-link target="City">{{ "rules.content.terms.cityGenitivePlural" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.m5' | translate"></span>
-        <app-rule-link target="Region">{{ 'rules.content.terms.regionGenitive' | translate }}</app-rule-link>
+        <app-rule-link target="Region">{{ "rules.content.terms.regionGenitive" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.m6' | translate"></span>
-        <app-rule-link target="ExclaveCenter">{{ 'rules.content.terms.exclaveCenterGenitive' | translate }}</app-rule-link>
+        <app-rule-link target="ExclaveCenter">
+            {{ "rules.content.terms.exclaveCenterGenitive" | translate }}
+        </app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.m7' | translate"></span>
-        <app-rule-link target="Key point">{{ 'rules.content.terms.keyPointGenitiveCapital' | translate }}</app-rule-link>
+        <app-rule-link target="Key point">
+            {{ "rules.content.terms.keyPointGenitiveCapital" | translate }}
+        </app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.m8' | translate"></span>
-        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitiveCapital' | translate }}</app-rule-link>
+
         <span [innerHTML]="'rules.content.actions.theft.targetOnline.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.finishAfterLogout' | translate }}
+        {{ "rules.content.actions.theft.finishAfterLogout" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.noChisel' | translate }}
+        {{ "rules.content.actions.theft.noChisel" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.noTemporalGears' | translate }}
+        {{ "rules.content.actions.theft.noTemporalGears" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.noReinforce' | translate }}
+        {{ "rules.content.actions.theft.noReinforce" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.noBackpackStorage' | translate }}
+        {{ "rules.content.actions.theft.noBackpackStorage" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.screenshots' | translate }}
+        {{ "rules.content.actions.theft.screenshots" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        {{ 'rules.content.actions.theft.noDespawn' | translate }}
+        {{ "rules.content.actions.theft.noDespawn" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <span [innerHTML]="'rules.content.actions.theft.noBypass.before' | translate"></span>
-        <app-rule-link target="Political course">{{ 'rules.content.terms.politicalCourseGenitiveAlt' | translate }}</app-rule-link>
+        <app-rule-link target="Political course">
+            {{ "rules.content.terms.politicalCourseGenitiveAlt" | translate }}
+        </app-rule-link>
         <span [innerHTML]="'rules.content.actions.theft.noBypass.after' | translate"></span>
     </app-rule-paragraph>
 

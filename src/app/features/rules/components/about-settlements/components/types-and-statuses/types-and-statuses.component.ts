@@ -8,7 +8,7 @@ import { TownshipComponent } from './components/township/township.component';
 import { CityComponent } from './components/city/city.component';
 import { RegionComponent } from './components/region/region.component';
 import { ExclaveCenterComponent } from './components/exclave-center/exclave-center.component';
-import { SuzerainComponent } from './components/suzerain/suzerain.component';
+import { GuildComponent } from './components/guild/guild.component';
 
 /**
  * Компонент типов и статусов поселений.
@@ -16,6 +16,16 @@ import { SuzerainComponent } from './components/suzerain/suzerain.component';
 @Component({
     selector: 'app-types-and-statuses',
     templateUrl: './types-and-statuses.component.html',
-    imports: [RuleSectionComponent, HomesteadComponent, CampComponent, VillageComponent, TownshipComponent, CityComponent, RegionComponent, ExclaveCenterComponent, SuzerainComponent],
+    imports: [
+        RuleSectionComponent,
+        GuildComponent,
+        HomesteadComponent,
+        CampComponent,
+        VillageComponent,
+        TownshipComponent,
+        CityComponent,
+        RegionComponent,
+        ExclaveCenterComponent,
+    ],
 })
 export class TypesAndStatusesComponent extends BaseScrollableComponent {}

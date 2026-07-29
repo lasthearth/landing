@@ -84,11 +84,11 @@
                             <p class="text-lg leading-[27px] text-neutral-500 mb-1">{{ 'profile.settlement.label' | translate }}</p>
                             <span class="font-bold truncate text-lg leading-[27px]">
                                 {{ (settlement.leader.user_id === userService.userId ? 'profile.settlement.role.leader' : 'profile.settlement.role.resident') | translate }}
-                                «{{ settlement.name }}»
+                                «{{ settlement | settlementDisplayName }}»
                             </span>
                             <div class="flex items-start gap-2 flex-wrap text-lg leading-[27px]">
                                 <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
-                                    {{ settlementService.getSettlementTypeByKey(settlement.type) }}
+                                    {{ getSettlementTypeLabel(settlement) }}
                                 </span>
                                 <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
                                     {{ settlement.members.length + 1 }} {{ 'profile.settlement.residentsShort' | translate }}

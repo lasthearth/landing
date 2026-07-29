@@ -1,0 +1,94 @@
+<form [formGroup]="form" class="flex flex-col gap-6 w-full bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6" (ngSubmit)="onSubmit.next()">
+    <p class="text-2xl text-[#2d201a] font-bold self-center">{{ 'settlements.form.title.guild' | translate }}</p>
+
+    <div class="flex flex-col gap-2">
+        <p class="text-xl text-[#2d201a] font-semibold">
+            {{ 'settlements.form.nameLabel' | translate }}
+            <span class="text-lh-danger">*</span>
+            <lh-hint [hintText]="'settlements.form.nameHint' | translate" />
+        </p>
+        <lh-input [placeholder]="'settlements.form.namePlaceholder' | translate" formControlName="name" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <p class="text-xl text-[#2d201a] font-semibold">
+            {{ 'settlements.form.coordinatesLabel' | translate }}
+            <span class="text-lh-danger">*</span>
+            <lh-hint [hintText]="'settlements.form.coordinatesHint' | translate" />
+        </p>
+        <lh-input [placeholder]="'settlements.form.xPlaceholder' | translate" type="inputNumber" formControlName="x" />
+        <lh-input [placeholder]="'settlements.form.zPlaceholder' | translate" type="inputNumber" formControlName="z" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <p class="text-xl text-[#2d201a] font-semibold">
+            {{ 'settlements.form.diplomacyLabel' | translate }}
+            <span class="text-lh-danger">*</span>
+            <lh-hint [hintText]="'settlements.form.diplomacyHint' | translate" />
+        </p>
+        <span class="text-lg text-[#5c4030]">
+            {{ 'settlements.diplomacy.guild' | translate }}
+        </span>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <p class="text-xl text-[#2d201a] font-semibold">
+            {{ 'settlements.form.descriptionLabel' | translate }}
+            <span class="text-lh-danger">*</span>
+            <lh-hint [hintText]="'settlements.form.descriptionHint' | translate" />
+        </p>
+        <lh-input [placeholder]="'settlements.form.descriptionPlaceholder' | translate" type="textarea" formControlName="description" />
+    </div>
+
+    <div *ngFor="let key of fileFields">
+        <p class="text-xl text-[#2d201a] font-semibold">
+            {{ getLabelForKey(key) }}
+            <span class="text-lh-danger">*</span>
+        </p>
+
+        <label *ngIf="!form.controls[key].value" tuiInputFiles>
+            <input accept="image/*" tuiInputFiles [formControl]="form.controls[key]" class="border-lh-primary!" />
+            <ng-template tuiInputFilesContent>
+                <span class="text-neutral-500">{{ 'settlements.form.addImage' | translate }}</span>
+            </ng-template>
+        </label>
+
+        <tui-files class="tui-space_top-1">
+            <tui-file
+                *ngIf="fileStatus.loading[key] | async as file"
+                state="loading"
+                [file]="file"
+                (remove)="removeFile(key)"
+            ></tui-file>
+
+            <ng-container *ngIf="form.get(key)?.value as file">
+                <tui-file
+                    *ngIf="form.get(key)?.invalid || (file | tuiFileRejected: { accept: 'image/*' } | async)"
+                    state="error"
+                    [file]="file"
+                    (remove)="removeFile(key)"
+                ></tui-file>
+
+                <tui-file
+                    *ngIf="form.get(key)?.valid && !(file | tuiFileRejected: { accept: 'image/*' } | async)"
+                    [file]="file"
+                    (remove)="removeFile(key)"
+                ></tui-file>
+            </ng-container>
+
+            <tui-error [formControl]="getControl(key)" [error]="[] | tuiFieldError | async"></tui-error>
+        </tui-files>
+    </div>
+
+    <button
+        type="submit"
+        class="lh-secondary-button text-base py-2 px-4 mt-2 self-start disabled:text-neutral-400 disabled:bg-lh-primary-2/5 disabled:cursor-not-allowed"
+        [disabled]="form.invalid || isLoading()"
+    >
+        @if (isLoading()) {
+            <tui-loader [showLoader]="isLoading()" />
+        } @else {
+            {{ 'settlements.form.submit' | translate }}
+        }
+    </button>
+</form>

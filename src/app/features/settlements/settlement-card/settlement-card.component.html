@@ -27,7 +27,7 @@
             <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-2 flex-wrap">
                     <h2 class="text-xl/7 md:text-2xl uppercase font-bold text-[#2d201a]">
-                        {{ data().name }}
+                        {{ data() | settlementDisplayName }}
                     </h2>
                     <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-0.5 rounded-lg">
                         {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
@@ -72,7 +72,7 @@
                                   : 'bg-[#720000]/15 text-[#720000]')
                         "
                     >
-                        {{ data().diplomacy }}
+                        {{ getDiplomacyLabel(data()) }}
                     </span>
                     @for (tag of data().tags; track tag.id) {
                         @if (getTag(tag.id); as tagData) {

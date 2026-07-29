@@ -17,6 +17,9 @@
         @case (settlementsTypes.city) {
             <app-region-form (submitEvent)="context.$implicit.complete()" />
         }
+        @case (settlementsTypes.guild) {
+            <app-guild-form (submitEvent)="context.$implicit.complete()" />
+        }
         @default {
             <app-camp-form (submitEvent)="context.$implicit.complete()" />
         }

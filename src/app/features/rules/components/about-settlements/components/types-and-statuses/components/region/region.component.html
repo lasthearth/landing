@@ -1,179 +1,198 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="Region" [level]="3">
         <span [innerHTML]="'rules.content.settlements.types.region.intro' | translate"></span>
-        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <app-rule-link target="Settlement">{{ "rules.content.terms.settlement" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.region.introAfter.before' | translate"></span>
-        <app-rule-link target="City">{{ 'rules.content.terms.cityStage' | translate }}</app-rule-link>
+        <app-rule-link target="City">{{ "rules.content.terms.cityStage" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.region.introAfter.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>{{ 'rules.content.settlements.common.requirements' | translate }}</b>
+        <b>{{ "rules.content.settlements.common.requirements" | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.location' | translate }}
+        {{ "rules.content.settlements.types.region.location" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.population' | translate }}
+        {{ "rules.content.settlements.types.region.population" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        <span class="ml-2" [innerHTML]="'rules.content.settlements.types.region.citizensRequirement.before' | translate"></span>
-        <app-rule-link target="Passport">{{ 'rules.content.terms.passportGenitive' | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.region.citizensRequirement.after' | translate"></span>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        <app-rule-link target="Monument" class="ml-2">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
+        <app-rule-link target="Monument" class="ml-2">{{ "rules.content.terms.monument" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.region.monumentAfter.before' | translate"></span>
-        <app-rule-link target="Patent">{{ 'rules.content.terms.patentImprovementDative' | translate }}</app-rule-link>
+        <app-rule-link target="Patent">{{ "rules.content.terms.patentImprovementDative" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.region.monumentAfter.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.documentsHeading' | translate }}
+        {{ "rules.content.settlements.types.region.documentsHeading" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.region.libertiesBefore' | translate }}
-        <app-rule-link target="Volnost">{{ 'rules.content.terms.liberties' | translate }}</app-rule-link>
+        ◦ {{ "rules.content.settlements.types.region.libertiesBefore" | translate }}
+        <app-rule-link target="Volnost">{{ "rules.content.terms.liberties" | translate }}</app-rule-link>
         <span>;</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.region.books' | translate }}
+        ◦ {{ "rules.content.settlements.types.region.books" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.infrastructureHeading' | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.smallSquare' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.bigSquare' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.well' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.stables' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.region.roads' | translate }}
+        {{ "rules.content.settlements.types.region.infrastructureHeading" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.region.suzerainRoadBefore' | translate }}
-        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        ◦ {{ "rules.content.settlements.types.region.smallSquare" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.bigSquare" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.well" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.stables" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.roads" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.suzerainRoadBefore" | translate }}
+        {{ "rules.content.terms.centralSettlementGenitive" | translate }}
         <span [innerHTML]="'rules.content.settlements.types.region.suzerainRoadAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.economyHeading' | translate }}
+        {{ "rules.content.settlements.types.region.economyHeading" | translate }}
     </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.storage' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.barn' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.farm' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ 'rules.content.settlements.types.region.additionalBuildingsHeading' | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.singleStory' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.twoStory' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.threeStory' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.region.specialBuilding' | translate }}
+        ◦ {{ "rules.content.settlements.types.region.storage" | translate }}
     </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.marketStalls' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.tavern' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.region.entertainment' | translate }}
+        ◦ {{ "rules.content.settlements.types.region.barn" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.farm" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.industryHeading' | translate }}
+        {{ "rules.content.settlements.types.region.additionalBuildingsHeading" | translate }}
     </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.workshop' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.singleStory" | translate }}
+    </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.forge' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.twoStory" | translate }}
+    </app-rule-paragraph>
 
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.region.steelMillPrep' | translate }}</app-rule-paragraph>
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.threeStory" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.specialBuilding" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.marketStalls" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.tavern" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.entertainment" | translate }}
+    </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        <app-rule-link target="Great building" class="ml-2">{{ 'rules.content.terms.greatBuildingNominative' | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.region.greatBuildingAfter' | translate"></span>
+        {{ "rules.content.settlements.types.region.industryHeading" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.workshop" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.forge" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.region.steelMillPrep" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.events' | translate }}
+        {{ "rules.content.settlements.types.region.events" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>{{ 'rules.content.settlements.common.advantages' | translate }}</b>
+        <b>{{ "rules.content.settlements.common.advantages" | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.territoryBlock' | translate }}
+        {{ "rules.content.settlements.types.region.territoryBlock" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
         <span [innerHTML]="'rules.content.settlements.types.region.raidTargetsBefore' | translate"></span>
-        <app-rule-link target="TypesAndStatuses">{{ 'rules.content.terms.allSettlementTypes' | translate }}</app-rule-link>
+        <app-rule-link target="TypesAndStatuses">
+            {{ "rules.content.terms.allSettlementTypes" | translate }}
+        </app-rule-link>
         <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
         <span class="ml-2" [innerHTML]="'rules.content.settlements.types.region.war.before' | translate"></span>
-        <app-rule-link target="War">{{ 'rules.content.terms.declareWar' | translate }}</app-rule-link>
+        <app-rule-link target="War">{{ "rules.content.terms.declareWar" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.region.war.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
         <span [innerHTML]="'rules.content.settlements.types.region.defensesBefore' | translate"></span>
-        <app-rule-link target="Defend3">{{ 'rules.content.terms.defensiveStructures' | translate }}</app-rule-link>
+        <app-rule-link target="Defend3">{{ "rules.content.terms.defensiveStructures" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.region.defensesAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.credit' | translate }}
-        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        {{ "rules.content.settlements.types.region.credit" | translate }}
+        <app-rule-link target="GovernorEstate">{{ "rules.content.terms.governorGenitive" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.region.creditAfter' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.colonies' | translate }}
+        {{ "rules.content.settlements.types.region.colonies" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.region.steelFurnaceBlueprint' | translate }}
+        {{ "rules.content.settlements.types.region.steelFurnaceBlueprint" | translate }}
     </app-rule-paragraph>
 </div>

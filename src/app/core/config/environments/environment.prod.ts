@@ -12,7 +12,7 @@ export const environment = {
     eastSuzerain: '-',
     westSuzerain: '-',
     gameVersion: '1.22.2',
-    siteVersion: '1.3.8',
+    siteVersion: '1.4.0',
     gameServerIp: 'play.lasthearth.ru',
     gameServerPassword: 'djA2n313IN728Olq99SlBr',
     teamPhotos: {

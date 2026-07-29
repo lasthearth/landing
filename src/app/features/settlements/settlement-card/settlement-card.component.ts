@@ -16,12 +16,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { TuiPulse } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { ISettlement, getSettlementTypeByKey } from '@entities/settlement';
+import { ISettlement, getSettlementTypeByKey, getSettlementDisplayName, isGuildSettlement, SettlementDisplayNamePipe } from '@entities/settlement';
 import { IPlayer, UserService } from '@entities/user';
 import { SettlementTagStore } from '@entities/settlement-tag';
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
-import { TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 import { SetTagsComponent } from './set-tags/set-tags.component';
 import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
@@ -31,7 +31,7 @@ import { SettlementDetailedComponent } from '../settlement-detailed/settlement-d
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
     styleUrl: './settlement-card.component.less',
-    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent, TranslatePipe, SettlementTagComponent],
+    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent, TranslatePipe, SettlementTagComponent, SettlementDisplayNamePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent implements OnInit {
@@ -66,6 +66,11 @@ export class SettlementCardComponent implements OnInit {
     protected readonly tagStore: SettlementTagStore = inject(SettlementTagStore);
 
     protected readonly environment = environment;
+
+    /**
+     * Сервис интернационализации.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Лидер поселения
@@ -123,7 +128,22 @@ export class SettlementCardComponent implements OnInit {
      * @returns true, если селение — Поместье Эренхольд.
      */
     protected isPinned(settlement: ISettlement): boolean {
-        return settlement.name === this.pinnedSettlementName;
+        return getSettlementDisplayName(settlement) === this.pinnedSettlementName;
+    }
+
+    /**
+     * Возвращает отображаемый статус дипломатии.
+     * Для гильдий миролюбивый статус отображается как "Торгово-миролюбивый".
+     *
+     * @param settlement Селение.
+     * @returns Локализованное название дипломатии.
+     */
+    protected getDiplomacyLabel(settlement: ISettlement): string {
+        if (isGuildSettlement(settlement) && settlement.diplomacy === 'Миролюбивый') {
+            return this.i18n.translate('settlements.diplomacy.guild');
+        }
+
+        return settlement.diplomacy;
     }
 
     /**
@@ -136,6 +156,10 @@ export class SettlementCardComponent implements OnInit {
     protected getSettlementTypeLabel(settlement: ISettlement): string {
         if (this.isPinned(settlement)) {
             return 'Поместье наместника';
+        }
+
+        if (isGuildSettlement(settlement)) {
+            return this.i18n.translate('settlements.types.guild');
         }
 
         return getSettlementTypeByKey(settlement.type);
@@ -152,6 +176,10 @@ export class SettlementCardComponent implements OnInit {
     protected getSettlementTypeBadgeClasses(settlement: ISettlement): string {
         if (this.isPinned(settlement)) {
             return 'bg-[#ffd700]/15 text-[#8a6e2f] border border-[#d4af37]/40';
+        }
+
+        if (isGuildSettlement(settlement)) {
+            return 'bg-[#8b5a2b]/15 text-[#8b5a2b]';
         }
 
         switch (settlement.type) {
@@ -241,6 +269,10 @@ export class SettlementCardComponent implements OnInit {
     protected getBorderClass(type: string | number | undefined): string {
         if (this.isPinned(this.data())) {
             return 'settlement-card--pinned';
+        }
+
+        if (isGuildSettlement(this.data())) {
+            return 'settlement-card--guild';
         }
 
         switch (type) {

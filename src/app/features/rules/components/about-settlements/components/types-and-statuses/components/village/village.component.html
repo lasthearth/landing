@@ -1,118 +1,130 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph anchor="Village" [level]="3">
         <span [innerHTML]="'rules.content.settlements.types.village.intro' | translate"></span>
-        <app-rule-link target="Settlement">{{ 'rules.content.terms.settlement' | translate }}</app-rule-link>
+        <app-rule-link target="Settlement">{{ "rules.content.terms.settlement" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.village.introAfter.before' | translate"></span>
-        <app-rule-link target="Camp">{{ 'rules.content.terms.campStage' | translate }}</app-rule-link>
+        <app-rule-link target="Camp">{{ "rules.content.terms.campStage" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.village.introAfter.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>{{ 'rules.content.settlements.common.requirements' | translate }}</b>
+        <b>{{ "rules.content.settlements.common.requirements" | translate }}</b>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.location' | translate }}
+        {{ "rules.content.settlements.types.village.location" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.population' | translate }}
+        {{ "rules.content.settlements.types.village.population" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        <app-rule-link target="Monument" class="ml-2">{{ 'rules.content.terms.monument' | translate }}</app-rule-link>
+        <app-rule-link target="Monument" class="ml-2">{{ "rules.content.terms.monument" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.village.monumentAfter.before' | translate"></span>
-        <app-rule-link target="Patent">{{ 'rules.content.terms.patentImprovementDative' | translate }}</app-rule-link>
+        <app-rule-link target="Patent">{{ "rules.content.terms.patentImprovementDative" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.village.monumentAfter.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.documentsHeading' | translate }}
+        {{ "rules.content.settlements.types.village.documentsHeading" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.village.patentBefore' | translate }}
-        <app-rule-link target="Patent">{{ 'rules.content.terms.patent' | translate }}</app-rule-link>
+        ◦ {{ "rules.content.settlements.types.village.patentBefore" | translate }}
+        <app-rule-link target="Patent">{{ "rules.content.terms.patent" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.types.village.patentAfter' | translate"></span>
-        <app-rule-link target="Suzerain">{{ 'rules.content.terms.suzerainGenitive' | translate }}</app-rule-link>
+        <app-rule-link target="GovernorEstate">{{ "rules.content.terms.governorGenitive" | translate }}</app-rule-link>
         <span>;</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.village.libertiesBefore' | translate }}
-        <app-rule-link target="Volnost">{{ 'rules.content.terms.liberties' | translate }}</app-rule-link>
+        ◦ {{ "rules.content.settlements.types.village.libertiesBefore" | translate }}
+        <app-rule-link target="Volnost">{{ "rules.content.terms.liberties" | translate }}</app-rule-link>
         <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.infrastructureHeading' | translate }}
+        {{ "rules.content.settlements.types.village.infrastructureHeading" | translate }}
     </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.village.square' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.village.well' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.village.paths' | translate }}
+        ◦ {{ "rules.content.settlements.types.village.square" | translate }}
     </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ 'rules.content.settlements.types.village.economyHeading' | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.village.storage' | translate }}</app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">◦ {{ 'rules.content.settlements.types.village.barn' | translate }}</app-rule-paragraph>
 
     <app-rule-paragraph [level]="4">
-        ◦ {{ 'rules.content.settlements.types.village.farm' | translate }}
+        ◦ {{ "rules.content.settlements.types.village.well" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.village.paths" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.additionalBuildings' | translate }}
+        {{ "rules.content.settlements.types.village.economyHeading" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.village.storage" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.village.barn" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="4">
+        ◦ {{ "rules.content.settlements.types.village.farm" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.defenses' | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="3">
-        <b>{{ 'rules.content.settlements.common.advantages' | translate }}</b>
+        {{ "rules.content.settlements.types.village.additionalBuildings" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.territoryBlock' | translate }}
+        {{ "rules.content.settlements.types.village.defenses" | translate }}
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>{{ "rules.content.settlements.common.advantages" | translate }}</b>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <b>•</b>
+        {{ "rules.content.settlements.types.village.territoryBlock" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
         <span [innerHTML]="'rules.content.settlements.types.village.raidTargetsBefore' | translate"></span>
-        <app-rule-link target="Homestead">{{ 'rules.content.terms.homesteadAccusativePlural' | translate }}</app-rule-link>
-        <span>,</span>
-        <app-rule-link target="Camp">{{ 'rules.content.terms.campAccusativePlural' | translate }}</app-rule-link>
-        <span>,</span>
-        <app-rule-link target="Village">{{ 'rules.content.terms.villageAccusativePlural' | translate }}</app-rule-link>
-        <span>,</span>
-        <app-rule-link target="Township">{{ 'rules.content.terms.townshipAccusativePlural' | translate }}</app-rule-link>
+        <app-rule-link target="Homestead">
+            {{ "rules.content.terms.homesteadAccusativePlural" | translate }}
+        </app-rule-link>
+        <span>,&nbsp;</span>
+        <app-rule-link target="Camp">{{ "rules.content.terms.campAccusativePlural" | translate }}</app-rule-link>
+        <span>,&nbsp;</span>
+        <app-rule-link target="Village">{{ "rules.content.terms.villageAccusativePlural" | translate }}</app-rule-link>
+        <span>,&nbsp;</span>
+        <app-rule-link target="Township">
+            {{ "rules.content.terms.townshipAccusativePlural" | translate }}
+        </app-rule-link>
         <span>.</span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.trader' | translate }}
+        {{ "rules.content.settlements.types.village.trader" | translate }}
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
         <b>•</b>
-        {{ 'rules.content.settlements.types.village.sailsBlueprint' | translate }}
+        {{ "rules.content.settlements.types.village.sailsBlueprint" | translate }}
     </app-rule-paragraph>
 </div>

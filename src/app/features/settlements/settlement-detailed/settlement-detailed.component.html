@@ -9,8 +9,13 @@
         <div class="flex flex-col gap-3">
             <div class="flex items-center gap-2 flex-wrap">
                 <h1 class="text-2xl/7.5 md:text-3xl uppercase font-bold text-[#2d201a]">
-                    {{ settlementData.name }}
+                    {{ settlementData | settlementDisplayName }}
                 </h1>
+                @if (isGuild()) {
+                    <span class="bg-[#8b5a2b]/15 text-[#8b5a2b] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                        {{ guildLabel() }}
+                    </span>
+                }
                 <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-0.5 rounded-lg">
                     {{ settlementData.members.length + 1 }} {{ 'settlements.detailed.residentsShort' | translate }}
                 </span>

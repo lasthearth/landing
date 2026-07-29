@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
 import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
-import { IRequestSettlement } from '@entities/settlement';
+import { IRequestSettlement, isGuildName, getSettlementDisplayName, SettlementDisplayNamePipe } from '@entities/settlement';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 import { SettlementService } from '@entities/settlement';
@@ -133,11 +133,27 @@ export class SettlementVerificationRequestComponent {
     /**
      * Возвращает локализованное название типа селения по ключу.
      *
-     * @param key Ключ типа селения.
+     * Для гильдий возвращает "Гильдия".
+     *
+     * @param request Данные заявки на селение.
      * @returns Локализованная строка.
      */
-    protected getSettlementType(key: string): string {
-        const typeKey = this.settlementTypeKeyMap[key] ?? 'camp';
+    protected getSettlementType(request: IRequestSettlement): string {
+        if (isGuildName(request.name)) {
+            return this.i18n.translate('admin.settlementTypes.guild');
+        }
+
+        const typeKey = this.settlementTypeKeyMap[request.type] ?? 'camp';
         return this.i18n.translate(`admin.settlementTypes.${typeKey}`);
+    }
+
+    /**
+     * Возвращает отображаемое название селения без маркера гильдии.
+     *
+     * @param request Данные заявки на селение.
+     * @returns Очищенное название.
+     */
+    protected getDisplayName(request: IRequestSettlement): string {
+        return getSettlementDisplayName(request.name);
     }
 }

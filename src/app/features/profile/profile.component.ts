@@ -19,18 +19,7 @@ import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to
 import { RouterOutlet } from '@angular/router';
 import { VerificationService } from '@features/verification';
 import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
-import {
-    catchError,
-    combineLatest,
-    defaultIfEmpty,
-    map,
-    Observable,
-    of,
-    startWith,
-    switchMap,
-    take,
-    tap,
-} from 'rxjs';
+import { catchError, combineLatest, defaultIfEmpty, map, Observable, of, startWith, switchMap, take, tap } from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
@@ -40,7 +29,13 @@ import { ProfileSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { DonateService, IPurchase } from '@entities/donate';
 import { ServerInformationService } from '@core/services/server-information.service';
-import { SettlementService } from '@entities/settlement';
+import {
+    SettlementService,
+    isGuildSettlement,
+    getSettlementTypeByKey,
+    ISettlement,
+    SettlementDisplayNamePipe,
+} from '@entities/settlement';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
 @Component({
     standalone: true,
@@ -56,6 +51,7 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
         ImageLoaderComponent,
         TranslatePipe,
         NgTemplateOutlet,
+        SettlementDisplayNamePipe,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
@@ -502,5 +498,21 @@ export class ProfileComponent {
         this.previewContent = url;
         this.previewDesc = desc;
         this.previewService.open(this.preview || '').subscribe();
+    }
+
+    /**
+     * Возвращает отображаемый тип селения.
+     *
+     * Для гильдий возвращает "Гильдия".
+     *
+     * @param settlement Поселение.
+     * @returns Локализованное название типа.
+     */
+    protected getSettlementTypeLabel(settlement: ISettlement): string {
+        if (isGuildSettlement(settlement)) {
+            return this.i18n.translate('settlements.types.guild');
+        }
+
+        return getSettlementTypeByKey(settlement.type);
     }
 }

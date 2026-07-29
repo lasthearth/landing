@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { SettlementService, ISettlement, getSettlementTypeByKey } from '@entities/settlement';
+import { SettlementService, ISettlement, getSettlementTypeByKey, getSettlementDisplayName, isGuildSettlement } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { SettlementTagStore } from '@entities/settlement-tag';
 import { SettlementCardComponent } from './settlement-card/settlement-card.component';
@@ -9,7 +9,7 @@ import { ErrorStateComponent } from '@shared/ui/error-state';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { TuiIcon } from '@taiga-ui/core';
-import { TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe } from '@core/i18n';
 
 /**
  * Поле сортировки списка селений.
@@ -65,6 +65,7 @@ export class SettlementsComponent {
     private readonly settlementService = inject(SettlementService);
     private readonly userService = inject(UserService);
     private readonly tagStore = inject(SettlementTagStore);
+    private readonly i18n = inject(I18nService);
 
     protected readonly loading = signal<boolean>(false);
     protected readonly loadingOnline = signal<boolean>(false);
@@ -85,7 +86,7 @@ export class SettlementsComponent {
         const { field, direction } = this.sortState();
         const dir = direction === 'asc' ? 1 : -1;
 
-        const pinnedIndex = list.findIndex((s) => s.name === PINNED_SETTLEMENT_NAME);
+        const pinnedIndex = list.findIndex((s) => getSettlementDisplayName(s) === PINNED_SETTLEMENT_NAME);
         const pinned = pinnedIndex >= 0 ? list.splice(pinnedIndex, 1)[0] : null;
 
         let sorted: EnrichedSettlement[];
@@ -226,7 +227,7 @@ export class SettlementsComponent {
      * @returns true, если селение — Поместье Эренхольд.
      */
     protected isPinned(settlement: ISettlement): boolean {
-        return settlement.name === PINNED_SETTLEMENT_NAME;
+        return getSettlementDisplayName(settlement) === PINNED_SETTLEMENT_NAME;
     }
 
     /**
@@ -239,6 +240,10 @@ export class SettlementsComponent {
     protected getSettlementTypeLabel(settlement: EnrichedSettlement): string {
         if (this.isPinned(settlement)) {
             return PINNED_SETTLEMENT_TYPE_LABEL;
+        }
+
+        if (isGuildSettlement(settlement)) {
+            return this.i18n.translate('settlements.types.guild');
         }
 
         return getSettlementTypeByKey(settlement.type);

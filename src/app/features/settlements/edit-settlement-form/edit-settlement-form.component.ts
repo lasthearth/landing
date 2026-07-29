@@ -12,7 +12,7 @@ import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { catchError, of, tap } from 'rxjs';
 
-import { ISettlement, IUpdateSettlementRequest, SettlementService } from '@entities/settlement';
+import { ISettlement, IUpdateSettlementRequest, SettlementService, getSettlementDisplayName, buildGuildName, isGuildSettlement } from '@entities/settlement';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
@@ -70,7 +70,7 @@ export class EditSettlementFormComponent {
      * Форма редактирования поселения.
      */
     protected readonly form = this.formBuilder.group({
-        name: [this.settlement.name, [Validators.required]],
+        name: [getSettlementDisplayName(this.settlement), [Validators.required]],
         description: [this.settlement.description, [Validators.required]],
         attachments: this.formBuilder.array(
             this.settlement.attachments.map((attachment) =>
@@ -148,8 +148,9 @@ export class EditSettlementFormComponent {
             attachments: { url: string; description: string; isExisting?: boolean }[];
         };
 
+        const rawName = rawValue.name.trimEnd();
         const request: IUpdateSettlementRequest = {
-            name: rawValue.name.trimEnd(),
+            name: isGuildSettlement(this.settlement) ? buildGuildName(rawName) : rawName,
             description: rawValue.description.trimEnd(),
             attachments: rawValue.attachments.map((attachment) => ({
                 url: attachment.url.trimEnd(),

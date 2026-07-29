@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inje
 import { HttpContext } from '@angular/common/http';
 import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { SettlementService } from '@entities/settlement';
+import { SettlementService, getSettlementDisplayName } from '@entities/settlement';
 import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { UserService } from '@entities/user';
 import { PlayerInviteComponent } from '../player-invite/player-invite.component';
@@ -15,7 +15,7 @@ import { CreateSettlementFormComponent } from '@app/features/profile/create-sett
 import { EditSettlementFormComponent } from '../edit-settlement-form/edit-settlement-form.component';
 import { SettlementsTypes } from '@entities/settlement';
 import { ISettlementInvitation } from '@entities/settlement';
-import { getSettlementTypeByKey } from '@entities/settlement';
+import { getSettlementTypeByKey, isGuildSettlement, SettlementDisplayNamePipe } from '@entities/settlement';
 import { TuiPulse } from '@taiga-ui/kit';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
@@ -36,7 +36,7 @@ import { compressImage } from '@shared/lib/compress-image.function';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, TuiPulse, TuiIcon, TuiLoader, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe],
+    imports: [AsyncPipe, TuiPulse, TuiIcon, TuiLoader, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe, SettlementDisplayNamePipe],
     providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
@@ -231,6 +231,27 @@ export class SettlementComponent {
     }
 
     /**
+     * Открывает диалоговое окно создания гильдии.
+     */
+    protected createGuild(): void {
+        this.dialogs
+            .open(new PolymorpheusComponent(CreateSettlementFormComponent), {
+                data: { level: SettlementsTypes.guild },
+            })
+            .subscribe();
+    }
+
+    /**
+     * Проверяет, является ли селение гильдией.
+     *
+     * @param settlement Селение.
+     * @returns true, если селение содержит маркер гильдии.
+     */
+    protected isGuild(settlement: ISettlement): boolean {
+        return isGuildSettlement(settlement);
+    }
+
+    /**
      * Открывает диалоговое окно редактирования поселения.
      *
      * @param settlement Информация о селении.
@@ -247,12 +268,33 @@ export class SettlementComponent {
     }
 
     /**
-     * Возвращает наименования типа селения по его ключу.
+     * Возвращает наименования типа селения.
      *
-     * @param key Ключ-типа селения.
+     * Для гильдий возвращает "Гильдия" вместо бэкенд-типа "Лагерь".
+     *
+     * @param settlement Селение.
      */
-    protected getSettlementType(key: string | number | undefined): string {
-        return getSettlementTypeByKey(key);
+    protected getSettlementType(settlement: ISettlement): string {
+        if (isGuildSettlement(settlement)) {
+            return this.i18n.translate('settlements.types.guild');
+        }
+
+        return getSettlementTypeByKey(settlement.type);
+    }
+
+    /**
+     * Возвращает отображаемый статус дипломатии.
+     * Для гильдий миролюбивый статус отображается как "Торгово-миролюбивый".
+     *
+     * @param settlement Селение.
+     * @returns Локализованное название дипломатии.
+     */
+    protected getDiplomacyLabel(settlement: ISettlement): string {
+        if (isGuildSettlement(settlement) && settlement.diplomacy === 'Миролюбивый') {
+            return this.i18n.translate('settlements.diplomacy.guild');
+        }
+
+        return settlement.diplomacy;
     }
 
     /**
@@ -285,7 +327,7 @@ export class SettlementComponent {
             this.settlementCache.set(
                 id,
                 this.settlementService.getSettlementById(id).pipe(
-                    map((data) => data.name),
+                    map((data) => getSettlementDisplayName(data)),
                     shareReplay(1)
                 )
             );

@@ -13,22 +13,36 @@
 
     <app-rule-paragraph [level]="2">
         <span [innerHTML]="'rules.content.settlements.defensive.p2_2_4.before' | translate"></span>
-        <app-rule-link target="Defend land">{{ 'rules.content.terms.protectedLandGenitive' | translate }}</app-rule-link>
+        <app-rule-link target="Defend land">
+            {{ "rules.content.terms.protectedLandGenitive" | translate }}
+        </app-rule-link>
         <span [innerHTML]="'rules.content.settlements.defensive.p2_2_4.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
         <span [innerHTML]="'rules.content.settlements.defensive.p2_2_5.before' | translate"></span>
-        <app-rule-link target="Patent">{{ 'rules.content.terms.patentDativeShort' | translate }}</app-rule-link>
+        <app-rule-link target="Patent">{{ "rules.content.terms.patentDativeShort" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.defensive.p2_2_5.after' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
         <span [innerHTML]="'rules.content.settlements.defensive.p2_2_6.before' | translate"></span>
-        <app-rule-link target="Monument">{{ 'rules.content.terms.monumentGenitive' | translate }}</app-rule-link>
+        <app-rule-link target="Monument">{{ "rules.content.terms.monumentGenitive" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.defensive.p2_2_6.mid1' | translate"></span>
-        <app-rule-link target="Patent">{{ 'rules.content.terms.patentDativeShort' | translate }}</app-rule-link>
+        <app-rule-link target="Patent">{{ "rules.content.terms.patentDativeShort" | translate }}</app-rule-link>
         <span [innerHTML]="'rules.content.settlements.defensive.p2_2_6.after' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="2">
+        <span [innerHTML]="'rules.content.settlements.defensive.p2_2_6_1.before' | translate"></span>
+        <app-rule-link target="Monument">{{ "rules.content.terms.monumentGenitive" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.defensive.p2_2_6_1.mid1' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="2">
+        <span [innerHTML]="'rules.content.settlements.defensive.p2_2_6_2.before1' | translate"></span>
+        <app-rule-link target="Monument">{{ "rules.content.terms.monument" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.defensive.p2_2_6_2.before2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
@@ -45,6 +59,10 @@
 
     <app-rule-paragraph anchor="Defend2" [level]="2">
         <span [innerHTML]="'rules.content.settlements.defensive.level2Heading' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph anchor="Defend2" [level]="2">
+        <span [innerHTML]="'rules.content.settlements.defensive.level2monument' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">

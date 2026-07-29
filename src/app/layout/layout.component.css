@@ -14,6 +14,12 @@
     font-family: 'Advent Pro', serif;
 }
 
+:host-context(html[data-theme='dark']) {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+        url('/images/Group_4_3.webp');
+}
+
 .content-wrapper {
     flex-grow: 1;
     display: flex;

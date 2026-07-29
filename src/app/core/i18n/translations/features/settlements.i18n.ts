@@ -1,6 +1,9 @@
 export const SETTLEMENTS_I18N = {
     ru: {
         settlements: {
+            types: {
+                guild: 'Гильдия',
+            },
             list: {
                 title: 'Список поселений игроков',
                 sort: {
@@ -31,6 +34,7 @@ export const SETTLEMENTS_I18N = {
             },
             diplomacy: {
                 peaceful: 'Миролюбивый',
+                guild: 'Торгово-миролюбивый',
                 neutral: 'Нейтральный',
                 aggressive: 'Агрессивный',
             },
@@ -83,6 +87,7 @@ export const SETTLEMENTS_I18N = {
                 sentInvitations: 'Отправленные приглашения',
                 loading: 'Загрузка...',
                 invitePlayers: 'Пригласить игроков',
+                createGuild: 'Основать гильдию',
                 levelUp: 'Повысить уровень',
                 edit: 'Редактировать',
                 editDisabledTitle: 'Редактирование временно недоступно из-за CORS-ограничений на сервере',
@@ -136,6 +141,7 @@ export const SETTLEMENTS_I18N = {
                     township: 'Улучшение селения из "Деревни" в "Посёлок"',
                     city: 'Улучшение селения из "Посёлка" в "Город"',
                     region: 'Улучшение селения из "Города" в "Провинцию"',
+                    guild: 'Основание гильдии',
                 },
                 nameLabel: 'Какое будет название?',
                 coordinatesLabel: 'Координаты расположения',
@@ -204,11 +210,25 @@ export const SETTLEMENTS_I18N = {
                 house2: '1 этажный дом №2',
                 house3: '1 этажный дом №3',
                 house4: '1 этажный дом №4',
+                guildPatentDocument: 'Подписанный патент на разрешение основания гильдии',
+                guildLibertiesDocument: 'Купчие на каждого участника гильдии',
+                guildSquare: 'Площадь гильдии',
+                guildWell: 'Колодец с питьевой водой',
+                guildPaths: 'Дороги между постройками шириной не менее 2-х блоков',
+                guildStorage: 'Прилавки на продажу еды не менее 2-х штук',
+                guildBarn: 'Ящики на скупку товаров не менее 6-ти штук',
+                guildFarm: 'Прилавки на продажу различных товаров не менее 4-х штук',
+                guildAdditionalBuilding1: 'Дополнительное строение №1',
+                guildAdditionalBuilding2: 'Дополнительное строение №2',
+                guildAdditionalBuilding3: 'Дополнительное строение №3',
             },
         },
     },
     en: {
         settlements: {
+            types: {
+                guild: 'Guild',
+            },
             list: {
                 title: 'Player settlement list',
                 sort: {
@@ -239,6 +259,7 @@ export const SETTLEMENTS_I18N = {
             },
             diplomacy: {
                 peaceful: 'Peaceful',
+                guild: 'Trade-peaceful',
                 neutral: 'Neutral',
                 aggressive: 'Aggressive',
             },
@@ -291,6 +312,7 @@ export const SETTLEMENTS_I18N = {
                 sentInvitations: 'Sent invitations',
                 loading: 'Loading...',
                 invitePlayers: 'Invite players',
+                createGuild: 'Found guild',
                 levelUp: 'Level up',
                 edit: 'Edit',
                 editDisabledTitle: 'Editing is temporarily unavailable due to CORS restrictions on the server',
@@ -346,6 +368,7 @@ export const SETTLEMENTS_I18N = {
                     township: 'Settlement upgrade from "Village" to "Township"',
                     city: 'Settlement upgrade from "Township" to "City"',
                     region: 'Settlement upgrade from "City" to "Province"',
+                    guild: 'Founding a guild',
                 },
                 nameLabel: 'What will the name be?',
                 coordinatesLabel: 'Location coordinates',
@@ -414,6 +437,17 @@ export const SETTLEMENTS_I18N = {
                 house2: '1-story house #2',
                 house3: '1-story house #3',
                 house4: '1-story house #4',
+                guildPatentDocument: 'Signed patent permitting establishment of a guild',
+                guildLibertiesDocument: 'Deeds for each guild member',
+                guildSquare: 'Guild square',
+                guildWell: 'Well with drinking water',
+                guildPaths: 'Roads between buildings at least 2 blocks wide',
+                guildStorage: 'Food stalls for sale, at least 2',
+                guildBarn: 'Boxes for buying goods, at least 6',
+                guildFarm: 'Stalls for selling various goods, at least 4',
+                guildAdditionalBuilding1: 'Additional building #1',
+                guildAdditionalBuilding2: 'Additional building #2',
+                guildAdditionalBuilding3: 'Additional building #3',
             },
         },
     },

@@ -23,7 +23,37 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
-### 3.1 Галерея скриншотов (`/gallery`)
+### 3.1 Костыль: основание гильдии через маркер в названии селения
+
+> Бэкенд не знает про тип «гильдия». На фронте реализован маркер `[GUILD]`, который прячется в `name` селения и вырезается при отображении.
+
+- Файлы:
+  - `src/app/entities/settlement/lib/guild-marker.constant.ts`
+  - `src/app/entities/settlement/lib/is-guild-settlement.function.ts`
+  - `src/app/entities/settlement/lib/is-guild-name.function.ts`
+  - `src/app/entities/settlement/lib/get-settlement-display-name.function.ts`
+  - `src/app/entities/settlement/lib/build-guild-name.function.ts`
+  - `src/app/entities/settlement/ui/settlement-display-name.pipe.ts`
+  - `src/app/entities/settlement/ui/guild-badge/guild-badge.component.{ts,html,less}`
+  - `src/app/entities/settlement/model/settlement-types.ts`
+  - `src/app/features/profile/create-settlement-from/settlements-types-forms/guild-form/guild-form.component.{ts,html}`
+  - `src/app/features/profile/create-settlement-from/settlements-types-forms/guild-form/model/guild-form-data.ts`
+  - `src/app/features/profile/create-settlement-from/settlements-types-forms/guild-form/lib/guild-form-fields.ts`
+  - `src/app/features/profile/create-settlement-from/create-settlement-from.component.ts`
+  - `src/app/features/profile/pages/settlement/settlement.component.{ts,html}`
+  - `src/app/features/profile/pages/settlement/edit-settlement-form/edit-settlement-form.component.ts`
+  - `src/app/widgets/settlement-card/settlement-card.component.{ts,html}`
+  - `src/app/widgets/settlement-detailed/settlement-detailed.component.{ts,html}`
+  - `src/app/pages/settlements/settlements.component.{ts,html}`
+  - `src/app/features/admin/settlement-verification-request/settlement-verification-request.component.{ts,html}`
+- Функционал:
+  - Маркер `[GUILD]` в начале названия селения скрывается при выводе.
+  - Для гильдий показывается бейдж «Гильдия» и тип «Гильдия» вместо «Лагерь».
+  - Добавлена отдельная форма создания гильдии; на бэкенд шлётся `type: 'CAMP'` с именем, начинающимся на `[GUILD]`.
+  - Кнопка «Повысить уровень» скрыта для гильдий (гильдия не имеет уровней).
+  - Переводы добавлены в `settlements.i18n.ts` и `admin.i18n.ts` (ru/en).
+
+### 3.2 Галерея скриншотов (`/gallery`)
 - Файлы:
   - `src/app/features/gallery/gallery.component.{ts,html,css}`
   - `src/app/features/gallery/ui/gallery-image/`

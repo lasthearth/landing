@@ -4,14 +4,14 @@ import { RuleLinkComponent } from '@app/features/rules/ui/rule-link/rule-link.co
 import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/rule-paragraph.component';
 
 /**
- * Компонент сюзерена - высшего правителя региона.
+ * Компонент гильдии - торгового образования.
  */
 @Component({
-    selector: 'app-suzerain',
-    templateUrl: './suzerain.component.html',
+    selector: 'app-guild',
+    templateUrl: './guild.component.html',
     imports: [RuleParagraphComponent, RuleLinkComponent, TranslatePipe],
 })
-export class SuzerainComponent {
+export class GuildComponent {
     /**
      * Событие прокрутки к элементу.
      */
