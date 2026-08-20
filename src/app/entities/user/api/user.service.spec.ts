@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AuthenticatedResult, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
+import { AuthenticatedResult, LoginResponse, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { BehaviorSubject, of, Subject, take, toArray } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
@@ -21,6 +21,16 @@ function makeJwt(payload: Record<string, unknown>): string {
     return `${encode({ alg: 'none' })}.${encode(payload)}.sig`;
 }
 
+/**
+ * Формирует ответ библиотеки о результате входа.
+ *
+ * @param isAuthenticated Признак успешной авторизации.
+ * @returns Объект {@link LoginResponse}.
+ */
+function loginResponse(isAuthenticated: boolean): LoginResponse {
+    return { isAuthenticated, userData: null, accessToken: '', idToken: '', configId: '0' };
+}
+
 describe('UserService', () => {
     const idToken = makeJwt({
         sub: 'user-1',
@@ -32,12 +42,14 @@ describe('UserService', () => {
     });
 
     let authenticated$: BehaviorSubject<AuthenticatedResult>;
+    let checkAuth$: Subject<LoginResponse>;
 
     beforeEach(() => {
         authenticated$ = new BehaviorSubject<AuthenticatedResult>({
             isAuthenticated: false,
             allConfigsAuthenticated: [],
         });
+        checkAuth$ = new Subject<LoginResponse>();
 
         const oidc = {
             get isAuthenticated$() {
@@ -45,10 +57,8 @@ describe('UserService', () => {
             },
             getIdToken: () => of(idToken),
             getAccessToken: () => of('access-token'),
-            checkAuth: () =>
-                of({ isAuthenticated: false, userData: null, accessToken: '', idToken: '', configId: '0' }),
-            forceRefreshSession: () =>
-                of({ isAuthenticated: false, userData: null, accessToken: '', idToken: '', configId: '0' }),
+            checkAuth: () => checkAuth$,
+            forceRefreshSession: () => of(loginResponse(false)),
         };
 
         TestBed.configureTestingModule({
@@ -77,14 +87,22 @@ describe('UserService', () => {
         authenticated$.next({ isAuthenticated: true, allConfigsAuthenticated: [] });
     });
 
-    it('сообщает о завершении проверки только после checkAuth', (done: DoneFn) => {
+    it('не выдаёт состояние авторизации, пока checkAuth не завершился', () => {
         const service = TestBed.inject(UserService);
+        const seen: boolean[] = [];
 
-        service.isAuthChecked$.pipe(take(1)).subscribe((checked) => {
-            expect(checked).toBeTrue();
-            done();
-        });
+        service.authSettled$.subscribe((isAuth) => seen.push(isAuth));
 
-        service.checkAuthTrigger$.next(false);
+        expect(seen).toEqual([]);
+
+        // Библиотека выставляет состояние на шаге валидации токенов,
+        // то есть до завершения checkAuth.
+        authenticated$.next({ isAuthenticated: true, allConfigsAuthenticated: [] });
+        expect(seen).toEqual([]);
+
+        checkAuth$.next(loginResponse(true));
+        checkAuth$.complete();
+
+        expect(seen).toEqual([true]);
     });
 });

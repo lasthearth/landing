@@ -107,27 +107,27 @@ export class UserService {
 
     /**
      * Публичный поток признака завершения проверки авторизации.
-     *
-     * Переходит в `true` только когда `checkAuth` завершился И {@link authState$}
-     * выдал первое значение. Иначе подписчики (например, приветственный экран)
-     * успевают увидеть промежуточное «проверка закончена, но не авторизован».
      */
-    public readonly isAuthChecked$: Observable<boolean> = this.checkCompleted$.pipe(
-        switchMap((completed) => (completed ? this.authState$.pipe(map(() => true)) : of(false))),
-        distinctUntilChanged(),
-        shareReplay({ bufferSize: 1, refCount: false })
-    );
+    public readonly isAuthChecked$: Observable<boolean> = this.checkCompleted$.asObservable();
 
     /**
-     * Поток итогового состояния авторизации после завершения проверки.
+     * Поток итогового состояния авторизации: начинает выдавать значения
+     * только после завершения `checkAuth`.
      *
-     * Используется стражами маршрутов: подписка на {@link authState$} через
-     * `take(1)` до окончания `checkAuth` вернула бы `false` и выкинула
-     * авторизованного пользователя с защищённой страницы.
+     * До этого момента {@link authState$} отдаёт `false` — начальное значение
+     * библиотеки, а не результат проверки. Подписчики, которым важен именно
+     * итог (стражи маршрутов, приветственный экран), должны ждать этот поток,
+     * иначе авторизованный пользователь получит редирект на главную либо
+     * увидит приветственный экран.
+     *
+     * К моменту завершения `checkAuth` библиотека уже выставила состояние
+     * авторизации (это происходит на шаге валидации токенов внутри обработки
+     * callback), поэтому промежуточного `false` здесь не будет.
      */
-    public readonly authSettled$: Observable<boolean> = this.isAuthChecked$.pipe(
+    public readonly authSettled$: Observable<boolean> = this.checkCompleted$.pipe(
         filter(Boolean),
-        switchMap(() => this.authState$)
+        switchMap(() => this.authState$),
+        shareReplay({ bufferSize: 1, refCount: false })
     );
 
     /**
