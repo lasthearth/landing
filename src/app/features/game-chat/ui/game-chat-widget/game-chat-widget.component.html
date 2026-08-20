@@ -3,6 +3,12 @@
         <div class="game-chat-widget__header">
             <span class="game-chat-widget__title">{{ title() }}</span>
             <div class="game-chat-widget__actions">
+                @if (isSounding()) {
+                    <span class="game-chat-widget__sound-mark" role="status">
+                        <tui-icon icon="@tui.volume-2" class="size-4" />
+                        звук отсюда
+                    </span>
+                }
                 <button
                     type="button"
                     class="game-chat-widget__action"
@@ -44,9 +50,17 @@
         </div>
     </div>
 
+    @if (isSounding() && !isExpanded()) {
+        <span class="game-chat-widget__sound-hint" role="status">
+            <tui-icon icon="@tui.volume-2" class="size-4" />
+            Звук: {{ title() }}
+        </span>
+    }
+
     <button
         type="button"
         class="game-chat-widget__fab"
+        [class.game-chat-widget__fab--sounding]="isSounding()"
         (click)="toggleExpanded()"
         [attr.aria-label]="'Открыть ' + title()"
     >

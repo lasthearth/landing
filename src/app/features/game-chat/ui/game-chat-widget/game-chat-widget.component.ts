@@ -142,9 +142,20 @@ export class GameChatWidgetComponent implements OnInit {
     protected readonly isSoundEnabled = signal(true);
 
     /**
+     * Признак того, что виджет прямо сейчас издал звук.
+     * Используется для визуального индикатора источника звука.
+     */
+    protected readonly isSounding = signal(false);
+
+    /**
      * Признак того, что пользователь прокрутил вверх и не видит новые сообщения.
      */
     private readonly isScrolledUp = signal(false);
+
+    /**
+     * Таймер сброса индикатора звука.
+     */
+    private soundIndicatorTimer: ReturnType<typeof setTimeout> | null = null;
 
     /**
      * Аудио-контекст для звуковых уведомлений.
@@ -166,6 +177,20 @@ export class GameChatWidgetComponent implements OnInit {
         if (isPlatformBrowser(this.platformId)) {
             this.audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
         }
+
+        // effect() требует контекст инъекции, поэтому создаётся здесь, а не в ngOnInit.
+        effect(() => {
+            const expanded = this.isExpanded();
+            const list = this.messages();
+
+            if (!expanded || list.length === 0) {
+                return;
+            }
+
+            if (!this.isScrolledUp()) {
+                this.scrollToBottomAfterRender();
+            }
+        });
     }
 
     /**
@@ -195,19 +220,6 @@ export class GameChatWidgetComponent implements OnInit {
             .subscribe((freshMessages) => {
                 this.updateMessages(freshMessages);
             });
-
-        effect(() => {
-            const expanded = this.isExpanded();
-            const list = this.messages();
-
-            if (!expanded || list.length === 0) {
-                return;
-            }
-
-            if (!this.isScrolledUp()) {
-                this.scrollToBottomAfterRender();
-            }
-        });
     }
 
     /**
@@ -389,6 +401,25 @@ export class GameChatWidgetComponent implements OnInit {
 
         oscillator.start();
         oscillator.stop(context.currentTime + 0.15);
+
+        this.flashSoundIndicator();
+    }
+
+    /**
+     * Подсвечивает индикатор источника звука на несколько секунд.
+     * Нужен, чтобы пользователь понимал, что сигнал издала эта вкладка.
+     */
+    private flashSoundIndicator(): void {
+        this.isSounding.set(true);
+
+        if (this.soundIndicatorTimer !== null) {
+            clearTimeout(this.soundIndicatorTimer);
+        }
+
+        this.soundIndicatorTimer = setTimeout(() => {
+            this.isSounding.set(false);
+            this.soundIndicatorTimer = null;
+        }, 2500);
     }
 
     /**
