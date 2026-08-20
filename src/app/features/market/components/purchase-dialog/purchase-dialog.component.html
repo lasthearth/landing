@@ -1,6 +1,4 @@
-<div
-    class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-8 w-full max-w-[32rem] bg-surface rounded-2xl text-ink shadow-[0_12px_40px_rgba(0,0,0,0.25)] lh-card-glow"
->
+<div class="flex flex-col gap-4 sm:gap-5 w-full max-w-[32rem] text-ink">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
         <div
@@ -62,7 +60,7 @@
     }
 
     <!-- Payment info -->
-    <div class="flex flex-col gap-4 bg-surface-3 rounded-xl p-4 sm:p-5 border border-line">
+    <div class="flex flex-col gap-4 pt-4 border-t border-line">
         <div class="flex items-center justify-between">
             <span class="text-base sm:text-[18px] font-bold text-ink">
                 {{ 'market.purchaseDialog.totalLabel' | translate }}
@@ -73,9 +71,7 @@
             </div>
         </div>
 
-        <div class="h-px bg-surface-4"></div>
-
-        <p class="text-base sm:text-[18px] leading-relaxed text-ink">
+        <p class="text-base sm:text-[18px] leading-relaxed text-ink-2">
             {{ 'market.purchaseDialog.confirmation' | translate:{ price: activePrice } }}
         </p>
     </div>

@@ -11,7 +11,7 @@
                         <div class="h-6 w-40 rounded bg-lh-primary-2/30"></div>
                     </div>
                 </div>
-                <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-2">
+                <div class="flex flex-col gap-2">
                     <div class="h-6 w-3/4 rounded bg-lh-primary-2/20"></div>
                     <div class="h-4 w-1/2 rounded bg-lh-primary-2/20"></div>
                 </div>
@@ -52,43 +52,39 @@
                 </div>
 
                 <!-- Информация о покупке -->
-                <div class="flex flex-col gap-3">
-                    <div
-                        class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-2"
-                    >
-                        <div class="flex items-start gap-2">
-                            <tui-icon
-                                icon="@tui.package"
-                                class="size-5! text-lh-accent shrink-0 mt-0.5"
-                            />
-                            <span class="text-lg font-semibold text-ink leading-6">{{ purchase.itemName }}</span>
-                        </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-start gap-2">
+                        <tui-icon
+                            icon="@tui.package"
+                            class="size-5! text-lh-accent shrink-0 mt-0.5"
+                        />
+                        <span class="text-lg font-semibold text-ink leading-6">{{ purchase.itemName }}</span>
+                    </div>
+                    <div class="flex items-start gap-2 pl-7">
+                        <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
+                        <span class="text-lg text-ink-2 leading-6 break-words">
+                            @if (purchase.discountPercent > 0 && purchase.basePrice) {
+                                <span class="line-through text-ink-3 mr-2">{{ purchase.basePrice }}</span>
+                            }
+                            {{ purchase.pricePaid }}
+                        </span>
+                    </div>
+                    @if (purchase.discountPercent > 0) {
                         <div class="flex items-start gap-2 pl-7">
-                            <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
-                            <span class="text-lg text-ink-2 leading-6 break-words">
-                                @if (purchase.discountPercent > 0 && purchase.basePrice) {
-                                    <span class="line-through text-ink-3 mr-2">{{ purchase.basePrice }}</span>
-                                }
-                                {{ purchase.pricePaid }}
-                            </span>
+                            <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.discount' | translate }}</span>
+                            <span class="text-lg text-lh-accent leading-6 break-words">{{ purchase.discountPercent }}%</span>
                         </div>
-                        @if (purchase.discountPercent > 0) {
-                            <div class="flex items-start gap-2 pl-7">
-                                <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.discount' | translate }}</span>
-                                <span class="text-lg text-lh-accent leading-6 break-words">{{ purchase.discountPercent }}%</span>
-                            </div>
-                        }
-                        @if (purchase.comment) {
-                            <div class="flex items-start gap-2 pl-7">
-                                <tui-icon icon="@tui.file-text" class="size-4! text-lh-accent shrink-0 mt-1" />
-                                <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.comment' | translate }}</span>
-                                <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.comment }}</span>
-                            </div>
-                        }
+                    }
+                    @if (purchase.comment) {
                         <div class="flex items-start gap-2 pl-7">
-                            <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
-                            <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.formattedDate }}</span>
+                            <tui-icon icon="@tui.file-text" class="size-4! text-lh-accent shrink-0 mt-1" />
+                            <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.comment' | translate }}</span>
+                            <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.comment }}</span>
                         </div>
+                    }
+                    <div class="flex items-start gap-2 pl-7">
+                        <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
+                        <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.formattedDate }}</span>
                     </div>
                 </div>
 

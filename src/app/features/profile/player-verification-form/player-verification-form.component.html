@@ -4,9 +4,7 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="lh-dialog-card">
         <h2 class="lh-dialog-title">{{ 'profile.verificationForm.title' | translate }}</h2>
 
-        <div class="lh-dialog-info">
-            <p class="text-lh-danger font-medium">{{ 'profile.verificationForm.warning' | translate }}</p>
-        </div>
+        <p class="text-lh-danger font-medium">{{ 'profile.verificationForm.warning' | translate }}</p>
 
         <div class="flex flex-col gap-2">
             <label class="flex flex-col gap-1">

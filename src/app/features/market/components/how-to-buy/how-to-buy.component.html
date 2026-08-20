@@ -1,10 +1,8 @@
-<div class="lh-dialog-card w-full p-4 sm:p-6 lg:p-8">
+<div class="lh-dialog-card w-full">
     <h2 class="lh-dialog-title text-center text-xl sm:text-[22px]">{{ "market.howToBuy.title" | translate }}</h2>
 
     <!-- Блок выбора суммы -->
-    <div
-        class="flex flex-col gap-4 p-4 sm:p-5 rounded-2xl bg-surface bg-[url('/image_1.webp')] bg-repeat border border-line shadow-sm"
-    >
+    <div class="flex flex-col gap-4 pb-6 border-b border-line">
         <!-- Итоговая сумма осколков -->
         <div class="flex flex-col items-center gap-1">
             <span class="text-lh-primary/60 text-base font-semibold uppercase">
@@ -115,7 +113,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-start gap-4 p-4 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-base">
+                <div class="flex items-start gap-4 text-base">
                     <tui-icon icon="@tui.badge-alert" class="size-8! text-lh-accent shrink-0 mt-0.5" />
                     <span class="text-lh-primary/80">
                         {{ "market.howToBuy.sbp.warning" | translate: { amount: rubles(), nickname: username() } }}
@@ -126,7 +124,7 @@
                     <label class="text-lh-primary text-base font-semibold">
                         {{ "market.howToBuy.sbp.phoneLabel" | translate }}
                     </label>
-                    <div class="flex items-center gap-3 p-4 rounded-xl bg-surface-3 border border-line">
+                    <div class="flex items-center gap-3">
                         <span class="text-lh-primary text-2xl font-bold font-mono tracking-wide flex-1">
                             {{ sbpPhone }}
                         </span>
@@ -208,7 +206,7 @@
                 <p class="text-lh-primary/70 text-base">
                     {{ "market.howToBuy.boosty.description" | translate }}
                 </p>
-                <div class="flex flex-col gap-3 p-4 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-base">
+                <div class="flex flex-col gap-3 text-base">
                     <div class="flex items-start gap-3">
                         <tui-icon icon="@tui.badge-alert" class="size-6! text-lh-accent shrink-0 mt-0.5" />
                         <span class="text-lh-primary/80">

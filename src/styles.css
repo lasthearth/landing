@@ -528,20 +528,17 @@ button:disabled,
 }
 
 /**
- * Единая карточка диалогового окна.
- * Используется как корневой контейнер для всех модальных компонентов.
+ * Единая раскладка содержимого диалогового окна.
+ * Поверхность (фон, радиус, тень, отступы) уже рисует `tui-dialog .t-content`,
+ * поэтому здесь только раскладка — иначе получается карточка в карточке.
  */
 .lh-dialog-card {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    padding: 2rem;
     min-width: auto;
     max-width: 42rem;
-    background-color: #e2d7bb;
-    border-radius: 1rem;
     color: #2a2722;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
 }
 
 /**
@@ -634,15 +631,15 @@ button:disabled,
 
 /**
  * Информационный блок внутри диалога.
+ * Без собственной поверхности: диалог — единственная карточка,
+ * группировка внутри делается разделителем и отступами.
  */
 .lh-dialog-info {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background-color: #d8cdb3;
-    border: 1px solid #c4b89e;
-    border-radius: 0.75rem;
-    padding: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--lh-border);
 }
 
 /**
@@ -1053,7 +1050,6 @@ html[data-theme='dark'] {
 
     /* Диалоги lh-dialog-* */
     .lh-dialog-card {
-        background-color: #212327;
         color: #e9dfc9;
     }
 
@@ -1063,10 +1059,6 @@ html[data-theme='dark'] {
 
     .lh-dialog-text {
         color: #b3a68d;
-    }
-
-    .lh-dialog-info {
-        background-color: #2b2d31;
     }
 
     .lh-dialog-button-secondary {
