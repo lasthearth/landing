@@ -1,10 +1,25 @@
-.copy-word {
-    word-wrap: anywhere;
+.copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.625rem;
+    border: 1px dashed var(--color-wood, currentColor);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
 }
 
-tui-copy ::ng-deep .t-content {
-    -webkit-mask: none !important;
-    mask: none !important;
-    overflow: visible !important;
-    line-height: 1.5 !important;
+.copy-btn:hover,
+.copy-btn:focus-visible {
+    background-color: rgb(255 255 255 / 0.5);
+}
+
+/* Состояние "скопировано": сплошная рамка и зелёная иконка-галочка. */
+.copy-btn--done {
+    border-style: solid;
+    border-color: var(--color-lh-success, currentColor);
+    color: var(--color-lh-success, currentColor);
 }

@@ -40,28 +40,43 @@
         <div class="flex flex-col gap-3 pt-2 flex-1">
             <p class="text-2xl font-bold text-ink">{{ 'profile.howToPlay.step2Title' | translate }}</p>
             <p class="text-xl text-lh-primary leading-8">Во вкладке сетевая игра добавьте наш сервер используя:</p>
-            <div
-                class="bg-white/30 border border-lh-primary-2/10 rounded-xl p-4 flex flex-col gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
-            >
-                <div class="flex items-start gap-2">
+            <div class="bg-white/30 rounded-xl p-4 flex flex-col gap-3">
+                <div class="flex items-center gap-2 flex-wrap">
                     <span class="text-xl text-ink-3 font-medium leading-normal">{{ 'profile.howToPlay.ipLabel' | translate }}</span>
-                    <div class="overflow-visible h-auto">
-                        <tui-copy>
-                            <span class="text-xl text-ink font-bold leading-normal">
-                                {{ environment.gameServerIp }}
-                            </span>
-                        </tui-copy>
-                    </div>
+                    <button type="button" class="copy-btn" [class.copy-btn--done]="copied() === environment.gameServerIp" (click)="copy(environment.gameServerIp)">
+                        <span class="text-xl text-ink font-bold leading-normal break-all">
+                            {{ environment.gameServerIp }}
+                        </span>
+                        <tui-icon [icon]="copied() === environment.gameServerIp ? '@tui.check' : '@tui.copy'" class="size-5!" />
+                        <span class="text-base text-ink-3 font-medium">
+                            {{
+                                (copied() === environment.gameServerIp
+                                    ? 'profile.howToPlay.copied'
+                                    : 'profile.howToPlay.copy'
+                                ) | translate
+                            }}
+                        </span>
+                    </button>
                 </div>
-                <div class="flex items-start gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
                     <span class="text-xl text-ink-3 font-medium leading-normal">{{ 'profile.howToPlay.passwordLabel' | translate }}</span>
-                    <div class="overflow-visible h-auto">
-                        <tui-copy class="copy-word">
-                            <span class="text-xl text-ink font-bold leading-normal whitespace-normal break-all">
-                                {{ environment.gameServerPassword }}
-                            </span>
-                        </tui-copy>
-                    </div>
+                    <button type="button" class="copy-btn" [class.copy-btn--done]="copied() === environment.gameServerPassword" (click)="copy(environment.gameServerPassword)">
+                        <span class="text-xl text-ink font-bold leading-normal break-all">
+                            {{ environment.gameServerPassword }}
+                        </span>
+                        <tui-icon
+                            [icon]="copied() === environment.gameServerPassword ? '@tui.check' : '@tui.copy'"
+                            class="size-5!"
+                        />
+                        <span class="text-base text-ink-3 font-medium">
+                            {{
+                                (copied() === environment.gameServerPassword
+                                    ? 'profile.howToPlay.copied'
+                                    : 'profile.howToPlay.copy'
+                                ) | translate
+                            }}
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
