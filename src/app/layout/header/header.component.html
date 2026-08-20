@@ -112,15 +112,15 @@
     <!-- Блок навигации -->
     <nav
         [attr.aria-label]="'header.mainMenu' | translate"
-        class="flex gap-1 md:gap-2 justify-center xl:justify-between w-full mb-4"
+        class="flex gap-1 items-start justify-center xl:justify-between w-full mb-4"
     >
-        <div class="flex flex-wrap gap-1 md:gap-2">
+        <div class="flex flex-wrap gap-1 justify-center xl:justify-start">
             <!-- Мобильное меню навигации -->
             <div class="relative md:hidden">
                 <button
                     type="button"
                     (click)="showMobileMenu.set(!showMobileMenu())"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': showMobileMenu() }"
+                    [ngClass]="{ 'bg-surface! text-lh-primary!': showMobileMenu() }"
                     class="nav-button"
                     [attr.aria-label]="'header.mainMenu' | translate"
                     [attr.aria-expanded]="showMobileMenu()"
@@ -130,7 +130,7 @@
 
                 @if (showMobileMenu()) {
                     <div
-                        class="dropdown-enter absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-[#e9dec5] border border-[#bdb093] shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[180px]"
+                        class="dropdown-enter absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[180px]"
                     >
                         @if (!isAuth) {
                             <button
@@ -139,7 +139,7 @@
                                 (click)="showMobileMenu.set(false)"
                                 [ngClass]="{
                                     'bg-lh-accent text-white': select === 'startGame',
-                                    'text-lh-primary hover:bg-[#d8cdb3]': select !== 'startGame',
+                                    'text-lh-primary hover:bg-surface-3': select !== 'startGame',
                                 }"
                                 class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                             >
@@ -153,7 +153,7 @@
                             (click)="showMobileMenu.set(false)"
                             [ngClass]="{
                                 'bg-lh-accent text-white': select === 'rules',
-                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'rules',
+                                'text-lh-primary hover:bg-surface-3': select !== 'rules',
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
@@ -166,7 +166,7 @@
                             (click)="showMobileMenu.set(false)"
                             [ngClass]="{
                                 'bg-lh-accent text-white': select === 'faq',
-                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'faq',
+                                'text-lh-primary hover:bg-surface-3': select !== 'faq',
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
@@ -179,7 +179,7 @@
                             (click)="showMobileMenu.set(false)"
                             [ngClass]="{
                                 'bg-lh-accent text-white': select === 'settlements',
-                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'settlements',
+                                'text-lh-primary hover:bg-surface-3': select !== 'settlements',
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
@@ -192,7 +192,7 @@
                             (click)="showMobileMenu.set(false)"
                             [ngClass]="{
                                 'bg-lh-accent text-white': select === 'market',
-                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'market',
+                                'text-lh-primary hover:bg-surface-3': select !== 'market',
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
@@ -206,7 +206,7 @@
                             (click)="toggleMobileMediaMenu()"
                             [ngClass]="{
                                 'bg-lh-accent text-white': isMediaActive,
-                                'text-lh-primary hover:bg-[#d8cdb3]': !isMediaActive,
+                                'text-lh-primary hover:bg-surface-3': !isMediaActive,
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center justify-between"
                         >
@@ -222,14 +222,14 @@
                         </button>
 
                         @if (showMobileMediaMenu()) {
-                            <div class="dropdown-enter flex flex-col gap-1 pl-2 border-l-2 border-[#c35a17]/30 ml-2">
+                            <div class="dropdown-enter flex flex-col gap-1 pl-2 border-l-2 border-brand/30 ml-2">
                                 <button
                                     type="button"
                                     [routerLink]="['/gallery']"
                                     (click)="showMobileMenu.set(false)"
                                     [ngClass]="{
                                         'bg-lh-accent text-white': select === 'gallery',
-                                        'text-lh-primary hover:bg-[#d8cdb3]': select !== 'gallery',
+                                        'text-lh-primary hover:bg-surface-3': select !== 'gallery',
                                     }"
                                     class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                                 >
@@ -242,7 +242,7 @@
                                     (click)="showMobileMenu.set(false)"
                                     [ngClass]="{
                                         'bg-lh-accent text-white': select === 'videos',
-                                        'text-lh-primary hover:bg-[#d8cdb3]': select !== 'videos',
+                                        'text-lh-primary hover:bg-surface-3': select !== 'videos',
                                     }"
                                     class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                                 >
@@ -258,7 +258,7 @@
                             (click)="showMobileMenu.set(false)"
                             [ngClass]="{
                                 'bg-lh-accent text-white': select === 'diplomacy',
-                                'text-lh-primary hover:bg-[#d8cdb3]': select !== 'diplomacy',
+                                'text-lh-primary hover:bg-surface-3': select !== 'diplomacy',
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
@@ -272,7 +272,7 @@
             <button
                 (click)="select = 'home'"
                 [routerLink]="['/home']"
-                [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'home' }"
+                [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'home' }"
                 class="nav-button"
                 [attr.aria-label]="'header.nav.home' | translate"
             >
@@ -280,12 +280,12 @@
             </button>
 
             <!-- Десктопная навигация -->
-            <div class="hidden md:flex gap-1 md:gap-2">
+            <div class="hidden md:contents">
                 @if (!isAuth) {
                     <button
                         [routerLink]="['/start-game']"
-                        [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'startGame' }"
-                        class="nav-button relative md:w-auto md:min-w-20 px-2 md:px-4"
+                        [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'startGame' }"
+                        class="nav-button relative md:w-auto px-1.5"
                         [attr.aria-label]="'header.nav.startGame' | translate"
                     >
                         <tui-icon icon="@tui.gamepad-2" />
@@ -300,8 +300,8 @@
                 }
                 <button
                     [routerLink]="['/rules']"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'rules' }"
-                    class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                    [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'rules' }"
+                    class="nav-button md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.rules' | translate"
                 >
                     <tui-icon icon="@tui.file-text" />
@@ -309,8 +309,8 @@
                 </button>
                 <button
                     [routerLink]="['/faq']"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'faq' }"
-                    class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                    [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'faq' }"
+                    class="nav-button md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.faq' | translate"
                 >
                     <tui-icon icon="@tui.info" />
@@ -319,8 +319,8 @@
 
                 <button
                     [routerLink]="['/settlements']"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'settlements' }"
-                    class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                    [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'settlements' }"
+                    class="nav-button md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.settlements' | translate"
                 >
                     <tui-icon icon="@tui.tent" />
@@ -329,8 +329,8 @@
 
                 <button
                     [routerLink]="['/diplomacy']"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': select === 'diplomacy' }"
-                    class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                    [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'diplomacy' }"
+                    class="nav-button md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.diplomacy' | translate"
                 >
                     <tui-icon icon="@tui.scroll-text" />
@@ -339,8 +339,8 @@
 
                 <button
                     [routerLink]="['/market']"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary! font-bold! text-base!': select === 'market' }"
-                    class="nav-button w-11 md:w-auto md:min-w-20 px-2 md:px-4"
+                    [ngClass]="{ 'bg-surface! text-lh-primary! font-bold! text-base!': select === 'market' }"
+                    class="nav-button w-11 md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.market' | translate"
                 >
                     <tui-icon icon="@tui.store" />
@@ -352,8 +352,8 @@
                     <button
                         type="button"
                         (click)="toggleMediaMenu()"
-                        [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': isMediaActive || showMediaMenu() }"
-                        class="nav-button md:w-auto md:min-w-20 px-2 md:px-4"
+                        [ngClass]="{ 'bg-surface! text-lh-primary!': isMediaActive || showMediaMenu() }"
+                        class="nav-button md:w-auto px-1.5"
                         [attr.aria-label]="'header.nav.media' | translate"
                         [attr.aria-expanded]="showMediaMenu()"
                     >
@@ -368,7 +368,7 @@
 
                     @if (showMediaMenu()) {
                         <div
-                            class="dropdown-enter absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-[#e9dec5] border border-[#bdb093] shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[160px]"
+                            class="dropdown-enter absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[160px]"
                         >
                             <button
                                 type="button"
@@ -376,7 +376,7 @@
                                 (click)="showMediaMenu.set(false)"
                                 [ngClass]="{
                                     'bg-lh-accent text-white': select === 'gallery',
-                                    'text-lh-primary hover:bg-[#d8cdb3]': select !== 'gallery',
+                                    'text-lh-primary hover:bg-surface-3': select !== 'gallery',
                                 }"
                                 class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                             >
@@ -389,7 +389,7 @@
                                 (click)="showMediaMenu.set(false)"
                                 [ngClass]="{
                                     'bg-lh-accent text-white': select === 'videos',
-                                    'text-lh-primary hover:bg-[#d8cdb3]': select !== 'videos',
+                                    'text-lh-primary hover:bg-surface-3': select !== 'videos',
                                 }"
                                 class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                             >
@@ -415,7 +415,7 @@
                 <button
                     type="button"
                     (click)="showLangMenu.set(!showLangMenu())"
-                    [ngClass]="{ 'bg-[#e2d7bb]! text-lh-primary!': showLangMenu() }"
+                    [ngClass]="{ 'bg-surface! text-lh-primary!': showLangMenu() }"
                     class="nav-button !px-2.5 gap-1.5"
                     [attr.aria-label]="'header.language.select' | translate"
                 >
@@ -425,14 +425,14 @@
 
                 @if (showLangMenu()) {
                     <div
-                        class="dropdown-enter absolute top-full right-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-[#e9dec5] border border-[#bdb093] shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[130px]"
+                        class="dropdown-enter absolute top-full right-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[130px]"
                     >
                         <button
                             type="button"
                             (click)="selectLanguage('ru')"
                             [ngClass]="{
                                 'bg-lh-accent text-white': language() === 'ru',
-                                'text-lh-primary hover:bg-[#d8cdb3]': language() !== 'ru',
+                                'text-lh-primary hover:bg-surface-3': language() !== 'ru',
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
                         >
@@ -443,7 +443,7 @@
                             (click)="selectLanguage('en')"
                             [ngClass]="{
                                 'bg-lh-accent text-white': language() === 'en',
-                                'text-lh-primary hover:bg-[#d8cdb3]': language() !== 'en',
+                                'text-lh-primary hover:bg-surface-3': language() !== 'en',
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
                         >
@@ -457,7 +457,7 @@
                 (click)="isAuth ? '' : signIn()"
                 [routerLink]="isAuth ? ['/profile'] : ''"
                 [ngClass]="{
-                    'bg-[#e2d7bb]! text-lh-primary!': select === 'profile',
+                    'bg-surface! text-lh-primary!': select === 'profile',
                     '!rounded-lg': !isAuth,
                     '!rounded-r-none': isAuth,
                 }"
@@ -474,7 +474,7 @@
             @if (isAuth) {
                 <button
                     (click)="signOut()"
-                    class="relative nav-button !text-[#c35a17] hover:!text-white hover:bg-[#9C4F24] !rounded-l-none !p-1 w-8! transition-all duration-300"
+                    class="relative nav-button !text-brand-ink hover:!text-white hover:bg-brand-strong !rounded-l-none !p-1 w-8! transition-all duration-300"
                     [attr.aria-label]="'header.nav.signOut' | translate"
                 >
                     <tui-icon icon="@tui.log-out" />
