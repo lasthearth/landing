@@ -33,7 +33,7 @@
                         {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
                     </span>
                     <span class="bg-peace/15 text-peace font-bold text-base px-2 py-0.5 rounded-lg">
-                        {{ onlineCount }} {{ 'settlements.card.onlineShort' | translate }}
+                        {{ onlineCount() }} {{ 'settlements.card.onlineShort' | translate }}
                     </span>
                 </div>
 
@@ -95,25 +95,27 @@
             <div class="flex flex-col gap-2">
                 <hr class="h-px bg-surface-4/30 w-full rounded-full" />
                 <div class="flex flex-wrap gap-1.5 max-h-[68px] overflow-hidden">
-                    <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base px-2 py-1 rounded-lg items-center">
-                        @if (leader?.is_online === true) {
-                            <tui-pulse class="self-center mr-1.5 online" />
-                        } @else {
-                            <tui-pulse [playing]="false" class="self-center mr-1.5 offline" />
-                        }
-                        <span>{{ leader?.user_game_name }}</span>
-                    </div>
-
-                    @for (item of users; track $index) {
-                        <div
-                            class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base px-2 py-1 rounded-lg items-center"
-                        >
-                            @if (item?.is_online === true) {
+                    @if (leader(); as leaderPlayer) {
+                        <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base px-2 py-1 rounded-lg items-center">
+                            @if (leaderPlayer.is_online) {
                                 <tui-pulse class="self-center mr-1.5 online" />
                             } @else {
                                 <tui-pulse [playing]="false" class="self-center mr-1.5 offline" />
                             }
-                            <span>{{ item?.user_game_name }}</span>
+                            <span>{{ leaderPlayer.user_game_name }}</span>
+                        </div>
+                    }
+
+                    @for (item of users(); track item.user_id) {
+                        <div
+                            class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base px-2 py-1 rounded-lg items-center"
+                        >
+                            @if (item.is_online) {
+                                <tui-pulse class="self-center mr-1.5 online" />
+                            } @else {
+                                <tui-pulse [playing]="false" class="self-center mr-1.5 offline" />
+                            }
+                            <span>{{ item.user_game_name }}</span>
                         </div>
                     }
                 </div>

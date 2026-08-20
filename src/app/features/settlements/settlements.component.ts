@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { SettlementService, ISettlement, getSettlementTypeByKey, getSettlementDisplayName, isGuildSettlement } from '@entities/settlement';
-import { UserService } from '@entities/user';
+import { IPlayer, UserService } from '@entities/user';
 import { SettlementTagStore } from '@entities/settlement-tag';
 import { SettlementCardComponent } from './settlement-card/settlement-card.component';
 import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 
@@ -28,6 +28,11 @@ interface EnrichedSettlement extends ISettlement {
     membersCount: number;
     onlineCount: number;
     tagTypes: Set<string>;
+
+    /**
+     * Профили лидера и участников селения, загруженные одним батчем на страницу.
+     */
+    players: IPlayer[];
 }
 
 /**
@@ -68,14 +73,12 @@ export class SettlementsComponent {
     private readonly i18n = inject(I18nService);
 
     protected readonly loading = signal<boolean>(false);
-    protected readonly loadingOnline = signal<boolean>(false);
     protected readonly error = signal<boolean>(false);
     protected readonly sortState = signal<{ field: SortField; direction: SortDirection }>({
         field: 'default',
         direction: 'desc',
     });
 
-    private readonly rawSettlements = signal<ISettlement[]>([]);
     private readonly enrichedSettlements = signal<EnrichedSettlement[]>([]);
 
     /**
@@ -123,7 +126,10 @@ export class SettlementsComponent {
     }
 
     /**
-     * Загружает список селений и обогащает базовыми данными.
+     * Загружает список селений вместе с профилями всех участников.
+     *
+     * Профили запрашиваются одним батчем на всю страницу, поэтому счётчик
+     * онлайна и списки жителей готовы сразу, без запроса на каждую карточку.
      */
     protected loadSettlements(): void {
         this.loading.set(true);
@@ -132,20 +138,41 @@ export class SettlementsComponent {
             .getSettlements()
             .pipe(
                 map((s) => (s === null ? [] : s)),
+                switchMap((list) =>
+                    this.userService
+                        .getPlayersBatch$(
+                            list.flatMap((s) => [s.leader.user_id, ...s.members.map((m) => m.user_id)])
+                        )
+                        .pipe(
+                            catchError((error) => {
+                                console.error('[Settlements] Ошибка загрузки участников:', error);
+                                return of([] as IPlayer[]);
+                            }),
+                            map((players) => ({ list, players }))
+                        )
+                ),
                 catchError(() => {
                     this.error.set(true);
-                    return of([]);
+                    return of({ list: [] as ISettlement[], players: [] as IPlayer[] });
                 })
             )
-            .subscribe((list) => {
-                this.rawSettlements.set(list);
+            .subscribe(({ list, players }) => {
+                const playerById = new Map(players.map((player) => [player.user_id, player]));
+
                 this.enrichedSettlements.set(
-                    list.map((s) => ({
-                        ...s,
-                        membersCount: s.members.length + 1,
-                        onlineCount: 0,
-                        tagTypes: this.getSpecialTagTypes(s.tags),
-                    }))
+                    list.map((s) => {
+                        const settlementPlayers = [s.leader.user_id, ...s.members.map((m) => m.user_id)]
+                            .map((id) => playerById.get(id))
+                            .filter((player): player is IPlayer => player !== undefined);
+
+                        return {
+                            ...s,
+                            membersCount: s.members.length + 1,
+                            onlineCount: settlementPlayers.filter((player) => player.is_online).length,
+                            tagTypes: this.getSpecialTagTypes(s.tags),
+                            players: settlementPlayers,
+                        };
+                    })
                 );
                 this.loading.set(false);
             });
@@ -173,9 +200,6 @@ export class SettlementsComponent {
         } else {
             this.sortState.set({ field, direction: 'desc' });
         }
-        if (field === 'online') {
-            this.ensureOnlineLoaded();
-        }
     }
 
     /**
@@ -195,8 +219,6 @@ export class SettlementsComponent {
     protected getSortDirection(field: SortField): SortDirection | null {
         return this.sortState().field === field ? this.sortState().direction : null;
     }
-
-    private onlineLoaded = false;
 
     /**
      * Возвращает набор системных типов тегов, присутствующих у поселения.
@@ -247,48 +269,5 @@ export class SettlementsComponent {
         }
 
         return getSettlementTypeByKey(settlement.type);
-    }
-
-    /**
-     * Загружает онлайн-статусы всех участников селений.
-     * Выполняется один раз при первом выборе сортировки по онлайну.
-     */
-    private ensureOnlineLoaded(): void {
-        if (this.onlineLoaded || this.loadingOnline()) {
-            return;
-        }
-        if (!this.userService.userId) {
-            this.onlineLoaded = true;
-            return;
-        }
-        this.loadingOnline.set(true);
-
-        const allUserIds = [
-            ...new Set(
-                this.rawSettlements().flatMap((s) => [s.leader.user_id, ...s.members.map((m) => m.user_id)])
-            ),
-        ];
-
-        if (allUserIds.length === 0) {
-            this.loadingOnline.set(false);
-            return;
-        }
-
-        this.userService
-            .getPlayersBatch$(allUserIds)
-            .pipe(catchError(() => of([])))
-            .subscribe((players) => {
-                const onlineMap = new Map(players.map((p) => [p.user_id, p?.is_online ?? false]));
-                this.enrichedSettlements.update((list) =>
-                    list.map((s) => ({
-                        ...s,
-                        onlineCount: [s.leader.user_id, ...s.members.map((m) => m.user_id)].filter((id) =>
-                            onlineMap.get(id)
-                        ).length,
-                    }))
-                );
-                this.onlineLoaded = true;
-                this.loadingOnline.set(false);
-            });
     }
 }

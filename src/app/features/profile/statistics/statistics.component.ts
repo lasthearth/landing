@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { BehaviorSubject, catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, switchMap, tap } from 'rxjs';
 import { LeaderBoardType } from '@entities/user';
 import { ILeaderBoard } from '@entities/user';
 import { ServerInformationService } from '@core/services/server-information.service';
@@ -174,23 +174,17 @@ export class StatisticsComponent {
             return;
         }
 
-        const requests = uniqueUserIds.map((userId) =>
-            this.userService.getPlayer$(userId).pipe(
-                map((user) => ({ userId, avatar: user.avatar.original })),
-                catchError(() => of({ userId, avatar: undefined }))
-            )
-        );
-
-        forkJoin(requests).subscribe({
-            next: (results) => {
-                results.forEach(({ userId, avatar }) => {
-                    if (avatar) {
-                        this.avatarsCache.set(userId, avatar);
+        this.userService
+            .getPlayersBatch$(uniqueUserIds)
+            .pipe(catchError(() => of([])))
+            .subscribe((players) => {
+                players.forEach((player) => {
+                    if (player.avatar?.original) {
+                        this.avatarsCache.set(player.user_id, player.avatar.original);
                     }
                 });
                 this.cdr.detectChanges();
-            },
-        });
+            });
     }
 
     /**
