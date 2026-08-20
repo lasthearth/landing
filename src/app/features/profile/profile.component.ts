@@ -33,7 +33,11 @@ import {
     SettlementService,
     isGuildSettlement,
     getSettlementTypeByKey,
+    getSettlementTypeTone,
+    getDiplomacyTone,
     ISettlement,
+    SettlementBadgeComponent,
+    SettlementBadgeTone,
     SettlementDisplayNamePipe,
 } from '@entities/settlement';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
@@ -51,6 +55,7 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
         ImageLoaderComponent,
         TranslatePipe,
         NgTemplateOutlet,
+        SettlementBadgeComponent,
         SettlementDisplayNamePipe,
     ],
     selector: 'app-profile',
@@ -512,5 +517,25 @@ export class ProfileComponent {
         }
 
         return getSettlementTypeByKey(settlement.type);
+    }
+
+    /**
+     * Возвращает тон бейджа типа селения.
+     *
+     * @param settlement Поселение.
+     * @returns Тон бейджа.
+     */
+    protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
+        return getSettlementTypeTone(settlement);
+    }
+
+    /**
+     * Возвращает тон бейджа дипломатии.
+     *
+     * @param diplomacy Статус дипломатии.
+     * @returns Тон бейджа.
+     */
+    protected getDiplomacyTone(diplomacy: string | undefined): SettlementBadgeTone {
+        return getDiplomacyTone(diplomacy);
     }
 }

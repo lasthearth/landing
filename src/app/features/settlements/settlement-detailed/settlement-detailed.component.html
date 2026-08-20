@@ -12,16 +12,16 @@
                     {{ settlementData | settlementDisplayName }}
                 </h1>
                 @if (isGuild()) {
-                    <span class="bg-line-strong/15 text-ink-2 uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                    <app-settlement-badge tone="line" [uppercase]="true">
                         {{ guildLabel() }}
-                    </span>
+                    </app-settlement-badge>
                 }
-                <span class="bg-lh-leader/15 text-leader-ink font-bold text-base px-2 py-0.5 rounded-lg">
+                <app-settlement-badge tone="leader">
                     {{ settlementData.members.length + 1 }} {{ 'settlements.detailed.residentsShort' | translate }}
-                </span>
-                <span class="bg-peace/15 text-peace font-bold text-base px-2 py-0.5 rounded-lg">
+                </app-settlement-badge>
+                <app-settlement-badge tone="peace">
                     {{ onlineCount }} {{ 'settlements.detailed.onlineShort' | translate }}
-                </span>
+                </app-settlement-badge>
             </div>
 
             <p

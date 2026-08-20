@@ -86,20 +86,20 @@
                                 {{ (settlement.leader.user_id === userService.userId ? 'profile.settlement.role.leader' : 'profile.settlement.role.resident') | translate }}
                                 «{{ settlement | settlementDisplayName }}»
                             </span>
-                            <div class="flex items-start gap-2 flex-wrap text-lg leading-[27px]">
-                                <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
+                            <div class="flex items-start gap-2 flex-wrap">
+                                <app-settlement-badge [tone]="getSettlementTypeTone(settlement)" [uppercase]="true">
                                     {{ getSettlementTypeLabel(settlement) }}
-                                </span>
-                                <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
+                                </app-settlement-badge>
+                                <app-settlement-badge tone="leader">
                                     {{ settlement.members.length + 1 }} {{ 'profile.settlement.residentsShort' | translate }}
-                                </span>
-                                <span class="px-2 py-0.5 bg-leader-soft/30 text-leader-ink rounded-full">
+                                </app-settlement-badge>
+                                <app-settlement-badge tone="peace">
                                     {{ settlementOnline ?? 0 }} {{ 'profile.settlement.onlineShort' | translate }}
-                                </span>
+                                </app-settlement-badge>
                                 @if (settlement.diplomacy) {
-                                    <span class="px-2 py-0.5 bg-lh-accent-3/20 text-lh-accent-3 rounded-full">
+                                    <app-settlement-badge [tone]="getDiplomacyTone(settlement.diplomacy)" [uppercase]="true">
                                         {{ settlement.diplomacy }}
-                                    </span>
+                                    </app-settlement-badge>
                                 }
                             </div>
                         </div>

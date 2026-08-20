@@ -13,13 +13,22 @@ import { CommonModule } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { TuiPulse } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { ISettlement, getSettlementTypeByKey, getSettlementDisplayName, isGuildSettlement, SettlementDisplayNamePipe } from '@entities/settlement';
+import {
+    ISettlement,
+    getSettlementTypeByKey,
+    getSettlementDisplayName,
+    getSettlementTypeTone,
+    getDiplomacyTone,
+    isGuildSettlement,
+    SettlementBadgeComponent,
+    SettlementBadgeTone,
+    SettlementDisplayNamePipe,
+} from '@entities/settlement';
 import { IPlayer, UserService } from '@entities/user';
-import { SettlementTagStore } from '@entities/settlement-tag';
+import { SettlementTagStore, SettlementTagComponent } from '@entities/settlement-tag';
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
-import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 import { SetTagsComponent } from './set-tags/set-tags.component';
 import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 
@@ -28,7 +37,16 @@ import { SettlementDetailedComponent } from '../settlement-detailed/settlement-d
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
     styleUrl: './settlement-card.component.less',
-    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent, TranslatePipe, SettlementTagComponent, SettlementDisplayNamePipe],
+    imports: [
+        CommonModule,
+        TuiPulse,
+        TuiIcon,
+        ImageLoaderComponent,
+        TranslatePipe,
+        SettlementBadgeComponent,
+        SettlementTagComponent,
+        SettlementDisplayNamePipe,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent {
@@ -146,40 +164,23 @@ export class SettlementCardComponent {
     }
 
     /**
-     * Возвращает CSS-классы бейджа типа селения.
-     * Цвет бейджа соответствует tier селения, чтобы визуально отличать
-     * Лагерь, Деревню, Посёлок, Город и Региональную провинцию.
+     * Возвращает тон бейджа типа селения.
      *
      * @param settlement Селение.
-     * @returns Строка с Tailwind-классами фона и текста.
+     * @returns Тон бейджа.
      */
-    protected getSettlementTypeBadgeClasses(settlement: ISettlement): string {
-        if (this.isPinned(settlement)) {
-            return 'bg-gold/15 text-warning-ink border border-gold/40';
-        }
+    protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
+        return getSettlementTypeTone(settlement);
+    }
 
-        if (isGuildSettlement(settlement)) {
-            return 'bg-line-strong/15 text-ink-2';
-        }
-
-        switch (settlement.type) {
-            case 'VILLAGE':
-            case 1:
-                return 'bg-line-strong/15 text-ink-2';
-            case 'TOWNSHIP':
-            case 2:
-                return 'bg-rank-iron/15 text-rank-iron';
-            case 'CITY':
-            case 3:
-                return 'bg-rank-silver/15 text-rank-silver';
-            case 'PROVINCE':
-            case 4:
-                return 'bg-medal-gold/15 text-medal-gold';
-            case 'CAMP':
-            case 0:
-            default:
-                return 'bg-lh-leader/15 text-leader-ink';
-        }
+    /**
+     * Возвращает тон бейджа дипломатии.
+     *
+     * @param diplomacy Статус дипломатии.
+     * @returns Тон бейджа.
+     */
+    protected getDiplomacyTone(diplomacy: string | undefined): SettlementBadgeTone {
+        return getDiplomacyTone(diplomacy);
     }
 
     /**

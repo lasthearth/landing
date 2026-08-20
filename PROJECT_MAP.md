@@ -23,6 +23,19 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.0 Единый бейдж поселения
+
+> Плашки типа селения / населения / онлайна / дипломатии были разными в списке селений и в профиле. Вынесены в один компонент.
+
+- Файлы:
+  - `src/app/entities/settlement/ui/settlement-badge/settlement-badge.component.ts` — `app-settlement-badge`, входы `tone`, `uppercase`, `icon`.
+  - `src/app/entities/settlement/model/settlement-badge-tone.ts` — тип `SettlementBadgeTone`.
+  - `src/app/entities/settlement/lib/get-settlement-type-tone.function.ts` — тон по tier селения.
+  - `src/app/entities/settlement/lib/get-diplomacy-tone.function.ts` — тон по статусу дипломатии.
+  - `src/app/entities/settlement-tag/ui/settlement-tag/settlement-tag.component.{ts,html}` — перенесён из `features/admin/moderate-settlement-request/`, экспортируется из `@entities/settlement-tag`.
+- Потребители: `settlement-card`, `settlement-detailed`, `features/settlements/settlement`, `features/profile`.
+- Удалён `entities/settlement/ui/guild-badge` — нигде не использовался.
+
 ### 3.1 Костыль: основание гильдии через маркер в названии селения
 
 > Бэкенд не знает про тип «гильдия». На фронте реализован маркер `[GUILD]`, который прячется в `name` селения и вырезается при отображении.
@@ -34,7 +47,6 @@ src/app/
   - `src/app/entities/settlement/lib/get-settlement-display-name.function.ts`
   - `src/app/entities/settlement/lib/build-guild-name.function.ts`
   - `src/app/entities/settlement/ui/settlement-display-name.pipe.ts`
-  - `src/app/entities/settlement/ui/guild-badge/guild-badge.component.{ts,html,less}`
   - `src/app/entities/settlement/model/settlement-types.ts`
   - `src/app/features/profile/create-settlement-from/settlements-types-forms/guild-form/guild-form.component.{ts,html}`
   - `src/app/features/profile/create-settlement-from/settlements-types-forms/guild-form/model/guild-form-data.ts`

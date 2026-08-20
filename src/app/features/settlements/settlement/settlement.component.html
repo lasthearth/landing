@@ -80,19 +80,12 @@
             <div class="flex flex-col gap-3 flex-1">
                 <p class="text-xl md:text-2xl lg:text-3xl font-bold uppercase text-ink">{{ settlement | settlementDisplayName }}</p>
                 <div class="flex flex-wrap gap-2 items-center">
-                    <span class="bg-lh-leader/15 uppercase font-bold text-base md:text-base px-3 p-1.5 rounded-2xl text-leader-ink">
+                    <app-settlement-badge [tone]="getSettlementTypeTone(settlement)" [uppercase]="true">
                         {{ getSettlementType(settlement) }}
-                    </span>
-                    <span
-                        [class]="
-                            'uppercase font-bold text-base md:text-base px-3 p-1.5 rounded-2xl ' +
-                            (settlement.diplomacy === 'Миролюбивый' ? 'bg-peace/15 text-peace' :
-                             settlement.diplomacy === 'Нейтральный' ? 'bg-neutral-status/15 text-neutral-status' :
-                             'bg-lh-danger/15 text-danger-ink')
-                        "
-                    >
+                    </app-settlement-badge>
+                    <app-settlement-badge [tone]="getDiplomacyTone(settlement.diplomacy)" [uppercase]="true">
                         {{ getDiplomacyLabel(settlement) }}
-                    </span>
+                    </app-settlement-badge>
                     @for (tag of settlement.tags; track tag.id) {
                         @if (getTag(tag.id); as tagData) {
                             <app-settlement-tag [tag]="tagData" />

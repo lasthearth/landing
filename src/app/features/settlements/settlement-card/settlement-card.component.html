@@ -29,51 +29,35 @@
                     <h2 class="text-xl/7 md:text-2xl uppercase font-bold text-ink">
                         {{ data() | settlementDisplayName }}
                     </h2>
-                    <span class="bg-lh-leader/15 text-leader-ink font-bold text-base px-2 py-0.5 rounded-lg">
+                    <app-settlement-badge tone="leader">
                         {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
-                    </span>
-                    <span class="bg-peace/15 text-peace font-bold text-base px-2 py-0.5 rounded-lg">
+                    </app-settlement-badge>
+                    <app-settlement-badge tone="peace">
                         {{ onlineCount() }} {{ 'settlements.card.onlineShort' | translate }}
-                    </span>
+                    </app-settlement-badge>
                 </div>
 
                 <div class="flex gap-1.5 flex-wrap">
                     @if (isEastSuzerain(this.data())) {
-                        <span class="bg-lh-accent/25 text-ink-2 uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                        <app-settlement-badge tone="accent" [uppercase]="true">
                             {{ 'settlements.card.suzerainShort' | translate }}: {{ environment.eastSuzerain }}
-                        </span>
+                        </app-settlement-badge>
                     }
                     @if (isWestSuzerain(this.data())) {
-                        <span class="bg-lh-accent/25 text-ink-2 uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                        <app-settlement-badge tone="accent" [uppercase]="true">
                             {{ 'settlements.card.suzerainLabel' | translate }} {{ environment.westSuzerain }}
-                        </span>
+                        </app-settlement-badge>
                     }
-                    @if (isPinned(data())) {
-                        <span
-                            class="inline-flex items-center gap-1 bg-gold/15 text-warning-ink border border-gold/40 uppercase font-bold text-base px-2 py-0.5 rounded-lg"
-                        >
-                            <tui-icon icon="@tui.pin" class="size-4!" />
-                            {{ getSettlementTypeLabel(data()) }}
-                        </span>
-                    } @else {
-                        <span
-                            [class]="'uppercase font-bold text-base px-2 py-0.5 rounded-lg ' + getSettlementTypeBadgeClasses(data())"
-                        >
-                            {{ getSettlementTypeLabel(data()) }}
-                        </span>
-                    }
-                    <span
-                        [class]="
-                            'uppercase font-bold text-base px-2 py-0.5 rounded-lg ' +
-                            (data().diplomacy === 'Миролюбивый'
-                                ? 'bg-peace/15 text-peace'
-                                : data().diplomacy === 'Нейтральный'
-                                  ? 'bg-neutral-status/15 text-neutral-status'
-                                  : 'bg-lh-danger/15 text-danger-ink')
-                        "
+                    <app-settlement-badge
+                        [tone]="isPinned(data()) ? 'gold' : getSettlementTypeTone(data())"
+                        [icon]="isPinned(data()) ? '@tui.pin' : null"
+                        [uppercase]="true"
                     >
+                        {{ getSettlementTypeLabel(data()) }}
+                    </app-settlement-badge>
+                    <app-settlement-badge [tone]="getDiplomacyTone(data().diplomacy)" [uppercase]="true">
                         {{ getDiplomacyLabel(data()) }}
-                    </span>
+                    </app-settlement-badge>
                     @for (tag of data().tags; track tag.id) {
                         @if (getTag(tag.id); as tagData) {
                             <app-settlement-tag [tag]="tagData" />
