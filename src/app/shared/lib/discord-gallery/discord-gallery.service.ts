@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { Observable, of, shareReplay, switchMap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { DiscordApiService, DiscordImageDto, DiscordImagesPageDto } from '@entities/discord';
@@ -33,21 +33,6 @@ interface GalleryCache {
      * Сохранённые изображения.
      */
     images: DiscordGalleryImage[];
-}
-
-/**
- * Результат загрузки изображений.
- */
-export interface DiscordGalleryPage {
-    /**
-     * Список изображений.
-     */
-    images: DiscordGalleryImage[];
-
-    /**
-     * Признак того, что все изображения загружены.
-     */
-    isLastPage: boolean;
 }
 
 /**
@@ -162,17 +147,16 @@ export class DiscordGalleryService {
         accumulated: DiscordGalleryImage[]
     ): Observable<DiscordGalleryImage[]> {
         return this.discordApi.getImages$(this.channelId, DISCORD_MAX_LIMIT, before).pipe(
-            map((page: DiscordImagesPageDto) => ({
-                images: page.images.map((image: DiscordImageDto) => this.mapImage(image)),
-                isLastPage: page.is_last_page,
-            })),
-            switchMap((page: DiscordGalleryPage) => {
-                const allImages = accumulated.concat(page.images);
+            switchMap((page: DiscordImagesPageDto) => {
+                const images = page.images.map((image: DiscordImageDto) => this.mapImage(image));
+                const allImages = accumulated.concat(images);
 
-                if (page.isLastPage || page.images.length === 0) {
+                if (page.is_last_page || images.length === 0) {
                     return of(allImages);
                 }
 
+                // Курсор берётся из «сырых» id сообщений: подставлять сюда
+                // сгенерированный id нельзя, бэкенд ждёт настоящий message_id.
                 const lastMessageId = this.extractLastMessageId(page.images);
 
                 if (!lastMessageId) {
@@ -185,12 +169,12 @@ export class DiscordGalleryService {
     }
 
     /**
-     * Извлекает id последнего сообщения из списка изображений.
+     * Извлекает id последнего сообщения из ответа бэкенда.
      *
-     * @param images Список изображений.
-     * @returns Id сообщения или `undefined`.
+     * @param images Список DTO изображений страницы.
+     * @returns Id сообщения или `undefined`, если бэкенд его не прислал.
      */
-    private extractLastMessageId(images: DiscordGalleryImage[]): string | undefined {
+    private extractLastMessageId(images: DiscordImageDto[]): string | undefined {
         for (let i = images.length - 1; i >= 0; i--) {
             const messageId = images[i].id.split('-')[0];
 
@@ -246,7 +230,7 @@ export class DiscordGalleryService {
         height?: number;
     }): DiscordGalleryImage {
         return {
-            id: image.id,
+            id: image.id || this.buildFallbackId(image.url, image.timestamp),
             url: image.url,
             proxyUrl: image.proxy_url,
             alt: image.alt,
@@ -255,5 +239,22 @@ export class DiscordGalleryService {
             width: image.width,
             height: image.height,
         };
+    }
+
+    /**
+     * Строит стабильный идентификатор изображения, когда бэкенд вернул пустой `id`.
+     *
+     * Берёт id вложения из URL вида
+     * `/attachments/{channelId}/{attachmentId}/{filename}` — он уникален в рамках Discord.
+     * Если URL нестандартный, откатывается на метку времени.
+     *
+     * @param url URL изображения.
+     * @param timestamp Дата публикации.
+     * @returns Строковый идентификатор.
+     */
+    private buildFallbackId(url: string, timestamp: string): string {
+        const attachmentId = url.match(/\/attachments\/\d+\/(\d+)\//)?.[1];
+
+        return attachmentId ?? `${timestamp}:${url}`;
     }
 }

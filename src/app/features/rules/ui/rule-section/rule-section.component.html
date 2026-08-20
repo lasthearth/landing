@@ -4,7 +4,7 @@
         (click)="toggle()"
     >
         <div class="flex items-center gap-2 flex-1">
-            <p class="rule-section-title relative text-[#2d201a] cursor-pointer font-bold" [class]="titleClass() + ' ' + indentClass()">
+            <p class="rule-section-title relative text-ink cursor-pointer font-bold" [class]="titleClass() + ' ' + indentClass()">
                 @if (icon()) {
                     <tui-icon
                         [icon]="icon() ?? ''"
@@ -24,7 +24,7 @@
         <tui-icon
             icon="@tui.chevron-down"
             [ngClass]="{ 'rotate-180!': isExpanded() }"
-            class="text-[#5c554a] transition-all size-6!"
+            class="text-ink-2 transition-all size-6!"
         />
     </div>
 

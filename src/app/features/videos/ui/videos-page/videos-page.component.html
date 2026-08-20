@@ -24,8 +24,14 @@
     }
 
     @if (previewVideoId()) {
-        <div class="videos-page__overlay" (click)="closeVideo()">
-            <div class="videos-page__modal" (click)="$event.stopPropagation()">
+        <div class="videos-page__overlay" role="presentation" (click)="closeVideo()">
+            <div
+                class="videos-page__modal"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Просмотр видео"
+                (click)="$event.stopPropagation()"
+            >
                 <button type="button" class="videos-page__close" (click)="closeVideo()" aria-label="Закрыть">
                     <tui-icon icon="@tui.x" class="size-6" />
                 </button>

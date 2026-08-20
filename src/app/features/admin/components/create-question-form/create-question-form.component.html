@@ -1,5 +1,5 @@
 <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-    <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.questions.createTitle' | translate }}</p>
+    <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.questions.createTitle' | translate }}</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-4 mt-6">
         <lh-input formControlName="question" [placeholder]="'admin.questions.createPlaceholder' | translate" />
         <tui-error formControlName="question" [error]="[] | tuiFieldError | async" />
@@ -7,7 +7,7 @@
         <button
             [disabled]="!form.valid"
             type="submit"
-            class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-[#2a2722] cursor-pointer transition-all duration-200 bg-[#d8cdb3] border border-[#c4b89e] hover:bg-[#c4b89e] self-start disabled:opacity-50 disabled:cursor-not-allowed"
+            class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-ink cursor-pointer transition-all duration-200 bg-surface-3 border border-line hover:bg-surface-4 self-start disabled:opacity-50 disabled:cursor-not-allowed"
         >
             {{ 'admin.questions.createButton' | translate }}
         </button>

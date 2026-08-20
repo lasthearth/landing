@@ -5,7 +5,7 @@
 
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
         <div class="flex flex-col gap-2">
-            <p class="text-xl text-[#2d201a] font-semibold">{{ 'settlements.invite.nicknameLabel' | translate }}</p>
+            <p class="text-xl text-ink font-semibold">{{ 'settlements.invite.nicknameLabel' | translate }}</p>
             <lh-input [placeholder]="'settlements.invite.nicknamePlaceholder' | translate" [formControl]="playerNickControl" />
         </div>
 
@@ -33,7 +33,7 @@
                             containerClass="rounded-full"
                             class="w-10 h-10"
                         />
-                        <span class="text-lg text-[#2d201a] font-semibold">{{ item.user_game_name }}</span>
+                        <span class="text-lg text-ink font-semibold">{{ item.user_game_name }}</span>
                     </div>
                     <button
                         (click)="playerInvite(item.user_id)"

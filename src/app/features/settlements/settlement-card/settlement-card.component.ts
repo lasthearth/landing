@@ -175,30 +175,30 @@ export class SettlementCardComponent implements OnInit {
      */
     protected getSettlementTypeBadgeClasses(settlement: ISettlement): string {
         if (this.isPinned(settlement)) {
-            return 'bg-[#ffd700]/15 text-[#8a6e2f] border border-[#d4af37]/40';
+            return 'bg-gold/15 text-warning-ink border border-gold/40';
         }
 
         if (isGuildSettlement(settlement)) {
-            return 'bg-[#8b5a2b]/15 text-[#8b5a2b]';
+            return 'bg-line-strong/15 text-ink-2';
         }
 
         switch (settlement.type) {
             case 'VILLAGE':
             case 1:
-                return 'bg-[#8b5a2b]/15 text-[#8b5a2b]';
+                return 'bg-line-strong/15 text-ink-2';
             case 'TOWNSHIP':
             case 2:
-                return 'bg-[#5a5a5a]/15 text-[#5a5a5a]';
+                return 'bg-rank-iron/15 text-rank-iron';
             case 'CITY':
             case 3:
-                return 'bg-[#6e7a8b]/15 text-[#6e7a8b]';
+                return 'bg-rank-silver/15 text-rank-silver';
             case 'PROVINCE':
             case 4:
-                return 'bg-[#b8860b]/15 text-[#b8860b]';
+                return 'bg-medal-gold/15 text-medal-gold';
             case 'CAMP':
             case 0:
             default:
-                return 'bg-[#3d5381]/15 text-[#3d5381]';
+                return 'bg-lh-leader/15 text-leader-ink';
         }
     }
 

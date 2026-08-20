@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-10 max-w-5xl mx-auto w-full">
     <!-- Сезон -->
     <div class="flex flex-col gap-6">
-        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.currentSeason' | translate }}</h2>
+        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.currentSeason' | translate }}</h2>
 
         @if (isLoading()) {
             <app-admin-season-skeleton />
@@ -10,14 +10,14 @@
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
             >
                 <div class="flex flex-col gap-4">
-                    <span class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a] leading-none">{{ 'admin.hungerGames.seasonNumber' | translate:{number: season.number} }}</span>
+                    <span class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink leading-none">{{ 'admin.hungerGames.seasonNumber' | translate:{number: season.number} }}</span>
                     <div class="flex flex-col gap-2">
-                        <span class="text-[18px] text-[#5c554a]">
-                            {{ 'admin.hungerGames.startedAt' | translate }} <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedStartedAt }}</span>
+                        <span class="text-[18px] text-ink-2">
+                            {{ 'admin.hungerGames.startedAt' | translate }} <span class="text-[23px] font-medium text-ink">{{ season.formattedStartedAt }}</span>
                         </span>
                         @if (!season.isActive) {
-                            <span class="text-[18px] text-[#5c554a]">
-                                {{ 'admin.hungerGames.endedAt' | translate }} <span class="text-[23px] font-medium text-[#2a2722]">{{ season.formattedEndedAt }}</span>
+                            <span class="text-[18px] text-ink-2">
+                                {{ 'admin.hungerGames.endedAt' | translate }} <span class="text-[23px] font-medium text-ink">{{ season.formattedEndedAt }}</span>
                             </span>
                             <span class="text-[23px] font-semibold text-lh-danger">{{ 'admin.hungerGames.seasonCompleted' | translate }}</span>
                         } @else {
@@ -30,7 +30,7 @@
                         type="button"
                         [disabled]="isSeasonActionLoading()"
                         (click)="createSeason()"
-                        class="py-2 px-4 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        class="py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                         @if (isSeasonActionLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -60,22 +60,22 @@
                 >
                     <div class="flex items-center gap-2">
                         <tui-icon icon="@tui.gift" class="size-5! text-lh-accent" />
-                        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.rewardsTitle' | translate }}</p>
+                        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.rewardsTitle' | translate }}</p>
                     </div>
-                    <p class="text-[18px] leading-[28px] text-[#5c554a]">
+                    <p class="text-[18px] leading-[28px] text-ink-2">
                         {{ 'admin.hungerGames.rewardsDescription' | translate }}
                     </p>
 
                     @if (seasonRewards(); as rewards) {
                         <div class="flex flex-col gap-3">
-                            <div class="grid grid-cols-[auto_1fr_auto] gap-2 text-[18px] text-[#5c554a] uppercase font-semibold px-2">
+                            <div class="grid grid-cols-[auto_1fr_auto] gap-2 text-[18px] text-ink-2 uppercase font-semibold px-2">
                                 <span class="text-center w-16">{{ 'admin.hungerGames.rankColumn' | translate }}</span>
                                 <span>{{ 'admin.hungerGames.shardsColumn' | translate }}</span>
                                 <span class="w-10"></span>
                             </div>
                             @for (reward of rewards; track $index; let idx = $index) {
                                 <div
-                                    class="grid grid-cols-[auto_1fr_auto] gap-2 items-center p-2 rounded-lg bg-[#3f3c34]/5 border border-[#bdb093]/60"
+                                    class="grid grid-cols-[auto_1fr_auto] gap-2 items-center p-2 rounded-lg bg-lh-primary/5 border border-line/60"
                                 >
                                     <div class="w-16 text-center">
                                         <lh-input
@@ -110,7 +110,7 @@
                     <button
                         type="button"
                         (click)="addReward()"
-                        class="self-start py-2 px-4 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer flex items-center gap-2 text-[18px]"
+                        class="self-start py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer flex items-center gap-2 text-[18px]"
                     >
                         <tui-icon icon="@tui.plus" class="!text-base" />
                         {{ 'admin.hungerGames.addReward' | translate }}
@@ -121,12 +121,12 @@
             <div
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
             >
-                <span class="text-[23px] text-[#5c554a]">{{ 'admin.hungerGames.noActiveSeason' | translate }}</span>
+                <span class="text-[23px] text-ink-2">{{ 'admin.hungerGames.noActiveSeason' | translate }}</span>
                 <button
                     type="button"
                     [disabled]="isSeasonActionLoading()"
                     (click)="createSeason()"
-                    class="py-2 px-4 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    class="py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                     @if (isSeasonActionLoading()) {
                         <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -140,12 +140,12 @@
 
     <!-- Запись матча -->
     <div class="flex flex-col gap-6">
-        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.recordMatch' | translate }}</h2>
+        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.recordMatch' | translate }}</h2>
 
         <div class="flex flex-col gap-5 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
             <!-- Поиск игрока -->
             <div class="flex flex-col gap-4">
-                <label class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.addParticipant' | translate }}</label>
+                <label class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.addParticipant' | translate }}</label>
                 <lh-input
                     type="input"
                     [formControl]="searchControl"
@@ -156,11 +156,11 @@
                 @if (searchResults(); as users) {
                     @if (users.length > 0) {
                         <div
-                            class="flex flex-col gap-1 max-h-48 overflow-y-auto hide-scrollbar rounded-xl border border-[#a89a7e] bg-[#e2d7bb] p-2 shadow-lg"
+                            class="flex flex-col gap-1 max-h-48 overflow-y-auto hide-scrollbar rounded-xl border border-line bg-surface p-2 shadow-lg"
                         >
                             @for (user of users; track user.user_id) {
                                 <div
-                                    class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-[#d8cca8] transition-colors"
+                                    class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-surface-3 transition-colors"
                                     (click)="addPlayer(user)"
                                 >
                                     <app-image-loader
@@ -170,7 +170,7 @@
                                         objectFit="cover"
                                         [alt]="'admin.common.avatarAlt' | translate"
                                     />
-                                    <span class="text-[23px] font-medium text-[#2a2722]">{{ user.user_game_name }}</span>
+                                    <span class="text-[23px] font-medium text-ink">{{ user.user_game_name }}</span>
                                 </div>
                             }
                         </div>
@@ -182,7 +182,7 @@
             @if (matchPlayers(); as players) {
                 @if (players.length > 0) {
                     <div class="flex flex-col gap-3">
-                        <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-[18px] text-[#5c554a] uppercase font-semibold px-2">
+                        <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-[18px] text-ink-2 uppercase font-semibold px-2">
                             <span>{{ 'admin.hungerGames.playerColumn' | translate }}</span>
                             <span class="text-center">{{ 'admin.hungerGames.placeColumn' | translate }}</span>
                             <span class="text-center">{{ 'admin.hungerGames.killsColumn' | translate }}</span>
@@ -190,10 +190,10 @@
                         </div>
                         @for (player of players; track player.playerId; let idx = $index) {
                             <div
-                                class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center p-2 rounded-lg bg-[#e2d7bb]/30 border border-[#a89a7e]/50"
+                                class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center p-2 rounded-lg bg-surface/30 border border-line/50"
                             >
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <span class="text-[18px] font-medium truncate text-[#2a2722]">{{ player.playerName }}</span>
+                                    <span class="text-[18px] font-medium truncate text-ink">{{ player.playerName }}</span>
                                 </div>
                                 <div class="w-16 text-center">
                                     <lh-input
@@ -231,7 +231,7 @@
                 type="button"
                 [disabled]="matchPlayers().length < 2 || isMatchLoading()"
                 (click)="recordMatch()"
-                class="self-start py-3 px-6 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                class="self-start py-3 px-6 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
                 @if (isMatchLoading()) {
                     <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -244,7 +244,7 @@
     <!-- Лидерборд -->
     <div class="flex flex-col gap-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'admin.hungerGames.leaderboard' | translate }}</h2>
+            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.leaderboard' | translate }}</h2>
             <div class="min-w-[220px]">
                 <lh-input
                     type="select"
@@ -262,9 +262,9 @@
                 <app-admin-table-skeleton [columns]="6" [rows]="5" />
             } @else if (archiveLeaderboard(); as list) {
                 @if (list.length > 0) {
-                    <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                    <div class="overflow-x-auto rounded-2xl border border-line shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
                         <table class="w-full text-left border-collapse text-[18px]">
-                            <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
+                            <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                                 <tr>
                                     <th class="p-4">{{ 'admin.hungerGames.numberHeader' | translate }}</th>
                                     <th class="p-4">{{ 'admin.hungerGames.playerColumn' | translate }}</th>
@@ -277,18 +277,18 @@
                             <tbody>
                                 @for (entry of list; track entry.playerId; let idx = $index) {
                                     <tr
-                                        class="border-t border-[#bdb093] transition-colors"
-                                        [class.bg-[#d4af37]/10]="entry.rank === 1"
-                                        [class.bg-[#c0c0c0]/10]="entry.rank === 2"
-                                        [class.bg-[#cd7f32]/10]="entry.rank === 3"
-                                        [class.bg-[#f5eedd]]="entry.rank && entry.rank > 3 && idx % 2 === 0"
-                                        [class.bg-[#e2d7bb]]="entry.rank && entry.rank > 3 && idx % 2 === 1"
-                                        [class.hover:bg-[#d8cca8]]="entry.rank && entry.rank > 3"
+                                        class="border-t border-line transition-colors"
+                                        [class.bg-gold/10]="entry.rank === 1"
+                                        [class.bg-medal-silver/10]="entry.rank === 2"
+                                        [class.bg-medal-bronze/10]="entry.rank === 3"
+                                        [class.bg-surface-2]="entry.rank && entry.rank > 3 && idx % 2 === 0"
+                                        [class.bg-surface]="entry.rank && entry.rank > 3 && idx % 2 === 1"
+                                        [class.hover:bg-surface-3]="entry.rank && entry.rank > 3"
                                     >
                                         <td class="p-4 font-bold"
-                                            [class.text-[#b8860b]]="entry.rank === 1"
-                                            [class.text-[#a0a0a0]]="entry.rank === 2"
-                                            [class.text-[#b87333]]="entry.rank === 3"
+                                            [class.text-medal-gold]="entry.rank === 1"
+                                            [class.text-medal-silver]="entry.rank === 2"
+                                            [class.text-medal-bronze]="entry.rank === 3"
                                             [class.text-lh-primary]="!entry.rank || entry.rank > 3"
                                         >
                                             {{ entry.rank ?? idx + 1 }}
@@ -311,7 +311,7 @@
                     </div>
                 } @else {
                     <p
-                        class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
+                        class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
                     >
                         {{ 'admin.hungerGames.emptyLeaderboard' | translate }}
                     </p>
@@ -323,9 +323,9 @@
                 <app-admin-table-skeleton [columns]="5" [rows]="5" />
             } @else if (currentLeaderboard(); as list) {
                 @if (list.length > 0) {
-                    <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                    <div class="overflow-x-auto rounded-2xl border border-line shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
                         <table class="w-full text-left border-collapse text-[18px]">
-                            <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
+                            <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                                 <tr>
                                     <th class="p-4">{{ 'admin.hungerGames.numberHeader' | translate }}</th>
                                     <th class="p-4">{{ 'admin.hungerGames.playerColumn' | translate }}</th>
@@ -337,18 +337,18 @@
                             <tbody>
                                 @for (entry of list; track entry.playerId; let idx = $index) {
                                     <tr
-                                        class="border-t border-[#bdb093] transition-colors"
-                                        [class.bg-[#d4af37]/10]="entry.rank === 1"
-                                        [class.bg-[#c0c0c0]/10]="entry.rank === 2"
-                                        [class.bg-[#cd7f32]/10]="entry.rank === 3"
-                                        [class.bg-[#f5eedd]]="entry.rank && entry.rank > 3 && idx % 2 === 0"
-                                        [class.bg-[#e2d7bb]]="entry.rank && entry.rank > 3 && idx % 2 === 1"
-                                        [class.hover:bg-[#d8cca8]]="entry.rank && entry.rank > 3"
+                                        class="border-t border-line transition-colors"
+                                        [class.bg-gold/10]="entry.rank === 1"
+                                        [class.bg-medal-silver/10]="entry.rank === 2"
+                                        [class.bg-medal-bronze/10]="entry.rank === 3"
+                                        [class.bg-surface-2]="entry.rank && entry.rank > 3 && idx % 2 === 0"
+                                        [class.bg-surface]="entry.rank && entry.rank > 3 && idx % 2 === 1"
+                                        [class.hover:bg-surface-3]="entry.rank && entry.rank > 3"
                                     >
                                         <td class="p-4 font-bold"
-                                            [class.text-[#b8860b]]="entry.rank === 1"
-                                            [class.text-[#a0a0a0]]="entry.rank === 2"
-                                            [class.text-[#b87333]]="entry.rank === 3"
+                                            [class.text-medal-gold]="entry.rank === 1"
+                                            [class.text-medal-silver]="entry.rank === 2"
+                                            [class.text-medal-bronze]="entry.rank === 3"
                                             [class.text-lh-primary]="!entry.rank || entry.rank > 3"
                                         >
                                             {{ entry.rank ?? idx + 1 }}
@@ -364,7 +364,7 @@
                     </div>
                 } @else {
                     <p
-                        class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
+                        class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
                     >
                         {{ 'admin.hungerGames.emptyLeaderboard' | translate }}
                     </p>

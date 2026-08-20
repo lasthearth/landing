@@ -1,4 +1,4 @@
-<div class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow">
+<div class="bg-surface border-2 border-line/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow">
     <!-- Заголовок: ник игрока -->
     <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
         <app-image-loader
@@ -8,8 +8,8 @@
             [alt]="'admin.common.avatarAlt' | translate"
         />
         <div class="flex flex-col min-w-0">
-            <span class="text-base text-neutral-500 leading-5">{{ 'admin.playerForms.gameNameLabel' | translate }}</span>
-            <span class="text-2xl font-bold text-[#2d201a] truncate">{{ data().user_game_name }}</span>
+            <span class="text-base text-ink-3 leading-5">{{ 'admin.playerForms.gameNameLabel' | translate }}</span>
+            <span class="text-2xl font-bold text-ink truncate">{{ data().user_game_name }}</span>
         </div>
     </div>
 
@@ -19,11 +19,11 @@
             <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-2">
                 <div class="flex items-start gap-2">
                     <tui-icon icon="@tui.message-circle-question" class="size-5! text-lh-accent shrink-0 mt-0.5" />
-                    <span class="text-lg font-semibold text-[#2d201a] leading-6">{{ item.question }}</span>
+                    <span class="text-lg font-semibold text-ink leading-6">{{ item.question }}</span>
                 </div>
                 <div class="flex items-start gap-2 pl-7">
-                    <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.playerForms.answerLabel' | translate }}</span>
-                    <span class="text-lg text-[#5c4030] leading-6 break-words">{{ item.answer }}</span>
+                    <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.playerForms.answerLabel' | translate }}</span>
+                    <span class="text-lg text-ink-2 leading-6 break-words">{{ item.answer }}</span>
                 </div>
             </div>
         }
@@ -33,8 +33,8 @@
     <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex items-center gap-3">
         <tui-icon icon="@tui.phone" class="size-5! text-lh-accent shrink-0" />
         <div class="flex flex-col min-w-0">
-            <span class="text-base text-neutral-500 leading-4">{{ 'admin.playerForms.contactsLabel' | translate }}</span>
-            <span class="text-lg font-semibold text-[#2d201a] truncate">{{ data().contacts }}</span>
+            <span class="text-base text-ink-3 leading-4">{{ 'admin.playerForms.contactsLabel' | translate }}</span>
+            <span class="text-lg font-semibold text-ink truncate">{{ data().contacts }}</span>
         </div>
     </div>
 
@@ -48,7 +48,7 @@
         </button>
         <button
             (click)="approve()"
-            class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-[#e66a1a] transition-colors"
+            class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-brand-lit-2 transition-colors"
         >
             {{ 'admin.playerForms.approve' | translate }}
         </button>

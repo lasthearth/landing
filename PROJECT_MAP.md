@@ -162,6 +162,46 @@ src/app/
 - `AGENTS.md` — конституция проекта.
 - `src/app/routes/seo-data.ts` — SEO-метаданные.
 - `src/app/routes/enums/route-keys.ts` — ключи роутов.
+- `src/styles.css` — семантические токены цвета + тёмная тема.
+- `scripts/check-contrast.mjs` — проверка контраста токенов по WCAG AA.
+
+## 6.1 Дизайн-система: семантические токены цвета
+
+Захардкоженные hex-классы в шаблонах (`bg-[#e2d7bb]`, `text-[#2d201a]`) заменены
+на семантические токены. Токены объявлены в `:root` в `src/styles.css`, экспортированы
+в Tailwind через `@theme` и переопределены целиком в `html[data-theme='dark']`.
+
+| Группа | Токены | Назначение |
+|--------|--------|-----------|
+| Поверхности | `surface`, `surface-2`, `surface-3`, `surface-4` | пергаментные панели (в тёмной теме — тёмное дерево) |
+| Границы | `line`, `line-strong` | обычная и усиленная рамка |
+| Текст | `ink`, `ink-2`, `ink-3` | основной / вторичный / приглушённый |
+| Пергамент | `parchment`, `parchment-2`, `parchment-3`, `parchment-dim` | светлый текст на постоянно тёмных подложках |
+| Ночь | `night`, `night-2`, `night-deep`, `overlay`, `night-grad-1..3` | тёмные фоны, одинаковые в обеих темах |
+| Дерево | `wood`, `wood-2` | коричневые кнопки и градиенты |
+| Бренд | `brand`, `brand-hover`, `brand-lit`, `brand-lit-2`, `brand-deep`, `brand-deep-2`, `brand-strong`, `brand-ink`, `accent-soft` | `brand-ink` — только для текста, затемнён под контраст |
+| Статусы | `peace`, `neutral-status`, `warning-ink`, `danger-ink`, `danger-strong`, `danger-soft` | дипломатия, ошибки |
+| Ранги и медали | `medal-gold/silver/bronze`, `rank-iron`, `rank-silver` | уровни селений, рейтинг |
+| Покупки | `status-issued`, `status-done`, `status-refund`, `status-wait` | статусы покупок в профиле |
+| Редкость | `rarity-epic`, `rarity-rare` | рамки товаров магазина |
+| Прочее | `leader-ink`, `leader-hover`, `leader-soft`, `gold`, `sber` | наместник, золото, СберPay |
+
+**Правила:**
+- Новые цвета в шаблонах пишутся ТОЛЬКО через токены. `bg-[#hex]` в HTML/TS запрещён.
+- Для текста используются `*-ink`-варианты: они затемнены до порога WCAG AA.
+- Тёмная тема НЕ перекрывает hex-классы селекторами `[class*='bg-[#...]']` — этот хак удалён.
+  Тёмная тема меняет только значения переменных плюс несколько правил, которые токенами
+  не выражаются (снятие текстуры `background-image: none`).
+- `node scripts/check-contrast.mjs` проверяет контраст всех текстовых токенов к `surface`
+  и `surface-3` в обеих темах. Запускать после изменения палитры.
+
+## 6.2 Доступность
+
+- Глобальное кольцо фокуса `:focus-visible` в `src/styles.css` (2px, цвет `--lh-accent`).
+- Кликабельные `div`/`span` заменены на `button`: `lh-input` (триггер и опции select
+  с ролями `combobox`/`listbox`/`option`), `rule-link`, карусель привилегий магазина.
+- Модальное окно видео получило `role="dialog"`, `aria-modal`, закрытие по `Escape`.
+- Ссылки в тексте перекрашены с системного синего (1.84:1 на пергаменте) на `--lh-link` (4.97:1).
 
 ## 7. Последний коммит
 

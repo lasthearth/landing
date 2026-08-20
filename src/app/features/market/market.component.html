@@ -9,17 +9,17 @@
             type="button"
             (click)="activeItemIndex.set(0)"
             class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
-            [class.border-[#8b5a2b]]="activeItemIndex() === 0"
+            [class.border-line-strong]="activeItemIndex() === 0"
             [class.bg-gradient-to-r]="activeItemIndex() === 0"
-            [class.from-[#1a1510]]="activeItemIndex() === 0"
-            [class.via-[#3d2a1f]]="activeItemIndex() === 0"
-            [class.to-[#7a4a2a]]="activeItemIndex() === 0"
-            [class.text-[#f0e6d2]]="activeItemIndex() === 0"
+            [class.from-night-grad-1]="activeItemIndex() === 0"
+            [class.via-night-grad-2]="activeItemIndex() === 0"
+            [class.to-night-grad-3]="activeItemIndex() === 0"
+            [class.text-parchment-2]="activeItemIndex() === 0"
             [class.shadow-md]="activeItemIndex() === 0"
-            [class.border-[#c4b89e]]="activeItemIndex() !== 0"
-            [class.bg-[#d8cdb3]]="activeItemIndex() !== 0"
-            [class.text-[#2a2722]]="activeItemIndex() !== 0"
-            [class.hover:bg-[#c4b89e]]="activeItemIndex() !== 0"
+            [class.border-line]="activeItemIndex() !== 0"
+            [class.bg-surface-3]="activeItemIndex() !== 0"
+            [class.text-ink]="activeItemIndex() !== 0"
+            [class.hover:bg-surface-4]="activeItemIndex() !== 0"
         >
             {{ 'market.marketPage.tabPrivileges' | translate }}
         </button>
@@ -27,17 +27,17 @@
             type="button"
             (click)="activeItemIndex.set(1)"
             class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
-            [class.border-[#8b5a2b]]="activeItemIndex() === 1"
+            [class.border-line-strong]="activeItemIndex() === 1"
             [class.bg-gradient-to-r]="activeItemIndex() === 1"
-            [class.from-[#1a1510]]="activeItemIndex() === 1"
-            [class.via-[#3d2a1f]]="activeItemIndex() === 1"
-            [class.to-[#7a4a2a]]="activeItemIndex() === 1"
-            [class.text-[#f0e6d2]]="activeItemIndex() === 1"
+            [class.from-night-grad-1]="activeItemIndex() === 1"
+            [class.via-night-grad-2]="activeItemIndex() === 1"
+            [class.to-night-grad-3]="activeItemIndex() === 1"
+            [class.text-parchment-2]="activeItemIndex() === 1"
             [class.shadow-md]="activeItemIndex() === 1"
-            [class.border-[#c4b89e]]="activeItemIndex() !== 1"
-            [class.bg-[#d8cdb3]]="activeItemIndex() !== 1"
-            [class.text-[#2a2722]]="activeItemIndex() !== 1"
-            [class.hover:bg-[#c4b89e]]="activeItemIndex() !== 1"
+            [class.border-line]="activeItemIndex() !== 1"
+            [class.bg-surface-3]="activeItemIndex() !== 1"
+            [class.text-ink]="activeItemIndex() !== 1"
+            [class.hover:bg-surface-4]="activeItemIndex() !== 1"
         >
             {{ 'market.marketPage.tabKits' | translate }}
         </button>
@@ -45,17 +45,17 @@
             type="button"
             (click)="activeItemIndex.set(2)"
             class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
-            [class.border-[#8b5a2b]]="activeItemIndex() === 2"
+            [class.border-line-strong]="activeItemIndex() === 2"
             [class.bg-gradient-to-r]="activeItemIndex() === 2"
-            [class.from-[#1a1510]]="activeItemIndex() === 2"
-            [class.via-[#3d2a1f]]="activeItemIndex() === 2"
-            [class.to-[#7a4a2a]]="activeItemIndex() === 2"
-            [class.text-[#f0e6d2]]="activeItemIndex() === 2"
+            [class.from-night-grad-1]="activeItemIndex() === 2"
+            [class.via-night-grad-2]="activeItemIndex() === 2"
+            [class.to-night-grad-3]="activeItemIndex() === 2"
+            [class.text-parchment-2]="activeItemIndex() === 2"
             [class.shadow-md]="activeItemIndex() === 2"
-            [class.border-[#c4b89e]]="activeItemIndex() !== 2"
-            [class.bg-[#d8cdb3]]="activeItemIndex() !== 2"
-            [class.text-[#2a2722]]="activeItemIndex() !== 2"
-            [class.hover:bg-[#c4b89e]]="activeItemIndex() !== 2"
+            [class.border-line]="activeItemIndex() !== 2"
+            [class.bg-surface-3]="activeItemIndex() !== 2"
+            [class.text-ink]="activeItemIndex() !== 2"
+            [class.hover:bg-surface-4]="activeItemIndex() !== 2"
         >
             {{ 'market.marketPage.tabSpecial' | translate }}
         </button>
@@ -84,14 +84,14 @@
             <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-lh-primary">
                 {{ 'market.marketPage.supportTitle' | translate }}
             </p>
-            <p class="text-base md:text-lg text-[#5c554a] mt-2 max-w-2xl">
+            <p class="text-base md:text-lg text-ink-2 mt-2 max-w-2xl">
                 {{ 'market.marketPage.supportDescription' | translate }}
             </p>
         </div>
         <button
             type="button"
             (click)="howToBuy()"
-            class="w-full md:w-auto px-6 lg:px-8 py-3 lg:py-3.5 rounded-xl border-2 border-[rgba(51,44,38,0.12)] bg-transparent hover:bg-[rgba(240,230,210,0.08)] !text-[#5c554a] text-base md:text-lg lg:text-xl font-bold uppercase tracking-wide transition-all duration-200 hover:border-[#ffaa5c] hover:!text-[#c35a17] no-underline!"
+            class="w-full md:w-auto px-6 lg:px-8 py-3 lg:py-3.5 rounded-xl border-2 border-[rgba(51,44,38,0.12)] bg-transparent hover:bg-[rgba(240,230,210,0.08)] !text-ink-2 text-base md:text-lg lg:text-xl font-bold uppercase tracking-wide transition-all duration-200 hover:border-accent-soft hover:!text-brand-ink no-underline!"
         >
             {{ 'market.marketPage.howToBuyButton' | translate }}
         </button>
@@ -99,67 +99,67 @@
 
     <!-- Блок "Куда идут средства" -->
     <div
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 rounded-2xl bg-[#d8cdb3] border border-[rgba(51,44,38,0.12)] p-4 shadow-[0_6px_20px_rgba(0,0,0,0.08)]"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 rounded-2xl bg-surface-3 border border-[rgba(51,44,38,0.12)] p-4 shadow-[0_6px_20px_rgba(0,0,0,0.08)]"
     >
         <div
-            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-[#1a1510] via-[#3d2a1f] to-[#7a4a2a] border border-[#8b5a2b]/50 p-4"
+            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"
         >
-            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-[#f0e6d2]/10 text-[#f0e6d2]">
+            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-parchment-2/10 text-parchment-2">
                 <tui-icon icon="@tui.server" class="!text-xl" />
             </span>
             <div>
-                <p class="font-bold text-[#f0e6d2] text-base lg:text-[18px] uppercase tracking-wide">
+                <p class="font-bold text-parchment-2 text-base lg:text-[18px] uppercase tracking-wide">
                     {{ 'market.marketPage.fundingHosting.title' | translate }}
                 </p>
-                <p class="text-base md:text-[18px] text-[#e8d8b8]/80 mt-1">
+                <p class="text-base md:text-[18px] text-parchment-2/80 mt-1">
                     {{ 'market.marketPage.fundingHosting.description' | translate }}
                 </p>
             </div>
         </div>
 
         <div
-            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-[#1a1510] via-[#3d2a1f] to-[#7a4a2a] border border-[#8b5a2b]/50 p-4"
+            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"
         >
-            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-[#f0e6d2]/10 text-[#f0e6d2]">
+            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-parchment-2/10 text-parchment-2">
                 <tui-icon icon="@tui.code" class="!text-xl" />
             </span>
             <div>
-                <p class="font-bold text-[#f0e6d2] text-base lg:text-[18px] uppercase tracking-wide">
+                <p class="font-bold text-parchment-2 text-base lg:text-[18px] uppercase tracking-wide">
                     {{ 'market.marketPage.fundingMods.title' | translate }}
                 </p>
-                <p class="text-base md:text-[18px] text-[#e8d8b8]/80 mt-1">
+                <p class="text-base md:text-[18px] text-parchment-2/80 mt-1">
                     {{ 'market.marketPage.fundingMods.description' | translate }}
                 </p>
             </div>
         </div>
 
         <div
-            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-[#1a1510] via-[#3d2a1f] to-[#7a4a2a] border border-[#8b5a2b]/50 p-4"
+            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"
         >
-            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-[#f0e6d2]/10 text-[#f0e6d2]">
+            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-parchment-2/10 text-parchment-2">
                 <tui-icon icon="@tui.trophy" class="!text-xl" />
             </span>
             <div>
-                <p class="font-bold text-[#f0e6d2] text-base lg:text-[18px] uppercase tracking-wide">
+                <p class="font-bold text-parchment-2 text-base lg:text-[18px] uppercase tracking-wide">
                     {{ 'market.marketPage.fundingEvents.title' | translate }}
                 </p>
-                <p class="text-base md:text-[18px] text-[#e8d8b8]/80 mt-1">
+                <p class="text-base md:text-[18px] text-parchment-2/80 mt-1">
                     {{ 'market.marketPage.fundingEvents.description' | translate }}
                 </p>
             </div>
         </div>
 
         <div
-            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-[#1a1510] via-[#3d2a1f] to-[#7a4a2a] border border-[#8b5a2b]/50 p-4"
+            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"
         >
-            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-[#f0e6d2]/10 text-[#f0e6d2]">
+            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-parchment-2/10 text-parchment-2">
                 <tui-icon icon="@tui.scale" class="!text-xl" />
             </span>
             <div>
-                <p class="font-bold text-[#f0e6d2] text-base lg:text-[18px] uppercase tracking-wide">
+                <p class="font-bold text-parchment-2 text-base lg:text-[18px] uppercase tracking-wide">
                     {{ 'market.marketPage.fundingFair.title' | translate }}
                 </p>
-                <p class="text-base md:text-[18px] text-[#e8d8b8]/80 mt-1">
+                <p class="text-base md:text-[18px] text-parchment-2/80 mt-1">
                     {{ 'market.marketPage.fundingFair.description' | translate }}
                 </p>
             </div>

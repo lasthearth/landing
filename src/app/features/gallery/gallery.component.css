@@ -19,9 +19,9 @@
     &.gallery-item--skeleton {
         background: linear-gradient(
             110deg,
-            #1a1816 8%,
-            #322a22 18%,
-            #1a1816 33%
+            var(--lh-night) 8%,
+            var(--lh-night-2) 18%,
+            var(--lh-night) 33%
         );
         background-size: 200% 100%;
         animation: skeleton-shimmer 1.5s linear infinite;
@@ -34,7 +34,7 @@
     }
 
     &.gallery-item--new {
-        border-color: #c35a17;
+        border-color: var(--lh-brand);
         animation: new-item-glow 2s ease-in-out infinite;
     }
 }
@@ -42,11 +42,11 @@
 @keyframes new-item-glow {
     0%,
     100% {
-        box-shadow: 0 0 8px rgba(195, 90, 23, 0.35);
+        box-shadow: 0 0 8px color-mix(in srgb, var(--lh-brand) 35%, transparent);
     }
 
     50% {
-        box-shadow: 0 0 20px rgba(255, 170, 92, 0.55);
+        box-shadow: 0 0 20px color-mix(in srgb, var(--lh-accent-soft) 55%, transparent);
     }
 }
 

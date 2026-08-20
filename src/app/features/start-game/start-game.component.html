@@ -1,16 +1,16 @@
 @let isAuth = userService.authState$ | async;
 <div class="p-6 flex flex-col gap-6 w-full">
-    <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#2d201a]">{{ 'startGame.title' | translate }}</p>
+    <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-ink">{{ 'startGame.title' | translate }}</p>
 
     <!-- Шаг 1 -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
         <p
-            class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300"
+            class="text-8xl font-extrabold text-ink-2 min-w-16 leading-none select-none opacity-40 transition-all duration-300"
         >
             1
         </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">{{ 'startGame.step1.title' | translate }}</p>
+            <p class="text-2xl font-bold text-ink">{{ 'startGame.step1.title' | translate }}</p>
             <p class="text-xl text-lh-primary leading-8" [innerHTML]="'startGame.step1.body' | translate"></p>
         </div>
     </div>
@@ -18,16 +18,16 @@
     <!-- Шаг 2 -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
         <p
-            class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300"
+            class="text-8xl font-extrabold text-ink-2 min-w-16 leading-none select-none opacity-40 transition-all duration-300"
         >
             2
         </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">{{ 'startGame.step2.title' | translate }}</p>
+            <p class="text-2xl font-bold text-ink">{{ 'startGame.step2.title' | translate }}</p>
             <p class="text-xl text-lh-primary leading-8">
                 {{ 'startGame.step2.bodyPart1' | translate }}
                 <a
-                    class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
+                    class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
                     [routerLink]="isAuth ? ['/profile'] : ['/start-game']"
                     (click)="isAuth ? '' : signIn()"
                 >
@@ -35,7 +35,7 @@
                 </a>
                 {{ 'startGame.step2.bodyPart2' | translate }}
                 <a
-                    class="text-[#5c4030] font-bold border-dashed border-b border-[#5c4030] hover:text-[#2d201a] transition-all duration-100"
+                    class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
                     [routerLink]="['/rules']"
                 >
                     {{ 'startGame.step2.linkRules' | translate }}
@@ -50,12 +50,12 @@
     <!-- Шаг 3 -->
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex gap-6 items-start">
         <p
-            class="text-8xl font-extrabold text-[#5c4030] min-w-16 leading-none select-none opacity-40 transition-all duration-300"
+            class="text-8xl font-extrabold text-ink-2 min-w-16 leading-none select-none opacity-40 transition-all duration-300"
         >
             3
         </p>
         <div class="flex flex-col gap-2 pt-2 flex-1">
-            <p class="text-2xl font-bold text-[#2d201a]">{{ 'startGame.step3.title' | translate }}</p>
+            <p class="text-2xl font-bold text-ink">{{ 'startGame.step3.title' | translate }}</p>
             <p class="text-xl text-lh-primary leading-8" [innerHTML]="'startGame.step3.body' | translate"></p>
         </div>
     </div>

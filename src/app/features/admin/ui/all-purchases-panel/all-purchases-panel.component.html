@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-4">
         @for (_ of [1, 2, 3]; track $index) {
             <div
-                class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
+                class="bg-surface border-2 border-line/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
             >
                 <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
                     <div class="flex flex-col gap-2 min-w-0">
@@ -33,15 +33,15 @@
     <div class="flex flex-col gap-4 lh-stagger-list">
         @for (purchase of purchases(); track purchase.id) {
             <div
-                class="bg-[#e2d7bb] border-2 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow"
-                [class.border-[#bdb093]/40]="!isExpiredPrivilege(purchase)"
+                class="bg-surface border-2 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow"
+                [class.border-line/40]="!isExpiredPrivilege(purchase)"
                 [class.border-lh-danger]="isExpiredPrivilege(purchase)"
             >
                 <!-- Заголовок: игрок и статус -->
                 <div class="flex items-center justify-between gap-3 pb-3 border-b border-lh-primary-2/20">
                     <div class="flex flex-col min-w-0">
-                        <span class="text-base text-neutral-500 leading-5">{{ 'admin.common.player' | translate }}</span>
-                        <span class="text-2xl font-bold text-[#2d201a] truncate">{{ purchase.playerName || purchase.playerId }}</span>
+                        <span class="text-base text-ink-3 leading-5">{{ 'admin.common.player' | translate }}</span>
+                        <span class="text-2xl font-bold text-ink truncate">{{ purchase.playerName || purchase.playerId }}</span>
                     </div>
                     <div class="flex items-center gap-2 shrink-0">
                         <span
@@ -62,36 +62,36 @@
                                 icon="@tui.package"
                                 class="size-5! text-lh-accent shrink-0 mt-0.5"
                             />
-                            <span class="text-lg font-semibold text-[#2d201a] leading-6">{{ purchase.itemName }}</span>
+                            <span class="text-lg font-semibold text-ink leading-6">{{ purchase.itemName }}</span>
                         </div>
                         <div class="flex items-start gap-2 pl-7">
-                            <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
-                            <span class="text-lg text-[#5c4030] leading-6 break-words">
+                            <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
+                            <span class="text-lg text-ink-2 leading-6 break-words">
                                 @if (purchase.discountPercent > 0 && purchase.basePrice) {
-                                    <span class="line-through text-neutral-500 mr-2">{{ purchase.basePrice }}</span>
+                                    <span class="line-through text-ink-3 mr-2">{{ purchase.basePrice }}</span>
                                 }
                                 {{ purchase.pricePaid }}
                             </span>
                         </div>
                         @if (purchase.discountPercent > 0) {
                             <div class="flex items-start gap-2 pl-7">
-                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.discount' | translate }}</span>
+                                <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.discount' | translate }}</span>
                                 <span class="text-lg text-lh-accent leading-6 break-words">{{ purchase.discountPercent }}%</span>
                             </div>
                         }
                         <div class="flex items-start gap-2 pl-7">
-                            <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
-                            <span class="text-lg text-[#5c4030] leading-6 break-words">{{ purchase.formattedDate }}</span>
+                            <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
+                            <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.formattedDate }}</span>
                         </div>
                         @if (purchase.issuedBy) {
                             <div class="flex items-start gap-2 pl-7">
-                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchasesHistory.issuedBy' | translate }}</span>
-                                <span class="text-lg text-[#5c4030] leading-6 break-words">{{ adminName(purchase.issuedBy) }}</span>
+                                <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchasesHistory.issuedBy' | translate }}</span>
+                                <span class="text-lg text-ink-2 leading-6 break-words">{{ adminName(purchase.issuedBy) }}</span>
                             </div>
                         }
                         @if (purchase.refundedAt) {
                             <div class="flex items-start gap-2 pl-7">
-                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchasesHistory.refundedAt' | translate }}</span>
+                                <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchasesHistory.refundedAt' | translate }}</span>
                                 <span class="text-lg text-lh-danger leading-6 break-words">{{ purchase.formattedRefundedAt }}</span>
                             </div>
                         }
@@ -112,7 +112,7 @@
             type="button"
             (click)="loadMore()"
             [disabled]="loadingMore()"
-            class="self-center mt-4 py-2 px-6 rounded-xl bg-[#d8cdb3] border border-[#b0a48a] text-[#2a2722] font-bold uppercase transition-colors hover:bg-[#c4b89e] shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            class="self-center mt-4 py-2 px-6 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
             @if (loadingMore()) {
                 <span

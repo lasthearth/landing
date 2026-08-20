@@ -12,7 +12,7 @@
         <div class="gallery-grid columns-1 sm:columns-2 md:columns-3 xl:columns-4">
             @for (skeleton of skeletons(); track skeleton) {
                 <div
-                    class="gallery-item gallery-item--skeleton relative block w-full rounded-2xl overflow-hidden border-2 border-[#e2d7bb]/10"
+                    class="gallery-item gallery-item--skeleton relative block w-full rounded-2xl overflow-hidden border-2 border-parchment/10"
                     [style.height.px]="getSkeletonHeight(skeleton)"
                     [style.animation-delay.ms]="getSkeletonDelay(skeleton)"
                 ></div>
@@ -34,7 +34,7 @@
                 <button
                     type="button"
                     (click)="openImage(image)"
-                    class="gallery-item group relative block w-full rounded-2xl overflow-hidden border-2 border-[#e2d7bb]/20 bg-[#1a1816] hover:border-[#c35a17] transition-all duration-300 cursor-pointer text-left"
+                    class="gallery-item group relative block w-full rounded-2xl overflow-hidden border-2 border-parchment/20 bg-night hover:border-brand transition-all duration-300 cursor-pointer text-left"
                     [class.gallery-item--new]="isNew(image.timestamp)"
                     [style.aspect-ratio]="getImageAspect(image)"
                     [attr.aria-label]="image.alt"

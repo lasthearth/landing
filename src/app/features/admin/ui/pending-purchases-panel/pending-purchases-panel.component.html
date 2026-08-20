@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-4">
         @for (_ of [1, 2, 3]; track $index) {
             <div
-                class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
+                class="bg-surface border-2 border-line/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
             >
                 <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
                     <div class="size-14 rounded-full bg-lh-primary-2/20 shrink-0"></div>
@@ -34,7 +34,7 @@
     <div class="flex flex-col gap-4 lh-stagger-list">
         @for (purchase of purchases(); track purchase.id) {
             <div
-                class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow"
+                class="bg-surface border-2 border-line/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow"
             >
                 <!-- Заголовок: игрок -->
                 <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
@@ -46,8 +46,8 @@
                         [alt]="'admin.common.avatarAlt' | translate"
                     />
                     <div class="flex flex-col min-w-0">
-                        <span class="text-base text-neutral-500 leading-5">{{ 'admin.common.player' | translate }}</span>
-                        <span class="text-2xl font-bold text-[#2d201a] truncate">{{ purchase.playerName }}</span>
+                        <span class="text-base text-ink-3 leading-5">{{ 'admin.common.player' | translate }}</span>
+                        <span class="text-2xl font-bold text-ink truncate">{{ purchase.playerName }}</span>
                     </div>
                 </div>
 
@@ -61,33 +61,33 @@
                                 icon="@tui.package"
                                 class="size-5! text-lh-accent shrink-0 mt-0.5"
                             />
-                            <span class="text-lg font-semibold text-[#2d201a] leading-6">{{ purchase.itemName }}</span>
+                            <span class="text-lg font-semibold text-ink leading-6">{{ purchase.itemName }}</span>
                         </div>
                         <div class="flex items-start gap-2 pl-7">
-                            <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
-                            <span class="text-lg text-[#5c4030] leading-6 break-words">
+                            <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
+                            <span class="text-lg text-ink-2 leading-6 break-words">
                                 @if (purchase.discountPercent > 0 && purchase.basePrice) {
-                                    <span class="line-through text-neutral-500 mr-2">{{ purchase.basePrice }}</span>
+                                    <span class="line-through text-ink-3 mr-2">{{ purchase.basePrice }}</span>
                                 }
                                 {{ purchase.pricePaid }}
                             </span>
                         </div>
                         @if (purchase.discountPercent > 0) {
                             <div class="flex items-start gap-2 pl-7">
-                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.discount' | translate }}</span>
+                                <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.discount' | translate }}</span>
                                 <span class="text-lg text-lh-accent leading-6 break-words">{{ purchase.discountPercent }}%</span>
                             </div>
                         }
                         @if (purchase.comment) {
                             <div class="flex items-start gap-2 pl-7">
                                 <tui-icon icon="@tui.file-text" class="size-4! text-lh-accent shrink-0 mt-1" />
-                                <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.comment' | translate }}</span>
-                                <span class="text-lg text-[#5c4030] leading-6 break-words">{{ purchase.comment }}</span>
+                                <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.comment' | translate }}</span>
+                                <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.comment }}</span>
                             </div>
                         }
                         <div class="flex items-start gap-2 pl-7">
-                            <span class="text-base text-neutral-500 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
-                            <span class="text-lg text-[#5c4030] leading-6 break-words">{{ purchase.formattedDate }}</span>
+                            <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
+                            <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.formattedDate }}</span>
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                     </button>
                     <button
                         (click)="issue(purchase)"
-                        class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-[#e66a1a] transition-colors"
+                        class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-brand-lit-2 transition-colors"
                     >
                         {{ 'admin.purchases.issue' | translate }}
                     </button>

@@ -49,10 +49,10 @@
         @for (item of leaderBoard; track $index; let odd = $odd) {
             @if ($index > 2) {
                 <div
-                    class="ember-row h-24 relative transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex items-center size-full bg-[url('/br.webp')] bg-cover bg-center rounded-2xl object-center shadow-lg shadow-[#1a110d]/40 border border-[#8a5a3a]/25 overflow-hidden"
+                    class="ember-row h-24 relative transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex items-center size-full bg-[url('/br.webp')] bg-cover bg-center rounded-2xl object-center shadow-lg shadow-night-deep/40 border border-line-strong/25 overflow-hidden"
                 >
                     <p
-                        class="absolute left-4 lg:left-12 text-2xl md:text-4xl uppercase font-bold text-[#f5eedd]/15 z-10"
+                        class="absolute left-4 lg:left-12 text-2xl md:text-4xl uppercase font-bold text-parchment-3/15 z-10"
                     >
                         {{ $index + 1 }}
                     </p>
@@ -65,20 +65,20 @@
                                 objectFit="cover"
                                 [alt]="'profile.statistics.avatarAlt' | translate"
                             />
-                            <span class="font-semibold text-[#f5eedd] text-xl sm:text-2xl">{{ item.name }}</span>
+                            <span class="font-semibold text-parchment-3 text-xl sm:text-2xl">{{ item.name }}</span>
                         </div>
                         <div class="flex flex-col items-end">
                             @if (activeItemIndex === 0) {
-                                <span class="font-extrabold text-3xl sm:text-4xl text-[#ff7920] text-shadow-lg">{{ item.deaths }}</span>
-                                <span class="text-base sm:text-base text-[#f5eedd]/50">{{ 'profile.statistics.typeLabels.deaths' | translate }}</span>
+                                <span class="font-extrabold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.deaths }}</span>
+                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.deaths' | translate }}</span>
                             }
                             @if (activeItemIndex === 1) {
-                                <span class="font-bold text-3xl sm:text-4xl text-[#ff7920] text-shadow-lg">{{ item.hours_played }}</span>
-                                <span class="text-base sm:text-base text-[#f5eedd]/50">{{ 'profile.statistics.typeLabels.hours' | translate }}</span>
+                                <span class="font-bold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.hours_played }}</span>
+                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.hours' | translate }}</span>
                             }
                             @if (activeItemIndex === 2) {
-                                <span class="font-bold text-3xl sm:text-4xl text-[#ff7920] text-shadow-lg">{{ item.kills }}</span>
-                                <span class="text-base sm:text-base text-[#f5eedd]/50">{{ 'profile.statistics.typeLabels.kills' | translate }}</span>
+                                <span class="font-bold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.kills }}</span>
+                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.kills' | translate }}</span>
                             }
                         </div>
                     </div>

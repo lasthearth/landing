@@ -5,12 +5,14 @@ import { map, take } from 'rxjs';
 
 /**
  * Страж для страницы профиля.
+ * Ждёт завершения проверки авторизации, иначе при прямом переходе по ссылке
+ * авторизованный пользователь получил бы редирект на главную.
  */
 export const userGuard: CanActivateFn = () => {
     const userService = inject(UserService);
     const router = inject(Router);
 
-    return userService.authState$.pipe(
+    return userService.authSettled$.pipe(
         take(1),
         map((isAuthenticated) => {
             if (isAuthenticated) {

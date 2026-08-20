@@ -67,6 +67,10 @@ function getConfig() {
     config.renewTimeBeforeTokenExpiresInSeconds = 120;
     config.logLevel = environment.production ? LogLevel.Warn : LogLevel.Debug;
 
+    // Библиотека сама навигирует после обработки callback. По умолчанию это '/',
+    // из-за чего адрес расходился с redirectUri и страница перерисовывалась заново.
+    config.postLoginRoute = '/home';
+
     return config;
 }
 

@@ -1,13 +1,13 @@
 @let vm = vm$ | async;
 
 <div class="flex flex-col gap-6 text-lh-primary">
-    <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">
+    <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
         {{ 'referral.title' | translate }}
     </h2>
 
     @if (vm?.code) {
         <div class="flex flex-col gap-4">
-            <p class="text-lg leading-[27px] text-neutral-500">
+            <p class="text-lg leading-[27px] text-ink-3">
                 {{ 'referral.description' | translate }}
             </p>
 
@@ -15,7 +15,7 @@
                 class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10"
             >
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm text-neutral-500 mb-1">{{ 'referral.yourCode' | translate }}</p>
+                    <p class="text-sm text-ink-3 mb-1">{{ 'referral.yourCode' | translate }}</p>
                     <p class="text-2xl font-bold truncate">{{ vm!.code }}</p>
                 </div>
 
@@ -60,13 +60,13 @@
                 <div
                     class="flex flex-col gap-1 p-4 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10"
                 >
-                    <p class="text-sm text-neutral-500">{{ 'referral.totalReferrals' | translate }}</p>
+                    <p class="text-sm text-ink-3">{{ 'referral.totalReferrals' | translate }}</p>
                     <p class="text-2xl font-bold">{{ vm!.totalReferrals }}</p>
                 </div>
                 <div
                     class="flex flex-col gap-1 p-4 rounded-2xl bg-lh-accent/10 border border-lh-accent/30"
                 >
-                    <p class="text-sm text-neutral-500">{{ 'referral.totalEarned' | translate }}</p>
+                    <p class="text-sm text-ink-3">{{ 'referral.totalEarned' | translate }}</p>
                     <p class="text-2xl font-bold text-lh-accent">
                         {{ vm!.totalCoinsEarned }}
                         <img
@@ -79,7 +79,7 @@
             </div>
         </div>
     } @else {
-        <p class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]">
+        <p class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line">
             {{ 'referral.unavailable' | translate }}
         </p>
     }

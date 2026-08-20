@@ -15,7 +15,7 @@ import { isGuildSettlement } from '../../lib/is-guild-settlement.function';
     standalone: true,
     template: `
         @if (isGuild()) {
-            <span class="inline-flex items-center bg-[#8b5a2b]/15 text-[#8b5a2b] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+            <span class="inline-flex items-center bg-line-strong/15 text-ink-2 uppercase font-bold text-base px-2 py-0.5 rounded-lg">
                 {{ badgeLabel() }}
             </span>
         }

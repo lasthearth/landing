@@ -1,20 +1,20 @@
 <div
-    class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-8 w-full max-w-[32rem] bg-[#e2d7bb] rounded-2xl text-[#2a2722] shadow-[0_12px_40px_rgba(0,0,0,0.25)] lh-card-glow"
+    class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-8 w-full max-w-[32rem] bg-surface rounded-2xl text-ink shadow-[0_12px_40px_rgba(0,0,0,0.25)] lh-card-glow"
 >
     <!-- Header -->
     <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
         <div
-            class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border-2 border-[#bdb093] bg-[#e8dcc0] shadow-[0_4px_12px_rgba(0,0,0,0.1)] shrink-0"
+            class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border-2 border-line bg-surface-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)] shrink-0"
         >
             <app-image-loader [src]="data.image" [alt]="data.title" />
         </div>
         <div class="flex flex-col gap-2 justify-center h-24">
-            <h3 class="text-center sm:text-left text-lg md:text-[22px] font-bold text-[#1c1a16] leading-tight">{{ data.title }}</h3>
+            <h3 class="text-center sm:text-left text-lg md:text-[22px] font-bold text-ink leading-tight">{{ data.title }}</h3>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-7 w-7 object-contain" />
-                <span class="text-lg sm:text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
+                <span class="text-lg sm:text-[20px] font-bold text-ink">{{ activePrice }}</span>
                 @if (data.currency === "rubles") {
-                    <span class="text-[18px] text-[#5c554a]">{{ 'market.purchaseDialog.currencyRub' | translate }}</span>
+                    <span class="text-[18px] text-ink-2">{{ 'market.purchaseDialog.currencyRub' | translate }}</span>
                 }
             </div>
         </div>
@@ -23,7 +23,7 @@
     <!-- Term selector -->
     @if (data.monthPrice && data.seasonPrice) {
         <div class="flex flex-col gap-3">
-            <label class="text-[18px] font-bold uppercase tracking-wide text-[#5c554a]">
+            <label class="text-[18px] font-bold uppercase tracking-wide text-ink-2">
                 {{ 'market.purchaseDialog.termLabel' | translate }}
             </label>
             <div class="flex gap-3">
@@ -34,10 +34,10 @@
                     [class.border-lh-accent]="selectedTerm() === 'month'"
                     [class.bg-lh-accent]="selectedTerm() === 'month'"
                     [class.text-white]="selectedTerm() === 'month'"
-                    [class.border-[#c4b89e]]="selectedTerm() !== 'month'"
-                    [class.bg-[#d8cdb3]]="selectedTerm() !== 'month'"
-                    [class.text-[#2a2722]]="selectedTerm() !== 'month'"
-                    [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'month'"
+                    [class.border-line]="selectedTerm() !== 'month'"
+                    [class.bg-surface-3]="selectedTerm() !== 'month'"
+                    [class.text-ink]="selectedTerm() !== 'month'"
+                    [class.hover:bg-surface-4]="selectedTerm() !== 'month'"
                 >
                     <tui-icon icon="@tui.calendar" class="size-5!" />
                     {{ 'market.common.month' | translate }}
@@ -49,10 +49,10 @@
                     [class.border-lh-accent]="selectedTerm() === 'season'"
                     [class.bg-lh-accent]="selectedTerm() === 'season'"
                     [class.text-white]="selectedTerm() === 'season'"
-                    [class.border-[#c4b89e]]="selectedTerm() !== 'season'"
-                    [class.bg-[#d8cdb3]]="selectedTerm() !== 'season'"
-                    [class.text-[#2a2722]]="selectedTerm() !== 'season'"
-                    [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'season'"
+                    [class.border-line]="selectedTerm() !== 'season'"
+                    [class.bg-surface-3]="selectedTerm() !== 'season'"
+                    [class.text-ink]="selectedTerm() !== 'season'"
+                    [class.hover:bg-surface-4]="selectedTerm() !== 'season'"
                 >
                     <tui-icon icon="@tui.infinity" class="size-5!" />
                     {{ 'market.common.forever' | translate }}
@@ -62,20 +62,20 @@
     }
 
     <!-- Payment info -->
-    <div class="flex flex-col gap-4 bg-[#d8cdb3] rounded-xl p-4 sm:p-5 border border-[#c4b89e]">
+    <div class="flex flex-col gap-4 bg-surface-3 rounded-xl p-4 sm:p-5 border border-line">
         <div class="flex items-center justify-between">
-            <span class="text-base sm:text-[18px] font-bold text-[#1c1a16]">
+            <span class="text-base sm:text-[18px] font-bold text-ink">
                 {{ 'market.purchaseDialog.totalLabel' | translate }}
             </span>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
-                <span class="text-lg sm:text-[20px] font-bold text-[#1c1a16]">{{ activePrice }}</span>
+                <span class="text-lg sm:text-[20px] font-bold text-ink">{{ activePrice }}</span>
             </div>
         </div>
 
-        <div class="h-px bg-[#b8aa8e]"></div>
+        <div class="h-px bg-surface-4"></div>
 
-        <p class="text-base sm:text-[18px] leading-relaxed text-[#2a2722]">
+        <p class="text-base sm:text-[18px] leading-relaxed text-ink">
             {{ 'market.purchaseDialog.confirmation' | translate:{ price: activePrice } }}
         </p>
     </div>

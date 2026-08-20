@@ -159,13 +159,13 @@ export class KitsComponent {
     protected getRarityFrameClass(price: string): string {
         switch (getRarityByPrice(price)) {
             case 'legendary':
-                return 'border-[#d4af37] shadow-[0_0_18px_rgba(212,175,55,0.4)]';
+                return 'border-gold shadow-[0_0_18px_rgba(212,175,55,0.4)]';
             case 'epic':
-                return 'border-[#8b5cf6]/80 shadow-[0_0_14px_rgba(139,92,246,0.3)]';
+                return 'border-rarity-epic/80 shadow-[0_0_14px_rgba(139,92,246,0.3)]';
             case 'rare':
-                return 'border-[#3d5381]/80 shadow-[0_0_12px_rgba(61,83,129,0.3)]';
+                return 'border-rarity-rare/80 shadow-[0_0_12px_rgba(61,83,129,0.3)]';
             default:
-                return 'border-[#bdb093] shadow-[0_4px_16px_rgba(0,0,0,0.12)]';
+                return 'border-line shadow-[0_4px_16px_rgba(0,0,0,0.12)]';
         }
     }
 

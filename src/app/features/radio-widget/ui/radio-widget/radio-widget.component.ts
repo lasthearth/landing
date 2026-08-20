@@ -153,6 +153,7 @@ export class RadioWidgetComponent implements OnDestroy {
 
         this.destroyPlayer();
         this.iframeSrc.set(null);
+        delete window.onYouTubeIframeAPIReady;
     }
 
     /**
@@ -288,41 +289,54 @@ export class RadioWidgetComponent implements OnDestroy {
     /**
      * Загружает YouTube IFrame API и инициализирует плеер.
      *
+     * Загрузка скрипта `iframe_api` асинхронная: сам файл лишь подтягивает
+     * внутренний бандл, поэтому на `script.onload` конструктор `window.YT.Player`
+     * ещё не существует. Готовность API сообщает глобальный колбэк
+     * `onYouTubeIframeAPIReady`, его и ждём.
+     *
      * @param videoId Идентификатор видео.
      * @param volume Уровень громкости в процентах.
      * @param autoplay Флаг автовоспроизведения.
      */
     private loadApiAndInitPlayer(videoId: string, volume: number, autoplay: boolean): void {
-        if (this.apiReady) {
+        if (this.isApiAvailable()) {
+            this.apiReady = true;
+            this.apiLoading = false;
             this.initPlayer(videoId, volume, autoplay);
             return;
         }
 
-        if (this.apiLoading) {
+        // Всегда перезаписываем колбэк: он должен использовать актуальные параметры станции.
+        window.onYouTubeIframeAPIReady = () => {
+            this.apiLoading = false;
+            this.apiReady = true;
+            this.initPlayer(videoId, volume, autoplay);
+        };
+
+        if (this.apiLoading || document.getElementById(YOUTUBE_SCRIPT_ID)) {
             return;
         }
 
         this.apiLoading = true;
 
-        const existing = document.getElementById(YOUTUBE_SCRIPT_ID) as HTMLScriptElement | null;
-
-        if (existing) {
-            return;
-        }
-
         const tag = document.createElement('script');
         tag.id = YOUTUBE_SCRIPT_ID;
         tag.src = 'https://www.youtube.com/iframe_api';
-        tag.onload = () => {
-            this.apiLoading = false;
-            this.apiReady = true;
-            this.initPlayer(videoId, volume, autoplay);
-        };
         tag.onerror = () => {
             this.apiLoading = false;
+            tag.remove();
         };
 
         document.head.appendChild(tag);
+    }
+
+    /**
+     * Проверяет, что YouTube IFrame API загружено и конструктор плеера доступен.
+     *
+     * @returns `true`, если можно создавать `window.YT.Player`.
+     */
+    private isApiAvailable(): boolean {
+        return typeof window.YT?.Player === 'function';
     }
 
     /**
@@ -333,6 +347,10 @@ export class RadioWidgetComponent implements OnDestroy {
      * @param autoplay Флаг автовоспроизведения.
      */
     private initPlayer(videoId: string, volume: number, autoplay: boolean): void {
+        if (!this.isApiAvailable()) {
+            return;
+        }
+
         const iframe = document.getElementById('radio-player-iframe') as HTMLIFrameElement | null;
 
         if (!iframe) {

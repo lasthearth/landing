@@ -6,12 +6,14 @@ import { map, take } from 'rxjs';
 /**
  * Страж для страницы администраторов.
  * Перенаправляет неавторизованных и не-админов на главную страницу.
+ * Ждёт завершения проверки авторизации, чтобы не отбросить админа
+ * при прямом переходе по ссылке.
  */
 export const adminGuard: CanActivateFn = () => {
     const userService = inject(UserService);
     const router = inject(Router);
 
-    return userService.authState$.pipe(
+    return userService.authSettled$.pipe(
         take(1),
         map((isAuthenticated) => {
             if (isAuthenticated && userService.roles.includes('admin')) {

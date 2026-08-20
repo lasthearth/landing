@@ -17,8 +17,8 @@ p {
  * и сургучная кромка слева (идентично странице FAQ).
  */
 .faq-scroll {
-    background: linear-gradient(160deg, #f0e7ce 0%, #e3d7b9 100%);
-    border-left: 4px solid rgba(140, 35, 32, 0.5);
+    background: linear-gradient(160deg, var(--lh-surface-2) 0%, var(--lh-surface) 100%);
+    border-left: 4px solid color-mix(in srgb, var(--lh-danger-ink) 55%, transparent);
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
@@ -40,7 +40,7 @@ p {
 }
 
 .old-paper-background {
-    background-color: #e8dfc8;
+    background-color: var(--lh-surface);
     background-image: url('/old-paper.webp'), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
     display: flex;
     align-items: center;
@@ -49,12 +49,12 @@ p {
 }
 
 .content {
-    background: rgba(255, 248, 220, 0.8);
-    border: 2px solid rgba(139, 69, 19, 0.5);
+    background: color-mix(in srgb, var(--lh-surface-2) 80%, transparent);
+    border: 2px solid color-mix(in srgb, var(--lh-border-strong) 55%, transparent);
     border-radius: 12px;
     padding: 30px;
     max-width: 600px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     text-align: center;
-    color: #5a4635;
+    color: var(--lh-ink-2);
 }

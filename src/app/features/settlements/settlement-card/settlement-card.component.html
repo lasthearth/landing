@@ -3,7 +3,7 @@
     [ngClass]="[getBorderClass(data().type)]"
 >
     <div
-        class="settlement-card-inner transform flex xl:flex-row flex-col relative rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#bdb093]/30 h-full max-h-[400px]"
+        class="settlement-card-inner transform flex xl:flex-row flex-col relative rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-line/30 h-full max-h-[400px]"
     >
         <!-- Изображение -->
         <div class="xl:w-2/5 w-full shrink-0 h-40 xl:h-full relative">
@@ -26,31 +26,31 @@
         <div class="xl:w-3/5 w-full p-5 flex flex-col gap-3 justify-between overflow-hidden">
             <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-2 flex-wrap">
-                    <h2 class="text-xl/7 md:text-2xl uppercase font-bold text-[#2d201a]">
+                    <h2 class="text-xl/7 md:text-2xl uppercase font-bold text-ink">
                         {{ data() | settlementDisplayName }}
                     </h2>
-                    <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-0.5 rounded-lg">
+                    <span class="bg-lh-leader/15 text-leader-ink font-bold text-base px-2 py-0.5 rounded-lg">
                         {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
                     </span>
-                    <span class="bg-[#16a34a]/15 text-[#16a34a] font-bold text-base px-2 py-0.5 rounded-lg">
+                    <span class="bg-peace/15 text-peace font-bold text-base px-2 py-0.5 rounded-lg">
                         {{ onlineCount }} {{ 'settlements.card.onlineShort' | translate }}
                     </span>
                 </div>
 
                 <div class="flex gap-1.5 flex-wrap">
                     @if (isEastSuzerain(this.data())) {
-                        <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                        <span class="bg-lh-accent/25 text-ink-2 uppercase font-bold text-base px-2 py-0.5 rounded-lg">
                             {{ 'settlements.card.suzerainShort' | translate }}: {{ environment.eastSuzerain }}
                         </span>
                     }
                     @if (isWestSuzerain(this.data())) {
-                        <span class="bg-[#ff7920]/25 text-[#5c4030] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                        <span class="bg-lh-accent/25 text-ink-2 uppercase font-bold text-base px-2 py-0.5 rounded-lg">
                             {{ 'settlements.card.suzerainLabel' | translate }} {{ environment.westSuzerain }}
                         </span>
                     }
                     @if (isPinned(data())) {
                         <span
-                            class="inline-flex items-center gap-1 bg-[#ffd700]/15 text-[#8a6e2f] border border-[#d4af37]/40 uppercase font-bold text-base px-2 py-0.5 rounded-lg"
+                            class="inline-flex items-center gap-1 bg-gold/15 text-warning-ink border border-gold/40 uppercase font-bold text-base px-2 py-0.5 rounded-lg"
                         >
                             <tui-icon icon="@tui.pin" class="size-4!" />
                             {{ getSettlementTypeLabel(data()) }}
@@ -66,10 +66,10 @@
                         [class]="
                             'uppercase font-bold text-base px-2 py-0.5 rounded-lg ' +
                             (data().diplomacy === 'Миролюбивый'
-                                ? 'bg-[#16a34a]/15 text-[#16a34a]'
+                                ? 'bg-peace/15 text-peace'
                                 : data().diplomacy === 'Нейтральный'
-                                  ? 'bg-[#3b3c36]/15 text-[#3b3c36]'
-                                  : 'bg-[#720000]/15 text-[#720000]')
+                                  ? 'bg-neutral-status/15 text-neutral-status'
+                                  : 'bg-lh-danger/15 text-danger-ink')
                         "
                     >
                         {{ getDiplomacyLabel(data()) }}
@@ -89,13 +89,13 @@
                     }
                 </div>
 
-                <p class="text-lg text-[#5c4030] leading-6 line-clamp-3" [innerHTML]="data().description"></p>
+                <p class="text-lg text-ink-2 leading-6 line-clamp-3" [innerHTML]="data().description"></p>
             </div>
 
             <div class="flex flex-col gap-2">
-                <hr class="h-px bg-[#bdb093]/30 w-full rounded-full" />
+                <hr class="h-px bg-surface-4/30 w-full rounded-full" />
                 <div class="flex flex-wrap gap-1.5 max-h-[68px] overflow-hidden">
-                    <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-1 rounded-lg items-center">
+                    <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base px-2 py-1 rounded-lg items-center">
                         @if (leader?.is_online === true) {
                             <tui-pulse class="self-center mr-1.5 online" />
                         } @else {
@@ -106,7 +106,7 @@
 
                     @for (item of users; track $index) {
                         <div
-                            class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base px-2 py-1 rounded-lg items-center"
+                            class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base px-2 py-1 rounded-lg items-center"
                         >
                             @if (item?.is_online === true) {
                                 <tui-pulse class="self-center mr-1.5 online" />
@@ -120,7 +120,7 @@
 
                 <button
                     (click)="openDetails()"
-                    class="text-[#5c4030] border-[#5c4030]/50 hover:border-[#5c4030] mt-1 transition-all self-end duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-[#2d201a] bg-transparent py-0.5 text-base"
+                    class="text-ink-2 border-wood/50 hover:border-wood mt-1 transition-all self-end duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base"
                 >
                     {{ 'settlements.card.more' | translate }}
                 </button>

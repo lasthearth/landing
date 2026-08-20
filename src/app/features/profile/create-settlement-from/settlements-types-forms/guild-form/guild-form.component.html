@@ -1,8 +1,8 @@
 <form [formGroup]="form" class="flex flex-col gap-6 w-full bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6" (ngSubmit)="onSubmit.next()">
-    <p class="text-2xl text-[#2d201a] font-bold self-center">{{ 'settlements.form.title.guild' | translate }}</p>
+    <p class="text-2xl text-ink font-bold self-center">{{ 'settlements.form.title.guild' | translate }}</p>
 
     <div class="flex flex-col gap-2">
-        <p class="text-xl text-[#2d201a] font-semibold">
+        <p class="text-xl text-ink font-semibold">
             {{ 'settlements.form.nameLabel' | translate }}
             <span class="text-lh-danger">*</span>
             <lh-hint [hintText]="'settlements.form.nameHint' | translate" />
@@ -11,7 +11,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-        <p class="text-xl text-[#2d201a] font-semibold">
+        <p class="text-xl text-ink font-semibold">
             {{ 'settlements.form.coordinatesLabel' | translate }}
             <span class="text-lh-danger">*</span>
             <lh-hint [hintText]="'settlements.form.coordinatesHint' | translate" />
@@ -21,18 +21,18 @@
     </div>
 
     <div class="flex flex-col gap-2">
-        <p class="text-xl text-[#2d201a] font-semibold">
+        <p class="text-xl text-ink font-semibold">
             {{ 'settlements.form.diplomacyLabel' | translate }}
             <span class="text-lh-danger">*</span>
             <lh-hint [hintText]="'settlements.form.diplomacyHint' | translate" />
         </p>
-        <span class="text-lg text-[#5c4030]">
+        <span class="text-lg text-ink-2">
             {{ 'settlements.diplomacy.guild' | translate }}
         </span>
     </div>
 
     <div class="flex flex-col gap-2">
-        <p class="text-xl text-[#2d201a] font-semibold">
+        <p class="text-xl text-ink font-semibold">
             {{ 'settlements.form.descriptionLabel' | translate }}
             <span class="text-lh-danger">*</span>
             <lh-hint [hintText]="'settlements.form.descriptionHint' | translate" />
@@ -41,7 +41,7 @@
     </div>
 
     <div *ngFor="let key of fileFields">
-        <p class="text-xl text-[#2d201a] font-semibold">
+        <p class="text-xl text-ink font-semibold">
             {{ getLabelForKey(key) }}
             <span class="text-lh-danger">*</span>
         </p>
@@ -49,7 +49,7 @@
         <label *ngIf="!form.controls[key].value" tuiInputFiles>
             <input accept="image/*" tuiInputFiles [formControl]="form.controls[key]" class="border-lh-primary!" />
             <ng-template tuiInputFilesContent>
-                <span class="text-neutral-500">{{ 'settlements.form.addImage' | translate }}</span>
+                <span class="text-ink-3">{{ 'settlements.form.addImage' | translate }}</span>
             </ng-template>
         </label>
 
@@ -82,7 +82,7 @@
 
     <button
         type="submit"
-        class="lh-secondary-button text-base py-2 px-4 mt-2 self-start disabled:text-neutral-400 disabled:bg-lh-primary-2/5 disabled:cursor-not-allowed"
+        class="lh-secondary-button text-base py-2 px-4 mt-2 self-start disabled:text-ink-3 disabled:bg-lh-primary-2/5 disabled:cursor-not-allowed"
         [disabled]="form.invalid || isLoading()"
     >
         @if (isLoading()) {

@@ -20,19 +20,19 @@
                     (click)="selectKit(kit)"
                     class="shrink-0 w-auto lg:w-full text-left text-lh-primary px-3 py-2 lg:px-4 lg:py-3 rounded-xl font-bold text-base lg:text-2xl leading-tight transition-all duration-300 border border-lh-primary-2/10 hover:translate-x-1 cursor-pointer relative overflow-hidden"
                     [class.bg-gradient-to-r]="kit === selectedPrivilege"
-                    [class.from-[#1a1510]]="kit === selectedPrivilege"
-                    [class.via-[#3d2a1f]]="kit === selectedPrivilege"
-                    [class.to-[#7a4a2a]]="kit === selectedPrivilege"
-                    [class.text-[#f0e6d2]!]="kit === selectedPrivilege"
+                    [class.from-night-grad-1]="kit === selectedPrivilege"
+                    [class.via-night-grad-2]="kit === selectedPrivilege"
+                    [class.to-night-grad-3]="kit === selectedPrivilege"
+                    [class.text-parchment-2!]="kit === selectedPrivilege"
                     [class.border-l-4]="kit === selectedPrivilege"
-                    [class.border-[#8b5a2b]]="kit === selectedPrivilege"
+                    [class.border-line-strong]="kit === selectedPrivilege"
                     [class.shadow-[0_0_16px_rgba(123,74,42,0.35)]]="kit === selectedPrivilege"
                     [class.bg-lh-primary-2/10]="kit !== selectedPrivilege"
-                    [class.hover:bg-[#e2d7bb]/60]="kit !== selectedPrivilege"
+                    [class.hover:bg-surface/60]="kit !== selectedPrivilege"
                 >
                     @if (kit.discountPercent) {
                         <span
-                            class="absolute top-1 right-1 z-10 inline-flex items-center justify-center min-w-[1.75rem] h-5 px-1 rounded-md bg-white text-[#c35a17] text-[10px] lg:text-xs font-extrabold shadow-sm"
+                            class="absolute top-1 right-1 z-10 inline-flex items-center justify-center min-w-[1.75rem] h-5 px-1 rounded-md bg-white text-brand-ink text-[10px] lg:text-xs font-extrabold shadow-sm"
                         >
                             −{{ kit.discountPercent }}%
                         </span>
@@ -50,7 +50,7 @@
             <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch">
                 <!-- Image with frame -->
                 <div
-                    [class]="'w-full max-w-[16rem] lg:max-w-none lg:w-56 lg:h-56 shrink-0 rounded-2xl overflow-hidden border-2 bg-[#e8dcc0] mx-auto lg:mx-0 transition-shadow duration-300 ' + getRarityFrameClass(selectedPrivilege!.monthPrice)"
+                    [class]="'w-full max-w-[16rem] lg:max-w-none lg:w-56 lg:h-56 shrink-0 rounded-2xl overflow-hidden border-2 bg-surface-2 mx-auto lg:mx-0 transition-shadow duration-300 ' + getRarityFrameClass(selectedPrivilege!.monthPrice)"
                 >
                     <app-image-loader [src]="selectedPrivilege!.image" [alt]="selectedPrivilege!.title" />
                 </div>
@@ -63,32 +63,32 @@
                         (click)="selectedTerm.set('month')"
                         class="price-block relative rounded-xl px-5 py-4 flex items-center justify-between overflow-hidden cursor-pointer border-2 transition-colors duration-200"
                         [class.bg-gradient-to-r]="selectedTerm() === 'month'"
-                        [class.from-[#c35a17]]="selectedTerm() === 'month'"
-                        [class.to-[#e07830]]="selectedTerm() === 'month'"
+                        [class.from-brand]="selectedTerm() === 'month'"
+                        [class.to-brand-hover]="selectedTerm() === 'month'"
                         [class.text-white]="selectedTerm() === 'month'"
                         [class.shadow-lg]="selectedTerm() === 'month'"
-                        [class.bg-[#d8cdb3]]="selectedTerm() !== 'month'"
+                        [class.bg-surface-3]="selectedTerm() !== 'month'"
                         [class.border-lh-accent]="selectedTerm() === 'month'"
-                        [class.border-[#c4b89e]]="selectedTerm() !== 'month'"
-                        [class.text-[#2a2722]]="selectedTerm() !== 'month'"
-                        [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'month'"
+                        [class.border-line]="selectedTerm() !== 'month'"
+                        [class.text-ink]="selectedTerm() !== 'month'"
+                        [class.hover:bg-surface-4]="selectedTerm() !== 'month'"
                     >
                         @if (selectedPrivilege!.monthPriceOriginal) {
                             <div
-                                class="absolute -top-0.5 -left-0.5 bg-white text-[#c35a17] text-xs lg:text-base font-extrabold px-2 py-1 lg:px-3 lg:py-1.5 rounded-br-xl shadow-md -rotate-3"
+                                class="absolute -top-0.5 -left-0.5 bg-white text-brand-ink text-xs lg:text-base font-extrabold px-2 py-1 lg:px-3 lg:py-1.5 rounded-br-xl shadow-md -rotate-3"
                             >
                                 −{{ getDiscountPercent(selectedPrivilege!.monthPrice, selectedPrivilege!.monthPriceOriginal) }}%
                             </div>
                         }
 
-                        <div class="flex items-center gap-2" [class.text-white/90]="selectedTerm() === 'month'" [class.text-[#5c554a]]="selectedTerm() !== 'month'">
+                        <div class="flex items-center gap-2" [class.text-white/90]="selectedTerm() === 'month'" [class.text-ink-2]="selectedTerm() !== 'month'">
                             <tui-icon icon="@tui.package" class="size-5 lg:size-6!" />
                             <span class="text-lg lg:text-2xl font-bold">{{ 'market.kits.term' | translate }}</span>
                         </div>
 
                         @if (selectedPrivilege!.monthPriceOriginal) {
                             <div class="flex flex-col items-end">
-                                <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'month'" [class.text-[#9e9789]]="selectedTerm() !== 'month'">
+                                <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'month'" [class.text-ink-3]="selectedTerm() !== 'month'">
                                     <span class="strong-strike font-medium text-base lg:text-lg leading-none">{{ selectedPrivilege!.monthPriceOriginal }}</span>
                                     <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-4 w-4 lg:h-5 lg:w-5 object-contain opacity-70 leading-none -ml-0.5" />
                                 </div>
@@ -112,32 +112,32 @@
                             (click)="selectedTerm.set('season')"
                             class="price-block relative rounded-xl px-5 py-4 flex items-center justify-between overflow-hidden border-2 transition-colors duration-200 cursor-pointer"
                             [class.bg-gradient-to-r]="selectedTerm() === 'season'"
-                            [class.from-[#c35a17]]="selectedTerm() === 'season'"
-                            [class.to-[#e07830]]="selectedTerm() === 'season'"
+                            [class.from-brand]="selectedTerm() === 'season'"
+                            [class.to-brand-hover]="selectedTerm() === 'season'"
                             [class.text-white]="selectedTerm() === 'season'"
                             [class.shadow-lg]="selectedTerm() === 'season'"
                             [class.border-lh-accent]="selectedTerm() === 'season'"
-                            [class.bg-[#d8cdb3]]="selectedTerm() !== 'season'"
-                            [class.border-[#c4b89e]]="selectedTerm() !== 'season'"
-                            [class.text-[#2a2722]]="selectedTerm() !== 'season'"
-                            [class.hover:bg-[#c4b89e]]="selectedTerm() !== 'season'"
+                            [class.bg-surface-3]="selectedTerm() !== 'season'"
+                            [class.border-line]="selectedTerm() !== 'season'"
+                            [class.text-ink]="selectedTerm() !== 'season'"
+                            [class.hover:bg-surface-4]="selectedTerm() !== 'season'"
                         >
                             @if (selectedPrivilege!.seasonPriceOriginal) {
                                 <div
-                                    class="absolute -top-0.5 -left-0.5 bg-white text-[#c35a17] text-xs lg:text-base font-extrabold px-2 py-1 lg:px-3 lg:py-1.5 rounded-br-xl shadow-md discount-badge"
+                                    class="absolute -top-0.5 -left-0.5 bg-white text-brand-ink text-xs lg:text-base font-extrabold px-2 py-1 lg:px-3 lg:py-1.5 rounded-br-xl shadow-md discount-badge"
                                 >
                                     −{{ getDiscountPercent(selectedPrivilege!.seasonPrice, selectedPrivilege!.seasonPriceOriginal) }}%
                                 </div>
                             }
 
-                            <div class="flex items-center gap-2" [class.text-white/90]="selectedTerm() === 'season'" [class.text-[#5c554a]]="selectedTerm() !== 'season'">
+                            <div class="flex items-center gap-2" [class.text-white/90]="selectedTerm() === 'season'" [class.text-ink-2]="selectedTerm() !== 'season'">
                                 <tui-icon icon="@tui.infinity" class="size-5 lg:size-6!" />
                                 <span class="text-lg lg:text-2xl font-bold">{{ 'market.common.forever' | translate }}</span>
                             </div>
 
                             @if (selectedPrivilege!.seasonPriceOriginal) {
                                 <div class="flex flex-col items-end">
-                                    <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'season'" [class.text-[#9e9789]]="selectedTerm() !== 'season'">
+                                    <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'season'" [class.text-ink-3]="selectedTerm() !== 'season'">
                                         <span class="strong-strike font-medium text-base lg:text-lg leading-none">{{ selectedPrivilege!.seasonPriceOriginal }}</span>
                                         <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-4 w-4 lg:h-5 lg:w-5 object-contain opacity-70 leading-none -ml-0.5" />
                                     </div>
@@ -172,7 +172,7 @@
             <!-- Buy button -->
             <button
                 (click)="openPurchaseDialog()"
-                class="shimmer-btn self-stretch text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-[#b55115] to-[#cc6e2a] hover:from-[#b85115] hover:to-[#d07028] rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-lg lg:text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
+                class="shimmer-btn self-stretch text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-brand-deep to-brand-lit hover:from-brand-deep hover:to-brand-lit rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-lg lg:text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
             >
                 <tui-icon icon="@tui.shopping-cart" class="size-6!" />
                 <span>{{ 'market.common.buyButton' | translate }}</span>

@@ -9,9 +9,9 @@ import { SkeletonComponent } from './skeleton.component';
     standalone: true,
     imports: [SkeletonComponent],
     template: `
-        <div class="overflow-x-auto rounded-2xl border border-[#bdb093] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <div class="overflow-x-auto rounded-2xl border border-line shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
             <table class="w-full text-left border-collapse text-[18px]">
-                <thead class="bg-lh-primary text-[#e2d7bb] font-semibold uppercase">
+                <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                     <tr>
                         @for (_ of columnsArray(); track $index) {
                             <th class="p-4">
@@ -19,7 +19,7 @@ import { SkeletonComponent } from './skeleton.component';
                                     width="16"
                                     height="5"
                                     rounded="lg"
-                                    className="bg-[#e2d7bb]/30"
+                                    className="bg-surface/30"
                                 />
                             </th>
                         }
@@ -27,7 +27,7 @@ import { SkeletonComponent } from './skeleton.component';
                 </thead>
                 <tbody>
                     @for (_ of rowsArray(); track $index; let rowIndex = $index) {
-                        <tr class="border-t border-[#bdb093]">
+                        <tr class="border-t border-line">
                             @for (_ of columnsArray(); track $index; let colIndex = $index) {
                                 <td class="p-4">
                                     <app-skeleton

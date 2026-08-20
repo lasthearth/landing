@@ -9,7 +9,7 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 
     &:hover {
-        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(195, 90, 23, 0.25);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px color-mix(in srgb, var(--lh-brand) 25%, transparent);
         transform: translateY(-2px);
     }
 
@@ -46,16 +46,16 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #c35a17 0%, #ffaa5c 50%, #c35a17 100%);
+        background: linear-gradient(90deg, var(--lh-brand) 0%, var(--lh-accent-soft) 50%, var(--lh-brand) 100%);
         z-index: 2;
         opacity: 0.85;
         transition: opacity 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 2px 12px rgba(195, 90, 23, 0.3);
+        box-shadow: 0 2px 12px color-mix(in srgb, var(--lh-brand) 30%, transparent);
     }
 
     &:hover &__accent-border {
         opacity: 1;
-        box-shadow: 0 2px 18px rgba(255, 170, 92, 0.45);
+        box-shadow: 0 2px 18px color-mix(in srgb, var(--lh-accent-soft) 45%, transparent);
     }
 
     &__content {
@@ -99,11 +99,18 @@
         font-weight: 900;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: #f0e6d2;
-        background: linear-gradient(90deg, #8b4a1f 0%, #c35a17 25%, #ffaa5c 50%, #c35a17 75%, #8b4a1f 100%);
+        color: var(--lh-parchment-2);
+        background: linear-gradient(
+            90deg,
+            var(--lh-brand-deep-2) 0%,
+            var(--lh-brand) 25%,
+            var(--lh-accent-soft) 50%,
+            var(--lh-brand) 75%,
+            var(--lh-brand-deep-2) 100%
+        );
         background-size: 200% 100%;
         box-shadow:
-            0 4px 14px rgba(195, 90, 23, 0.45),
+            0 4px 14px color-mix(in srgb, var(--lh-brand) 45%, transparent),
             inset 0 1px 0 rgba(255, 255, 255, 0.15);
         text-shadow: 0 1px 2px rgba(45, 32, 26, 0.4);
         animation:
@@ -120,13 +127,13 @@
 @keyframes new-badge-pulse {
     0%, 100% {
         box-shadow:
-            0 4px 14px rgba(195, 90, 23, 0.45),
+            0 4px 14px color-mix(in srgb, var(--lh-brand) 45%, transparent),
             inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
     50% {
         box-shadow:
-            0 6px 22px rgba(255, 170, 92, 0.6),
+            0 6px 22px color-mix(in srgb, var(--lh-accent-soft) 60%, transparent),
             inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 }

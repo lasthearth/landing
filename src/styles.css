@@ -1,6 +1,68 @@
 @import 'tailwindcss';
 @import './app/shared/styles/appearances/icon.appearance.css';
 :root {
+    /**
+     * Семантические поверхности (пергамент). Переопределяются в тёмной теме.
+     * surface   — основная панель, surface-2 — приподнятая, surface-3/4 — вложенные.
+     */
+    --lh-surface: #e2d7bb;
+    --lh-surface-2: #f6f0df;
+    --lh-surface-3: #d8cdb3;
+    --lh-surface-4: #c4b89e;
+
+    /** Границы: обычная и усиленная (акцентные рамки блоков). */
+    --lh-border: #bdb093;
+    --lh-border-strong: #8b7355;
+
+    /**
+     * Текст: ink — основной, ink-2 — вторичный, ink-3 — приглушённый.
+     * Все три уровня проходят WCAG AA (>= 4.5:1) на surface и surface-3,
+     * см. scripts/check-contrast.mjs.
+     */
+    --lh-ink: #2d201a;
+    --lh-ink-2: #4a4238;
+    --lh-ink-3: #61564b;
+
+    /** Цвет ссылок в тексте. */
+    --lh-link: #8f420e;
+    --lh-link-hover: #c35a17;
+
+    /**
+     * Константы, не зависящие от темы.
+     * Пергаментные оттенки для текста на тёмных подложках.
+     */
+    --lh-parchment: #e2d7bb;
+    --lh-parchment-2: #f0e6d2;
+    --lh-parchment-3: #f5eedd;
+    --lh-parchment-dim: #c9a880;
+
+    /** Тёмные подложки (ночь, галерея, оверлеи) — одинаковы в обеих темах. */
+    --lh-night: #1a1816;
+    --lh-night-2: #2a2722;
+    --lh-night-deep: #1a110d;
+    --lh-overlay: #2d201a;
+    --lh-night-grad-1: #1a1510;
+    --lh-night-grad-2: #3d2a1f;
+    --lh-night-grad-3: #7a4a2a;
+
+    /** Дерево — тёмно-коричневые фоны кнопок и градиентов. */
+    --lh-wood: #5c4030;
+    --lh-wood-2: #7a5c4a;
+
+    /** Брендовый оранжевый: фоны, градиенты, состояния. */
+    --lh-brand: #c35a17;
+    --lh-brand-hover: #e07830;
+    --lh-brand-lit: #cc6e2a;
+    --lh-brand-lit-2: #e56a18;
+    --lh-brand-deep: #b55115;
+    --lh-brand-deep-2: #8b4a1f;
+    --lh-brand-strong: #9c4f24;
+
+    /** Брендовый цвет для ТЕКСТА и иконок: затемнён под контраст на пергаменте. */
+    --lh-brand-ink: #8f420e;
+
+    --lh-accent-soft: #ffaa5c;
+
     --lh-primary: #3f3c34;
     --lh-primary-2: #332c26;
 
@@ -9,6 +71,9 @@
     --lh-accent-3: #86523b;
 
     --lh-danger: #720000;
+    --lh-danger-ink: #8f1a1a;
+    --lh-danger-strong: #8c2320;
+    --lh-danger-soft: #c9a0a0;
     --lh-danger-hover: var(--color-red-700);
     --lh-danger-active: var(--color-red-400);
 
@@ -25,6 +90,43 @@
     --lh-offline: #3b3c36;
 
     --lh-leader: #3d5381;
+    --lh-leader-hover: #4a649a;
+    --lh-leader-ink: #3d5381;
+    --lh-leader-soft: #a0b8d0;
+
+    /** Статусы дипломатии и подтверждений на пергаменте (контраст WCAG AA). */
+    --lh-peace: #157f3c;
+    --lh-neutral: #4f5049;
+    --lh-warning-ink: #8a6e2f;
+    --lh-gold: #d4af37;
+
+    /** Медали рейтинга. Затемнены до порога AA для крупного текста. */
+    --lh-medal-gold: #946c09;
+    --lh-medal-silver: #767270;
+    --lh-medal-bronze: #a1652d;
+
+    /**
+     * Ранги селений: железо (посёлок) и серебро (город).
+     * Выбраны с запасом контраста для текста на пергаменте.
+     */
+    --lh-rank-iron: #4f4f4f;
+    --lh-rank-silver: #5d6a7c;
+
+    /**
+     * Статусы покупок. Спокойная приглушённая палитра,
+     * контраст рассчитан на пергаментный фон.
+     */
+    --lh-status-issued: #3d6b78;
+    --lh-status-done: #47755a;
+    --lh-status-refund: #8b4a4a;
+    --lh-status-wait: #8a5d2d;
+
+    /** Редкость товаров магазина: эпический и редкий. */
+    --lh-rarity-epic: #8b5cf6;
+    --lh-rarity-rare: #3d5381;
+
+    /** Платёжный бренд (СберPay). */
+    --lh-sber: #1b842c;
 
     --lh-tag-purple: #9d5bd2;
     --lh-tag-purple-bg: rgba(157, 91, 210, 0.15);
@@ -54,6 +156,79 @@
 }
 
 @theme {
+    /**
+     * Семантические токены. Используются в шаблонах как bg-surface,
+     * text-ink, border-line и т.д. Меняют значение вместе с темой,
+     * поэтому тёмная тема не нуждается в перекрытии по hex-классам.
+     */
+    --color-surface: var(--lh-surface);
+    --color-surface-2: var(--lh-surface-2);
+    --color-surface-3: var(--lh-surface-3);
+    --color-surface-4: var(--lh-surface-4);
+
+    --color-line: var(--lh-border);
+    --color-line-strong: var(--lh-border-strong);
+
+    --color-ink: var(--lh-ink);
+    --color-ink-2: var(--lh-ink-2);
+    --color-ink-3: var(--lh-ink-3);
+
+    --color-parchment: var(--lh-parchment);
+    --color-parchment-2: var(--lh-parchment-2);
+    --color-parchment-3: var(--lh-parchment-3);
+    --color-parchment-dim: var(--lh-parchment-dim);
+
+    --color-night: var(--lh-night);
+    --color-night-2: var(--lh-night-2);
+    --color-night-deep: var(--lh-night-deep);
+    --color-overlay: var(--lh-overlay);
+    --color-night-grad-1: var(--lh-night-grad-1);
+    --color-night-grad-2: var(--lh-night-grad-2);
+    --color-night-grad-3: var(--lh-night-grad-3);
+
+    --color-wood: var(--lh-wood);
+    --color-wood-2: var(--lh-wood-2);
+
+    --color-brand: var(--lh-brand);
+    --color-brand-hover: var(--lh-brand-hover);
+    --color-brand-lit: var(--lh-brand-lit);
+    --color-brand-lit-2: var(--lh-brand-lit-2);
+    --color-brand-deep: var(--lh-brand-deep);
+    --color-brand-deep-2: var(--lh-brand-deep-2);
+    --color-brand-strong: var(--lh-brand-strong);
+    --color-brand-ink: var(--lh-brand-ink);
+    --color-accent-soft: var(--lh-accent-soft);
+
+    --color-danger-ink: var(--lh-danger-ink);
+    --color-danger-strong: var(--lh-danger-strong);
+    --color-danger-soft: var(--lh-danger-soft);
+
+    --color-leader-hover: var(--lh-leader-hover);
+    --color-leader-ink: var(--lh-leader-ink);
+    --color-leader-soft: var(--lh-leader-soft);
+
+    --color-peace: var(--lh-peace);
+    --color-neutral-status: var(--lh-neutral);
+    --color-warning-ink: var(--lh-warning-ink);
+    --color-gold: var(--lh-gold);
+
+    --color-medal-gold: var(--lh-medal-gold);
+    --color-medal-silver: var(--lh-medal-silver);
+    --color-medal-bronze: var(--lh-medal-bronze);
+
+    --color-rank-iron: var(--lh-rank-iron);
+    --color-rank-silver: var(--lh-rank-silver);
+
+    --color-status-issued: var(--lh-status-issued);
+    --color-status-done: var(--lh-status-done);
+    --color-status-refund: var(--lh-status-refund);
+    --color-status-wait: var(--lh-status-wait);
+
+    --color-rarity-epic: var(--lh-rarity-epic);
+    --color-rarity-rare: var(--lh-rarity-rare);
+
+    --color-sber: var(--lh-sber);
+
     --color-lh-primary: var(--lh-primary);
     --color-lh-primary-2: var(--lh-primary-2);
 
@@ -138,16 +313,20 @@ html body {
     }
 }
 
+/**
+ * Ссылки в тексте. Тёплый акцент вместо системного синего:
+ * синий по WCAG давал 1.84:1 на пергаменте, токен --lh-link даёт 4.97:1.
+ */
 a {
     cursor: pointer;
-    color: var(--color-blue-400);
+    color: var(--lh-link);
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
     transition: all 0.1s ease-in-out;
 }
 
 a:hover {
-    color: var(--color-blue-600);
+    color: var(--lh-link-hover);
 }
 
 .words-break {
@@ -692,6 +871,40 @@ html {
 }
 
 /**
+ * Единое кольцо фокуса для всех интерактивных элементов.
+ * Только :focus-visible — мышиные клики кольцо не показывают.
+ */
+:where(a, button, [role='button'], input, textarea, select, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--lh-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/**
+ * Внутри полей ввода кольцо рисует контейнер .flexible-input,
+ * поэтому у самого input оно избыточно.
+ */
+.flexible-input input:focus-visible,
+.flexible-input textarea:focus-visible {
+    outline: none;
+}
+
+/**
+ * Скрытый текст только для скринридеров.
+ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/**
  * Тёмная тема «ночь у очага».
  *
  * Затемняет поверхности и текст. Переключается через
@@ -701,6 +914,46 @@ html {
 html[data-theme='dark'] {
     color-scheme: dark;
     color: #e9dfc9;
+
+    /**
+     * Переопределение семантических токенов.
+     * Классы вида bg-surface / text-ink наследуют новые значения автоматически,
+     * поэтому подмена по hex-селекторам больше не нужна.
+     */
+    --lh-surface: #212327;
+    --lh-surface-2: #2b2d31;
+    --lh-surface-3: #383a40;
+    --lh-surface-4: #43464d;
+
+    --lh-border: #3f4147;
+    --lh-border-strong: #55585f;
+
+    --lh-ink: #e9dfc9;
+    --lh-ink-2: #c3b79c;
+    --lh-ink-3: #afa289;
+
+    --lh-link: #e07830;
+    --lh-link-hover: #ffaa5c;
+
+    --lh-brand-ink: #ff9445;
+    --lh-danger-ink: #e88a7c;
+    --lh-danger-soft: #d8a5a5;
+    --lh-leader-ink: #8fa8d8;
+    --lh-leader-soft: #a0b8d0;
+    --lh-peace: #45c47a;
+    --lh-neutral: #9a9d95;
+    --lh-warning-ink: #e0be5c;
+    --lh-accent-3: #c9a184;
+    --lh-medal-silver: #b6b1ad;
+    --lh-medal-gold: #e0b53c;
+    --lh-medal-bronze: #d1894a;
+    --lh-rank-iron: #a9aaa6;
+    --lh-rank-silver: #9fb0c4;
+    --lh-status-issued: #7fb3c0;
+    --lh-status-done: #7fbd97;
+    --lh-status-refund: #d89a9a;
+    --lh-status-wait: #d3a566;
+    --lh-sber: #35b84c;
 
     /* Текстовые переменные Taiga UI */
     --tui-text-primary: #e9dfc9;
@@ -720,25 +973,6 @@ html[data-theme='dark'] {
         background-image: none !important;
     }
 
-    /* Пергаментные поверхности → тёмное дерево */
-    [class*='bg-[#e2d7bb]'],
-    [class*='bg-[#e8dfc8]'],
-    [class*='bg-[#e9dec5]'] {
-        background-color: #212327;
-    }
-
-    [class*='bg-[#f6f0df]'],
-    [class*='bg-[#f0e7ce]'],
-    [class*='bg-[#ece1c8]'],
-    [class*='bg-[#e8dcc0]'] {
-        background-color: #2b2d31;
-    }
-
-    [class*='bg-[#d8cdb3]'],
-    [class*='bg-[#d4c5a9]'] {
-        background-color: #383a40;
-    }
-
     /* Тёмные полупрозрачные панели → светлая альфа */
     [class*='bg-lh-primary-2/'] {
         background-color: rgba(233, 223, 201, 0.08);
@@ -748,71 +982,22 @@ html[data-theme='dark'] {
         border-color: rgba(233, 223, 201, 0.18);
     }
 
-    /* Градиенты и текстуры пергамента */
-    [class*='from-[#e2d7bb]'] {
-        --tw-gradient-from: #212327;
-    }
-
     [class*="bg-[url('/image_1.webp')]"] {
         background-image: none;
     }
 
-    /* Ховеры светлых кнопок → тёмные */
-    [class*='hover:bg-[#c4b89e]'],
-    [class*='hover:bg-[#d8cca8]'],
-    [class*='hover:bg-[#d8cdb3]'] {
-        &:hover {
-            background-color: rgba(233, 223, 201, 0.12);
-        }
-    }
-
     /* Тёмный текст → пергаментный */
-    [class*='text-[#2d201a]'],
-    [class*='text-[#2a2722]'],
-    [class*='text-[#1c1a16]'],
     [class*='text-lh-primary-2'],
     [class*='text-lh-primary'] {
         color: #e9dfc9;
     }
 
-    [class*='text-[#3f3c34]'] {
-        color: #d6c9ae;
-    }
-
-    [class*='text-[#5c4030]'],
-    [class*='text-[#5c554a]'],
-    [class*='text-[#3b3c36]'],
-    [class*='text-[#7a6b58]'],
-    [class*='text-[#8a7a6a]'],
-    .text-neutral-500 {
-        color: #b3a68d;
-    }
-
-    /* Акцентные тёмные тексты → осветлённые */
-    [class*='text-[#3d5381]'],
-    [class*='text-[#5a7a9a]'] {
-        color: #8fa8d8;
-    }
-
-    [class*='text-[#720000]'],
     [class*='text-lh-danger'] {
-        color: #e06a5a;
-    }
-
-    [class*='text-[#86523b]'] {
-        color: #c9a184;
-    }
-
-    [class*='text-[#8a6e2f]'] {
-        color: #d4af37;
-    }
-
-    [class*='text-[#9c4f24]'] {
-        color: #e07830;
+        color: #e88a7c;
     }
 
     /* Классы с !important (активные кнопки меню) */
-    [class*='bg-[#e2d7bb]!'] {
+    [class*='bg-surface!'] {
         background-color: #383a40 !important;
     }
 
@@ -820,96 +1005,18 @@ html[data-theme='dark'] {
         color: #e9dfc9 !important;
     }
 
-    /* Границы */
-    [class*='border-[#bdb093]'],
-    [class*='border-[#c4b89e]'],
-    [class*='border-[#b0a48a]'],
-    [class*='border-[#a89a7e]'],
-    [class*='border-[#8b7355]'],
-    [class*='border-[#b8aa8e]'],
     [class*='border-[rgba(51,44,38'] {
         border-color: #3f4147;
     }
 
-    /* Компонентные поверхности */
-    .faq-scroll {
-        background: #2b2d31;
-        border-left-color: rgba(224, 106, 90, 0.6);
-    }
-
-    .faq-scroll > div:first-child > p:first-child::before {
-        color: rgba(224, 106, 90, 0.7);
-    }
-
-    .diplomacy-card {
-        background: #2b2d31;
-    }
-
-    .diplomacy-card::before {
-        background: repeating-linear-gradient(
-            45deg,
-            rgba(233, 223, 201, 0.03) 0,
-            rgba(233, 223, 201, 0.03) 2px,
-            transparent 2px,
-            transparent 12px
-        );
-    }
-
-    .diplomacy-card__text,
-    .diplomacy-card__author-name,
-    .diplomacy-card__date-day,
-    .diplomacy-card__empty-title {
-        color: #e9dfc9;
-    }
-
-    .diplomacy-card__author-role,
-    .diplomacy-card__text::first-letter {
-        color: #e07830;
-    }
-
-    .diplomacy-card__date-time,
-    .diplomacy-card__empty-description {
-        color: #b3a68d;
-    }
-
-    .diplomacy-page__loading,
-    .diplomacy-page__empty {
-        color: #e9dfc9;
-        background: rgba(233, 223, 201, 0.05);
-        border-color: rgba(233, 223, 201, 0.15);
-    }
-
-    .diplomacy-page__error {
-        color: #e06a5a;
-        background: rgba(224, 106, 90, 0.08);
-        border-color: rgba(224, 106, 90, 0.3);
-    }
-
-    .settlement-card-inner {
-        background-color: #212327;
-        background-image: none;
-    }
-
+    /**
+     * Компонентные поверхности.
+     * Остались только правила, которые токенами не выражаются:
+     * снятие пергаментной текстуры и цвета вне токен-системы.
+     */
+    .settlement-card-inner,
     .recruit-panel {
-        background-color: #212327;
         background-image: none;
-    }
-
-    .quick-actions {
-        background: #212327;
-    }
-
-    .quick-actions__item {
-        background: #2b2d31;
-        color: #e9dfc9;
-
-        &:hover {
-            background: #383a40;
-        }
-    }
-
-    .quick-actions__label {
-        color: #e9dfc9;
     }
 
     /* Кнопки навигации хедера */
@@ -923,94 +1030,14 @@ html[data-theme='dark'] {
         background-color: #383a40;
     }
 
-    .video-card {
-        background: #2b2d31;
-    }
-
-    .video-card__title,
-    .videos-page__title {
-        color: #e9dfc9;
-    }
-
-    .video-card__date,
-    .videos-page__subtitle {
-        color: #b3a68d;
-    }
-
-    .videos-page__error {
-        color: #e06a5a;
-    }
-
-    .videos-page__empty {
-        color: #b3a68d;
-    }
-
-    /* Поля ввода */
-    .flexible-input {
-        border-color: #3f4147;
-        color: #e9dfc9;
-        background-color: rgba(233, 223, 201, 0.06);
-    }
-
-    .flexible-input:focus-within {
-        border-color: #c35a17;
-    }
-
-    .flexible-input input,
-    .flexible-input textarea {
-        color: #e9dfc9;
-    }
-
-    .flexible-input input::placeholder,
-    .flexible-input textarea::placeholder {
-        color: #b3a68d;
-    }
-
+    /* Поля ввода: цвета берутся из токенов, снимается только текстура пергамента */
     .flexible-input .dropdown {
-        background-color: #212327;
         background-image: none;
-        border-color: #3f4147;
-    }
-
-    .flexible-input .dropdown-option {
-        color: #e9dfc9;
-
-        &:hover {
-            background-color: rgba(233, 223, 201, 0.1);
-        }
-    }
-
-    /* Скелетон image-loader → светлый шиммер на тёмном */
-    .image-loader-skeleton {
-        background: linear-gradient(
-            110deg,
-            rgba(233, 223, 201, 0.06) 8%,
-            rgba(233, 223, 201, 0.14) 18%,
-            rgba(233, 223, 201, 0.06) 33%
-        );
-        background-size: 200% 100%;
-    }
-
-    .rule-link {
-        color: #d6c9ae;
-
-        &:hover {
-            color: #ece1c8;
-        }
     }
 
     /* Скроллбар */
     & {
         scrollbar-color: #3f4147 #212327;
-    }
-
-    /* Ссылки: системный синий → тёплый акцент */
-    a {
-        color: #e07830;
-
-        &:hover {
-            color: #ffaa5c;
-        }
     }
 
     /* Табы Taiga */
