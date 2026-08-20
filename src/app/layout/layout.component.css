@@ -20,6 +20,43 @@
         url('/images/Group_4_3.webp');
 }
 
+/* Пульс очага: тёплое свечение у нижней кромки экрана.
+   z-index: -2 — ниже фоновых искр (-1), но выше фоновой картинки хоста.
+   Анимируется только opacity, поэтому слой живёт на композиторе. */
+:host::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    opacity: 0.92;
+    background: radial-gradient(
+        ellipse 120% 55% at 50% 108%,
+        color-mix(in srgb, var(--lh-brand-deep) 9%, transparent) 0%,
+        color-mix(in srgb, var(--lh-brand-deep) 5%, transparent) 42%,
+        transparent 72%
+    );
+    animation: hearth-pulse 15s ease-in-out infinite alternate;
+    will-change: opacity;
+}
+
+@keyframes hearth-pulse {
+    from {
+        opacity: 0.85;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host::before {
+        animation: none;
+        opacity: 0.92;
+    }
+}
+
 .content-wrapper {
     flex-grow: 1;
     display: flex;
