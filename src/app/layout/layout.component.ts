@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Renderer2 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { UserService } from '@entities/user';
-import { combineLatest, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WelcomeComponent } from '@app/features/welcome/welcome.component';
@@ -25,14 +25,17 @@ import { environment } from '@core/config/environments/environment';
 })
 export class LayoutComponent {
     /**
-     * {@link Observable} Состояния авторизации пользователя.
+     * {@link Observable} Признак необходимости показать приветственный экран.
+     *
+     * Опирается на `authSettled$`, который начинает выдавать значения только
+     * после завершения проверки авторизации. Комбинация «состояние + признак
+     * завершения» двумя отдельными потоками давала промежуточный кадр
+     * `!isAuth && authChecked`, из-за чего экран показывался авторизованному
+     * пользователю сразу после входа.
      */
-    protected readonly userAuth$: Observable<boolean> = inject(UserService).authState$;
-
-    /**
-     * {@link Observable} Признак завершения первоначальной проверки авторизации.
-     */
-    protected readonly isAuthChecked$: Observable<boolean> = inject(UserService).isAuthChecked$;
+    protected readonly showWelcome$: Observable<boolean> = inject(UserService).authSettled$.pipe(
+        map((isAuth) => !isAuth)
+    );
 
     /**
      * Окружение для доступа к идентификаторам Discord-каналов в шаблоне.
@@ -55,12 +58,9 @@ export class LayoutComponent {
     protected isSetScrollClass = false;
 
     constructor() {
-        combineLatest([this.userAuth$, this.isAuthChecked$])
-            .pipe(takeUntilDestroyed())
-            .subscribe(([isAuth, authChecked]) => {
-                const showWelcome = !isAuth && authChecked;
-                this.updateScrollLock(showWelcome && !this.isSetScrollClass);
-            });
+        this.showWelcome$.pipe(takeUntilDestroyed()).subscribe((showWelcome) => {
+            this.updateScrollLock(showWelcome && !this.isSetScrollClass);
+        });
     }
 
     /**

@@ -3,7 +3,12 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    background: linear-gradient(160deg, #f6f0df 0%, #e9dec5 55%, #e0d3b8 100%);
+    background: linear-gradient(
+        160deg,
+        var(--lh-surface-2) 0%,
+        color-mix(in srgb, var(--lh-surface-2), var(--lh-surface)) 55%,
+        var(--lh-surface) 100%
+    );
     border-radius: 1rem;
     overflow: hidden;
     cursor: pointer;
@@ -17,7 +22,7 @@
         transform: translateY(-4px);
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 14px 40px rgba(195, 90, 23, 0.25);
+            0 14px 40px color-mix(in srgb, var(--lh-brand) 25%, transparent);
     }
 }
 
@@ -61,7 +66,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #f0e6d2;
+    color: var(--lh-parchment-2);
     opacity: 0.85;
     transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -71,7 +76,7 @@
         width: 4rem;
         height: 4rem;
         border-radius: 50%;
-        background: rgba(195, 90, 23, 0.9);
+        background: color-mix(in srgb, var(--lh-brand) 90%, transparent);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease;
     }
@@ -89,7 +94,7 @@
 
     .video-card:hover &::before {
         transform: scale(1.1);
-        background: #c35a17;
+        background: var(--lh-brand);
     }
 }
 
@@ -105,7 +110,7 @@
 .video-card__title {
     font-size: 1rem;
     font-weight: 700;
-    color: #2d201a;
+    color: var(--lh-ink);
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -117,7 +122,7 @@
 
 .video-card__date {
     font-size: 0.8125rem;
-    color: #7a6b58;
+    color: var(--lh-ink-3);
     font-weight: 500;
     flex-shrink: 0;
 }

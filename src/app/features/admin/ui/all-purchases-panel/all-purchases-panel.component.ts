@@ -189,7 +189,7 @@ export class AllPurchasesPanelComponent implements OnInit {
             case 'PENDING_ISSUE':
                 return 'bg-lh-accent/15 text-lh-accent';
             default:
-                return 'bg-[#16a34a]/15 text-[#16a34a]';
+                return 'bg-peace/15 text-peace';
         }
     }
 

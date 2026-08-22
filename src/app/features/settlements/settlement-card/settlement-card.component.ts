@@ -1,28 +1,34 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    DestroyRef,
+    computed,
     inject,
     input,
     InputSignal,
-    OnInit,
     output,
     OutputEmitterRef,
+    Signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { tap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { TuiPulse } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { ISettlement, getSettlementTypeByKey, getSettlementDisplayName, isGuildSettlement, SettlementDisplayNamePipe } from '@entities/settlement';
+import {
+    ISettlement,
+    getSettlementTypeByKey,
+    getSettlementDisplayName,
+    getSettlementTypeTone,
+    getDiplomacyTone,
+    isGuildSettlement,
+    SettlementBadgeComponent,
+    SettlementBadgeTone,
+    SettlementDisplayNamePipe,
+} from '@entities/settlement';
 import { IPlayer, UserService } from '@entities/user';
-import { SettlementTagStore } from '@entities/settlement-tag';
+import { SettlementTagStore, SettlementTagComponent } from '@entities/settlement-tag';
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
-import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
 import { SetTagsComponent } from './set-tags/set-tags.component';
 import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 
@@ -31,14 +37,29 @@ import { SettlementDetailedComponent } from '../settlement-detailed/settlement-d
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
     styleUrl: './settlement-card.component.less',
-    imports: [CommonModule, TuiPulse, TuiIcon, ImageLoaderComponent, TranslatePipe, SettlementTagComponent, SettlementDisplayNamePipe],
+    imports: [
+        CommonModule,
+        TuiPulse,
+        TuiIcon,
+        ImageLoaderComponent,
+        TranslatePipe,
+        SettlementBadgeComponent,
+        SettlementTagComponent,
+        SettlementDisplayNamePipe,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettlementCardComponent implements OnInit {
+export class SettlementCardComponent {
     /**
      * Данные поселения.
      */
     public data: InputSignal<ISettlement> = input.required();
+
+    /**
+     * Профили лидера и участников селения.
+     * Загружаются одним батчем на странице списка и передаются готовыми.
+     */
+    public players: InputSignal<IPlayer[]> = input<IPlayer[]>([]);
 
     /**
      * Режим управляющей карточки.
@@ -73,48 +94,25 @@ export class SettlementCardComponent implements OnInit {
     private readonly i18n = inject(I18nService);
 
     /**
-     * Лидер поселения
+     * Лидер поселения.
      */
-    protected leader: IPlayer | null = null;
-
-    cdr = inject(ChangeDetectorRef);
-
-    /**
-     * Ссылка уничтожения компонента.
-     */
-    private readonly destroyRef: DestroyRef = inject(DestroyRef);
+    protected readonly leader: Signal<IPlayer | null> = computed(
+        () => this.players().find((player) => player.user_id === this.data().leader.user_id) ?? null
+    );
 
     /**
-     * Список игроков
+     * Список участников поселения без лидера.
      */
-    protected users: IPlayer[] = [];
+    protected readonly users: Signal<IPlayer[]> = computed(() =>
+        this.players().filter((player) => player.user_id !== this.data().leader.user_id)
+    );
 
     /**
      * Количество онлайн-участников селения.
      */
-    protected onlineCount: number = 0;
-
-    /**
-     * @inheritdoc
-     */
-    public ngOnInit(): void {
-        this.tagStore.loadTags$().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
-
-        const leaderId = this.data().leader.user_id;
-
-        this.userService
-            .getPlayersBatch$([leaderId, ...this.data().members.map((m) => m.user_id)])
-            .pipe(
-                tap((players) => {
-                    this.leader = players.find((p) => p.user_id === leaderId) ?? null;
-                    this.users = players.filter((p) => p.user_id !== leaderId);
-                    this.onlineCount = players.filter((p) => p?.is_online).length;
-                    this.cdr.detectChanges();
-                }),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe();
-    }
+    protected readonly onlineCount: Signal<number> = computed(
+        () => this.players().filter((player) => player.is_online).length
+    );
 
     /**
      * Имя закреплённого селения.
@@ -166,40 +164,23 @@ export class SettlementCardComponent implements OnInit {
     }
 
     /**
-     * Возвращает CSS-классы бейджа типа селения.
-     * Цвет бейджа соответствует tier селения, чтобы визуально отличать
-     * Лагерь, Деревню, Посёлок, Город и Региональную провинцию.
+     * Возвращает тон бейджа типа селения.
      *
      * @param settlement Селение.
-     * @returns Строка с Tailwind-классами фона и текста.
+     * @returns Тон бейджа.
      */
-    protected getSettlementTypeBadgeClasses(settlement: ISettlement): string {
-        if (this.isPinned(settlement)) {
-            return 'bg-[#ffd700]/15 text-[#8a6e2f] border border-[#d4af37]/40';
-        }
+    protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
+        return getSettlementTypeTone(settlement);
+    }
 
-        if (isGuildSettlement(settlement)) {
-            return 'bg-[#8b5a2b]/15 text-[#8b5a2b]';
-        }
-
-        switch (settlement.type) {
-            case 'VILLAGE':
-            case 1:
-                return 'bg-[#8b5a2b]/15 text-[#8b5a2b]';
-            case 'TOWNSHIP':
-            case 2:
-                return 'bg-[#5a5a5a]/15 text-[#5a5a5a]';
-            case 'CITY':
-            case 3:
-                return 'bg-[#6e7a8b]/15 text-[#6e7a8b]';
-            case 'PROVINCE':
-            case 4:
-                return 'bg-[#b8860b]/15 text-[#b8860b]';
-            case 'CAMP':
-            case 0:
-            default:
-                return 'bg-[#3d5381]/15 text-[#3d5381]';
-        }
+    /**
+     * Возвращает тон бейджа дипломатии.
+     *
+     * @param diplomacy Статус дипломатии.
+     * @returns Тон бейджа.
+     */
+    protected getDiplomacyTone(diplomacy: string | undefined): SettlementBadgeTone {
+        return getDiplomacyTone(diplomacy);
     }
 
     /**
@@ -230,7 +211,7 @@ export class SettlementCardComponent implements OnInit {
         this.dialogs
             .open(new PolymorpheusComponent(SettlementDetailedComponent), {
                 size: 'auto',
-                data: { settlement: this.data() },
+                data: { settlement: this.data(), players: this.players() },
             })
             .subscribe();
     }

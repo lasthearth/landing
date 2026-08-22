@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { DestroyRef, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { combineLatest, filter, of, take } from 'rxjs';
+import { filter, of, take } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ReferralService } from '@entities/referral';
 import { UserService } from '@entities/user';
@@ -82,9 +82,9 @@ export class ReferralApplierService {
      * (например, после редиректа от OIDC-провайдера).
      */
     private init(): void {
-        combineLatest([this.userService.authState$, this.userService.isAuthChecked$])
+        this.userService.authSettled$
             .pipe(
-                filter(([isAuth, checked]) => isAuth && checked),
+                filter((isAuth) => isAuth),
                 filter(() => !this.attempted),
                 take(1),
                 takeUntilDestroyed(this.destroyRef)

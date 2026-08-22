@@ -9,14 +9,22 @@
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
     color: var(--color-white);
-    gap: 8px;
+    gap: 4px;
     align-items: center;
     justify-items: center;
     display: flex;
+    white-space: nowrap;
+}
+
+/**
+ * Компактные иконки в кнопках навигации, чтобы весь ряд влезал в одну строку.
+ */
+.nav-button tui-icon {
+    font-size: 1rem;
 }
 
 .nav-button:hover {
-    background-color: #3d342d;
+    background-color: var(--color-lh-primary);
     background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
 }
 

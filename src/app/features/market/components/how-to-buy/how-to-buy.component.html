@@ -1,10 +1,8 @@
-<div class="lh-dialog-card w-full p-4 sm:p-6 lg:p-8">
+<div class="lh-dialog-card w-full">
     <h2 class="lh-dialog-title text-center text-xl sm:text-[22px]">{{ "market.howToBuy.title" | translate }}</h2>
 
     <!-- Блок выбора суммы -->
-    <div
-        class="flex flex-col gap-4 p-4 sm:p-5 rounded-2xl bg-[#e2d7bb] bg-[url('/image_1.webp')] bg-repeat border border-[#bdb093] shadow-sm"
-    >
+    <div class="flex flex-col gap-4 pb-6 border-b border-line">
         <!-- Итоговая сумма осколков -->
         <div class="flex flex-col items-center gap-1">
             <span class="text-lh-primary/60 text-base font-semibold uppercase">
@@ -63,10 +61,10 @@
                         [class.bg-lh-accent]="rubles() === amount"
                         [class.text-white]="rubles() === amount"
                         [class.border-lh-accent]="rubles() === amount"
-                        [class.bg-[#d8cdb3]]="rubles() !== amount"
+                        [class.bg-surface-3]="rubles() !== amount"
                         [class.text-lh-primary]="rubles() !== amount"
-                        [class.border-[#bdb093]]="rubles() !== amount"
-                        [class.hover:bg-[#c4b89e]]="rubles() !== amount"
+                        [class.border-line]="rubles() !== amount"
+                        [class.hover:bg-surface-4]="rubles() !== amount"
                     >
                         {{ amount | number }} ₽
                     </button>
@@ -90,18 +88,18 @@
 
         <!-- Сбербанк / СБП — основной способ -->
         <div
-            class="relative flex flex-col gap-3 rounded-2xl bg-[#e9dec5] border border-[#bdb093] shadow-sm overflow-hidden"
+            class="relative flex flex-col gap-3 rounded-2xl bg-surface border border-line shadow-sm overflow-hidden"
         >
-            <div class="h-1.5 bg-[#21A038]"></div>
+            <div class="h-1.5 bg-sber"></div>
             <div
-                class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-[#21A038] text-white text-xs font-bold uppercase tracking-wide shadow-[0_2px_8px_rgba(33,160,56,0.35)]"
+                class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-sber text-white text-xs font-bold uppercase tracking-wide shadow-[0_2px_8px_rgba(33,160,56,0.35)]"
             >
                 {{ "common.recommended" | translate }}
             </div>
             <div class="p-4 pt-10 sm:p-5 sm:pt-10 flex flex-col gap-4">
                 <div class="flex items-center gap-3">
                     <div
-                        class="flex items-center justify-center w-12 h-12 rounded-full bg-[#21A038] text-white shrink-0 shadow-sm"
+                        class="flex items-center justify-center w-12 h-12 rounded-full bg-sber text-white shrink-0 shadow-sm"
                     >
                         <tui-icon icon="@tui.smartphone" class="size-6!" />
                     </div>
@@ -115,7 +113,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-start gap-4 p-4 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-base">
+                <div class="flex items-start gap-4 text-base">
                     <tui-icon icon="@tui.badge-alert" class="size-8! text-lh-accent shrink-0 mt-0.5" />
                     <span class="text-lh-primary/80">
                         {{ "market.howToBuy.sbp.warning" | translate: { amount: rubles(), nickname: username() } }}
@@ -126,14 +124,14 @@
                     <label class="text-lh-primary text-base font-semibold">
                         {{ "market.howToBuy.sbp.phoneLabel" | translate }}
                     </label>
-                    <div class="flex items-center gap-3 p-4 rounded-xl bg-[#d8cdb3] border border-[#bdb093]">
+                    <div class="flex items-center gap-3">
                         <span class="text-lh-primary text-2xl font-bold font-mono tracking-wide flex-1">
                             {{ sbpPhone }}
                         </span>
                         <button
                             type="button"
                             (click)="copyPhone()"
-                            class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#21A038] text-white text-base font-semibold hover:brightness-105 transition-all cursor-pointer"
+                            class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-sber text-white text-base font-semibold hover:brightness-105 transition-all cursor-pointer"
                         >
                             @if (phoneCopied()) {
                                 <tui-icon icon="@tui.check" class="size-4!" />
@@ -153,7 +151,7 @@
                 <button
                     type="button"
                     (click)="copySbpDetails()"
-                    class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl border-2 border-[#21A038] text-[#21A038] font-bold text-base hover:bg-[rgba(33,160,56,0.1)] transition-all cursor-pointer"
+                    class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl border-2 border-sber text-sber font-bold text-base hover:bg-[rgba(33,160,56,0.1)] transition-all cursor-pointer"
                 >
                     <tui-icon icon="@tui.copy" class="size-5!" />
                     {{ "market.howToBuy.sbp.copyAll" | translate }}
@@ -161,21 +159,21 @@
 
                 <div class="flex flex-col gap-2 text-lh-primary/80 text-base">
                     <div class="flex items-start gap-2">
-                        <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
+                        <tui-icon icon="@tui.check" class="size-5! text-sber shrink-0 mt-0.5" />
                         <span>{{ "market.howToBuy.sbp.step1" | translate }}</span>
                     </div>
                     <div class="flex items-start gap-2">
-                        <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
+                        <tui-icon icon="@tui.check" class="size-5! text-sber shrink-0 mt-0.5" />
                         <span>{{ "market.howToBuy.sbp.step2" | translate }}</span>
                     </div>
                     <div class="flex items-start gap-2">
-                        <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
+                        <tui-icon icon="@tui.check" class="size-5! text-sber shrink-0 mt-0.5" />
                         <span>
                             {{ "market.howToBuy.sbp.step3" | translate: { amount: rubles(), bank: sbpBank } }}
                         </span>
                     </div>
                     <div class="flex items-start gap-2">
-                        <tui-icon icon="@tui.check" class="size-5! text-[#21A038] shrink-0 mt-0.5" />
+                        <tui-icon icon="@tui.check" class="size-5! text-sber shrink-0 mt-0.5" />
                         <span>
                             {{ "market.howToBuy.sbp.step4" | translate: { nickname: username() } }}
                         </span>
@@ -186,7 +184,7 @@
 
         <!-- Boosty — международный, низкий приоритет -->
         <div
-            class="relative flex flex-col gap-3 rounded-2xl bg-[#e9dec5] border border-[#bdb093] shadow-sm overflow-hidden"
+            class="relative flex flex-col gap-3 rounded-2xl bg-surface border border-line shadow-sm overflow-hidden"
         >
             <div class="h-1.5 bg-lh-primary"></div>
             <div class="p-4 sm:p-5 flex flex-col gap-3">
@@ -208,7 +206,7 @@
                 <p class="text-lh-primary/70 text-base">
                     {{ "market.howToBuy.boosty.description" | translate }}
                 </p>
-                <div class="flex flex-col gap-3 p-4 rounded-xl bg-lh-accent/10 border border-lh-accent/20 text-base">
+                <div class="flex flex-col gap-3 text-base">
                     <div class="flex items-start gap-3">
                         <tui-icon icon="@tui.badge-alert" class="size-6! text-lh-accent shrink-0 mt-0.5" />
                         <span class="text-lh-primary/80">

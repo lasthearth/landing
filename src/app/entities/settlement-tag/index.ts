@@ -10,6 +10,8 @@ export type { IColor } from './model/i-color';
 export type { ISettlementTag } from './model/i-settlement-tag';
 export type { ISettlementTagDto } from './model/i-settlement-tag-dto';
 
+export { SettlementTagComponent } from './ui/settlement-tag/settlement-tag.component';
+
 export { colorToCss } from './lib/color-to-css.function';
 export { hexToColor } from './lib/hex-to-color.function';
 export { getContrastColor } from './lib/get-contrast-color.function';

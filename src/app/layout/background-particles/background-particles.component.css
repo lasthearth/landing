@@ -6,75 +6,104 @@
     pointer-events: none;
 }
 
-.background-particles__spark {
+/* Внешний элемент отвечает только за траекторию подъёма и общую
+   огибающую появления/угасания. Мерцание живёт на вложенном элементе,
+   чтобы его частота не зависела от скорости полёта искры. */
+.background-particles__rise {
     position: absolute;
-    bottom: -10px;
-    border-radius: 50%;
+    bottom: -12px;
     opacity: 0;
     animation-name: spark-rise;
-    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-timing-function: cubic-bezier(0.32, 0, 0.36, 1);
     animation-iteration-count: infinite;
     will-change: transform, opacity;
 }
 
+/* Свечение рисуется одним радиальным градиентом вместо тройного
+   box-shadow: тот же результат без дорогой перерисовки тени. */
+.background-particles__spark {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    opacity: var(--spark-peak);
+    background: radial-gradient(
+        ellipse at 50% 42%,
+        currentColor 0%,
+        color-mix(in srgb, currentColor 62%, transparent) 20%,
+        color-mix(in srgb, currentColor 22%, transparent) 44%,
+        color-mix(in srgb, currentColor 6%, transparent) 64%,
+        transparent 78%
+    );
+    animation-name: spark-flicker-soft;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: opacity;
+}
+
+/* Хвост: мягкие стопы градиента вместо filter: blur(),
+   который создавал отдельный слой композитинга на каждую искру. */
 .background-particles__spark::after {
     content: '';
     position: absolute;
-    top: 60%;
+    top: 58%;
     left: 50%;
-    width: 55%;
-    height: calc(120% * var(--spark-tail-length));
+    width: 42%;
+    height: calc(115% * var(--spark-tail-length));
     transform: translateX(-50%);
     background: linear-gradient(
         to bottom,
-        currentColor 0%,
-        rgba(255, 100, 0, 0.1) 30%,
+        color-mix(in srgb, currentColor 45%, transparent) 0%,
+        color-mix(in srgb, currentColor 16%, transparent) 26%,
+        color-mix(in srgb, currentColor 5%, transparent) 58%,
         transparent 100%
     );
     border-radius: 50%;
-    filter: blur(1.5px);
-    opacity: 0.18;
-    pointer-events: none;
+    opacity: 0.5;
 }
 
 @keyframes spark-rise {
     0% {
-        transform: translateX(0) translateY(0) scale(0.6) rotate(calc(var(--spark-rotate) - 12deg));
+        transform: translate3d(0, 0, 0) scale(0.5) rotate(calc(var(--spark-rotate) - 12deg));
         opacity: 0;
     }
 
-    8% {
-        opacity: 0.23;
-    }
-
-    18% {
-        opacity: 0.15;
-    }
-
-    28% {
-        opacity: 0.23;
+    7% {
+        opacity: 1;
     }
 
     40% {
-        transform: translateX(calc(var(--spark-drift) * 0.3)) translateY(-30vh) scale(1) rotate(calc(var(--spark-rotate) + 18deg));
-        opacity: 0.19;
-    }
-
-    55% {
-        opacity: 0.23;
+        transform: translate3d(calc(var(--spark-drift) * 0.3), calc(var(--spark-life) * -0.34), 0) scale(1)
+            rotate(calc(var(--spark-rotate) + 18deg));
     }
 
     70% {
-        transform: translateX(calc(var(--spark-drift) * 0.7)) translateY(-70vh) scale(0.9) rotate(calc(var(--spark-rotate) - 8deg));
-        opacity: 0.15;
-    }
-
-    88% {
-        opacity: 0.12;
+        transform: translate3d(calc(var(--spark-drift) * 0.72), calc(var(--spark-life) * -0.7), 0) scale(0.88)
+            rotate(calc(var(--spark-rotate) - 8deg));
+        opacity: 0.85;
     }
 
     100% {
-        transform: translateX(var(--spark-drift)) translateY(-105vh) scale(0.35) rotate(calc(var(--spark-rotate) + 14deg));
+        transform: translate3d(var(--spark-drift), calc(var(--spark-life) * -1), 0) scale(0.3)
+            rotate(calc(var(--spark-rotate) + 14deg));
         opacity: 0;
+    }
+}
+
+@keyframes spark-flicker-soft {
+    0%,
+    100% {
+        opacity: var(--spark-peak);
+    }
+
+    22% {
+        opacity: calc(var(--spark-peak) * 0.42);
+    }
+
+    48% {
+        opacity: var(--spark-peak);
+    }
+
+    74% {
+        opacity: calc(var(--spark-peak) * 0.68);
     }
 }

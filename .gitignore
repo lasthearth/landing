@@ -43,3 +43,7 @@ Thumbs.db
 
 # Environment variables
 .env
+
+# Agent tooling artifacts
+.openchamber/
+.playwright-mcp/

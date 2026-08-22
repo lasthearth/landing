@@ -106,6 +106,8 @@ export const PROFILE_I18N = {
                 step3Title: 'Играйте',
                 ipLabel: 'IP:',
                 passwordLabel: 'Пароль:',
+                copy: 'Копировать',
+                copied: 'Скопировано',
             },
             statistics: {
                 title: 'Рейтинг игроков',
@@ -237,6 +239,8 @@ export const PROFILE_I18N = {
                 step3Title: 'Play',
                 ipLabel: 'IP:',
                 passwordLabel: 'Password:',
+                copy: 'Copy',
+                copied: 'Copied',
             },
             statistics: {
                 title: 'Player rating',

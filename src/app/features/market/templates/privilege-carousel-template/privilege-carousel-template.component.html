@@ -1,15 +1,25 @@
 <div class="flex gap-6 justify-center items-center">
-    <button (click)="navigate(-1)" class="cursor-pointer text-white bg-lh-primary p-2 rounded-2xl hidden sm:block">
+    <button
+        (click)="navigate(-1)"
+        type="button"
+        aria-label="Предыдущий набор"
+        class="cursor-pointer text-white bg-lh-primary p-2 rounded-2xl hidden sm:block"
+    >
         <tui-icon icon="@tui.chevron-left" />
     </button>
     <tui-carousel [itemsCount]="3" [(index)]="carouselIndex">
         @for (item of items(); track $index) {
-            <div *tuiItem (click)="selectedPrivilege.emit(item)" class="cursor-pointer">
+            <button *tuiItem type="button" (click)="selectedPrivilege.emit(item)" class="cursor-pointer w-full text-left">
                 <ng-container *ngTemplateOutlet="itemTemplate(); context: { $implicit: item }"></ng-container>
-            </div>
+            </button>
         }
     </tui-carousel>
-    <button (click)="navigate(1)" class="cursor-pointer text-white bg-lh-primary p-2 rounded-2xl hidden sm:block">
+    <button
+        (click)="navigate(1)"
+        type="button"
+        aria-label="Следующий набор"
+        class="cursor-pointer text-white bg-lh-primary p-2 rounded-2xl hidden sm:block"
+    >
         <tui-icon icon="@tui.chevron-right" />
     </button>
 </div>

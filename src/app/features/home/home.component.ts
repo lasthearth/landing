@@ -306,13 +306,13 @@ export class HomeComponent {
     protected getTeamRoleBadgeClass(role: TeamRole): string {
         switch (role) {
             case 'founder':
-                return 'bg-[#d4af37]/90 text-[#2d201a]';
+                return 'bg-gold/90 text-ink';
             case 'coFounder':
                 return 'bg-lh-accent/90 text-white';
             case 'techAdmin':
-                return 'bg-[#3d5381]/90 text-[#f0e6d2]';
+                return 'bg-lh-leader/90 text-parchment-2';
             case 'moderator':
-                return 'bg-[#16a34a]/90 text-white';
+                return 'bg-peace/90 text-white';
             default:
                 return 'bg-lh-danger/90 text-white';
         }

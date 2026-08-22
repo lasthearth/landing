@@ -33,7 +33,11 @@ import {
     SettlementService,
     isGuildSettlement,
     getSettlementTypeByKey,
+    getSettlementTypeTone,
+    getDiplomacyTone,
     ISettlement,
+    SettlementBadgeComponent,
+    SettlementBadgeTone,
     SettlementDisplayNamePipe,
 } from '@entities/settlement';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
@@ -51,6 +55,7 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
         ImageLoaderComponent,
         TranslatePipe,
         NgTemplateOutlet,
+        SettlementBadgeComponent,
         SettlementDisplayNamePipe,
     ],
     selector: 'app-profile',
@@ -345,11 +350,9 @@ export class ProfileComponent {
     @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
     /**
-     *
+     * Загружает список сезонов «Голодных игр» и выбирает активный.
      */
     constructor() {
-        this.userService.checkAuthTrigger$.next(false);
-
         this.hungerGamesService
             .getSeasons$()
             .pipe(take(1))
@@ -386,8 +389,8 @@ export class ProfileComponent {
         if (isIssued) {
             return {
                 label: 'profile.purchases.status.issued',
-                dotClass: 'bg-[#4a7c8c]',
-                textClass: 'text-[#4a7c8c]',
+                dotClass: 'bg-status-issued',
+                textClass: 'text-status-issued',
             };
         }
 
@@ -397,34 +400,34 @@ export class ProfileComponent {
             case 'COMPLETED':
                 return {
                     label: 'profile.purchases.status.completed',
-                    dotClass: 'bg-[#5a8c69]',
-                    textClass: 'text-[#5a8c69]',
+                    dotClass: 'bg-status-done',
+                    textClass: 'text-status-done',
                 };
             case 'ISSUED':
             case 'DELIVERED':
                 return {
                     label: 'profile.purchases.status.issued',
-                    dotClass: 'bg-[#4a7c8c]',
-                    textClass: 'text-[#4a7c8c]',
+                    dotClass: 'bg-status-issued',
+                    textClass: 'text-status-issued',
                 };
             case 'REFUNDED':
                 return {
                     label: 'profile.purchases.status.refunded',
-                    dotClass: 'bg-[#8b4a4a]',
-                    textClass: 'text-[#8b4a4a]',
+                    dotClass: 'bg-status-refund',
+                    textClass: 'text-status-refund',
                 };
             case 'PENDING':
             case 'ACTIVE':
                 return {
                     label: 'profile.purchases.status.pending',
-                    dotClass: 'bg-[#9c6b3c]',
-                    textClass: 'text-[#9c6b3c]',
+                    dotClass: 'bg-status-wait',
+                    textClass: 'text-status-wait',
                 };
             default:
                 return {
-                    label: purchase.status || '—',
+                    label: purchase.status || '-',
                     dotClass: 'bg-lh-primary-2/50',
-                    textClass: 'text-neutral-600',
+                    textClass: 'text-ink-3',
                 };
         }
     }
@@ -514,5 +517,25 @@ export class ProfileComponent {
         }
 
         return getSettlementTypeByKey(settlement.type);
+    }
+
+    /**
+     * Возвращает тон бейджа типа селения.
+     *
+     * @param settlement Поселение.
+     * @returns Тон бейджа.
+     */
+    protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
+        return getSettlementTypeTone(settlement);
+    }
+
+    /**
+     * Возвращает тон бейджа дипломатии.
+     *
+     * @param diplomacy Статус дипломатии.
+     * @returns Тон бейджа.
+     */
+    protected getDiplomacyTone(diplomacy: string | undefined): SettlementBadgeTone {
+        return getDiplomacyTone(diplomacy);
     }
 }

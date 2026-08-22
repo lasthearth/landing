@@ -8,13 +8,13 @@
     display: flex;
     align-items: center;
     min-height: 50px;
-    border: 1px solid #a89a7e;
+    border: 1px solid var(--lh-border);
     border-radius: 12px;
     padding: 10px 16px;
     cursor: text;
     box-sizing: border-box;
-    color: #2a2722;
-    background-color: rgba(226, 215, 187, 0.4);
+    color: var(--lh-ink);
+    background-color: color-mix(in srgb, var(--lh-surface) 55%, transparent);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     transition:
         background-color 0.2s ease,
@@ -22,8 +22,31 @@
 }
 
 .flexible-input:focus-within {
-    background-color: rgba(226, 215, 187, 0.6);
+    background-color: color-mix(in srgb, var(--lh-surface) 75%, transparent);
     border-color: var(--lh-accent, #ff7920);
+}
+
+/**
+ * Кнопка-триггер режима select.
+ * Заменила кликабельный div: даёт фокус с клавиатуры и роль combobox.
+ */
+.select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    border-radius: 6px;
+}
+
+.select-trigger:disabled {
+    opacity: 0.6;
 }
 
 .flexible-input input,
@@ -46,7 +69,8 @@
 
 .flexible-input input::placeholder,
 .flexible-input textarea::placeholder {
-    color: #5c554a;
+    color: var(--lh-ink-3);
+    opacity: 1;
 }
 
 .flexible-input textarea {
@@ -71,7 +95,7 @@
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
-    color: #5c554a;
+    color: var(--lh-ink-2);
     font-size: 20px;
 }
 
@@ -90,8 +114,8 @@
     left: 0;
     right: 0;
     margin-top: 0.5rem;
-    border: 1px solid #a89a7e;
-    background-color: #e2d7bb;
+    border: 1px solid var(--lh-border);
+    background-color: var(--lh-surface);
     background-image: url("/image_1.webp");
     background-repeat: repeat;
     border-radius: 12px;
@@ -115,15 +139,21 @@
 }
 
 .flexible-input .dropdown-option {
+    display: block;
+    width: calc(100% - 0.5rem);
+    text-align: left;
+    background: none;
+    border: none;
+    font: inherit;
     padding: 12px 16px;
     border-radius: 8px;
     margin: 0.25rem;
     font-size: 18px;
-    color: #2a2722;
+    color: var(--lh-ink);
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
 .flexible-input .dropdown-option:hover {
-    background-color: rgba(189, 176, 147, 0.6);
+    background-color: color-mix(in srgb, var(--lh-surface-4) 60%, transparent);
 }

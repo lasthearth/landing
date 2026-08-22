@@ -9,16 +9,16 @@
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    color: #f0e6d2;
-    background: linear-gradient(135deg, #9c4f24 0%, #c35a17 100%);
-    border: 2px solid rgba(226, 215, 187, 0.3);
-    box-shadow: 0 8px 24px rgba(195, 90, 23, 0.4);
+    color: var(--lh-parchment-2);
+    background: linear-gradient(135deg, var(--lh-brand-strong) 0%, var(--lh-brand) 100%);
+    border: 2px solid color-mix(in srgb, var(--lh-parchment) 30%, transparent);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--lh-brand) 40%, transparent);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
         transform: scale(1.08);
-        box-shadow: 0 12px 32px rgba(195, 90, 23, 0.55);
+        box-shadow: 0 12px 32px color-mix(in srgb, var(--lh-brand) 55%, transparent);
     }
 }
 

@@ -1,5 +1,5 @@
 <div class="lh-dialog-card min-w-[36rem]">
-    <div class="flex flex-col gap-4 w-full bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+    <div class="flex flex-col gap-4 w-full">
         <div class="shrink-0 relative w-full shadow-md shadow-black/10 overflow-clip rounded-xl">
             <app-image-loader
                 [src]="settlementData.attachments[0].url ? settlementData.attachments[0].url : '/images/screenshots/screen_1.png'"
@@ -8,48 +8,50 @@
         </div>
         <div class="flex flex-col gap-3">
             <div class="flex items-center gap-2 flex-wrap">
-                <h1 class="text-2xl/7.5 md:text-3xl uppercase font-bold text-[#2d201a]">
+                <h1 class="text-2xl/7.5 md:text-3xl uppercase font-bold text-ink">
                     {{ settlementData | settlementDisplayName }}
                 </h1>
                 @if (isGuild()) {
-                    <span class="bg-[#8b5a2b]/15 text-[#8b5a2b] uppercase font-bold text-base px-2 py-0.5 rounded-lg">
+                    <app-settlement-badge tone="line" [uppercase]="true">
                         {{ guildLabel() }}
-                    </span>
+                    </app-settlement-badge>
                 }
-                <span class="bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-2 py-0.5 rounded-lg">
+                <app-settlement-badge tone="leader">
                     {{ settlementData.members.length + 1 }} {{ 'settlements.detailed.residentsShort' | translate }}
-                </span>
-                <span class="bg-[#16a34a]/15 text-[#16a34a] font-bold text-base px-2 py-0.5 rounded-lg">
+                </app-settlement-badge>
+                <app-settlement-badge tone="peace">
                     {{ onlineCount }} {{ 'settlements.detailed.onlineShort' | translate }}
-                </span>
+                </app-settlement-badge>
             </div>
 
             <p
-                class="text-base md:text-lg font-medium text-[#5c4030] leading-7"
+                class="text-base md:text-lg font-medium text-ink-2 leading-7"
                 [innerHTML]="settlementData.description"
             ></p>
 
-            <hr class="h-px bg-[#bdb093]/30 w-full rounded-full" />
+            <hr class="h-px bg-surface-4/30 w-full rounded-full" />
 
-            <p class="text-lg font-semibold text-[#2d201a]">{{ 'settlements.detailed.population' | translate }}</p>
+            <p class="text-lg font-semibold text-ink">{{ 'settlements.detailed.population' | translate }}</p>
             <div class="flex flex-wrap gap-2">
-                <div class="flex bg-[#3d5381]/15 text-[#3d5381] font-bold text-base px-3 py-1.5 rounded-xl items-center">
-                    @if (leader?.is_online === true) {
-                        <tui-pulse class="self-center mr-2 online" />
-                    } @else {
-                        <tui-pulse [playing]="false" class="self-center mr-2 offline" />
-                    }
-                    <span>{{ leader?.user_game_name }}</span>
-                </div>
-
-                @for (item of users; track $index) {
-                    <div class="flex bg-[#86523b]/15 text-[#86523b] font-bold text-base px-3 py-1.5 rounded-xl items-center">
-                        @if (item?.is_online === true) {
+                @if (leader; as leaderPlayer) {
+                    <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base px-3 py-1.5 rounded-xl items-center">
+                        @if (leaderPlayer.is_online) {
                             <tui-pulse class="self-center mr-2 online" />
                         } @else {
                             <tui-pulse [playing]="false" class="self-center mr-2 offline" />
                         }
-                        <span>{{ item?.user_game_name }}</span>
+                        <span>{{ leaderPlayer.user_game_name }}</span>
+                    </div>
+                }
+
+                @for (item of users; track item.user_id) {
+                    <div class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base px-3 py-1.5 rounded-xl items-center">
+                        @if (item.is_online) {
+                            <tui-pulse class="self-center mr-2 online" />
+                        } @else {
+                            <tui-pulse [playing]="false" class="self-center mr-2 offline" />
+                        }
+                        <span>{{ item.user_game_name }}</span>
                     </div>
                 }
             </div>

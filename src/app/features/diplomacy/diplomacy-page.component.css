@@ -20,27 +20,27 @@
     gap: 1rem;
     padding: 4rem 1rem;
     text-align: center;
-    color: var(--color-lh-primary);
+    color: var(--lh-ink);
     border-radius: 1rem;
-    background: rgba(26, 24, 22, 0.04);
-    border: 1px dashed rgba(45, 32, 26, 0.15);
+    background: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--lh-ink) 15%, transparent);
 }
 
 .diplomacy-page__error {
-    color: var(--lh-danger);
-    background: rgba(114, 0, 0, 0.06);
+    color: var(--lh-danger-ink);
+    background: color-mix(in srgb, var(--lh-danger-ink) 6%, transparent);
     border-style: solid;
 }
 
 .diplomacy-page__empty-title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--color-lh-primary);
+    color: var(--lh-ink);
 }
 
 .diplomacy-page__empty-description {
     font-size: 1rem;
-    color: #5c4f3f;
+    color: var(--lh-ink-2);
     max-width: 28rem;
 }
 
@@ -58,7 +58,12 @@
     padding: 1.75rem;
     padding-top: 2.25rem;
     border-radius: 1rem;
-    background: linear-gradient(160deg, #f6f0df 0%, #e9dec5 55%, #e0d3b8 100%);
+    background: linear-gradient(
+        160deg,
+        var(--lh-surface-2) 0%,
+        color-mix(in srgb, var(--lh-surface-2), var(--lh-surface)) 55%,
+        var(--lh-surface) 100%
+    );
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.45),
         0 8px 28px rgba(45, 32, 26, 0.1);
@@ -75,8 +80,8 @@
     pointer-events: none;
     background: repeating-linear-gradient(
         45deg,
-        rgba(195, 90, 23, 0.04) 0,
-        rgba(195, 90, 23, 0.04) 2px,
+        color-mix(in srgb, var(--lh-brand) 4%, transparent) 0,
+        color-mix(in srgb, var(--lh-brand) 4%, transparent) 2px,
         transparent 2px,
         transparent 12px
     );
@@ -98,7 +103,7 @@
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    color: #f0e6d2;
+    color: var(--lh-parchment-2);
     background: radial-gradient(circle at 35% 30%, #b03a2e 0%, #8c2320 45%, #6e1512 100%);
     border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%;
     box-shadow:
@@ -130,9 +135,9 @@
     border-radius: 50%;
     font-size: 1.25rem;
     font-weight: 800;
-    color: #f0e6d2;
-    background: linear-gradient(135deg, #7a5631 0%, #9c4f24 100%);
-    border: 2px solid rgba(240, 230, 210, 0.5);
+    color: var(--lh-parchment-2);
+    background: linear-gradient(135deg, var(--lh-night-grad-3) 0%, var(--lh-brand-strong) 100%);
+    border: 2px solid color-mix(in srgb, var(--lh-parchment-2) 50%, transparent);
     box-shadow: 0 3px 10px rgba(124, 78, 40, 0.3);
 }
 
@@ -145,7 +150,7 @@
 .diplomacy-card__author-name {
     font-size: 1.125rem;
     font-weight: 700;
-    color: var(--color-lh-primary);
+    color: var(--lh-ink);
     line-height: 1.25;
 }
 
@@ -154,7 +159,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #9c4f24;
+    color: var(--lh-brand-ink);
 }
 
 .diplomacy-card__date {
@@ -167,13 +172,13 @@
 .diplomacy-card__date-day {
     font-size: 0.875rem;
     font-weight: 700;
-    color: var(--color-lh-primary);
+    color: var(--lh-ink);
 }
 
 .diplomacy-card__date-time {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #7a6b58;
+    color: var(--lh-ink-3);
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
@@ -183,8 +188,8 @@
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(156, 79, 36, 0.35) 20%,
-        rgba(156, 79, 36, 0.35) 80%,
+        color-mix(in srgb, var(--lh-brand-strong) 35%, transparent) 20%,
+        color-mix(in srgb, var(--lh-brand-strong) 35%, transparent) 80%,
         transparent 100%
     );
 }
@@ -197,7 +202,7 @@
     font-family: 'Alegreya', Georgia, 'Times New Roman', serif;
     font-size: 1.125rem;
     line-height: 1.75;
-    color: #2d201a;
+    color: var(--lh-ink);
     white-space: pre-wrap;
     word-break: break-word;
     text-align: left;
@@ -206,7 +211,7 @@
 .diplomacy-card__text::first-letter {
     font-size: 1.65em;
     font-weight: 700;
-    color: #9c4f24;
+    color: var(--lh-brand-ink);
     line-height: 1;
 }
 

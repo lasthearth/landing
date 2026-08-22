@@ -14,7 +14,7 @@ import { SkeletonComponent } from './skeleton.component';
         <div class="flex flex-col gap-4">
             @for (_ of itemsArray(); track $index) {
                 <div
-                    class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
+                    class="bg-surface border-2 border-line/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
                 >
                     <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
                         <app-skeleton width="14" height="14" [circle]="true" className="shrink-0 bg-lh-primary-2/20" />

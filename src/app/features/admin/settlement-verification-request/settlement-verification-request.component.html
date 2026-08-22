@@ -1,4 +1,4 @@
-<div class="bg-[#e2d7bb] border-2 border-[#bdb093]/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow">
+<div class="bg-surface border-2 border-line/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow">
     <!-- Заголовок: название селения -->
     <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">
         <div
@@ -7,34 +7,34 @@
             <tui-icon icon="@tui.home" class="size-5! text-lh-accent" />
         </div>
         <div class="flex flex-col min-w-0">
-            <span class="text-base text-neutral-500 leading-5">{{ 'admin.settlementForms.nameLabel' | translate }}</span>
-            <span class="text-2xl font-bold text-[#2d201a] truncate">{{ getDisplayName(data()) }}</span>
+            <span class="text-base text-ink-3 leading-5">{{ 'admin.settlementForms.nameLabel' | translate }}</span>
+            <span class="text-2xl font-bold text-ink truncate">{{ getDisplayName(data()) }}</span>
         </div>
     </div>
 
     <!-- Поля анкеты -->
-    <div class="flex flex-col gap-3">
-        <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-1">
-            <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.typeLabel' | translate }}</span>
-            <span class="text-lg font-semibold text-[#2d201a]">{{ getSettlementType(data()) }}</span>
+    <div class="flex flex-col divide-y divide-line">
+        <div class="flex flex-col gap-1 py-3 first:pt-0">
+            <span class="text-base text-ink-3 leading-4">{{ 'admin.settlementForms.typeLabel' | translate }}</span>
+            <span class="text-lg font-semibold text-ink">{{ getSettlementType(data()) }}</span>
         </div>
 
-        <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex flex-col gap-1">
-            <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.descriptionLabel' | translate }}</span>
-            <span class="text-lg text-[#5c4030] leading-6 break-words">{{ data().description }}</span>
+        <div class="flex flex-col gap-1 py-3">
+            <span class="text-base text-ink-3 leading-4">{{ 'admin.settlementForms.descriptionLabel' | translate }}</span>
+            <span class="text-lg text-ink-2 leading-6 break-words">{{ data().description }}</span>
         </div>
 
-        <div class="bg-lh-primary-2/15 border border-lh-primary-2/20 rounded-xl p-4 flex items-center gap-4 flex-wrap">
+        <div class="flex items-center gap-4 flex-wrap py-3 last:pb-0">
             <div class="flex flex-col">
-                <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.coordinatesLabel' | translate }}</span>
-                <span class="text-lg font-semibold text-[#2d201a]">
+                <span class="text-base text-ink-3 leading-4">{{ 'admin.settlementForms.coordinatesLabel' | translate }}</span>
+                <span class="text-lg font-semibold text-ink">
                     x: {{ data().coordinates.x }}, z: {{ data().coordinates.y }}
                 </span>
             </div>
-            <div class="w-px h-8 bg-lh-primary-2/20"></div>
+            <div class="w-px h-8 bg-line"></div>
             <div class="flex flex-col">
-                <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.diplomacyLabel' | translate }}</span>
-                <span class="text-lg font-semibold text-[#2d201a]">{{ data().diplomacy }}</span>
+                <span class="text-base text-ink-3 leading-4">{{ 'admin.settlementForms.diplomacyLabel' | translate }}</span>
+                <span class="text-lg font-semibold text-ink">{{ data().diplomacy }}</span>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
     <!-- Вложения / картинки -->
     @if (data().attachments.length) {
         <div class="flex flex-col gap-2">
-            <span class="text-base text-neutral-500 leading-4">{{ 'admin.settlementForms.attachmentsLabel' | translate }}</span>
+            <span class="text-base text-ink-3 leading-4">{{ 'admin.settlementForms.attachmentsLabel' | translate }}</span>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 @for (item of data().attachments; track $index) {
                     <div
@@ -53,7 +53,7 @@
                         <div
                             class="absolute inset-0 bg-linear-to-t from-lh-primary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2"
                         >
-                            <span class="text-base text-[#f5eedd] font-medium truncate">{{ item.desc }}</span>
+                            <span class="text-base text-parchment-3 font-medium truncate">{{ item.desc }}</span>
                         </div>
                     </div>
                 }
@@ -71,7 +71,7 @@
         </button>
         <button
             (click)="approve()"
-            class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-[#e66a1a] transition-colors"
+            class="text-lg font-bold cursor-pointer bg-lh-accent text-white rounded-xl py-2 px-5 hover:bg-brand-lit-2 transition-colors"
         >
             {{ 'admin.playerForms.approve' | translate }}
         </button>

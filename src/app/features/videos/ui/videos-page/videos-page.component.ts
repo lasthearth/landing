@@ -18,6 +18,9 @@ import { catchError, of, switchMap } from 'rxjs';
     templateUrl: './videos-page.component.html',
     styleUrl: './videos-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(document:keydown.escape)': 'closeVideo()',
+    },
 })
 export class VideosPageComponent {
     /**
@@ -68,6 +71,7 @@ export class VideosPageComponent {
 
     /**
      * Закрывает превью видео.
+     * Вызывается кликом по оверлею, кнопкой закрытия и клавишей Escape.
      */
     protected closeVideo(): void {
         this.previewVideoId.set(null);

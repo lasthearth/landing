@@ -7,12 +7,15 @@ import {
     BehaviorSubject,
     catchError,
     combineLatest,
+    distinctUntilChanged,
+    filter,
     finalize,
     first,
     forkJoin,
     map,
     Observable,
     of,
+    shareReplay,
     Subject,
     switchMap,
     tap,
@@ -81,24 +84,51 @@ export class UserService {
     private baseUrl = environment.apiUrl;
 
     /**
-     * Поток изменения состояния авторизации.
-     */
-    private readonly authStateChange$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    /**
      * Публичный поток состояния авторизации.
+     *
+     * Источник истины — {@link OidcSecurityService.isAuthenticated$}: библиотека
+     * переводит его в `true` сразу при обработке OIDC-callback и в `false` при
+     * выходе либо неудачном обновлении токена. Перед выдачей `true` подписчикам
+     * данные пользователя догружаются из токенов, чтобы `userId`, `roles`,
+     * `userName` и `userImage` были заполнены к моменту рендера.
      */
-    public readonly authState$: Observable<boolean> = this.authStateChange$;
+    public readonly authState$: Observable<boolean> = this.oidcSecurityService.isAuthenticated$.pipe(
+        map(({ isAuthenticated }) => isAuthenticated),
+        distinctUntilChanged(),
+        switchMap((isAuthenticated) => (isAuthenticated ? this.hydrateUserData$() : of(false))),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: false })
+    );
 
     /**
-     * Признак завершения первоначальной проверки авторизации.
+     * Признак завершения вызова {@link OidcSecurityService.checkAuth}.
      */
-    private readonly authChecked$ = new BehaviorSubject(false);
+    private readonly checkCompleted$ = new BehaviorSubject(false);
 
     /**
      * Публичный поток признака завершения проверки авторизации.
      */
-    public readonly isAuthChecked$: Observable<boolean> = this.authChecked$.asObservable();
+    public readonly isAuthChecked$: Observable<boolean> = this.checkCompleted$.asObservable();
+
+    /**
+     * Поток итогового состояния авторизации: начинает выдавать значения
+     * только после завершения `checkAuth`.
+     *
+     * До этого момента {@link authState$} отдаёт `false` — начальное значение
+     * библиотеки, а не результат проверки. Подписчики, которым важен именно
+     * итог (стражи маршрутов, приветственный экран), должны ждать этот поток,
+     * иначе авторизованный пользователь получит редирект на главную либо
+     * увидит приветственный экран.
+     *
+     * К моменту завершения `checkAuth` библиотека уже выставила состояние
+     * авторизации (это происходит на шаге валидации токенов внутри обработки
+     * callback), поэтому промежуточного `false` здесь не будет.
+     */
+    public readonly authSettled$: Observable<boolean> = this.checkCompleted$.pipe(
+        filter(Boolean),
+        switchMap(() => this.authState$),
+        shareReplay({ bufferSize: 1, refCount: false })
+    );
 
     /**
      * HTTP-клиент Angular.
@@ -133,86 +163,32 @@ export class UserService {
 
     /**
      * Инициализирует поток проверки авторизации.
-     * При срабатывании триггера выполняет проверку или принудительное обновление сессии.
-     * В режиме обычной проверки сначала вызывает {@link OidcSecurityService.checkAuth},
-     * а при отсутствии действующего access token пытается обновить его через refresh token,
-     * чтобы стражи маршрутов получили финальное состояние без промежуточного редиректа.
+     *
+     * При срабатывании триггера выполняет {@link OidcSecurityService.checkAuth}
+     * (обрабатывает OIDC-callback с `?code=`) либо принудительное обновление сессии.
+     * Состояние авторизации сюда не пишется — его источником является
+     * {@link authState$}, подписанный на состояние библиотеки.
      */
-    public initAuthStream() {
+    public initAuthStream(): void {
         this.checkAuthTrigger$
             .pipe(
                 switchMap((forceRefresh) => {
-                    if (isPlatformBrowser(this.platformId)) {
-                        console.debug('[Auth] URL:', window.location.href);
-                        console.debug('[Auth] redirectUri:', environment.redirectUri);
-                    }
-
                     const authRequest$ = forceRefresh
                         ? this.oidcSecurityService.forceRefreshSession()
                         : this.oidcSecurityService.checkAuth();
 
                     return authRequest$.pipe(
                         tap((authResult) => {
-                            console.debug('[Auth] checkAuth result:', authResult.isAuthenticated, authResult.errorMessage);
-                        }),
-                        switchMap((authResult) => {
-                            if (!authResult.isAuthenticated) {
-                                console.warn('[Auth] Не аутентифицирован');
-                                this.authStateChange$.next(false);
-                                return of(null);
+                            if (!authResult.isAuthenticated && authResult.errorMessage) {
+                                console.error('[Auth] Ошибка проверки авторизации:', authResult.errorMessage);
                             }
-
-                            // Очищаем query-параметры авторизации из URL
-                            if (window.location.search.includes('code=')) {
-                                window.history.replaceState(
-                                    {},
-                                    document.title,
-                                    window.location.pathname + window.location.hash
-                                );
-                            }
-
-                            return combineLatest([
-                                this.oidcSecurityService.getIdToken(),
-                                this.oidcSecurityService.getAccessToken(),
-                                this.oidcSecurityService.getRefreshToken(),
-                            ]).pipe(
-                                first(),
-                                tap(([idToken, accessToken, refreshToken]) => {
-                                    console.debug('[Auth] Refresh token present:', !!refreshToken);
-                                    this.accessToken = accessToken;
-                                    try {
-                                        if (idToken) {
-                                            const decoded = jwtDecode<IJwtTokenLh>(idToken);
-                                            this.userId = decoded.sub ?? '';
-                                            this.roles = decoded.roles ?? [];
-
-                                            if (authResult.userData) {
-                                                this.userImage = authResult.userData.picture;
-                                                this.userName = authResult.userData.username;
-                                            }
-
-                                            this.authStateChange$.next(true);
-                                            console.debug('[Auth] Данные успешно обновлены');
-                                        }
-                                    } catch (decodeError) {
-                                        console.error('[Auth] Ошибка декодирования:', decodeError);
-                                        this.authStateChange$.next(false);
-                                    }
-                                }),
-                                catchError((err) => {
-                                    console.error('[Auth] Ошибка получения токенов:', err);
-                                    this.authStateChange$.next(false);
-                                    return of(null);
-                                })
-                            );
                         }),
                         catchError((authError) => {
                             console.error('[Auth] Ошибка авторизации/обновления:', authError);
-                            this.authStateChange$.next(false);
                             return of(null);
                         }),
                         finalize(() => {
-                            this.authChecked$.next(true);
+                            this.checkCompleted$.next(true);
                         })
                     );
                 })
@@ -221,49 +197,57 @@ export class UserService {
     }
 
     /**
-     * Подписывается на публичные события OIDC.
-     * Обновляет локальные поля при silent renew и сбрасывает авторизацию при ошибках.
+     * Подгружает данные пользователя из актуальных токенов.
+     *
+     * Вызывается перед публикацией `true` в {@link authState$}, чтобы к моменту
+     * рендера шапки и профиля поля `userId`, `roles`, `userName` и `userImage`
+     * были заполнены.
+     *
+     * Все поля читаются из `id_token`, а не из хранилища userData библиотеки:
+     * при обработке OIDC-callback состояние авторизации выставляется на шаг
+     * раньше, чем userData попадает в хранилище.
+     *
+     * @returns Observable с признаком успешного заполнения данных.
      */
-    private listenToAuthEvents(): void {
-        this.publicEventsService
-            .registerForEvents()
-            .subscribe((notification) => {
-                switch (notification.type) {
-                    case EventTypes.NewAuthenticationResult:
-                        if (notification.value?.isAuthenticated) {
-                            this.updateUserDataFromTokens();
-                        }
-                        break;
-                    case EventTypes.SilentRenewFailed:
-                        console.error('[Auth] Silent renew не удался:', notification.value);
-                        this.authStateChange$.next(false);
-                        break;
+    private hydrateUserData$(): Observable<boolean> {
+        return combineLatest([
+            this.oidcSecurityService.getIdToken(),
+            this.oidcSecurityService.getAccessToken(),
+        ]).pipe(
+            first(),
+            map(([idToken, accessToken]) => {
+                if (!idToken) {
+                    return false;
                 }
-            });
+
+                const decoded = jwtDecode<IJwtTokenLh>(idToken);
+
+                this.accessToken = accessToken;
+                this.userId = decoded.sub ?? '';
+                this.roles = decoded.roles ?? [];
+                this.userName = decoded.username ?? decoded.name ?? '';
+                this.userImage = decoded.picture ?? '';
+
+                return true;
+            }),
+            catchError((error) => {
+                console.error('[Auth] Ошибка чтения данных пользователя:', error);
+                return of(false);
+            })
+        );
     }
 
     /**
-     * Обновляет локальные данные пользователя из актуальных токенов.
-     * Используется после успешного silent renew.
+     * Подписывается на публичные события OIDC.
+     * Перечитывает данные пользователя после успешного silent renew:
+     * {@link authState$} при обновлении токена не переизлучается.
      */
-    private updateUserDataFromTokens(): void {
-        combineLatest([this.oidcSecurityService.getIdToken(), this.oidcSecurityService.getAccessToken()])
-            .pipe(first())
-            .subscribe(([idToken, accessToken]) => {
-                this.accessToken = accessToken;
-                try {
-                    if (idToken) {
-                        const decoded = jwtDecode<IJwtTokenLh>(idToken);
-                        this.userId = decoded.sub ?? '';
-                        this.roles = decoded.roles ?? [];
-                        this.authStateChange$.next(true);
-                        console.debug('[Auth] Данные обновлены после silent renew');
-                    }
-                } catch (decodeError) {
-                    console.error('[Auth] Ошибка декодирования токена после renew:', decodeError);
-                    this.authStateChange$.next(false);
-                }
-            });
+    private listenToAuthEvents(): void {
+        this.publicEventsService.registerForEvents().subscribe((notification) => {
+            if (notification.type === EventTypes.NewAuthenticationResult && notification.value?.isAuthenticated) {
+                this.hydrateUserData$().subscribe();
+            }
+        });
     }
 
     /**

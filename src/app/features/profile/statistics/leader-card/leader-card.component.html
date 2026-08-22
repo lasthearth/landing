@@ -2,7 +2,7 @@
     <div
         [class.!min-w-[130%]]="isBigSize()"
         [class.!h-[110%]]="isBigSize()"
-        class="ember-card flex px-6 bg-[url('/br.webp')] bg-cover bg-center size-full flex-col gap-2 lg:gap-6 rounded-4xl justify-center items-center shadow-lg shadow-[#1a110d]/60 border border-[#8a5a3a]/30 card-tilt"
+        class="ember-card flex px-6 bg-[url('/br.webp')] bg-cover bg-center size-full flex-col gap-2 lg:gap-6 rounded-4xl justify-center items-center shadow-lg shadow-night-deep/60 border border-line-strong/30 card-tilt"
     >
         <div
             class="absolute inset-0 z-20 pointer-events-none particles"
@@ -17,7 +17,7 @@
             objectFit="cover"
             [alt]="'profile.statistics.avatarAlt' | translate"
         />
-        <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-[#f5eedd]">
+        <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-parchment-3">
             {{ playerName() }}
         </p>
         <p
@@ -29,10 +29,10 @@
             {{ ratingPlace() }}
         </p>
         <div class="flex flex-col gap-1 justify-center items-center">
-            <p class="count-text text-shadow-2xl text-shadow-2xl font-semibold z-30 text-[#f5eedd]">
+            <p class="count-text text-shadow-2xl text-shadow-2xl font-semibold z-30 text-parchment-3">
                 {{ count() }}
             </p>
-            <p class="type-text opacity-50 lowercase text-shadow-2xl font-semibold z-30 text-[#f5eedd]">
+            <p class="type-text opacity-50 lowercase text-shadow-2xl font-semibold z-30 text-parchment-3">
                 {{ type() }}
             </p>
         </div>

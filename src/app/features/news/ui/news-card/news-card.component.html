@@ -40,27 +40,27 @@
             </div>
             <div class="flex flex-col gap-3 items-start mb-5">
                 <h2
-                    class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100 group-hover:text-[#ffcc8a] transition-colors duration-300"
+                    class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100 group-hover:text-accent-soft transition-colors duration-300"
                 >
                     {{ title() }}
                 </h2>
                 <div class="flex flex-wrap gap-2 items-center">
                     @if (date() !== "—") {
                         <span
-                            class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-[#f0e6d2] bg-gradient-to-br from-[#8b4a1f] to-[#c35a17] shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                            class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2 to-brand shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
                         >
                             {{ date() }}
                         </span>
                     }
                     @if (createdBy()) {
                         <span
-                            class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-[#f0e6d2] bg-gradient-to-br from-[#8b4a1f]/75 to-[#c35a17]/75"
+                            class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2/75 to-brand/75"
                         >
                             {{ createdBy() }}
                         </span>
                     }
                     <span
-                        class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-[#f0e6d2] bg-gradient-to-br from-[#8b4a1f]/75 to-[#c35a17]/75"
+                        class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2/75 to-brand/75"
                     >
                         <tui-icon icon="@tui.eye" class="size-3.5" />
                         {{ viewCount() }}

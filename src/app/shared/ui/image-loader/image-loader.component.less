@@ -1,13 +1,16 @@
 /**
  * Анимированный скелетон для загрузки изображения.
  * Бегущий градиент, имитирующий блик на поверхности.
+ *
+ * Блик строится от --lh-ink, поэтому в светлой теме он тёмный,
+ * а в тёмной — светлый, без отдельного правила на тему.
  */
 .image-loader-skeleton {
     background: linear-gradient(
         90deg,
-        rgba(51, 44, 38, 0.06) 0%,
-        rgba(51, 44, 38, 0.14) 50%,
-        rgba(51, 44, 38, 0.06) 100%
+        color-mix(in srgb, var(--lh-ink) 6%, transparent) 0%,
+        color-mix(in srgb, var(--lh-ink) 14%, transparent) 50%,
+        color-mix(in srgb, var(--lh-ink) 6%, transparent) 100%
     );
     background-size: 200% 100%;
     animation: image-loader-shimmer 1.6s infinite linear;

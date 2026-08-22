@@ -37,7 +37,7 @@
                     <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden />
                     <button
                         (click)="triggerFileInput()"
-                        class="flex items-center justify-center gap-2 w-full text-base leading-[27px] font-bold cursor-pointer text-white bg-gradient-to-r from-lh-accent to-[#e07830] hover:brightness-105 transition-all duration-300 shadow-md py-2 px-2 whitespace-nowrap rounded-b-2xl"
+                        class="flex items-center justify-center gap-2 w-full text-base leading-[27px] font-bold cursor-pointer text-white bg-gradient-to-r from-lh-accent to-brand-hover hover:brightness-105 transition-all duration-300 shadow-md py-2 px-2 whitespace-nowrap rounded-b-2xl"
                     >
                         <tui-icon icon="@tui.camera" class="size-4!" />
                         {{ 'profile.avatar.changePhoto' | translate }}
@@ -51,7 +51,7 @@
                         <div
                             class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
                         >
-                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">{{ 'profile.role.label' | translate }}</p>
+                            <p class="text-lg leading-[27px] text-ink-3 mb-1">{{ 'profile.role.label' | translate }}</p>
                             <p class="text-lg leading-[27px] font-bold">{{ getRoleName() | translate }}</p>
                         </div>
 
@@ -60,7 +60,7 @@
                             <div
                                 class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
                             >
-                                <p class="text-lg leading-[27px] text-neutral-500 mb-1">{{ 'profile.nickname.label' | translate }}</p>
+                                <p class="text-lg leading-[27px] text-ink-3 mb-1">{{ 'profile.nickname.label' | translate }}</p>
                                 <div class="flex items-center justify-between gap-2">
                                     <p class="text-lg leading-[27px] font-bold truncate">{{ userName }}</p>
                                     <button
@@ -81,25 +81,25 @@
                         <div
                             class="flex-1 shrink-1 flex gap-1 flex-col justify-start bg-lh-primary-2/10 rounded-xl px-4 py-3 border border-lh-primary-2/10 w-full"
                         >
-                            <p class="text-lg leading-[27px] text-neutral-500 mb-1">{{ 'profile.settlement.label' | translate }}</p>
+                            <p class="text-lg leading-[27px] text-ink-3 mb-1">{{ 'profile.settlement.label' | translate }}</p>
                             <span class="font-bold truncate text-lg leading-[27px]">
                                 {{ (settlement.leader.user_id === userService.userId ? 'profile.settlement.role.leader' : 'profile.settlement.role.resident') | translate }}
                                 «{{ settlement | settlementDisplayName }}»
                             </span>
-                            <div class="flex items-start gap-2 flex-wrap text-lg leading-[27px]">
-                                <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
+                            <div class="flex items-start gap-2 flex-wrap">
+                                <app-settlement-badge [tone]="getSettlementTypeTone(settlement)" [uppercase]="true">
                                     {{ getSettlementTypeLabel(settlement) }}
-                                </span>
-                                <span class="px-2 py-0.5 bg-lh-primary-2/20 rounded-full">
+                                </app-settlement-badge>
+                                <app-settlement-badge tone="leader">
                                     {{ settlement.members.length + 1 }} {{ 'profile.settlement.residentsShort' | translate }}
-                                </span>
-                                <span class="px-2 py-0.5 bg-[#a0b8d0]/30 text-[#5a7a9a] rounded-full">
+                                </app-settlement-badge>
+                                <app-settlement-badge tone="peace">
                                     {{ settlementOnline ?? 0 }} {{ 'profile.settlement.onlineShort' | translate }}
-                                </span>
+                                </app-settlement-badge>
                                 @if (settlement.diplomacy) {
-                                    <span class="px-2 py-0.5 bg-lh-accent-3/20 text-lh-accent-3 rounded-full">
+                                    <app-settlement-badge [tone]="getDiplomacyTone(settlement.diplomacy)" [uppercase]="true">
                                         {{ settlement.diplomacy }}
-                                    </span>
+                                    </app-settlement-badge>
                                 }
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                         <div
                             class="bg-lh-primary-2/10 rounded-xl px-4 py-3 text-center border border-lh-primary-2/10 w-full"
                         >
-                            <span class="text-lg leading-[27px] text-neutral-500">{{ 'profile.settlement.noSettlement' | translate }}</span>
+                            <span class="text-lg leading-[27px] text-ink-3">{{ 'profile.settlement.noSettlement' | translate }}</span>
                         </div>
                     }
 
@@ -128,7 +128,7 @@
             >
                 <div class="flex items-center justify-center gap-2 mb-1">
                     <tui-icon icon="@tui.flame" class="size-5! text-lh-accent" />
-                    <p class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">{{ 'profile.hungerGames.title' | translate }}</p>
+                    <p class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">{{ 'profile.hungerGames.title' | translate }}</p>
                 </div>
                 @if (hungerGamesSeason(); as season) {
                     <div class="flex items-center justify-center gap-2 mb-1">
@@ -174,23 +174,23 @@
                         <div class="flex flex-col gap-0.5">
                             <div class="flex items-center justify-center gap-1.5 text-base leading-5">
                                 <span>
-                                    <span class="text-neutral-500">{{ 'profile.hungerGames.elo' | translate }}</span>
+                                    <span class="text-ink-3">{{ 'profile.hungerGames.elo' | translate }}</span>
                                     <span class="font-bold">{{ hgStats.elo }}</span>
                                 </span>
                                 <span class="text-lh-primary-2/40">|</span>
                                 <span>
-                                    <span class="text-neutral-500">{{ 'profile.hungerGames.wins' | translate }}</span>
+                                    <span class="text-ink-3">{{ 'profile.hungerGames.wins' | translate }}</span>
                                     <span class="font-bold">{{ hgStats.wins }}</span>
                                 </span>
                                 <span class="text-lh-primary-2/40">|</span>
                                 <span>
-                                    <span class="text-neutral-500">{{ 'profile.hungerGames.kills' | translate }}</span>
+                                    <span class="text-ink-3">{{ 'profile.hungerGames.kills' | translate }}</span>
                                     <span class="font-bold">{{ hgStats.kills }}</span>
                                 </span>
                             </div>
                             @if (hgStats.rank > 0) {
                                 <div
-                                    class="flex items-center justify-center gap-1.5 text-base leading-5 text-neutral-500"
+                                    class="flex items-center justify-center gap-1.5 text-base leading-5 text-ink-3"
                                 >
                                     <span>
                                         {{ 'profile.hungerGames.rank' | translate }}
@@ -207,10 +207,10 @@
                             }
                         </div>
                     } @else {
-                        <p class="text-base leading-5 text-neutral-500">{{ 'profile.hungerGames.noData' | translate }}</p>
+                        <p class="text-base leading-5 text-ink-3">{{ 'profile.hungerGames.noData' | translate }}</p>
                     }
                 } @else {
-                    <p class="text-base leading-5 text-neutral-500">{{ 'profile.hungerGames.noCurrentSeason' | translate }}</p>
+                    <p class="text-base leading-5 text-ink-3">{{ 'profile.hungerGames.noCurrentSeason' | translate }}</p>
                 }
             </div>
 
@@ -229,7 +229,7 @@
                             />
                             <span class="text-lg leading-[27px] font-bold">{{ balance ?? "—" }}</span>
                         </div>
-                        <span class="text-lg leading-[27px] text-neutral-500 font-semibold">{{ 'profile.currency.shards' | translate }}</span>
+                        <span class="text-lg leading-[27px] text-ink-3 font-semibold">{{ 'profile.currency.shards' | translate }}</span>
                     </div>
 
                     <!-- Кнопка пополнения -->
@@ -246,15 +246,15 @@
                         <div
                             class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
                         >
-                            <tui-icon icon="@tui.skull" class="size-6! text-[#c9a0a0] mb-1" />
-                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">{{ 'profile.stats.deaths' | translate }}</span>
+                            <tui-icon icon="@tui.skull" class="size-6! text-danger-soft mb-1" />
+                            <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">{{ 'profile.stats.deaths' | translate }}</span>
                             <span class="text-lg leading-[27px] font-bold">{{ stats?.deaths ?? "—" }}</span>
                         </div>
                         <div
                             class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
                         >
-                            <tui-icon icon="@tui.swords" class="size-6! text-[#c9a880] mb-1" />
-                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">
+                            <tui-icon icon="@tui.swords" class="size-6! text-parchment-dim mb-1" />
+                            <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">
                                 {{ 'profile.stats.kills' | translate }}
                             </span>
                             <span class="text-lg leading-[27px] font-bold">{{ stats?.kills ?? "—" }}</span>
@@ -262,8 +262,8 @@
                         <div
                             class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
                         >
-                            <tui-icon icon="@tui.clock" class="size-6! text-[#8a9eb0] mb-1" />
-                            <span class="text-lg leading-[27px] text-neutral-500 uppercase font-semibold">{{ 'profile.stats.hours' | translate }}</span>
+                            <tui-icon icon="@tui.clock" class="size-6! text-leader-soft mb-1" />
+                            <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">{{ 'profile.stats.hours' | translate }}</span>
                             <span class="text-lg leading-[27px] font-bold">
                                 {{ stats ? (stats.hours_played | number: "1.0-1") : "—" }}
                             </span>
@@ -276,7 +276,7 @@
         <!-- История покупок -->
         @if (getRoleName() !== 'profile.role.unverified') {
             <div class="flex flex-col gap-3 mt-6">
-                <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-[#2d201a]">{{ 'profile.purchases.title' | translate }}</h2>
+                <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'profile.purchases.title' | translate }}</h2>
 
                 @if (purchases; as list) {
                     @if (list.length > 0) {
@@ -290,7 +290,7 @@
                                     <span class="text-lg font-bold text-lh-primary truncate">
                                         {{ purchase.itemName || "—" }}
                                     </span>
-                                    <span class="text-base text-neutral-500">{{ purchase.formattedDate }}</span>
+                                    <span class="text-base text-ink-3">{{ purchase.formattedDate }}</span>
                                 </div>
 
                                 <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
@@ -339,7 +339,7 @@
                             <button
                                 type="button"
                                 (click)="isPurchasesExpanded.set(!isPurchasesExpanded())"
-                                class="self-center flex items-center gap-2 text-lg font-semibold text-lh-accent hover:text-[#e07830] transition-colors cursor-pointer"
+                                class="self-center flex items-center gap-2 text-lg font-semibold text-lh-accent hover:text-brand-hover transition-colors cursor-pointer"
                             >
                                 {{ isPurchasesExpanded() ? ('profile.purchases.collapse' | translate) : ('profile.purchases.expand' | translate) }}
                                 <tui-icon
@@ -351,7 +351,7 @@
                         }
                     } @else {
                         <p
-                            class="text-[23px] text-[#5c554a] text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-[#bdb093]"
+                            class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
                         >
                             {{ 'profile.purchases.empty' | translate }}
                         </p>

@@ -1,8 +1,16 @@
 import { HttpContextToken, HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { environment } from '@core/config/environments/environment';
 import { TuiAlertService } from '@taiga-ui/core';
 import { EMPTY, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+/**
+ * Базовый URL OIDC-эмиттента Logto.
+ * Запросы к нему выполняет `angular-auth-oidc-client` (well-known, jwks, token),
+ * и их ошибки должны доходить до библиотеки, а не подменяться на `EMPTY`.
+ */
+const OIDC_ISSUER = `${environment.logtoEndpoint}/oidc`;
 
 /**
  * HTTP-интерцептор для централизованной обработки ошибок.
@@ -23,6 +31,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(req).pipe(
         catchError((err: HttpErrorResponse) => {
+            // Служебные OIDC-запросы: подмена ошибки на EMPTY оборвала бы
+            // процесс авторизации молча — пользователь остался бы «не вошедшим»
+            // при уже сохранённых токенах.
+            if (req.url.startsWith(OIDC_ISSUER)) {
+                return throwError(() => err);
+            }
+
             // Компонент сам обработает ошибку — пропускаем показ алерта
             if (req.context.get(SKIP_ERROR_ALERT)) {
                 return throwError(() => err);

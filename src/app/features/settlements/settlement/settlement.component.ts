@@ -15,14 +15,13 @@ import { CreateSettlementFormComponent } from '@app/features/profile/create-sett
 import { EditSettlementFormComponent } from '../edit-settlement-form/edit-settlement-form.component';
 import { SettlementsTypes } from '@entities/settlement';
 import { ISettlementInvitation } from '@entities/settlement';
-import { getSettlementTypeByKey, isGuildSettlement, SettlementDisplayNamePipe } from '@entities/settlement';
+import { getSettlementTypeByKey, getSettlementTypeTone, getDiplomacyTone, isGuildSettlement, SettlementBadgeComponent, SettlementBadgeTone, SettlementDisplayNamePipe } from '@entities/settlement';
 import { TuiPulse } from '@taiga-ui/kit';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { IPlayer } from '@entities/user';
-import { SettlementTagStore } from '@entities/settlement-tag';
-import { SettlementTagComponent } from '@app/features/admin/moderate-settlement-request/settlement-tag/settlement-tag.component';
+import { SettlementTagStore, SettlementTagComponent } from '@entities/settlement-tag';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { MediaService } from '@entities/media';
@@ -36,7 +35,7 @@ import { compressImage } from '@shared/lib/compress-image.function';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, TuiPulse, TuiIcon, TuiLoader, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe, SettlementDisplayNamePipe],
+    imports: [AsyncPipe, TuiPulse, TuiIcon, TuiLoader, SettlementBadgeComponent, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe, SettlementDisplayNamePipe],
     providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
@@ -295,6 +294,26 @@ export class SettlementComponent {
         }
 
         return settlement.diplomacy;
+    }
+
+    /**
+     * Возвращает тон бейджа типа селения.
+     *
+     * @param settlement Селение.
+     * @returns Тон бейджа.
+     */
+    protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
+        return getSettlementTypeTone(settlement);
+    }
+
+    /**
+     * Возвращает тон бейджа дипломатии.
+     *
+     * @param diplomacy Статус дипломатии.
+     * @returns Тон бейджа.
+     */
+    protected getDiplomacyTone(diplomacy: string | undefined): SettlementBadgeTone {
+        return getDiplomacyTone(diplomacy);
     }
 
     /**

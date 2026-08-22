@@ -5,15 +5,15 @@
             type="button"
             (click)="activeTabIndex.set(0)"
             class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
-            [class.border-[#c35a17]]="activeTabIndex() === 0"
+            [class.border-brand]="activeTabIndex() === 0"
             [class.bg-gradient-to-r]="activeTabIndex() === 0"
-            [class.from-[#c35a17]]="activeTabIndex() === 0"
-            [class.to-[#e07830]]="activeTabIndex() === 0"
+            [class.from-brand]="activeTabIndex() === 0"
+            [class.to-brand-hover]="activeTabIndex() === 0"
             [class.text-white]="activeTabIndex() === 0"
-            [class.border-[#c4b89e]]="activeTabIndex() !== 0"
-            [class.bg-[#d8cdb3]]="activeTabIndex() !== 0"
-            [class.text-[#2a2722]]="activeTabIndex() !== 0"
-            [class.hover:bg-[#c4b89e]]="activeTabIndex() !== 0"
+            [class.border-line]="activeTabIndex() !== 0"
+            [class.bg-surface-3]="activeTabIndex() !== 0"
+            [class.text-ink]="activeTabIndex() !== 0"
+            [class.hover:bg-surface-4]="activeTabIndex() !== 0"
         >
             {{ 'admin.shop.listTab' | translate }}
         </button>
@@ -21,15 +21,15 @@
             type="button"
             (click)="startCreate()"
             class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
-            [class.border-[#c35a17]]="activeTabIndex() === 1"
+            [class.border-brand]="activeTabIndex() === 1"
             [class.bg-gradient-to-r]="activeTabIndex() === 1"
-            [class.from-[#c35a17]]="activeTabIndex() === 1"
-            [class.to-[#e07830]]="activeTabIndex() === 1"
+            [class.from-brand]="activeTabIndex() === 1"
+            [class.to-brand-hover]="activeTabIndex() === 1"
             [class.text-white]="activeTabIndex() === 1"
-            [class.border-[#c4b89e]]="activeTabIndex() !== 1"
-            [class.bg-[#d8cdb3]]="activeTabIndex() !== 1"
-            [class.text-[#2a2722]]="activeTabIndex() !== 1"
-            [class.hover:bg-[#c4b89e]]="activeTabIndex() !== 1"
+            [class.border-line]="activeTabIndex() !== 1"
+            [class.bg-surface-3]="activeTabIndex() !== 1"
+            [class.text-ink]="activeTabIndex() !== 1"
+            [class.hover:bg-surface-4]="activeTabIndex() !== 1"
         >
             {{ isEditMode() ? ('admin.shop.editTab' | translate) : ('admin.shop.createTab' | translate) }}
         </button>
@@ -43,23 +43,23 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         @for (item of items; track item.id) {
                             <div
-                                class="relative flex flex-col gap-4 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-[103%] hover:border-[#ff7920]/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] group lh-card-glow"
+                                class="relative flex flex-col gap-4 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-[103%] hover:border-lh-accent/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] group lh-card-glow"
                             >
                                 @if (item.hasDiscount) {
                                     <div
-                                        class="absolute top-3 left-3 bg-white text-[#c35a17] text-base font-extrabold px-3 py-1 rounded-br-xl shadow-md -rotate-3 z-10"
+                                        class="absolute top-3 left-3 bg-white text-brand-ink text-base font-extrabold px-3 py-1 rounded-br-xl shadow-md -rotate-3 z-10"
                                     >
                                         -{{ item.discountPercent }}%
                                     </div>
                                 }
 
                                 <div
-                                    class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-[#ff7920]/30 transition-colors"
+                                    class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30 transition-colors"
                                 >
                                     @if (item.imageUrl) {
                                         <app-image-loader [src]="item.imageUrl" [alt]="item.name" />
                                     } @else {
-                                        <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
+                                        <div class="w-full h-full flex items-center justify-center text-ink-3">
                                             <tui-icon icon="@tui.image" class="size-12!" />
                                         </div>
                                     }
@@ -138,7 +138,7 @@
                     <div
                         class="flex flex-col items-center justify-center gap-4 py-16 bg-lh-primary-2/5 rounded-2xl border border-dashed border-lh-primary-2/30"
                     >
-                        <tui-icon icon="@tui.package" class="size-16! text-[#bdb093]" />
+                        <tui-icon icon="@tui.package" class="size-16! text-ink-3" />
                         <p class="text-xl font-bold text-lh-primary/50">{{ 'admin.shop.empty' | translate }}</p>
                     </div>
                 }
@@ -191,7 +191,7 @@
                             @if (imagePreviewUrl(); as url) {
                                 <app-image-loader [src]="url" [alt]="'admin.common.previewAlt' | translate" />
                             } @else {
-                                <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
+                                <div class="w-full h-full flex items-center justify-center text-ink-3">
                                     <tui-icon icon="@tui.image" class="size-12!" />
                                 </div>
                             }
@@ -200,7 +200,7 @@
                             @if (!form.controls.image.value) {
                                 <label tuiInputFiles>
                                     <ng-template tuiInputFilesContent>
-                                        <span class="text-[#5c554a] text-[18px]">{{ 'admin.shop.addImage' | translate }}</span>
+                                        <span class="text-ink-2 text-[18px]">{{ 'admin.shop.addImage' | translate }}</span>
                                         <input accept="image/*" tuiInputFiles [formControl]="form.controls.image" />
                                     </ng-template>
                                 </label>
@@ -258,13 +258,13 @@
                     form.controls.item_type.value === "ITEM_TYPE_KIT" ||
                     form.controls.item_type.value === "ITEM_TYPE_PRIVILEGE"
                 ) {
-                    <div class="flex flex-col gap-5 p-5 rounded-2xl border border-lh-primary-2/10 bg-lh-primary-2/5">
+                    <div class="flex flex-col gap-5 pt-5 border-t border-lh-primary-2/15">
                         <div class="flex items-center justify-between">
                             <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.entriesTitle' | translate }}</h3>
                             <button
                                 type="button"
                                 (click)="addEntry()"
-                                class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-[#e07830] text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
+                                class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
                             >
                                 <tui-icon icon="@tui.plus" class="size-5!" />
                                 {{ 'admin.common.add' | translate }}
@@ -331,7 +331,7 @@
                                                 <app-image-loader [src]="url" [alt]="'admin.common.previewAlt' | translate" />
                                             } @else {
                                                 <div
-                                                    class="w-full h-full flex items-center justify-center text-[#bdb093]"
+                                                    class="w-full h-full flex items-center justify-center text-ink-3"
                                                 >
                                                     <tui-icon icon="@tui.image" class="size-8!" />
                                                 </div>
@@ -340,7 +340,7 @@
                                         <div class="flex flex-col gap-2 flex-1">
                                             <label tuiInputFiles>
                                                 <ng-template tuiInputFilesContent>
-                                                    <span class="text-[#5c554a] text-base">
+                                                    <span class="text-ink-2 text-base">
                                                         {{ 'admin.shop.addImage' | translate }}
                                                     </span>
                                                     <input
@@ -386,13 +386,13 @@
                     form.controls.item_type.value === "ITEM_TYPE_KIT" ||
                     form.controls.item_type.value === "ITEM_TYPE_PRIVILEGE"
                 ) {
-                    <div class="flex flex-col gap-5 p-5 rounded-2xl border border-lh-primary-2/10 bg-lh-primary-2/5">
+                    <div class="flex flex-col gap-5 pt-5 border-t border-lh-primary-2/15">
                         <div class="flex items-center justify-between">
                             <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.abilitiesTitle' | translate }}</h3>
                             <button
                                 type="button"
                                 (click)="addAbility()"
-                                class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-[#e07830] text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
+                                class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
                             >
                                 <tui-icon icon="@tui.plus" class="size-5!" />
                                 {{ 'admin.common.add' | translate }}
@@ -445,7 +445,7 @@
                     <button
                         type="submit"
                         [disabled]="form.invalid || isLoading()"
-                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-[#e07830] text-white font-bold uppercase text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
+                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-brand-hover text-white font-bold uppercase text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
                     >
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -461,23 +461,23 @@
             >
                 <p class="text-xl font-bold text-lh-primary uppercase tracking-wide">{{ 'admin.shop.previewTitle' | translate }}</p>
                 <div
-                    class="relative flex flex-col gap-4 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-[103%] hover:border-[#ff7920]/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] group"
+                    class="relative flex flex-col gap-4 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-[103%] hover:border-lh-accent/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] group"
                 >
                     @if (previewItem().hasDiscount && previewItem().discountPercent) {
                         <div
-                            class="absolute top-4 left-4 bg-white text-[#c35a17] text-base font-extrabold px-3 py-1.5 rounded-br-xl shadow-md -rotate-3 z-10"
+                            class="absolute top-4 left-4 bg-white text-brand-ink text-base font-extrabold px-3 py-1.5 rounded-br-xl shadow-md -rotate-3 z-10"
                         >
                             -{{ previewItem().discountPercent }}%
                         </div>
                     }
 
                     <div
-                        class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-[#ff7920]/30 transition-colors"
+                        class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30 transition-colors"
                     >
                         @if (previewItem().imageUrl) {
                             <app-image-loader [src]="previewItem().imageUrl" [alt]="previewItem().name" />
                         } @else {
-                            <div class="w-full h-full flex items-center justify-center text-[#bdb093]">
+                            <div class="w-full h-full flex items-center justify-center text-ink-3">
                                 <tui-icon icon="@tui.image" class="size-16!" />
                             </div>
                         }
@@ -520,7 +520,7 @@
 
                     <button
                         type="button"
-                        class="w-full text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-[#e56a18] hover:from-[#e56a18] hover:to-lh-accent rounded-xl py-3 text-lg shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
+                        class="w-full text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-brand-lit-2 hover:from-brand-lit-2 hover:to-lh-accent rounded-xl py-3 text-lg shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
                     >
                         {{ 'admin.shop.buy' | translate }}
                     </button>
@@ -549,7 +549,7 @@
                                 @for (entry of previewItem().entries; track $index) {
                                     <div
                                         [title]="entry.name"
-                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-[#8b7355] bg-[#d4c5a9] shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_2px_4px_rgba(0,0,0,0.15)] transition-all duration-150 hover:scale-110 hover:rotate-2 hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.25)] hover:border-[#ff7920] group/item"
+                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_2px_4px_rgba(0,0,0,0.15)] transition-all duration-150 hover:scale-110 hover:rotate-2 hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.25)] hover:border-lh-accent group/item"
                                     >
                                         @if (entry.imageUrl) {
                                             <app-image-loader
@@ -559,13 +559,13 @@
                                                     imageClass="p-1 drop-shadow-md"
                                                 />
                                         } @else {
-                                            <div class="w-full h-full flex items-center justify-center text-[#8b7355]">
+                                            <div class="w-full h-full flex items-center justify-center text-ink-2">
                                                 <tui-icon icon="@tui.image" class="size-8!" />
                                             </div>
                                         }
                                         @if (entry.quantity > 1) {
                                             <span
-                                                class="absolute bottom-0.5 right-0.5 min-w-[1.5rem] h-6 flex items-center justify-center bg-[#3f3c34] text-white text-base font-extrabold leading-none px-1 rounded-md border border-white/30 shadow-sm"
+                                                class="absolute bottom-0.5 right-0.5 min-w-[1.5rem] h-6 flex items-center justify-center bg-lh-primary text-white text-base font-extrabold leading-none px-1 rounded-md border border-white/30 shadow-sm"
                                             >
                                                 {{ entry.quantity }}
                                             </span>

@@ -1,5 +1,4 @@
 <div
-    (click)="toggleDropdown()"
     [class.select-mode]="type() === 'select'"
     [class.has-icon]="icon() && type() !== 'select'"
     class="flexible-input"
@@ -26,16 +25,27 @@
     }
 
     @if (type() === "select") {
-        <div class="flex justify-between w-full">
-            <div [class.text-[#8c8784]]="!displayedValue" class="select-display">
+        <button
+            type="button"
+            class="select-trigger"
+            role="combobox"
+            aria-haspopup="listbox"
+            [attr.aria-expanded]="dropdownOpen()"
+            [attr.aria-label]="placeholder()"
+            [disabled]="disabled"
+            (click)="toggleDropdown()"
+            (keydown.escape)="dropdownOpen.set(false)"
+        >
+            <span [class.text-ink-3]="!displayedValue" class="select-display">
                 {{ displayedValue || placeholder() }}
-            </div>
+            </span>
             <img
                 src="/chevron-down.svg"
+                alt=""
                 [class.rotate-180]="dropdownOpen()"
                 class="transition-all duration-300 opacity-50"
             />
-        </div>
+        </button>
     }
 
     @if (icon() && type() !== "select") {
@@ -43,11 +53,18 @@
     }
 
     @if (type() === "select") {
-        <div [class.dropdown--open]="dropdownOpen()" class="dropdown">
+        <div [class.dropdown--open]="dropdownOpen()" class="dropdown" role="listbox">
             @for (item of items(); track $index) {
-                <div (click)="selectItem(item); $event.stopPropagation()" class="dropdown-option">
+                <button
+                    type="button"
+                    role="option"
+                    [attr.aria-selected]="item === value"
+                    class="dropdown-option"
+                    (click)="selectItem(item)"
+                    (keydown.escape)="dropdownOpen.set(false)"
+                >
                     {{ displayWith(item) }}
-                </div>
+                </button>
             }
         </div>
     }
