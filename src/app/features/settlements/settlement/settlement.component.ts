@@ -15,7 +15,7 @@ import { CreateSettlementFormComponent } from '@app/features/profile/create-sett
 import { EditSettlementFormComponent } from '../edit-settlement-form/edit-settlement-form.component';
 import { SettlementsTypes } from '@entities/settlement';
 import { ISettlementInvitation } from '@entities/settlement';
-import { getSettlementTypeByKey, getSettlementTypeTone, getDiplomacyTone, isGuildSettlement, SettlementBadgeComponent, SettlementBadgeTone, SettlementDisplayNamePipe } from '@entities/settlement';
+import { getSettlementTypeByKey, getSettlementTypeTone, getDiplomacyTone, getOwnerIds, isOwner, memberHasPermission, Permission, OWNER_ROLE_ID, isGuildSettlement, SettlementBadgeComponent, SettlementBadgeTone, SettlementDisplayNamePipe } from '@entities/settlement';
 import { TuiPulse } from '@taiga-ui/kit';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
@@ -156,16 +156,15 @@ export class SettlementComponent {
                               if (settlement === null) return undefined;
 
                               this.userService
-                                  .getPlayersBatch$([
-                                      settlement.leader.user_id,
-                                      ...settlement.members.map((m) => m.user_id),
-                                  ])
+                                  .getPlayersBatch$(settlement.members.map((m) => m.user_id))
                                   .pipe(
                                       tap((players) => {
-                                          this.leader =
-                                              players.find((p) => p.user_id === settlement.leader.user_id) ?? null;
+                                          const ownerIds = getOwnerIds(settlement);
+                                          this.leaders = players.filter((p) =>
+                                              ownerIds.includes(p.user_id)
+                                          );
                                           this.users = players.filter(
-                                              (p) => p.user_id !== settlement.leader.user_id
+                                              (p) => !ownerIds.includes(p.user_id)
                                           );
                                           this.cdr.detectChanges();
                                       })
@@ -214,9 +213,73 @@ export class SettlementComponent {
     protected users: IPlayer[] = [];
 
     /**
-     * Имя лидера поселения.
+     * Лидеры поселения (владельцы). Может быть несколько.
      */
-    protected leader: IPlayer | null = null;
+    protected leaders: IPlayer[] = [];
+
+    /**
+     * Проверяет, является ли текущий пользователь владельцем поселения.
+     *
+     * @param settlement Поселение.
+     * @returns true, если текущий пользователь — owner.
+     */
+    protected isOwner(settlement: ISettlement): boolean {
+        return isOwner(settlement, this.userId);
+    }
+
+    /**
+     * Проверяет, есть ли у текущего пользователя право приглашать членов.
+     *
+     * @param settlement Поселение.
+     * @returns true, если пользователь может приглашать.
+     */
+    protected canInvite(settlement: ISettlement): boolean {
+        return memberHasPermission(settlement, this.userId, Permission.InviteMember);
+    }
+
+    /**
+     * Проверяет, есть ли у текущего пользователя право рассматривать заявки на вступление.
+     *
+     * @param settlement Поселение.
+     * @returns true, если пользователь может рассматривать заявки.
+     */
+    protected canReviewJoinRequests(settlement: ISettlement): boolean {
+        return memberHasPermission(settlement, this.userId, Permission.ReviewJoinRequest);
+    }
+
+    /**
+     * Проверяет, является ли пользователь владельцем поселения.
+     *
+     * @param settlement Поселение.
+     * @param targetUserId Идентификатор проверяемого пользователя.
+     * @returns true, если пользователь — owner.
+     */
+    protected isMemberOwner(settlement: ISettlement, targetUserId: string): boolean {
+        return isOwner(settlement, targetUserId);
+    }
+
+    /**
+     * Возвращает имена ролей члена (без служебной роли owner) для показа бейджей.
+     * Учитывается только при включённых ролях (`roles_enabled !== false`).
+     * ВНИМАНИЕ (XSS): имена выводить только через интерполяцию `{{ }}`.
+     *
+     * @param settlement Поселение (справочник `roles`).
+     * @param targetUserId Идентификатор члена.
+     * @returns Массив имён ролей.
+     */
+    protected getMemberRoleNames(settlement: ISettlement, targetUserId: string): string[] {
+        if (settlement.roles_enabled === false) {
+            return [];
+        }
+
+        const member = (settlement.members ?? []).find((m) => m.user_id === targetUserId);
+        const roleIds = (member?.role_ids ?? []).filter((id) => id !== OWNER_ROLE_ID);
+        const roles = settlement.roles ?? [];
+
+        return roleIds
+            .map((id) => roles.find((role) => role.id === id)?.name)
+            .filter((name): name is string => !!name);
+    }
 
     /**
      * Открывает диалоговое окно создания поселения.
@@ -410,14 +473,16 @@ export class SettlementComponent {
                         return;
                     }
 
+                    if (isSelfLeave) {
+                        this.settlementService.leaveSettlement$(settlementId).subscribe({
+                            next: () => window.location.reload(),
+                        });
+
+                        return;
+                    }
+
                     this.settlementService.settlementLeave$(settlementId, targetUserId).subscribe({
                         next: () => {
-                            if (isSelfLeave) {
-                                window.location.reload();
-
-                                return;
-                            }
-
                             const index = this.users.findIndex((u) => u.user_id === targetUserId);
 
                             if (index !== -1) {

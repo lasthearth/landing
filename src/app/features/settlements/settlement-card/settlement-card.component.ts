@@ -19,6 +19,7 @@ import {
     getSettlementDisplayName,
     getSettlementTypeTone,
     getDiplomacyTone,
+    getOwnerIds,
     isGuildSettlement,
     SettlementBadgeComponent,
     SettlementBadgeTone,
@@ -94,18 +95,25 @@ export class SettlementCardComponent {
     private readonly i18n = inject(I18nService);
 
     /**
-     * Лидер поселения.
+     * Идентификаторы владельцев (owner) поселения.
      */
-    protected readonly leader: Signal<IPlayer | null> = computed(
-        () => this.players().find((player) => player.user_id === this.data().leader.user_id) ?? null
-    );
+    protected readonly ownerIds: Signal<string[]> = computed(() => getOwnerIds(this.data()));
 
     /**
-     * Список участников поселения без лидера.
+     * Лидеры поселения (владельцы). Может быть несколько.
      */
-    protected readonly users: Signal<IPlayer[]> = computed(() =>
-        this.players().filter((player) => player.user_id !== this.data().leader.user_id)
-    );
+    protected readonly leaders: Signal<IPlayer[]> = computed(() => {
+        const owners = this.ownerIds();
+        return this.players().filter((player) => owners.includes(player.user_id));
+    });
+
+    /**
+     * Список участников поселения без владельцев.
+     */
+    protected readonly users: Signal<IPlayer[]> = computed(() => {
+        const owners = this.ownerIds();
+        return this.players().filter((player) => !owners.includes(player.user_id));
+    });
 
     /**
      * Количество онлайн-участников селения.

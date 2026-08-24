@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { ISettlement, isGuildSettlement, SettlementBadgeComponent, SettlementDisplayNamePipe } from '@entities/settlement';
+import { ISettlement, getOwnerIds, isGuildSettlement, SettlementBadgeComponent, SettlementDisplayNamePipe } from '@entities/settlement';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { IPlayer } from '@entities/user';
 import { TuiPulse } from '@taiga-ui/kit';
@@ -25,16 +25,22 @@ export class SettlementDetailedComponent {
     private readonly i18n = inject(I18nService);
 
     /**
-     * Лидер селения из профилей, загруженных на странице списка.
+     * Идентификаторы владельцев (owner) поселения.
      */
-    protected readonly leader: IPlayer | null =
-        this.context.data.players.find((player) => player.user_id === this.settlementData.leader.user_id) ?? null;
+    private readonly ownerIds: string[] = getOwnerIds(this.settlementData);
 
     /**
-     * Участники селения без лидера.
+     * Лидеры селения (владельцы) из профилей, загруженных на странице списка.
+     */
+    protected readonly leaders: IPlayer[] = this.context.data.players.filter((player) =>
+        this.ownerIds.includes(player.user_id)
+    );
+
+    /**
+     * Участники селения без владельцев.
      */
     protected readonly users: IPlayer[] = this.context.data.players.filter(
-        (player) => player.user_id !== this.settlementData.leader.user_id
+        (player) => !this.ownerIds.includes(player.user_id)
     );
 
     /**

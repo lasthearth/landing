@@ -30,7 +30,7 @@
                         {{ data() | settlementDisplayName }}
                     </h2>
                     <app-settlement-badge tone="leader">
-                        {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
+                        {{ data().members.length }} {{ 'settlements.card.residentsShort' | translate }}
                     </app-settlement-badge>
                     <app-settlement-badge tone="peace">
                         {{ onlineCount() }} {{ 'settlements.card.onlineShort' | translate }}
@@ -79,7 +79,7 @@
             <div class="flex flex-col gap-2">
                 <hr class="h-px bg-surface-4/30 w-full rounded-full" />
                 <div class="flex flex-wrap gap-1.5 max-h-[68px] overflow-hidden">
-                    @if (leader(); as leaderPlayer) {
+                    @for (leaderPlayer of leaders(); track leaderPlayer.user_id) {
                         <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base px-2 py-1 rounded-lg items-center">
                             @if (leaderPlayer.is_online) {
                                 <tui-pulse class="self-center mr-1.5 online" />

@@ -35,6 +35,7 @@ import {
     getSettlementTypeByKey,
     getSettlementTypeTone,
     getDiplomacyTone,
+    isOwner,
     ISettlement,
     SettlementBadgeComponent,
     SettlementBadgeTone,
@@ -527,6 +528,16 @@ export class ProfileComponent {
      */
     protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
         return getSettlementTypeTone(settlement);
+    }
+
+    /**
+     * Проверяет, является ли текущий пользователь владельцем (owner) поселения.
+     *
+     * @param settlement Поселение.
+     * @returns true, если текущий пользователь — owner.
+     */
+    protected isSettlementOwner(settlement: ISettlement): boolean {
+        return isOwner(settlement, this.userService.userId);
     }
 
     /**

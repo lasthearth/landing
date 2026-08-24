@@ -107,6 +107,10 @@
             <div class="flex-1">
                 <p class="text-lg font-semibold text-ink mb-2">{{ 'settlements.settlement.about' | translate }}</p>
                 <p class="text-lg text-ink-2 break-words leading-7 text-justify">{{ settlement.description }}</p>
+                @if (settlement.contact_info) {
+                    <p class="text-lg font-semibold text-ink mt-4 mb-2">{{ 'settlements.settlement.contactInfo' | translate }}</p>
+                    <p class="text-lg text-ink-2 break-words leading-7 text-justify">{{ settlement.contact_info }}</p>
+                }
             </div>
 
             <!-- Изображение -->
@@ -121,7 +125,7 @@
                         class="w-full"
                     />
                 </div>
-                @if (userId === settlement.leader.user_id) {
+                @if (isOwner(settlement)) {
                     <input
                         #settlementImageInput
                         type="file"
@@ -157,20 +161,22 @@
     <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
         <p class="text-xl font-semibold text-ink">{{ 'settlements.settlement.population' | translate }}</p>
         <div class="flex flex-wrap gap-4">
-            <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base md:text-base px-3 p-1.5 rounded-2xl items-center">
-                @if (leader?.is_online === true) {
-                    <tui-pulse class="self-center mr-2.5 online" />
-                } @else {
-                    <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
-                }
-                <span>{{ leader?.user_game_name }}</span>
-            </div>
+            @for (leaderPlayer of leaders; track leaderPlayer.user_id) {
+                <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base md:text-base px-3 p-1.5 rounded-2xl items-center">
+                    @if (leaderPlayer.is_online === true) {
+                        <tui-pulse class="self-center mr-2.5 online" />
+                    } @else {
+                        <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
+                    }
+                    <span>{{ leaderPlayer.user_game_name }}</span>
+                </div>
+            }
 
             @for (item of users; track $index) {
                 <div class="flex gap-0.5 justify-center items-center">
                     <div
-                        [class.rounded-l-2xl]="userId === settlement.leader.user_id"
-                        [class.rounded-2xl]="userId !== settlement.leader.user_id"
+                        [class.rounded-l-2xl]="isOwner(settlement)"
+                        [class.rounded-2xl]="!isOwner(settlement)"
                         class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base md:text-base px-3 p-1.5 items-center"
                     >
                         @if (item.is_online === true) {
@@ -179,8 +185,11 @@
                             <tui-pulse [playing]="false" class="self-center mr-2.5 offline" />
                         }
                         <span>{{ item.user_game_name }}</span>
+                        @for (roleName of getMemberRoleNames(settlement, item.user_id); track roleName) {
+                            <span class="ml-2 px-1.5 py-0.5 rounded-md bg-surface-3 text-ink-3 text-xs font-semibold">{{ roleName }}</span>
+                        }
                     </div>
-                    @if (userId === settlement.leader.user_id) {
+                    @if (isOwner(settlement) && !isMemberOwner(settlement, item.user_id)) {
                         <div
                             (click)="settlementLeave(settlement.id, item.user_id)"
                             class="flex cursor-pointer hover:opacity-65 transition-all duration-300 bg-lh-accent-3/15 h-full justify-center items-center text-lh-accent-3 font-bold text-base md:text-base px-3 p-1.5 rounded-r-2xl"
@@ -194,7 +203,7 @@
     </div>
 
     <!-- Отправленные приглашения -->
-    @if (userId === settlement.leader.user_id && sentInvitations?.length) {
+    @if (canInvite(settlement) && sentInvitations?.length) {
         <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
             <p class="text-xl font-semibold text-ink">{{ 'settlements.settlement.sentInvitations' | translate }}</p>
             <div class="flex flex-wrap gap-3">
@@ -217,14 +226,16 @@
 
     <!-- Кнопки управления -->
     <div class="flex w-full justify-start flex-wrap gap-4">
-        @if (userId === settlement.leader.user_id) {
+        @if (canInvite(settlement)) {
             <button
                 (click)="invitePlayer(settlement)"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
                 {{ 'settlements.settlement.invitePlayers' | translate }}
             </button>
+        }
 
+        @if (isOwner(settlement)) {
             @if (!isGuild(settlement)) {
                 <button
                     (click)="levelUp(settlement.type)"

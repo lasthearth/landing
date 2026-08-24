@@ -17,7 +17,7 @@
                     </app-settlement-badge>
                 }
                 <app-settlement-badge tone="leader">
-                    {{ settlementData.members.length + 1 }} {{ 'settlements.detailed.residentsShort' | translate }}
+                    {{ settlementData.members.length }} {{ 'settlements.detailed.residentsShort' | translate }}
                 </app-settlement-badge>
                 <app-settlement-badge tone="peace">
                     {{ onlineCount }} {{ 'settlements.detailed.onlineShort' | translate }}
@@ -33,7 +33,7 @@
 
             <p class="text-lg font-semibold text-ink">{{ 'settlements.detailed.population' | translate }}</p>
             <div class="flex flex-wrap gap-2">
-                @if (leader; as leaderPlayer) {
+                @for (leaderPlayer of leaders; track leaderPlayer.user_id) {
                     <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base px-3 py-1.5 rounded-xl items-center">
                         @if (leaderPlayer.is_online) {
                             <tui-pulse class="self-center mr-2 online" />

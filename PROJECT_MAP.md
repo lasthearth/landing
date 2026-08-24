@@ -23,6 +23,28 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-1 Роли, owner-модель и заявки на вступление в поселения
+
+> `Settlement.leader` deprecated. Лидеры теперь — члены с `role_ids`, содержащими `"owner"` (их может быть несколько). Добавлены роли, права, заявки на вступление, передача владения, контакты.
+
+- Модель (`entities/settlement/model/`):
+  - `permission.ts` — enum `Permission` (`PERMISSION_INVITE_MEMBER`, `PERMISSION_REVIEW_JOIN_REQUEST`).
+  - `i-role.ts` — `IRole { id, name, permissions[] }`.
+  - `i-join-request.ts` — `IJoinRequest`.
+  - `i-member.ts` — добавлено `role_ids?: string[]`.
+  - `i-settlement.ts` — добавлены `roles?`, `roles_enabled?`, `contact_info?`; `leader?` помечен `@deprecated`.
+- Хелперы (`entities/settlement/lib/`):
+  - `owner-role-id.constant.ts` — `OWNER_ROLE_ID = 'owner'`.
+  - `get-owner-ids.function.ts` — `getOwnerIds(settlement)`.
+  - `is-owner.function.ts` — `isOwner(settlement, userId)`.
+  - `member-has-permission.function.ts` — `memberHasPermission(settlement, userId, permission)` (owner = все права; при `roles_enabled=false` только owner).
+- API (`entities/settlement/api/settlement.service.ts`): `createJoinRequest$`, `cancelJoinRequest$`, `getMyJoinRequests$`, `getJoinRequests$`, `approveJoinRequest$`, `rejectJoinRequest$`, `createRole$`, `updateRole$`, `deleteRole$`, `assignMemberRole$`, `removeMemberRole$`, `transferOwnership$`, `leaveSettlement$`, `updateContactInfo$`, `adminAddOwner$`, `adminRemoveOwner$`, `adminSetRolesEnabled$`, `adminDeleteSettlement$`.
+- UI-потребители переведены с `.leader` на owner-модель: `settlements.component`, `settlement-card`, `settlement-detailed`, `features/settlements/settlement`, `features/profile`.
+  - Кнопки гейтятся: инвайты по `canInvite` (`PERMISSION_INVITE_MEMBER`/owner), уровень/редактирование/картинка — по `isOwner`, выход — не-owner.
+  - Бейджи ролей члена — `getMemberRoleNames`, скрыты при `roles_enabled=false`.
+  - `contact_info` и `role.name` выводятся ТОЛЬКО интерполяцией `{{ }}` (XSS: сервер не экранирует).
+  - Счётчики жителей: `members.length` (owner теперь внутри `members`, не `+1`).
+
 ### 3.0 Единый бейдж поселения
 
 > Плашки типа селения / населения / онлайна / дипломатии были разными в списке селений и в профиле. Вынесены в один компонент.
