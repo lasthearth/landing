@@ -334,8 +334,12 @@ html body {
 /**
  * Дисплейная антиква для заголовков страниц и секций.
  *
- * Almendra — контрастный шрифт с выраженными засечками: он читается
- * как акцент только пока применён к единичным крупным заголовкам.
+ * Almendra стоит первой и покрывает только латиницу: у неё нет
+ * кириллического набора. Русские заголовки подхватывает Alegreya —
+ * книжная антиква с полной кириллицей и близким характером засечек,
+ * поэтому подмена шрифта по языку не бросается в глаза.
+ *
+ * Шрифт читается как акцент только на единичных крупных заголовках.
  * На абзацах, подписях и числах его ставить нельзя — теряется контраст
  * с основным Advent Pro, и текст просто становится хуже читаемым.
  *
@@ -343,14 +347,10 @@ html body {
  * на заголовок секции. Минимальный кегль — text-2xl.
  */
 .lh-display {
-    font-family: 'Almendra', serif;
+    font-family: 'Almendra', 'Alegreya', Georgia, serif;
     letter-spacing: 0.01em;
     /* Заголовок из 2-4 слов не должен ронять последнее слово на свою строку. */
     text-wrap: balance;
-}
-
-.almendra-regular {
-    font-family: 'Almendra', serif;
 }
 
 /**
@@ -371,17 +371,24 @@ html body {
 /**
  * Ссылки в тексте. Тёплый акцент вместо системного синего:
  * синий по WCAG давал 1.84:1 на пергаменте, токен --lh-link даёт 4.97:1.
+ *
+ * Объявлено в @layer base намеренно. Вне слоёв это правило выигрывало
+ * у всех классов в @layer components — ссылка с классом кнопки получала
+ * цвет текстовой ссылки, и `.lh-cta` в виде <a> оказывалась тёмно-оранжевой
+ * на оранжевом градиенте. В base его перебивают и компоненты, и утилиты.
  */
-a {
-    cursor: pointer;
-    color: var(--lh-link);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
-    transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
-}
+@layer base {
+    a {
+        cursor: pointer;
+        color: var(--lh-link);
+        --tw-font-weight: var(--font-weight-bold);
+        font-weight: var(--font-weight-bold);
+        transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
 
-a:hover {
-    color: var(--lh-link-hover);
+    a:hover {
+        color: var(--lh-link-hover);
+    }
 }
 
 .words-break {
@@ -424,10 +431,6 @@ tui-dialog {
     -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 16px 16px;
-}
-
-.almendra-regular {
-    font-family: 'Almendra', serif;
 }
 
 .spark-glow {
@@ -685,43 +688,66 @@ tui-pulse.offline {
      * Активный раздел. Брендовая заливка вместо инверсии в пергамент:
      * инверсия в тёмной теме давала белую кнопку в тёмном ряду, а тёплый
      * градиент читается одинаково в обеих темах и не требует перекрытия.
+     *
+     * Оба конца градиента взяты из тёмной части брендовой шкалы: подпись
+     * набрана 13px, порог WCAG AA для неё 4.5:1, а светлый `brand-lit-2`
+     * давал белому тексту только 3.28:1. `brand-deep` — 5.06:1,
+     * `brand-deep-2` — 6.78:1.
      */
     .nav-button--active,
     .nav-button--active:hover {
         color: #ffffff;
         background-color: var(--lh-brand-deep);
-        background-image: linear-gradient(150deg, var(--lh-brand-lit-2) 0%, var(--lh-brand-deep) 100%);
+        background-image: linear-gradient(150deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.24),
             inset 0 -1px 0 rgba(45, 32, 26, 0.28),
             0 6px 18px -6px color-mix(in srgb, var(--lh-brand) 55%, transparent);
     }
 
+    /**
+     * Ховер активной кнопки: заливка не светлеет (это уронило бы контраст),
+     * усиливается только свечение.
+     */
     .nav-button--active:hover {
-        background-image: linear-gradient(150deg, var(--lh-brand-hover) 0%, var(--lh-brand) 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.24),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.28),
+            0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+            0 8px 22px -6px color-mix(in srgb, var(--lh-brand) 65%, transparent);
     }
 
     /**
-     * Первичная CTA: пилюля с вложенной иконкой-кругом.
-     * Круг сдвигается на ховере, задавая направление действия, вся пилюля
-     * приподнимается. Нажатие даёт просадку — та же физика, что у nav-button.
+     * Первичная CTA.
+     *
+     * Форма прямоугольная: скруглённая пилюля с вложенным кругом-иконкой
+     * читалась как чужой элемент рядом с прямоугольными кнопками навигации
+     * и панелями — у проекта угловатая геометрия, а не «капсульная».
+     *
+     * Заливка — тёмный конец брендовой шкалы. Светлые оттенки
+     * (`brand-hover` 3.04:1, `brand-lit-2` 3.28:1) не проходят WCAG AA
+     * для белого текста в 18px bold, где требуется 4.5:1.
+     * `brand-deep` даёт 5.06:1, `brand-deep-2` — 6.78:1.
+     *
+     * Ховер не меняет заливку: любое осветление уводит контраст ниже порога.
+     * Отклик даёт подъём и усиление свечения.
      */
     .lh-cta {
         display: inline-flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem 0.5rem 0.5rem 1.375rem;
-        border-radius: 9999px;
+        gap: 0.625rem;
+        padding: 0.875rem 1.5rem;
+        border-radius: var(--radius-xl);
         font-weight: 700;
         cursor: pointer;
         text-decoration: none;
         color: #ffffff;
-        background-image: linear-gradient(140deg, var(--lh-brand-lit-2) 0%, var(--lh-brand-deep) 100%);
+        background-image: linear-gradient(150deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
         box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.22),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.25),
-            0 0 0 1px color-mix(in srgb, var(--lh-brand) 30%, transparent),
-            0 10px 32px -8px color-mix(in srgb, var(--lh-brand) 28%, transparent);
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+            0 0 0 1px color-mix(in srgb, var(--lh-brand) 35%, transparent),
+            0 8px 24px -8px color-mix(in srgb, var(--lh-brand) 35%, transparent);
         transition:
             transform var(--lh-dur-fast) var(--lh-ease-spring),
             box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
@@ -730,10 +756,10 @@ tui-pulse.offline {
     .lh-cta:hover {
         transform: translateY(-2px);
         box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.22),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.25),
-            0 0 0 1px color-mix(in srgb, var(--lh-accent) 40%, transparent),
-            0 16px 40px -10px color-mix(in srgb, var(--lh-brand) 42%, transparent);
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+            0 0 0 1px color-mix(in srgb, var(--lh-accent) 55%, transparent),
+            0 14px 32px -10px color-mix(in srgb, var(--lh-brand) 50%, transparent);
     }
 
     .lh-cta:active {
@@ -741,45 +767,41 @@ tui-pulse.offline {
         transition-duration: 80ms;
     }
 
+    /**
+     * Слот иконки в CTA. Своей поверхности не имеет: круг внутри
+     * прямоугольной кнопки — «кнопка в кнопке», лишний уровень вложенности.
+     * Сдвиг на ховере задаёт направление действия.
+     */
     .lh-cta__icon {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 2rem;
-        height: 2rem;
-        border-radius: 9999px;
-        background-color: rgba(255, 255, 255, 0.16);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.25),
-            0 1px 3px rgba(26, 17, 13, 0.25);
-        transition:
-            transform var(--lh-dur-fast) var(--lh-ease-spring),
-            background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
     .lh-cta:hover .lh-cta__icon {
         transform: translateX(3px);
-        background-color: rgba(255, 255, 255, 0.24);
     }
 
     /**
      * CTA в цветах Telegram — для ссылки на личку, а не на брендовое действие.
+     * `leader` 5.86:1, `leader-hover` 7.63:1 к белому.
      */
     .lh-cta--telegram {
-        background-image: linear-gradient(140deg, var(--lh-leader-hover) 0%, var(--lh-leader) 100%);
+        background-image: linear-gradient(150deg, var(--lh-leader) 0%, var(--lh-leader-hover) 100%);
         box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.22),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.25),
-            0 0 0 1px color-mix(in srgb, var(--lh-leader) 30%, transparent),
-            0 10px 32px -8px color-mix(in srgb, var(--lh-leader) 35%, transparent);
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+            0 0 0 1px color-mix(in srgb, var(--lh-leader) 35%, transparent),
+            0 8px 24px -8px color-mix(in srgb, var(--lh-leader) 35%, transparent);
     }
 
     .lh-cta--telegram:hover {
         box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.22),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.25),
-            0 0 0 1px color-mix(in srgb, var(--lh-leader) 45%, transparent),
-            0 16px 40px -10px color-mix(in srgb, var(--lh-leader) 42%, transparent);
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+            0 0 0 1px color-mix(in srgb, var(--lh-leader) 55%, transparent),
+            0 14px 32px -10px color-mix(in srgb, var(--lh-leader) 50%, transparent);
     }
 
     /**
@@ -791,11 +813,6 @@ tui-pulse.offline {
         background-image: none;
         background-color: transparent;
         box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--lh-wood) 40%, transparent);
-    }
-
-    .lh-cta--ghost .lh-cta__icon {
-        background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent);
-        box-shadow: none;
     }
 
     .lh-cta--ghost:hover {
