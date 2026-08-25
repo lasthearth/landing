@@ -262,7 +262,7 @@
                 <app-admin-table-skeleton [columns]="6" [rows]="5" />
             } @else if (archiveLeaderboard(); as list) {
                 @if (list.length > 0) {
-                    <div class="overflow-x-auto rounded-2xl border border-line shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                    <div class="overflow-x-auto rounded-2xl border border-line lh-shadow">
                         <table class="w-full text-left border-collapse text-[18px]">
                             <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                                 <tr>
@@ -323,7 +323,7 @@
                 <app-admin-table-skeleton [columns]="5" [rows]="5" />
             } @else if (currentLeaderboard(); as list) {
                 @if (list.length > 0) {
-                    <div class="overflow-x-auto rounded-2xl border border-line shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                    <div class="overflow-x-auto rounded-2xl border border-line lh-shadow">
                         <table class="w-full text-left border-collapse text-[18px]">
                             <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                                 <tr>

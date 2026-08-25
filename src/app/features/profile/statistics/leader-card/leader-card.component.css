@@ -33,7 +33,7 @@
     pointer-events: none;
     z-index: 0;
     filter: drop-shadow(0 0 18px var(--border-glow));
-    transition: filter 250ms ease-in-out;
+    transition: filter var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .card-frame:hover::before {
