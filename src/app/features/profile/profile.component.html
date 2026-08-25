@@ -49,7 +49,7 @@
                     <div class="flex items-stretch gap-3 max-[530px]:flex-col">
                         <!-- Роль -->
                         <div
-                            class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
+                            class="flex-1 flex flex-col justify-center lh-panel rounded-xl px-3 py-2"
                         >
                             <p class="text-lg leading-[27px] text-ink-3 mb-1">{{ 'profile.role.label' | translate }}</p>
                             <p class="text-lg leading-[27px] font-bold">{{ getRoleName() | translate }}</p>
@@ -58,7 +58,7 @@
                         <!-- Ник -->
                         @if (userName && getRoleName() !== 'profile.role.unverified') {
                             <div
-                                class="flex-1 flex flex-col justify-center bg-lh-primary-2/10 rounded-xl px-3 py-2 border border-lh-primary-2/10"
+                                class="flex-1 flex flex-col justify-center lh-panel rounded-xl px-3 py-2"
                             >
                                 <p class="text-lg leading-[27px] text-ink-3 mb-1">{{ 'profile.nickname.label' | translate }}</p>
                                 <div class="flex items-center justify-between gap-2">
@@ -79,7 +79,7 @@
                     <!-- Селение -->
                     @if (settlement) {
                         <div
-                            class="flex-1 shrink-1 flex gap-1 flex-col justify-start bg-lh-primary-2/10 rounded-xl px-4 py-3 border border-lh-primary-2/10 w-full"
+                            class="flex-1 shrink-1 flex gap-1 flex-col justify-start lh-panel rounded-xl px-4 py-3 w-full"
                         >
                             <p class="text-lg leading-[27px] text-ink-3 mb-1">{{ 'profile.settlement.label' | translate }}</p>
                             <span class="font-bold truncate text-lg leading-[27px]">
@@ -284,7 +284,7 @@
                             @let meta = getPurchaseStatusMeta(purchase);
 
                             <div
-                                class="flex items-center justify-between gap-4 px-4 py-3 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2/10"
+                                class="flex items-center justify-between gap-4 lh-panel rounded-xl px-4 py-3"
                             >
                                 <div class="flex flex-col gap-1 min-w-0">
                                     <span class="text-lg font-bold text-lh-primary truncate">

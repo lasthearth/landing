@@ -53,7 +53,7 @@
             </button>
         </div>
     } @else {
-        <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-8 text-center flex flex-col gap-4 items-center">
+        <div class="lh-panel p-8 text-center flex flex-col gap-4 items-center">
             <p class="text-2xl/7.5 uppercase font-bold text-ink-3">
                 {{ 'settlements.settlement.noSettlement' | translate }}
             </p>
@@ -75,7 +75,7 @@
     }
 } @else {
     <!-- Основная информация -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
+    <div class="lh-panel flex flex-col gap-4">
         <div class="flex xl:flex-row flex-col gap-6">
             <div class="flex flex-col gap-3 flex-1">
                 <p class="text-xl md:text-2xl lg:text-3xl font-bold uppercase text-ink">{{ settlement | settlementDisplayName }}</p>
@@ -154,7 +154,7 @@
     </div>
 
     <!-- Население -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
+    <div class="lh-panel flex flex-col gap-4">
         <p class="text-xl font-semibold text-ink">{{ 'settlements.settlement.population' | translate }}</p>
         <div class="flex flex-wrap gap-4">
             <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base md:text-base px-3 p-1.5 rounded-2xl items-center">
@@ -195,7 +195,7 @@
 
     <!-- Отправленные приглашения -->
     @if (userId === settlement.leader.user_id && sentInvitations?.length) {
-        <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 flex flex-col gap-4">
+        <div class="lh-panel flex flex-col gap-4">
             <p class="text-xl font-semibold text-ink">{{ 'settlements.settlement.sentInvitations' | translate }}</p>
             <div class="flex flex-wrap gap-3">
                 @for (invitation of sentInvitations; track invitation.id; let idx = $index) {
