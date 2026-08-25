@@ -1,45 +1,17 @@
-.nav-button {
-    transition: all 0.3s 0s;
-    background-color: var(--color-lh-primary-2);
-    background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.3) 0%, transparent 60%);
-    padding: calc(var(--spacing) * 2.5);
-    border-radius: var(--radius-lg);
-    height: 44px;
-    cursor: pointer;
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-white);
-    gap: 4px;
-    align-items: center;
-    justify-items: center;
-    display: flex;
-    white-space: nowrap;
-}
-
 /**
- * Компактные иконки в кнопках навигации, чтобы весь ряд влезал в одну строку.
- */
-.nav-button tui-icon {
-    font-size: 1rem;
-}
-
-.nav-button:hover {
-    background-color: var(--color-lh-primary);
-    background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
-}
-
-/**
- * Плавное появление выпадающих меню хедера.
+ * Появление выпадающих меню хедера.
+ * Меню «вылетает» сверху по smooth-кривой; пункты внутри не анимируются
+ * отдельно — каскад на 8 пунктах читался дольше самого открытия меню.
  */
 .dropdown-enter {
-    animation: dropdown-enter 0.18s ease-out;
+    animation: dropdown-enter var(--lh-dur-fast) var(--lh-ease-smooth);
     transform-origin: top center;
 }
 
 @keyframes dropdown-enter {
     from {
         opacity: 0;
-        transform: translateY(-6px) scale(0.98);
+        transform: translateY(-8px) scale(0.97);
     }
 
     to {
