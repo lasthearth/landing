@@ -700,6 +700,108 @@ tui-pulse.offline {
     .nav-button--active:hover {
         background-image: linear-gradient(150deg, var(--lh-brand-hover) 0%, var(--lh-brand) 100%);
     }
+
+    /**
+     * Первичная CTA: пилюля с вложенной иконкой-кругом.
+     * Круг сдвигается на ховере, задавая направление действия, вся пилюля
+     * приподнимается. Нажатие даёт просадку — та же физика, что у nav-button.
+     */
+    .lh-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0.5rem 0.5rem 1.375rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        color: #ffffff;
+        background-image: linear-gradient(140deg, var(--lh-brand-lit-2) 0%, var(--lh-brand-deep) 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.25),
+            0 0 0 1px color-mix(in srgb, var(--lh-brand) 30%, transparent),
+            0 10px 32px -8px color-mix(in srgb, var(--lh-brand) 28%, transparent);
+        transition:
+            transform var(--lh-dur-fast) var(--lh-ease-spring),
+            box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+    }
+
+    .lh-cta:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.25),
+            0 0 0 1px color-mix(in srgb, var(--lh-accent) 40%, transparent),
+            0 16px 40px -10px color-mix(in srgb, var(--lh-brand) 42%, transparent);
+    }
+
+    .lh-cta:active {
+        transform: translateY(0) scale(0.97);
+        transition-duration: 80ms;
+    }
+
+    .lh-cta__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9999px;
+        background-color: rgba(255, 255, 255, 0.16);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.25),
+            0 1px 3px rgba(26, 17, 13, 0.25);
+        transition:
+            transform var(--lh-dur-fast) var(--lh-ease-spring),
+            background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
+
+    .lh-cta:hover .lh-cta__icon {
+        transform: translateX(3px);
+        background-color: rgba(255, 255, 255, 0.24);
+    }
+
+    /**
+     * CTA в цветах Telegram — для ссылки на личку, а не на брендовое действие.
+     */
+    .lh-cta--telegram {
+        background-image: linear-gradient(140deg, var(--lh-leader-hover) 0%, var(--lh-leader) 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.25),
+            0 0 0 1px color-mix(in srgb, var(--lh-leader) 30%, transparent),
+            0 10px 32px -8px color-mix(in srgb, var(--lh-leader) 35%, transparent);
+    }
+
+    .lh-cta--telegram:hover {
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.25),
+            0 0 0 1px color-mix(in srgb, var(--lh-leader) 45%, transparent),
+            0 16px 40px -10px color-mix(in srgb, var(--lh-leader) 42%, transparent);
+    }
+
+    /**
+     * Третичная CTA: обводка без заливки. Для действия рядом с основным,
+     * которое не должно с ним конкурировать по весу.
+     */
+    .lh-cta--ghost {
+        color: var(--lh-ink-2);
+        background-image: none;
+        background-color: transparent;
+        box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--lh-wood) 40%, transparent);
+    }
+
+    .lh-cta--ghost .lh-cta__icon {
+        background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+        box-shadow: none;
+    }
+
+    .lh-cta--ghost:hover {
+        color: var(--lh-brand-ink);
+        box-shadow: inset 0 0 0 2px var(--lh-brand);
+    }
 }
 
 html[data-theme='dark'] {

@@ -4,12 +4,150 @@
     height: 100dvh;
 }
 
-.welcome-card {
-    -webkit-box-shadow: 0 0 32px 12px rgba(0, 0, 0, 0.35);
-    -moz-box-shadow: 0 0 32px 12px rgba(0, 0, 0, 0.35);
-    box-shadow: 0 0 32px 12px rgba(0, 0, 0, 0.35);
+/**
+ * Двойная фаска приветственной карточки.
+ *
+ * Локальная, а не .lh-panel--bezel: на видео карточка стеклянная и
+ * рисуется светлыми полупрозрачными слоями, тогда как общая утилита
+ * подмешивает цвет чернил и поверхность surface-2 — на тёмном кадре
+ * получилась бы мутная плашка вместо стекла.
+ */
+.welcome-bezel {
+    padding: 0.5rem;
+    border-radius: 2rem;
+    background-color: rgba(240, 230, 210, 0.06);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.12),
+        inset 0 0 0 1px rgba(240, 230, 210, 0.14),
+        0 32px 80px -24px rgba(0, 0, 0, 0.65);
 }
 
+/**
+ * Стеклянное ядро карточки. Радиус — радиус оправы минус её зазор,
+ * иначе внутренний контур перестаёт быть концентричным внешнему.
+ */
+.welcome-card {
+    border-radius: calc(2rem - 0.5rem);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 0 0 1px rgba(240, 230, 210, 0.08),
+        0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/**
+ * Пункт с преимуществом проекта: строка на мобильном, столбец на десктопе.
+ */
+.welcome-feature {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    padding-inline: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .welcome-feature {
+        flex-direction: column;
+    }
+}
+
+/**
+ * Иконка преимущества в тёплом медальоне.
+ */
+.welcome-feature__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    color: #ffaa5c;
+    background-color: rgba(255, 121, 32, 0.12);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 170, 92, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/**
+ * Подсказка прокрутки: стеклянная плашка с мягким подскоком.
+ * Подскок сдвигает элемент, поэтому центрирование по X держится
+ * внутри самих ключевых кадров, а не утилитой -translate-x-1/2.
+ */
+.welcome-scroll-hint {
+    background-color: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(8px);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 0 0 1px rgba(240, 230, 210, 0.28);
+    animation: welcome-hint-bounce 2.4s var(--lh-ease-smooth) infinite;
+    transition:
+        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart),
+        color var(--lh-dur-mid) var(--lh-ease-out-quart);
+}
+
+.welcome-scroll-hint:hover {
+    color: #ffffff;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 0 0 1px rgba(255, 170, 92, 0.7),
+        0 12px 32px -10px rgba(255, 121, 32, 0.4);
+}
+
+@keyframes welcome-hint-bounce {
+    0%,
+    100% {
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        transform: translate(-50%, 10px);
+    }
+}
+
+/**
+ * Каскадное проявление содержимого карточки при открытии экрана.
+ * Здесь анимация по таймеру, а не appReveal: экран приветствия
+ * всегда открывается целиком во вьюпорте, наблюдать за пересечением
+ * нечего — все элементы видны сразу.
+ */
+.welcome-stagger {
+    opacity: 0;
+    transform: translateY(28px);
+    animation: welcome-reveal var(--lh-dur-slow) var(--lh-ease-out-quart) forwards;
+}
+
+.welcome-stagger:nth-child(1) {
+    animation-delay: 120ms;
+}
+
+.welcome-stagger:nth-child(2) {
+    animation-delay: 220ms;
+}
+
+.welcome-stagger:nth-child(3) {
+    animation-delay: 320ms;
+}
+
+.welcome-stagger:nth-child(4) {
+    animation-delay: 440ms;
+}
+
+.welcome-stagger:nth-child(5) {
+    animation-delay: 560ms;
+}
+
+@keyframes welcome-reveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/**
+ * Свет очага: тёплое свечение от нижней кромки кадра.
+ */
 .hearth-glow {
     position: absolute;
     inset: 0;
@@ -25,4 +163,39 @@
 
 video::-webkit-media-controls {
     display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .welcome-stagger {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+
+    .welcome-scroll-hint {
+        animation: none;
+    }
+}
+
+/**
+ * Вторичная CTA на тёмном стекле.
+ * Общий .lh-cta--ghost красит обводку в чернила пергамента, что на видео
+ * не читается, поэтому у экрана приветствия свой светлый вариант.
+ */
+.welcome-cta-ghost {
+    color: #f0e6d2;
+    background-image: none;
+    background-color: rgba(240, 230, 210, 0.04);
+    box-shadow: inset 0 0 0 2px rgba(240, 230, 210, 0.32);
+}
+
+.welcome-cta-ghost .lh-cta__icon {
+    background-color: rgba(240, 230, 210, 0.14);
+}
+
+.welcome-cta-ghost:hover {
+    color: #ffffff;
+    box-shadow:
+        inset 0 0 0 2px rgba(255, 170, 92, 0.75),
+        0 16px 40px -12px rgba(255, 121, 32, 0.35);
 }

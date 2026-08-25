@@ -216,27 +216,29 @@
                         href="https://discord.com/invite/FZb7SGrSFy"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand hover:bg-brand-hover !text-white text-lg font-bold transition-colors duration-200 no-underline! shadow-[0_0_18px_rgba(195,90,23,0.35)]"
+                        class="lh-cta text-lg no-underline!"
                     >
-                        <tui-icon icon="@tui.message-circle" class="size-5!" />
                         {{ 'home.recruit.discord' | translate }}
+                        <span class="lh-cta__icon">
+                            <tui-icon icon="@tui.message-circle" class="size-4!" />
+                        </span>
                     </a>
                     <a
                         href="https://t.me/lisovcd"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-lh-leader hover:bg-leader-hover !text-white text-lg font-bold transition-colors duration-200 no-underline!"
+                        class="lh-cta lh-cta--telegram text-lg no-underline!"
                     >
-                        <tui-icon icon="@tui.send" class="size-5!" />
                         {{ 'home.recruit.telegram' | translate }}
+                        <span class="lh-cta__icon">
+                            <tui-icon icon="@tui.send" class="size-4!" />
+                        </span>
                     </a>
-                    <button
-                        type="button"
-                        (click)="openTicket()"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-wood/40 text-ink-2 hover:border-brand hover:text-brand-ink text-lg font-bold transition-colors duration-200 cursor-pointer bg-transparent"
-                    >
-                        <tui-icon icon="@tui.file-text" class="size-5!" />
+                    <button type="button" (click)="openTicket()" class="lh-cta lh-cta--ghost text-lg">
                         {{ 'home.recruit.ticket' | translate }}
+                        <span class="lh-cta__icon">
+                            <tui-icon icon="@tui.file-text" class="size-4!" />
+                        </span>
                     </button>
                 </div>
             </div>
