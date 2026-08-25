@@ -1,6 +1,7 @@
-<div class="relative">
-    <h1 class="sr-only">{{ "home.carousel.slides.lastHearth.header" | translate }} — Last Hearth</h1>
+<h1 class="sr-only">{{ "home.carousel.slides.lastHearth.header" | translate }} — Last Hearth</h1>
 
+@if (!isAuthed()) {
+<div class="relative">
     <button
         (click)="navigate(1)"
         class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 -translate-y-1/2 justify-center backdrop-blur-md"
@@ -43,6 +44,7 @@
         <tui-icon icon="@tui.chevron-left" class="text-white" />
     </button>
 </div>
+}
 
 <!-- Быстрые действия -->
 <div class="px-4 md:px-10 py-3">

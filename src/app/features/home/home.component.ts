@@ -95,6 +95,13 @@ export class HomeComponent {
     readonly loading = signal(true);
 
     /**
+     * Признак авторизованного пользователя.
+     * Для вошедших игроков карусель-приветствие скрывается: она нужна как
+     * презентация проекта новым посетителям, а не как часть рабочего экрана.
+     */
+    protected readonly isAuthed = toSignal(this.userService.authState$, { initialValue: false });
+
+    /**
      * Номер элемента карусели.
      */
     protected carouselIndex: number = 0;
