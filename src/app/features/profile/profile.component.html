@@ -276,7 +276,7 @@
         <!-- История покупок -->
         @if (getRoleName() !== 'profile.role.unverified') {
             <div class="flex flex-col gap-3 mt-6">
-                <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'profile.purchases.title' | translate }}</h2>
+                <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'profile.purchases.title' | translate }}</h2>
 
                 @if (purchases; as list) {
                     @if (list.length > 0) {
