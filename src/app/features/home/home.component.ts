@@ -19,6 +19,8 @@ import { formatServerTime } from '@app/layout/header/lib/format-server-time.func
 import { catchError, finalize, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RevealDirective } from '@shared/lib/directives';
+import { PulseStat } from './model/pulse-stat.interface';
 
 /**
  * Роль участника команды проекта.
@@ -31,7 +33,7 @@ type TeamRole = 'founder' | 'coFounder' | 'techAdmin' | 'admin' | 'moderator';
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe],
+    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe, RevealDirective],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -285,6 +287,17 @@ export class HomeComponent {
         ),
         { initialValue: null }
     );
+
+    /**
+     * Метрики «Пульса сервера» для отрисовки одним циклом.
+     * Собраны в один список, чтобы три идентичные карточки не дублировались
+     * в шаблоне: расходились подписи и разметка при каждой правке.
+     */
+    protected readonly pulseStats = computed<readonly PulseStat[]>(() => [
+        { icon: '@tui.users', labelKey: 'home.pulse.online', value: this.online()?.online ?? null },
+        { icon: '@tui.clock', labelKey: 'home.pulse.worldTime', value: this.worldTime() },
+        { icon: '@tui.castle', labelKey: 'home.pulse.settlements', value: this.settlementsCount() },
+    ]);
 
     /**
      * Последние скриншоты из галереи для ленты на главной.

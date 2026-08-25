@@ -111,44 +111,24 @@
 
 <!-- Пульс сервера -->
 <section class="px-4 md:px-10 pb-6 flex flex-col gap-3">
-    <h2 class="text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.pulse.title' | translate }}</h2>
+    <h2 appReveal class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.pulse.title' | translate }}</h2>
 
     <div class="grid grid-cols-3 gap-3 md:gap-4">
-        <div
-            class="flex flex-col items-center gap-1 rounded-xl bg-surface border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-        >
-            <tui-icon icon="@tui.users" class="size-6! text-brand-ink" />
-            <span class="text-2xl md:text-3xl font-bold text-ink tabular-nums">
-                {{ online()?.online ?? '—' }}
-            </span>
-            <span class="text-sm md:text-base font-semibold text-ink-2 text-center uppercase tracking-wide">
-                {{ 'home.pulse.online' | translate }}
-            </span>
-        </div>
-
-        <div
-            class="flex flex-col items-center gap-1 rounded-xl bg-surface border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-        >
-            <tui-icon icon="@tui.clock" class="size-6! text-brand-ink" />
-            <span class="text-2xl md:text-3xl font-bold text-ink tabular-nums">
-                {{ worldTime() ?? '—' }}
-            </span>
-            <span class="text-sm md:text-base font-semibold text-ink-2 text-center uppercase tracking-wide">
-                {{ 'home.pulse.worldTime' | translate }}
-            </span>
-        </div>
-
-        <div
-            class="flex flex-col items-center gap-1 rounded-xl bg-surface border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-        >
-            <tui-icon icon="@tui.castle" class="size-6! text-brand-ink" />
-            <span class="text-2xl md:text-3xl font-bold text-ink tabular-nums">
-                {{ settlementsCount() ?? '—' }}
-            </span>
-            <span class="text-sm md:text-base font-semibold text-ink-2 text-center uppercase tracking-wide">
-                {{ 'home.pulse.settlements' | translate }}
-            </span>
-        </div>
+        @for (stat of pulseStats(); track stat.labelKey) {
+            <div class="pulse-card lh-panel lh-panel--bezel" appReveal [appRevealDelay]="$index * 90">
+                <div class="lh-panel__core flex flex-col items-center gap-1 px-3 py-4">
+                    <span class="pulse-card__icon flex items-center justify-center size-10 rounded-full">
+                        <tui-icon [icon]="stat.icon" class="size-5!" />
+                    </span>
+                    <span class="text-2xl md:text-3xl font-bold text-ink tabular-nums">
+                        {{ stat.value ?? '—' }}
+                    </span>
+                    <span class="text-sm md:text-base font-semibold text-ink-2 text-center uppercase tracking-wide">
+                        {{ stat.labelKey | translate }}
+                    </span>
+                </div>
+            </div>
+        }
     </div>
 </section>
 

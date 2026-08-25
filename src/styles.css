@@ -1032,6 +1032,41 @@ button:disabled,
 }
 
 /**
+ * Появление элемента при входе во вьюпорт.
+ * Классы навешивает директива appReveal: до пересечения — сдвиг и
+ * прозрачность, после — проявление. Анимируются только transform
+ * и opacity, чтобы кадр не уходил на пересчёт раскладки.
+ *
+ * Единственный механизм появления в проекте: .lh-stagger-list и
+ * .market-tab-content работают по таймеру и не знают о вьюпорте,
+ * поэтому не заменяют его, но и не должны с ним сочетаться на одном
+ * элементе — сложатся две прозрачности.
+ */
+.lh-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity var(--lh-dur-slow) var(--lh-ease-out-quart),
+        transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition-delay: var(--lh-reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+.lh-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lh-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/**
  * Тематическое выделение текста в палитре проекта.
  */
 ::selection {

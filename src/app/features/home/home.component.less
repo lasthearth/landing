@@ -314,3 +314,76 @@
         }
     }
 }
+
+/**
+ * Карточка метрики «Пульса сервера».
+ * Геометрия и поверхность приходят из .lh-panel--bezel, здесь только
+ * реакция на курсор и медальон иконки.
+ */
+.pulse-card {
+    display: flex;
+    flex-direction: column;
+    transition:
+        transform var(--lh-dur-mid) var(--lh-ease-spring),
+        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.14),
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
+            var(--lh-shadow-lift);
+    }
+
+    /**
+     * Ядро растягивается на всю оправу: в сетке карточки разной высоты,
+     * и без этого рамка снизу оказывалась толще, чем сверху.
+     */
+    .lh-panel__core {
+        flex: 1 1 auto;
+    }
+}
+
+/**
+ * Медальон иконки метрики.
+ */
+.pulse-card__icon {
+    background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+    color: var(--lh-brand-ink);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 22%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+
+    .pulse-card:hover & {
+        background-color: color-mix(in srgb, var(--lh-brand) 22%, transparent);
+        box-shadow:
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 30%, transparent),
+            0 0 16px color-mix(in srgb, var(--lh-accent) 30%, transparent);
+    }
+}
+
+:host-context(html[data-theme='dark']) {
+    .pulse-card:hover {
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.06),
+            inset 0 0 0 1px rgba(233, 223, 201, 0.09),
+            var(--lh-shadow-lift);
+    }
+
+    .pulse-card__icon {
+        color: var(--lh-accent-soft);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pulse-card {
+        transition: none;
+
+        &:hover {
+            transform: none;
+        }
+    }
+}
