@@ -23,6 +23,28 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-1 Роли, owner-модель и заявки на вступление в поселения
+
+> `Settlement.leader` deprecated. Лидеры теперь — члены с `role_ids`, содержащими `"owner"` (их может быть несколько). Добавлены роли, права, заявки на вступление, передача владения, контакты.
+
+- Модель (`entities/settlement/model/`):
+  - `permission.ts` — enum `Permission` (`PERMISSION_INVITE_MEMBER`, `PERMISSION_REVIEW_JOIN_REQUEST`).
+  - `i-role.ts` — `IRole { id, name, permissions[] }`.
+  - `i-join-request.ts` — `IJoinRequest`.
+  - `i-member.ts` — добавлено `role_ids?: string[]`.
+  - `i-settlement.ts` — добавлены `roles?`, `roles_enabled?`, `contact_info?`; `leader?` помечен `@deprecated`.
+- Хелперы (`entities/settlement/lib/`):
+  - `owner-role-id.constant.ts` — `OWNER_ROLE_ID = 'owner'`.
+  - `get-owner-ids.function.ts` — `getOwnerIds(settlement)`.
+  - `is-owner.function.ts` — `isOwner(settlement, userId)`.
+  - `member-has-permission.function.ts` — `memberHasPermission(settlement, userId, permission)` (owner = все права; при `roles_enabled=false` только owner).
+- API (`entities/settlement/api/settlement.service.ts`): `createJoinRequest$`, `cancelJoinRequest$`, `getMyJoinRequests$`, `getJoinRequests$`, `approveJoinRequest$`, `rejectJoinRequest$`, `createRole$`, `updateRole$`, `deleteRole$`, `assignMemberRole$`, `removeMemberRole$`, `transferOwnership$`, `leaveSettlement$`, `updateContactInfo$`, `adminAddOwner$`, `adminRemoveOwner$`, `adminSetRolesEnabled$`, `adminDeleteSettlement$`.
+- UI-потребители переведены с `.leader` на owner-модель: `settlements.component`, `settlement-card`, `settlement-detailed`, `features/settlements/settlement`, `features/profile`.
+  - Кнопки гейтятся: инвайты по `canInvite` (`PERMISSION_INVITE_MEMBER`/owner), уровень/редактирование/картинка — по `isOwner`, выход — не-owner.
+  - Бейджи ролей члена — `getMemberRoleNames`, скрыты при `roles_enabled=false`.
+  - `contact_info` и `role.name` выводятся ТОЛЬКО интерполяцией `{{ }}` (XSS: сервер не экранирует).
+  - Счётчики жителей: `members.length` (owner теперь внутри `members`, не `+1`).
+
 ### 3.0 Единый бейдж поселения
 
 > Плашки типа селения / населения / онлайна / дипломатии были разными в списке селений и в профиле. Вынесены в один компонент.
@@ -215,14 +237,65 @@ src/app/
 - Модальное окно видео получило `role="dialog"`, `aria-modal`, закрытие по `Escape`.
 - Ссылки в тексте перекрашены с системного синего (1.84:1 на пергаменте) на `--lh-link` (4.97:1).
 
+## 6.3 Дизайн-система: motion / поверхности / ритм
+
+Утилиты в `src/styles.css`, внедрённые прогоном skill `high-end-visual-design`.
+Прогон дал смешанный результат: часть приёмов принята как канон проекта,
+часть признана AI-слопом и подлежит откату. Ветка ревизии — `design/keep-approved`.
+
+### 6.3.1 Принято (канон, переиспользовать)
+
+| Утилита / приём | Файл | Назначение |
+|---|---|---|
+| `--lh-ease-smooth` / `--lh-ease-spring` / `--lh-ease-out-quart` | `src/styles.css` | единые нелинейные кривые. Дефолтные `ease` / `ease-in-out` / `linear` в проекте запрещены |
+| `--lh-dur-fast` (200ms) / `--lh-dur-mid` (450ms) / `--lh-dur-slow` (800ms) | `src/styles.css` | шкала длительностей |
+| `--default-transition-timing-function`, `--ease-*` в `@theme` | `src/styles.css` | глобальный переопредель кривых для всех Tailwind `transition*`-утилит |
+| `--lh-shadow-soft` / `--lh-shadow-lift` / `--lh-shadow-glow` | `src/styles.css` | слоистые ambient-тени вместо резких одиночных `drop-shadow` |
+| `.nav-button` + `.nav-button--active` | `layout/header/header.component.css`, `src/styles.css` | кнопки навигации: hover-лифт `-1px`, `:active` просадка `scale(0.95)` @80ms, брендовый градиент активного состояния с двойным inset-бликом. Контраст держится в обеих темах |
+| `.dropdown-enter` + каскад `> *:nth-child(n)` | `layout/header/header.component.css` | появление меню хедера: `blur(4px)` → 0 + каскад пунктов по 50ms |
+| Двойная фаска (double-bezel) | `.lh-bezel`/`.lh-bezel__core` в `src/styles.css`; `.pulse-card`/`.pulse-card__inner` в `home.component.less`; `.welcome-bezel`/`.welcome-card` в `welcome.component.css` | внешняя оправа `padding: 0.375rem` + hairline `inset 0 0 0 1px` + ядро с концентрическим радиусом `calc(R - padding)` |
+| Карточки «Пульса сервера» | `features/home/home.component.*` | двойная фаска + иконка в тёплом медальоне + `tabular-nums` на значениях. Эталон карточки-метрики |
+| `.lh-reveal` (+ `.is-visible`) и `RevealDirective` | `src/styles.css`, `shared/lib/directives/reveal.directive.ts` | `[appReveal]` / `[appRevealDelay]`: IntersectionObserver, сдвиг 28px + `blur(8px)`. Уважает `prefers-reduced-motion` |
+| Тёмная палитра | `html[data-theme='dark']` в `src/styles.css` | текущие значения токенов тёмной темы лучше предыдущих — не откатывать |
+| Экран приветствия | `features/welcome/**` | композиция целиком принята (двойная фаска, hearth-glow, каскад `welcome-stagger`, `.lh-cta`) |
+| `.lh-tag` | `src/styles.css` | тег поселения; произвольный цвет с бэкенда остаётся читаемым в обеих темах через `color-mix` |
+| `.lh-cta` + `.lh-cta__icon` (+ `--secondary` / `--ghost`) | `src/styles.css`, `home.component.less` | CTA-пилюля с вложенной иконкой-кругом; на hover круг сдвигается, пилюля поднимается на 2px |
+| `.lh-panel` | `src/styles.css` | базовая контентная панель, заменила ~44 дубля `bg-lh-primary-2/10 … rounded-2xl p-6`. Используется в 62 местах — единственная разрешённая «плоская» поверхность |
+| `text-wrap: balance` (`h1..h6`) / `pretty` (`p`) | `src/styles.css` | нет висячих слов в заголовках |
+| Семантические токены текста | все шаблоны | `text-lh-primary` (#3f3c34) заменён на `text-ink` / `text-ink-2` / `text-ink-3` |
+
+### 6.3.2 К пересмотру (AI-слоп)
+
+| Приём | Проблема | Решение |
+|---|---|---|
+| `.lh-display` (Almendra) | шрифт хороший, применение бессистемное: висит на 20 узлах, включая `<p>` карусели главной и цифры шагов 1/2/3 в `start-game` | ограничить `h1`/`h2` первого уровня секции. Убрать с абзацев и с декоративных цифр |
+| Декоративные цифры шагов `text-8xl opacity-25` | `start-game.component.html` — маркеры `01/02/03` поверх контента | удалить или свести к обычному счётчику списка |
+| `.lh-eyebrow` | микро-пилюля-кикер над каждым вторым заголовком (5 файлов) | оставить максимум на одной секции главной либо выпилить |
+| `blur()` в keyframes | `filter: blur()` добавлен в `market-tab-fade-in`, `lh-stagger-fade-in`, `dropdown-enter`, `.lh-reveal` — 4 независимых механизма появления | свести к одному (`.lh-reveal`), остальные оставить без blur |
+| `!important` в `.nav-button--active` | 5 объявлений подряд, обоснования в коде нет | убрать после проверки специфичности Taiga-стилей |
+| Несогласованность поверхностей | одна и та же карточка выражена тремя способами: `.lh-panel`, `.lh-bezel`, локальный `.pulse-card` (копия `.lh-bezel` в `home.component.less`) | `.pulse-card` переписать на `.lh-bezel` + `.lh-bezel__core`, локальную копию удалить |
+| Инлайновые тени/кривые в шаблонах | `start-game`: `hover:shadow-[0_16px_40px_-16px_rgba(26,17,13,0.3)] ease-[cubic-bezier(0.22,1,0.36,1)]` в каждом блоке | заменить на `.lh-shadow` и токены |
+
+### 6.3.3 Открытые баги
+
+- **Видео на welcome не запускается в Firefox / Zen.** `<video autoplay muted playsinline>`
+  + фолбэк-запуск по первому жесту (`onFirstGesture` в `welcome.component.ts`).
+  Firefox блокирует автоплей до `loadeddata` и игнорирует `autoplay`, если
+  `muted` выставлен только атрибутом при гидрации SSR. Нужно: ставить
+  `video.muted = true` в JS до `play()` и дёргать `play()` на `loadedmetadata`,
+  а не только по жесту пользователя.
+- Бандл превышает бюджет 2.50 MB (~2.66 MB).
+
 ## 7. Последний коммит
 
 - `LH | feat: add diplomacy, gallery, videos, game chat, radio widget; remove secrets from configs`
 - Сборка: `npm run build` проходит, 11 prerender-роутов.
-- Предупреждение: бандл превышает бюджет 2.50 MB (~2.53 MB).
+- Предупреждение: бандл превышает бюджет 2.50 MB (~2.66 MB после дизайн-системы).
 
 ## 8. TODO для следующей сессии
 
+- [ ] Прогон по репозиторию по разделу 6.3.2: унифицировать поверхности, урезать `.lh-display` и `.lh-eyebrow`, снять `!important` и инлайновые тени.
+- [ ] Починить автоплей видео на welcome в Firefox / Zen (см. 6.3.3).
 - [ ] Сгенерировать proto-заглушки и goverter-мапперы в `vsservice` (`make proto && make generate`).
 - [ ] Проверить сборку и линтер `vsservice` (`make lint && make test && make build`).
 - [ ] Проверить интеграцию фронтенд ↔ бэкенд на dev-стенде.
