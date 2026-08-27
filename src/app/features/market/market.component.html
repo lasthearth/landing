@@ -1,7 +1,53 @@
 <div class="p-6 flex flex-col gap-8">
-    <h1 class="lh-display text-2xl md:text-3xl lg:text-4xl font-bold text-lh-primary">
-        {{ 'market.marketPage.title' | translate }}
-    </h1>
+    <!-- Шапка: заголовок, баланс и быстрый доступ к пополнению -->
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+        <div class="flex flex-col gap-2">
+            <h1 class="lh-display text-2xl md:text-3xl lg:text-4xl font-bold text-lh-primary">
+                {{ 'market.marketPage.title' | translate }}
+            </h1>
+            <p class="text-base md:text-lg text-ink-2 max-w-2xl">
+                {{ 'market.marketPage.subtitle' | translate }}
+            </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            @if (balance$ | async; as balance) {
+                <div
+                    class="flex items-center gap-2 rounded-xl border border-line bg-surface-3 px-4 py-2.5"
+                >
+                    <span class="text-sm font-bold uppercase tracking-wide text-ink-2">
+                        {{ 'market.marketPage.balanceLabel' | translate }}
+                    </span>
+                    <img
+                        src="/splinter-of-spark.webp"
+                        [alt]="'market.common.shardAlt' | translate"
+                        class="h-6 w-6 object-contain"
+                    />
+                    <span class="text-xl font-extrabold text-lh-primary">{{ balance }}</span>
+                </div>
+            }
+            <button
+                type="button"
+                (click)="howToBuy()"
+                class="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-deep to-brand-lit px-5 py-2.5 text-base lg:text-lg font-bold uppercase tracking-wide text-white shadow-[0_4px_16px_rgba(195,90,23,0.35)] transition-all duration-200 hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] cursor-pointer"
+            >
+                <tui-icon icon="@tui.plus" class="size-5!" />
+                {{ 'market.marketPage.topUp' | translate }}
+            </button>
+        </div>
+    </div>
+
+    <!-- Аргументы доверия -->
+    <div class="flex flex-wrap gap-x-6 gap-y-2 -mt-4 text-sm md:text-base text-ink-2">
+        <span class="flex items-center gap-2">
+            <tui-icon icon="@tui.clock" class="!text-base text-lh-accent" />
+            {{ 'market.marketPage.trustDelivery' | translate }}
+        </span>
+        <span class="flex items-center gap-2">
+            <tui-icon icon="@tui.credit-card" class="!text-base text-lh-accent" />
+            {{ 'market.marketPage.trustPayment' | translate }}
+        </span>
+    </div>
 
     <!-- Вкладки -->
     <div class="flex gap-3">
@@ -98,6 +144,7 @@
     </div>
 
     <!-- Блок "Куда идут средства" -->
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div
             class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"

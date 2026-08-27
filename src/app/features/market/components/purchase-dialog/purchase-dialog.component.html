@@ -59,6 +59,46 @@
         </div>
     }
 
+    <!-- Contents preview -->
+    @if (data.privileges?.length) {
+        <div class="flex flex-col gap-2">
+            <p class="text-base font-bold uppercase tracking-wide text-ink-2">
+                {{ 'market.purchaseDialog.abilities' | translate }}
+            </p>
+            <div class="flex flex-wrap gap-2">
+                @for (ability of data.privileges; track $index) {
+                    <app-ability-tag [data]="ability" />
+                }
+            </div>
+        </div>
+    }
+
+    @if (data.kitItems?.length) {
+        <div class="flex flex-col gap-2">
+            <p class="text-base font-bold uppercase tracking-wide text-ink-2">
+                {{ 'market.purchaseDialog.contents' | translate }}
+            </p>
+            <div class="flex flex-wrap gap-2">
+                @for (kitItem of data.kitItems; track $index) {
+                    <app-kit-item [data]="kitItem" />
+                }
+            </div>
+        </div>
+    }
+
+    @if (data.dailyKitItems?.length) {
+        <div class="flex flex-col gap-2">
+            <p class="text-base font-bold uppercase tracking-wide text-ink-2">
+                {{ 'market.purchaseDialog.dailyContents' | translate }}
+            </p>
+            <div class="flex flex-wrap gap-2">
+                @for (kitItem of data.dailyKitItems; track $index) {
+                    <app-kit-item [data]="kitItem" />
+                }
+            </div>
+        </div>
+    }
+
     <!-- Payment info -->
     <div class="flex flex-col gap-4 pt-4 border-t border-line">
         <div class="flex items-center justify-between">
@@ -71,9 +111,28 @@
             </div>
         </div>
 
-        <p class="text-base sm:text-[18px] leading-relaxed text-ink-2">
-            {{ 'market.purchaseDialog.confirmation' | translate:{ price: activePrice } }}
+        @if (balance() !== null) {
+            <div class="flex items-center justify-between text-base sm:text-[18px]">
+                <span class="text-ink-2">{{ 'market.purchaseDialog.yourBalance' | translate }}</span>
+                <div class="flex items-center gap-2">
+                    <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
+                    <span class="font-bold" [class.text-lh-danger]="missingAmount() > 0" [class.text-ink]="missingAmount() === 0">
+                        {{ balance() }}
+                    </span>
+                </div>
+            </div>
+        }
+
+        <p class="flex items-center gap-2 text-base sm:text-[18px] text-ink-2">
+            <tui-icon icon="@tui.clock" class="size-5!" />
+            {{ 'market.purchaseDialog.delivery' | translate }}
         </p>
+
+        @if (missingAmount() > 0) {
+            <p class="text-base sm:text-[18px] font-bold text-lh-danger">
+                {{ 'market.purchaseDialog.notEnough' | translate:{ amount: missingAmount() } }}
+            </p>
+        }
     </div>
 
     <!-- Actions -->
@@ -81,8 +140,14 @@
         <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-[18px]">
             {{ 'market.purchaseDialog.cancel' | translate }}
         </button>
-        <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-[18px]">
-            {{ 'market.purchaseDialog.buy' | translate }}
-        </button>
+        @if (missingAmount() > 0) {
+            <button tuiButton appearance="primary" (click)="onTopUp()" class="flex-1 text-base sm:text-[18px]">
+                {{ 'market.purchaseDialog.topUp' | translate }}
+            </button>
+        } @else {
+            <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-[18px]">
+                {{ 'market.purchaseDialog.buy' | translate }}
+            </button>
+        }
     </div>
 </div>

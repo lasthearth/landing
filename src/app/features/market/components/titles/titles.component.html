@@ -203,8 +203,26 @@
                 class="shimmer-btn self-stretch text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-brand-deep to-brand-lit hover:from-brand-deep hover:to-brand-lit rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-lg lg:text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
             >
                 <tui-icon icon="@tui.shopping-cart" class="size-6!" />
-                <span>{{ 'market.common.buyButton' | translate }}</span>
+                <span>{{ 'market.common.buyFor' | translate }}</span>
+                <span class="font-extrabold">{{ activePrice() }}</span>
+                <img
+                    src="/splinter-of-spark.webp"
+                    [alt]="'market.common.shardAlt' | translate"
+                    class="h-6 w-6 lg:h-7 lg:w-7 object-contain -ml-1"
+                />
             </button>
+
+            <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm lg:text-base text-ink-2">
+                @if (activeSavings(); as savings) {
+                    <span class="font-bold text-lh-accent">
+                        {{ 'market.common.savings' | translate:{ amount: savings } }}
+                    </span>
+                }
+                <span class="flex items-center gap-1.5">
+                    <tui-icon icon="@tui.clock" class="!text-base" />
+                    {{ 'market.purchaseDialog.delivery' | translate }}
+                </span>
+            </div>
         </div>
     </div>
 }

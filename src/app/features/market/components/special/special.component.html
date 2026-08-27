@@ -70,6 +70,11 @@
                         <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                         <span class="text-lg lg:text-xl font-bold text-lh-primary">{{ getDisplayPrice(item) }}</span>
                     </div>
+                    @if (getSavings(item); as savings) {
+                        <span class="text-xs lg:text-sm font-bold text-lh-accent">
+                            {{ 'market.common.savings' | translate:{ amount: savings } }}
+                        </span>
+                    }
                 </div>
 
                 <!-- Buy button -->
