@@ -48,7 +48,7 @@
 }
 
 <!-- Быстрые действия -->
-<div class="px-4 md:px-10 py-3">
+<div class="px-4 md:px-10 pt-6 md:pt-8 pb-3">
     <div class="quick-actions">
         @for (action of quickActions; track action.label) {
             @if (action.external) {
@@ -83,31 +83,37 @@
 </div>
 
 @if (loading()) {
-    <div class="flex flex-wrap items-center gap-5 pt-0 px-6 pb-3">
-        <app-news-skeleton class="!h-auto w-full" />
-        <app-news-skeleton class="!h-auto w-full" />
-    </div>
+    <section class="px-4 md:px-10 pb-3 flex flex-col gap-3">
+        <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.news.title' | translate }}</h2>
+        <div class="flex flex-wrap items-center gap-5">
+            <app-news-skeleton class="!h-auto w-full" />
+            <app-news-skeleton class="!h-auto w-full" />
+        </div>
+    </section>
 } @else if (news().length > 0) {
-    <div class="flex flex-wrap items-center gap-5 pt-0 px-6 pb-3">
-        @for (item of pageNews(); track item.id) {
-            <app-news-card
-                [id]="item.id"
-                [title]="item.title"
-                [content]="item.content"
-                [preview]="item.preview"
-                [date]="item.formattedDate"
-                [createdAt]="item.createdAt"
-                [viewCount]="item.viewCount"
-                [createdBy]="isAuthenticated() ? item.createdBy : ''"
-                [canDelete]="isAdmin()"
-                [trackViews]="true"
-                (delete)="deleteNews(item.id)"
-                class="!h-auto w-full"
-            />
-        }
-    </div>
+    <section class="px-4 md:px-10 pb-3 flex flex-col gap-3">
+        <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.news.title' | translate }}</h2>
+        <div class="flex flex-wrap items-center gap-5">
+            @for (item of pageNews(); track item.id) {
+                <app-news-card
+                    [id]="item.id"
+                    [title]="item.title"
+                    [content]="item.content"
+                    [preview]="item.preview"
+                    [date]="item.formattedDate"
+                    [createdAt]="item.createdAt"
+                    [viewCount]="item.viewCount"
+                    [createdBy]="isAuthenticated() ? item.createdBy : ''"
+                    [canDelete]="isAdmin()"
+                    [trackViews]="true"
+                    (delete)="deleteNews(item.id)"
+                    class="!h-auto w-full"
+                />
+            }
+        </div>
 
-    <tui-pagination [index]="pageIndex()" [length]="totalPages()" (indexChange)="goToPage($event)" class="mb-4" />
+        <tui-pagination [index]="pageIndex()" [length]="totalPages()" (indexChange)="goToPage($event)" class="mb-4" />
+    </section>
 } @else {
     <p class="text-2xl/7.5 my-6 uppercase font-bold text-ink-3 self-center">{{ 'home.news.empty' | translate }}</p>
 }

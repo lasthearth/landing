@@ -1,23 +1,43 @@
-<div class="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center">
-    <h1 class="lh-display text-6xl md:text-8xl font-bold text-lh-accent mb-4">404</h1>
+<!--
+    Атмосферная сцена 404: ночная пустошь и последний очаг.
+    Тёмный фон одинаков в обеих темах (токены --lh-night-*), поверх него
+    тлеющие угли и мерцающее пламя. Свет факела (`.not-found__torch`)
+    следует за курсором через переменные --torch-x/--torch-y.
+    aria-hidden на всём декоре: скринридеру важны только заголовок и ссылки.
+-->
+<section class="not-found" aria-labelledby="not-found-title">
+    <!-- Слой свечения факела: идёт за курсором, «освещая» сцену. -->
+    <div class="not-found__torch" aria-hidden="true"></div>
 
-    <p class="text-2xl md:text-3xl font-bold text-lh-primary mb-2">{{ 'notFound.title' | translate }}</p>
-
-    <p class="text-lg text-lh-primary-2/80 mb-8 max-w-md">{{ 'notFound.description' | translate }}</p>
-
-    <div class="flex flex-wrap gap-4 justify-center">
-        <a
-            [routerLink]="['/home']"
-            class="lh-secondary-button px-6 py-3 text-lg font-bold"
-        >
-            {{ 'notFound.home' | translate }}
-        </a>
-
-        <a
-            [routerLink]="['/market']"
-            class="lh-secondary-button px-6 py-3 text-lg font-bold"
-        >
-            {{ 'notFound.market' | translate }}
-        </a>
+    <!-- Поднимающиеся угли. Число задаётся разметкой, разброс — в LESS по :nth-child. -->
+    <div class="not-found__embers" aria-hidden="true">
+        @for (ember of embers; track $index) {
+            <span class="not-found__ember"></span>
+        }
     </div>
-</div>
+
+    <div class="not-found__content">
+        <!-- Очаг: пламя за огромной цифрой 404. -->
+        <div class="not-found__hearth" aria-hidden="true">
+            <span class="not-found__flame"></span>
+        </div>
+
+        <h1 id="not-found-title" class="lh-display not-found__code">404</h1>
+
+        <p class="not-found__title lh-display">{{ 'notFound.title' | translate }}</p>
+
+        <p class="not-found__description">{{ 'notFound.description' | translate }}</p>
+
+        <div class="not-found__actions">
+            <a [routerLink]="['/home']" class="lh-cta">
+                <span class="lh-cta__icon"><tui-icon icon="@tui.flame" /></span>
+                {{ 'notFound.home' | translate }}
+            </a>
+
+            <a [routerLink]="['/market']" class="lh-cta lh-cta--ghost">
+                <span class="lh-cta__icon"><tui-icon icon="@tui.arrow-right" /></span>
+                {{ 'notFound.market' | translate }}
+            </a>
+        </div>
+    </div>
+</section>
