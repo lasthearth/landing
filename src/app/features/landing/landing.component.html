@@ -16,5 +16,11 @@
         </div>
     </div>
 
-    <app-radio-widget />
+    <!--
+        Радио — второстепенный плавающий виджет: откладываем его код
+        и загрузку YouTube IFrame API до простоя браузера.
+    -->
+    @defer (on idle) {
+        <app-radio-widget />
+    }
 </main>

@@ -8,7 +8,7 @@
 .purchases-list {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows 0.35s ease-out;
+    transition: grid-template-rows var(--lh-dur-mid) var(--lh-ease-out-quart);
 }
 
 .purchases-list--expanded {
@@ -26,7 +26,7 @@
  * Плавное появление элементов при раскрытии списка.
  */
 .purchases-list--expanded .purchases-list__inner > * {
-    animation: purchaseItemFadeIn 0.3s ease-out both;
+    animation: purchaseItemFadeIn var(--lh-dur-fast) var(--lh-ease-out-quart) both;
 }
 
 .purchases-list--expanded .purchases-list__inner > *:nth-child(1) { animation-delay: 0ms; }
@@ -48,7 +48,7 @@
 }
 
 .purchases-toggle-icon {
-    transition: transform 0.35s ease-out;
+    transition: transform var(--lh-dur-mid) var(--lh-ease-out-quart);
 }
 
 .purchases-toggle-icon--expanded {

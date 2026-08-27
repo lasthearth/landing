@@ -1,0 +1,26 @@
+/**
+ * Бейдж тега поселения.
+ *
+ * Цвет тега приходит из БД произвольным, поэтому напрямую как цвет текста он
+ * не годится: тёмно-красный тег читался как 1.3:1 на тёмной теме. Собственный
+ * цвет подмешивается к текущим чернилам темы (`--lh-ink`) — светлым в тёмной
+ * теме и тёмным в светлой, поэтому текст всегда уходит в читаемую сторону,
+ * сохраняя узнаваемый оттенок тега.
+ */
+.settlement-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.5;
+    background-color: color-mix(in srgb, var(--tag-color) 16%, transparent);
+    color: color-mix(in srgb, var(--tag-color) 40%, var(--lh-ink));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tag-color) 30%, transparent);
+}
+
+.settlement-tag--uppercase {
+    text-transform: uppercase;
+}

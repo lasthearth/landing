@@ -1,0 +1,89 @@
+<ng-template #tooltip>
+    <div class="player-tooltip">
+        <div class="player-tooltip__head">
+            <app-image-loader
+                class="player-tooltip__avatar"
+                [src]="tooltipAvatarUrl()"
+                [alt]="player().user_game_name"
+                imageClass="h-full w-full object-cover"
+            />
+            <div class="player-tooltip__ident">
+                <span class="player-tooltip__name">{{ player().user_game_name }}</span>
+                <span class="player-tooltip__badges">
+                    @if (isLeader()) {
+                        <span class="player-tooltip__role">
+                            <tui-icon icon="@tui.crown" class="player-tooltip__role-icon" />
+                            {{ 'settlements.player.leader' | translate }}
+                        </span>
+                    }
+                    <span class="player-tooltip__status" [class.player-tooltip__status--online]="player().is_online">
+                        <span
+                            class="player-tooltip__status-dot"
+                            [class.player-tooltip__status-dot--online]="player().is_online"
+                        ></span>
+                        {{
+                            (player().is_online ? 'settlements.player.online' : 'settlements.player.offline')
+                                | translate
+                        }}
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        @if (statsLoading()) {
+            <div class="player-tooltip__hint">{{ 'settlements.player.loading' | translate }}</div>
+        } @else if (stats(); as s) {
+            <dl class="player-tooltip__stats">
+                <div class="player-tooltip__stat">
+                    <dt>{{ 'settlements.player.stats.hours' | translate }}</dt>
+                    <dd>{{ s.hours_played | number: '1.0-0' }}</dd>
+                </div>
+                <div class="player-tooltip__stat">
+                    <dt>{{ 'settlements.player.stats.kills' | translate }}</dt>
+                    <dd>{{ s.players_killed }}</dd>
+                </div>
+                <div class="player-tooltip__stat">
+                    <dt>{{ 'settlements.player.stats.deaths' | translate }}</dt>
+                    <dd>{{ s.death_count }}</dd>
+                </div>
+            </dl>
+        } @else {
+            <div class="player-tooltip__hint">{{ 'settlements.player.noStats' | translate }}</div>
+        }
+    </div>
+</ng-template>
+
+<span
+    class="player-chip"
+    [class.player-chip--leader]="isLeader()"
+    [tuiHint]="tooltip"
+    tuiHintDirection="top"
+    tuiHintAppearance="lh-player"
+    (tuiHintVisible)="onHintVisible($event)"
+>
+    <span class="player-chip__portrait">
+        <app-image-loader
+            class="player-chip__avatar"
+            [src]="avatarUrl()"
+            [alt]="player().user_game_name"
+            imageClass="h-full w-full object-cover"
+        />
+        <span class="player-chip__dot" [class.player-chip__dot--online]="player().is_online"></span>
+    </span>
+
+    @if (isLeader()) {
+        <tui-icon icon="@tui.crown" class="player-chip__crown" />
+    }
+    <span class="player-chip__name">{{ player().user_game_name }}</span>
+
+    @if (removable()) {
+        <button
+            type="button"
+            class="player-chip__remove"
+            (click)="onRemove()"
+            [attr.aria-label]="'settlements.player.remove' | translate"
+        >
+            <tui-icon icon="@tui.user-round-x" />
+        </button>
+    }
+</span>

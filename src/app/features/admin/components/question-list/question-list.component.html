@@ -2,7 +2,7 @@
     @if (questions().length > 0) {
         <div class="flex flex-col gap-6">
             @for (q of questions(); track q.id) {
-                <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] flex items-center justify-between gap-4">
+                <div class="lh-panel flex items-center justify-between gap-4">
                     <div class="flex flex-col gap-2 flex-1 min-w-0">
                         <p class="text-[23px] leading-[32px] text-ink">{{ q.text }}</p>
                         @if (q.createdBy) {

@@ -1,0 +1,27 @@
+/**
+ * Нумерация шагов.
+ *
+ * Номер рисуется счётчиком списка, а не отдельным `<p>` в разметке:
+ * так порядок задаётся структурой `<ol>` и остаётся верным при
+ * добавлении шага, а скринридер объявляет его сам.
+ */
+.start-steps {
+    counter-reset: start-step;
+    list-style: none;
+}
+
+.start-steps > li {
+    counter-increment: start-step;
+}
+
+.start-steps > li::before {
+    content: counter(start-step);
+    flex: 0 0 auto;
+    min-width: 2.5rem;
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--lh-brand-ink);
+    opacity: 0.45;
+    user-select: none;
+}

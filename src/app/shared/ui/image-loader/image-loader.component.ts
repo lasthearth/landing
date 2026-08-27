@@ -41,6 +41,16 @@ export class ImageLoaderComponent {
     public containerClass: InputSignal<string> = input<string>('');
 
     /**
+     * Изображение находится на первом экране.
+     *
+     * По умолчанию картинки грузятся лениво (`loading="lazy"`): в списках
+     * поселений и в галерее их десятки, и одновременная загрузка забивает
+     * канал. Для картинки над сгибом ленивая загрузка вредна — она
+     * задерживает LCP, поэтому такие помечаются `eager`.
+     */
+    public eager: InputSignal<boolean> = input<boolean>(false);
+
+    /**
      * Признак завершения загрузки изображения.
      */
     protected readonly loaded = signal(false);

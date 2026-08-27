@@ -1,9 +1,10 @@
-<div class="relative">
-    <h1 class="sr-only">{{ "home.carousel.slides.lastHearth.header" | translate }} — Last Hearth</h1>
+<h1 class="sr-only">{{ "home.carousel.slides.lastHearth.header" | translate }} — Last Hearth</h1>
 
+@if (!isAuthed()) {
+<div class="relative">
     <button
         (click)="navigate(1)"
-        class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 cursor-pointer -translate-y-1/2 hover:scale-[105%] hover:bg-brand transition-all duration-200 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 -translate-y-1/2 justify-center backdrop-blur-md"
         [attr.aria-label]="'home.carousel.nextAria' | translate"
     >
         <tui-icon icon="@tui.chevron-right" class="text-white" />
@@ -15,6 +16,7 @@
                 <app-image-loader
                     [src]="item.image"
                     [alt]="item.header | translate"
+                    [eager]="$first"
                     class="h-full w-full md:h-[600px]"
                     [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
                 />
@@ -24,7 +26,7 @@
                 <div
                     class="absolute flex flex-col justify-start left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white w-[90%] px-4 py-6"
                 >
-                    <h2 class="text-2xl md:text-4xl lg:text-8xl font-bold mb-4 uppercase !text-shadow-lg">
+                    <h2 class="lh-display text-2xl md:text-4xl lg:text-8xl font-bold mb-4 uppercase !text-shadow-lg">
                         {{ item.header | translate }}
                     </h2>
                     <p [innerHTML]="item.body | translate" class="text-lg md:text-2xl lg:text-4xl font-medium !text-shadow-lg"></p>
@@ -37,15 +39,16 @@
 
     <button
         (click)="navigate(-1)"
-        class="absolute nav-button hidden md:block size-12 z-40 left-8 cursor-pointer hover:scale-[105%] hover:bg-brand transition-all duration-200 top-1/2 -translate-y-1/2 rounded-xl backdrop-blur-md shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        class="absolute nav-button hidden md:block size-12 z-40 left-8 top-1/2 -translate-y-1/2 justify-center backdrop-blur-md"
         [attr.aria-label]="'home.carousel.prevAria' | translate"
     >
         <tui-icon icon="@tui.chevron-left" class="text-white" />
     </button>
 </div>
+}
 
 <!-- Быстрые действия -->
-<div class="px-4 md:px-10 py-3">
+<div class="px-4 md:px-10 pt-6 md:pt-8 pb-3">
     <div class="quick-actions">
         @for (action of quickActions; track action.label) {
             @if (action.external) {
@@ -80,82 +83,68 @@
 </div>
 
 @if (loading()) {
-    <div class="flex flex-wrap items-center gap-5 pt-0 px-6 pb-3">
-        <app-news-skeleton class="!h-auto w-full" />
-        <app-news-skeleton class="!h-auto w-full" />
-    </div>
+    <section class="px-4 md:px-10 pb-3 flex flex-col gap-3">
+        <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.news.title' | translate }}</h2>
+        <div class="flex flex-wrap items-center gap-5">
+            <app-news-skeleton class="!h-auto w-full" />
+            <app-news-skeleton class="!h-auto w-full" />
+        </div>
+    </section>
 } @else if (news().length > 0) {
-    <div class="flex flex-wrap items-center gap-5 pt-0 px-6 pb-3">
-        @for (item of pageNews(); track item.id) {
-            <app-news-card
-                [id]="item.id"
-                [title]="item.title"
-                [content]="item.content"
-                [preview]="item.preview"
-                [date]="item.formattedDate"
-                [createdAt]="item.createdAt"
-                [viewCount]="item.viewCount"
-                [createdBy]="isAuthenticated() ? item.createdBy : ''"
-                [canDelete]="isAdmin()"
-                [trackViews]="true"
-                (delete)="deleteNews(item.id)"
-                class="!h-auto w-full"
-            />
-        }
-    </div>
+    <section class="px-4 md:px-10 pb-3 flex flex-col gap-3">
+        <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.news.title' | translate }}</h2>
+        <div class="flex flex-wrap items-center gap-5">
+            @for (item of pageNews(); track item.id) {
+                <app-news-card
+                    [id]="item.id"
+                    [title]="item.title"
+                    [content]="item.content"
+                    [preview]="item.preview"
+                    [date]="item.formattedDate"
+                    [createdAt]="item.createdAt"
+                    [viewCount]="item.viewCount"
+                    [createdBy]="isAuthenticated() ? item.createdBy : ''"
+                    [canDelete]="isAdmin()"
+                    [trackViews]="true"
+                    (delete)="deleteNews(item.id)"
+                    class="!h-auto w-full"
+                />
+            }
+        </div>
 
-    <tui-pagination [index]="pageIndex()" [length]="totalPages()" (indexChange)="goToPage($event)" class="mb-4" />
+        <tui-pagination [index]="pageIndex()" [length]="totalPages()" (indexChange)="goToPage($event)" class="mb-4" />
+    </section>
 } @else {
     <p class="text-2xl/7.5 my-6 uppercase font-bold text-ink-3 self-center">{{ 'home.news.empty' | translate }}</p>
 }
 
 <!-- Пульс сервера -->
 <section class="px-4 md:px-10 pb-6 flex flex-col gap-3">
-    <h2 class="text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.pulse.title' | translate }}</h2>
+    <h2 appReveal class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.pulse.title' | translate }}</h2>
 
     <div class="grid grid-cols-3 gap-3 md:gap-4">
-        <div
-            class="flex flex-col items-center gap-1 rounded-xl bg-surface border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-        >
-            <tui-icon icon="@tui.users" class="size-6! text-brand-ink" />
-            <span class="text-2xl md:text-3xl font-bold text-ink tabular-nums">
-                {{ online()?.online ?? '—' }}
-            </span>
-            <span class="text-sm md:text-base font-semibold text-ink-2 text-center uppercase tracking-wide">
-                {{ 'home.pulse.online' | translate }}
-            </span>
-        </div>
-
-        <div
-            class="flex flex-col items-center gap-1 rounded-xl bg-surface border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-        >
-            <tui-icon icon="@tui.clock" class="size-6! text-brand-ink" />
-            <span class="text-2xl md:text-3xl font-bold text-ink tabular-nums">
-                {{ worldTime() ?? '—' }}
-            </span>
-            <span class="text-sm md:text-base font-semibold text-ink-2 text-center uppercase tracking-wide">
-                {{ 'home.pulse.worldTime' | translate }}
-            </span>
-        </div>
-
-        <div
-            class="flex flex-col items-center gap-1 rounded-xl bg-surface border border-[rgba(51,44,38,0.08)] px-3 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-        >
-            <tui-icon icon="@tui.castle" class="size-6! text-brand-ink" />
-            <span class="text-2xl md:text-3xl font-bold text-ink tabular-nums">
-                {{ settlementsCount() ?? '—' }}
-            </span>
-            <span class="text-sm md:text-base font-semibold text-ink-2 text-center uppercase tracking-wide">
-                {{ 'home.pulse.settlements' | translate }}
-            </span>
-        </div>
+        @for (stat of pulseStats(); track stat.labelKey) {
+            <div class="pulse-card lh-panel lh-panel--bezel" appReveal [appRevealDelay]="$index * 90">
+                <div class="lh-panel__core flex flex-col items-center gap-1 px-3 py-4">
+                    <span class="pulse-card__icon flex items-center justify-center size-10 rounded-full">
+                        <tui-icon [icon]="stat.icon" class="size-5!" />
+                    </span>
+                    <span class="text-2xl md:text-3xl font-bold text-ink tabular-nums">
+                        {{ stat.value ?? '—' }}
+                    </span>
+                    <span class="text-sm md:text-base font-semibold text-ink-2 text-center uppercase tracking-wide">
+                        {{ stat.labelKey | translate }}
+                    </span>
+                </div>
+            </div>
+        }
     </div>
 </section>
 
 <!-- Команда проекта -->
 <section class="px-4 md:px-10 pb-6 flex flex-col gap-4">
     <div class="flex flex-col gap-1">
-        <h2 class="text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.team.title' | translate }}</h2>
+        <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.team.title' | translate }}</h2>
         <p class="text-lg md:text-xl font-medium text-lh-primary">{{ 'home.team.subtitle' | translate }}</p>
     </div>
 
@@ -197,7 +186,7 @@
         <!-- Текст и роли -->
         <div class="flex flex-col gap-6 p-6 lg:p-8 lg:w-3/5">
             <div class="flex flex-col gap-2 pl-4 border-l-4 border-danger-strong/60">
-                <h2 class="text-2xl md:text-3xl uppercase font-bold text-ink">
+                <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
                     {{ 'home.recruit.title' | translate }}
                 </h2>
                 <p class="text-xl font-medium text-ink max-w-2xl">
@@ -236,27 +225,29 @@
                         href="https://discord.com/invite/FZb7SGrSFy"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand hover:bg-brand-hover !text-white text-lg font-bold transition-colors duration-200 no-underline! shadow-[0_0_18px_rgba(195,90,23,0.35)]"
+                        class="lh-cta text-lg no-underline!"
                     >
-                        <tui-icon icon="@tui.message-circle" class="size-5!" />
                         {{ 'home.recruit.discord' | translate }}
+                        <span class="lh-cta__icon">
+                            <tui-icon icon="@tui.message-circle" class="size-4!" />
+                        </span>
                     </a>
                     <a
                         href="https://t.me/lisovcd"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-lh-leader hover:bg-leader-hover !text-white text-lg font-bold transition-colors duration-200 no-underline!"
+                        class="lh-cta lh-cta--telegram text-lg no-underline!"
                     >
-                        <tui-icon icon="@tui.send" class="size-5!" />
                         {{ 'home.recruit.telegram' | translate }}
+                        <span class="lh-cta__icon">
+                            <tui-icon icon="@tui.send" class="size-4!" />
+                        </span>
                     </a>
-                    <button
-                        type="button"
-                        (click)="openTicket()"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-wood/40 text-ink-2 hover:border-brand hover:text-brand-ink text-lg font-bold transition-colors duration-200 cursor-pointer bg-transparent"
-                    >
-                        <tui-icon icon="@tui.file-text" class="size-5!" />
+                    <button type="button" (click)="openTicket()" class="lh-cta lh-cta--ghost text-lg">
                         {{ 'home.recruit.ticket' | translate }}
+                        <span class="lh-cta__icon">
+                            <tui-icon icon="@tui.file-text" class="size-4!" />
+                        </span>
                     </button>
                 </div>
             </div>
@@ -280,7 +271,7 @@
 @if (galleryStrip().length > 0) {
     <section class="px-4 md:px-10 pb-8 flex flex-col gap-4">
         <div class="flex items-center justify-between gap-4">
-            <h2 class="text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.galleryStrip.title' | translate }}</h2>
+            <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">{{ 'home.galleryStrip.title' | translate }}</h2>
             <a
                 [routerLink]="['/gallery']"
                 class="shrink-0 inline-flex items-center gap-2 text-lg font-bold !text-brand-ink hover:!text-brand-hover transition-colors no-underline!"

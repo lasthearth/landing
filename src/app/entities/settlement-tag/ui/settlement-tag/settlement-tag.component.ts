@@ -11,6 +11,7 @@ import { ISettlementTag } from '../../model/i-settlement-tag';
     standalone: true,
     selector: 'app-settlement-tag',
     templateUrl: './settlement-tag.component.html',
+    styleUrl: './settlement-tag.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementTagComponent {
@@ -25,23 +26,10 @@ export class SettlementTagComponent {
     public readonly uppercase: InputSignal<boolean> = input<boolean>(true);
 
     /**
-     * Стиль бейджа в общем дизайне проекта: фон с прозрачностью 15% + насыщенный текст.
+     * Цвет тега как CSS-строка.
+     * Прокидывается в стили через переменную `--tag-color`, а фон, текст и
+     * обводка выводятся из неё в LESS — иначе три производных цвета пришлось бы
+     * считать в TypeScript и они не смогли бы учитывать текущую тему.
      */
-    protected readonly tagStyle: Signal<Record<string, string>> = computed(() => {
-        const color = this.tag().color;
-
-        return {
-            backgroundColor: colorToCss({ ...color, alpha: 0.15 }),
-            color: colorToCss({ ...color, alpha: 1 }),
-        };
-    });
-
-    /**
-     * Итоговый набор CSS-классов бейджа.
-     */
-    protected readonly classes: Signal<string> = computed(
-        () =>
-            'inline-flex items-center gap-1 font-bold text-base px-2 py-0.5 rounded-lg ' +
-            (this.uppercase() ? 'uppercase' : '')
-    );
+    protected readonly tagColor: Signal<string> = computed(() => colorToCss({ ...this.tag().color, alpha: 1 }));
 }

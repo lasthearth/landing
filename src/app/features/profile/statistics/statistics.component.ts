@@ -195,8 +195,8 @@ export class StatisticsComponent {
      */
     protected getUserAvatar(userId: string | undefined): string {
         if (!userId) {
-            return '/default-avatar.png';
+            return '/default-avatar.webp';
         }
-        return this.avatarsCache.get(userId) ?? '/default-avatar.png';
+        return this.avatarsCache.get(userId) ?? '/default-avatar.webp';
     }
 }

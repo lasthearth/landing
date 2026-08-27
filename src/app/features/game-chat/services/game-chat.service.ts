@@ -1,6 +1,17 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { map, Observable, of, shareReplay, switchMap, timer } from 'rxjs';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {
+    distinctUntilChanged,
+    EMPTY,
+    fromEvent,
+    map,
+    Observable,
+    of,
+    shareReplay,
+    startWith,
+    switchMap,
+    timer,
+} from 'rxjs';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import {
     DiscordApiService,
@@ -78,6 +89,11 @@ export class GameChatService {
     private readonly platformId = inject(PLATFORM_ID);
 
     /**
+     * Документ — источник события смены видимости вкладки.
+     */
+    private readonly document = inject(DOCUMENT);
+
+    /**
      * Кэш активных polling-потоков по каналам.
      * Позволяет избежать дублирования HTTP-запросов, когда несколько
      * подписчиков слушают один и тот же канал.
@@ -106,7 +122,7 @@ export class GameChatService {
             return cachedStream;
         }
 
-        const stream = timer(0, POLLING_INTERVAL).pipe(
+        const stream = this.visibleTimer$(POLLING_INTERVAL).pipe(
             switchMap(() => this.fetchMessages$(channelId, limit)),
             map((page) => {
                 this.saveCache(channelId, page.messages);
@@ -119,6 +135,28 @@ export class GameChatService {
         this.activeStreams.set(streamKey, stream);
 
         return stream;
+    }
+
+    /**
+     * Возвращает тик опроса, который останавливается на скрытой вкладке.
+     *
+     * Раньше `timer` тикал всегда, и открытая в фоне вкладка продолжала
+     * дергать Discord каждые 15 секунд неограниченно долго. Теперь при
+     * скрытии вкладки поток замолкает, а при возврате сразу отдаёт тик,
+     * чтобы чат догнал пропущенное.
+     *
+     * @param interval Период опроса в миллисекундах.
+     * @returns Поток тиков опроса.
+     */
+    private visibleTimer$(interval: number): Observable<number> {
+        const document = this.document;
+
+        return fromEvent(document, 'visibilitychange').pipe(
+            startWith(null),
+            map(() => document.visibilityState === 'visible'),
+            distinctUntilChanged(),
+            switchMap((isVisible) => (isVisible ? timer(0, interval) : EMPTY))
+        );
     }
 
     /**

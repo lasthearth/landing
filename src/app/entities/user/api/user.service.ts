@@ -18,6 +18,7 @@ import {
     shareReplay,
     Subject,
     switchMap,
+    take,
     tap,
 } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -27,6 +28,7 @@ import { environment } from '@core/config/environments/environment';
 import { IJwtTokenLh } from '../model/i-jwt-token-lh';
 import { IUser } from '../model/i-user';
 import { IPlayer } from '../model/i-player';
+import { IPlayerStats } from '../model/i-player-stats';
 import { ISettlementInvitation } from '@entities/settlement';
 
 /**
@@ -120,13 +122,25 @@ export class UserService {
      * иначе авторизованный пользователь получит редирект на главную либо
      * увидит приветственный экран.
      *
-     * К моменту завершения `checkAuth` библиотека уже выставила состояние
-     * авторизации (это происходит на шаге валидации токенов внутри обработки
-     * callback), поэтому промежуточного `false` здесь не будет.
+     * Состояние читается напрямую из {@link OidcSecurityService.isAuthenticated$},
+     * а НЕ из {@link authState$}: последний добавляет асинхронный шаг
+     * `hydrateUserData$`, из-за которого к моменту завершения `checkAuth` его
+     * `shareReplay` ещё держит устаревший `false`. Стражи с `take(1)` ловили
+     * именно этот `false` и выкидывали авторизованного пользователя на главную,
+     * а вход «срабатывал» только со второй попытки. К моменту завершения
+     * `checkAuth` библиотека уже выставила `isAuthenticated$` (на шаге валидации
+     * токенов внутри обработки callback), поэтому здесь оно уже актуально.
      */
     public readonly authSettled$: Observable<boolean> = this.checkCompleted$.pipe(
         filter(Boolean),
-        switchMap(() => this.authState$),
+        switchMap(() =>
+            this.oidcSecurityService.isAuthenticated$.pipe(
+                take(1),
+                map(({ isAuthenticated }) => isAuthenticated),
+                switchMap((isAuthenticated) => (isAuthenticated ? this.hydrateUserData$() : of(false)))
+            )
+        ),
+        distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: false })
     );
 
@@ -367,6 +381,72 @@ export class UserService {
             })
         ).pipe(map((results) => results.flat()));
     }
+
+    /**
+     * Получает игровую статистику игрока по игровому имени.
+     *
+     * ponytail: источник — таблица лидеров (`GET /leaderboard`, топ‑200 по
+     * убийствам), т.к. штатный `GET /{name}/stats` (StatsService) пока не
+     * развёрнут и отдаёт 404 для всех. Когда бэкенд включит `/stats` —
+     * вернуть его как основной источник, а лидерборд оставить фолбэком.
+     * Игрок вне топ‑200 → `null` («Статистика недоступна»).
+     *
+     * Ответ лидерборда кэшируется (`shareReplay`), поэтому наведение на
+     * несколько чипов не порождает повторных запросов топ‑200.
+     *
+     * @param name Игровое имя игрока (`user_game_name`).
+     * @returns Observable со статистикой {@link IPlayerStats} или `null`.
+     */
+    public getPlayerStats$(name: string): Observable<IPlayerStats | null> {
+        return this.leaderboardStats$().pipe(
+            map((entries) => {
+                const entry = entries.find((e) => e.name === name);
+
+                if (!entry) {
+                    return null;
+                }
+
+                return {
+                    name: entry.name,
+                    death_count: entry.deaths,
+                    hours_played: entry.hours_played,
+                    players_killed: entry.kills,
+                    last_online: 0,
+                } satisfies IPlayerStats;
+            }),
+            catchError(() => of(null))
+        );
+    }
+
+    /**
+     * Кэшированный запрос топ‑200 таблицы лидеров (по убийствам).
+     * Источник статистики для тултипов игроков; общий на все чипы.
+     */
+    private leaderboardStats$(): Observable<
+        Array<{ name: string; deaths: number; kills: number; hours_played: number }>
+    > {
+        if (!this.leaderboardStatsCache$) {
+            const params = new HttpParams().set('filter', 'LEADERBOARD_FILTER_KILLS').set('limit', '200');
+
+            this.leaderboardStatsCache$ = this.http
+                .get<{
+                    entries: Array<{ name: string; deaths: number; kills: number; hours_played: number }>;
+                }>(`${this.baseUrl}/leaderboard`, { params })
+                .pipe(
+                    map((response) => response.entries ?? []),
+                    shareReplay({ bufferSize: 1, refCount: false })
+                );
+        }
+
+        return this.leaderboardStatsCache$;
+    }
+
+    /**
+     * Кэш таблицы лидеров для статистики игроков (см. {@link leaderboardStats$}).
+     */
+    private leaderboardStatsCache$?: Observable<
+        Array<{ name: string; deaths: number; kills: number; hours_played: number }>
+    >;
 
     /**
      * Создает запрос на изменение игрового никнейма пользователя.

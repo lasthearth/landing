@@ -23,6 +23,76 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-4 Креативная страница 404
+
+> Плоская страница 404 переработана в атмосферную ночную сцену в стиле проекта: последний очаг в пустоши.
+
+- Файлы (`features/not-found/`): `not-found.component.{ts,html,less}`.
+- Сцена: тёмный фон на токенах `--lh-night-*` (одинаков в обеих темах), поднимающиеся угли (`.not-found__ember`, 14 шт., разброс по `:nth-child`), дышащее пламя очага за цифрой, тёплый градиент по тексту `404`.
+- Интерактив: свет факела (`.not-found__torch`) следует за курсором через CSS-переменные `--torch-x/--torch-y`. Слушатель `pointermove` вешается в `afterNextRender` (нет SSR) и `runOutsideAngular` (не дёргает CD на каждое движение), снимается в `DestroyRef.onDestroy`.
+- CTA — базовые `.lh-cta` / `.lh-cta--ghost`; ghost локально перекрашен в пергамент (тёмный `--lh-ink-2` тонул в ночном фоне).
+- `prefers-reduced-motion`: угли/факел скрыты, мерцание отключено.
+- Переводы уже есть — ветка `notFound.*` в `shared.i18n.ts` (грузится в общих словарях).
+
+
+### 3.-3 Карточка селения, тултип жителя и цвет тегов
+
+> Переработана иерархия карточки в списке селений; исправлен контраст тултипа игрока (был тёмный текст на тёмном фоне) и цвет тегов в тёмной теме.
+
+- Карточка (`features/settlements/settlement-card/`):
+  - Двойная фаска: внешний блок `.settlement-card` — оправа, её падинг (`--card-gap: 0.3125rem`) даёт зазор рамки, `.settlement-card-inner` — пергаментное ядро. Радиус ядра = `calc(--card-radius - --card-gap)`, иначе дуги контуров расходятся. Скругление уменьшено с `1rem` (`rounded-2xl`) до `0.875rem`.
+  - Цвет уровня переехал с 4px-полоски поверх карточки на саму оправу (`--card-accent`): полоска читалась как декор и не сообщала, что кодирует. Уровни: лагерь — нейтральная граница, деревня — `--lh-accent-3`, посёлок — `--lh-rank-iron`, город — `--lh-rank-silver`, провинция и закреплённое — `--lh-medal-gold`, гильдия — `--lh-leader`.
+  - Уровень стал явным, а не только цветовым: шкала `.settlement-card__tier` рядом с названием — пять засечек, закрашенных до текущего уровня, плюс подпись «4/5» (цвет сам по себе недоступен дальтоникам). Уровень считает `getSettlementTier` (`entities/settlement/lib/`). Гильдия и закреплённое селение шкалу не показывают: у них тип на бэкенде — лагерь, честная шкала дала бы «1/5» у поместья наместника.
+  - Третий признак типа — иконка в бейдже (`getSettlementTypeIcon`): `tent` / `house` / `building` / `building-2` / `castle` / `handshake`.
+  - Порядок бейджей: тип и дипломатия первыми, сюзеренство и теги после — раньше сюзеренство выдавливало тип во вторую строку.
+  - Счётчики населения и онлайна вынесены из ряда бейджей в строку метрик (`.settlement-card__meta`, иконка `@tui.users` + точка статуса): бейдж — классификация, счётчик — метрика.
+  - Ховер: подъём на 2px + оправа набирает насыщенность + `scale(1.04)` изображения. Трансформ на оправе, а не на хосте — иначе соседние карточки во flex-раскладке сдвигались. Всё снимается в `prefers-reduced-motion`.
+  - `max-h-[400px]` ограничен префиксом `xl:`: ниже этой ширины карточка складывается в колонку, и общий кап резал список жителей и кнопку «Подробнее».
+  - `imageUrl()` — computed с optional chaining по `attachments[0]`: у части селений массив вложений пуст, шаблон падал на чтении `.url`.
+  - Кнопка тегов и «Подробнее» стали `<button type="button">` (были `div` с `(click)`), у «Подробнее» добавлена стрелка `@tui.arrow-right`.
+  - `shared/ui/skeletons/settlement-card-skeleton.component.ts` повторяет двойную фаску и новые радиусы.
+- Тултип жителя (`entities/user/ui/player-chip/`):
+  - Глобальное правило `tui-hint` в `styles.css` (тёмный фон + белый текст, оба с `!important`) перебивало `data-appearance='lh-player'`, и разметка тултипа красила текст в `--lh-ink` — тёмное по тёмному, ~1.2:1. Правило ограничено `:not([data-appearance='lh-player'])`, а appearance тултипа усилен удвоенным селектором.
+  - Роль и статус собраны в один ряд (`.player-tooltip__badges`) — раньше три строки текста были выше аватара и голова тултипа теряла выравнивание. Ширина хоста зафиксирована `min-inline-size: 19rem`, колонки статистики разделены линиями.
+- Теги (`entities/settlement-tag/ui/settlement-tag/`):
+  - Цвет тега приходит из БД произвольным и раньше шёл прямо в `color` — тёмно-красный тег давал ~1.3:1 в тёмной теме. Теперь цвет прокидывается как `--tag-color`, а фон/текст/обводка выводятся в LESS через `color-mix` с `--lh-ink`, т.е. подстраиваются под тему (замер: 10.6:1 светлая, 5.1:1 тёмная).
+  - Добавлен `settlement-tag.component.less`; геометрия бейджа переехала из Tailwind-строки в класс `.settlement-tag`.
+
+### 3.-2 Чип игрока + тултип со статистикой в списках населения
+
+> Три дублировавшихся блока плашек жителей (карточка селения, диалог деталей, страница управления) заменены единым компонентом `app-player-chip`. При наведении — тултип с ленивой статистикой игрока.
+
+- Файлы:
+  - `src/app/entities/user/ui/player-chip/player-chip.component.{ts,html,less}` — `app-player-chip`, входы `player`, `isLeader`, `removable`; выход `remove`. Экспортируется из `@entities/user`.
+  - `src/app/entities/user/model/i-player-stats.ts` — `IPlayerStats` (ответ `GET /{name}/stats`, StatsService).
+  - `UserService.getPlayerStats$(name)` — статистика игрока; при 404 возвращает `null`.
+- Дизайн чипа: нейтральная плашка для всех, аватар x48 как ведущий элемент, точка статуса (зелёная/серая), лидер помечен короной `@tui.crown` (не другим фоном). Кнопка кика `@tui.user-round-x` — только на странице управления (`removable`).
+- Тултип (`tuiHint`, floating): аватар + имя + статус, ниже — часы/убийства/смерти. Статистика грузится ЛЕНИВО при первом показе тултипа (`tuiHintVisible`), один раз (флаг `statsRequested`), поэтому наведение на 20 чипов не даёт 20 запросов сразу. Игроки вне сервера статистики → «Статистика недоступна».
+- Потребители переведены на компонент: `settlement-card`, `settlement-detailed`, `features/settlements/settlement`. Удалены дубли `tui-pulse.online/.offline` + имя из трёх шаблонов.
+- Переводы: ветка `settlements.player.*` (ru/en) в `settlements.i18n.ts`.
+
+### 3.-1 Роли, owner-модель и заявки на вступление в поселения
+
+> `Settlement.leader` deprecated. Лидеры теперь — члены с `role_ids`, содержащими `"owner"` (их может быть несколько). Добавлены роли, права, заявки на вступление, передача владения, контакты.
+
+- Модель (`entities/settlement/model/`):
+  - `permission.ts` — enum `Permission` (`PERMISSION_INVITE_MEMBER`, `PERMISSION_REVIEW_JOIN_REQUEST`).
+  - `i-role.ts` — `IRole { id, name, permissions[] }`.
+  - `i-join-request.ts` — `IJoinRequest`.
+  - `i-member.ts` — добавлено `role_ids?: string[]`.
+  - `i-settlement.ts` — добавлены `roles?`, `roles_enabled?`, `contact_info?`; `leader?` помечен `@deprecated`.
+- Хелперы (`entities/settlement/lib/`):
+  - `owner-role-id.constant.ts` — `OWNER_ROLE_ID = 'owner'`.
+  - `get-owner-ids.function.ts` — `getOwnerIds(settlement)`.
+  - `is-owner.function.ts` — `isOwner(settlement, userId)`.
+  - `member-has-permission.function.ts` — `memberHasPermission(settlement, userId, permission)` (owner = все права; при `roles_enabled=false` только owner).
+- API (`entities/settlement/api/settlement.service.ts`): `createJoinRequest$`, `cancelJoinRequest$`, `getMyJoinRequests$`, `getJoinRequests$`, `approveJoinRequest$`, `rejectJoinRequest$`, `createRole$`, `updateRole$`, `deleteRole$`, `assignMemberRole$`, `removeMemberRole$`, `transferOwnership$`, `leaveSettlement$`, `updateContactInfo$`, `adminAddOwner$`, `adminRemoveOwner$`, `adminSetRolesEnabled$`, `adminDeleteSettlement$`.
+- UI-потребители переведены с `.leader` на owner-модель: `settlements.component`, `settlement-card`, `settlement-detailed`, `features/settlements/settlement`, `features/profile`.
+  - Кнопки гейтятся: инвайты по `canInvite` (`PERMISSION_INVITE_MEMBER`/owner), уровень/редактирование/картинка — по `isOwner`, выход — не-owner.
+  - Бейджи ролей члена — `getMemberRoleNames`, скрыты при `roles_enabled=false`.
+  - `contact_info` и `role.name` выводятся ТОЛЬКО интерполяцией `{{ }}` (XSS: сервер не экранирует).
+  - Счётчики жителей: `members.length` (owner теперь внутри `members`, не `+1`).
+
 ### 3.0 Единый бейдж поселения
 
 > Плашки типа селения / населения / онлайна / дипломатии были разными в списке селений и в профиле. Вынесены в один компонент.
@@ -215,14 +285,143 @@ src/app/
 - Модальное окно видео получило `role="dialog"`, `aria-modal`, закрытие по `Escape`.
 - Ссылки в тексте перекрашены с системного синего (1.84:1 на пергаменте) на `--lh-link` (4.97:1).
 
+## 6.3 Дизайн-система: motion / поверхности / ритм
+
+Внедрена в ветке `design/keep-approved` по итогам ревизии прогона skill
+`high-end-visual-design`. Сам прогон целиком лежит в `design/slop-archive`
+и в `main` не мержится: принятые приёмы перенесены заново и переписаны,
+остальное отброшено.
+
+### 6.3.1 Токены движения и тени
+
+| Токен | Значение | Назначение |
+|---|---|---|
+| `--lh-ease-smooth` | `cubic-bezier(0.32, 0.72, 0, 1)` | вход панелей и меню |
+| `--lh-ease-spring` | `cubic-bezier(0.34, 1.4, 0.64, 1)` | отклик на нажатие (лёгкий перелёт) |
+| `--lh-ease-out-quart` | `cubic-bezier(0.22, 1, 0.36, 1)` | затухание появлений |
+| `--lh-dur-fast` / `-mid` / `-slow` | 200 / 450 / 800ms | шкала длительностей |
+| `--lh-shadow-soft` / `-lift` | два слоя | покой / приподнятое состояние |
+
+**Правила:**
+- Дефолтные `ease`, `ease-in-out`, `ease-out`, `linear` в переходах запрещены.
+  Исключение — бесконечные пульсации: там `ease-in-out` даёт симметричное дыхание.
+- Кривые Tailwind переопределены в `@theme` (`--default-transition-timing-function`,
+  `--ease-*`), поэтому `transition`-утилиты в шаблонах получают проектную физику
+  без правки разметки.
+- `transition: all` запрещён: он анимирует в том числе `box-shadow` и раскладку,
+  что давало дрожание на ховере. Перечислять свойства.
+- Тени переопределены в тёмной теме: чернильный оттенок на тёмном фоне не читается.
+- `blur()` в появлениях не используется: размытие большого блока заставляет
+  композитор перерисовывать слой каждый кадр, а на тексте даёт муар.
+
+### 6.3.2 Поверхности
+
+Все объявлены в `@layer components`, поэтому утилиты Tailwind (`rounded-*`, `p-*`)
+перебивают их каскадом — `!important` не нужен.
+
+| Класс | Назначение |
+|---|---|
+| `.lh-panel` | базовая контентная панель. Рамка — внутренняя тень, а не `border`, поэтому не влияет на размеры блока. Заменила 58 дублей `bg-lh-primary-2/10 + border + rounded-2xl + p-6 + инлайновая тень` в 15 шаблонах |
+| `.lh-panel--bezel` + `.lh-panel__core` | двойная фаска: панель становится оправой, её падинг — зазором рамки, содержимое переносится в ядро. Радиус ядра = `calc(var(--lh-panel-radius) - var(--lh-panel-gap))`, иначе контуры перестают быть концентрическими |
+| `.lh-shadow` | мягкая слоистая тень для статики. Ховер-версию задавать явно |
+| `.lh-card-glow` | брендовое свечение рамки на ховере |
+
+Локальные исключения (обоснованы в комментариях): `.welcome-bezel` / `.welcome-card` —
+на видеокадре карточка стеклянная, а общая утилита подмешивает чернила и `surface-2`,
+давая мутную плашку.
+
+### 6.3.3 Компоненты
+
+| Класс | Файл | Заметки |
+|---|---|---|
+| `.nav-button`, `.nav-button--active` | `src/styles.css` | хедер, футер, навигация профиля, стрелки карусели. Ховер-лифт 1px, просадка `scale(0.95)` @80ms. Активный раздел — брендовый градиент вместо инверсии в пергамент (инверсия давала белую кнопку в тёмном ряду). Перекрытие тёмной темы сужено до `:not(.nav-button--active)` — поэтому без `!important` |
+| `.lh-cta`, `.lh-cta__icon`, `--telegram`, `--ghost` | `src/styles.css` | пилюля с вложенной иконкой-кругом; круг сдвигается на ховере, задавая направление действия |
+| `.lh-reveal` + `RevealDirective` | `src/styles.css`, `shared/lib/directives/` | `[appReveal]`, `[appRevealDelay]`, `[appRevealThreshold]`. Единственный механизм появления при прокрутке. Учитывает пререндер: на сервере `is-visible` ставится сразу, при гидратации сбрасывается только у блоков ниже сгиба |
+| `.pulse-card` | `home.component.less` | карточка метрики на `.lh-panel--bezel`; в компоненте остались только ховер и медальон иконки |
+| `.welcome-stagger` | `welcome.component.css` | каскад по таймеру, а не `appReveal`: экран открывается целиком во вьюпорте, наблюдать за пересечением нечего |
+| `.lh-display` | `src/styles.css` | Almendra. **Один `h1` на страницу плюс заголовки секций, кегль от `text-2xl`.** На абзацах и подписях запрещён: теряется контраст с Advent Pro |
+| `.lh-tag` | `src/styles.css` | тег поселения; произвольный цвет с бэкенда читаем в обеих темах через `color-mix` |
+
+### 6.3.4 Отброшено
+
+| Приём | Причина |
+|---|---|
+| `.lh-eyebrow` | кикер-пилюля над каждым вторым заголовком — типовой AI-тик |
+| Декоративные цифры шагов `text-8xl opacity-40` | в `start-game` заменены на `<ol>` + `counter()`: порядок задан структурой, скринридер объявляет нумерацию сам |
+| `blur()` в четырёх механизмах появления | сведено к одному `.lh-reveal`, без размытия |
+| Каскад пунктов внутри `.dropdown-enter` | 8 пунктов по 50ms открывались дольше самого меню |
+| `scale(103%)` на ховере карточек магазина | замыливало текст на субпиксельном рендере; заменено на подъём |
+| `.lh-bezel` как отдельный класс | стал модификатором `.lh-panel--bezel` |
+
+### 6.3.5 Доступность и проверки
+
+- `node scripts/check-contrast.mjs` — все пары токенов проходят WCAG AA.
+- Заголовки страниц `rules` / `faq` / `market` / `start-game` были `<p>` — заменены
+  на `<h1>`: страница без `h1` ломает обход по заголовкам и SEO.
+- Все анимации имеют ветку `prefers-reduced-motion: reduce`.
+
 ## 7. Последний коммит
 
 - `LH | feat: add diplomacy, gallery, videos, game chat, radio widget; remove secrets from configs`
 - Сборка: `npm run build` проходит, 11 prerender-роутов.
-- Предупреждение: бандл превышает бюджет 2.50 MB (~2.53 MB).
+
+### 7.0 Оптимизация бандла и загрузки
+
+> Начальный бандл сокращён с ~2.66 MB (raw) / бюджет не проходил до ~1.25 MB raw
+> (~257 kB gzip). `public/` уменьшен с ~50 MB до ~4.8 MB.
+
+- **Роуты ленивые** (`routes/app.routes.ts`): все страницы через `loadComponent`
+  (были статические `import`). Правила, юр-страницы и админка больше не в
+  начальном чанке.
+- **Ленивые словари i18n**: `translations/index.ts` грузит только общие словари
+  (common/header/footer/shared/ticket/news). Остальные (`rules` 224 kB,
+  `legal` 64 kB, `admin`, `market`, ...) подмешиваются вместе со страницей через
+  `loadPage()` (`core/i18n/lib/load-page.function.ts`) в реестр
+  `translations/registry.ts` (`TRANSLATIONS` + `registerTranslations`).
+  `ALL_TRANSLATIONS` переименован в `TRANSLATIONS`.
+- **Удалённые зависимости**: `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`
+  (не использовались — загрузка идёт через presigned POST + `fetch`),
+  `@taiga-ui/addon-charts`, `@taiga-ui/addon-doc`, `@angular/platform-browser-dynamic`.
+- **`@defer (on idle)`**: игровой чат (`layout.component.html`) и радио
+  (`landing.component.html`) выведены из начального рендера.
+- **Радио не грузит YouTube по умолчанию** (`radio-widget.component.ts`):
+  конструктор больше не создаёт iframe и не тянет `iframe_api` (>1 MB чужого JS +
+  запросы к doubleclick). Плеер создаётся при первом нажатии play.
+- **Опрос Discord останавливается на скрытой вкладке** (`game-chat.service.ts`,
+  `visibleTimer$` по `visibilitychange`).
+- **Изображения**:
+  - `welcome-video.mp4` 24 MB → 2.8 MB (720p/30fps, без звука, `+faststart`).
+  - `public/team/*` PNG (~10.5 MB) → webp 512px (~0.28 MB); `default-avatar`,
+    `splinter-of-spark` → webp; `7.png` → `7.webp`. Ссылки в шаблонах и
+    `environment*.ts` обновлены.
+  - Пережаты крупные webp (`br`, `3`, `1`, `4`, `castle-recruit`,
+    `landing-carousel/4-6`), `images/logo.png`.
+  - Удалены неиспользуемые: `5/8/9/10.png`, `br.jpg`, `s.jpg/webp`, `ava.jpg`,
+    `images/news_1.webp`, `images/logo.webp`, битая ссылка `old-paper.webp`
+    (правило `.old-paper-background` удалено из `styles.css` и
+    `rules.component.less`).
+  - `ImageLoaderComponent` получил вход `eager` (по умолчанию `loading="lazy"`,
+    `decoding="async"`; на первом слайде карусели — `eager`+`fetchpriority=high`).
+- **Шрифты**: убраны italic-начертания из Google Fonts в `index.html` (в проекте
+  курсив не используется) — меньше `@font-face` и woff2-загрузок.
+- **nginx.conf**: gzip + `Cache-Control immutable` для хешированных js/css,
+  30d для статики, `no-cache` для html.
+- **Бюджеты** (`angular.json`): initial warning 1.4 MB / error 1.8 MB.
+- Проверено Playwright: все 13 роутов рендерят контент (переводы, картинки,
+  скриншот-стрип из Discord грузятся), непереведённых ключей и битых картинок нет.
+
+### 7.1 Ветки
+
+| Ветка | Содержимое |
+|---|---|
+| `design/keep-approved` | дизайн-система 6.3, внедрена заново поверх чистого `main` |
+| `design/slop-archive` | архив прогона `high-end-visual-design` целиком. Не мержить, только копировать куски |
+| `feat/settlement-roles-ownership` | owner-модель, роли и заявки на вступление. Мержить отдельно после дизайна |
 
 ## 8. TODO для следующей сессии
 
+- [ ] Смержить `feat/settlement-roles-ownership` (owner-модель, роли, заявки).
+- [ ] Проверить дизайн-систему в браузере: тёмная тема, `prefers-reduced-motion`, автоплей видео в Firefox / Zen.
 - [ ] Сгенерировать proto-заглушки и goverter-мапперы в `vsservice` (`make proto && make generate`).
 - [ ] Проверить сборку и линтер `vsservice` (`make lint && make test && make build`).
 - [ ] Проверить интеграцию фронтенд ↔ бэкенд на dev-стенде.

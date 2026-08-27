@@ -148,6 +148,38 @@ export class KitsComponent {
     }
 
     /**
+     * Возвращает цену выбранного срока для кнопки покупки.
+     *
+     * @returns Цена строкой или пустая строка, если набор не выбран.
+     */
+    protected activePrice(): string {
+        const kit = this.selectedPrivilege;
+        if (!kit) {
+            return '';
+        }
+        return this.selectedTerm() === 'season' && kit.seasonPrice ? kit.seasonPrice : kit.monthPrice;
+    }
+
+    /**
+     * Возвращает абсолютную экономию в осколках для выбранного срока.
+     *
+     * @returns Экономия строкой или пустая строка, если скидки нет.
+     */
+    protected activeSavings(): string {
+        const kit = this.selectedPrivilege;
+        if (!kit) {
+            return '';
+        }
+        const isSeason = this.selectedTerm() === 'season' && !!kit.seasonPrice;
+        const original = parseInt((isSeason ? kit.seasonPriceOriginal : kit.monthPriceOriginal).replace(/\D/g, ''), 10);
+        const current = parseInt((isSeason ? kit.seasonPrice : kit.monthPrice).replace(/\D/g, ''), 10);
+        if (!original || !current || original <= current) {
+            return '';
+        }
+        return String(original - current);
+    }
+
+    /**
      * Возвращает CSS-классы рамки изображения по редкости товара.
      *
      * Редкость определяется ценой: обычный (пергамент), редкий (синий),

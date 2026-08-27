@@ -7,22 +7,67 @@
     min-height: 100dvh;
     width: 100%;
     overflow: visible;
-    background-image: url('/images/Group_4_3.webp');
-    background-repeat: repeat;
-    background-size: cover;
-    background-attachment: fixed;
+
+    /**
+     * Базовый тон фона. Тёплый уголь, не нейтральный чёрный:
+     * страница живёт в одной температуре с брендовым янтарём
+     * и пергаментом панелей.
+     *
+     * Растровой текстуры здесь нет намеренно. До этого фон был
+     * растянутым на весь экран mesh-градиентом 1920×1080 (мылился на 4K),
+     * затем тайлом процедурного шума — его пятна масштаба 8-32 px
+     * при повторе читались как грязь. Материальность фону не нужна:
+     * текстуру в интерфейсе несут пергаментные панели, фон под ними
+     * должен быть ровным, чтобы контраст текста не гулял по экрану.
+     */
+    --lh-backdrop: #191310;
+    background-color: var(--lh-backdrop);
     font-family: 'Advent Pro', serif;
 }
 
+/**
+ * Тёмная тема: тон уходит от коричневого к угольному, иначе фон
+ * оказывается теплее панелей (--lh-surface #212327) и они читаются
+ * как холодные заплаты на буром.
+ */
 :host-context(html[data-theme='dark']) {
-    background-image:
-        linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
-        url('/images/Group_4_3.webp');
+    --lh-backdrop: #121316;
+}
+
+/**
+ * Освещение фона: рассеянный холодный свет сверху и затемнение по краям.
+ *
+ * Вместе они дают освещённую полосу под центральной колонкой контента
+ * (xl:w-[60%]) и гасят пустые боковые поля на широких мониторах.
+ * Тёплый отсвет снизу сюда не входит — его рисует ::before,
+ * и дублировать градиент в двух слоях значит складывать альфу.
+ *
+ * Слой прибит к вьюпорту, поэтому свет не «едет» при прокрутке.
+ * Раньше тот же эффект давал `background-attachment: fixed` на хосте,
+ * но он не работает в iOS Safari и даёт рывки при скролле.
+ *
+ * z-index: -3 — ниже пульса очага (-2) и искр (-1), но выше фона хоста.
+ * Порядок важен: при равном z-index этот слой красился бы поверх ::before
+ * и притушил бы свечение очага.
+ */
+:host::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 130% 70% at 50% -18%, rgba(132, 124, 113, 0.17) 0%, transparent 60%),
+        radial-gradient(ellipse 58% 100% at 50% 42%, transparent 42%, rgba(0, 0, 0, 0.36) 100%);
 }
 
 /* Пульс очага: тёплое свечение у нижней кромки экрана.
-   z-index: -2 — ниже фоновых искр (-1), но выше фоновой картинки хоста.
-   Анимируется только opacity, поэтому слой живёт на композиторе. */
+   z-index: -2 — ниже фоновых искр (-1), но выше фона хоста.
+   Анимируется только opacity, поэтому слой живёт на композиторе.
+
+   Плотность выше прежней (9% → 26%): раньше под слоем лежала пёстрая
+   картинка и свечение только грязнило её, теперь фон ровный, и тёплый
+   отсвет — единственное, что отделяет низ страницы от верха. */
 :host::before {
     content: '';
     position: fixed;
@@ -31,10 +76,10 @@
     pointer-events: none;
     opacity: 0.92;
     background: radial-gradient(
-        ellipse 120% 55% at 50% 108%,
-        color-mix(in srgb, var(--lh-brand-deep) 9%, transparent) 0%,
-        color-mix(in srgb, var(--lh-brand-deep) 5%, transparent) 42%,
-        transparent 72%
+        ellipse 110% 58% at 50% 112%,
+        color-mix(in srgb, var(--lh-brand-deep) 26%, transparent) 0%,
+        color-mix(in srgb, var(--lh-brand-deep) 12%, transparent) 40%,
+        transparent 74%
     );
     animation: hearth-pulse 15s ease-in-out infinite alternate;
     will-change: opacity;

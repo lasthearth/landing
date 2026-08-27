@@ -15,7 +15,7 @@
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4 lh-stagger-list">
         @for (item of items(); track item.id) {
             <div
-                class="flex flex-col gap-2 lg:gap-3 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-3 lg:p-4 items-center lh-card-glow transition-transform duration-300 hover:scale-[103%] shadow-[0_2px_8px_rgba(0,0,0,0.06)] group"
+                class="flex flex-col gap-2 lg:gap-3 lh-panel p-3 lg:p-4 items-center lh-card-glow hover:-translate-y-1 group"
             >
                 <!-- Image -->
                 <div
@@ -60,16 +60,21 @@
                         <div class="flex items-center gap-0.5 leading-none text-ink-3">
                             <span class="strong-strike font-medium text-sm lg:text-base leading-none">{{ item.price }}</span>
                             <img
-                                src="/splinter-of-spark.png"
+                                src="/splinter-of-spark.webp"
                                 [alt]="'market.common.shardAlt' | translate"
                                 class="h-4 w-4 object-contain opacity-70 leading-none -ml-0.5"
                             />
                         </div>
                     }
                     <div class="flex items-center gap-1.5">
-                        <img src="/splinter-of-spark.png" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
+                        <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                         <span class="text-lg lg:text-xl font-bold text-lh-primary">{{ getDisplayPrice(item) }}</span>
                     </div>
+                    @if (getSavings(item); as savings) {
+                        <span class="text-xs lg:text-sm font-bold text-lh-accent">
+                            {{ 'market.common.savings' | translate:{ amount: savings } }}
+                        </span>
+                    }
                 </div>
 
                 <!-- Buy button -->

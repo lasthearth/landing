@@ -6,6 +6,9 @@
     <img
         [src]="src()"
         [alt]="alt()"
+        [attr.loading]="eager() ? null : 'lazy'"
+        [attr.fetchpriority]="eager() ? 'high' : null"
+        decoding="async"
         (load)="loaded.set(true)"
         (error)="loaded.set(true)"
         class="w-full h-full transition-opacity duration-500"

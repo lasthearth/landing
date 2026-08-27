@@ -135,15 +135,6 @@ export class RadioWidgetComponent implements OnDestroy {
     private readonly sanitizer = inject(DomSanitizer);
 
     /**
-     * Инициализирует виджет.
-     */
-    public constructor() {
-        if (isPlatformBrowser(this.platformId)) {
-            this.updateIframeSrc(false);
-        }
-    }
-
-    /**
      * Останавливает воспроизведение при уничтожении компонента.
      */
     public ngOnDestroy(): void {
@@ -193,8 +184,14 @@ export class RadioWidgetComponent implements OnDestroy {
 
         if (this.player) {
             this.player.loadVideoById(this.currentStation().id);
-        } else {
-            this.updateIframeSrc(this.isPlaying());
+
+            return;
+        }
+
+        // Пока пользователь не нажал «играть», плеер не создаём: выбор
+        // станции не должен тянуть YouTube-embed.
+        if (this.isPlaying()) {
+            this.updateIframeSrc(true);
         }
     }
 

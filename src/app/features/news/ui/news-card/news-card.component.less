@@ -66,22 +66,13 @@
         height: 100%;
     }
 
-    &__inner {
-        &::after {
-            content: '';
-            display: table;
-            clear: both;
-        }
-    }
-
-    &__image-wrapper {
-        float: left;
-        margin-right: 2rem;
-        margin-bottom: 1.5rem;
-    }
-
     &__text {
         overflow-wrap: break-word;
+        line-height: 1.5;
+
+        :where(p, li, div) {
+            line-height: 1.5;
+        }
     }
 
     &__new-badge {

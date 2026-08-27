@@ -26,8 +26,15 @@
     </footer>
 </div>
 
-<app-game-chat-widget
-    [channelId]="environment.discordGameChatChannelId"
-    [title]="'Игровой чат'"
-    icon="@tui.message-square"
-/>
+<!--
+    Игровой чат — плавающий виджет поверх контента: он не участвует
+    в первом экране, поэтому его код и опрос Discord откладываются
+    до простоя браузера.
+-->
+@defer (on idle) {
+    <app-game-chat-widget
+        [channelId]="environment.discordGameChatChannelId"
+        [title]="'Игровой чат'"
+        icon="@tui.message-square"
+    />
+}

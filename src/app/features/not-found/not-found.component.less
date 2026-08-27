@@ -1,3 +1,232 @@
+/**
+ * Стили сцены 404. Тёмная ночная пустошь одинакова в обеих темах:
+ * фон построен на токенах --lh-night-* (см. PROJECT_MAP 6.1), поэтому
+ * отдельного правила для html[data-theme='dark'] не нужно.
+ */
 :host {
     display: block;
+}
+
+.not-found {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    padding: 3rem 1.5rem;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: 1rem;
+    color: var(--lh-parchment);
+    background:
+        radial-gradient(circle at 50% 120%, var(--lh-night-grad-3) 0%, transparent 45%),
+        linear-gradient(180deg, var(--lh-night-grad-1) 0%, var(--lh-night-deep) 100%);
+}
+
+/**
+ * Свет факела: мягкое тёплое пятно, центр которого привязан к позиции
+ * курсора через --torch-x/--torch-y (пишет компонент). До первого движения
+ * стоит по центру. `mix-blend-mode: screen` даёт эффект подсветки, а не
+ * наложения плёнки. На тач-устройствах курсора нет — пятно просто остаётся
+ * по центру, деградируя мягко.
+ */
+.not-found__torch {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    background: radial-gradient(
+        220px circle at var(--torch-x, 50%) var(--torch-y, 40%),
+        rgba(255, 150, 60, 0.28) 0%,
+        rgba(255, 100, 30, 0.12) 35%,
+        transparent 70%
+    );
+    transition: background 120ms var(--lh-ease-out-quart);
+}
+
+/* Слой углей поверх фона, но под контентом. */
+.not-found__embers {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/**
+ * Один уголёк: маленькая тёплая точка, всплывающая снизу вверх и гаснущая.
+ * Позиция по горизонтали, задержка и длительность разведены по :nth-child,
+ * иначе все 14 стартуют одновременно и читаются как сетка, а не искры.
+ */
+.not-found__ember {
+    position: absolute;
+    bottom: -10px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--lh-accent-soft);
+    box-shadow: 0 0 6px 1px rgba(255, 140, 50, 0.7);
+    opacity: 0;
+    animation: not-found-ember-rise 6s linear infinite;
+}
+
+.not-found__ember:nth-child(1) { left: 6%; animation-delay: 0s; animation-duration: 7s; }
+.not-found__ember:nth-child(2) { left: 14%; animation-delay: 1.4s; animation-duration: 5.5s; }
+.not-found__ember:nth-child(3) { left: 22%; animation-delay: 3.1s; animation-duration: 6.5s; }
+.not-found__ember:nth-child(4) { left: 30%; animation-delay: 0.6s; animation-duration: 8s; }
+.not-found__ember:nth-child(5) { left: 38%; animation-delay: 2.2s; animation-duration: 5s; }
+.not-found__ember:nth-child(6) { left: 45%; animation-delay: 4s; animation-duration: 7.5s; }
+.not-found__ember:nth-child(7) { left: 52%; animation-delay: 1s; animation-duration: 6s; }
+.not-found__ember:nth-child(8) { left: 60%; animation-delay: 3.6s; animation-duration: 5.8s; }
+.not-found__ember:nth-child(9) { left: 67%; animation-delay: 0.3s; animation-duration: 7.2s; }
+.not-found__ember:nth-child(10) { left: 74%; animation-delay: 2.8s; animation-duration: 5.3s; }
+.not-found__ember:nth-child(11) { left: 82%; animation-delay: 4.4s; animation-duration: 6.8s; }
+.not-found__ember:nth-child(12) { left: 88%; animation-delay: 1.7s; animation-duration: 8s; }
+.not-found__ember:nth-child(13) { left: 93%; animation-delay: 3.3s; animation-duration: 5.6s; }
+.not-found__ember:nth-child(14) { left: 97%; animation-delay: 0.9s; animation-duration: 7s; }
+
+@keyframes not-found-ember-rise {
+    0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 0.9;
+    }
+    100% {
+        /* Небольшой снос вбок имитирует восходящий поток тёплого воздуха. */
+        transform: translateY(-70vh) translateX(18px) scale(0.4);
+        opacity: 0;
+    }
+}
+
+.not-found__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 34rem;
+}
+
+/**
+ * Очаг за цифрой: тёплое дышащее пятно, из которого будто растёт пламя.
+ * Абсолютно спозиционирован по центру цифры, скрыт от скринридера.
+ */
+.not-found__hearth {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.not-found__flame {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 150, 50, 0.35) 0%, rgba(200, 70, 20, 0.15) 40%, transparent 70%);
+    animation: not-found-flame 3s ease-in-out infinite;
+}
+
+@keyframes not-found-flame {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(1.12);
+        opacity: 1;
+    }
+}
+
+/**
+ * Цифра 404. Крупный акцент на Almendra (.lh-display). Тёплый градиент по
+ * тексту + тлеющая тень; лёгкое мерцание синхронно с очагом.
+ */
+.not-found__code {
+    position: relative;
+    margin: 0;
+    font-size: clamp(6rem, 22vw, 12rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    background: linear-gradient(180deg, var(--lh-accent-soft) 0%, var(--lh-brand) 70%, var(--lh-brand-deep-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 24px rgba(255, 120, 40, 0.35));
+    animation: not-found-code-glow 3s ease-in-out infinite;
+}
+
+@keyframes not-found-code-glow {
+    0%,
+    100% {
+        filter: drop-shadow(0 0 24px rgba(255, 120, 40, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 0 34px rgba(255, 140, 50, 0.5));
+    }
+}
+
+.not-found__title {
+    margin: 0.5rem 0 0.75rem;
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 700;
+    color: var(--lh-parchment-2);
+}
+
+.not-found__description {
+    margin: 0 0 2rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--lh-parchment) 80%, transparent);
+}
+
+.not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/**
+ * На пустоши ghost-CTA видна плохо: её текст --lh-ink-2 тёмный, а ховер
+ * уводит в --lh-brand-ink — оба тонут в ночном фоне. Перекрашиваем локально
+ * в пергамент со светлой обводкой, сохраняя геометрию базового класса.
+ */
+.not-found__actions .lh-cta--ghost {
+    color: var(--lh-parchment);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--lh-parchment) 35%, transparent);
+}
+
+.not-found__actions .lh-cta--ghost:hover {
+    color: var(--lh-accent-soft);
+    box-shadow: inset 0 0 0 2px var(--lh-accent-soft);
+}
+
+/**
+ * Уменьшенное движение: гасим угли, пламя, мерцание и следящий факел.
+ * Глобальное правило в styles.css уже почти обнуляет длительности, но
+ * следящее пятно завязано на курсор, а не на анимацию — прячем его явно.
+ */
+@media (prefers-reduced-motion: reduce) {
+    .not-found__torch {
+        display: none;
+    }
+
+    .not-found__embers {
+        display: none;
+    }
+
+    .not-found__flame,
+    .not-found__code {
+        animation: none;
+    }
 }

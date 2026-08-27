@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './app/shared/styles/appearances/icon.appearance.css';
+@import './app/shared/styles/appearances/hint.appearance.css';
 :root {
     /**
      * Семантические поверхности (пергамент). Переопределяются в тёмной теме.
@@ -153,9 +154,46 @@
     --lh-tag-coral-bg: rgba(255, 107, 107, 0.15);
 
     --lh-hint: #30303056;
+
+    /**
+     * Кривые ускорения. Дефолтные ease / ease-in-out / linear в проекте
+     * не используются: движение по ним читается как «системное».
+     * smooth — вход панелей и меню, spring — отклик на нажатие
+     * (лёгкий перелёт), out-quart — затухание появлений.
+     */
+    --lh-ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+    --lh-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+    --lh-ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /** Шкала длительностей: отклик / переход / появление. */
+    --lh-dur-fast: 200ms;
+    --lh-dur-mid: 450ms;
+    --lh-dur-slow: 800ms;
+
+    /**
+     * Тени. Два слоя (контактный + рассеянный) вместо одиночного
+     * drop-shadow: soft — покой, lift — приподнятое состояние.
+     * Цвет берётся из чернил пергамента, не из чистого чёрного.
+     */
+    --lh-shadow-soft:
+        0 1px 2px rgba(26, 17, 13, 0.06),
+        0 8px 24px -8px rgba(26, 17, 13, 0.16);
+    --lh-shadow-lift:
+        0 2px 4px rgba(26, 17, 13, 0.07),
+        0 20px 48px -16px rgba(26, 17, 13, 0.28);
 }
 
 @theme {
+    /**
+     * Кривые для утилит Tailwind. Переопределяют дефолты, поэтому любой
+     * класс transition / duration в шаблонах получает проектную физику
+     * без правки самих шаблонов. Значения — те же токены --lh-ease-*.
+     */
+    --default-transition-timing-function: var(--lh-ease-out-quart);
+    --ease-out: var(--lh-ease-out-quart);
+    --ease-in-out: var(--lh-ease-smooth);
+    --ease-in: cubic-bezier(0.64, 0, 0.78, 0);
+
     /**
      * Семантические токены. Используются в шаблонах как bg-surface,
      * text-ink, border-line и т.д. Меняют значение вместе с темой,
@@ -294,8 +332,26 @@ html body {
     font-optical-sizing: auto;
 }
 
-.almendra-regular {
-    font-family: 'Almendra', serif;
+/**
+ * Дисплейная антиква для заголовков страниц и секций.
+ *
+ * Almendra стоит первой и покрывает только латиницу: у неё нет
+ * кириллического набора. Русские заголовки подхватывает Alegreya —
+ * книжная антиква с полной кириллицей и близким характером засечек,
+ * поэтому подмена шрифта по языку не бросается в глаза.
+ *
+ * Шрифт читается как акцент только на единичных крупных заголовках.
+ * На абзацах, подписях и числах его ставить нельзя — теряется контраст
+ * с основным Advent Pro, и текст просто становится хуже читаемым.
+ *
+ * Правило: один `.lh-display` на страницу для `h1` и по одному
+ * на заголовок секции. Минимальный кегль — text-2xl.
+ */
+.lh-display {
+    font-family: 'Almendra', 'Alegreya', Georgia, serif;
+    letter-spacing: 0.01em;
+    /* Заголовок из 2-4 слов не должен ронять последнее слово на свою строку. */
+    text-wrap: balance;
 }
 
 /**
@@ -316,30 +372,28 @@ html body {
 /**
  * Ссылки в тексте. Тёплый акцент вместо системного синего:
  * синий по WCAG давал 1.84:1 на пергаменте, токен --lh-link даёт 4.97:1.
+ *
+ * Объявлено в @layer base намеренно. Вне слоёв это правило выигрывало
+ * у всех классов в @layer components — ссылка с классом кнопки получала
+ * цвет текстовой ссылки, и `.lh-cta` в виде <a> оказывалась тёмно-оранжевой
+ * на оранжевом градиенте. В base его перебивают и компоненты, и утилиты.
  */
-a {
-    cursor: pointer;
-    color: var(--lh-link);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
-    transition: all 0.1s ease-in-out;
-}
+@layer base {
+    a {
+        cursor: pointer;
+        color: var(--lh-link);
+        --tw-font-weight: var(--font-weight-bold);
+        font-weight: var(--font-weight-bold);
+        transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
 
-a:hover {
-    color: var(--lh-link-hover);
+    a:hover {
+        color: var(--lh-link-hover);
+    }
 }
 
 .words-break {
     word-break: break-word;
-}
-
-.old-paper-background {
-    background-color: #e8dfc8;
-    background-image: url('/old-paper.webp'), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
 }
 
 .progress {
@@ -369,10 +423,6 @@ tui-dialog {
     -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 16px 16px;
-}
-
-.almendra-regular {
-    font-family: 'Almendra', serif;
 }
 
 .spark-glow {
@@ -416,12 +466,24 @@ tui-tabs.content-tabs {
     }
 }
 
-tui-hint {
+/**
+ * Базовый вид тултипов: тёмная плашка со светлым текстом.
+ *
+ * `:not([data-appearance='lh-player'])` обязателен: правило объявлено с
+ * !important, и без исключения оно перебивало собственный вид тултипа игрока
+ * (см. shared/styles/appearances/hint.appearance.css). Хост получал тёмный фон
+ * и белый цвет, а вложенная разметка красит текст в --lh-ink — тёмное по
+ * тёмному, контраст около 1.2:1.
+ */
+tui-hint:not([data-appearance='lh-player']) {
     background-color: var(--lh-primary-2) !important;
     color: var(--color-white) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+tui-hint {
     font-family: 'Advent Pro', serif !important;
     font-optical-sizing: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
 .lh-confirm-button {
@@ -435,7 +497,9 @@ tui-hint {
     padding-block: calc(var(--spacing) * 1.5);
     padding-inline: calc(var(--spacing) * 2.5);
     margin-top: calc(var(--spacing) * 2);
-    transition: all 0.3s ease-in-out;
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-spring);
     &:disabled {
         background-color: var(--lh-success-disabled);
         pointer-events: none;
@@ -456,7 +520,9 @@ tui-hint {
     padding-block: calc(var(--spacing) * 1.5);
     padding-inline: calc(var(--spacing) * 2.5);
     margin-top: calc(var(--spacing) * 2);
-    transition: all 0.3s ease-in-out;
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-spring);
     &:hover {
         background-color: var(--color-lh-danger-hover);
     }
@@ -477,7 +543,11 @@ tui-hint {
     border-radius: var(--radius-xl);
     font-weight: var(--font-weight-bold);
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition:
+        border-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .lh-secondary-button:hover:not(:disabled) {
@@ -500,10 +570,283 @@ tui-pulse.offline {
     color: var(--color-lh-offline) !important;
 }
 
+/**
+ * Мягкая слоистая тень. Ставится на элемент, который в покое должен
+ * читаться приподнятым над фоном. Ховер-версию задавать явно,
+ * автоматического :hover здесь нет — тень не должна ездить у статики.
+ */
 .lh-shadow {
-    -webkit-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
-    -moz-box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
-    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--lh-shadow-soft);
+}
+
+/**
+ * Поверхности проекта. Объявлены в слое components, поэтому утилиты
+ * Tailwind (rounded-*, p-*) перебивают их без !important: слой utilities
+ * идёт после components.
+ */
+@layer components {
+    /**
+     * Базовая контентная панель: секции правил, FAQ, оферты, профиля.
+     * Рамка нарисована внутренней тенью, а не border, поэтому не влияет
+     * на размеры блока. Радиус хранится в переменной — от него считается
+     * концентрический радиус вложенного ядра в модификаторе --bezel.
+     */
+    .lh-panel {
+        --lh-panel-radius: 1.5rem;
+        --lh-panel-gap: 1.5rem;
+        padding: var(--lh-panel-gap);
+        border-radius: var(--lh-panel-radius);
+        background-color: color-mix(in srgb, var(--lh-surface-2) 55%, transparent);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.16),
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
+            var(--lh-shadow-soft);
+    }
+
+    /**
+     * Двойная фаска: панель превращается в оправу, её падинг становится
+     * зазором рамки, а содержимое переносится в .lh-panel__core.
+     * Требует ровно одного ребёнка с классом .lh-panel__core.
+     */
+    .lh-panel--bezel {
+        --lh-panel-radius: 1.75rem;
+        --lh-panel-gap: 0.375rem;
+        background-color: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.14),
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
+            var(--lh-shadow-soft);
+    }
+
+    /**
+     * Ядро двойной фаски. Радиус вычисляется из радиуса оправы за вычетом
+     * зазора: только так дуги внешнего и внутреннего контура остаются
+     * концентричными, иначе рамка выглядит разной толщины в углах.
+     */
+    .lh-panel__core {
+        border-radius: calc(var(--lh-panel-radius) - var(--lh-panel-gap));
+        background-color: var(--lh-surface-2);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.12),
+            0 1px 2px rgba(26, 17, 13, 0.08);
+        overflow: hidden;
+    }
+
+    /**
+     * Кнопка навигации: хедер, футер, навигация профиля.
+     * Класс глобальный, потому что используется четырьмя компонентами —
+     * пока он лежал в стилях хедера, остальные три копировали его
+     * утилитами в шаблоне, а тёмная тема перекрывала всех разом.
+     *
+     * Тени: тонкий верхний блик внутри + контактная тень снаружи.
+     * При наведении кнопка приподнимается на 1px, при нажатии проседает
+     * с укороченной длительностью — отклик должен успевать за пальцем.
+     */
+    .nav-button {
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        gap: 4px;
+        height: 44px;
+        padding: calc(var(--spacing) * 2.5);
+        border-radius: var(--radius-lg);
+        white-space: nowrap;
+        cursor: pointer;
+        --tw-font-weight: var(--font-weight-bold);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-white);
+        background-color: var(--color-lh-primary-2);
+        background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.3) 0%, transparent 60%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            0 1px 2px rgba(26, 17, 13, 0.12);
+        transition:
+            background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+            color var(--lh-dur-fast) var(--lh-ease-out-quart),
+            transform var(--lh-dur-fast) var(--lh-ease-spring),
+            box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+    }
+
+    /**
+     * Компактные иконки, чтобы ряд навигации влезал в одну строку.
+     */
+    .nav-button tui-icon {
+        font-size: 1rem;
+    }
+
+    .nav-button:hover {
+        background-color: var(--color-lh-primary);
+        background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
+        transform: translateY(-1px);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 6px 16px -6px rgba(26, 17, 13, 0.35);
+    }
+
+    .nav-button:active {
+        transform: translateY(0) scale(0.95);
+        transition-duration: 80ms;
+    }
+
+    /**
+     * Активный раздел. Брендовая заливка вместо инверсии в пергамент:
+     * инверсия в тёмной теме давала белую кнопку в тёмном ряду, а тёплый
+     * градиент читается одинаково в обеих темах и не требует перекрытия.
+     *
+     * Оба конца градиента взяты из тёмной части брендовой шкалы: подпись
+     * набрана 13px, порог WCAG AA для неё 4.5:1, а светлый `brand-lit-2`
+     * давал белому тексту только 3.28:1. `brand-deep` — 5.06:1,
+     * `brand-deep-2` — 6.78:1.
+     */
+    .nav-button--active,
+    .nav-button--active:hover {
+        color: #ffffff;
+        background-color: var(--lh-brand-deep);
+        background-image: linear-gradient(150deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.24),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.28),
+            0 6px 18px -6px color-mix(in srgb, var(--lh-brand) 55%, transparent);
+    }
+
+    /**
+     * Ховер активной кнопки: заливка не светлеет (это уронило бы контраст),
+     * усиливается только свечение.
+     */
+    .nav-button--active:hover {
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.24),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.28),
+            0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+            0 8px 22px -6px color-mix(in srgb, var(--lh-brand) 65%, transparent);
+    }
+
+    /**
+     * Первичная CTA.
+     *
+     * Форма прямоугольная: скруглённая пилюля с вложенным кругом-иконкой
+     * читалась как чужой элемент рядом с прямоугольными кнопками навигации
+     * и панелями — у проекта угловатая геометрия, а не «капсульная».
+     *
+     * Заливка — тёмный конец брендовой шкалы. Светлые оттенки
+     * (`brand-hover` 3.04:1, `brand-lit-2` 3.28:1) не проходят WCAG AA
+     * для белого текста в 18px bold, где требуется 4.5:1.
+     * `brand-deep` даёт 5.06:1, `brand-deep-2` — 6.78:1.
+     *
+     * Ховер не меняет заливку: любое осветление уводит контраст ниже порога.
+     * Отклик даёт подъём и усиление свечения.
+     */
+    .lh-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.875rem 1.5rem;
+        border-radius: var(--radius-xl);
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        color: #ffffff;
+        background-image: linear-gradient(150deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+            0 0 0 1px color-mix(in srgb, var(--lh-brand) 35%, transparent),
+            0 8px 24px -8px color-mix(in srgb, var(--lh-brand) 35%, transparent);
+        transition:
+            transform var(--lh-dur-fast) var(--lh-ease-spring),
+            box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+    }
+
+    .lh-cta:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+            0 0 0 1px color-mix(in srgb, var(--lh-accent) 55%, transparent),
+            0 14px 32px -10px color-mix(in srgb, var(--lh-brand) 50%, transparent);
+    }
+
+    .lh-cta:active {
+        transform: translateY(0) scale(0.97);
+        transition-duration: 80ms;
+    }
+
+    /**
+     * Слот иконки в CTA. Своей поверхности не имеет: круг внутри
+     * прямоугольной кнопки — «кнопка в кнопке», лишний уровень вложенности.
+     * Сдвиг на ховере задаёт направление действия.
+     */
+    .lh-cta__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
+    }
+
+    .lh-cta:hover .lh-cta__icon {
+        transform: translateX(3px);
+    }
+
+    /**
+     * CTA в цветах Telegram — для ссылки на личку, а не на брендовое действие.
+     * `leader` 5.86:1, `leader-hover` 7.63:1 к белому.
+     */
+    .lh-cta--telegram {
+        background-image: linear-gradient(150deg, var(--lh-leader) 0%, var(--lh-leader-hover) 100%);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+            0 0 0 1px color-mix(in srgb, var(--lh-leader) 35%, transparent),
+            0 8px 24px -8px color-mix(in srgb, var(--lh-leader) 35%, transparent);
+    }
+
+    .lh-cta--telegram:hover {
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+            0 0 0 1px color-mix(in srgb, var(--lh-leader) 55%, transparent),
+            0 14px 32px -10px color-mix(in srgb, var(--lh-leader) 50%, transparent);
+    }
+
+    /**
+     * Третичная CTA: обводка без заливки. Для действия рядом с основным,
+     * которое не должно с ним конкурировать по весу.
+     */
+    .lh-cta--ghost {
+        color: var(--lh-ink-2);
+        background-image: none;
+        background-color: transparent;
+        box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--lh-wood) 40%, transparent);
+    }
+
+    .lh-cta--ghost:hover {
+        color: var(--lh-brand-ink);
+        box-shadow: inset 0 0 0 2px var(--lh-brand);
+    }
+}
+
+html[data-theme='dark'] {
+    .lh-panel {
+        background-color: rgba(233, 223, 201, 0.05);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            inset 0 0 0 1px rgba(233, 223, 201, 0.1),
+            var(--lh-shadow-soft);
+    }
+
+    .lh-panel--bezel {
+        background-color: rgba(233, 223, 201, 0.06);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.06),
+            inset 0 0 0 1px rgba(233, 223, 201, 0.09),
+            var(--lh-shadow-soft);
+    }
+
+    .lh-panel__core {
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.05),
+            0 1px 2px rgba(0, 0, 0, 0.35);
+    }
 }
 
 /**
@@ -579,7 +922,10 @@ button:disabled,
     font-size: 18px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        filter var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 /**
@@ -658,7 +1004,10 @@ button:disabled,
     background-color: rgba(226, 215, 187, 0.4);
     cursor: pointer;
     position: relative;
-    transition: all 0.2s ease;
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        border-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .lh-checkbox:checked {
@@ -698,11 +1047,11 @@ button:disabled,
 }
 
 .cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition: transform 250ms var(--lh-ease-out-quart);
 }
 
 .cdk-drop-list-dragging .cdk-drag {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    transition: transform 250ms var(--lh-ease-out-quart);
 }
 
 .cdk-drag-handle {
@@ -717,7 +1066,7 @@ button:disabled,
  * Плавное появление контента при смене вкладок.
  */
 .market-tab-content {
-    animation: market-tab-fade-in 0.35s ease-out both;
+    animation: market-tab-fade-in var(--lh-dur-mid) var(--lh-ease-out-quart) both;
 }
 
 @keyframes market-tab-fade-in {
@@ -736,9 +1085,9 @@ button:disabled,
  */
 .lh-card-glow {
     transition:
-        box-shadow 0.3s ease,
-        transform 0.3s ease,
-        border-color 0.3s ease;
+        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart),
+        transform var(--lh-dur-mid) var(--lh-ease-spring),
+        border-color var(--lh-dur-mid) var(--lh-ease-out-quart);
 }
 
 .lh-card-glow:hover {
@@ -790,7 +1139,7 @@ button:disabled,
 .lh-stagger-list > * {
     opacity: 0;
     transform: translateY(12px);
-    animation: lh-stagger-fade-in 0.4s ease-out forwards;
+    animation: lh-stagger-fade-in var(--lh-dur-mid) var(--lh-ease-out-quart) forwards;
 }
 
 .lh-stagger-list > *:nth-child(1) { animation-delay: 0ms; }
@@ -820,6 +1169,41 @@ button:disabled,
         animation: none;
         opacity: 1;
         transform: none;
+    }
+}
+
+/**
+ * Появление элемента при входе во вьюпорт.
+ * Классы навешивает директива appReveal: до пересечения — сдвиг и
+ * прозрачность, после — проявление. Анимируются только transform
+ * и opacity, чтобы кадр не уходил на пересчёт раскладки.
+ *
+ * Единственный механизм появления в проекте: .lh-stagger-list и
+ * .market-tab-content работают по таймеру и не знают о вьюпорте,
+ * поэтому не заменяют его, но и не должны с ним сочетаться на одном
+ * элементе — сложатся две прозрачности.
+ */
+.lh-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity var(--lh-dur-slow) var(--lh-ease-out-quart),
+        transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition-delay: var(--lh-reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+.lh-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lh-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
     }
 }
 
@@ -932,6 +1316,17 @@ html[data-theme='dark'] {
     --lh-link: #e07830;
     --lh-link-hover: #ffaa5c;
 
+    /**
+     * Тени на тёмном фоне. Чернильный оттенок здесь не читается,
+     * поэтому оба слоя уходят в чистый чёрный и набирают плотность.
+     */
+    --lh-shadow-soft:
+        0 1px 2px rgba(0, 0, 0, 0.3),
+        0 8px 24px -8px rgba(0, 0, 0, 0.4);
+    --lh-shadow-lift:
+        0 2px 4px rgba(0, 0, 0, 0.35),
+        0 20px 48px -16px rgba(0, 0, 0, 0.55);
+
     --lh-brand-ink: #ff9445;
     --lh-danger-ink: #e88a7c;
     --lh-danger-soft: #d8a5a5;
@@ -1016,14 +1411,20 @@ html[data-theme='dark'] {
         background-image: none;
     }
 
-    /* Кнопки навигации хедера */
-    .nav-button {
+    /**
+     * Кнопки навигации: снимается только текстура и подложка.
+     * Активная кнопка исключена — у неё брендовый градиент, одинаковый
+     * в обеих темах. Без :not() этот селектор перекрыл бы её по
+     * специфичности (атрибут + класс против одного класса), и активное
+     * состояние приходилось бы дожимать !important.
+     */
+    .nav-button:not(.nav-button--active) {
         background-color: #2b2d31;
         background-image: none;
         color: #e9dfc9;
     }
 
-    .nav-button:hover {
+    .nav-button:not(.nav-button--active):hover {
         background-color: #383a40;
     }
 

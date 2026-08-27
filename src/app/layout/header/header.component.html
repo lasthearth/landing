@@ -5,7 +5,7 @@
 @let userVerifications = userVerifications$ | async;
 @let settlementVerifications = settlementVerifications$ | async;
 
-<div class="flex flex-col xl:gap-24 gap-8">
+<div class="flex flex-col xl:gap-10 gap-8">
     <div class="flex justify-center sm:justify-between px-4 sm:px-0">
         <!-- Логотип -->
         <div
@@ -82,7 +82,7 @@
                                 class="flex items-center gap-0.5 bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 bg-clip-text text-transparent"
                             >
                                 <img
-                                    src="/splinter-of-spark.png"
+                                    src="/splinter-of-spark.webp"
                                     alt="Осколок Искры"
                                     class="h-6 w-6 sm:h-8 sm:w-8 object-contain spark-glow"
                                 />
@@ -120,7 +120,7 @@
                 <button
                     type="button"
                     (click)="showMobileMenu.set(!showMobileMenu())"
-                    [ngClass]="{ 'bg-surface! text-lh-primary!': showMobileMenu() }"
+                    [ngClass]="{ 'nav-button--active': showMobileMenu() }"
                     class="nav-button"
                     [attr.aria-label]="'header.mainMenu' | translate"
                     [attr.aria-expanded]="showMobileMenu()"
@@ -272,7 +272,7 @@
             <button
                 (click)="select = 'home'"
                 [routerLink]="['/home']"
-                [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'home' }"
+                [ngClass]="{ 'nav-button--active': select === 'home' }"
                 class="nav-button"
                 [attr.aria-label]="'header.nav.home' | translate"
             >
@@ -284,7 +284,7 @@
                 @if (!isAuth) {
                     <button
                         [routerLink]="['/start-game']"
-                        [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'startGame' }"
+                        [ngClass]="{ 'nav-button--active': select === 'startGame' }"
                         class="nav-button relative md:w-auto px-1.5"
                         [attr.aria-label]="'header.nav.startGame' | translate"
                     >
@@ -300,7 +300,7 @@
                 }
                 <button
                     [routerLink]="['/rules']"
-                    [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'rules' }"
+                    [ngClass]="{ 'nav-button--active': select === 'rules' }"
                     class="nav-button md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.rules' | translate"
                 >
@@ -309,7 +309,7 @@
                 </button>
                 <button
                     [routerLink]="['/faq']"
-                    [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'faq' }"
+                    [ngClass]="{ 'nav-button--active': select === 'faq' }"
                     class="nav-button md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.faq' | translate"
                 >
@@ -319,7 +319,7 @@
 
                 <button
                     [routerLink]="['/settlements']"
-                    [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'settlements' }"
+                    [ngClass]="{ 'nav-button--active': select === 'settlements' }"
                     class="nav-button md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.settlements' | translate"
                 >
@@ -329,7 +329,7 @@
 
                 <button
                     [routerLink]="['/diplomacy']"
-                    [ngClass]="{ 'bg-surface! text-lh-primary!': select === 'diplomacy' }"
+                    [ngClass]="{ 'nav-button--active': select === 'diplomacy' }"
                     class="nav-button md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.diplomacy' | translate"
                 >
@@ -339,7 +339,7 @@
 
                 <button
                     [routerLink]="['/market']"
-                    [ngClass]="{ 'bg-surface! text-lh-primary! font-bold! text-base!': select === 'market' }"
+                    [ngClass]="{ 'nav-button--active': select === 'market' }"
                     class="nav-button w-11 md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.market' | translate"
                 >
@@ -352,7 +352,7 @@
                     <button
                         type="button"
                         (click)="toggleMediaMenu()"
-                        [ngClass]="{ 'bg-surface! text-lh-primary!': isMediaActive || showMediaMenu() }"
+                        [ngClass]="{ 'nav-button--active': isMediaActive || showMediaMenu() }"
                         class="nav-button md:w-auto px-1.5"
                         [attr.aria-label]="'header.nav.media' | translate"
                         [attr.aria-expanded]="showMediaMenu()"
@@ -415,7 +415,7 @@
                 <button
                     type="button"
                     (click)="showLangMenu.set(!showLangMenu())"
-                    [ngClass]="{ 'bg-surface! text-lh-primary!': showLangMenu() }"
+                    [ngClass]="{ 'nav-button--active': showLangMenu() }"
                     class="nav-button !px-2.5 gap-1.5"
                     [attr.aria-label]="'header.language.select' | translate"
                 >
@@ -457,7 +457,7 @@
                 (click)="isAuth ? '' : signIn()"
                 [routerLink]="isAuth ? ['/profile'] : ''"
                 [ngClass]="{
-                    'bg-surface! text-lh-primary!': select === 'profile',
+                    'nav-button--active': select === 'profile',
                     '!rounded-lg': !isAuth,
                     '!rounded-r-none': isAuth,
                 }"

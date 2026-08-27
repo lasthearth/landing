@@ -2,7 +2,7 @@
     <div id="faq-scroll-sentinel" class="absolute top-0 left-0 w-px h-px pointer-events-none"></div>
 
     <div class="flex justify-between items-center">
-        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-ink">{{ "faq.title" | translate }}</p>
+        <h1 class="lh-display text-2xl md:text-3xl lg:text-4xl font-bold text-ink">{{ "faq.title" | translate }}</h1>
         <button
             (click)="toggleAll()"
             class="shrink-0 rounded-xl px-5 py-2.5 text-[18px] font-bold text-ink cursor-pointer transition-all duration-200 bg-surface-3 border border-line hover:bg-surface-4"
@@ -12,7 +12,7 @@
     </div>
 
     <!-- 1. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isServerConcept = !isServerConcept"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -87,7 +87,7 @@
     </div>
 
     <!-- 2. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isPasswordLost = !isPasswordLost"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -117,7 +117,7 @@
     </div>
 
     <!-- 3. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isTroubles = !isTroubles"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -233,7 +233,7 @@
     </div>
 
     <!-- 4. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isSeason = !isSeason"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -256,7 +256,7 @@
     </div>
 
     <!-- 5. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isHowToStart = !isHowToStart"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -304,7 +304,7 @@
     </div>
 
     <!-- 6. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isBagsOrViolation = !isBagsOrViolation"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -338,7 +338,7 @@
     </div>
 
     <!-- 7. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isDeathOrTheft = !isDeathOrTheft"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -364,7 +364,7 @@
     </div>
 
     <!-- 8. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isOffer = !isOffer"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -397,7 +397,7 @@
     </div>
 
     <!-- 9. -->
-    <div class="bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] faq-scroll">
+    <div class="lh-panel faq-scroll">
         <div
             (click)="isTeam = !isTeam"
             class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
@@ -425,7 +425,7 @@
     @if (showScrollTop) {
         <button
             (click)="scrollToTop()"
-            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-surface-4 shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-surface-4 lh-shadow"
             [title]="'faq.scrollTop' | translate"
         >
             <tui-icon icon="@tui.chevron-up" class="size-6!" />

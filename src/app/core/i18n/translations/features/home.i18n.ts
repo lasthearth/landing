@@ -48,6 +48,7 @@ export const HOME_I18N = {
                 donate: 'Поддержать',
             },
             news: {
+                title: 'Новости',
                 empty: 'Новостей пока нет...',
                 deleteTitle: 'Удаление новости',
                 deleteText: 'Вы уверены, что хотите удалить эту новость? Это действие нельзя отменить.',
@@ -151,6 +152,7 @@ export const HOME_I18N = {
             },
             news: {
                 empty: 'No news yet...',
+                title: 'News',
                 deleteTitle: 'Delete news',
                 deleteText: 'Are you sure you want to delete this news? This action cannot be undone.',
             },

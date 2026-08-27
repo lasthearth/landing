@@ -16,11 +16,10 @@ import { EditSettlementFormComponent } from '../edit-settlement-form/edit-settle
 import { SettlementsTypes } from '@entities/settlement';
 import { ISettlementInvitation } from '@entities/settlement';
 import { getSettlementTypeByKey, getSettlementTypeTone, getDiplomacyTone, isGuildSettlement, SettlementBadgeComponent, SettlementBadgeTone, SettlementDisplayNamePipe } from '@entities/settlement';
-import { TuiPulse } from '@taiga-ui/kit';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
-import { IPlayer } from '@entities/user';
+import { IPlayer, PlayerChipComponent } from '@entities/user';
 import { SettlementTagStore, SettlementTagComponent } from '@entities/settlement-tag';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
@@ -35,7 +34,7 @@ import { compressImage } from '@shared/lib/compress-image.function';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [AsyncPipe, TuiPulse, TuiIcon, TuiLoader, SettlementBadgeComponent, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe, SettlementDisplayNamePipe],
+    imports: [AsyncPipe, TuiIcon, TuiLoader, SettlementBadgeComponent, SettlementTagComponent, SettlementDetailSkeletonComponent, ImageLoaderComponent, TranslatePipe, SettlementDisplayNamePipe, PlayerChipComponent],
     providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',

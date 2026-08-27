@@ -8,15 +8,15 @@
     --tui-carousel-padding: 0;
 }
 
+/**
+ * Полоса быстрых действий.
+ * Фона и рамки у полосы нет намеренно: она лежит на пергаменте панели,
+ * и второй контур давал вложенную карточку в карточке.
+ */
 .quick-actions {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
-    padding: 0.75rem;
-    border-radius: 1rem;
-    background: var(--lh-surface-3);
-    border: 1px solid color-mix(in srgb, var(--lh-ink) 12%, transparent);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 .quick-actions__item {
@@ -26,8 +26,8 @@
     min-height: 3.25rem;
     padding: 0.625rem 0.875rem;
     border-radius: 0.75rem;
-    background: var(--lh-surface);
-    border: 1px solid color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    background: var(--lh-surface-2);
+    border: 1px solid color-mix(in srgb, var(--lh-ink) 10%, transparent);
     color: inherit;
     text-decoration: none;
     transition:
@@ -36,7 +36,7 @@
         box-shadow 0.2s ease;
 
     &:hover {
-        background: var(--lh-surface-2);
+        background: var(--lh-surface-3);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
@@ -307,6 +307,79 @@
 
 @media (prefers-reduced-motion: reduce) {
     .team-card {
+        transition: none;
+
+        &:hover {
+            transform: none;
+        }
+    }
+}
+
+/**
+ * Карточка метрики «Пульса сервера».
+ * Геометрия и поверхность приходят из .lh-panel--bezel, здесь только
+ * реакция на курсор и медальон иконки.
+ */
+.pulse-card {
+    display: flex;
+    flex-direction: column;
+    transition:
+        transform var(--lh-dur-mid) var(--lh-ease-spring),
+        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.14),
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
+            var(--lh-shadow-lift);
+    }
+
+    /**
+     * Ядро растягивается на всю оправу: в сетке карточки разной высоты,
+     * и без этого рамка снизу оказывалась толще, чем сверху.
+     */
+    .lh-panel__core {
+        flex: 1 1 auto;
+    }
+}
+
+/**
+ * Медальон иконки метрики.
+ */
+.pulse-card__icon {
+    background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+    color: var(--lh-brand-ink);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 22%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+
+    .pulse-card:hover & {
+        background-color: color-mix(in srgb, var(--lh-brand) 22%, transparent);
+        box-shadow:
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 30%, transparent),
+            0 0 16px color-mix(in srgb, var(--lh-accent) 30%, transparent);
+    }
+}
+
+:host-context(html[data-theme='dark']) {
+    .pulse-card:hover {
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.06),
+            inset 0 0 0 1px rgba(233, 223, 201, 0.09),
+            var(--lh-shadow-lift);
+    }
+
+    .pulse-card__icon {
+        color: var(--lh-accent-soft);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pulse-card {
         transition: none;
 
         &:hover {

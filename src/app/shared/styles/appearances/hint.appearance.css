@@ -1,0 +1,28 @@
+/**
+ * Внешний вид тултипов Taiga UI, переопределённый под пергаментную палитру.
+ *
+ * По умолчанию `tui-hint` красится в `--tui-background-accent-1` (тёмно-синий)
+ * с белым текстом — на пергаментном сайте это чужеродно и даёт низкий контраст
+ * с содержимым, которое использует токены проекта. Здесь хост тултипа
+ * перекрашивается в поверхность проекта, а текст — в основные чернила.
+ *
+ * `lh-player` — тултип чипа игрока: широкий, с крупным аватаром.
+ *
+ * Селектор продублирован (`tui-hint[...][...]`) намеренно: глобальное правило
+ * для `tui-hint` в styles.css объявлено с !important, и одиночного селектора
+ * не хватало, чтобы вернуть тултипу игрока светлую подложку.
+ */
+tui-hint[data-appearance='lh-player'][data-appearance='lh-player'] {
+    /* Ширина под сетку из трёх чисел статистики: уже 19rem подписи начинают рваться. */
+    inline-size: max-content;
+    min-inline-size: 19rem;
+    max-inline-size: min(24rem, calc(100vw - 2rem));
+    padding: 1rem;
+    background: var(--lh-surface-2) !important;
+    color: var(--lh-ink) !important;
+    border-radius: 1rem;
+    box-shadow:
+        inset 0 0 0 1px var(--lh-border-strong),
+        var(--lh-shadow-lift) !important;
+    white-space: normal;
+}

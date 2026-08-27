@@ -1,15 +1,27 @@
-.card {
-    @media (width >= 1695px) {
-        width: 48%;
-    }
+/**
+ * Сетка карточек селений.
+ *
+ * CSS Grid вместо flex-wrap с процентной шириной: там 48%+48% плюс gap
+ * переполняли строку, а justify-center разбрасывал остаток асимметрично —
+ * желоба между колонками и до краёв получались разной ширины.
+ *
+ * Одна колонка до 1280px и на «среднем» диапазоне 1281–1694px (там панель
+ * узкая, две колонки дают слишком тесные карточки), две колонки на остальных.
+ */
+.settlements-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
 
-    @media (width > 1280px) and (width < 1695px) {
-        width: 100%;
+@media (width > 1024px) and (width <= 1280px) {
+    .settlements-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
+}
 
-    @media (width > 1024px) and (width <= 1280px) {
-        width: 48%;
+@media (width >= 1695px) {
+    .settlements-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
-
-    width: 100%;
 }

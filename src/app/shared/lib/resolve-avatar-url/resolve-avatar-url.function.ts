@@ -11,7 +11,7 @@
  */
 export function resolveAvatarUrl(value: unknown): string {
     if (!value) {
-        return '/default-avatar.png';
+        return '/default-avatar.webp';
     }
 
     if (typeof value === 'string') {
@@ -26,5 +26,5 @@ export function resolveAvatarUrl(value: unknown): string {
         }
     }
 
-    return '/default-avatar.png';
+    return '/default-avatar.webp';
 }

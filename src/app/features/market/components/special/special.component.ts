@@ -179,6 +179,27 @@ export class SpecialComponent {
     }
 
     /**
+     * Возвращает абсолютную экономию в осколках по товару.
+     *
+     * @param item Товар магазина.
+     * @returns Экономия строкой или пустая строка, если скидки нет.
+     */
+    protected getSavings(item: IShopItem): string {
+        if (!this.hasDiscount(item)) {
+            return '';
+        }
+
+        const original = parseInt(item.price.replace(/\D/g, ''), 10);
+        const current = parseInt(item.effectivePrice!.replace(/\D/g, ''), 10);
+
+        if (!original || !current || original <= current) {
+            return '';
+        }
+
+        return String(original - current);
+    }
+
+    /**
      * Открывает диалог покупки товара.
      *
      * @param item Товар для покупки.

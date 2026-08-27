@@ -2,8 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { ISettlement, isGuildSettlement, SettlementBadgeComponent, SettlementDisplayNamePipe } from '@entities/settlement';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { IPlayer } from '@entities/user';
-import { TuiPulse } from '@taiga-ui/kit';
+import { IPlayer, PlayerChipComponent } from '@entities/user';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 
@@ -11,7 +10,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
     selector: 'app-settlement-detailed',
     templateUrl: './settlement-detailed.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
-    imports: [TuiPulse, ImageLoaderComponent, TranslatePipe, SettlementBadgeComponent, SettlementDisplayNamePipe],
+    imports: [ImageLoaderComponent, TranslatePipe, SettlementBadgeComponent, SettlementDisplayNamePipe, PlayerChipComponent],
 })
 export class SettlementDetailedComponent {
     /**

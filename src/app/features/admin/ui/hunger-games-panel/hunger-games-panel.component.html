@@ -1,13 +1,13 @@
 <div class="flex flex-col gap-10 max-w-5xl mx-auto w-full">
     <!-- Сезон -->
     <div class="flex flex-col gap-6">
-        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.currentSeason' | translate }}</h2>
+        <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.currentSeason' | translate }}</h2>
 
         @if (isLoading()) {
             <app-admin-season-skeleton />
         } @else if (currentSeason(); as season) {
             <div
-                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lh-panel"
             >
                 <div class="flex flex-col gap-4">
                     <span class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink leading-none">{{ 'admin.hungerGames.seasonNumber' | translate:{number: season.number} }}</span>
@@ -56,7 +56,7 @@
             <!-- Настройка наград (только для активного сезона) -->
             @if (season.isActive) {
                 <div
-                    class="flex flex-col gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                    class="flex flex-col gap-4 lh-panel"
                 >
                     <div class="flex items-center gap-2">
                         <tui-icon icon="@tui.gift" class="size-5! text-lh-accent" />
@@ -119,7 +119,7 @@
             }
         } @else {
             <div
-                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lh-panel"
             >
                 <span class="text-[23px] text-ink-2">{{ 'admin.hungerGames.noActiveSeason' | translate }}</span>
                 <button
@@ -140,9 +140,9 @@
 
     <!-- Запись матча -->
     <div class="flex flex-col gap-6">
-        <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.recordMatch' | translate }}</h2>
+        <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.recordMatch' | translate }}</h2>
 
-        <div class="flex flex-col gap-5 p-6 rounded-2xl bg-lh-primary-2/10 border border-lh-primary-2/10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+        <div class="flex flex-col gap-5 lh-panel">
             <!-- Поиск игрока -->
             <div class="flex flex-col gap-4">
                 <label class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.addParticipant' | translate }}</label>
@@ -244,7 +244,7 @@
     <!-- Лидерборд -->
     <div class="flex flex-col gap-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.leaderboard' | translate }}</h2>
+            <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.leaderboard' | translate }}</h2>
             <div class="min-w-[220px]">
                 <lh-input
                     type="select"
@@ -262,7 +262,7 @@
                 <app-admin-table-skeleton [columns]="6" [rows]="5" />
             } @else if (archiveLeaderboard(); as list) {
                 @if (list.length > 0) {
-                    <div class="overflow-x-auto rounded-2xl border border-line shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                    <div class="overflow-x-auto rounded-2xl border border-line lh-shadow">
                         <table class="w-full text-left border-collapse text-[18px]">
                             <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                                 <tr>
@@ -323,7 +323,7 @@
                 <app-admin-table-skeleton [columns]="5" [rows]="5" />
             } @else if (currentLeaderboard(); as list) {
                 @if (list.length > 0) {
-                    <div class="overflow-x-auto rounded-2xl border border-line shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                    <div class="overflow-x-auto rounded-2xl border border-line lh-shadow">
                         <table class="w-full text-left border-collapse text-[18px]">
                             <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                                 <tr>

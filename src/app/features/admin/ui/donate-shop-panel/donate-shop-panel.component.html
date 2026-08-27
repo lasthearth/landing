@@ -43,7 +43,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         @for (item of items; track item.id) {
                             <div
-                                class="relative flex flex-col gap-4 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-[103%] hover:border-lh-accent/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] group lh-card-glow"
+                                class="relative flex flex-col gap-4 lh-panel p-4 lh-card-glow hover:-translate-y-1 group"
                             >
                                 @if (item.hasDiscount) {
                                     <div
@@ -74,7 +74,7 @@
                                         <span class="text-base text-lh-primary/50 line-through flex items-center gap-1">
                                             {{ item.price }}
                                             <img
-                                                src="/splinter-of-spark.png"
+                                                src="/splinter-of-spark.webp"
                                                 [alt]="'admin.common.shardAlt' | translate"
                                                 class="h-4 w-4 object-contain"
                                             />
@@ -82,7 +82,7 @@
                                         <span class="text-xl font-extrabold text-lh-accent flex items-center gap-1">
                                             {{ item.effectivePrice }}
                                             <img
-                                                src="/splinter-of-spark.png"
+                                                src="/splinter-of-spark.webp"
                                                 [alt]="'admin.common.shardAlt' | translate"
                                                 class="h-5 w-5 object-contain"
                                             />
@@ -91,7 +91,7 @@
                                         <span class="text-xl font-extrabold text-lh-primary flex items-center gap-1">
                                             {{ item.price }}
                                             <img
-                                                src="/splinter-of-spark.png"
+                                                src="/splinter-of-spark.webp"
                                                 [alt]="'admin.common.shardAlt' | translate"
                                                 class="h-5 w-5 object-contain"
                                             />
@@ -461,7 +461,7 @@
             >
                 <p class="text-xl font-bold text-lh-primary uppercase tracking-wide">{{ 'admin.shop.previewTitle' | translate }}</p>
                 <div
-                    class="relative flex flex-col gap-4 bg-lh-primary-2/10 border border-lh-primary-2/10 rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:scale-[103%] hover:border-lh-accent/40 hover:shadow-[0_8px_24px_rgba(255,121,32,0.12)] group"
+                    class="relative flex flex-col gap-4 lh-panel p-5 lh-card-glow hover:-translate-y-1 group"
                 >
                     @if (previewItem().hasDiscount && previewItem().discountPercent) {
                         <div
@@ -491,16 +491,16 @@
                         @if (previewItem().hasDiscount && previewItem().discountPercent) {
                             <span class="text-lg text-lh-primary/50 line-through flex items-center gap-1">
                                 {{ previewItem().price }}
-                                <img src="/splinter-of-spark.png" [alt]="'admin.common.shardAlt' | translate" class="h-4 w-4 object-contain" />
+                                <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-4 w-4 object-contain" />
                             </span>
                             <span class="text-2xl font-extrabold text-lh-accent flex items-center gap-1">
                                 {{ previewEffectivePrice() }}
-                                <img src="/splinter-of-spark.png" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
+                                <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                             </span>
                         } @else {
                             <span class="text-2xl font-extrabold text-lh-primary flex items-center gap-1">
                                 {{ previewItem().price }}
-                                <img src="/splinter-of-spark.png" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
+                                <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                             </span>
                         }
                     </div>
