@@ -141,7 +141,7 @@ export class SettlementsComponent {
                 switchMap((list) =>
                     this.userService
                         .getPlayersBatch$(
-                            list.flatMap((s) => [s.leader.user_id, ...s.members.map((m) => m.user_id)])
+                            list.flatMap((s) => s.members.map((m) => m.user_id))
                         )
                         .pipe(
                             catchError((error) => {
@@ -161,13 +161,14 @@ export class SettlementsComponent {
 
                 this.enrichedSettlements.set(
                     list.map((s) => {
-                        const settlementPlayers = [s.leader.user_id, ...s.members.map((m) => m.user_id)]
+                        const settlementPlayers = s.members
+                            .map((m) => m.user_id)
                             .map((id) => playerById.get(id))
                             .filter((player): player is IPlayer => player !== undefined);
 
                         return {
                             ...s,
-                            membersCount: s.members.length + 1,
+                            membersCount: s.members.length,
                             onlineCount: settlementPlayers.filter((player) => player.is_online).length,
                             tagTypes: this.getSpecialTagTypes(s.tags),
                             players: settlementPlayers,

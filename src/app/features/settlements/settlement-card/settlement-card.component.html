@@ -65,7 +65,7 @@
                     <div class="settlement-card__meta flex items-center gap-3 text-base text-ink-3 font-semibold">
                         <span class="inline-flex items-center gap-1.5">
                             <tui-icon icon="@tui.users" class="size-4!" />
-                            {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
+                            {{ data().members.length }} {{ 'settlements.card.residentsShort' | translate }}
                         </span>
                         <span class="inline-flex items-center gap-1.5" [class.text-peace]="onlineCount() > 0">
                             <span
@@ -121,7 +121,7 @@
             <div class="flex flex-col gap-2">
                 <hr class="h-px bg-surface-4/30 w-full rounded-full border-0" />
                 <div class="flex flex-wrap gap-1.5 items-center">
-                    @if (leader(); as leaderPlayer) {
+                    @for (leaderPlayer of leaders(); track leaderPlayer.user_id) {
                         <app-player-chip [player]="leaderPlayer" [isLeader]="true" />
                     }
 
