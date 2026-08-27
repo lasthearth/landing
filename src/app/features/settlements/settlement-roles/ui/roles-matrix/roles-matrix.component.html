@@ -1,0 +1,94 @@
+<section class="lh-panel flex flex-col gap-4">
+    <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <h2 class="lh-display text-2xl text-ink">{{ 'settlements.roles.title' | translate }}</h2>
+
+        @if (!rolesDisabled()) {
+            <button type="button" class="lh-cta lh-cta--ghost roles-matrix__add" (click)="createRole.emit()">
+                {{ 'settlements.roles.create' | translate }}
+            </button>
+        }
+    </header>
+
+    @if (rolesDisabled()) {
+        <p class="text-lg text-ink-2">{{ 'settlements.roles.disabled' | translate }}</p>
+    } @else {
+        <p class="text-base text-ink-3">{{ 'settlements.roles.hint' | translate }}</p>
+
+        @if (roles().length === 0) {
+            <app-empty-state
+                icon="@tui.shield"
+                [title]="'settlements.roles.empty.title' | translate"
+                [description]="'settlements.roles.empty.description' | translate"
+            />
+        } @else {
+            <div class="roles-matrix__scroll">
+                <table class="roles-matrix">
+                    <caption class="sr-only">{{ 'settlements.roles.tableCaption' | translate }}</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" class="roles-matrix__role-head">
+                                {{ 'settlements.roles.roleColumn' | translate }}
+                            </th>
+                            @for (permission of permissions; track permission) {
+                                <th scope="col" class="roles-matrix__permission-head">
+                                    {{ permissionLabelKey(permission) | translate }}
+                                </th>
+                            }
+                            <th scope="col" class="roles-matrix__actions-head">
+                                <span class="sr-only">{{ 'settlements.roles.actionsColumn' | translate }}</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (role of roles(); track role.id) {
+                            <tr>
+                                <th scope="row" class="roles-matrix__role">{{ role.name }}</th>
+
+                                @for (permission of permissions; track permission) {
+                                    <td class="roles-matrix__cell">
+                                        <button
+                                            type="button"
+                                            class="roles-matrix__check"
+                                            [class.roles-matrix__check--on]="hasPermission(role, permission)"
+                                            [attr.aria-pressed]="hasPermission(role, permission)"
+                                            [attr.aria-label]="
+                                                (permissionLabelKey(permission) | translate) + ' — ' + role.name
+                                            "
+                                            [disabled]="busy()"
+                                            (click)="onToggle(role, permission)"
+                                        >
+                                            @if (hasPermission(role, permission)) {
+                                                <tui-icon icon="@tui.check" class="size-4!" />
+                                            }
+                                        </button>
+                                    </td>
+                                }
+
+                                <td class="roles-matrix__cell roles-matrix__cell--actions">
+                                    <button
+                                        type="button"
+                                        class="roles-matrix__action"
+                                        [attr.aria-label]="('settlements.roles.rename' | translate) + ': ' + role.name"
+                                        [disabled]="busy()"
+                                        (click)="editRole.emit(role)"
+                                    >
+                                        <tui-icon icon="@tui.pencil" class="size-4!" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="roles-matrix__action roles-matrix__action--danger"
+                                        [attr.aria-label]="('settlements.roles.delete' | translate) + ': ' + role.name"
+                                        [disabled]="busy()"
+                                        (click)="deleteRole.emit(role)"
+                                    >
+                                        <tui-icon icon="@tui.trash-2" class="size-4!" />
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+</section>

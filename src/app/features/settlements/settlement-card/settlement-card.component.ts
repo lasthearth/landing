@@ -31,6 +31,7 @@ import { SettlementTagStore, SettlementTagComponent } from '@entities/settlement
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
+import { JoinRequestButtonComponent } from '../join-request';
 import { SetTagsComponent } from './set-tags/set-tags.component';
 import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 
@@ -48,6 +49,7 @@ import { SettlementDetailedComponent } from '../settlement-detailed/settlement-d
         SettlementTagComponent,
         SettlementDisplayNamePipe,
         PlayerChipComponent,
+        JoinRequestButtonComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,54 +1,40 @@
-@let settlement = settlementInfo$ | async;
-@let invitations = invitations$ | async;
-@let status = requestStatus$ | async;
-@let sentInvitations = sentInvitations$ | async;
-@let sentUsers = sentInvitationUsers$ | async;
+@let data = settlement();
 
-@if (settlement === null) {
+@if (data === null) {
     <app-settlement-detail-skeleton />
-} @else if (settlement === undefined) {
-    @if (invitations?.length) {
-        @for (item of invitations; track $index) {
-            <div class="self-center flex flex-col gap-3 items-center">
-                <p class="text-xl md:text-2xl lg:text-3xl font-semibold">
-                    {{ 'settlements.settlement.inviteTitle' | translate }}
-                    <span class="font-bold">{{ getSettlementName$(item.settlement_id) | async }}</span>
-                </p>
-                <div class="flex gap-3">
-                    <button
-                        (click)="inviteAccept(item.id)"
-                        class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-wood rounded-2xl py-1.5 px-3"
-                    >
-                        {{ 'settlements.settlement.join' | translate }}
-                    </button>
-                    <button
-                        (click)="rejectAccept(item.id)"
-                        class="text-white transition-all duration-300 font-semibold text-base cursor-pointer bg-[rgb(148,90,50)] hover:bg-wood rounded-2xl py-1.5 px-3"
-                    >
-                        {{ 'settlements.settlement.reject' | translate }}
-                    </button>
-                </div>
-            </div>
-        }
-    } @else if (status?.status === "pending") {
+} @else if (data === undefined) {
+    @if (invitations().length) {
+        <div class="flex flex-col gap-4">
+            <h1 class="lh-display text-2xl md:text-3xl text-ink">
+                {{ 'settlements.invitation.title' | translate }}
+            </h1>
+
+            @for (item of invitations(); track item.id) {
+                <app-invitation-card
+                    [invitationId]="item.id"
+                    [settlementId]="item.settlement_id"
+                    (resolved)="onInvitationResolved()"
+                />
+            }
+        </div>
+    } @else if (requestStatusInfo()?.status === 'pending') {
         <div class="size-full flex justify-center items-center">
             <p class="text-2xl/7.5 my-6 uppercase font-bold text-ink-3 self-center">
                 {{ 'settlements.settlement.pending' | translate }}
             </p>
         </div>
-    } @else if (status?.status === "rejected") {
+    } @else if (requestStatusInfo()?.status === 'rejected') {
         <div class="size-full text-center flex flex-col gap-4 justify-center items-center">
             <p class="text-2xl/7.5 my-6 uppercase font-bold text-lh-danger self-center">
                 {{ 'settlements.settlement.rejected' | translate }}
                 <br />
                 <br />
-                <span class="text-lh-primary">{{ 'settlements.settlement.reason' | translate }} {{ status?.rejection_reason }}</span>
+                <span class="text-lh-primary">
+                    {{ 'settlements.settlement.reason' | translate }} {{ requestStatusInfo()?.rejection_reason }}
+                </span>
             </p>
 
-            <button
-                (click)="createSettlement()"
-                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
-            >
+            <button type="button" (click)="createSettlement()" class="lh-secondary-button text-lg leading-[27px] py-2 px-4">
                 {{ 'settlements.form.submit' | translate }}
             </button>
         </div>
@@ -58,16 +44,10 @@
                 {{ 'settlements.settlement.noSettlement' | translate }}
             </p>
             <div class="flex flex-wrap gap-3 justify-center">
-                <button
-                    (click)="createSettlement()"
-                    class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
-                >
+                <button type="button" (click)="createSettlement()" class="lh-secondary-button text-lg leading-[27px] py-2 px-4">
                     {{ 'settlements.form.submit' | translate }}
                 </button>
-                <button
-                    (click)="createGuild()"
-                    class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
-                >
+                <button type="button" (click)="createGuild()" class="lh-secondary-button text-lg leading-[27px] py-2 px-4">
                     {{ 'settlements.settlement.createGuild' | translate }}
                 </button>
             </div>
@@ -78,26 +58,31 @@
     <div class="lh-panel flex flex-col gap-4">
         <div class="flex xl:flex-row flex-col gap-6">
             <div class="flex flex-col gap-3 flex-1">
-                <p class="text-xl md:text-2xl lg:text-3xl font-bold uppercase text-ink">{{ settlement | settlementDisplayName }}</p>
+                <h1 class="lh-display text-2xl md:text-3xl uppercase text-ink">
+                    {{ data | settlementDisplayName }}
+                </h1>
                 <div class="flex flex-wrap gap-2 items-center">
-                    <app-settlement-badge [tone]="getSettlementTypeTone(settlement)" [uppercase]="true">
-                        {{ getSettlementType(settlement) }}
+                    <app-settlement-badge [tone]="getSettlementTypeTone(data)" [uppercase]="true">
+                        {{ getSettlementType(data) }}
                     </app-settlement-badge>
-                    <app-settlement-badge [tone]="getDiplomacyTone(settlement.diplomacy)" [uppercase]="true">
-                        {{ getDiplomacyLabel(settlement) }}
+                    <app-settlement-badge [tone]="getDiplomacyTone(data.diplomacy)" [uppercase]="true">
+                        {{ getDiplomacyLabel(data) }}
                     </app-settlement-badge>
-                    @for (tag of settlement.tags; track tag.id) {
+                    @for (tag of data.tags; track tag.id) {
                         @if (getTag(tag.id); as tagData) {
                             <app-settlement-tag [tag]="tagData" />
                         }
                     }
                 </div>
                 <div class="flex flex-wrap gap-3 items-center text-[18px] text-ink-2 font-medium">
-                    <span>{{ 'settlements.settlement.created' | translate }} {{ formatTimestamp(settlement.created_at) }}</span>
+                    <span>{{ 'settlements.settlement.created' | translate }} {{ formatTimestamp(data.created_at) }}</span>
                     <span class="w-px h-4 bg-surface-4"></span>
-                    <span>{{ 'settlements.settlement.updated' | translate }} {{ formatTimestamp(settlement.updated_at) }}</span>
+                    <span>{{ 'settlements.settlement.updated' | translate }} {{ formatTimestamp(data.updated_at) }}</span>
                     <span class="w-px h-4 bg-surface-4"></span>
-                    <span>{{ 'settlements.settlement.coordinates' | translate }} {{ settlement.coordinates.x }}, {{ settlement.coordinates.y }}</span>
+                    <span>
+                        {{ 'settlements.settlement.coordinates' | translate }}
+                        {{ data.coordinates.x }}, {{ data.coordinates.y }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -105,11 +90,26 @@
         <div class="flex xl:flex-row flex-col gap-6 items-start">
             <!-- Описание -->
             <div class="flex-1">
-                <p class="text-lg font-semibold text-ink mb-2">{{ 'settlements.settlement.about' | translate }}</p>
-                <p class="text-lg text-ink-2 break-words leading-7 text-justify">{{ settlement.description }}</p>
-                @if (settlement.contact_info) {
-                    <p class="text-lg font-semibold text-ink mt-4 mb-2">{{ 'settlements.settlement.contactInfo' | translate }}</p>
-                    <p class="text-lg text-ink-2 break-words leading-7 text-justify">{{ settlement.contact_info }}</p>
+                <h2 class="text-lg font-semibold text-ink mb-2">{{ 'settlements.settlement.about' | translate }}</h2>
+                <p class="text-lg text-ink-2 break-words leading-7 text-justify">{{ data.description }}</p>
+
+                <div class="flex flex-wrap items-baseline gap-3 mt-4 mb-2">
+                    <h2 class="text-lg font-semibold text-ink">{{ 'settlements.settlement.contactInfo' | translate }}</h2>
+                    @if (isCurrentOwner()) {
+                        <button
+                            type="button"
+                            class="text-base font-semibold text-ink-3 underline decoration-dashed underline-offset-4 hover:text-ink"
+                            [disabled]="busy()"
+                            (click)="editContactInfo()"
+                        >
+                            {{ 'settlements.contactInfo.edit' | translate }}
+                        </button>
+                    }
+                </div>
+                @if (data.contact_info) {
+                    <p class="text-lg text-ink-2 break-words leading-7 text-justify">{{ data.contact_info }}</p>
+                } @else {
+                    <p class="text-lg text-ink-3">{{ 'settlements.contactInfo.empty' | translate }}</p>
                 }
             </div>
 
@@ -120,18 +120,18 @@
                     [class.opacity-40]="isImageUploading()"
                 >
                     <app-image-loader
-                        [src]="settlement.attachments[0].url"
+                        [src]="imageUrl()"
                         [alt]="'settlements.detailed.imageAlt' | translate"
                         class="w-full"
                     />
                 </div>
-                @if (isOwner(settlement)) {
+                @if (isCurrentOwner()) {
                     <input
                         #settlementImageInput
                         type="file"
                         accept="image/*"
                         class="hidden"
-                        (change)="onSettlementImageSelected(settlement, $event)"
+                        (change)="onSettlementImageSelected(data, $event)"
                     />
                     <button
                         type="button"
@@ -142,14 +142,14 @@
                         @if (isImageUploading()) {
                             <div class="flex flex-col items-center gap-2">
                                 <tui-loader [showLoader]="true" [inheritColor]="true" size="m" />
-                                <span class="text-white font-semibold text-base drop-shadow-md"
-                                    >{{ 'settlements.settlement.imageUploading' | translate }}</span
-                                >
+                                <span class="text-white font-semibold text-base drop-shadow-md">
+                                    {{ 'settlements.settlement.imageUploading' | translate }}
+                                </span>
                             </div>
                         } @else {
-                            <span class="text-white font-bold text-lg drop-shadow-md"
-                                >{{ 'settlements.settlement.changeImage' | translate }}</span
-                            >
+                            <span class="text-white font-bold text-lg drop-shadow-md">
+                                {{ 'settlements.settlement.changeImage' | translate }}
+                            </span>
                         }
                     </button>
                 }
@@ -159,52 +159,78 @@
 
     <!-- Население -->
     <div class="lh-panel flex flex-col gap-4">
-        <p class="text-xl font-semibold text-ink">{{ 'settlements.settlement.population' | translate }}</p>
+        <h2 class="lh-display text-2xl text-ink">{{ 'settlements.settlement.population' | translate }}</h2>
         <div class="flex flex-wrap gap-4">
-            @for (leaderPlayer of leaders; track leaderPlayer.user_id) {
+            @for (leaderPlayer of leaders(); track leaderPlayer.user_id) {
                 <app-player-chip [player]="leaderPlayer" [isLeader]="true" />
             }
 
-            @for (item of users; track item.user_id) {
+            @for (item of users(); track item.user_id) {
                 <div class="flex flex-col gap-1 items-start">
                     <app-player-chip
                         [player]="item"
-                        [removable]="canRemoveMember(settlement)"
-                        (remove)="settlementLeave(settlement.id, $event)"
+                        [removable]="canRemoveMember()"
+                        (remove)="settlementLeave(data.id, $event)"
                     />
-                    @if (getMemberRoleNames(settlement, item.user_id); as roleNames) {
-                        @if (roleNames.length) {
-                            <div class="flex flex-wrap gap-1">
-                                @for (roleName of roleNames; track roleName) {
-                                    <span
-                                        class="px-1.5 py-0.5 rounded-md bg-surface-3 text-ink-3 text-xs font-semibold"
-                                        >{{ roleName }}</span
-                                    >
-                                }
-                            </div>
+
+                    <div class="flex flex-wrap items-center gap-1">
+                        @for (roleName of roleNamesOf(data, item.user_id); track roleName) {
+                            <span class="px-1.5 py-0.5 rounded-md bg-surface-3 text-ink-3 text-xs font-semibold">
+                                {{ roleName }}
+                            </span>
                         }
-                    }
+                        @if (isCurrentOwner() && data.roles_enabled !== false) {
+                            <button
+                                type="button"
+                                class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-ink-3 text-xs font-semibold hover:bg-surface-3"
+                                [disabled]="busy()"
+                                (click)="openMemberRoles(item.user_id)"
+                            >
+                                <tui-icon icon="@tui.settings-2" class="size-3.5!" />
+                                {{ 'settlements.roles.member.manage' | translate }}
+                            </button>
+                        }
+                    </div>
                 </div>
             }
         </div>
     </div>
 
+    <!-- Роли -->
+    @if (isCurrentOwner()) {
+        <app-roles-matrix
+            [settlement]="data"
+            [busy]="busy()"
+            (createRole)="createRole()"
+            (editRole)="editRole($event)"
+            (deleteRole)="deleteRole($event)"
+            (togglePermission)="togglePermission($event)"
+        />
+    }
+
+    <!-- Заявки на вступление -->
+    @if (canReviewJoinRequests()) {
+        <app-join-requests-panel [settlement]="data" (membersChanged)="onInvitationResolved()" />
+    }
+
     <!-- Отправленные приглашения -->
-    @if (canInvite(settlement) && sentInvitations?.length) {
+    @if (canInvite() && sentInvitations().length) {
         <div class="lh-panel flex flex-col gap-4">
-            <p class="text-xl font-semibold text-ink">{{ 'settlements.settlement.sentInvitations' | translate }}</p>
+            <h2 class="lh-display text-2xl text-ink">{{ 'settlements.settlement.sentInvitations' | translate }}</h2>
             <div class="flex flex-wrap gap-3">
-                @for (invitation of sentInvitations; track invitation.id; let idx = $index) {
+                @for (invitation of sentInvitations(); track invitation.id) {
                     <div class="flex gap-0.5 justify-center items-center">
-                        <div class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base md:text-base px-3 p-1.5 rounded-l-2xl items-center">
-                            <span>{{ sentUsers?.[idx]?.user_game_name ?? ('settlements.settlement.loading' | translate) }}</span>
+                        <div class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base px-3 p-1.5 rounded-l-2xl items-center">
+                            <span>{{ invitedNameOf(invitation.user_id) }}</span>
                         </div>
-                        <div
-                            (click)="revokeInvitation(settlement.id, invitation.id)"
-                            class="flex cursor-pointer hover:opacity-65 transition-all duration-300 bg-lh-danger/15 h-full justify-center items-center text-danger-ink font-bold text-base md:text-base px-3 p-1.5 rounded-r-2xl"
+                        <button
+                            type="button"
+                            [attr.aria-label]="'settlements.settlement.revoke' | translate"
+                            (click)="revokeInvitation(data.id, invitation.id)"
+                            class="flex hover:opacity-65 transition-opacity duration-300 bg-lh-danger/15 h-full justify-center items-center text-danger-ink font-bold text-base px-3 p-1.5 rounded-r-2xl"
                         >
-                            <tui-icon icon="@tui.circle-arrow-left" class="!text-base md:!text-base" />
-                        </div>
+                            <tui-icon icon="@tui.circle-arrow-left" class="size-4!" />
+                        </button>
                     </div>
                 }
             </div>
@@ -213,35 +239,42 @@
 
     <!-- Кнопки управления -->
     <div class="flex w-full justify-start flex-wrap gap-4">
-        @if (canInvite(settlement)) {
-            <button
-                (click)="invitePlayer(settlement)"
-                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
-            >
+        @if (canInvite()) {
+            <button type="button" (click)="invitePlayer(data)" class="lh-secondary-button text-lg leading-[27px] py-2 px-4">
                 {{ 'settlements.settlement.invitePlayers' | translate }}
             </button>
         }
 
-        @if (isOwner(settlement)) {
-            @if (!isGuild(settlement)) {
-                <button
-                    (click)="levelUp(settlement.type)"
-                    class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
-                >
+        @if (isCurrentOwner()) {
+            @if (!isGuild(data)) {
+                <button type="button" (click)="levelUp(data.type)" class="lh-secondary-button text-lg leading-[27px] py-2 px-4">
                     {{ 'settlements.settlement.levelUp' | translate }}
                 </button>
             }
 
             <button
+                type="button"
+                [disabled]="busy()"
+                (click)="transferOwnership()"
+                class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
+            >
+                {{ 'settlements.ownership.transfer' | translate }}
+            </button>
+
+            <button
+                type="button"
                 disabled
                 [title]="'settlements.settlement.editDisabledTitle' | translate"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {{ 'settlements.settlement.edit' | translate }}
             </button>
-        } @else {
+        }
+
+        @if (canLeave()) {
             <button
-                (click)="settlementLeave(settlement.id, userId)"
+                type="button"
+                (click)="settlementLeave(data.id, userId)"
                 class="lh-secondary-button text-lg leading-[27px] py-2 px-4"
             >
                 {{ 'settlements.settlement.leave' | translate }}

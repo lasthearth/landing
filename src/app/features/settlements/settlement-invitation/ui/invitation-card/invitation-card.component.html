@@ -1,0 +1,48 @@
+@let data = settlement();
+
+<article class="lh-panel lh-panel--bezel invitation-card">
+    <div class="lh-panel__core invitation-card__core">
+        <div class="invitation-card__media">
+            <app-image-loader
+                [src]="imageUrl()"
+                [alt]="'settlements.invitation.imageAlt' | translate:{name: displayName()}"
+                class="block h-full w-full"
+                imageClass="h-full w-full object-cover"
+            />
+        </div>
+
+        <div class="invitation-card__body">
+            <p class="text-base text-ink-3">{{ 'settlements.invitation.kicker' | translate }}</p>
+
+            <h2 class="lh-display text-2xl text-ink break-words">
+                {{ displayName() || ('settlements.invitation.loading' | translate) }}
+            </h2>
+
+            @if (data) {
+                <div class="flex flex-wrap gap-1.5">
+                    <app-settlement-badge [tone]="typeTone(data)" [icon]="typeIcon(data)" [uppercase]="true">
+                        {{ typeLabel(data) }}
+                    </app-settlement-badge>
+                    <app-settlement-badge [tone]="diplomacyTone(data.diplomacy)" [uppercase]="true">
+                        {{ data.diplomacy }}
+                    </app-settlement-badge>
+                </div>
+            }
+
+            <div class="invitation-card__actions">
+                <button type="button" class="lh-cta invitation-card__accept" [disabled]="busy()" (click)="accept()">
+                    {{ 'settlements.invitation.accept' | translate }}
+                    <tui-icon icon="@tui.arrow-right" class="lh-cta__icon size-4!" />
+                </button>
+                <button
+                    type="button"
+                    class="lh-cta lh-cta--ghost invitation-card__reject"
+                    [disabled]="busy()"
+                    (click)="reject()"
+                >
+                    {{ 'settlements.invitation.reject' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</article>

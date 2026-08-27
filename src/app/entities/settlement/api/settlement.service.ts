@@ -214,29 +214,39 @@ export class SettlementService {
      * Получает список отправленных приглашений для поселения.
      *
      * @param settlementId Идентификатор поселения.
+     * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
      * @returns Observable с массивом приглашений.
      */
-    public getSentInvitations(settlementId: string): Observable<ISettlementInvitation[]> {
+    public getSentInvitations(
+        settlementId: string,
+        context?: HttpContext
+    ): Observable<ISettlementInvitation[]> {
         return this.http
             .get<{
                 invitations: ISettlementInvitation[];
-            }>(`${this.baseUrl}/settlements/${settlementId}/invitations`)
-            .pipe(map((data) => data.invitations));
+            }>(`${this.baseUrl}/settlements/${settlementId}/invitations`, { context })
+            .pipe(map((data) => data.invitations ?? []));
     }
 
     /**
      * Отзывает приглашение в поселение.
      *
+     * По спеке тело запроса обязательно и повторяет идентификаторы из пути,
+     * а ответ содержит актуальный список приглашений поселения.
+     *
      * @param settlementId Идентификатор поселения.
      * @param invitationId Идентификатор приглашения.
-     * @returns Observable с результатом операции.
+     * @returns Observable с идентификаторами оставшихся приглашений.
      */
-    public revokeInvitation(settlementId: string, invitationId: string) {
-        return this.http.post(
-            `${this.baseUrl}/settlements/${settlementId}/invitations/${invitationId}:revoke`,
-            {},
-            
-        );
+    public revokeInvitation(settlementId: string, invitationId: string): Observable<string[]> {
+        return this.http
+            .post<{
+                invitation_ids: string[];
+            }>(`${this.baseUrl}/settlements/${settlementId}/invitations/${invitationId}:revoke`, {
+                settlement_id: settlementId,
+                invitation_id: invitationId,
+            })
+            .pipe(map((data) => data.invitation_ids ?? []));
     }
 
     /**
@@ -304,13 +314,13 @@ export class SettlementService {
      * Получает статус верификации поселения пользователя.
      *
      * @param userId Идентификатор пользователя.
+     * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
      * @returns Observable со статусом верификации.
      */
-    public getRequestSettlementStatus$(userId: string) {
+    public getRequestSettlementStatus$(userId: string, context?: HttpContext) {
         return this.http.get<{ status: string; rejection_reason: string }>(
             `${this.baseUrl}/users/${userId}/settlements/verification:status`,
-            {
-            }
+            { context }
         );
     }
 
@@ -318,16 +328,20 @@ export class SettlementService {
 
     /**
      * Подаёт заявку на вступление в поселение.
-     * Ошибки: 409 (уже в поселении/уже подал), 429 (лимит 3 активных), 404.
+     *
+     * Ответ пустой (`CreateJoinRequestResponse` в спеке — пустая схема),
+     * поэтому созданную заявку нужно перечитать через `getMyJoinRequests$`.
+     * Ошибки: 409 (уже в поселении/уже подал), 429 (лимит активных заявок), 404.
      *
      * @param settlementId Идентификатор поселения.
-     * @returns Observable с созданной заявкой.
+     * @returns Observable, завершающийся после создания заявки.
      */
-    public createJoinRequest$(settlementId: string): Observable<IJoinRequest> {
-        return this.http.post<IJoinRequest>(
-            `${this.baseUrl}/settlements/${settlementId}/join-requests`,
-            {}
-        );
+    public createJoinRequest$(settlementId: string): Observable<void> {
+        return this.http
+            .post<Record<string, never>>(`${this.baseUrl}/settlements/${settlementId}/join-requests`, {
+                settlement_id: settlementId,
+            })
+            .pipe(map(() => undefined));
     }
 
     /**
@@ -337,24 +351,24 @@ export class SettlementService {
      * @returns Observable с результатом операции.
      */
     public cancelJoinRequest$(joinRequestId: string) {
-        return this.http.post(
-            `${this.baseUrl}/settlements/join-requests/${joinRequestId}:cancel`,
-            {}
-        );
+        return this.http.post(`${this.baseUrl}/settlements/join-requests/${joinRequestId}:cancel`, {
+            join_request_id: joinRequestId,
+        });
     }
 
     /**
      * Возвращает собственные заявки пользователя на вступление.
      *
      * @param userId Идентификатор пользователя (только свой).
+     * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
      * @returns Observable с массивом заявок.
      */
-    public getMyJoinRequests$(userId: string): Observable<IJoinRequest[]> {
+    public getMyJoinRequests$(userId: string, context?: HttpContext): Observable<IJoinRequest[]> {
         return this.http
             .get<{
                 join_requests: IJoinRequest[];
-            }>(`${this.baseUrl}/users/${userId}/settlements/join-requests`)
-            .pipe(map((data) => data.join_requests));
+            }>(`${this.baseUrl}/users/${userId}/settlements/join-requests`, { context })
+            .pipe(map((data) => data.join_requests ?? []));
     }
 
     // ─── Заявки на вступление (сторона поселения) ───
@@ -364,14 +378,15 @@ export class SettlementService {
      * Требует право `PERMISSION_REVIEW_JOIN_REQUEST` или owner.
      *
      * @param settlementId Идентификатор поселения.
+     * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
      * @returns Observable с массивом заявок.
      */
-    public getJoinRequests$(settlementId: string): Observable<IJoinRequest[]> {
+    public getJoinRequests$(settlementId: string, context?: HttpContext): Observable<IJoinRequest[]> {
         return this.http
             .get<{
                 join_requests: IJoinRequest[];
-            }>(`${this.baseUrl}/settlements/${settlementId}/join-requests`)
-            .pipe(map((data) => data.join_requests));
+            }>(`${this.baseUrl}/settlements/${settlementId}/join-requests`, { context })
+            .pipe(map((data) => data.join_requests ?? []));
     }
 
     /**
@@ -422,7 +437,11 @@ export class SettlementService {
         return this.http
             .post<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/settlements/${settlementId}/roles`, { name, permissions })
+            }>(`${this.baseUrl}/settlements/${settlementId}/roles`, {
+                settlement_id: settlementId,
+                name,
+                permissions,
+            })
             .pipe(map((data) => data.settlement));
     }
 
@@ -442,7 +461,11 @@ export class SettlementService {
         return this.http
             .patch<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/settlements/${settlementId}/roles/${roleId}`, patch)
+            }>(`${this.baseUrl}/settlements/${settlementId}/roles/${roleId}`, {
+                settlement_id: settlementId,
+                role_id: roleId,
+                ...patch,
+            })
             .pipe(map((data) => data.settlement));
     }
 
@@ -477,7 +500,11 @@ export class SettlementService {
         return this.http
             .post<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/settlements/${settlementId}/members/${userId}/roles`, { role_id: roleId })
+            }>(`${this.baseUrl}/settlements/${settlementId}/members/${userId}/roles`, {
+                settlement_id: settlementId,
+                user_id: userId,
+                role_id: roleId,
+            })
             .pipe(map((data) => data.settlement));
     }
 
@@ -515,7 +542,10 @@ export class SettlementService {
         return this.http
             .post<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/settlements/${settlementId}/ownership:transfer`, { to_user_id: toUserId })
+            }>(`${this.baseUrl}/settlements/${settlementId}/ownership:transfer`, {
+                settlement_id: settlementId,
+                to_user_id: toUserId,
+            })
             .pipe(map((data) => data.settlement));
     }
 
@@ -543,7 +573,10 @@ export class SettlementService {
         return this.http
             .patch<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/settlements/${settlementId}/contact-info`, { contact_info: contactInfo })
+            }>(`${this.baseUrl}/settlements/${settlementId}/contact-info`, {
+                settlement_id: settlementId,
+                contact_info: contactInfo,
+            })
             .pipe(map((data) => data.settlement));
     }
 
@@ -557,10 +590,10 @@ export class SettlementService {
      * @returns Observable с результатом операции.
      */
     public adminAddOwner$(settlementId: string, userId: string) {
-        return this.http.post(
-            `${this.baseUrl}/admin/settlements/${settlementId}/owners`,
-            { user_id: userId }
-        );
+        return this.http.post(`${this.baseUrl}/admin/settlements/${settlementId}/owners`, {
+            settlement_id: settlementId,
+            user_id: userId,
+        });
     }
 
     /**
@@ -583,10 +616,25 @@ export class SettlementService {
      * @returns Observable с результатом операции.
      */
     public adminSetRolesEnabled$(settlementId: string, enabled: boolean) {
-        return this.http.post(
-            `${this.baseUrl}/admin/settlements/${settlementId}/roles:set-enabled`,
-            { enabled }
-        );
+        return this.http.post(`${this.baseUrl}/admin/settlements/${settlementId}/roles:set-enabled`, {
+            settlement_id: settlementId,
+            enabled,
+        });
+    }
+
+    /**
+     * Изменяет дипломатический статус поселения.
+     *
+     * @param settlementId Идентификатор поселения.
+     * @param diplomacy Новый дипломатический статус.
+     * @returns Observable с обновлённым поселением.
+     */
+    public adminUpdateSettlement$(settlementId: string, diplomacy: string): Observable<ISettlement> {
+        return this.http
+            .patch<{
+                settlement: ISettlement;
+            }>(`${this.baseUrl}/admin/settlements/${settlementId}`, { diplomacy })
+            .pipe(map((data) => data.settlement));
     }
 
     /**

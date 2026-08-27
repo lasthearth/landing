@@ -1,0 +1,39 @@
+<div class="lh-dialog-card min-w-[24rem]">
+    <h2 class="lh-dialog-title">{{ 'settlements.ownership.dialog.title' | translate }}</h2>
+
+    <p class="lh-dialog-text">{{ 'settlements.ownership.dialog.text' | translate }}</p>
+
+    @if (candidates().length === 0) {
+        <p class="lh-dialog-text">{{ 'settlements.ownership.dialog.noCandidates' | translate }}</p>
+    } @else {
+        <ul class="flex flex-col gap-1">
+            @for (player of candidates(); track player.user_id) {
+                <li>
+                    <button
+                        type="button"
+                        class="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-lg text-ink-2 transition-colors duration-200 hover:bg-surface-3"
+                        [class.bg-surface-3]="selectedUserId() === player.user_id"
+                        [attr.aria-pressed]="selectedUserId() === player.user_id"
+                        (click)="select(player.user_id)"
+                    >
+                        {{ player.user_game_name }}
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+
+    <div class="lh-dialog-actions">
+        <button type="button" class="lh-dialog-button lh-dialog-button-secondary" (click)="cancel()">
+            {{ 'settlements.ownership.dialog.cancel' | translate }}
+        </button>
+        <button
+            type="button"
+            class="lh-dialog-button lh-dialog-button-danger"
+            [disabled]="!selectedUserId()"
+            (click)="confirm()"
+        >
+            {{ 'settlements.ownership.dialog.confirm' | translate }}
+        </button>
+    </div>
+</div>

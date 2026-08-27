@@ -1,0 +1,74 @@
+/**
+ * Кнопка заявки на вступление.
+ * Своей поверхности не имеет: живёт внутри карточки селения и диалога
+ * «Подробнее», поэтому рисует только текст и штатный ghost-CTA.
+ */
+:host {
+    display: block;
+}
+
+/**
+ * Компактный ghost-CTA: полноразмерная пилюля рядом с «Подробнее»
+ * перевешивала бы содержимое карточки.
+ */
+.join-request__apply {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+.join-request__apply:disabled {
+    opacity: 0.55;
+}
+
+.join-request__sent {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/**
+ * Состояние «Заявка отправлена» — констатация, а не действие,
+ * поэтому это текст со значком, а не кнопка.
+ */
+.join-request__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-weight: 600;
+    color: var(--lh-peace);
+}
+
+/**
+ * Отзыв заявки — вторичное действие, подчёркнутый текст.
+ */
+.join-request__cancel {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-weight: 600;
+    color: var(--lh-ink-3);
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 3px;
+    transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.join-request__cancel:hover:not(:disabled) {
+    color: var(--lh-danger-ink);
+}
+
+.join-request__cancel:disabled {
+    opacity: 0.55;
+}
+
+.join-request__hint {
+    font-size: 0.9375rem;
+    color: var(--lh-ink-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .join-request__cancel {
+        transition: none;
+    }
+}

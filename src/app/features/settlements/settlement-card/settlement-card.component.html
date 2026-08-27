@@ -138,17 +138,21 @@
                     }
                 </div>
 
-                <button
-                    type="button"
-                    (click)="openDetails()"
-                    class="group text-ink-2 border-wood/50 hover:border-wood mt-1 transition-all self-end duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1"
-                >
-                    {{ 'settlements.card.more' | translate }}
-                    <tui-icon
-                        icon="@tui.arrow-right"
-                        class="size-4! transition-transform duration-300 group-hover:translate-x-0.5"
-                    />
-                </button>
+                <div class="flex flex-wrap items-center justify-between gap-3 mt-1">
+                    <app-join-request-button [settlementId]="data().id" />
+
+                    <button
+                        type="button"
+                        (click)="openDetails()"
+                        class="group text-ink-2 border-wood/50 hover:border-wood transition-all ml-auto duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1"
+                    >
+                        {{ 'settlements.card.more' | translate }}
+                        <tui-icon
+                            icon="@tui.arrow-right"
+                            class="size-4! transition-transform duration-300 group-hover:translate-x-0.5"
+                        />
+                    </button>
+                </div>
             </div>
         </div>
     </div>

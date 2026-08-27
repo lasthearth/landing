@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-4 w-full">
         <div class="shrink-0 relative w-full shadow-md shadow-black/10 overflow-clip rounded-xl">
             <app-image-loader
-                [src]="settlementData.attachments[0].url ? settlementData.attachments[0].url : '/images/screenshots/screen_1.png'"
+                [src]="imageUrl"
                 [alt]="'settlements.detailed.imageAlt' | translate"
             />
         </div>
@@ -41,6 +41,8 @@
                     <app-player-chip [player]="item" />
                 }
             </div>
+
+            <app-join-request-button [settlementId]="settlementData.id" />
         </div>
     </div>
 </div>

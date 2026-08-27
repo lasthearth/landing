@@ -1,0 +1,61 @@
+/**
+ * Карточка входящего приглашения.
+ * Двойная фаска как у карточки селения в списке: приглашение — то же
+ * селение, только с решением вместо ссылки «Подробнее».
+ */
+:host {
+    display: block;
+}
+
+.invitation-card__core {
+    display: flex;
+    flex-direction: column;
+    overflow: clip;
+}
+
+.invitation-card__media {
+    block-size: 10rem;
+    flex-shrink: 0;
+}
+
+.invitation-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+}
+
+.invitation-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 0.25rem;
+}
+
+.invitation-card__accept,
+.invitation-card__reject {
+    padding: 0.625rem 1.25rem;
+    font-size: 1rem;
+}
+
+.invitation-card__accept:disabled,
+.invitation-card__reject:disabled {
+    opacity: 0.55;
+    transform: none;
+}
+
+/* От планшета изображение уходит влево: карточка перестаёт быть колонкой. */
+@media (min-width: 48rem) {
+    .invitation-card__core {
+        flex-direction: row;
+    }
+
+    .invitation-card__media {
+        inline-size: 40%;
+        block-size: auto;
+    }
+
+    .invitation-card__body {
+        flex: 1 1 0%;
+    }
+}

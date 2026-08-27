@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { SettlementService, ISettlement, getSettlementTypeByKey, getSettlementDisplayName, isGuildSettlement } from '@entities/settlement';
 import { IPlayer, UserService } from '@entities/user';
 import { SettlementTagStore } from '@entities/settlement-tag';
+import { MyJoinRequestsStore } from './join-request';
 import { SettlementCardComponent } from './settlement-card/settlement-card.component';
 import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
@@ -72,6 +73,12 @@ export class SettlementsComponent {
     private readonly tagStore = inject(SettlementTagStore);
     private readonly i18n = inject(I18nService);
 
+    /**
+     * Хранилище собственных заявок игрока на вступление.
+     * Загружается один раз на страницу и раздаётся карточкам.
+     */
+    private readonly joinRequests = inject(MyJoinRequestsStore);
+
     protected readonly loading = signal<boolean>(false);
     protected readonly error = signal<boolean>(false);
     protected readonly sortState = signal<{ field: SortField; direction: SortDirection }>({
@@ -122,6 +129,7 @@ export class SettlementsComponent {
 
     constructor() {
         this.tagStore.loadTags$().subscribe();
+        this.joinRequests.load();
         this.loadSettlements();
     }
 

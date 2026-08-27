@@ -1,0 +1,19 @@
+@if (needsVerification()) {
+    <p class="join-request__hint">{{ 'settlements.joinRequest.needVerification' | translate }}</p>
+} @else if (canApply()) {
+    @if (sent()) {
+        <div class="join-request__sent">
+            <span class="join-request__status">
+                <tui-icon icon="@tui.check" class="size-4!" />
+                {{ 'settlements.joinRequest.sentState' | translate }}
+            </span>
+            <button type="button" class="join-request__cancel" [disabled]="busy()" (click)="cancel()">
+                {{ 'settlements.joinRequest.cancel' | translate }}
+            </button>
+        </div>
+    } @else {
+        <button type="button" class="lh-cta lh-cta--ghost join-request__apply" [disabled]="busy()" (click)="apply()">
+            {{ 'settlements.joinRequest.apply' | translate }}
+        </button>
+    }
+}
