@@ -31,6 +31,7 @@ export const SETTLEMENTS_I18N = {
                 suzerainLabel: 'БИ:',
                 more: 'Подробнее',
                 suzerainShort: 'БИ',
+                tier: 'Уровень селения: {{tier}} из 5',
             },
             diplomacy: {
                 peaceful: 'Миролюбивый',
@@ -70,6 +71,19 @@ export const SETTLEMENTS_I18N = {
                 population: 'Население',
                 residentsShort: 'жит.',
                 onlineShort: 'онл.',
+            },
+            player: {
+                online: 'В сети',
+                offline: 'Не в сети',
+                leader: 'Глава',
+                loading: 'Загрузка статистики...',
+                noStats: 'Статистика недоступна',
+                remove: 'Исключить игрока',
+                stats: {
+                    hours: 'Часов в игре',
+                    kills: 'Убийств',
+                    deaths: 'Смертей',
+                },
             },
             settlement: {
                 inviteTitle: 'Вас приглашают вступить в селение',
@@ -256,6 +270,7 @@ export const SETTLEMENTS_I18N = {
                 suzerainLabel: 'BI:',
                 more: 'More details',
                 suzerainShort: 'GS',
+                tier: 'Settlement tier: {{tier}} of 5',
             },
             diplomacy: {
                 peaceful: 'Peaceful',
@@ -295,6 +310,19 @@ export const SETTLEMENTS_I18N = {
                 population: 'Population',
                 residentsShort: 'res.',
                 onlineShort: 'onl.',
+            },
+            player: {
+                online: 'Online',
+                offline: 'Offline',
+                leader: 'Leader',
+                loading: 'Loading stats...',
+                noStats: 'Stats unavailable',
+                remove: 'Remove player',
+                stats: {
+                    hours: 'Hours played',
+                    kills: 'Kills',
+                    deaths: 'Deaths',
+                },
             },
             settlement: {
                 inviteTitle: 'You are invited to join the settlement',

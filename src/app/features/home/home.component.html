@@ -16,6 +16,7 @@
                 <app-image-loader
                     [src]="item.image"
                     [alt]="item.header | translate"
+                    [eager]="$first"
                     class="h-full w-full md:h-[600px]"
                     [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
                 />

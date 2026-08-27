@@ -2,7 +2,7 @@ import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 import { LocalStorageService } from '@core/services/local-storage.service';
-import { ALL_TRANSLATIONS } from './translations';
+import { TRANSLATIONS } from './translations';
 import { Language, Translations, TranslationParams, TranslationValue } from './i18n.types';
 
 /**
@@ -43,7 +43,7 @@ export class I18nService {
     constructor() {
         if (isPlatformBrowser(this.platformId)) {
             const savedLanguage = this.localStorageService.getItem<Language>(LANGUAGE_STORAGE_KEY);
-            if (savedLanguage && savedLanguage in ALL_TRANSLATIONS) {
+            if (savedLanguage && savedLanguage in TRANSLATIONS) {
                 this.language.set(savedLanguage);
             }
         }
@@ -63,7 +63,7 @@ export class I18nService {
         if (key == null) {
             return '';
         }
-        const value = this.getNestedValue(ALL_TRANSLATIONS[this.language()], key);
+        const value = this.getNestedValue(TRANSLATIONS[this.language()], key);
         if (typeof value !== 'string') {
             return key;
         }
@@ -76,7 +76,7 @@ export class I18nService {
      * @param language Новый язык.
      */
     public setLanguage(language: Language): void {
-        if (!(language in ALL_TRANSLATIONS)) {
+        if (!(language in TRANSLATIONS)) {
             return;
         }
         this.language.set(language);

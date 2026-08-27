@@ -94,9 +94,9 @@
     </div>
 
     @if (loading()) {
-        <div class="flex flex-wrap justify-center items-stretch gap-6 pt-0">
+        <div class="settlements-grid">
             @for (_ of skeletonItems; track $index) {
-                <app-settlement-card-skeleton class="card" />
+                <app-settlement-card-skeleton />
             }
         </div>
     } @else if (error()) {
@@ -112,13 +112,12 @@
             [description]="'settlements.list.empty.description' | translate"
         />
     } @else {
-        <div class="flex flex-wrap justify-center items-stretch gap-6 pt-0 lh-stagger-list">
+        <div class="settlements-grid lh-stagger-list">
             @for (item of sortedSettlements(); track item.id) {
                 <app-settlement-card
                     [data]="item"
                     [players]="item.players"
                     (tagsChanged)="loadSettlements()"
-                    class="card"
                 />
             }
         </div>

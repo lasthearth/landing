@@ -11,20 +11,21 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { TuiPulse } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import {
     ISettlement,
     getSettlementTypeByKey,
     getSettlementDisplayName,
     getSettlementTypeTone,
+    getSettlementTypeIcon,
+    getSettlementTier,
     getDiplomacyTone,
     isGuildSettlement,
     SettlementBadgeComponent,
     SettlementBadgeTone,
     SettlementDisplayNamePipe,
 } from '@entities/settlement';
-import { IPlayer, UserService } from '@entities/user';
+import { IPlayer, UserService, PlayerChipComponent } from '@entities/user';
 import { SettlementTagStore, SettlementTagComponent } from '@entities/settlement-tag';
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
@@ -39,13 +40,13 @@ import { SettlementDetailedComponent } from '../settlement-detailed/settlement-d
     styleUrl: './settlement-card.component.less',
     imports: [
         CommonModule,
-        TuiPulse,
         TuiIcon,
         ImageLoaderComponent,
         TranslatePipe,
         SettlementBadgeComponent,
         SettlementTagComponent,
         SettlementDisplayNamePipe,
+        PlayerChipComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -108,6 +109,37 @@ export class SettlementCardComponent {
     );
 
     /**
+     * Максимум чипов жителей, помещающихся в карточку (включая лидера).
+     */
+    private readonly MAX_VISIBLE_CHIPS = 5;
+
+    /**
+     * Участники, влезающие в карточку с учётом места под лидера.
+     * Остаток сворачивается в бейдж «+N».
+     */
+    protected readonly visibleUsers: Signal<IPlayer[]> = computed(() => {
+        const reserveForLeader = this.leader() ? 1 : 0;
+
+        return this.users().slice(0, this.MAX_VISIBLE_CHIPS - reserveForLeader);
+    });
+
+    /**
+     * Число скрытых жителей, не поместившихся в карточку.
+     */
+    protected readonly hiddenCount: Signal<number> = computed(() =>
+        Math.max(0, this.users().length - this.visibleUsers().length)
+    );
+
+    /**
+     * Ссылка на изображение селения с заглушкой.
+     * Обращение к `attachments[0]` через optional chaining: у части селений
+     * массив вложений приходит пустым, и шаблон падал на чтении `.url`.
+     */
+    protected readonly imageUrl: Signal<string> = computed(
+        () => this.data().attachments[0]?.url || '/images/screenshots/screen_1.png'
+    );
+
+    /**
      * Количество онлайн-участников селения.
      */
     protected readonly onlineCount: Signal<number> = computed(
@@ -164,6 +196,22 @@ export class SettlementCardComponent {
     }
 
     /**
+     * Уровень селения от 1 до 5; 0 — шкала не применима.
+     *
+     * Закреплённое селение исключено из шкалы наравне с гильдией: его тип на
+     * бэкенде — лагерь, и честная шкала показала бы «1/5» у поместья
+     * наместника, что противоречит и подписи типа, и золотой оправе.
+     */
+    protected readonly tier: Signal<number> = computed(() =>
+        this.isPinned(this.data()) ? 0 : getSettlementTier(this.data())
+    );
+
+    /**
+     * Позиции засечек шкалы уровня. Пять — максимальный уровень селения.
+     */
+    protected readonly tierScale: readonly number[] = [1, 2, 3, 4, 5];
+
+    /**
      * Возвращает тон бейджа типа селения.
      *
      * @param settlement Селение.
@@ -171,6 +219,22 @@ export class SettlementCardComponent {
      */
     protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
         return getSettlementTypeTone(settlement);
+    }
+
+    /**
+     * Возвращает иконку типа селения.
+     * Закреплённое селение получает иконку максимального тира (замок),
+     * несмотря на то что его тип на бэкенде — лагерь.
+     *
+     * @param settlement Селение.
+     * @returns Имя иконки Taiga UI.
+     */
+    protected getSettlementTypeIcon(settlement: ISettlement): string {
+        if (this.isPinned(settlement)) {
+            return '@tui.castle';
+        }
+
+        return getSettlementTypeIcon(settlement);
     }
 
     /**

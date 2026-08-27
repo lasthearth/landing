@@ -43,7 +43,7 @@
             <div class="flex items-center justify-between p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2 lh-card-glow">
                 <div class="flex items-center gap-4">
                     <app-image-loader
-                        [src]="selectedPlayer()?.avatar || '/default-avatar.png'"
+                        [src]="selectedPlayer()?.avatar || '/default-avatar.webp'"
                         class="size-10 shrink-0"
                         containerClass="rounded-full"
                         objectFit="cover"
@@ -60,7 +60,7 @@
                         <span class="text-base text-lh-primary/60">{{ 'admin.coins.balance' | translate }}</span>
                         <span class="text-xl font-bold text-lh-accent inline-flex items-center gap-1">
                             {{ playerBalance() ?? '—' }}
-                            <img src="/splinter-of-spark.png" [alt]="'admin.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
+                            <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
                         </span>
                     </div>
                     <button

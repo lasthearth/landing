@@ -3,87 +3,172 @@
 }
 
 /**
- * Внутренний пергаментный блок карточки.
+ * Карточка селения — двойная фаска.
+ *
+ * Внешний блок работает оправой: его падинг превращается в зазор рамки,
+ * а цвет уровня селения красит саму оправу. До этого цвет уровня жил в
+ * 4px-полоске поверх карточки — она читалась как декор и не сообщала,
+ * что именно кодирует цвет.
+ *
+ * Радиусы концентричны: радиус ядра = радиус оправы минус зазор, иначе
+ * дуги внешнего и внутреннего контура расходятся и рамка в углах выглядит
+ * толще, чем по сторонам.
+ */
+.settlement-card {
+    --card-radius: 0.875rem;
+    --card-gap: 0.3125rem;
+    --card-accent: var(--lh-border-strong);
+
+    padding: var(--card-gap);
+    border-radius: var(--card-radius);
+    background-color: color-mix(in srgb, var(--card-accent) 30%, var(--lh-surface-3));
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.14),
+        inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 45%, transparent),
+        var(--lh-shadow-soft);
+    transition:
+        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+/**
+ * Цвета уровней. Лагерь оставлен на нейтральной границе: у первого
+ * уровня не должно быть более заметной оправы, чем у пятого.
+ */
+.settlement-card--village {
+    --card-accent: var(--lh-accent-3);
+}
+
+.settlement-card--township {
+    --card-accent: var(--lh-rank-iron);
+}
+
+.settlement-card--city {
+    --card-accent: var(--lh-rank-silver);
+}
+
+.settlement-card--region,
+.settlement-card--pinned {
+    --card-accent: var(--lh-medal-gold);
+}
+
+.settlement-card--guild {
+    --card-accent: var(--lh-leader);
+}
+
+.settlement-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.18),
+        inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 80%, transparent),
+        var(--lh-shadow-lift);
+}
+
+/**
+ * Ядро карточки — пергаментная поверхность с содержимым.
  */
 .settlement-card-inner {
-    position: relative;
-    overflow: hidden;
+    border-radius: calc(var(--card-radius) - var(--card-gap));
     background-color: var(--lh-surface);
     background-image: url('/image_1.webp');
     background-repeat: repeat;
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.12),
+        0 1px 2px rgba(26, 17, 13, 0.08);
+    overflow: hidden;
 }
 
 /**
- * Верхний акцентный бар, обозначающий tier селения.
+ * Медиа-контейнер. Обрезает изображение при масштабировании на ховере.
+ */
+.settlement-card__media {
+    overflow: hidden;
+}
+
+.settlement-card__media app-image-loader {
+    display: block;
+    height: 100%;
+    width: 100%;
+    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+}
+
+.settlement-card:hover .settlement-card__media app-image-loader {
+    transform: scale(1.04);
+}
+
+/**
+ * Шкала уровня: пять засечек, закрашенных до текущего уровня, плюс числовая
+ * подпись «4/5».
  *
- * Выполнен в виде сплошной линии без анимации — сохраняет цветовое различие
- * уровней, но органично вписывается в пергаментный стиль сайта.
+ * Засечки — второй признак уровня помимо цвета оправы и иконки типа: цвет сам
+ * по себе недоступен дальтоникам. Числовая подпись добавлена потому, что без
+ * неё пять безымянных засечек не сообщают, что именно они шкалируют.
  */
-.settlement-card-inner::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.settlement-card__tier {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-shrink: 0;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.375rem;
+    background-color: color-mix(in srgb, var(--card-accent) 12%, transparent);
 }
 
-.settlement-card--camp .settlement-card-inner::before {
-    opacity: 1;
-    background-color: var(--lh-leader);
+.settlement-card__tier-pips {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
 }
 
-/**
- * Торговый акцент — Гильдия.
- */
-.settlement-card--guild .settlement-card-inner::before {
-    opacity: 1;
-    background-color: var(--lh-border-strong);
-    box-shadow: 0 1px 4px color-mix(in srgb, var(--lh-border-strong) 25%, transparent);
+.settlement-card__tier-pip {
+    inline-size: 0.25rem;
+    block-size: 0.6875rem;
+    border-radius: 1px;
+    background-color: color-mix(in srgb, var(--lh-ink) 20%, transparent);
 }
 
-/**
- * Деревянный акцент — Деревня.
- */
-.settlement-card--village .settlement-card-inner::before {
-    opacity: 1;
-    background-color: var(--lh-border-strong);
-    box-shadow: 0 1px 4px color-mix(in srgb, var(--lh-border-strong) 25%, transparent);
+.settlement-card__tier-pip--filled {
+    background-color: color-mix(in srgb, var(--card-accent) 85%, var(--lh-ink));
 }
 
-/**
- * Железный акцент — Посёлок.
- */
-.settlement-card--township .settlement-card-inner::before {
-    opacity: 1;
-    background-color: var(--lh-rank-iron);
-    box-shadow: 0 1px 4px color-mix(in srgb, var(--lh-rank-iron) 25%, transparent);
+.settlement-card__tier-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--lh-ink-3);
 }
 
 /**
- * Серебряный акцент — Город.
+ * Строка счётчиков: население и онлайн.
+ * Числа выключены табличными цифрами — иначе при сортировке списка
+ * числа в соседних карточках визуально «пляшут».
  */
-.settlement-card--city .settlement-card-inner::before {
-    opacity: 1;
-    background-color: var(--lh-rank-silver);
-    box-shadow: 0 1px 4px color-mix(in srgb, var(--lh-rank-silver) 25%, transparent);
+.settlement-card__meta {
+    font-variant-numeric: tabular-nums;
 }
 
-/**
- * Золотой акцент — Региональная провинция и закреплённое селение.
- */
-.settlement-card--region .settlement-card-inner::before,
-.settlement-card--pinned .settlement-card-inner::before {
-    opacity: 1;
-    background-color: var(--lh-medal-gold);
-    box-shadow: 0 1px 4px color-mix(in srgb, var(--lh-medal-gold) 30%, transparent);
+.settlement-card__meta-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 999px;
+    background: var(--color-lh-offline);
+}
+
+.settlement-card__meta-dot--online {
+    background: var(--color-lh-online);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-lh-online) 20%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .settlement-card-inner::before {
+    .settlement-card,
+    .settlement-card__media app-image-loader {
         transition: none;
+    }
+
+    .settlement-card:hover,
+    .settlement-card:hover .settlement-card__media app-image-loader {
+        transform: none;
     }
 }

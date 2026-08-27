@@ -78,6 +78,10 @@ function getConfig() {
  */
 export const appConfig: ApplicationConfig = {
     providers: [
+        // `provideAnimationsAsync` здесь не даёт выигрыша: `@taiga-ui/cdk`
+        // статически импортирует `@angular/animations/browser` в
+        // `TUI_REMOVED_ELEMENT`, поэтому движок всё равно оказывается
+        // в начальном графе.
         provideAnimations(),
         provideEventPlugins(),
         provideZoneChangeDetection({ eventCoalescing: true }),

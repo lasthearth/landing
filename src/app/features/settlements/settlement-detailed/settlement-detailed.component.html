@@ -34,25 +34,11 @@
             <p class="text-lg font-semibold text-ink">{{ 'settlements.detailed.population' | translate }}</p>
             <div class="flex flex-wrap gap-2">
                 @if (leader; as leaderPlayer) {
-                    <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base px-3 py-1.5 rounded-xl items-center">
-                        @if (leaderPlayer.is_online) {
-                            <tui-pulse class="self-center mr-2 online" />
-                        } @else {
-                            <tui-pulse [playing]="false" class="self-center mr-2 offline" />
-                        }
-                        <span>{{ leaderPlayer.user_game_name }}</span>
-                    </div>
+                    <app-player-chip [player]="leaderPlayer" [isLeader]="true" />
                 }
 
                 @for (item of users; track item.user_id) {
-                    <div class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base px-3 py-1.5 rounded-xl items-center">
-                        @if (item.is_online) {
-                            <tui-pulse class="self-center mr-2 online" />
-                        } @else {
-                            <tui-pulse [playing]="false" class="self-center mr-2 offline" />
-                        }
-                        <span>{{ item.user_game_name }}</span>
-                    </div>
+                    <app-player-chip [player]="item" />
                 }
             </div>
         </div>

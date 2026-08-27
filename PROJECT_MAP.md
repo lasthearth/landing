@@ -23,6 +23,42 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-3 Карточка селения, тултип жителя и цвет тегов
+
+> Переработана иерархия карточки в списке селений; исправлен контраст тултипа игрока (был тёмный текст на тёмном фоне) и цвет тегов в тёмной теме.
+
+- Карточка (`features/settlements/settlement-card/`):
+  - Двойная фаска: внешний блок `.settlement-card` — оправа, её падинг (`--card-gap: 0.3125rem`) даёт зазор рамки, `.settlement-card-inner` — пергаментное ядро. Радиус ядра = `calc(--card-radius - --card-gap)`, иначе дуги контуров расходятся. Скругление уменьшено с `1rem` (`rounded-2xl`) до `0.875rem`.
+  - Цвет уровня переехал с 4px-полоски поверх карточки на саму оправу (`--card-accent`): полоска читалась как декор и не сообщала, что кодирует. Уровни: лагерь — нейтральная граница, деревня — `--lh-accent-3`, посёлок — `--lh-rank-iron`, город — `--lh-rank-silver`, провинция и закреплённое — `--lh-medal-gold`, гильдия — `--lh-leader`.
+  - Уровень стал явным, а не только цветовым: шкала `.settlement-card__tier` рядом с названием — пять засечек, закрашенных до текущего уровня, плюс подпись «4/5» (цвет сам по себе недоступен дальтоникам). Уровень считает `getSettlementTier` (`entities/settlement/lib/`). Гильдия и закреплённое селение шкалу не показывают: у них тип на бэкенде — лагерь, честная шкала дала бы «1/5» у поместья наместника.
+  - Третий признак типа — иконка в бейдже (`getSettlementTypeIcon`): `tent` / `house` / `building` / `building-2` / `castle` / `handshake`.
+  - Порядок бейджей: тип и дипломатия первыми, сюзеренство и теги после — раньше сюзеренство выдавливало тип во вторую строку.
+  - Счётчики населения и онлайна вынесены из ряда бейджей в строку метрик (`.settlement-card__meta`, иконка `@tui.users` + точка статуса): бейдж — классификация, счётчик — метрика.
+  - Ховер: подъём на 2px + оправа набирает насыщенность + `scale(1.04)` изображения. Трансформ на оправе, а не на хосте — иначе соседние карточки во flex-раскладке сдвигались. Всё снимается в `prefers-reduced-motion`.
+  - `max-h-[400px]` ограничен префиксом `xl:`: ниже этой ширины карточка складывается в колонку, и общий кап резал список жителей и кнопку «Подробнее».
+  - `imageUrl()` — computed с optional chaining по `attachments[0]`: у части селений массив вложений пуст, шаблон падал на чтении `.url`.
+  - Кнопка тегов и «Подробнее» стали `<button type="button">` (были `div` с `(click)`), у «Подробнее» добавлена стрелка `@tui.arrow-right`.
+  - `shared/ui/skeletons/settlement-card-skeleton.component.ts` повторяет двойную фаску и новые радиусы.
+- Тултип жителя (`entities/user/ui/player-chip/`):
+  - Глобальное правило `tui-hint` в `styles.css` (тёмный фон + белый текст, оба с `!important`) перебивало `data-appearance='lh-player'`, и разметка тултипа красила текст в `--lh-ink` — тёмное по тёмному, ~1.2:1. Правило ограничено `:not([data-appearance='lh-player'])`, а appearance тултипа усилен удвоенным селектором.
+  - Роль и статус собраны в один ряд (`.player-tooltip__badges`) — раньше три строки текста были выше аватара и голова тултипа теряла выравнивание. Ширина хоста зафиксирована `min-inline-size: 19rem`, колонки статистики разделены линиями.
+- Теги (`entities/settlement-tag/ui/settlement-tag/`):
+  - Цвет тега приходит из БД произвольным и раньше шёл прямо в `color` — тёмно-красный тег давал ~1.3:1 в тёмной теме. Теперь цвет прокидывается как `--tag-color`, а фон/текст/обводка выводятся в LESS через `color-mix` с `--lh-ink`, т.е. подстраиваются под тему (замер: 10.6:1 светлая, 5.1:1 тёмная).
+  - Добавлен `settlement-tag.component.less`; геометрия бейджа переехала из Tailwind-строки в класс `.settlement-tag`.
+
+### 3.-2 Чип игрока + тултип со статистикой в списках населения
+
+> Три дублировавшихся блока плашек жителей (карточка селения, диалог деталей, страница управления) заменены единым компонентом `app-player-chip`. При наведении — тултип с ленивой статистикой игрока.
+
+- Файлы:
+  - `src/app/entities/user/ui/player-chip/player-chip.component.{ts,html,less}` — `app-player-chip`, входы `player`, `isLeader`, `removable`; выход `remove`. Экспортируется из `@entities/user`.
+  - `src/app/entities/user/model/i-player-stats.ts` — `IPlayerStats` (ответ `GET /{name}/stats`, StatsService).
+  - `UserService.getPlayerStats$(name)` — статистика игрока; при 404 возвращает `null`.
+- Дизайн чипа: нейтральная плашка для всех, аватар x48 как ведущий элемент, точка статуса (зелёная/серая), лидер помечен короной `@tui.crown` (не другим фоном). Кнопка кика `@tui.user-round-x` — только на странице управления (`removable`).
+- Тултип (`tuiHint`, floating): аватар + имя + статус, ниже — часы/убийства/смерти. Статистика грузится ЛЕНИВО при первом показе тултипа (`tuiHintVisible`), один раз (флаг `statsRequested`), поэтому наведение на 20 чипов не даёт 20 запросов сразу. Игроки вне сервера статистики → «Статистика недоступна».
+- Потребители переведены на компонент: `settlement-card`, `settlement-detailed`, `features/settlements/settlement`. Удалены дубли `tui-pulse.online/.offline` + имя из трёх шаблонов.
+- Переводы: ветка `settlements.player.*` (ru/en) в `settlements.i18n.ts`.
+
 ### 3.-1 Роли, owner-модель и заявки на вступление в поселения
 
 > `Settlement.leader` deprecated. Лидеры теперь — члены с `role_ids`, содержащими `"owner"` (их может быть несколько). Добавлены роли, права, заявки на вступление, передача владения, контакты.
@@ -316,7 +352,51 @@ src/app/
 
 - `LH | feat: add diplomacy, gallery, videos, game chat, radio widget; remove secrets from configs`
 - Сборка: `npm run build` проходит, 11 prerender-роутов.
-- Предупреждение: бандл превышает бюджет 2.50 MB (~2.65 MB).
+
+### 7.0 Оптимизация бандла и загрузки
+
+> Начальный бандл сокращён с ~2.66 MB (raw) / бюджет не проходил до ~1.25 MB raw
+> (~257 kB gzip). `public/` уменьшен с ~50 MB до ~4.8 MB.
+
+- **Роуты ленивые** (`routes/app.routes.ts`): все страницы через `loadComponent`
+  (были статические `import`). Правила, юр-страницы и админка больше не в
+  начальном чанке.
+- **Ленивые словари i18n**: `translations/index.ts` грузит только общие словари
+  (common/header/footer/shared/ticket/news). Остальные (`rules` 224 kB,
+  `legal` 64 kB, `admin`, `market`, ...) подмешиваются вместе со страницей через
+  `loadPage()` (`core/i18n/lib/load-page.function.ts`) в реестр
+  `translations/registry.ts` (`TRANSLATIONS` + `registerTranslations`).
+  `ALL_TRANSLATIONS` переименован в `TRANSLATIONS`.
+- **Удалённые зависимости**: `@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`
+  (не использовались — загрузка идёт через presigned POST + `fetch`),
+  `@taiga-ui/addon-charts`, `@taiga-ui/addon-doc`, `@angular/platform-browser-dynamic`.
+- **`@defer (on idle)`**: игровой чат (`layout.component.html`) и радио
+  (`landing.component.html`) выведены из начального рендера.
+- **Радио не грузит YouTube по умолчанию** (`radio-widget.component.ts`):
+  конструктор больше не создаёт iframe и не тянет `iframe_api` (>1 MB чужого JS +
+  запросы к doubleclick). Плеер создаётся при первом нажатии play.
+- **Опрос Discord останавливается на скрытой вкладке** (`game-chat.service.ts`,
+  `visibleTimer$` по `visibilitychange`).
+- **Изображения**:
+  - `welcome-video.mp4` 24 MB → 2.8 MB (720p/30fps, без звука, `+faststart`).
+  - `public/team/*` PNG (~10.5 MB) → webp 512px (~0.28 MB); `default-avatar`,
+    `splinter-of-spark` → webp; `7.png` → `7.webp`. Ссылки в шаблонах и
+    `environment*.ts` обновлены.
+  - Пережаты крупные webp (`br`, `3`, `1`, `4`, `castle-recruit`,
+    `landing-carousel/4-6`), `images/logo.png`.
+  - Удалены неиспользуемые: `5/8/9/10.png`, `br.jpg`, `s.jpg/webp`, `ava.jpg`,
+    `images/news_1.webp`, `images/logo.webp`, битая ссылка `old-paper.webp`
+    (правило `.old-paper-background` удалено из `styles.css` и
+    `rules.component.less`).
+  - `ImageLoaderComponent` получил вход `eager` (по умолчанию `loading="lazy"`,
+    `decoding="async"`; на первом слайде карусели — `eager`+`fetchpriority=high`).
+- **Шрифты**: убраны italic-начертания из Google Fonts в `index.html` (в проекте
+  курсив не используется) — меньше `@font-face` и woff2-загрузок.
+- **nginx.conf**: gzip + `Cache-Control immutable` для хешированных js/css,
+  30d для статики, `no-cache` для html.
+- **Бюджеты** (`angular.json`): initial warning 1.4 MB / error 1.8 MB.
+- Проверено Playwright: все 13 роутов рендерят контент (переводы, картинки,
+  скриншот-стрип из Discord грузятся), непереведённых ключей и битых картинок нет.
 
 ### 7.1 Ветки
 

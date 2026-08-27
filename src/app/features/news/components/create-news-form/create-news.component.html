@@ -62,7 +62,7 @@
             <app-news-card
                 title="{{ form.controls.title.value || ('news.create.titleFallback' | translate) }}"
                 content="{{ form.controls.content.value || ('news.create.contentFallback' | translate) }}"
-                [preview]="previewUrl || '/7.png'"
+                [preview]="previewUrl || '/7.webp'"
                 date="{{ currentDate$ | async | date: 'dd.MM.yy - HH:mm' }}"
                 [createdAt]="currentTime"
                 [viewCount]="0"

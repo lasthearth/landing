@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './app/shared/styles/appearances/icon.appearance.css';
+@import './app/shared/styles/appearances/hint.appearance.css';
 :root {
     /**
      * Семантические поверхности (пергамент). Переопределяются в тёмной теме.
@@ -395,15 +396,6 @@ html body {
     word-break: break-word;
 }
 
-.old-paper-background {
-    background-color: #e8dfc8;
-    background-image: url('/old-paper.webp'), radial-gradient(circle, rgba(255, 255, 255, 0.1) 20%, transparent 80%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
 .progress {
     &[data-size='s'] {
         color: #e2d7bb;
@@ -474,12 +466,24 @@ tui-tabs.content-tabs {
     }
 }
 
-tui-hint {
+/**
+ * Базовый вид тултипов: тёмная плашка со светлым текстом.
+ *
+ * `:not([data-appearance='lh-player'])` обязателен: правило объявлено с
+ * !important, и без исключения оно перебивало собственный вид тултипа игрока
+ * (см. shared/styles/appearances/hint.appearance.css). Хост получал тёмный фон
+ * и белый цвет, а вложенная разметка красит текст в --lh-ink — тёмное по
+ * тёмному, контраст около 1.2:1.
+ */
+tui-hint:not([data-appearance='lh-player']) {
     background-color: var(--lh-primary-2) !important;
     color: var(--color-white) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+tui-hint {
     font-family: 'Advent Pro', serif !important;
     font-optical-sizing: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
 .lh-confirm-button {

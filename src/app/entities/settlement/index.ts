@@ -13,6 +13,8 @@ export type { SettlementBadgeTone } from './model/settlement-badge-tone';
 export { SettlementService } from './api/settlement.service';
 export { getSettlementTypeByKey } from './lib/get-settlement-type-by-key.function';
 export { getSettlementTypeTone } from './lib/get-settlement-type-tone.function';
+export { getSettlementTypeIcon } from './lib/get-settlement-type-icon.function';
+export { getSettlementTier } from './lib/get-settlement-tier.function';
 export { getDiplomacyTone } from './lib/get-diplomacy-tone.function';
 export { GUILD_MARKER } from './lib/guild-marker.constant';
 export { isGuildSettlement } from './lib/is-guild-settlement.function';

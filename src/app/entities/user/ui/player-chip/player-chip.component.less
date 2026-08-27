@@ -1,0 +1,252 @@
+/**
+ * Чип игрока.
+ *
+ * Нейтральная плашка: портрет (аватар + точка статуса, для главы — корона),
+ * затем имя. Фон одинаков для всех, состояние несут только точка статуса
+ * и обводка главы — иначе цветовые сигналы конкурируют друг с другом.
+ *
+ * Ховер-эффектов со сдвигом/масштабом нет намеренно: чипы живут внутри
+ * контейнера с `overflow: hidden`, и любой `transform` или внешняя тень
+ * обрезались краями этого контейнера.
+ */
+.player-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.1875rem 0.75rem 0.1875rem 0.1875rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--lh-surface-3) 60%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-border) 55%, transparent);
+    color: var(--lh-ink);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    max-width: 100%;
+    cursor: default;
+    transition: background var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.player-chip:hover {
+    background: color-mix(in srgb, var(--lh-surface-3) 90%, transparent);
+}
+
+/* Глава селения: тёплая обводка вместо отдельного фона */
+.player-chip--leader {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-leader) 50%, transparent);
+}
+
+/**
+ * Портрет — контейнер позиционирования для точки статуса.
+ * Точка размещается абсолютно, поэтому не влияет на поток и не требует
+ * отрицательных отступов.
+ */
+.player-chip__portrait {
+    position: relative;
+    display: block;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+}
+
+.player-chip__avatar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--lh-surface-4);
+}
+
+.player-chip__dot {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 0.5625rem;
+    height: 0.5625rem;
+    border-radius: 999px;
+    background: var(--color-lh-offline);
+    box-shadow: 0 0 0 2px var(--lh-surface);
+}
+
+.player-chip__dot--online {
+    background: var(--color-lh-online);
+}
+
+.player-chip__crown {
+    color: var(--lh-leader);
+    font-size: 0.9375rem;
+    flex-shrink: 0;
+}
+
+.player-chip__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.player-chip__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.125rem;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--lh-danger-ink);
+    cursor: pointer;
+    transition: background var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.player-chip__remove:hover {
+    background: color-mix(in srgb, var(--lh-danger) 18%, transparent);
+}
+
+/**
+ * Тултип. Внешний вид хоста (фон, рамка, ширина) задан в
+ * `shared/styles/appearances/hint.appearance.css` под `data-appearance='lh-player'`,
+ * т.к. хост тултипа рендерится вне этого компонента и его стили сюда не достают.
+ *
+ * Цвета берутся из токенов и наследуются от хоста: жёсткий color здесь ставить
+ * нельзя — тултип живёт в обеих темах.
+ */
+.player-tooltip {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.player-tooltip__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.player-tooltip__avatar {
+    display: block;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--lh-surface-4);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-border) 60%, transparent);
+}
+
+/**
+ * Идентификация: имя первой строкой, статусы — второй.
+ * Роль и онлайн в одном ряду: раньше они шли тремя строками, из-за чего
+ * блок вырастал выше аватара и голова тултипа теряла выравнивание.
+ */
+.player-tooltip__ident {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.player-tooltip__badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.player-tooltip__role {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.0625rem 0.375rem;
+    border-radius: 0.375rem;
+    background: color-mix(in srgb, var(--lh-leader) 15%, transparent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--lh-leader-ink);
+}
+
+.player-tooltip__role-icon {
+    font-size: 0.875rem;
+}
+
+.player-tooltip__name {
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: 1.2;
+    color: var(--lh-ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.player-tooltip__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--lh-ink-3);
+}
+
+.player-tooltip__status--online {
+    color: var(--lh-peace);
+}
+
+.player-tooltip__status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    flex-shrink: 0;
+    background: var(--color-lh-offline);
+}
+
+.player-tooltip__status-dot--online {
+    background: var(--color-lh-online);
+}
+
+/**
+ * Статистика. Колонки равной ширины с разделителями: без них три числа
+ * читались как один поток, и было неясно, какая подпись к какому числу.
+ */
+.player-tooltip__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--lh-border) 60%, transparent);
+}
+
+.player-tooltip__stat {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 0.125rem;
+    padding-inline: 0.5rem;
+    text-align: center;
+}
+
+.player-tooltip__stat + .player-tooltip__stat {
+    border-left: 1px solid color-mix(in srgb, var(--lh-border) 45%, transparent);
+}
+
+.player-tooltip__stat dt {
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--lh-ink-3);
+}
+
+.player-tooltip__stat dd {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: var(--lh-ink);
+}
+
+.player-tooltip__hint {
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}

@@ -1,12 +1,14 @@
-<div
-    class="settlement-card block w-full h-full max-h-[400px] relative rounded-2xl transition duration-500 hover:scale-[101%] overflow-hidden"
-    [ngClass]="[getBorderClass(data().type)]"
->
-    <div
-        class="settlement-card-inner transform flex xl:flex-row flex-col relative rounded-2xl lh-shadow border border-line/30 h-full max-h-[400px]"
-    >
+<div class="settlement-card block w-full h-full relative" [ngClass]="[getBorderClass(data().type)]">
+    <!--
+        Высота карточки задаётся её контентом, а не фиксированным капом:
+        прежний max-h-[400px] был меньше реальной высоты (три ряда бейджей +
+        описание + два ряда чипов + кнопка) и резал нижние чипы и «Подробнее».
+        Соседние карточки в ряду выравниваются по высоте через items-stretch
+        родителя, изображение растягивается object-cover.
+    -->
+    <div class="settlement-card-inner flex xl:flex-row flex-col relative h-full">
         <!-- Изображение -->
-        <div class="xl:w-2/5 w-full shrink-0 h-40 xl:h-full relative">
+        <div class="settlement-card__media xl:w-2/5 w-full shrink-0 h-40 xl:h-auto relative">
             @if (isPinned(data())) {
                 <div
                     class="absolute top-3 right-3 z-10 bg-lh-accent text-white rounded-lg px-2 py-1 shadow-md flex items-center gap-1"
@@ -15,42 +17,70 @@
                 </div>
             }
             <app-image-loader
-                [src]="data().attachments[0].url ? data().attachments[0].url : '/images/screenshots/screen_1.png'"
+                [src]="imageUrl()"
                 [alt]="'settlements.card.imageAlt' | translate:{name: data().name}"
                 class="block h-full w-full"
-                imageClass="h-full w-full object-cover rounded-t-2xl xl:rounded-l-2xl xl:rounded-tr-none"
+                imageClass="h-full w-full object-cover"
             />
         </div>
 
         <!-- Контент -->
         <div class="xl:w-3/5 w-full p-5 flex flex-col gap-3 justify-between overflow-hidden">
-            <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2 flex-wrap">
-                    <h2 class="text-xl/7 md:text-2xl uppercase font-bold text-ink">
-                        {{ data() | settlementDisplayName }}
-                    </h2>
-                    <app-settlement-badge tone="leader">
-                        {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
-                    </app-settlement-badge>
-                    <app-settlement-badge tone="peace">
-                        {{ onlineCount() }} {{ 'settlements.card.onlineShort' | translate }}
-                    </app-settlement-badge>
+            <div class="flex flex-col gap-2.5">
+                <div class="flex flex-col gap-1.5">
+                    <!--
+                        Заголовок и шкала уровня в одной строке: уровень — свойство
+                        селения, а не отдельная метрика, поэтому он читается рядом
+                        с названием, а не в ряду бейджей.
+                    -->
+                    <div class="flex items-baseline gap-3">
+                        <h2 class="text-xl/7 md:text-2xl/8 uppercase font-bold text-ink min-w-0 break-words">
+                            {{ data() | settlementDisplayName }}
+                        </h2>
+                        @if (tier() > 0) {
+                            <span
+                                class="settlement-card__tier"
+                                role="img"
+                                [attr.aria-label]="'settlements.card.tier' | translate:{tier: tier()}"
+                            >
+                                <span class="settlement-card__tier-pips">
+                                    @for (pip of tierScale; track $index) {
+                                        <span
+                                            class="settlement-card__tier-pip"
+                                            [class.settlement-card__tier-pip--filled]="pip <= tier()"
+                                        ></span>
+                                    }
+                                </span>
+                                <span class="settlement-card__tier-label">{{ tier() }}/5</span>
+                            </span>
+                        }
+                    </div>
+
+                    <!--
+                        Счётчики населения и онлайна.
+                        Вынесены из общего ряда бейджей: там они конкурировали
+                        по весу с типом селения и дипломатией, хотя это не
+                        классификация, а метрика.
+                    -->
+                    <div class="settlement-card__meta flex items-center gap-3 text-base text-ink-3 font-semibold">
+                        <span class="inline-flex items-center gap-1.5">
+                            <tui-icon icon="@tui.users" class="size-4!" />
+                            {{ data().members.length + 1 }} {{ 'settlements.card.residentsShort' | translate }}
+                        </span>
+                        <span class="inline-flex items-center gap-1.5" [class.text-peace]="onlineCount() > 0">
+                            <span
+                                class="settlement-card__meta-dot"
+                                [class.settlement-card__meta-dot--online]="onlineCount() > 0"
+                            ></span>
+                            {{ onlineCount() }} {{ 'settlements.card.onlineShort' | translate }}
+                        </span>
+                    </div>
                 </div>
 
                 <div class="flex gap-1.5 flex-wrap">
-                    @if (isEastSuzerain(this.data())) {
-                        <app-settlement-badge tone="accent" [uppercase]="true">
-                            {{ 'settlements.card.suzerainShort' | translate }}: {{ environment.eastSuzerain }}
-                        </app-settlement-badge>
-                    }
-                    @if (isWestSuzerain(this.data())) {
-                        <app-settlement-badge tone="accent" [uppercase]="true">
-                            {{ 'settlements.card.suzerainLabel' | translate }} {{ environment.westSuzerain }}
-                        </app-settlement-badge>
-                    }
                     <app-settlement-badge
                         [tone]="isPinned(data()) ? 'gold' : getSettlementTypeTone(data())"
-                        [icon]="isPinned(data()) ? '@tui.pin' : null"
+                        [icon]="getSettlementTypeIcon(data())"
                         [uppercase]="true"
                     >
                         {{ getSettlementTypeLabel(data()) }}
@@ -58,18 +88,30 @@
                     <app-settlement-badge [tone]="getDiplomacyTone(data().diplomacy)" [uppercase]="true">
                         {{ getDiplomacyLabel(data()) }}
                     </app-settlement-badge>
+                    @if (isEastSuzerain(data())) {
+                        <app-settlement-badge tone="accent" [uppercase]="true">
+                            {{ 'settlements.card.suzerainShort' | translate }}: {{ environment.eastSuzerain }}
+                        </app-settlement-badge>
+                    }
+                    @if (isWestSuzerain(data())) {
+                        <app-settlement-badge tone="accent" [uppercase]="true">
+                            {{ 'settlements.card.suzerainLabel' | translate }} {{ environment.westSuzerain }}
+                        </app-settlement-badge>
+                    }
                     @for (tag of data().tags; track tag.id) {
                         @if (getTag(tag.id); as tagData) {
                             <app-settlement-tag [tag]="tagData" />
                         }
                     }
                     @if (isAdmin()) {
-                        <div
+                        <button
+                            type="button"
                             (click)="openSetTagsDialog()"
+                            [attr.aria-label]="'settlements.tags.add' | translate"
                             class="bg-lh-primary-2/10 hover:bg-lh-primary-2/30 cursor-pointer transition-all duration-300 active:scale-[95%] flex justify-center items-center px-1 text-lh-primary rounded-full"
                         >
                             <tui-icon icon="@tui.circle-plus" class="size-4!" />
-                        </div>
+                        </button>
                     }
                 </div>
 
@@ -77,38 +119,35 @@
             </div>
 
             <div class="flex flex-col gap-2">
-                <hr class="h-px bg-surface-4/30 w-full rounded-full" />
-                <div class="flex flex-wrap gap-1.5 max-h-[68px] overflow-hidden">
+                <hr class="h-px bg-surface-4/30 w-full rounded-full border-0" />
+                <div class="flex flex-wrap gap-1.5 items-center">
                     @if (leader(); as leaderPlayer) {
-                        <div class="flex bg-lh-leader/15 text-leader-ink font-bold text-base px-2 py-1 rounded-lg items-center">
-                            @if (leaderPlayer.is_online) {
-                                <tui-pulse class="self-center mr-1.5 online" />
-                            } @else {
-                                <tui-pulse [playing]="false" class="self-center mr-1.5 offline" />
-                            }
-                            <span>{{ leaderPlayer.user_game_name }}</span>
-                        </div>
+                        <app-player-chip [player]="leaderPlayer" [isLeader]="true" />
                     }
 
-                    @for (item of users(); track item.user_id) {
-                        <div
-                            class="flex bg-lh-accent-3/15 text-lh-accent-3 font-bold text-base px-2 py-1 rounded-lg items-center"
+                    @for (item of visibleUsers(); track item.user_id) {
+                        <app-player-chip [player]="item" />
+                    }
+
+                    @if (hiddenCount() > 0) {
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full bg-surface-3/60 text-ink-3 font-semibold text-sm shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--lh-border)_55%,transparent)]"
                         >
-                            @if (item.is_online) {
-                                <tui-pulse class="self-center mr-1.5 online" />
-                            } @else {
-                                <tui-pulse [playing]="false" class="self-center mr-1.5 offline" />
-                            }
-                            <span>{{ item.user_game_name }}</span>
-                        </div>
+                            +{{ hiddenCount() }}
+                        </span>
                     }
                 </div>
 
                 <button
+                    type="button"
                     (click)="openDetails()"
-                    class="text-ink-2 border-wood/50 hover:border-wood mt-1 transition-all self-end duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base"
+                    class="group text-ink-2 border-wood/50 hover:border-wood mt-1 transition-all self-end duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1"
                 >
                     {{ 'settlements.card.more' | translate }}
+                    <tui-icon
+                        icon="@tui.arrow-right"
+                        class="size-4! transition-transform duration-300 group-hover:translate-x-0.5"
+                    />
                 </button>
             </div>
         </div>
