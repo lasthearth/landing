@@ -23,6 +23,118 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-5 Управление поселением: роли, заявки, владение, контакты, админка
+
+> Ветка `feat/settlement-management` = `main` + влитая `feat/settlement-roles-ownership`.
+> Главная жалоба была не в отсутствии функций, а в попапах: страница поселения
+> дёргала owner-only эндпоинты у обычного жителя, и на каждый 403/404
+> `errorInterceptor` показывал алерт.
+
+**Почему попапы нельзя было убрать одним `catchError`.** `errorInterceptor`
+(`core/interceptors/error.interceptor.ts`) для GET-запросов сам открывает алерт и
+возвращает `EMPTY` — к моменту, когда ошибка доходит до компонента, алерт уже
+показан. Лечится двумя слоями, и одного мало:
+
+1. `new HttpContext().set(SKIP_ERROR_ALERT, true)` на все GET-ы, доступные не
+   всем: `getSentInvitations`, `getJoinRequests$`, `getMyJoinRequests$`,
+   `getRequestSettlementStatus$`, `getSettlementInfo`. Для этого у методов
+   появился опциональный параметр `context?: HttpContext`.
+2. Гейт по праву **перед подпиской**: стрим не запускается, если права нет. Без
+   первого слоя гонка при смене владельца всё равно дала бы 403; без второго
+   запрос уходил бы зря.
+
+**API-слой (`entities/settlement/api/settlement.service.ts`)** приведён к живой
+спеке (`https://docs.lasthearth.ru/v1/openapi.yaml`; `API_CONTRACT.md` по
+поселениям обновлён):
+
+- `createJoinRequest$` возвращает `Observable<void>`: `CreateJoinRequestResponse`
+  в спеке — пустая схема, идентификатор заявки перечитывается через
+  `getMyJoinRequests$`.
+- Обязательные поля тела добавлены в `createRole$`, `updateRole$`,
+  `assignMemberRole$`, `transferOwnership$`, `updateContactInfo$`,
+  `adminAddOwner$`, `adminSetRolesEnabled$`, `createJoinRequest$`,
+  `cancelJoinRequest$`. В спеке они `required` в теле, а не только в пути —
+  без них `INVALID_ARGUMENT`.
+- `revokeInvitation` отправляет тело и отдаёт `{ invitation_ids }`: список
+  оставшихся приглашений берётся из ответа, дозапрос не нужен.
+- Добавлен `adminUpdateSettlement$` (`PATCH /admin/settlements/{id}`, дипломатия).
+
+**Ключевое ограничение контракта:** эндпоинтов `GET .../roles` и
+`GET .../members` **не существует**. Роли и состав приходят только внутри
+`Settlement`, а все мутации ролей/владения/контактов возвращают
+`{ settlement }` — поэтому страница перерисовывается из ответа мутации
+(`runMutation`), без повторного `getSettlementInfo`.
+
+- Хелперы (`entities/settlement/lib/`): `get-member-role-names.function.ts`
+  (вынесен из компонента), `permission-label-key.function.ts`,
+  `assignable-permissions.constant.ts`, `is-settlement-member.function.ts`.
+  `Permission` получил `PERMISSION_UNSPECIFIED` (нулевой элемент proto3-enum),
+  но в редакторе ролей он не показывается: колонки матрицы строятся строго по
+  `ASSIGNABLE_PERMISSIONS`.
+- Новые слайсы `features/settlements/`:
+  - `join-request/` — `MyJoinRequestsStore` + `app-join-request-button`.
+    Заявка подаётся **на странице `/settlements`**, а не в профиле: список один
+    раз тянет `getMyJoinRequests$` и раздаёт карточкам множество
+    `settlement_id`. Стор общий для карточки и диалога «Подробнее», поэтому
+    после отправки или отзыва они не расходятся. Кнопка не показывается
+    неавторизованному и тем, кто уже состоит в поселении
+    (`isSettlementMember`); неверифицированному вместо кнопки — подсказка.
+  - `settlement-roles/` — матрица прав, диалог роли, диалог ролей участника.
+  - `settlement-join-requests/` — панель заявок; ники грузятся **одним**
+    батчем `getPlayersBatch$`, пустое состояние приглашает к действию.
+  - `settlement-ownership/` — диалог передачи владения. Владение передаётся, а
+    не добавляется: число владельцев не растёт, поэтому подтверждение
+    необратимости спрашивается вторым шагом.
+  - `settlement-contact-info/` — диалог контактов, лимит 512, запрет `<` `>`.
+  - `settlement-invitation/` — карточка входящего приглашения вместо сырого
+    текста с двумя Tailwind-кнопками. `inviteAccept` раньше вызывался без
+    реакции — экран не обновлялся; теперь после accept/reject данные
+    перезагружаются.
+- Гейтинг: инвайты — `owner ∨ PERMISSION_INVITE_MEMBER`, заявки —
+  `owner ∨ PERMISSION_REVIEW_JOIN_REQUEST`, роли/контакты/владение/картинка/
+  уровень — только `isOwner`, кик — `isOwner ∨ admin` (по спеке
+  `DELETE .../members/{user_id}` требует владельца либо scope
+  `settlements:manage`, правом это не покрывается), выход — не-owner либо owner
+  при наличии второго.
+- `SettlementComponent` переписан с `Observable`-каскада на сигналы: прежний
+  `settlementInfo$` внутри `map` запускал вложенную подписку на
+  `getPlayersBatch$` и дёргал `detectChanges` — при OnPush это работало, но
+  состав и роли жили в изменяемых полях класса.
+- **Матрица прав** (`settlement-roles/ui/roles-matrix/`) — единственное место,
+  где выбрана нетиповая для проекта форма. Роли — строки, права — столбцы,
+  отметка на пересечении: право роли буквально декартово произведение, а не
+  список. Разделители hairline на токене `line`, своих поверхностей у строк нет
+  — это ведомость, а не карточки. Колонка роли `sticky`: при прокрутке узкого
+  экрана отметка без имени роли ничего не сообщает. Сетка растёт при добавлении
+  третьего права без правки шаблона. При `roles_enabled === false` вместо
+  матрицы одна строка о том, что роли отключены модерацией (не пустая таблица).
+- XSS: `role.name` и `contact_info` сервер хранит как есть и не экранирует —
+  выводятся **только** интерполяцией `{{ }}`. На клиенте имя роли валидируется
+  (1–64, запрет `<` `>`), контакты — 512 и тот же запрет.
+- Админка: новый таб «Поселения» (`admin.component.html`, `@case (9)`) и
+  `features/admin/ui/settlement-admin-panel/`. Поиск идёт по загруженному
+  `GET /settlements` — серверного поиска по поселениям в контракте нет.
+  Удаление необратимо и стирает приглашения и заявки, поэтому вынесено в
+  `ui/delete-settlement-dialog/` с вводом названия: кнопка активируется только
+  при точном совпадении.
+- Попутные баги: население больше не завышено на 1 (`members` теперь включает
+  владельцев — убраны `members.length + 1` в карточке, диалоге деталей и
+  `membersCount`); чтение `attachments[0].url` без optional chaining убрано в
+  `settlement.component.html` и `settlement-detailed` (шаблон падал на селении
+  с пустым массивом вложений); `settlement-card`, `settlement-detailed` и
+  `settlements.component` переведены с `data().leader.user_id` на `getOwnerIds`.
+- Тесты (`npm test`, karma+jasmine): `member-has-permission.function.spec.ts` и
+  `get-member-role-names.function.spec.ts` — на этих чистых функциях висит весь
+  гейтинг, молчаливая регрессия здесь равна показанной кнопке, которой не
+  должно быть. 15 спеков проходят.
+- `scripts/check-i18n.mjs` — проверка, что каждая ветка словаря есть в обеих
+  локалях. Запуск: `node scripts/check-i18n.mjs <файл.i18n.ts>`.
+
+Дипломатия в админке описана `features/admin/config/diplomacy-options.constant.ts`:
+`value` — русские литералы, с которыми сопоставляется `getDiplomacyTone`,
+`labelKey` — ключ **словаря админки**, потому что на роуте `/profile/admin`
+словарь поселений не подгружается.
+
 ### 3.-4 Креативная страница 404
 
 > Плоская страница 404 переработана в атмосферную ночную сцену в стиле проекта: последний очаг в пустоши.
@@ -246,6 +358,7 @@ src/app/
 - `src/app/routes/enums/route-keys.ts` — ключи роутов.
 - `src/styles.css` — семантические токены цвета + тёмная тема.
 - `scripts/check-contrast.mjs` — проверка контраста токенов по WCAG AA.
+- `scripts/check-i18n.mjs` — проверка полноты обеих локалей в словаре i18n.
 
 ## 6.1 Дизайн-система: семантические токены цвета
 
@@ -414,13 +527,20 @@ src/app/
 
 | Ветка | Содержимое |
 |---|---|
-| `design/keep-approved` | дизайн-система 6.3, внедрена заново поверх чистого `main` |
+| `design/keep-approved` | дизайн-система 6.3, внедрена заново поверх чистого `main`. Влита в `main` |
 | `design/slop-archive` | архив прогона `high-end-visual-design` целиком. Не мержить, только копировать куски |
-| `feat/settlement-roles-ownership` | owner-модель, роли и заявки на вступление. Мержить отдельно после дизайна |
+| `feat/settlement-roles-ownership` | owner-модель, роли и заявки. **Влита** в `feat/settlement-management` |
+| `feat/settlement-management` | текущая: управление ролями, заявками, владением, контактами, админская вкладка (раздел 3.-5) |
 
 ## 8. TODO для следующей сессии
 
-- [ ] Смержить `feat/settlement-roles-ownership` (owner-модель, роли, заявки).
+- [x] Смержить `feat/settlement-roles-ownership` (owner-модель, роли, заявки).
+- [ ] Проверить `feat/settlement-management` на dev-стенде: гейтинг прав у
+      обычного жителя (не должно быть ни одного попапа), матрица прав в тёмной
+      теме и на мобильном, лимит активных заявок (число знает только бэкенд).
+- [ ] Прогон сборки нестабилен: `ng build` иногда падает на пререндере
+      `/unauthorized` с `TimeoutError` — воспроизводится и на чистом `main`,
+      к изменениям ветки отношения не имеет. Разобраться отдельно.
 - [ ] Проверить дизайн-систему в браузере: тёмная тема, `prefers-reduced-motion`, автоплей видео в Firefox / Zen.
 - [ ] Сгенерировать proto-заглушки и goverter-мапперы в `vsservice` (`make proto && make generate`).
 - [ ] Проверить сборку и линтер `vsservice` (`make lint && make test && make build`).
