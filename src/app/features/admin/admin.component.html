@@ -6,85 +6,155 @@
 
 <div class="w-full flex flex-col gap-3 lg:gap-6">
     <p class="text-2xl md:text-3xl lg:text-4xl font-bold">{{ 'admin.title' | translate }}</p>
-    <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 !font-semibold !w-full content-tabs">
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.playerForms' | translate }}</span>
-                <tui-icon icon="@tui.user-check" class="size-5! lg:hidden!" />
-                <tui-pulse
-                    *ngIf="!requestExist"
-                    tuiHintAppearance="floating"
-                    class="!absolute !-top-1.5 !-right-1.5 !scale-110"
-                />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.settlementForms' | translate }}</span>
-                <tui-icon icon="@tui.castle" class="size-5! lg:hidden!" />
-                <tui-pulse
-                    *ngIf="!settlementsRequest"
-                    tuiHintAppearance="floating"
-                    class="!absolute !-top-1.5 !-right-1.5 !scale-110"
-                />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.questions' | translate }}</span>
-                <tui-icon icon="@tui.circle-help" class="size-5! lg:hidden!" />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.createNews' | translate }}</span>
-                <tui-icon icon="@tui.newspaper" class="size-5! lg:hidden!" />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.coins' | translate }}</span>
-                <tui-icon icon="@tui.wallet" class="size-5! lg:hidden!" />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.purchases' | translate }}</span>
-                <tui-icon icon="@tui.package" class="size-5! lg:hidden!" />
-                <tui-pulse
-                    *ngIf="hasPendingPurchases"
-                    tuiHintAppearance="floating"
-                    class="!absolute !-top-1.5 !-right-1.5 !scale-110"
-                />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.goods' | translate }}</span>
-                <tui-icon icon="@tui.shopping-cart" class="size-5! lg:hidden!" />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.hungerGames' | translate }}</span>
-                <tui-icon icon="@tui.flame" class="size-5! lg:hidden!" />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.purchasesHistory' | translate }}</span>
-                <tui-icon icon="@tui.receipt" class="size-5! lg:hidden!" />
-            </span>
-        </button>
-        <button tuiTab type="button">
-            <span class="relative inline-flex items-center">
-                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.settlements' | translate }}</span>
-                <tui-icon icon="@tui.map-pin" class="size-5! lg:hidden!" />
-            </span>
-        </button>
-    </tui-tabs>
+    <!--
+        Разделы набраны кнопками `.nav-button` с переносом строк, а не `tui-tabs`:
+        десять подписей в один ряд ужимались до двух строк и обрезались, а
+        подчёркивание Taiga не переживает перенос. Кнопки — тот же идиом, что в
+        `app-profile-navigation`, и в них уже размечено место под `tui-pulse`.
 
-    <div class="mt-2 flex flex-col gap-4">
+        Числовые литералы в `(click)` соответствуют `@switch` ниже: порядок кнопок
+        сгруппирован по смыслу, поэтому индексы идут не по возрастанию.
+    -->
+    <nav class="mt-4 flex flex-wrap gap-2" [attr.aria-label]="'admin.title' | translate">
+        <!-- Модерация -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.playerForms' | translate"
+            class="nav-button relative shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 0 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 0"
+            (click)="activeItemIndex = 0"
+        >
+            <tui-icon icon="@tui.user-check" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.playerForms' | translate }}</span>
+            @if (!requestExist) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
+            }
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.settlementForms' | translate"
+            class="nav-button relative shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 1 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 1"
+            (click)="activeItemIndex = 1"
+        >
+            <tui-icon icon="@tui.castle" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.settlementForms' | translate }}</span>
+            @if (!settlementsRequest) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
+            }
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.settlements' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 9 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 9"
+            (click)="activeItemIndex = 9"
+        >
+            <tui-icon icon="@tui.map-pin" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.settlements' | translate }}</span>
+        </button>
+
+        <!-- Экономика -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.coins' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 4 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 4"
+            (click)="activeItemIndex = 4"
+        >
+            <tui-icon icon="@tui.wallet" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.coins' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.purchases' | translate"
+            class="nav-button relative shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 5 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 5"
+            (click)="activeItemIndex = 5"
+        >
+            <tui-icon icon="@tui.package" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.purchases' | translate }}</span>
+            @if (hasPendingPurchases) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
+            }
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.goods' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 6 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 6"
+            (click)="activeItemIndex = 6"
+        >
+            <tui-icon icon="@tui.shopping-cart" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.goods' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.purchasesHistory' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 8 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 8"
+            (click)="activeItemIndex = 8"
+        >
+            <tui-icon icon="@tui.receipt" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.purchasesHistory' | translate }}</span>
+        </button>
+
+        <!-- Контент -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.questions' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 2 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 2"
+            (click)="activeItemIndex = 2"
+        >
+            <tui-icon icon="@tui.circle-help" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.questions' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.createNews' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 3 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 3"
+            (click)="activeItemIndex = 3"
+        >
+            <tui-icon icon="@tui.newspaper" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.createNews' | translate }}</span>
+        </button>
+
+        <!-- Игра -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.hungerGames' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 7 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 7"
+            (click)="activeItemIndex = 7"
+        >
+            <tui-icon icon="@tui.flame" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.hungerGames' | translate }}</span>
+        </button>
+    </nav>
+
+    <div id="admin-panel" class="mt-2 flex flex-col gap-4">
         @switch (activeItemIndex) {
             @case (0) {
                 @if (veriverificationRequests === null) {
