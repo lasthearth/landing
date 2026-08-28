@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-4 w-full">
         <div class="shrink-0 relative w-full shadow-md shadow-black/10 overflow-clip rounded-xl">
             <app-image-loader
-                [src]="settlementData.attachments[0].url ? settlementData.attachments[0].url : '/images/screenshots/screen_1.png'"
+                [src]="imageUrl"
                 [alt]="'settlements.detailed.imageAlt' | translate"
             />
         </div>
@@ -17,7 +17,7 @@
                     </app-settlement-badge>
                 }
                 <app-settlement-badge tone="leader">
-                    {{ settlementData.members.length + 1 }} {{ 'settlements.detailed.residentsShort' | translate }}
+                    {{ settlementData.members.length }} {{ 'settlements.detailed.residentsShort' | translate }}
                 </app-settlement-badge>
                 <app-settlement-badge tone="peace">
                     {{ onlineCount }} {{ 'settlements.detailed.onlineShort' | translate }}
@@ -33,7 +33,7 @@
 
             <p class="text-lg font-semibold text-ink">{{ 'settlements.detailed.population' | translate }}</p>
             <div class="flex flex-wrap gap-2">
-                @if (leader; as leaderPlayer) {
+                @for (leaderPlayer of leaders; track leaderPlayer.user_id) {
                     <app-player-chip [player]="leaderPlayer" [isLeader]="true" />
                 }
 
@@ -41,6 +41,8 @@
                     <app-player-chip [player]="item" />
                 }
             </div>
+
+            <app-join-request-button [settlementId]="settlementData.id" />
         </div>
     </div>
 </div>

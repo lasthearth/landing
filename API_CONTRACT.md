@@ -562,6 +562,96 @@ interface WorldTimeResponse {
 | 16  | `GET`    | `/users/{user_id}/settlements/invitations`                        | Приглашения пользователя            | ✅ (self)      | ✅ `UserService.getInvitations$()` |
 | 17  | `GET`    | `/users/{user_id}/settlements/verification:status`                | Статус заявки пользователя          | —              | ✅ `getRequestSettlementStatus$()` |
 
+#### Роли, заявки, владение, контакты
+
+> Источник истины — https://docs.lasthearth.ru/v1/openapi.yaml. Раздел выше
+> устарел: `Settlement.leader` помечен `deprecated`, лидеры вычисляются из
+> `members[].role_ids`, содержащих `"owner"` (их может быть несколько).
+>
+> **Эндпоинтов `GET .../roles` и `GET .../members` НЕ СУЩЕСТВУЕТ.** Роли и
+> состав приходят только внутри `Settlement`, а все мутации ролей, владения и
+> контактов возвращают `{ settlement }` — UI перерисовывается из ответа.
+
+| #   | Метод    | Путь                                                                   | Описание                                     | Auth                  | Реализовано                     |
+| --- | -------- | ---------------------------------------------------------------------- | -------------------------------------------- | --------------------- | ------------------------------- |
+| 18  | `POST`   | `/settlements/{settlement_id}/join-requests`                           | Подать заявку на вступление                  | ✅                    | ✅ `createJoinRequest$()`       |
+| 19  | `GET`    | `/settlements/{settlement_id}/join-requests`                           | Заявки поселения                             | ✅ + право/owner      | ✅ `getJoinRequests$()`         |
+| 20  | `POST`   | `/settlements/{settlement_id}/join-requests/{id}:approve`              | Одобрить заявку                              | ✅ + право/owner      | ✅ `approveJoinRequest$()`      |
+| 21  | `POST`   | `/settlements/{settlement_id}/join-requests/{id}:reject`               | Отклонить заявку                             | ✅ + право/owner      | ✅ `rejectJoinRequest$()`       |
+| 22  | `POST`   | `/settlements/join-requests/{join_request_id}:cancel`                  | Отозвать свою заявку                         | ✅ (self)             | ✅ `cancelJoinRequest$()`       |
+| 23  | `GET`    | `/users/{user_id}/settlements/join-requests`                           | Свои заявки                                  | ✅ (self)             | ✅ `getMyJoinRequests$()`       |
+| 24  | `POST`   | `/settlements/{settlement_id}/roles`                                   | Создать роль                                 | ✅ + owner            | ✅ `createRole$()`              |
+| 25  | `PATCH`  | `/settlements/{settlement_id}/roles/{role_id}`                         | Переименовать роль, изменить права           | ✅ + owner            | ✅ `updateRole$()`              |
+| 26  | `DELETE` | `/settlements/{settlement_id}/roles/{role_id}`                         | Удалить роль (снимается со всех)             | ✅ + owner            | ✅ `deleteRole$()`              |
+| 27  | `POST`   | `/settlements/{settlement_id}/members/{user_id}/roles`                 | Выдать роль участнику                        | ✅ + owner            | ✅ `assignMemberRole$()`        |
+| 28  | `DELETE` | `/settlements/{settlement_id}/members/{user_id}/roles/{role_id}`       | Снять роль с участника                       | ✅ + owner            | ✅ `removeMemberRole$()`        |
+| 29  | `POST`   | `/settlements/{settlement_id}/ownership:transfer`                      | Передать владение                            | ✅ + owner            | ✅ `transferOwnership$()`       |
+| 30  | `POST`   | `/settlements/{settlement_id}:leave`                                   | Выйти из поселения                           | ✅                    | ✅ `leaveSettlement$()`         |
+| 31  | `PATCH`  | `/settlements/{settlement_id}/contact-info`                            | Обновить контакты (≤512, без `<` `>`)        | ✅ + owner            | ✅ `updateContactInfo$()`       |
+| 32  | `POST`   | `/admin/settlements/{settlement_id}/owners`                            | Выдать владение                              | ✅ + settlements:manage | ✅ `adminAddOwner$()`         |
+| 33  | `DELETE` | `/admin/settlements/{settlement_id}/owners/{user_id}`                  | Снять владение (400 на последнем)            | ✅ + settlements:manage | ✅ `adminRemoveOwner$()`      |
+| 34  | `POST`   | `/admin/settlements/{settlement_id}/roles:set-enabled`                 | Включить/выключить систему ролей             | ✅ + settlements:manage | ✅ `adminSetRolesEnabled$()`  |
+| 35  | `PATCH`  | `/admin/settlements/{settlement_id}`                                   | Изменить дипломатию                          | ✅ + settlements:manage | ✅ `adminUpdateSettlement$()` |
+| 36  | `DELETE` | `/admin/settlements/{settlement_id}`                                   | Удалить поселение (необратимо)               | ✅ + settlements:manage | ✅ `adminDeleteSettlement$()` |
+
+**Особенности, отличающие живую спеку от таблицы выше:**
+
+- Поля `settlement_id` / `role_id` / `user_id` / `invitation_id` /
+  `join_request_id` помечены `required` **в теле**, а не только в пути. Без них
+  сервер отвечает `INVALID_ARGUMENT`.
+- `CreateJoinRequestResponse` — **пустая схема**: идентификатор созданной заявки
+  нужно перечитывать через `getMyJoinRequests$`.
+- `:revoke` требует тело (`settlement_id` + `invitation_id`) и отдаёт
+  `{ invitation_ids: string[] }`, а не пустой объект.
+- `DELETE /settlements/{id}/members/{user_id}` требует владельца **или** scope
+  `settlements:manage`. Правом `Permission` это не покрывается.
+- Ошибки: 409 — уже в поселении либо заявка уже подана; 429 — превышен лимит
+  активных заявок (конкретное число знает только бэкенд); 400
+  `FAILED_PRECONDITION` — последний владелец пытается выйти.
+
+**`Settlement` (дополнение)**
+
+```ts
+interface Settlement {
+    // ...поля из DTO ниже
+    /** @deprecated Лидеры вычисляются из members[].role_ids, содержащих "owner". */
+    leader?: Member;
+    roles?: Role[];
+    /** При false роли скрыты и не применяются — остаётся только owner. */
+    roles_enabled?: boolean;
+    /** ≤512 символов. Сервер НЕ экранирует — выводить только интерполяцией. */
+    contact_info?: string;
+}
+
+interface Member {
+    user_id: string;
+    /** Член с ролью "owner" — лидер. Владельцев может быть несколько. */
+    role_ids?: string[];
+}
+
+interface Role {
+    /** Служебная роль владельца имеет id "owner". */
+    id: string;
+    /** 1–64 символа. Сервер НЕ экранирует — выводить только интерполяцией. */
+    name: string;
+    permissions: Permission[];
+}
+
+type Permission = 'PERMISSION_UNSPECIFIED' | 'PERMISSION_INVITE_MEMBER' | 'PERMISSION_REVIEW_JOIN_REQUEST';
+
+interface JoinRequest {
+    id: string;
+    settlement_id: string;
+    user_id: string;
+    status?: string;
+    created_at?: string;
+}
+```
+
+`PERMISSION_UNSPECIFIED` — нулевой элемент proto3-enum. В редакторе ролей он не
+показывается: назначаемые права перечислены в `ASSIGNABLE_PERMISSIONS`
+(`entities/settlement/lib/`).
+
 #### DTO
 
 **`Settlement`**
@@ -573,6 +663,7 @@ interface Settlement {
     type: number; // enum as int32 (0=CAMP, 1=CITY, 2=FORTRESS, 3=CAPITAL)
     description: string;
     diplomacy: string;
+    /** @deprecated Лидеры вычисляются из members[].role_ids. См. раздел выше. */
     leader: Member;
     members: Member[];
     attachments: Attachment[];

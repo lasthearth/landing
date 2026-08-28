@@ -80,4 +80,13 @@ export class RequestStatusService {
     public showError(errorMessage: string = 'Произошла непредвиденная ошибка.') {
         this.alertService.open('', { label: errorMessage, appearance: 'negative' }).subscribe();
     }
+
+    /**
+     * Показывает уведомление об успешном действии без привязки к потоку.
+     *
+     * @param successMessage Текст уведомления.
+     */
+    public showSuccess(successMessage: string): void {
+        this.alertService.open('', { label: successMessage, appearance: 'positive' }).subscribe();
+    }
 }

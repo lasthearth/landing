@@ -1,0 +1,42 @@
+<section class="lh-panel flex flex-col gap-4">
+    <h2 class="lh-display text-2xl text-ink">{{ 'settlements.joinRequests.title' | translate }}</h2>
+
+    @if (loading()) {
+        <p class="text-lg text-ink-3">{{ 'settlements.joinRequests.loading' | translate }}</p>
+    } @else if (isEmpty()) {
+        <app-empty-state
+            icon="@tui.mail"
+            [title]="'settlements.joinRequests.empty.title' | translate"
+            [description]="'settlements.joinRequests.empty.description' | translate"
+        />
+    } @else {
+        <ul class="flex flex-col gap-2">
+            @for (request of requests(); track request.id) {
+                <li class="join-requests__row">
+                    <span class="text-lg font-semibold text-ink">{{ nameOf(request.user_id) }}</span>
+
+                    <span class="flex gap-2">
+                        <button
+                            type="button"
+                            class="join-requests__action join-requests__action--approve"
+                            [disabled]="busy()"
+                            (click)="approve(request)"
+                        >
+                            <tui-icon icon="@tui.check" class="size-4!" />
+                            {{ 'settlements.joinRequests.approve' | translate }}
+                        </button>
+                        <button
+                            type="button"
+                            class="join-requests__action join-requests__action--reject"
+                            [disabled]="busy()"
+                            (click)="reject(request)"
+                        >
+                            <tui-icon icon="@tui.x" class="size-4!" />
+                            {{ 'settlements.joinRequests.reject' | translate }}
+                        </button>
+                    </span>
+                </li>
+            }
+        </ul>
+    }
+</section>

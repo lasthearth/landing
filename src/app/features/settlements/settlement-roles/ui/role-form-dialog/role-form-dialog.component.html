@@ -1,0 +1,56 @@
+<div class="lh-dialog-card min-w-[24rem]">
+    <h2 class="lh-dialog-title">
+        {{ (isEdit ? 'settlements.roles.dialog.editTitle' : 'settlements.roles.dialog.createTitle') | translate }}
+    </h2>
+
+    <div class="flex flex-col gap-2">
+        <label class="flex flex-col gap-2">
+            <span class="text-lg font-semibold text-ink">
+                {{ 'settlements.roles.dialog.nameLabel' | translate }}
+            </span>
+            <lh-input
+                [placeholder]="'settlements.roles.dialog.namePlaceholder' | translate"
+                [formControl]="nameControl"
+            />
+        </label>
+        @if (hasForbiddenChars()) {
+            <p class="text-base text-danger-ink">{{ 'settlements.roles.dialog.nameForbidden' | translate }}</p>
+        } @else {
+            <p class="text-base text-ink-3">
+                {{ 'settlements.roles.dialog.nameHint' | translate:{max: maxLength} }}
+            </p>
+        }
+    </div>
+
+    <fieldset class="flex flex-col gap-3">
+        <legend class="text-lg font-semibold text-ink">
+            {{ 'settlements.roles.dialog.permissionsLabel' | translate }}
+        </legend>
+
+        @for (permission of permissions; track permission) {
+            <label class="flex items-center gap-3 text-lg text-ink-2">
+                <input
+                    type="checkbox"
+                    class="lh-checkbox"
+                    [checked]="isSelected(permission)"
+                    (change)="toggle(permission)"
+                />
+                {{ permissionLabelKey(permission) | translate }}
+            </label>
+        }
+    </fieldset>
+
+    <div class="lh-dialog-actions">
+        <button type="button" class="lh-dialog-button lh-dialog-button-secondary" (click)="cancel()">
+            {{ 'settlements.roles.dialog.cancel' | translate }}
+        </button>
+        <button
+            type="button"
+            class="lh-dialog-button lh-dialog-button-primary"
+            [disabled]="!nameValid()"
+            (click)="save()"
+        >
+            {{ 'settlements.roles.dialog.save' | translate }}
+        </button>
+    </div>
+</div>

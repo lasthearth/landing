@@ -20,6 +20,7 @@ import {
     getSettlementTypeIcon,
     getSettlementTier,
     getDiplomacyTone,
+    getOwnerIds,
     isGuildSettlement,
     SettlementBadgeComponent,
     SettlementBadgeTone,
@@ -30,6 +31,7 @@ import { SettlementTagStore, SettlementTagComponent } from '@entities/settlement
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
+import { JoinRequestButtonComponent } from '../join-request';
 import { SetTagsComponent } from './set-tags/set-tags.component';
 import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 
@@ -47,6 +49,7 @@ import { SettlementDetailedComponent } from '../settlement-detailed/settlement-d
         SettlementTagComponent,
         SettlementDisplayNamePipe,
         PlayerChipComponent,
+        JoinRequestButtonComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -95,18 +98,25 @@ export class SettlementCardComponent {
     private readonly i18n = inject(I18nService);
 
     /**
-     * Лидер поселения.
+     * Идентификаторы владельцев (owner) поселения.
      */
-    protected readonly leader: Signal<IPlayer | null> = computed(
-        () => this.players().find((player) => player.user_id === this.data().leader.user_id) ?? null
-    );
+    protected readonly ownerIds: Signal<string[]> = computed(() => getOwnerIds(this.data()));
 
     /**
-     * Список участников поселения без лидера.
+     * Лидеры поселения (владельцы). Может быть несколько.
      */
-    protected readonly users: Signal<IPlayer[]> = computed(() =>
-        this.players().filter((player) => player.user_id !== this.data().leader.user_id)
-    );
+    protected readonly leaders: Signal<IPlayer[]> = computed(() => {
+        const owners = this.ownerIds();
+        return this.players().filter((player) => owners.includes(player.user_id));
+    });
+
+    /**
+     * Список участников поселения без владельцев.
+     */
+    protected readonly users: Signal<IPlayer[]> = computed(() => {
+        const owners = this.ownerIds();
+        return this.players().filter((player) => !owners.includes(player.user_id));
+    });
 
     /**
      * Максимум чипов жителей, помещающихся в карточку (включая лидера).
@@ -114,13 +124,13 @@ export class SettlementCardComponent {
     private readonly MAX_VISIBLE_CHIPS = 5;
 
     /**
-     * Участники, влезающие в карточку с учётом места под лидера.
+     * Участники, влезающие в карточку с учётом места под владельцев.
      * Остаток сворачивается в бейдж «+N».
      */
     protected readonly visibleUsers: Signal<IPlayer[]> = computed(() => {
-        const reserveForLeader = this.leader() ? 1 : 0;
+        const reserveForLeaders = this.leaders().length;
 
-        return this.users().slice(0, this.MAX_VISIBLE_CHIPS - reserveForLeader);
+        return this.users().slice(0, Math.max(0, this.MAX_VISIBLE_CHIPS - reserveForLeaders));
     });
 
     /**

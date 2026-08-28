@@ -1,0 +1,152 @@
+/**
+ * Матрица прав ролей.
+ *
+ * Ведомость, а не набор карточек: разделители — hairline на токене `line`,
+ * своих поверхностей у строк нет. Ширина растёт с числом прав, поэтому
+ * таблица прокручивается по горизонтали на узких экранах, а колонка роли
+ * остаётся прилипшей — иначе непонятно, к какой роли относится отметка.
+ */
+:host {
+    display: block;
+}
+
+.roles-matrix__add {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+.roles-matrix__scroll {
+    overflow-x: auto;
+    /* Полоса прокрутки не должна прижиматься к последней строке. */
+    padding-bottom: 0.25rem;
+}
+
+.roles-matrix {
+    inline-size: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.roles-matrix th,
+.roles-matrix td {
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid var(--lh-border);
+}
+
+.roles-matrix tbody tr:last-child > * {
+    border-bottom: 0;
+}
+
+.roles-matrix__role-head,
+.roles-matrix__permission-head,
+.roles-matrix__actions-head {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lh-ink-3);
+    white-space: nowrap;
+}
+
+.roles-matrix__permission-head,
+.roles-matrix__actions-head {
+    text-align: center;
+}
+
+/**
+ * Колонка роли остаётся видимой при горизонтальной прокрутке:
+ * отметка без имени роли не сообщает ничего.
+ */
+.roles-matrix__role-head,
+.roles-matrix__role {
+    position: sticky;
+    inset-inline-start: 0;
+    background-color: var(--lh-surface);
+    min-inline-size: 10rem;
+}
+
+.roles-matrix__role {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--lh-ink);
+    /* Имя роли приходит от пользователя: длинное не должно ломать таблицу. */
+    overflow-wrap: anywhere;
+}
+
+.roles-matrix__cell {
+    text-align: center;
+}
+
+.roles-matrix__cell--actions {
+    white-space: nowrap;
+}
+
+/**
+ * Отметка на пересечении. Пустая клетка тоже кликабельна и имеет
+ * контур — иначе непонятно, что право можно выдать.
+ */
+.roles-matrix__check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border: 0;
+    border-radius: 0.5rem;
+    color: var(--lh-ink-3);
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px var(--lh-border);
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart),
+        color var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.roles-matrix__check:hover:not(:disabled) {
+    box-shadow: inset 0 0 0 1px var(--lh-accent);
+}
+
+.roles-matrix__check--on {
+    color: #ffffff;
+    background-color: var(--lh-accent);
+    box-shadow: inset 0 0 0 1px var(--lh-accent);
+}
+
+.roles-matrix__check:disabled {
+    opacity: 0.5;
+}
+
+.roles-matrix__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border: 0;
+    border-radius: 0.5rem;
+    color: var(--lh-ink-3);
+    background-color: transparent;
+    transition:
+        color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.roles-matrix__action:hover:not(:disabled) {
+    color: var(--lh-ink);
+    background-color: var(--lh-surface-3);
+}
+
+.roles-matrix__action--danger:hover:not(:disabled) {
+    color: var(--lh-danger-ink);
+}
+
+.roles-matrix__action:disabled {
+    opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .roles-matrix__check,
+    .roles-matrix__action {
+        transition: none;
+    }
+}

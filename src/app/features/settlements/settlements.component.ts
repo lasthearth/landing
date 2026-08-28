@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { SettlementService, ISettlement, getSettlementTypeByKey, getSettlementDisplayName, isGuildSettlement } from '@entities/settlement';
 import { IPlayer, UserService } from '@entities/user';
 import { SettlementTagStore } from '@entities/settlement-tag';
+import { MyJoinRequestsStore } from './join-request';
 import { SettlementCardComponent } from './settlement-card/settlement-card.component';
 import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
@@ -72,6 +73,12 @@ export class SettlementsComponent {
     private readonly tagStore = inject(SettlementTagStore);
     private readonly i18n = inject(I18nService);
 
+    /**
+     * Хранилище собственных заявок игрока на вступление.
+     * Загружается один раз на страницу и раздаётся карточкам.
+     */
+    private readonly joinRequests = inject(MyJoinRequestsStore);
+
     protected readonly loading = signal<boolean>(false);
     protected readonly error = signal<boolean>(false);
     protected readonly sortState = signal<{ field: SortField; direction: SortDirection }>({
@@ -122,6 +129,7 @@ export class SettlementsComponent {
 
     constructor() {
         this.tagStore.loadTags$().subscribe();
+        this.joinRequests.load();
         this.loadSettlements();
     }
 
@@ -141,7 +149,7 @@ export class SettlementsComponent {
                 switchMap((list) =>
                     this.userService
                         .getPlayersBatch$(
-                            list.flatMap((s) => [s.leader.user_id, ...s.members.map((m) => m.user_id)])
+                            list.flatMap((s) => s.members.map((m) => m.user_id))
                         )
                         .pipe(
                             catchError((error) => {
@@ -161,13 +169,14 @@ export class SettlementsComponent {
 
                 this.enrichedSettlements.set(
                     list.map((s) => {
-                        const settlementPlayers = [s.leader.user_id, ...s.members.map((m) => m.user_id)]
+                        const settlementPlayers = s.members
+                            .map((m) => m.user_id)
                             .map((id) => playerById.get(id))
                             .filter((player): player is IPlayer => player !== undefined);
 
                         return {
                             ...s,
-                            membersCount: s.members.length + 1,
+                            membersCount: s.members.length,
                             onlineCount: settlementPlayers.filter((player) => player.is_online).length,
                             tagTypes: this.getSpecialTagTypes(s.tags),
                             players: settlementPlayers,

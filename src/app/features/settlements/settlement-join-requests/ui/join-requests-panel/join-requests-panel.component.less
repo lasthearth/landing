@@ -1,0 +1,64 @@
+/**
+ * Панель заявок в поселение.
+ * Строки списка своей поверхности не имеют: панель — единственная карточка,
+ * заявки разделены hairline-линиями.
+ */
+:host {
+    display: block;
+}
+
+.join-requests__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-block: 0.625rem;
+    border-bottom: 1px solid var(--lh-border);
+}
+
+.join-requests__row:last-child {
+    border-bottom: 0;
+}
+
+.join-requests__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border: 0;
+    border-radius: 0.625rem;
+    font-size: 1rem;
+    font-weight: 600;
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        color var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.join-requests__action:disabled {
+    opacity: 0.5;
+}
+
+.join-requests__action--approve {
+    color: var(--lh-peace);
+    background-color: color-mix(in srgb, var(--lh-peace) 12%, transparent);
+}
+
+.join-requests__action--approve:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--lh-peace) 22%, transparent);
+}
+
+.join-requests__action--reject {
+    color: var(--lh-danger-ink);
+    background-color: color-mix(in srgb, var(--lh-danger-ink) 12%, transparent);
+}
+
+.join-requests__action--reject:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--lh-danger-ink) 22%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .join-requests__action {
+        transition: none;
+    }
+}

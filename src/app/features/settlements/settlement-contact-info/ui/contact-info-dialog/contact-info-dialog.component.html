@@ -1,0 +1,35 @@
+<div class="lh-dialog-card min-w-[24rem]">
+    <h2 class="lh-dialog-title">{{ 'settlements.contactInfo.dialog.title' | translate }}</h2>
+
+    <label class="flex flex-col gap-2">
+        <span class="text-lg font-semibold text-ink">
+            {{ 'settlements.contactInfo.dialog.label' | translate }}
+        </span>
+        <lh-input
+            type="textarea"
+            [rows]="5"
+            [placeholder]="'settlements.contactInfo.dialog.placeholder' | translate"
+            [formControl]="control"
+        />
+    </label>
+
+    @if (hasForbiddenChars()) {
+        <p class="text-base text-danger-ink">{{ 'settlements.contactInfo.dialog.forbidden' | translate }}</p>
+    } @else {
+        <p class="text-base text-ink-3">{{ length() }} / {{ maxLength }}</p>
+    }
+
+    <div class="lh-dialog-actions">
+        <button type="button" class="lh-dialog-button lh-dialog-button-secondary" (click)="cancel()">
+            {{ 'settlements.contactInfo.dialog.cancel' | translate }}
+        </button>
+        <button
+            type="button"
+            class="lh-dialog-button lh-dialog-button-primary"
+            [disabled]="!valid()"
+            (click)="save()"
+        >
+            {{ 'settlements.contactInfo.dialog.save' | translate }}
+        </button>
+    </div>
+</div>
