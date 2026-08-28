@@ -1,0 +1,26 @@
+<div class="lh-dialog-card min-w-[24rem]">
+    <h2 class="lh-dialog-title">{{ 'admin.settlementAdmin.delete.title' | translate }}</h2>
+
+    <p class="lh-dialog-text">{{ 'admin.settlementAdmin.delete.text' | translate }}</p>
+
+    <label class="flex flex-col gap-2">
+        <span class="text-lg font-semibold text-ink">
+            {{ 'admin.settlementAdmin.delete.confirmLabel' | translate:{name: name} }}
+        </span>
+        <lh-input [placeholder]="name" [formControl]="control" />
+    </label>
+
+    <div class="lh-dialog-actions">
+        <button type="button" class="lh-dialog-button lh-dialog-button-secondary" (click)="cancel()">
+            {{ 'admin.settlementAdmin.delete.cancel' | translate }}
+        </button>
+        <button
+            type="button"
+            class="lh-dialog-button lh-dialog-button-danger"
+            [disabled]="!matches()"
+            (click)="confirm()"
+        >
+            {{ 'admin.settlementAdmin.delete.confirm' | translate }}
+        </button>
+    </div>
+</div>

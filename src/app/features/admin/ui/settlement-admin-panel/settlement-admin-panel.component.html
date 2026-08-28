@@ -1,0 +1,165 @@
+@let current = selected();
+
+<div class="flex flex-col gap-6 max-w-5xl mx-auto w-full">
+    <div class="flex flex-col gap-3">
+        <h2 class="lh-display text-xl md:text-2xl text-ink">
+            {{ 'admin.settlementAdmin.title' | translate }}
+        </h2>
+        <lh-input
+            icon="@tui.search"
+            [placeholder]="'admin.settlementAdmin.searchPlaceholder' | translate"
+            [formControl]="searchControl"
+        />
+    </div>
+
+    @if (loading()) {
+        <div class="flex justify-center py-8">
+            <tui-loader [showLoader]="true" size="l" />
+        </div>
+    } @else if (filtered().length === 0) {
+        <app-empty-state
+            icon="@tui.castle"
+            [title]="'admin.settlementAdmin.empty.title' | translate"
+            [description]="'admin.settlementAdmin.empty.description' | translate"
+        />
+    } @else {
+        <ul class="settlement-admin__list">
+            @for (settlement of filtered(); track settlement.id) {
+                <li>
+                    <button
+                        type="button"
+                        class="settlement-admin__row"
+                        [class.settlement-admin__row--active]="settlement.id === current?.id"
+                        (click)="select(settlement)"
+                    >
+                        <span class="font-semibold text-ink">{{ displayName(settlement) }}</span>
+                        <span class="text-base text-ink-3">{{ settlement.diplomacy }}</span>
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+
+    @if (current) {
+        <section class="lh-panel flex flex-col gap-5">
+            <h3 class="lh-display text-2xl text-ink">{{ displayName(current) }}</h3>
+
+            <!-- Система ролей -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-col">
+                    <span class="text-lg font-semibold text-ink">
+                        {{ 'admin.settlementAdmin.rolesTitle' | translate }}
+                    </span>
+                    <span class="text-base text-ink-3">
+                        {{ 'admin.settlementAdmin.rolesHint' | translate }}
+                    </span>
+                </div>
+                <label class="flex items-center gap-2 text-lg text-ink-2">
+                    <input
+                        type="checkbox"
+                        class="lh-checkbox"
+                        [checked]="current.roles_enabled !== false"
+                        [disabled]="busy()"
+                        (change)="setRolesEnabled(current, current.roles_enabled === false)"
+                    />
+                    {{ 'admin.settlementAdmin.rolesToggle' | translate }}
+                </label>
+            </div>
+
+            <hr class="h-px border-0 bg-line" />
+
+            <!-- Владельцы -->
+            <div class="flex flex-col gap-3">
+                <span class="text-lg font-semibold text-ink">
+                    {{ 'admin.settlementAdmin.ownersTitle' | translate }}
+                </span>
+
+                @if (owners().length === 0) {
+                    <p class="text-base text-ink-3">{{ 'admin.settlementAdmin.noOwners' | translate }}</p>
+                } @else {
+                    <ul class="flex flex-wrap gap-2">
+                        @for (owner of owners(); track owner.userId) {
+                            <li class="settlement-admin__owner">
+                                <span>{{ owner.name }}</span>
+                                <button
+                                    type="button"
+                                    [attr.aria-label]="'admin.settlementAdmin.removeOwner' | translate"
+                                    [disabled]="busy()"
+                                    (click)="removeOwner(current, owner.userId)"
+                                >
+                                    <tui-icon icon="@tui.x" class="size-4!" />
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                <div class="flex flex-wrap items-end gap-3">
+                    <label class="flex flex-col gap-2 flex-1 min-w-[14rem]">
+                        <span class="text-base text-ink-2">
+                            {{ 'admin.settlementAdmin.addOwnerLabel' | translate }}
+                        </span>
+                        <lh-input
+                            [placeholder]="'admin.settlementAdmin.addOwnerPlaceholder' | translate"
+                            [formControl]="ownerNameControl"
+                        />
+                    </label>
+                    <button
+                        type="button"
+                        class="lh-secondary-button text-lg py-2 px-4"
+                        [disabled]="busy()"
+                        (click)="addOwner(current)"
+                    >
+                        {{ 'admin.settlementAdmin.addOwner' | translate }}
+                    </button>
+                </div>
+            </div>
+
+            <hr class="h-px border-0 bg-line" />
+
+            <!-- Дипломатия -->
+            <div class="flex flex-col gap-3">
+                <span class="text-lg font-semibold text-ink">
+                    {{ 'admin.settlementAdmin.diplomacyTitle' | translate }}
+                </span>
+                <div class="flex flex-wrap gap-2">
+                    @for (option of diplomacyOptions; track option.value) {
+                        <button
+                            type="button"
+                            class="settlement-admin__diplomacy"
+                            [class.settlement-admin__diplomacy--active]="current.diplomacy === option.value"
+                            [attr.aria-pressed]="current.diplomacy === option.value"
+                            [disabled]="busy()"
+                            (click)="setDiplomacy(current, option.value)"
+                        >
+                            {{ option.labelKey | translate }}
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <hr class="h-px border-0 bg-line" />
+
+            <!-- Удаление -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-col">
+                    <span class="text-lg font-semibold text-ink">
+                        {{ 'admin.settlementAdmin.deleteTitle' | translate }}
+                    </span>
+                    <span class="text-base text-ink-3">
+                        {{ 'admin.settlementAdmin.deleteHint' | translate }}
+                    </span>
+                </div>
+                <button
+                    type="button"
+                    class="settlement-admin__delete"
+                    [disabled]="busy()"
+                    (click)="deleteSettlement(current)"
+                >
+                    <tui-icon icon="@tui.trash-2" class="size-4!" />
+                    {{ 'admin.settlementAdmin.deleteButton' | translate }}
+                </button>
+            </div>
+        </section>
+    }
+</div>

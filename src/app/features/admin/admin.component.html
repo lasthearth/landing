@@ -76,6 +76,12 @@
                 <tui-icon icon="@tui.receipt" class="size-5! lg:hidden!" />
             </span>
         </button>
+        <button tuiTab type="button">
+            <span class="relative inline-flex items-center">
+                <span class="hidden lg:inline lg:px-3">{{ 'admin.tabs.settlements' | translate }}</span>
+                <tui-icon icon="@tui.map-pin" class="size-5! lg:hidden!" />
+            </span>
+        </button>
     </tui-tabs>
 
     <div class="mt-2 flex flex-col gap-4">
@@ -139,6 +145,9 @@
             }
             @case (8) {
                 <app-all-purchases-panel />
+            }
+            @case (9) {
+                <app-settlement-admin-panel />
             }
         }
     </div>
