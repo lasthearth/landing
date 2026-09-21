@@ -41,6 +41,7 @@ export const HOME_I18N = {
             },
             quickActions: {
                 start: 'Как начать',
+                whereIp: 'Где IP?',
                 settlements: 'Поселения',
                 gallery: 'Галерея',
                 videos: 'Видео',
@@ -88,7 +89,6 @@ export const HOME_I18N = {
                 contactTitle: 'Связаться с нами:',
                 discord: 'Discord',
                 telegram: 'Telegram',
-                ticket: 'Оставить тикет',
             },
             pulse: {
                 title: 'Пульс сервера',
@@ -144,6 +144,7 @@ export const HOME_I18N = {
             },
             quickActions: {
                 start: 'How to start',
+                whereIp: 'Where is IP?',
                 settlements: 'Settlements',
                 gallery: 'Gallery',
                 videos: 'Videos',
@@ -191,7 +192,6 @@ export const HOME_I18N = {
                 contactTitle: 'Get in touch:',
                 discord: 'Discord',
                 telegram: 'Telegram',
-                ticket: 'Open a ticket',
             },
             pulse: {
                 title: 'Server pulse',

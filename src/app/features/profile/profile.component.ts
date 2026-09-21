@@ -11,7 +11,7 @@ import {
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
-import { AsyncPipe, DecimalPipe, NgIf, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, DecimalPipe, NgIf } from '@angular/common';
 import { HttpContext } from '@angular/common/http';
 import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
@@ -27,7 +27,7 @@ import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
 import { ProfileSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
-import { DonateService, IPurchase } from '@entities/donate';
+import { DonateService } from '@entities/donate';
 import { ServerInformationService } from '@core/services/server-information.service';
 import {
     SettlementService,
@@ -55,7 +55,6 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
         ProfileSkeletonComponent,
         ImageLoaderComponent,
         TranslatePipe,
-        NgTemplateOutlet,
         SettlementBadgeComponent,
         SettlementDisplayNamePipe,
     ],
@@ -172,30 +171,6 @@ export class ProfileComponent {
     );
 
     /**
-     * Признак развёрнутого состояния истории покупок.
-     */
-    protected readonly isPurchasesExpanded = signal<boolean>(false);
-
-    /**
-     * Количество покупок, отображаемых в свёрнутом состоянии.
-     */
-    protected readonly purchasesCollapsedCount = 1;
-    /**
-     * История покупок текущего пользователя.
-     */
-    protected readonly purchases$ = this.userService.authState$.pipe(
-        switchMap((isAuth) => {
-            if (!isAuth || !this.isVerifiedUser()) {
-                return of([]);
-            }
-            return this.donateService.getMyPurchases$().pipe(
-                catchError(() => of([])),
-                defaultIfEmpty([])
-            );
-        })
-    );
-
-    /**
      * Поселение текущего пользователя.
      */
     protected readonly settlement$ = this.userService.authState$.pipe(
@@ -289,7 +264,6 @@ export class ProfileComponent {
         this.settlement$,
         this.hungerGamesStats$,
         this.details$,
-        this.purchases$,
     ]).pipe(
         map(() => false),
         startWith(true)
@@ -375,62 +349,6 @@ export class ProfileComponent {
         }
 
         return 'profile.role.unverified';
-    }
-
-    /**
-     * Возвращает спокойную мета-информацию для отображения статуса покупки.
-     * Если покупка выдана (есть issuedBy и issuedAt), отображается «Выдан».
-     * Иначе используется перевод статуса.
-     * @param purchase UI-модель покупки.
-     * @returns Объект с метаданными статуса.
-     */
-    protected getPurchaseStatusMeta(purchase: IPurchase) {
-        const isIssued = !!purchase.issuedBy || !!purchase.issuedAt;
-
-        if (isIssued) {
-            return {
-                label: 'profile.purchases.status.issued',
-                dotClass: 'bg-status-issued',
-                textClass: 'text-status-issued',
-            };
-        }
-
-        const normalizedStatus = purchase.status?.toUpperCase();
-
-        switch (normalizedStatus) {
-            case 'COMPLETED':
-                return {
-                    label: 'profile.purchases.status.completed',
-                    dotClass: 'bg-status-done',
-                    textClass: 'text-status-done',
-                };
-            case 'ISSUED':
-            case 'DELIVERED':
-                return {
-                    label: 'profile.purchases.status.issued',
-                    dotClass: 'bg-status-issued',
-                    textClass: 'text-status-issued',
-                };
-            case 'REFUNDED':
-                return {
-                    label: 'profile.purchases.status.refunded',
-                    dotClass: 'bg-status-refund',
-                    textClass: 'text-status-refund',
-                };
-            case 'PENDING':
-            case 'ACTIVE':
-                return {
-                    label: 'profile.purchases.status.pending',
-                    dotClass: 'bg-status-wait',
-                    textClass: 'text-status-wait',
-                };
-            default:
-                return {
-                    label: purchase.status || '-',
-                    dotClass: 'bg-lh-primary-2/50',
-                    textClass: 'text-ink-3',
-                };
-        }
     }
 
     /**

@@ -116,17 +116,30 @@
                 </div>
 
                 <p class="text-lg text-ink-2 leading-6 line-clamp-3" [innerHTML]="data().description"></p>
+
+                <!--
+                    Контакты поселения. Иконка стоит на базовой линии текста,
+                    поэтому при обрезке до двух строк не остаётся одна висячая
+                    иконка, как было бы у абсолютного позиционирования.
+                    Вывод только интерполяцией (XSS: сервер не экранирует).
+                -->
+                @if (data().contact_info) {
+                    <p class="settlement-card__contacts" [title]="data().contact_info">
+                        <tui-icon icon="@tui.contact-round" class="settlement-card__contacts-icon" />
+                        <span class="line-clamp-2">{{ data().contact_info }}</span>
+                    </p>
+                }
             </div>
 
             <div class="flex flex-col gap-2">
                 <hr class="h-px bg-surface-4/30 w-full rounded-full border-0" />
                 <div class="flex flex-wrap gap-1.5 items-center">
                     @for (leaderPlayer of leaders(); track leaderPlayer.user_id) {
-                        <app-player-chip [player]="leaderPlayer" [isLeader]="true" />
+                        <app-player-chip [player]="leaderPlayer" [isLeader]="true" [settlement]="data()" />
                     }
 
                     @for (item of visibleUsers(); track item.user_id) {
-                        <app-player-chip [player]="item" />
+                        <app-player-chip [player]="item" [settlement]="data()" />
                     }
 
                     @if (hiddenCount() > 0) {

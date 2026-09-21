@@ -48,6 +48,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/settlement.v1.AdminUpdateSettlementResponse"
+  /v1/admin/settlements/{settlement_id}:
+    delete:
+      tags:
+        - SettlementService
+      summary: "Admin: permanently delete a settlement, its invitations and join
+        requests. Requires settlements:manage scope."
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement not found
+           - PERMISSION_DENIED (403): missing settlements:manage scope
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_DeleteSettlement
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.DeleteSettlementResponse"
   /v1/admin/settlements/{settlement_id}/imperial-favor/logs:
     get:
       tags:
@@ -69,32 +96,28 @@ paths:
             title: settlement_id
         - name: next_token
           in: query
+          description: "(OPTIONAL) "
           required: false
           schema:
             type: string
             title: next_token
-            description: "(OPTIONAL) "
         - name: admin_id
           in: query
-          description: Filter logs by the admin who performed the operation.
+          description: (OPTIONAL) Filter logs by the admin who performed the operation.
           required: false
           schema:
             type: string
             title: admin_id
-            description: (OPTIONAL) Filter logs by the admin who performed the operation.
         - name: order_by
           in: query
-          description: |-
-            Sort order. Format: "field [asc|desc]". Default: "created_at desc".
+          description: >-
+            (OPTIONAL) Sort order. Format: "field [asc|desc]". Default:
+            "created_at desc".
              Allowed fields: created_at, settlement_id, admin_id.
           required: false
           schema:
             type: string
             title: order_by
-            description: >-
-              (OPTIONAL) Sort order. Format: "field [asc|desc]". Default:
-              "created_at desc".
-               Allowed fields: created_at, settlement_id, admin_id.
       responses:
         "200":
           description: Success
@@ -208,15 +231,273 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/settlement.v1.DeductImperialFavorResponse"
+  /v1/admin/settlements/{settlement_id}/owners:
+    post:
+      tags:
+        - SettlementService
+      summary: "Admin: grant the owner role to a member. Requires settlements:manage
+        scope."
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement or member not found
+           - PERMISSION_DENIED (403): missing settlements:manage scope
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_AddOwner
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlement_id:
+                  type: string
+                  title: settlement_id
+                user_id:
+                  type: string
+                  title: user_id
+              title: AddOwnerRequest
+              required:
+                - settlement_id
+                - user_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.AddOwnerResponse"
+  /v1/admin/settlements/{settlement_id}/owners/{user_id}:
+    delete:
+      tags:
+        - SettlementService
+      summary: "Admin: revoke the owner role from a member. Requires
+        settlements:manage scope."
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement or member not found
+           - FAILED_PRECONDITION (400): cannot revoke the last owner
+           - PERMISSION_DENIED (403): missing settlements:manage scope
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_RemoveOwner
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: user_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.RemoveOwnerResponse"
+  /v1/admin/settlements/{settlement_id}/roles:set-enabled:
+    post:
+      tags:
+        - SettlementService
+      summary: >-
+        Admin: enable or disable custom roles for a settlement. Requires
+        settlements:manage scope.
+         When disabled, roles are neither returned nor applied.
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement not found
+           - PERMISSION_DENIED (403): missing settlements:manage scope
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_SetRolesEnabled
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlement_id:
+                  type: string
+                  title: settlement_id
+                enabled:
+                  type: boolean
+                  title: enabled
+              title: SetRolesEnabledRequest
+              required:
+                - settlement_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.SetRolesEnabledResponse"
+  /v1/discord/channels/{channel_id}/images:
+    get:
+      tags:
+        - DiscordService
+      summary: ListImages
+      description: "Lists image attachments from a Discord channel.\r
+
+        \r
+
+        \ Aggregates messages until the requested number of images is
+        collected.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): missing channel_id or invalid limit\r
+
+        \   - INTERNAL (500): Discord API error or JSON decode failure"
+      operationId: DiscordService_ListImages
+      parameters:
+        - name: channel_id
+          in: path
+          description: Discord channel ID.
+          required: true
+          schema:
+            type: string
+            title: channel_id
+        - name: limit
+          in: query
+          description: "Maximum number of images. Allowed range: [1, 100]."
+          schema:
+            type: integer
+            title: limit
+            format: int32
+        - name: before
+          in: query
+          description: Message ID to fetch before (for pagination).
+          schema:
+            type: string
+            title: before
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/discord.v1.ListImagesResponse"
+  /v1/discord/channels/{channel_id}/messages:
+    get:
+      tags:
+        - DiscordService
+      summary: ListMessages
+      description: "Lists messages from a Discord channel.\r
+
+        \r
+
+        \ Returns cleaned Markdown text, resolved emojis, and derived message
+        type.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): missing channel_id or invalid limit\r
+
+        \   - INTERNAL (500): Discord API error or JSON decode failure"
+      operationId: DiscordService_ListMessages
+      parameters:
+        - name: channel_id
+          in: path
+          description: Discord channel ID.
+          required: true
+          schema:
+            type: string
+            title: channel_id
+        - name: limit
+          in: query
+          description: "Maximum number of messages. Allowed range: [1, 100]."
+          schema:
+            type: integer
+            title: limit
+            format: int32
+        - name: before
+          in: query
+          description: Message ID to fetch before (for pagination).
+          schema:
+            type: string
+            title: before
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/discord.v1.ListMessagesResponse"
+  /v1/discord/news:
+    post:
+      tags:
+        - DiscordService
+      summary: SendNews
+      description: "Sends a news embed to the configured Discord webhook.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): missing news:create scope\r
+
+        \   - INVALID_ARGUMENT (400): missing required fields\r
+
+        \   - INTERNAL (500): webhook request failed"
+      operationId: DiscordService_SendNews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/discord.v1.SendNewsRequest"
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/google.protobuf.Empty"
   /v1/donate/me/balance:
     get:
       tags:
         - DonateService
-      summary: "Player: get the caller's current coin balance."
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: GetMyBalance
+      description: "Player: get the caller's current coin balance.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_GetMyBalance
       responses:
         "200":
@@ -229,11 +510,16 @@ paths:
     get:
       tags:
         - DonateService
-      summary: "Player: list the caller's own purchases."
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: ListMyPurchases
+      description: "Player: list the caller's own purchases.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_ListMyPurchases
       responses:
         "200":
@@ -246,14 +532,22 @@ paths:
     get:
       tags:
         - DonateService
-      summary: "Admin: get a player's current coin balance."
-      description: |-
-        Returns 0 coins if the wallet does not exist yet.
+      summary: AdminGetPlayerBalance
+      description: "Admin: get a player's current coin balance.\r
 
-         Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+        \r
+
+        \ Returns 0 coins if the wallet does not exist yet.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_AdminGetPlayerBalance
       parameters:
         - name: player_id
@@ -273,13 +567,20 @@ paths:
     post:
       tags:
         - DonateService
-      summary: "Admin: manually credit coins to a player's wallet."
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): amount must be positive
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: AddCoins
+      description: "Admin: manually credit coins to a player's wallet.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): amount must be positive\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_AddCoins
       parameters:
         - name: player_id
@@ -323,15 +624,24 @@ paths:
     post:
       tags:
         - DonateService
-      summary: "Admin: manually deduct coins from a player's wallet."
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): amount must be positive
-           - NOT_FOUND (404): wallet not found
-           - FAILED_PRECONDITION (412): insufficient funds
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: DeductCoins
+      description: "Admin: manually deduct coins from a player's wallet.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): amount must be positive\r
+
+        \   - NOT_FOUND (404): wallet not found\r
+
+        \   - FAILED_PRECONDITION (412): insufficient funds\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_DeductCoins
       parameters:
         - name: player_id
@@ -372,12 +682,18 @@ paths:
     get:
       tags:
         - DonateService
-      summary: "Admin: list all purchases for a player."
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: AdminListPurchases
+      description: "Admin: list all purchases for a player.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_AdminListPurchases
       parameters:
         - name: player_id
@@ -397,12 +713,18 @@ paths:
     get:
       tags:
         - DonateService
-      summary: "Admin: list all coin transactions for a player."
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: ListTransactions
+      description: "Admin: list all coin transactions for a player.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_ListTransactions
       parameters:
         - name: player_id
@@ -418,19 +740,70 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/donate.v1.ListTransactionsResponse"
+  /v1/donate/purchases:
+    get:
+      tags:
+        - DonateService
+      summary: AdminListAllPurchases
+      description: "Admin: list every purchase across all players, cursor-paginated.\r
+
+        \r
+
+        \ Returns newest purchases first. Pass the returned next_page_token to
+        fetch the next page.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
+      operationId: DonateService_AdminListAllPurchases
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type:
+              - integer
+              - string
+            title: limit
+            format: int64
+        - name: page_token
+          in: query
+          schema:
+            type: string
+            title: page_token
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/donate.v1.AdminListAllPurchasesResponse"
   /v1/donate/purchases/pending:
     get:
       tags:
         - DonateService
-      summary: "Admin: list purchases that have not been marked as issued yet (pending
-        manual delivery)."
-      description: |-
-        Returns only active (non-refunded) purchases.
+      summary: AdminListPendingPurchases
+      description: "Admin: list purchases that have not been marked as issued yet
+        (pending manual delivery).\r
 
-         Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+        \r
+
+        \ Returns only active (non-refunded) purchases.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_AdminListPendingPurchases
       parameters:
         - name: limit
@@ -457,17 +830,27 @@ paths:
     post:
       tags:
         - DonateService
-      summary: "Admin: mark a purchase as manually issued by the calling admin."
-      description: >-
-        Idempotent — calling on an already-issued purchase returns the existing
-        record unchanged.
+      summary: MarkPurchaseIssued
+      description: "Admin: mark a purchase as manually issued by the calling admin.\r
 
-         Errors:
-           - NOT_FOUND (404): purchase not found
-           - FAILED_PRECONDITION (412): purchase is refunded
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+        \r
+
+        \ Idempotent — calling on an already-issued purchase returns the
+        existing record unchanged.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): purchase not found\r
+
+        \   - FAILED_PRECONDITION (412): purchase is refunded\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_MarkPurchaseIssued
       parameters:
         - name: purchase_id
@@ -499,14 +882,23 @@ paths:
     post:
       tags:
         - DonateService
-      summary: "Admin: refund a purchase — restores coins to the player's wallet."
-      description: |-
-        Errors:
-           - NOT_FOUND (404): purchase not found
-           - FAILED_PRECONDITION (412): already refunded
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: Refund
+      description: "Admin: refund a purchase — restores coins to the player's
+        wallet.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): purchase not found\r
+
+        \   - FAILED_PRECONDITION (412): already refunded\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_Refund
       parameters:
         - name: purchase_id
@@ -541,11 +933,16 @@ paths:
     get:
       tags:
         - DonateService
-      summary: "Player: list all available shop items."
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: ListShopItems
+      description: "Player: list all available shop items.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_ListShopItems
       responses:
         "200":
@@ -557,13 +954,20 @@ paths:
     post:
       tags:
         - DonateService
-      summary: "Admin: create a new shop item."
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): missing or invalid fields
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: CreateShopItem
+      description: "Admin: create a new shop item.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): missing or invalid fields\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_CreateShopItem
       requestBody:
         content:
@@ -582,14 +986,22 @@ paths:
     put:
       tags:
         - DonateService
-      summary: "Admin: update an existing shop item."
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): missing or invalid fields
-           - NOT_FOUND (404): item not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: UpdateShopItem
+      description: "Admin: update an existing shop item.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): missing or invalid fields\r
+
+        \   - NOT_FOUND (404): item not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_UpdateShopItem
       parameters:
         - name: id
@@ -665,13 +1077,20 @@ paths:
     delete:
       tags:
         - DonateService
-      summary: "Admin: delete a shop item."
-      description: |-
-        Errors:
-           - NOT_FOUND (404): item not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: DeleteShopItem
+      description: "Admin: delete a shop item.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): item not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_DeleteShopItem
       parameters:
         - name: id
@@ -691,13 +1110,20 @@ paths:
     post:
       tags:
         - DonateService
-      summary: "Player: purchase a shop item using coins."
-      description: |-
-        Errors:
-           - NOT_FOUND (404): item not found or unavailable
-           - FAILED_PRECONDITION (412): insufficient coins
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: BuyItem
+      description: "Player: purchase a shop item using coins.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): item not found or unavailable\r
+
+        \   - FAILED_PRECONDITION (412): insufficient coins\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_BuyItem
       parameters:
         - name: item_id
@@ -729,13 +1155,19 @@ paths:
     get:
       tags:
         - DonateService
-      summary: "Admin: list all player wallets sorted by coins descending,
-        cursor-paginated."
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: ListWallets
+      description: "Admin: list all player wallets sorted by coins descending,
+        cursor-paginated.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: DonateService_ListWallets
       parameters:
         - name: page_token
@@ -762,10 +1194,14 @@ paths:
     get:
       tags:
         - HungerGamesService
-      summary: Returns the current season leaderboard sorted by ELO descending.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: ListLeaderboard
+      description: "Returns the current season leaderboard sorted by ELO descending.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: HungerGamesService_ListLeaderboard
       parameters:
         - name: limit
@@ -775,7 +1211,6 @@ paths:
             type: integer
             title: limit
             format: int32
-            description: Maximum number of entries. Defaults to 25.
       responses:
         "200":
           description: Success
@@ -787,15 +1222,26 @@ paths:
     post:
       tags:
         - HungerGamesService
-      summary: Records a match result and recalculates ELO for all participants.
-      description: >-
-        Requires an active season.
+      summary: RecordMatch
+      description: "Records a match result and recalculates ELO for all
+        participants.\r
 
-         Errors:
-           - INVALID_ARGUMENT (400): fewer than 2 players, duplicate places, or no active season
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+        \r
+
+        \ Requires an active season.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): fewer than 2 players, duplicate places, or
+        no active season\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: HungerGamesService_RecordMatch
       requestBody:
         content:
@@ -814,13 +1260,20 @@ paths:
     post:
       tags:
         - HungerGamesService
-      summary: Creates a new season. Fails if a season is already active.
-      description: |-
-        Errors:
-           - ALREADY_EXISTS (409): active season already exists
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: CreateSeason
+      description: "Creates a new season. Fails if a season is already active.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - ALREADY_EXISTS (409): active season already exists\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: HungerGamesService_CreateSeason
       requestBody:
         content:
@@ -839,16 +1292,25 @@ paths:
     post:
       tags:
         - HungerGamesService
-      summary: Distributes season rewards to top-N players and closes the current
-        season.
-      description: |-
-        Archives the leaderboard. Does NOT create a new season.
+      summary: ResetSeason
+      description: "Distributes season rewards to top-N players and closes the current
+        season.\r
 
-         Errors:
-           - NOT_FOUND (404): no active season
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+        \r
+
+        \ Archives the leaderboard. Does NOT create a new season.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): no active season\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: HungerGamesService_ResetSeason
       requestBody:
         content:
@@ -867,10 +1329,14 @@ paths:
     get:
       tags:
         - HungerGamesService
-      summary: Returns a paginated list of all seasons, newest first.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: ListSeasons
+      description: "Returns a paginated list of all seasons, newest first.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: HungerGamesService_ListSeasons
       parameters:
         - name: next
@@ -879,7 +1345,6 @@ paths:
           schema:
             type: string
             title: next
-            description: Cursor from a previous response for pagination.
         - name: limit
           in: query
           description: Maximum number of seasons. Defaults to 20.
@@ -887,7 +1352,6 @@ paths:
             type: integer
             title: limit
             format: int32
-            description: Maximum number of seasons. Defaults to 20.
       responses:
         "200":
           description: Success
@@ -899,11 +1363,16 @@ paths:
     get:
       tags:
         - HungerGamesService
-      summary: Returns the top 10 archived results for a specific past season.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): season not found
-           - INTERNAL (500): database failure
+      summary: GetSeasonLeaderboard
+      description: "Returns the top 10 archived results for a specific past season.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): season not found\r
+
+        \   - INTERNAL (500): database failure"
       operationId: HungerGamesService_GetSeasonLeaderboard
       parameters:
         - name: season_id
@@ -923,14 +1392,23 @@ paths:
     get:
       tags:
         - HungerGamesService
-      summary: Returns a player's stats for a specific season.
-      description: >-
-        For an active season returns current live stats (rank = 0).
-         For a completed season returns the archived result including rank and reward.
+      summary: GetPlayerStats
+      description: "Returns a player's stats for a specific season.\r
 
-         Errors:
-           - NOT_FOUND (404): season or player stats not found
-           - INTERNAL (500): database failure
+        \r
+
+        \ For an active season returns current live stats (rank = 0).\r
+
+        \ For a completed season returns the archived result including rank and
+        reward.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): season or player stats not found\r
+
+        \   - INTERNAL (500): database failure"
       operationId: HungerGamesService_GetPlayerStats
       parameters:
         - name: season_id
@@ -956,10 +1434,14 @@ paths:
     get:
       tags:
         - ImperialPointService
-      summary: List all imperial points.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: ListPoints
+      description: "List all imperial points.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ImperialPointService_ListPoints
       responses:
         "200":
@@ -971,13 +1453,20 @@ paths:
     post:
       tags:
         - ImperialPointService
-      summary: Create a new imperial point. Requires imperialpoint:write scope.
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): missing name
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): requires imperialpoint:write scope
-           - INTERNAL (500): database failure
+      summary: CreatePoint
+      description: "Create a new imperial point. Requires imperialpoint:write scope.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): missing name\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): requires imperialpoint:write scope\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ImperialPointService_CreatePoint
       requestBody:
         content:
@@ -996,11 +1485,16 @@ paths:
     get:
       tags:
         - ImperialPointService
-      summary: Get an imperial point by ID.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): point not found
-           - INTERNAL (500): database failure
+      summary: GetPoint
+      description: "Get an imperial point by ID.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): point not found\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ImperialPointService_GetPoint
       parameters:
         - name: id
@@ -1019,15 +1513,23 @@ paths:
     patch:
       tags:
         - ImperialPointService
-      summary: |-
-        Update an imperial point config (name, description, bi_rate, tree_id).
-         Requires imperialpoint:write scope.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): point not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): requires imperialpoint:write scope
-           - INTERNAL (500): database failure
+      summary: UpdatePoint
+      description: "Update an imperial point config (name, description, bi_rate,
+        tree_id).\r
+
+        \ Requires imperialpoint:write scope.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): point not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): requires imperialpoint:write scope\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ImperialPointService_UpdatePoint
       parameters:
         - name: id
@@ -1071,16 +1573,23 @@ paths:
     post:
       tags:
         - ImperialPointService
-      summary: >-
-        Release control of an imperial point. Rolls back the last purchased
-        node.
-         Requires imperialpoint:write scope.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): point not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): requires imperialpoint:write scope
-           - INTERNAL (500): database failure
+      summary: ReleaseControl
+      description: "Release control of an imperial point. Rolls back the last
+        purchased node.\r
+
+        \ Requires imperialpoint:write scope.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): point not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): requires imperialpoint:write scope\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ImperialPointService_ReleaseControl
       parameters:
         - name: point_id
@@ -1114,18 +1623,29 @@ paths:
     post:
       tags:
         - ImperialPointService
-      summary: |-
-        Set which settlement controls an imperial point.
-         If the point was previously controlled by the opposite side, the last
-         purchased node in the point's tree is rolled back (no БИ refund).
-         Requires imperialpoint:write scope.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): point or settlement not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): requires imperialpoint:write scope
-           - FAILED_PRECONDITION (412): side already controls 2 points
-           - INTERNAL (500): database failure
+      summary: SetControl
+      description: "Set which settlement controls an imperial point.\r
+
+        \ If the point was previously controlled by the opposite side, the
+        last\r
+
+        \ purchased node in the point's tree is rolled back (no БИ refund).\r
+
+        \ Requires imperialpoint:write scope.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): point or settlement not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): requires imperialpoint:write scope\r
+
+        \   - FAILED_PRECONDITION (412): side already controls 2 points\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ImperialPointService_SetControl
       parameters:
         - name: point_id
@@ -1182,14 +1702,89 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/trademarket.v1.CreateResponse"
+  /v1/kitdefs:
+    get:
+      tags:
+        - KitDefService
+      summary: "Admin: list every captured kit with its display metadata and item
+        icons."
+      description: |-
+        Returns all kits in one response — attr_snapshot is not exposed.
+
+         Errors:
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - PERMISSION_DENIED (403): missing kit:edit scope
+           - INTERNAL (500): database failure
+      operationId: KitDefService_ListKits
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/kitdef.v1.ListKitsResponse"
+  /v1/kitdefs/{code}:rename:
+    post:
+      tags:
+        - KitDefService
+      summary: "Admin: rename a kit (set its display title). Metadata-only $set, no
+        upsert."
+      description: >-
+        NotFound when the kit was never captured by the game — vsservice does
+        not
+         insert. Only the title changes; code/items/created_at stay the game's.
+
+         Errors:
+           - INVALID_ARGUMENT (400): empty code or title
+           - NOT_FOUND (404): kit was never captured
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - PERMISSION_DENIED (403): missing kit:edit scope
+           - INTERNAL (500): database failure
+      operationId: KitDefService_RenameKit
+      parameters:
+        - name: code
+          in: path
+          description: Upsert key of the kit to rename.
+          required: true
+          schema:
+            type: string
+            title: code
+            minLength: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  title: title
+                  minLength: 1
+                  description: New display title.
+              title: RenameKitRequest
+              required:
+                - title
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/kitdef.v1.RenameKitResponse"
   /v1/kits:
     get:
       tags:
         - KitService
-      summary: Get all available kits that can be assigned to users.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: GetAvailableKits
+      description: "Get all available kits that can be assigned to users.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: KitService_GetAvailableKits
       responses:
         "200":
@@ -1202,13 +1797,21 @@ paths:
     post:
       tags:
         - KitService
-      summary: Assign a specific kit to a user. Requires admin privileges.
-      description: >-
-        Errors:
-           - INVALID_ARGUMENT (400): missing required fields or invalid timestamps
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: AssignKitToUser
+      description: "Assign a specific kit to a user. Requires admin privileges.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): missing required fields or invalid
+        timestamps\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: KitService_AssignKitToUser
       parameters:
         - name: kit_name
@@ -1247,13 +1850,20 @@ paths:
     get:
       tags:
         - LeaderboardService
-      summary: List leaderboard entries sorted by the specified filter.
-      description: |-
-        Defaults to 25 entries if limit is not specified.
+      summary: ListEntries
+      description: "List leaderboard entries sorted by the specified filter.\r
 
-         Errors:
-           - INVALID_ARGUMENT (400): unknown filter value
-           - INTERNAL (500): database failure
+        \r
+
+        \ Defaults to 25 entries if limit is not specified.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): unknown filter value\r
+
+        \   - INTERNAL (500): database failure"
       operationId: LeaderboardService_ListEntries
       parameters:
         - name: filter
@@ -1263,21 +1873,16 @@ paths:
           required: true
           schema:
             title: filter
-            description: Leaderboard filter. Service will return entries sorted by provided
-              filter.
             $ref: "#/components/schemas/leaderboard.v1.LeaderboardRequest.LeaderboardFilter"
         - name: limit
           in: query
-          description: |-
-            The maximum number of entries to return.
-             If unspecified, 25 entry will be returned.
+          description: "The maximum number of entries to return.\r
+
+            \ If unspecified, 25 entry will be returned."
           schema:
             type: integer
             title: limit
             format: int32
-            description: |-
-              The maximum number of entries to return.
-               If unspecified, 25 entry will be returned.
       responses:
         "200":
           description: Success
@@ -1285,20 +1890,274 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/leaderboard.v1.LeaderboardResponse"
+  /v1/mail:
+    get:
+      tags:
+        - MailService
+      summary: "Player: list the caller's mails joined with their per-player claim
+        state."
+      description: |-
+        Returns targeted mails (recipient == caller) and broadcasts. State is
+         derived: no claim row → UNREAD; revoked/expired computed at read.
+
+         Errors:
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: MailService_ListMail
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mail.v1.ListMailResponse"
+  /v1/mail/{mail_id}:claim:
+    post:
+      tags:
+        - MailService
+      summary: "Player: claim the attachments of one of the caller's mails. Idempotent."
+      description: >-
+        The claimed row is written before physical delivery (VintageAPI grants
+        by
+         reading Mongo). Not claimable when the mail has no attachments, is expired,
+         or was revoked before the claim.
+
+         Errors:
+           - NOT_FOUND (404): mail does not exist or is not addressed to the caller
+           - FAILED_PRECONDITION (412): nothing to claim, expired, or revoked
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: MailService_Claim
+      parameters:
+        - name: mail_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: mail_id
+            minLength: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mail_id:
+                  type: string
+                  title: mail_id
+                  minLength: 1
+              title: ClaimRequest
+              required:
+                - mail_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mail.v1.ClaimResponse"
+  /v1/mail/{mail_id}:read:
+    post:
+      tags:
+        - MailService
+      summary: "Player: mark one of the caller's mails as read. Idempotent."
+      description: >-
+        Errors:
+           - NOT_FOUND (404): mail does not exist or is not addressed to the caller
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: MailService_MarkRead
+      parameters:
+        - name: mail_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: mail_id
+            minLength: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mail_id:
+                  type: string
+                  title: mail_id
+                  minLength: 1
+              title: MarkReadRequest
+              required:
+                - mail_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mail.v1.MarkReadResponse"
+  /v1/mail/{mail_id}:revoke:
+    post:
+      tags:
+        - MailService
+      summary: "Admin: revoke a mail before it is claimed. Idempotent."
+      description: >-
+        Sets the revoked flag on the document (not on claims). Non-claimers lose
+         access (status revoked at read); already-claimed grants are NOT rolled back.
+
+         Errors:
+           - NOT_FOUND (404): mail not found
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - PERMISSION_DENIED (403): insufficient privileges
+           - INTERNAL (500): database failure
+      operationId: MailService_RevokeMail
+      parameters:
+        - name: mail_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: mail_id
+            minLength: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mail_id:
+                  type: string
+                  title: mail_id
+                  minLength: 1
+              title: RevokeMailRequest
+              required:
+                - mail_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mail.v1.RevokeMailResponse"
+  /v1/mail:claim-all:
+    post:
+      tags:
+        - MailService
+      summary: "Player: claim every claimable mail for the caller. Idempotent."
+      description: |-
+        Errors:
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: MailService_ClaimAll
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/mail.v1.ClaimAllRequest"
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mail.v1.ClaimAllResponse"
+  /v1/mail:compose:
+    post:
+      tags:
+        - MailService
+      summary: "Admin: compose a mail to one player or to everyone (broadcast)."
+      description: >-
+        Broadcast creates ONE document with recipient "broadcast"; there is no
+         fan-out (per-player claim rows are created lazily on read/claim). An empty
+         attachments list is a pure notification. Optional idempotency_key makes the
+         call retry-safe: the same key returns the same mail.
+
+         Errors:
+           - INVALID_ARGUMENT (400): missing recipient, empty title/body, or bad attachment
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - PERMISSION_DENIED (403): insufficient privileges
+           - INTERNAL (500): database failure
+      operationId: MailService_ComposeMail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/mail.v1.ComposeMailRequest"
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mail.v1.ComposeMailResponse"
+  /v1/mail:compose-kit:
+    post:
+      tags:
+        - MailService
+      summary: >-
+        Admin: compose a mail whose attachments are a captured kit's contents,
+         expanded server-side. Addressed to one player or to everyone (broadcast).
+      description: >-
+        The kit is expanded at compose time into item attachments (game_code +
+         type + quantity + attr_snapshot carried through as-is); the kit reference
+         itself is never stored on the mail. A kit that was never captured is
+         NOT_FOUND; a captured-but-empty kit is FAILED_PRECONDITION (an empty kit is
+         treated as missing — a claimless kit-mail is never created). Optional
+         idempotency_key makes the call retry-safe: the same key returns the same
+         mail.
+
+         Errors:
+           - INVALID_ARGUMENT (400): missing recipient, empty kit_id/title/body
+           - NOT_FOUND (404): kit was never captured
+           - FAILED_PRECONDITION (412): kit is empty (nothing to grant)
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - PERMISSION_DENIED (403): insufficient privileges
+           - INTERNAL (500): database failure
+      operationId: MailService_ComposeKitMail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/mail.v1.ComposeKitMailRequest"
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/mail.v1.ComposeKitMailResponse"
   /v1/media/upload-urls:
     post:
       tags:
         - MediaService
-      summary: Returns N presigned POST targets for uploading images.
-      description: >-
-        The required scope depends on the purpose (see the server-side
-        per-purpose config).
+      summary: CreateUploadUrls
+      description: "Returns N presigned POST targets for uploading images.\r
 
-         Errors:
-           - INVALID_ARGUMENT (400): unknown purpose, count out of [1,20], or unsupported content_type
-           - UNAUTHENTICATED (401)
-           - PERMISSION_DENIED (403)
-           - INTERNAL (500)
+        \r
+
+        \ The required scope depends on the purpose (see the server-side
+        per-purpose config).\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): unknown purpose, count out of [1,20], or
+        unsupported content_type\r
+
+        \   - UNAUTHENTICATED (401)\r
+
+        \   - PERMISSION_DENIED (403)\r
+
+        \   - INTERNAL (500)"
       operationId: MediaService_CreateUploadUrls
       requestBody:
         content:
@@ -1317,49 +2176,49 @@ paths:
     get:
       tags:
         - NewsService
-      summary: List news with pagination.
-      description: |-
-        Default page size is 15, maximum is 50.
+      summary: ListNews
+      description: "List news with pagination.\r
 
-         Errors:
-           - INTERNAL (500): database failure
+        \r
+
+        \ Default page size is 15, maximum is 50.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: NewsService_ListNews
       parameters:
         - name: page_size
           in: query
-          description: >-
-            The maximum number of news to return. The service may return fewer
-            than
-             this value.
-             If unspecified, at most 15 news will be returned.
-             The maximum value is 50; values above 50 will be coerced to 50.
+          description: "The maximum number of news to return. The service may return fewer
+            than\r
+
+            \ this value.\r
+
+            \ If unspecified, at most 15 news will be returned.\r
+
+            \ The maximum value is 50; values above 50 will be coerced to 50."
           schema:
             type: integer
             title: page_size
             format: int32
-            description: >-
-              The maximum number of news to return. The service may return fewer
-              than
-               this value.
-               If unspecified, at most 15 news will be returned.
-               The maximum value is 50; values above 50 will be coerced to 50.
         - name: page_token
           in: query
-          description: >-
-            A page token, received from a previous `ListBooks` call.
-             Provide this to retrieve the subsequent page.
+          description: "A page token, received from a previous `ListBooks` call.\r
 
-             When paginating, all other parameters provided to `ListBooks` must match
-             the call that provided the page token.
+            \ Provide this to retrieve the subsequent page.\r
+
+            \r
+
+            \ When paginating, all other parameters provided to `ListBooks` must
+            match\r
+
+            \ the call that provided the page token."
           schema:
             type: string
             title: page_token
-            description: >-
-              A page token, received from a previous `ListBooks` call.
-               Provide this to retrieve the subsequent page.
-
-               When paginating, all other parameters provided to `ListBooks` must match
-               the call that provided the page token.
       responses:
         "200":
           description: Success
@@ -1370,14 +2229,23 @@ paths:
     post:
       tags:
         - NewsService
-      summary: Create a news entry. Requires admin privileges.
-      description: |-
-        Preview image is stored as WebP. Broadcasts a notification to all users.
+      summary: CreateNews
+      description: "Create a news entry. Requires admin privileges.\r
 
-         Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): storage or database failure
+        \r
+
+        \ Preview image is stored as WebP. Broadcasts a notification to all
+        users.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): storage or database failure"
       operationId: NewsService_CreateNews
       requestBody:
         content:
@@ -1396,11 +2264,16 @@ paths:
     get:
       tags:
         - NewsService
-      summary: Get a specific news entry by ID.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): news not found
-           - INTERNAL (500): database failure
+      summary: GetNews
+      description: "Get a specific news entry by ID.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): news not found\r
+
+        \   - INTERNAL (500): database failure"
       operationId: NewsService_GetNews
       parameters:
         - name: id
@@ -1410,7 +2283,6 @@ paths:
           schema:
             type: string
             title: id
-            description: The unique identifier of the news item to retrieve.
       responses:
         "200":
           description: Success
@@ -1421,13 +2293,20 @@ paths:
     delete:
       tags:
         - NewsService
-      summary: Delete a news entry by ID. Requires admin privileges.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): news not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: DeleteNews
+      description: "Delete a news entry by ID. Requires admin privileges.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): news not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: NewsService_DeleteNews
       parameters:
         - name: id
@@ -1437,7 +2316,6 @@ paths:
           schema:
             type: string
             title: id
-            description: The unique identifier of the news item to delete.
       responses:
         "200":
           description: Success
@@ -1449,15 +2327,21 @@ paths:
     post:
       tags:
         - NewsService
-      summary: >-
-        Mark a news item as viewed by the authenticated user. Increments view
-        count once per user.
-         Returns the updated view count.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): news not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: MarkNewsViewed
+      description: "Mark a news item as viewed by the authenticated user. Increments
+        view count once per user.\r
+
+        \ Returns the updated view count.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): news not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: NewsService_MarkNewsViewed
       parameters:
         - name: id
@@ -1467,7 +2351,6 @@ paths:
           schema:
             type: string
             title: id
-            description: The unique identifier of the news item.
       responses:
         "200":
           description: Success
@@ -1479,53 +2362,56 @@ paths:
     get:
       tags:
         - NotificationService
-      summary: Lists notifications for the authenticated user with pagination.
-      description: >-
-        Default page size is 15, maximum is 15.
-         Supports order_by: "created_at" or "state" with optional " asc"/" desc" suffix.
+      summary: ListNotifications
+      description: "Lists notifications for the authenticated user with pagination.\r
 
-         Errors:
-           - NOT_FOUND (404): no notifications found for user
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+        \r
+
+        \ Default page size is 15, maximum is 15.\r
+
+        \ Supports order_by: \"created_at\" or \"state\" with optional \"
+        asc\"/\" desc\" suffix.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): no notifications found for user\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: NotificationService_ListNotifications
       parameters:
         - name: page_size
           in: query
-          description: >-
-            The maximum number of notifications to return. The service may
-            return fewer
-             than this value. If unspecified, at most 15 notifications will be returned.
-             The maximum value is 15; values above 15 will be coerced to 15.
+          description: "The maximum number of notifications to return. The service may
+            return fewer\r
+
+            \ than this value. If unspecified, at most 15 notifications will be
+            returned.\r
+
+            \ The maximum value is 15; values above 15 will be coerced to 15."
           schema:
             type: integer
             title: page_size
             format: int32
-            description: >-
-              The maximum number of notifications to return. The service may
-              return fewer
-               than this value. If unspecified, at most 15 notifications will be returned.
-               The maximum value is 15; values above 15 will be coerced to 15.
         - name: page_token
           in: query
           description: A token identifying a page of results the server should return.
           schema:
             type: string
             title: page_token
-            description: A token identifying a page of results the server should return.
         - name: order_by
           in: query
-          description: >-
-            The field to sort by, followed by direction (e.g., "created_at desc"
-            or "state asc").
-             Supported fields: "created_at", "state". If unspecified, defaults to "created_at desc".
+          description: "The field to sort by, followed by direction (e.g., \"created_at
+            desc\" or \"state asc\").\r
+
+            \ Supported fields: \"created_at\", \"state\". If unspecified,
+            defaults to \"created_at desc\"."
           schema:
             type: string
             title: order_by
-            description: >-
-              The field to sort by, followed by direction (e.g., "created_at
-              desc" or "state asc").
-               Supported fields: "created_at", "state". If unspecified, defaults to "created_at desc".
       responses:
         "200":
           description: Success
@@ -1537,26 +2423,29 @@ paths:
     post:
       tags:
         - NotificationService
-      summary: Mark a notification as read.
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): invalid notification ID format
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: MarkAsRead
+      description: "Mark a notification as read.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): invalid notification ID format\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: NotificationService_MarkAsRead
       parameters:
         - name: id
           in: path
-          description: |-
-            The identifier of the notification to mark as read.
-             Required.
+          description: "The identifier of the notification to mark as read.\r
+
+            \ Required."
           required: true
           schema:
             type: string
             title: id
-            description: |-
-              The identifier of the notification to mark as read.
-               Required.
       responses:
         "200":
           description: Success
@@ -1568,10 +2457,14 @@ paths:
     get:
       tags:
         - ProgressionService
-      summary: Get a point's progression for a specific side (east/west).
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: GetPointProgress
+      description: "Get a point's progression for a specific side (east/west).\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_GetPointProgress
       parameters:
         - name: point_id
@@ -1603,17 +2496,28 @@ paths:
     post:
       tags:
         - ProgressionService
-      summary: |-
-        Purchase a node in a key point's talent tree.
-         Caller must be the leader of the settlement that controls the point.
-      description: >-
-        Errors:
-           - NOT_FOUND (404): point, tree, or node not found
-           - INVALID_ARGUMENT (400): node already purchased or parent not purchased
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): caller's settlement does not control this point
-           - FAILED_PRECONDITION (412): insufficient imperial favor
-           - INTERNAL (500): database failure
+      summary: PurchasePointNode
+      description: "Purchase a node in a key point's talent tree.\r
+
+        \ Caller must be the leader of the settlement that controls the point.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): point, tree, or node not found\r
+
+        \   - INVALID_ARGUMENT (400): node already purchased or parent not
+        purchased\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): caller's settlement does not control this
+        point\r
+
+        \   - FAILED_PRECONDITION (412): insufficient imperial favor\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_PurchasePointNode
       parameters:
         - name: point_id
@@ -1677,10 +2581,14 @@ paths:
     get:
       tags:
         - ProgressionService
-      summary: List all presets.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: ListPresets
+      description: "List all presets.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_ListPresets
       responses:
         "200":
@@ -1692,16 +2600,23 @@ paths:
     post:
       tags:
         - ProgressionService
-      summary: >-
-        Create a settlement preset (a named collection of tree IDs available to
-        settlements).
-         Requires progression:write scope.
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): missing required fields
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): requires progression:write scope
-           - INTERNAL (500): database failure
+      summary: CreatePreset
+      description: "Create a settlement preset (a named collection of tree IDs
+        available to settlements).\r
+
+        \ Requires progression:write scope.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): missing required fields\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): requires progression:write scope\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_CreatePreset
       requestBody:
         content:
@@ -1720,11 +2635,16 @@ paths:
     get:
       tags:
         - ProgressionService
-      summary: Get a preset by ID.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): preset not found
-           - INTERNAL (500): database failure
+      summary: GetPreset
+      description: "Get a preset by ID.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): preset not found\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_GetPreset
       parameters:
         - name: id
@@ -1743,13 +2663,20 @@ paths:
     patch:
       tags:
         - ProgressionService
-      summary: Update a settlement preset. Requires progression:write scope.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): preset not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): requires progression:write scope
-           - INTERNAL (500): database failure
+      summary: UpdatePreset
+      description: "Update a settlement preset. Requires progression:write scope.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): preset not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): requires progression:write scope\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_UpdatePreset
       parameters:
         - name: id
@@ -1786,10 +2713,14 @@ paths:
     get:
       tags:
         - ProgressionService
-      summary: Get a settlement's progress on a specific tree.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: GetSettlementProgress
+      description: "Get a settlement's progress on a specific tree.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_GetSettlementProgress
       parameters:
         - name: settlement_id
@@ -1815,17 +2746,28 @@ paths:
     post:
       tags:
         - ProgressionService
-      summary: |-
-        Purchase a node in a settlement's talent tree.
-         Caller must be the leader of settlement_id.
-      description: >-
-        Errors:
-           - NOT_FOUND (404): tree or node not found
-           - INVALID_ARGUMENT (400): node already purchased or parent not purchased
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): caller is not the leader of the settlement
-           - FAILED_PRECONDITION (412): insufficient imperial favor
-           - INTERNAL (500): database failure
+      summary: PurchaseSettlementNode
+      description: "Purchase a node in a settlement's talent tree.\r
+
+        \ Caller must be the leader of settlement_id.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): tree or node not found\r
+
+        \   - INVALID_ARGUMENT (400): node already purchased or parent not
+        purchased\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): caller is not the leader of the
+        settlement\r
+
+        \   - FAILED_PRECONDITION (412): insufficient imperial favor\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_PurchaseSettlementNode
       parameters:
         - name: settlement_id
@@ -1879,10 +2821,14 @@ paths:
     get:
       tags:
         - ProgressionService
-      summary: List all talent trees.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: ListTrees
+      description: "List all talent trees.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_ListTrees
       responses:
         "200":
@@ -1894,13 +2840,21 @@ paths:
     post:
       tags:
         - ProgressionService
-      summary: Create a new talent tree template. Requires progression:write scope.
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): missing required fields
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): requires progression:write scope
-           - INTERNAL (500): database failure
+      summary: CreateTree
+      description: "Create a new talent tree template. Requires progression:write
+        scope.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): missing required fields\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): requires progression:write scope\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_CreateTree
       requestBody:
         content:
@@ -1919,12 +2873,18 @@ paths:
     get:
       tags:
         - ProgressionService
-      summary: Get a talent tree by ID.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): tree not found
-           - INVALID_ARGUMENT (400): invalid id format
-           - INTERNAL (500): database failure
+      summary: GetTree
+      description: "Get a talent tree by ID.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): tree not found\r
+
+        \   - INVALID_ARGUMENT (400): invalid id format\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_GetTree
       parameters:
         - name: id
@@ -1943,14 +2903,21 @@ paths:
     patch:
       tags:
         - ProgressionService
-      summary: Update an existing talent tree template. Requires progression:write
-        scope.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): tree not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): requires progression:write scope
-           - INTERNAL (500): database failure
+      summary: UpdateTree
+      description: "Update an existing talent tree template. Requires
+        progression:write scope.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): tree not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): requires progression:write scope\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ProgressionService_UpdateTree
       parameters:
         - name: id
@@ -1995,11 +2962,17 @@ paths:
     get:
       tags:
         - ReferralService
-      summary: Get the current player's referral code, generating one on first call.
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: GetMyReferralCode
+      description: "Get the current player's referral code, generating one on first
+        call.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ReferralService_GetMyReferralCode
       responses:
         "200":
@@ -2012,12 +2985,17 @@ paths:
     get:
       tags:
         - ReferralService
-      summary: Get referral stats for the current player (how many people they
-        referred, coins earned).
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: GetMyReferralStats
+      description: "Get referral stats for the current player (how many people they
+        referred, coins earned).\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ReferralService_GetMyReferralStats
       responses:
         "200":
@@ -2030,16 +3008,26 @@ paths:
     post:
       tags:
         - ReferralService
-      summary: Apply a referral code to the current player.
-      description: >-
-        Called once after first login; the frontend extracts the code from a
-        ?ref= URL parameter.
+      summary: UseReferralCode
+      description: "Apply a referral code to the current player.\r
 
-         Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - NOT_FOUND (404): code does not exist
-           - FAILED_PRECONDITION (409): code already used by this player, or attempting to use own code
-           - INTERNAL (500): database failure
+        \r
+
+        \ Called once after first login; the frontend extracts the code from a
+        ?ref= URL parameter.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - NOT_FOUND (404): code does not exist\r
+
+        \   - FAILED_PRECONDITION (409): code already used by this player, or
+        attempting to use own code\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ReferralService_UseReferralCode
       requestBody:
         content:
@@ -2058,13 +3046,20 @@ paths:
     post:
       tags:
         - RuleService
-      summary: Creates a new rule question. Requires admin privileges.
-      description: |-
-        Errors:
-           - INVALID_ARGUMENT (400): question is empty
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: CreateQuestion
+      description: "Creates a new rule question. Requires admin privileges.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): question is empty\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: RuleService_CreateQuestion
       requestBody:
         content:
@@ -2083,13 +3078,20 @@ paths:
     delete:
       tags:
         - RuleService
-      summary: Deletes a rule question by ID. Requires admin privileges.
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - NOT_FOUND (404): question not found
-           - INTERNAL (500): database failure
+      summary: DeleteQuestion
+      description: "Deletes a rule question by ID. Requires admin privileges.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - NOT_FOUND (404): question not found\r
+
+        \   - INTERNAL (500): database failure"
       operationId: RuleService_DeleteQuestion
       parameters:
         - name: id
@@ -2109,12 +3111,18 @@ paths:
     get:
       tags:
         - RuleService
-      summary: Returns random questions about server rules.
-      description: |-
-        Defaults to 5 questions if count is not specified.
+      summary: GetRandomQuestions
+      description: "Returns random questions about server rules.\r
 
-         Errors:
-           - INTERNAL (500): database failure
+        \r
+
+        \ Defaults to 5 questions if count is not specified.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: RuleService_GetRandomQuestions
       parameters:
         - name: count
@@ -2124,7 +3132,6 @@ paths:
             type: integer
             title: count
             format: int32
-            description: Count of questions to return, if not specified, returns 5 questions
       responses:
         "200":
           description: Success
@@ -2136,12 +3143,18 @@ paths:
     get:
       tags:
         - RuleService
-      summary: Returns all rule questions. Requires admin privileges.
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: ListQuestions
+      description: "Returns all rule questions. Requires admin privileges.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: RuleService_ListQuestions
       responses:
         "200":
@@ -2154,10 +3167,14 @@ paths:
     get:
       tags:
         - ServerInfoService
-      summary: Get the current and maximum player online counts.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: TotalOnline
+      description: "Get the current and maximum player online counts.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ServerInfoService_TotalOnline
       responses:
         "200":
@@ -2170,10 +3187,14 @@ paths:
     get:
       tags:
         - ServerInfoService
-      summary: Get the current in-game world time.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: WorldTime
+      description: "Get the current in-game world time.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: ServerInfoService_WorldTime
       responses:
         "200":
@@ -2275,14 +3296,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/settlement.v1.RejectInvitationResponse"
+  /v1/settlements/join-requests/{join_request_id}:cancel:
+    post:
+      tags:
+        - SettlementService
+      summary: Cancel the caller's own join request.
+      description: |-
+        Errors:
+           - NOT_FOUND (404): join request not found for the caller
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_CancelJoinRequest
+      parameters:
+        - name: join_request_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: join_request_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.CancelJoinRequestResponse"
   /v1/settlements/tags:
     get:
       tags:
         - SettlementTagService
-      summary: List all tags.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: GetTags
+      description: "List all tags.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: SettlementTagService_GetTags
       responses:
         "200":
@@ -2294,13 +3344,21 @@ paths:
     post:
       tags:
         - SettlementTagService
-      summary: Create a new tag. Requires tags:create privilege.
-      description: >-
-        Errors:
-           - INVALID_ARGUMENT (400): invalid tag fields (name, description, or color)
-           - PERMISSION_DENIED (403): requires tags:create privilege
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: CreateTag
+      description: "Create a new tag. Requires tags:create privilege.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INVALID_ARGUMENT (400): invalid tag fields (name, description, or
+        color)\r
+
+        \   - PERMISSION_DENIED (403): requires tags:create privilege\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: SettlementTagService_CreateTag
       requestBody:
         content:
@@ -2319,12 +3377,18 @@ paths:
     get:
       tags:
         - SettlementTagService
-      summary: Get a tag by ID.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): tag not found
-           - INVALID_ARGUMENT (400): invalid tag_id format
-           - INTERNAL (500): database failure
+      summary: GetTag
+      description: "Get a tag by ID.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): tag not found\r
+
+        \   - INVALID_ARGUMENT (400): invalid tag_id format\r
+
+        \   - INTERNAL (500): database failure"
       operationId: SettlementTagService_GetTag
       parameters:
         - name: tag_id
@@ -2343,14 +3407,22 @@ paths:
     delete:
       tags:
         - SettlementTagService
-      summary: Soft-delete a tag by ID. Requires tags:delete privilege.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): tag not found
-           - INVALID_ARGUMENT (400): invalid tag_id format
-           - PERMISSION_DENIED (403): requires tags:delete privilege
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: DeleteTag
+      description: "Soft-delete a tag by ID. Requires tags:delete privilege.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): tag not found\r
+
+        \   - INVALID_ARGUMENT (400): invalid tag_id format\r
+
+        \   - PERMISSION_DENIED (403): requires tags:delete privilege\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: SettlementTagService_DeleteTag
       parameters:
         - name: tag_id
@@ -2370,10 +3442,14 @@ paths:
     post:
       tags:
         - SettlementTagService
-      summary: Get multiple tags by their IDs in a single batch request.
-      description: |-
-        Errors:
-           - INTERNAL (500): database failure
+      summary: GetTagsByIds
+      description: "Get multiple tags by their IDs in a single batch request.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - INTERNAL (500): database failure"
       operationId: SettlementTagService_GetTagsByIds
       requestBody:
         content:
@@ -2602,6 +3678,51 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/settlement.v1.RejectResponse"
+  /v1/settlements/{settlement_id}/contact-info:
+    patch:
+      tags:
+        - SettlementService
+      summary: Update the settlement's public contact info. Owner only.
+      description: >-
+        Errors:
+           - NOT_FOUND (404): settlement not found
+           - INVALID_ARGUMENT (400): contact info too long or contains forbidden characters
+           - PERMISSION_DENIED (403): caller is not an owner
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_UpdateContactInfo
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlement_id:
+                  type: string
+                  title: settlement_id
+                contact_info:
+                  type: string
+                  title: contact_info
+                  maxLength: 512
+              title: UpdateContactInfoRequest
+              required:
+                - settlement_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.UpdateContactInfoResponse"
   /v1/settlements/{settlement_id}/invitations:
     get:
       tags:
@@ -2721,15 +3842,152 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/settlement.v1.RevokeInvitationResponse"
+  /v1/settlements/{settlement_id}/join-requests:
+    get:
+      tags:
+        - SettlementService
+      summary: List join requests for a settlement. Caller needs the
+        review_join_request permission or owner.
+      description: >-
+        Errors:
+           - PERMISSION_DENIED (403): caller lacks the review_join_request permission
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_ListJoinRequests
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.ListJoinRequestsResponse"
+    post:
+      tags:
+        - SettlementService
+      summary: Create a join request to a settlement. Caller must not already belong
+        to a settlement.
+      description: >-
+        Errors:
+           - NOT_FOUND (404): settlement not found
+           - ALREADY_EXISTS (409): caller already belongs to a settlement or already applied here
+           - RESOURCE_EXHAUSTED (429): caller has reached the active join-request limit
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_CreateJoinRequest
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlement_id:
+                  type: string
+                  title: settlement_id
+              title: CreateJoinRequestRequest
+              required:
+                - settlement_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.CreateJoinRequestResponse"
+  /v1/settlements/{settlement_id}/join-requests/{join_request_id}:approve:
+    post:
+      tags:
+        - SettlementService
+      summary: Approve a join request. Caller needs the review_join_request permission
+        or owner.
+      description: >-
+        Errors:
+           - NOT_FOUND (404): join request not found
+           - ALREADY_EXISTS (409): applicant already joined another settlement
+           - PERMISSION_DENIED (403): caller lacks the review_join_request permission
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_ApproveJoinRequest
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+        - name: join_request_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: join_request_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.ApproveJoinRequestResponse"
+  /v1/settlements/{settlement_id}/join-requests/{join_request_id}:reject:
+    post:
+      tags:
+        - SettlementService
+      summary: Reject a join request. Caller needs the review_join_request permission
+        or owner.
+      description: >-
+        Errors:
+           - NOT_FOUND (404): join request not found
+           - PERMISSION_DENIED (403): caller lacks the review_join_request permission
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_RejectJoinRequest
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+        - name: join_request_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: join_request_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.RejectJoinRequestResponse"
   /v1/settlements/{settlement_id}/members/{user_id}:
     delete:
       tags:
         - SettlementService
-      summary: Remove a member from a settlement. Requires admin privileges.
-      description: |-
+      summary: >-
+        Remove a member from a settlement. Caller must be the settlement leader
+        or
+         hold the settlements:manage scope.
+      description: >-
         Errors:
            - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
+           - PERMISSION_DENIED (403): caller is neither the settlement leader nor a moderator
            - INTERNAL (500): database failure
       operationId: SettlementService_RemoveMember
       parameters:
@@ -2752,6 +4010,292 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/settlement.v1.RemoveMemberResponse"
+  /v1/settlements/{settlement_id}/members/{user_id}/roles:
+    post:
+      tags:
+        - SettlementService
+      summary: Assign a custom role to a member. Owner only. The owner role cannot be
+        assigned here.
+      description: >-
+        Errors:
+           - NOT_FOUND (404): settlement, role, or member not found
+           - FAILED_PRECONDITION (400): roles disabled; cannot assign the owner role
+           - PERMISSION_DENIED (403): caller is not an owner
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_AssignRole
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: user_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlement_id:
+                  type: string
+                  title: settlement_id
+                user_id:
+                  type: string
+                  title: user_id
+                role_id:
+                  type: string
+                  title: role_id
+              title: AssignRoleRequest
+              required:
+                - settlement_id
+                - user_id
+                - role_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.AssignRoleResponse"
+  /v1/settlements/{settlement_id}/members/{user_id}/roles/{role_id}:
+    delete:
+      tags:
+        - SettlementService
+      summary: Unassign a custom role from a member. Owner only.
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement or member not found
+           - PERMISSION_DENIED (403): caller is not an owner
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_UnassignRole
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: user_id
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: role_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.UnassignRoleResponse"
+  /v1/settlements/{settlement_id}/ownership:transfer:
+    post:
+      tags:
+        - SettlementService
+      summary: >-
+        Transfer ownership: grant owner to a member and drop it from the caller.
+        Owner only.
+         The owner count is preserved, so this cannot be used to add owners.
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement or target member not found
+           - PERMISSION_DENIED (403): caller is not an owner
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_TransferOwnership
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlement_id:
+                  type: string
+                  title: settlement_id
+                to_user_id:
+                  type: string
+                  title: to_user_id
+              title: TransferOwnershipRequest
+              required:
+                - settlement_id
+                - to_user_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.TransferOwnershipResponse"
+  /v1/settlements/{settlement_id}/roles:
+    post:
+      tags:
+        - SettlementService
+      summary: Create a custom role in a settlement. Owner only. Ignored while roles
+        are disabled.
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement not found
+           - FAILED_PRECONDITION (400): roles disabled; role limit reached
+           - PERMISSION_DENIED (403): caller is not an owner
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_CreateRole
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlement_id:
+                  type: string
+                  title: settlement_id
+                name:
+                  type: string
+                  title: name
+                  maxLength: 64
+                  minLength: 1
+                permissions:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/settlement.v1.Permission"
+                  title: permissions
+              title: CreateRoleRequest
+              required:
+                - settlement_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.CreateRoleResponse"
+  /v1/settlements/{settlement_id}/roles/{role_id}:
+    delete:
+      tags:
+        - SettlementService
+      summary: Delete a custom role. Owner only. The role is unassigned from all
+        members.
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement or role not found
+           - PERMISSION_DENIED (403): caller is not an owner
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_DeleteRole
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: role_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.DeleteRoleResponse"
+    patch:
+      tags:
+        - SettlementService
+      summary: Update a custom role's name or permissions. Owner only.
+      description: |-
+        Errors:
+           - NOT_FOUND (404): settlement or role not found
+           - FAILED_PRECONDITION (400): roles disabled
+           - PERMISSION_DENIED (403): caller is not an owner
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_UpdateRole
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: role_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settlement_id:
+                  type: string
+                  title: settlement_id
+                role_id:
+                  type: string
+                  title: role_id
+                name:
+                  type: string
+                  title: name
+                  maxLength: 64
+                  minLength: 1
+                permissions:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/settlement.v1.Permission"
+                  title: permissions
+              title: UpdateRoleRequest
+              required:
+                - settlement_id
+                - role_id
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.UpdateRoleResponse"
   /v1/settlements/{settlement_id}/tags:
     post:
       tags:
@@ -2828,6 +4372,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/settlement.v1.RemoveTagFromSettlementResponse"
+  /v1/settlements/{settlement_id}:leave:
+    post:
+      tags:
+        - SettlementService
+      summary: Leave the settlement the caller belongs to. The last owner cannot leave.
+      description: |-
+        Errors:
+           - NOT_FOUND (404): caller does not belong to a settlement
+           - FAILED_PRECONDITION (400): caller is the last owner
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_LeaveSettlement
+      parameters:
+        - name: settlement_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: settlement_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.LeaveSettlementResponse"
   /v1/stats:
     get:
       tags:
@@ -2842,7 +4412,6 @@ paths:
           required: true
           schema:
             title: filter
-            description: Stats filter. Service will return count sorted by provided filter.
             $ref: "#/components/schemas/stats.v1.OnlineStatsRequest.StatsFilter"
         - name: started_at
           in: query
@@ -2853,7 +4422,6 @@ paths:
               - string
             title: started_at
             format: int64
-            description: Start time for filtering
       responses:
         "200":
           description: Success
@@ -2865,11 +4433,16 @@ paths:
     get:
       tags:
         - VerificationService
-      summary: Get verification status for a user by in-game name.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): user with given game name not found
-           - INTERNAL (500): database failure
+      summary: VerifyStatusByName
+      description: "Get verification status for a user by in-game name.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): user with given game name not found\r
+
+        \   - INTERNAL (500): database failure"
       operationId: VerificationService_VerifyStatusByName
       parameters:
         - name: user_game_name
@@ -2889,9 +4462,11 @@ paths:
     get:
       tags:
         - UserService
-      summary: Search users by query string.
+      summary: Search users by query string. Requires auth, since it enumerates
+        players by name.
       description: |-
         Errors:
+           - UNAUTHENTICATED (401): missing or invalid auth token
            - INTERNAL (500): database failure
       operationId: UserService_SearchUsers
       parameters:
@@ -2984,12 +4559,20 @@ paths:
     get:
       tags:
         - KitService
-      summary: List all kit assignments for a specific user. Caller must match user_id.
-      description: |-
-        Errors:
-           - PERMISSION_DENIED (403): cannot list assignments for another user
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+      summary: ListUserAssignments
+      description: "List all kit assignments for a specific user. Caller must match
+        user_id.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - PERMISSION_DENIED (403): cannot list assignments for another
+        user\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: KitService_ListUserAssignments
       parameters:
         - name: user_id
@@ -3103,6 +4686,30 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/settlement.v1.GetUserInvitationsResponse"
+  /v1/users/{user_id}/settlements/join-requests:
+    get:
+      tags:
+        - SettlementService
+      summary: List the caller's own active join requests.
+      description: |-
+        Errors:
+           - UNAUTHENTICATED (401): missing or invalid auth token
+           - INTERNAL (500): database failure
+      operationId: SettlementService_GetMyJoinRequests
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: user_id
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/settlement.v1.GetMyJoinRequestsResponse"
   /v1/users/{user_id}/settlements/verification:status:
     get:
       tags:
@@ -3131,11 +4738,16 @@ paths:
     get:
       tags:
         - VerificationService
-      summary: Get verification status for a user by ID.
-      description: |-
-        Errors:
-           - NOT_FOUND (404): verification request not found
-           - INTERNAL (500): database failure
+      summary: VerificationStatus
+      description: "Get verification status for a user by ID.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): verification request not found\r
+
+        \   - INTERNAL (500): database failure"
       operationId: VerificationService_VerificationStatus
       parameters:
         - name: user_id
@@ -3151,19 +4763,62 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/verification.v1.VerifyStatusResponse"
+  /v1/users:batchGet:
+    get:
+      tags:
+        - UserService
+      summary: Batch get user profiles by IDs.
+      description: >-
+        Returns only the users that were found; missing IDs are silently
+        omitted.
+
+         Errors:
+           - INVALID_ARGUMENT (400): user_ids is empty or has more than 100 entries
+           - INTERNAL (500): database failure
+      operationId: UserService_BatchGetUsers
+      parameters:
+        - name: user_ids
+          in: query
+          description: At least 1 and at most 100 user IDs.
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+            title: user_ids
+            maxItems: 100
+            minItems: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user.v1.BatchGetUsersResponse"
   /v1/verification:
     post:
       tags:
         - VerificationService
-      summary: Submit a verification request for the authenticated user.
-      description: >-
-        If a previous request exists and is re-submittable, it will be updated.
+      summary: Submit
+      description: "Submit a verification request for the authenticated user.\r
 
-         Errors:
-           - FAILED_PRECONDITION (400): verification is pending or already approved/verified
-           - ALREADY_EXISTS (409): user is already verified
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database or SSO failure
+        \r
+
+        \ If a previous request exists and is re-submittable, it will be
+        updated.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - FAILED_PRECONDITION (400): verification is pending or already
+        approved/verified\r
+
+        \   - ALREADY_EXISTS (409): user is already verified\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database or SSO failure"
       operationId: VerificationService_Submit
       requestBody:
         content:
@@ -3182,14 +4837,22 @@ paths:
     get:
       tags:
         - VerificationService
-      summary: Get verification details for the authenticated user.
-      description: |-
-        Possible statuses: pending, approved, rejected, verified.
+      summary: Details
+      description: "Get verification details for the authenticated user.\r
 
-         Errors:
-           - NOT_FOUND (404): no verification request found for user
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - INTERNAL (500): database failure
+        \r
+
+        \ Possible statuses: pending, approved, rejected, verified.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - NOT_FOUND (404): no verification request found for user\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - INTERNAL (500): database failure"
       operationId: VerificationService_Details
       responses:
         "200":
@@ -3202,17 +4865,29 @@ paths:
     post:
       tags:
         - VerificationService
-      summary: Approve a user's verification request. Requires admin privileges.
-      description: |-
-        Grants the "player" role to the user in SSO.
+      summary: Approve
+      description: "Approve a user's verification request. Requires admin
+        privileges.\r
 
-         Errors:
-           - FAILED_PRECONDITION (400): verification is not in pending state
-           - NOT_FOUND (404): verification request not found
-           - ALREADY_EXISTS (409): user is already verified
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database or SSO failure
+        \r
+
+        \ Grants the \"player\" role to the user in SSO.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - FAILED_PRECONDITION (400): verification is not in pending state\r
+
+        \   - NOT_FOUND (404): verification request not found\r
+
+        \   - ALREADY_EXISTS (409): user is already verified\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database or SSO failure"
       operationId: VerificationService_Approve
       parameters:
         - name: user_id
@@ -3232,14 +4907,22 @@ paths:
     post:
       tags:
         - VerificationService
-      summary: Reject a user's verification request. Requires admin privileges.
-      description: |-
-        Errors:
-           - FAILED_PRECONDITION (400): verification is not in pending state
-           - NOT_FOUND (404): verification request not found
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: Reject
+      description: "Reject a user's verification request. Requires admin privileges.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - FAILED_PRECONDITION (400): verification is not in pending state\r
+
+        \   - NOT_FOUND (404): verification request not found\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: VerificationService_Reject
       parameters:
         - name: user_id
@@ -3265,12 +4948,19 @@ paths:
     get:
       tags:
         - VerificationService
-      summary: List all pending verification requests. Requires admin privileges.
-      description: |-
-        Errors:
-           - UNAUTHENTICATED (401): missing or invalid auth token
-           - PERMISSION_DENIED (403): insufficient privileges
-           - INTERNAL (500): database failure
+      summary: List
+      description: "List all pending verification requests. Requires admin
+        privileges.\r
+
+        \r
+
+        \ Errors:\r
+
+        \   - UNAUTHENTICATED (401): missing or invalid auth token\r
+
+        \   - PERMISSION_DENIED (403): insufficient privileges\r
+
+        \   - INTERNAL (500): database failure"
       operationId: VerificationService_List
       responses:
         "200":
@@ -3302,6 +4992,147 @@ paths:
                 $ref: "#/components/schemas/stats.v1.PlayerStatsResponse"
 components:
   schemas:
+    discord.v1.Image:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        url:
+          type: string
+          title: url
+        proxy_url:
+          type: string
+          title: proxy_url
+        alt:
+          type: string
+          title: alt
+        author_name:
+          type: string
+          title: author_name
+        timestamp:
+          type: string
+          title: timestamp
+        width:
+          type: integer
+          title: width
+          format: int32
+        height:
+          type: integer
+          title: height
+          format: int32
+      title: Image
+      additionalProperties: false
+    discord.v1.ListImagesRequest:
+      type: object
+      properties:
+        channel_id:
+          type: string
+          title: channel_id
+          description: Discord channel ID.
+        limit:
+          type: integer
+          title: limit
+          format: int32
+          description: "Maximum number of images. Allowed range: [1, 100]."
+        before:
+          type: string
+          title: before
+          description: Message ID to fetch before (for pagination).
+      title: ListImagesRequest
+      required:
+        - channel_id
+      additionalProperties: false
+    discord.v1.ListImagesResponse:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/discord.v1.Image"
+          title: images
+        is_last_page:
+          type: boolean
+          title: is_last_page
+      title: ListImagesResponse
+      additionalProperties: false
+    discord.v1.ListMessagesRequest:
+      type: object
+      properties:
+        channel_id:
+          type: string
+          title: channel_id
+          description: Discord channel ID.
+        limit:
+          type: integer
+          title: limit
+          format: int32
+          description: "Maximum number of messages. Allowed range: [1, 100]."
+        before:
+          type: string
+          title: before
+          description: Message ID to fetch before (for pagination).
+      title: ListMessagesRequest
+      required:
+        - channel_id
+      additionalProperties: false
+    discord.v1.ListMessagesResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/discord.v1.Message"
+          title: messages
+        is_last_page:
+          type: boolean
+          title: is_last_page
+      title: ListMessagesResponse
+      additionalProperties: false
+    discord.v1.Message:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        content:
+          type: string
+          title: content
+        author_name:
+          type: string
+          title: author_name
+        timestamp:
+          type: string
+          title: timestamp
+        type:
+          type: string
+          title: type
+      title: Message
+      additionalProperties: false
+    discord.v1.SendNewsRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          title: title
+        content:
+          type: string
+          title: content
+        preview_url:
+          type: string
+          title: preview_url
+        news_url:
+          type: string
+          title: news_url
+        author:
+          type: string
+          title: author
+      title: SendNewsRequest
+      required:
+        - title
+        - content
+        - news_url
+      additionalProperties: false
     donate.v1.AddCoinsRequest:
       type: object
       properties:
@@ -3357,6 +5188,33 @@ components:
           title: coins
           format: int64
       title: AdminGetPlayerBalanceResponse
+      additionalProperties: false
+    donate.v1.AdminListAllPurchasesRequest:
+      type: object
+      properties:
+        limit:
+          type:
+            - integer
+            - string
+          title: limit
+          format: int64
+        page_token:
+          type: string
+          title: page_token
+      title: AdminListAllPurchasesRequest
+      additionalProperties: false
+    donate.v1.AdminListAllPurchasesResponse:
+      type: object
+      properties:
+        purchases:
+          type: array
+          items:
+            $ref: "#/components/schemas/donate.v1.Purchase"
+          title: purchases
+        next_page_token:
+          type: string
+          title: next_page_token
+      title: AdminListAllPurchasesResponse
       additionalProperties: false
     donate.v1.AdminListPendingPurchasesRequest:
       type: object
@@ -4694,6 +6552,93 @@ components:
       title: ListUserAssignmentsResponse
       additionalProperties: false
       description: Response containing user assignments list
+    kitdef.v1.KitDef:
+      type: object
+      properties:
+        code:
+          type: string
+          title: code
+          description: Unique upsert key, written by the game.
+        title:
+          type: string
+          title: title
+          description: Display name, written by RenameKit.
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/kitdef.v1.KitItem"
+          title: items
+        created_at:
+          title: created_at
+          $ref: "#/components/schemas/google.protobuf.Timestamp"
+        updated_at:
+          title: updated_at
+          $ref: "#/components/schemas/google.protobuf.Timestamp"
+      title: KitDef
+      additionalProperties: false
+      description: "KitDef is a captured kit: game-owned content plus vsservice-owned
+        title."
+    kitdef.v1.KitItem:
+      type: object
+      properties:
+        game_code:
+          type: string
+          title: game_code
+          description: Full namespaced Collectible.Code (identifies the item/block).
+        type:
+          type: string
+          title: type
+          description: '"item" or "block".'
+        quantity:
+          type: integer
+          title: quantity
+          format: int32
+        image_url:
+          type: string
+          title: image_url
+          description: <CDN>/<bucket>/<uuidv7>.png
+      title: KitItem
+      additionalProperties: false
+      description: >-
+        KitItem is one entry of a kit's contents. attr_snapshot is intentionally
+        NOT
+         present here — it stays server-side.
+    kitdef.v1.ListKitsRequest:
+      type: object
+      title: ListKitsRequest
+      additionalProperties: false
+    kitdef.v1.ListKitsResponse:
+      type: object
+      properties:
+        kits:
+          type: array
+          items:
+            $ref: "#/components/schemas/kitdef.v1.KitDef"
+          title: kits
+      title: ListKitsResponse
+      additionalProperties: false
+    kitdef.v1.RenameKitRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          title: code
+          minLength: 1
+          description: Upsert key of the kit to rename.
+        title:
+          type: string
+          title: title
+          minLength: 1
+          description: New display title.
+      title: RenameKitRequest
+      required:
+        - code
+        - title
+      additionalProperties: false
+    kitdef.v1.RenameKitResponse:
+      type: object
+      title: RenameKitResponse
+      additionalProperties: false
     leaderboard.v1.LeaderboardEntry:
       type: object
       properties:
@@ -4729,9 +6674,9 @@ components:
           type: integer
           title: limit
           format: int32
-          description: |-
-            The maximum number of entries to return.
-             If unspecified, 25 entry will be returned.
+          description: "The maximum number of entries to return.\r
+
+            \ If unspecified, 25 entry will be returned."
       title: LeaderboardRequest
       required:
         - filter
@@ -4754,6 +6699,333 @@ components:
           title: entries
       title: LeaderboardResponse
       additionalProperties: false
+    mail.v1.Attachment:
+      type: object
+      oneOf:
+        - type: object
+          properties:
+            coins:
+              title: coins
+              $ref: "#/components/schemas/mail.v1.CoinsAttachment"
+          title: coins
+          required:
+            - coins
+        - type: object
+          properties:
+            item:
+              title: item
+              $ref: "#/components/schemas/mail.v1.ItemAttachment"
+          title: item
+          required:
+            - item
+      title: Attachment
+      additionalProperties: false
+      description: Attachment is exactly one of item or coins.
+    mail.v1.ClaimAllRequest:
+      type: object
+      title: ClaimAllRequest
+      additionalProperties: false
+    mail.v1.ClaimAllResponse:
+      type: object
+      properties:
+        claimed_mail_ids:
+          type: array
+          items:
+            type: string
+          title: claimed_mail_ids
+          description: IDs of the mails claimed by this call.
+      title: ClaimAllResponse
+      additionalProperties: false
+    mail.v1.ClaimRequest:
+      type: object
+      properties:
+        mail_id:
+          type: string
+          title: mail_id
+          minLength: 1
+      title: ClaimRequest
+      required:
+        - mail_id
+      additionalProperties: false
+    mail.v1.ClaimResponse:
+      type: object
+      title: ClaimResponse
+      additionalProperties: false
+    mail.v1.CoinsAttachment:
+      type: object
+      properties:
+        amount:
+          exclusiveMinimum: 0
+          type:
+            - integer
+            - string
+          title: amount
+          format: int64
+      title: CoinsAttachment
+      required:
+        - amount
+      additionalProperties: false
+      description: CoinsAttachment grants donate-wallet coins.
+    mail.v1.ComposeKitMailRequest:
+      type: object
+      allOf:
+        - properties:
+            kit_id:
+              type: string
+              title: kit_id
+              minLength: 1
+              description: Code of a captured kit; expanded into item attachments at compose
+                time.
+            title:
+              type: string
+              title: title
+              minLength: 1
+            body:
+              type: string
+              title: body
+              minLength: 1
+            expires_at:
+              oneOf:
+                - $ref: "#/components/schemas/google.protobuf.Timestamp"
+                - type: "null"
+              title: expires_at
+              description: |
+                nil = never expires; if set, must be in the future.
+                timestamp.gt_now = true
+            idempotency_key:
+              type:
+                - string
+                - "null"
+              title: idempotency_key
+              description: Optional. Repeat with the same key to get the same mail; empty =
+                always new.
+        - oneOf:
+            - type: object
+              properties:
+                broadcast:
+                  type: boolean
+                  title: broadcast
+              title: broadcast
+              required:
+                - broadcast
+            - type: object
+              properties:
+                user_id:
+                  type: string
+                  title: user_id
+              title: user_id
+              required:
+                - user_id
+      title: ComposeKitMailRequest
+      required:
+        - kit_id
+        - title
+        - body
+      additionalProperties: false
+    mail.v1.ComposeKitMailResponse:
+      type: object
+      properties:
+        mail_id:
+          type: string
+          title: mail_id
+      title: ComposeKitMailResponse
+      additionalProperties: false
+    mail.v1.ComposeMailRequest:
+      type: object
+      allOf:
+        - properties:
+            title:
+              type: string
+              title: title
+              minLength: 1
+            body:
+              type: string
+              title: body
+              minLength: 1
+            attachments:
+              type: array
+              items:
+                $ref: "#/components/schemas/mail.v1.Attachment"
+              title: attachments
+            expires_at:
+              oneOf:
+                - $ref: "#/components/schemas/google.protobuf.Timestamp"
+                - type: "null"
+              title: expires_at
+              description: |
+                nil = never expires; if set, must be in the future.
+                timestamp.gt_now = true
+            idempotency_key:
+              type:
+                - string
+                - "null"
+              title: idempotency_key
+              description: Optional. Repeat with the same key to get the same mail; empty =
+                always new.
+        - oneOf:
+            - type: object
+              properties:
+                broadcast:
+                  type: boolean
+                  title: broadcast
+              title: broadcast
+              required:
+                - broadcast
+            - type: object
+              properties:
+                user_id:
+                  type: string
+                  title: user_id
+              title: user_id
+              required:
+                - user_id
+      title: ComposeMailRequest
+      required:
+        - title
+        - body
+      additionalProperties: false
+    mail.v1.ComposeMailResponse:
+      type: object
+      properties:
+        mail_id:
+          type: string
+          title: mail_id
+      title: ComposeMailResponse
+      additionalProperties: false
+    mail.v1.ItemAttachment:
+      type: object
+      properties:
+        game_code:
+          type: string
+          title: game_code
+          minLength: 1
+        quantity:
+          exclusiveMinimum: 0
+          type: integer
+          title: quantity
+          format: int32
+        attr_snapshot:
+          type: string
+          title: attr_snapshot
+          description: Base64 binary TreeAttribute snapshot. Empty = plain stack.
+        type:
+          type: string
+          title: type
+          enum:
+            - ""
+            - item
+            - block
+          description: '"item" (default) or "block".'
+      title: ItemAttachment
+      required:
+        - game_code
+        - quantity
+      additionalProperties: false
+      description: >-
+        ItemAttachment grants a game item or block. game_code + type identify
+        the
+         asset (VintageAPI resolves it); attr_snapshot is a base64 TreeAttribute
+         snapshot (empty = plain stack). Validity of game_code is checked at claim by
+         VintageAPI, not here.
+    mail.v1.ListMailRequest:
+      type: object
+      title: ListMailRequest
+      additionalProperties: false
+    mail.v1.ListMailResponse:
+      type: object
+      properties:
+        mails:
+          type: array
+          items:
+            $ref: "#/components/schemas/mail.v1.Mail"
+          title: mails
+      title: ListMailResponse
+      additionalProperties: false
+    mail.v1.Mail:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        recipient:
+          type: string
+          title: recipient
+          description: Either a user_id or the literal "broadcast".
+        sender:
+          type: string
+          title: sender
+          description: e.g. "admin:{jwt_sub}" or "system:donate".
+        title:
+          type: string
+          title: title
+        body:
+          type: string
+          title: body
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/mail.v1.Attachment"
+          title: attachments
+        created_at:
+          title: created_at
+          $ref: "#/components/schemas/google.protobuf.Timestamp"
+        expires_at:
+          title: expires_at
+          description: nil = never expires.
+          $ref: "#/components/schemas/google.protobuf.Timestamp"
+        state:
+          title: state
+          $ref: "#/components/schemas/mail.v1.MailState"
+        revoked:
+          type: boolean
+          title: revoked
+      title: Mail
+      additionalProperties: false
+      description: Mail is an inbox entry. state is per-player and derived at read.
+    mail.v1.MailState:
+      type: string
+      title: MailState
+      enum:
+        - MAIL_STATE_UNSPECIFIED
+        - MAIL_STATE_UNREAD
+        - MAIL_STATE_READ
+        - MAIL_STATE_CLAIMED
+        - MAIL_STATE_EXPIRED
+        - MAIL_STATE_REVOKED
+      description: >-
+        MailState is the per-player state, derived at read from the mail
+        document and
+         the caller's claim row.
+    mail.v1.MarkReadRequest:
+      type: object
+      properties:
+        mail_id:
+          type: string
+          title: mail_id
+          minLength: 1
+      title: MarkReadRequest
+      required:
+        - mail_id
+      additionalProperties: false
+    mail.v1.MarkReadResponse:
+      type: object
+      title: MarkReadResponse
+      additionalProperties: false
+    mail.v1.RevokeMailRequest:
+      type: object
+      properties:
+        mail_id:
+          type: string
+          title: mail_id
+          minLength: 1
+      title: RevokeMailRequest
+      required:
+        - mail_id
+      additionalProperties: false
+    mail.v1.RevokeMailResponse:
+      type: object
+      title: RevokeMailResponse
+      additionalProperties: false
     media.v1.CreateUploadUrlsRequest:
       type: object
       properties:
@@ -4771,10 +7043,11 @@ components:
         content_type:
           type: string
           title: content_type
-          description: >-
-            Optional. MIME type of the uploaded file; must be in the list
-            allowed for
-             the purpose. Empty → any image/* is allowed and the object gets a .webp extension.
+          description: "Optional. MIME type of the uploaded file; must be in the list
+            allowed for\r
+
+            \ the purpose. Empty → any image/* is allowed and the object gets a
+            .webp extension."
       title: CreateUploadUrlsRequest
       required:
         - purpose
@@ -4797,9 +7070,10 @@ components:
         - UPLOAD_PURPOSE_DONATE_SHOP
         - UPLOAD_PURPOSE_SETTLEMENT
         - UPLOAD_PURPOSE_NEWS
-      description: >-
-        UploadPurpose maps to a concrete bucket on the server side.
-         The client never passes a bucket name directly (guards against writing to arbitrary buckets).
+      description: "UploadPurpose maps to a concrete bucket on the server side.\r
+
+        \ The client never passes a bucket name directly (guards against writing
+        to arbitrary buckets)."
     media.v1.UploadTarget:
       type: object
       properties:
@@ -4877,21 +7151,27 @@ components:
           type: integer
           title: page_size
           format: int32
-          description: >-
-            The maximum number of news to return. The service may return fewer
-            than
-             this value.
-             If unspecified, at most 15 news will be returned.
-             The maximum value is 50; values above 50 will be coerced to 50.
+          description: "The maximum number of news to return. The service may return fewer
+            than\r
+
+            \ this value.\r
+
+            \ If unspecified, at most 15 news will be returned.\r
+
+            \ The maximum value is 50; values above 50 will be coerced to 50."
         page_token:
           type: string
           title: page_token
-          description: >-
-            A page token, received from a previous `ListBooks` call.
-             Provide this to retrieve the subsequent page.
+          description: "A page token, received from a previous `ListBooks` call.\r
 
-             When paginating, all other parameters provided to `ListBooks` must match
-             the call that provided the page token.
+            \ Provide this to retrieve the subsequent page.\r
+
+            \r
+
+            \ When paginating, all other parameters provided to `ListBooks` must
+            match\r
+
+            \ the call that provided the page token."
       title: ListNewsRequest
       additionalProperties: false
     news.v1.ListNewsResponse:
@@ -4905,10 +7185,10 @@ components:
         next_page_token:
           type: string
           title: next_page_token
-          description: >-
-            A token, which can be sent as `page_token` to retrieve the next
-            page.
-             If this field is omitted, there are no subsequent pages.
+          description: "A token, which can be sent as `page_token` to retrieve the next
+            page.\r
+
+            \ If this field is omitted, there are no subsequent pages."
       title: ListNewsResponse
       additionalProperties: false
     news.v1.MarkNewsViewedRequest:
@@ -4969,11 +7249,13 @@ components:
           type: integer
           title: page_size
           format: int32
-          description: >-
-            The maximum number of notifications to return. The service may
-            return fewer
-             than this value. If unspecified, at most 15 notifications will be returned.
-             The maximum value is 15; values above 15 will be coerced to 15.
+          description: "The maximum number of notifications to return. The service may
+            return fewer\r
+
+            \ than this value. If unspecified, at most 15 notifications will be
+            returned.\r
+
+            \ The maximum value is 15; values above 15 will be coerced to 15."
         page_token:
           type: string
           title: page_token
@@ -4981,10 +7263,11 @@ components:
         order_by:
           type: string
           title: order_by
-          description: >-
-            The field to sort by, followed by direction (e.g., "created_at desc"
-            or "state asc").
-             Supported fields: "created_at", "state". If unspecified, defaults to "created_at desc".
+          description: "The field to sort by, followed by direction (e.g., \"created_at
+            desc\" or \"state asc\").\r
+
+            \ Supported fields: \"created_at\", \"state\". If unspecified,
+            defaults to \"created_at desc\"."
       title: ListNotificationsRequest
       additionalProperties: false
     notification.v1.ListNotificationsResponse:
@@ -4998,10 +7281,10 @@ components:
         next_page_token:
           type: string
           title: next_page_token
-          description: >-
-            A token to retrieve the next page of results. Empty if there are no
-            more
-             results.
+          description: "A token to retrieve the next page of results. Empty if there are
+            no more\r
+
+            \ results."
       title: ListNotificationsResponse
       additionalProperties: false
     notification.v1.MarkAsReadRequest:
@@ -5010,9 +7293,9 @@ components:
         id:
           type: string
           title: id
-          description: |-
-            The identifier of the notification to mark as read.
-             Required.
+          description: "The identifier of the notification to mark as read.\r
+
+            \ Required."
       title: MarkAsReadRequest
       required:
         - id
@@ -5563,6 +7846,28 @@ components:
           $ref: "#/components/schemas/settlement.v1.Settlement"
       title: AddImperialFavorResponse
       additionalProperties: false
+    settlement.v1.AddOwnerRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        user_id:
+          type: string
+          title: user_id
+      title: AddOwnerRequest
+      required:
+        - settlement_id
+        - user_id
+      additionalProperties: false
+    settlement.v1.AddOwnerResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: AddOwnerResponse
+      additionalProperties: false
     settlement.v1.AddTagToSettlementRequest:
       type: object
       properties:
@@ -5606,6 +7911,24 @@ components:
           $ref: "#/components/schemas/settlement.v1.Settlement"
       title: AdminUpdateSettlementResponse
       additionalProperties: false
+    settlement.v1.ApproveJoinRequestRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        join_request_id:
+          type: string
+          title: join_request_id
+      title: ApproveJoinRequestRequest
+      required:
+        - settlement_id
+        - join_request_id
+      additionalProperties: false
+    settlement.v1.ApproveJoinRequestResponse:
+      type: object
+      title: ApproveJoinRequestResponse
+      additionalProperties: false
     settlement.v1.ApproveRequest:
       type: object
       properties:
@@ -5620,6 +7943,32 @@ components:
       type: object
       title: ApproveResponse
       additionalProperties: false
+    settlement.v1.AssignRoleRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        user_id:
+          type: string
+          title: user_id
+        role_id:
+          type: string
+          title: role_id
+      title: AssignRoleRequest
+      required:
+        - settlement_id
+        - user_id
+        - role_id
+      additionalProperties: false
+    settlement.v1.AssignRoleResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: AssignRoleResponse
+      additionalProperties: false
     settlement.v1.Attachment:
       type: object
       properties:
@@ -5633,6 +7982,62 @@ components:
       required:
         - desc
         - url
+      additionalProperties: false
+    settlement.v1.CancelJoinRequestRequest:
+      type: object
+      properties:
+        join_request_id:
+          type: string
+          title: join_request_id
+      title: CancelJoinRequestRequest
+      required:
+        - join_request_id
+      additionalProperties: false
+    settlement.v1.CancelJoinRequestResponse:
+      type: object
+      title: CancelJoinRequestResponse
+      additionalProperties: false
+    settlement.v1.CreateJoinRequestRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+      title: CreateJoinRequestRequest
+      required:
+        - settlement_id
+      additionalProperties: false
+    settlement.v1.CreateJoinRequestResponse:
+      type: object
+      title: CreateJoinRequestResponse
+      additionalProperties: false
+    settlement.v1.CreateRoleRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        name:
+          type: string
+          title: name
+          maxLength: 64
+          minLength: 1
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/settlement.v1.Permission"
+          title: permissions
+      title: CreateRoleRequest
+      required:
+        - settlement_id
+      additionalProperties: false
+    settlement.v1.CreateRoleResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: CreateRoleResponse
       additionalProperties: false
     settlement.v1.DeductImperialFavorRequest:
       type: object
@@ -5662,6 +8067,42 @@ components:
           title: settlement
           $ref: "#/components/schemas/settlement.v1.Settlement"
       title: DeductImperialFavorResponse
+      additionalProperties: false
+    settlement.v1.DeleteRoleRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        role_id:
+          type: string
+          title: role_id
+      title: DeleteRoleRequest
+      required:
+        - settlement_id
+        - role_id
+      additionalProperties: false
+    settlement.v1.DeleteRoleResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: DeleteRoleResponse
+      additionalProperties: false
+    settlement.v1.DeleteSettlementRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+      title: DeleteSettlementRequest
+      required:
+        - settlement_id
+      additionalProperties: false
+    settlement.v1.DeleteSettlementResponse:
+      type: object
+      title: DeleteSettlementResponse
       additionalProperties: false
     settlement.v1.DeleteTagRequest:
       type: object
@@ -5710,6 +8151,26 @@ components:
             $ref: "#/components/schemas/settlement.v1.Invitation"
           title: invitations
       title: GetInvitationsResponse
+      additionalProperties: false
+    settlement.v1.GetMyJoinRequestsRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+          title: user_id
+      title: GetMyJoinRequestsRequest
+      required:
+        - user_id
+      additionalProperties: false
+    settlement.v1.GetMyJoinRequestsResponse:
+      type: object
+      properties:
+        join_requests:
+          type: array
+          items:
+            $ref: "#/components/schemas/settlement.v1.JoinRequest"
+          title: join_requests
+      title: GetMyJoinRequestsResponse
       additionalProperties: false
     settlement.v1.GetRequest:
       type: object
@@ -5860,6 +8321,34 @@ components:
       type: object
       title: InviteMemberResponse
       additionalProperties: false
+    settlement.v1.JoinRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        user_id:
+          type: string
+          title: user_id
+        settlement_id:
+          type: string
+          title: settlement_id
+      title: JoinRequest
+      additionalProperties: false
+    settlement.v1.LeaveSettlementRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+      title: LeaveSettlementRequest
+      required:
+        - settlement_id
+      additionalProperties: false
+    settlement.v1.LeaveSettlementResponse:
+      type: object
+      title: LeaveSettlementResponse
+      additionalProperties: false
     settlement.v1.ListImperialFavorLogsRequest:
       type: object
       properties:
@@ -5898,6 +8387,26 @@ components:
           title: next_token
       title: ListImperialFavorLogsResponse
       additionalProperties: false
+    settlement.v1.ListJoinRequestsRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+      title: ListJoinRequestsRequest
+      required:
+        - settlement_id
+      additionalProperties: false
+    settlement.v1.ListJoinRequestsResponse:
+      type: object
+      properties:
+        join_requests:
+          type: array
+          items:
+            $ref: "#/components/schemas/settlement.v1.JoinRequest"
+          title: join_requests
+      title: ListJoinRequestsResponse
+      additionalProperties: false
     settlement.v1.ListPendingRequest:
       type: object
       title: ListPendingRequest
@@ -5932,10 +8441,25 @@ components:
         user_id:
           type: string
           title: user_id
+        role_ids:
+          type: array
+          items:
+            type: string
+          title: role_ids
+          description: Role ids held by this member. "owner" denotes a settlement leader.
       title: Member
       required:
         - user_id
       additionalProperties: false
+    settlement.v1.Permission:
+      type: string
+      title: Permission
+      enum:
+        - PERMISSION_UNSPECIFIED
+        - PERMISSION_INVITE_MEMBER
+        - PERMISSION_REVIEW_JOIN_REQUEST
+      description: Permission a custom role can grant. The owner role holds all
+        permissions implicitly.
     settlement.v1.RejectInvitationRequest:
       type: object
       properties:
@@ -5949,6 +8473,24 @@ components:
     settlement.v1.RejectInvitationResponse:
       type: object
       title: RejectInvitationResponse
+      additionalProperties: false
+    settlement.v1.RejectJoinRequestRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        join_request_id:
+          type: string
+          title: join_request_id
+      title: RejectJoinRequestRequest
+      required:
+        - settlement_id
+        - join_request_id
+      additionalProperties: false
+    settlement.v1.RejectJoinRequestResponse:
+      type: object
+      title: RejectJoinRequestResponse
       additionalProperties: false
     settlement.v1.RejectRequest:
       type: object
@@ -5985,6 +8527,28 @@ components:
     settlement.v1.RemoveMemberResponse:
       type: object
       title: RemoveMemberResponse
+      additionalProperties: false
+    settlement.v1.RemoveOwnerRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        user_id:
+          type: string
+          title: user_id
+      title: RemoveOwnerRequest
+      required:
+        - settlement_id
+        - user_id
+      additionalProperties: false
+    settlement.v1.RemoveOwnerResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: RemoveOwnerResponse
       additionalProperties: false
     settlement.v1.RemoveTagFromSettlementRequest:
       type: object
@@ -6031,6 +8595,43 @@ components:
           title: invitation_ids
       title: RevokeInvitationResponse
       additionalProperties: false
+    settlement.v1.Role:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        name:
+          type: string
+          title: name
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/settlement.v1.Permission"
+          title: permissions
+      title: Role
+      additionalProperties: false
+    settlement.v1.SetRolesEnabledRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        enabled:
+          type: boolean
+          title: enabled
+      title: SetRolesEnabledRequest
+      required:
+        - settlement_id
+      additionalProperties: false
+    settlement.v1.SetRolesEnabledResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: SetRolesEnabledResponse
+      additionalProperties: false
     settlement.v1.Settlement:
       type: object
       properties:
@@ -6051,6 +8652,9 @@ components:
           title: diplomacy
         leader:
           title: leader
+          description: 'Deprecated: use members with the "owner" role instead. Populated
+            with the first owner for compatibility.'
+          deprecated: true
           $ref: "#/components/schemas/settlement.v1.Member"
         members:
           type: array
@@ -6089,6 +8693,21 @@ components:
             $ref: "#/components/schemas/settlement.v1.TagReference"
           title: tags
           description: "(OPTIONAL) "
+        roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/settlement.v1.Role"
+          title: roles
+          description: (OPTIONAL) Custom roles defined for this settlement. Empty when
+            roles are disabled.
+        roles_enabled:
+          type: boolean
+          title: roles_enabled
+          description: Whether custom roles are enabled by moderation.
+        contact_info:
+          type: string
+          title: contact_info
+          description: (OPTIONAL) Public contact information for the settlement (free text).
       title: Settlement
       additionalProperties: false
     settlement.v1.SettlementTag:
@@ -6224,6 +8843,108 @@ components:
           title: to_settlement
           $ref: "#/components/schemas/settlement.v1.Settlement"
       title: TransferImperialFavorResponse
+      additionalProperties: false
+    settlement.v1.TransferOwnershipRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        to_user_id:
+          type: string
+          title: to_user_id
+      title: TransferOwnershipRequest
+      required:
+        - settlement_id
+        - to_user_id
+      additionalProperties: false
+    settlement.v1.TransferOwnershipResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: TransferOwnershipResponse
+      additionalProperties: false
+    settlement.v1.UnassignRoleRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        user_id:
+          type: string
+          title: user_id
+        role_id:
+          type: string
+          title: role_id
+      title: UnassignRoleRequest
+      required:
+        - settlement_id
+        - user_id
+        - role_id
+      additionalProperties: false
+    settlement.v1.UnassignRoleResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: UnassignRoleResponse
+      additionalProperties: false
+    settlement.v1.UpdateContactInfoRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        contact_info:
+          type: string
+          title: contact_info
+          maxLength: 512
+      title: UpdateContactInfoRequest
+      required:
+        - settlement_id
+      additionalProperties: false
+    settlement.v1.UpdateContactInfoResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: UpdateContactInfoResponse
+      additionalProperties: false
+    settlement.v1.UpdateRoleRequest:
+      type: object
+      properties:
+        settlement_id:
+          type: string
+          title: settlement_id
+        role_id:
+          type: string
+          title: role_id
+        name:
+          type: string
+          title: name
+          maxLength: 64
+          minLength: 1
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/settlement.v1.Permission"
+          title: permissions
+      title: UpdateRoleRequest
+      required:
+        - settlement_id
+        - role_id
+      additionalProperties: false
+    settlement.v1.UpdateRoleResponse:
+      type: object
+      properties:
+        settlement:
+          title: settlement
+          $ref: "#/components/schemas/settlement.v1.Settlement"
+      title: UpdateRoleResponse
       additionalProperties: false
     settlement.v1.UpdateSettlementRequest:
       type: object
@@ -6403,6 +9124,32 @@ components:
           type: string
           title: id
       title: CreateResponse
+      additionalProperties: false
+    user.v1.BatchGetUsersRequest:
+      type: object
+      properties:
+        user_ids:
+          type: array
+          items:
+            type: string
+          title: user_ids
+          maxItems: 100
+          minItems: 1
+          description: At least 1 and at most 100 user IDs.
+      title: BatchGetUsersRequest
+      required:
+        - user_ids
+      additionalProperties: false
+    user.v1.BatchGetUsersResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/user.v1.User"
+          title: users
+          description: Found users, in arbitrary order. Missing IDs are not represented.
+      title: BatchGetUsersResponse
       additionalProperties: false
     user.v1.ChangeNicknameRequest:
       type: object
@@ -6678,19 +9425,49 @@ components:
       bearerFormat: JWT
 security: []
 tags:
+  - name: DiscordService
+    description: DiscordService proxies read-only Discord channel data and sends
+      news webhooks.
   - name: DonateService
     description: Donate service — player wallet, shop, and manual coin management.
   - name: HungerGamesService
-    description: |-
-      HungerGamesService manages the Hunger Games game mode: ELO ratings,
-       season lifecycle, leaderboard, and reward distribution.
+    description: "HungerGamesService manages the Hunger Games game mode: ELO
+      ratings,\r
+
+      \ season lifecycle, leaderboard, and reward distribution."
   - name: ImperialPointService
     description: ImperialPointService manages neutral-zone key locations and their
       control state.
   - name: KitService
     description: Kit service for managing game kit assignment to users
+  - name: KitDefService
+    description: >-
+      KitDefService — read model + metadata writer over the shared `kits`
+       collection.
+
+       Ownership is split by field, not by document: the game (VintageAPI) is the
+       content writer via Mongo-direct ($setOnInsert code/items/created_at), while
+       vsservice writes only display metadata (title). The two writers touch
+       disjoint fields, so they never collide. vsservice NEVER inserts a kit and
+       NEVER writes content — an unknown code is NotFound, not a new document.
+
+       attr_snapshot (the base64 TreeAttribute per item) is deliberately absent from
+       the wire types below: it is server-side only, mirroring DailyRewards keeping
+       attributes off the client. Both rpcs require the admin scope kit:edit.
   - name: LeaderboardService
     description: Represent basic leaderboard
+  - name: MailService
+    description: >-
+      MailService — player inbox plus admin compose/revoke.
+
+       One service, split only by JWT scope: ListMail/MarkRead/Claim/ClaimAll are
+       self-service (the caller is the recipient); ComposeMail/RevokeMail require
+       admin scopes (mail:compose / mail:revoke).
+
+       The mail document is immutable content; per-player state (unread/read/claimed)
+       lives in the mail_claims collection and is derived at read. expired/revoked
+       are derived, never stored. Physical delivery of item/coin attachments is done
+       by VintageAPI reading Mongo — vsservice only manages documents and claim rows.
   - name: MediaService
     description: MediaService issues presigned POST targets for direct uploads to S3.
   - name: NewsService

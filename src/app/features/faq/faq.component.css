@@ -3,8 +3,8 @@
 }
 
 /**
- * Блок вопроса в виде свитка: пергаментный фон,
- * сургучная кромка слева и флёрон перед заголовком.
+ * Блок вопроса в виде свитка: пергаментный фон
+ * и сургучная кромка слева.
  */
 .faq-scroll {
     background: linear-gradient(160deg, var(--lh-surface-2) 0%, var(--lh-surface) 100%);
@@ -17,11 +17,6 @@
 .faq-scroll:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 16px rgba(45, 32, 26, 0.1);
-}
-
-.faq-scroll > div:first-child > p:first-child::before {
-    content: '❧ ';
-    color: color-mix(in srgb, var(--lh-danger-ink) 65%, transparent);
 }
 
 /**

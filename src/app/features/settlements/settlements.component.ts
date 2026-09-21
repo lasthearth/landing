@@ -15,7 +15,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 /**
  * Поле сортировки списка селений.
  */
-type SortField = 'default' | 'population' | 'online' | 'east' | 'west' | 'suzerain' | 'diplomacy';
+type SortField = 'default' | 'population' | 'online' | 'diplomacy';
 
 /**
  * Направление сортировки.
@@ -28,7 +28,6 @@ type SortDirection = 'asc' | 'desc';
 interface EnrichedSettlement extends ISettlement {
     membersCount: number;
     onlineCount: number;
-    tagTypes: Set<string>;
 
     /**
      * Профили лидера и участников селения, загруженные одним батчем на страницу.
@@ -108,15 +107,6 @@ export class SettlementsComponent {
             case 'online':
                 sorted = list.sort((a, b) => dir * (a.onlineCount - b.onlineCount));
                 break;
-            case 'east':
-                sorted = list.sort((a, b) => dir * ((a.tagTypes.has('east') ? 1 : 0) - (b.tagTypes.has('east') ? 1 : 0)));
-                break;
-            case 'west':
-                sorted = list.sort((a, b) => dir * ((a.tagTypes.has('west') ? 1 : 0) - (b.tagTypes.has('west') ? 1 : 0)));
-                break;
-            case 'suzerain':
-                sorted = list.sort((a, b) => dir * ((a.tagTypes.has('suzerain') ? 1 : 0) - (b.tagTypes.has('suzerain') ? 1 : 0)));
-                break;
             case 'diplomacy':
                 sorted = list.sort((a, b) => dir * a.diplomacy.localeCompare(b.diplomacy));
                 break;
@@ -178,7 +168,6 @@ export class SettlementsComponent {
                             ...s,
                             membersCount: s.members.length,
                             onlineCount: settlementPlayers.filter((player) => player.is_online).length,
-                            tagTypes: this.getSpecialTagTypes(s.tags),
                             players: settlementPlayers,
                         };
                     })
@@ -227,28 +216,6 @@ export class SettlementsComponent {
      */
     protected getSortDirection(field: SortField): SortDirection | null {
         return this.sortState().field === field ? this.sortState().direction : null;
-    }
-
-    /**
-     * Возвращает набор системных типов тегов, присутствующих у поселения.
-     *
-     * @param tags Список ссылок на теги поселения.
-     * @returns Набор строковых ключей системных типов.
-     */
-    private getSpecialTagTypes(tags: { id: string }[]): Set<string> {
-        const types = new Set<string>();
-
-        if (this.tagStore.hasSpecialTag(tags, 'east')) {
-            types.add('east');
-        }
-        if (this.tagStore.hasSpecialTag(tags, 'west')) {
-            types.add('west');
-        }
-        if (this.tagStore.hasSpecialTag(tags, 'suzerain')) {
-            types.add('suzerain');
-        }
-
-        return types;
     }
 
     /**

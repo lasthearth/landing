@@ -162,13 +162,14 @@
         <h2 class="lh-display text-2xl text-ink">{{ 'settlements.settlement.population' | translate }}</h2>
         <div class="flex flex-wrap gap-4">
             @for (leaderPlayer of leaders(); track leaderPlayer.user_id) {
-                <app-player-chip [player]="leaderPlayer" [isLeader]="true" />
+                <app-player-chip [player]="leaderPlayer" [isLeader]="true" [settlement]="data" />
             }
 
             @for (item of users(); track item.user_id) {
                 <div class="flex flex-col gap-1 items-start">
                     <app-player-chip
                         [player]="item"
+                        [settlement]="data"
                         [removable]="canRemoveMember()"
                         (remove)="settlementLeave(data.id, $event)"
                     />

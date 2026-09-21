@@ -28,11 +28,16 @@ export class NewsApiService {
     /**
      * Получает список всех новостей.
      *
+     * Вспомогательный запрос: при ошибке алерт не показывается
+     * (`SKIP_ERROR_ALERT`), потребитель деградирует к пустому списку.
+     *
      * @returns Observable с массивом DTO новостей.
      */
     getList(): Observable<NewsDto[]> {
         return this.http
-            .get<{ news: NewsDto[] }>(`${this.baseUrl}/news`)
+            .get<{ news: NewsDto[] }>(`${this.baseUrl}/news`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
             .pipe(map((response) => response.news));
     }
 

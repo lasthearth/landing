@@ -18,6 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiIcon } from '@taiga-ui/core';
 import { GameChatMessage } from '@features/game-chat/model/game-chat-message';
 import { GameChatService } from '@features/game-chat/services/game-chat.service';
+import { LocalStorageService } from '@core/services/local-storage.service';
 
 /**
  * Максимальное количество сообщений в виджете.
@@ -107,6 +108,13 @@ export class GameChatWidgetComponent implements OnInit {
     private readonly platformId = inject(PLATFORM_ID);
 
     /**
+     * Сервис localStorage.
+     * Обращения к хранилищу идут только через него: он сам защищён
+     * от обращения в серверном окружении (SSR/prerender).
+     */
+    private readonly localStorage = inject(LocalStorageService);
+
+    /**
      * Ссылка уничтожения компонента.
      */
     private readonly destroyRef = inject(DestroyRef);
@@ -172,7 +180,7 @@ export class GameChatWidgetComponent implements OnInit {
     });
 
     public constructor() {
-        this.isSoundEnabled.set(this.loadSoundSetting());
+        this.isSoundEnabled.set(this.localStorage.getItem<boolean>(SOUND_ENABLED_KEY) ?? true);
 
         if (isPlatformBrowser(this.platformId)) {
             this.audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
@@ -262,9 +270,7 @@ export class GameChatWidgetComponent implements OnInit {
         this.isSoundEnabled.update((value) => {
             const newValue = !value;
 
-            if (isPlatformBrowser(this.platformId)) {
-                localStorage.setItem(SOUND_ENABLED_KEY, JSON.stringify(newValue));
-            }
+            this.localStorage.setItem(SOUND_ENABLED_KEY, newValue);
 
             return newValue;
         });
@@ -420,20 +426,5 @@ export class GameChatWidgetComponent implements OnInit {
             this.isSounding.set(false);
             this.soundIndicatorTimer = null;
         }, 2500);
-    }
-
-    /**
-     * Загружает настройку звука из localStorage.
-     *
-     * @returns `true`, если звук включён (по умолчанию).
-     */
-    private loadSoundSetting(): boolean {
-        if (!isPlatformBrowser(this.platformId)) {
-            return true;
-        }
-
-        const stored = localStorage.getItem(SOUND_ENABLED_KEY);
-
-        return stored === null ? true : stored === 'true';
     }
 }

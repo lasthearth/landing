@@ -1,6 +1,7 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
+    catchError,
     distinctUntilChanged,
     EMPTY,
     fromEvent,
@@ -123,7 +124,9 @@ export class GameChatService {
         }
 
         const stream = this.visibleTimer$(POLLING_INTERVAL).pipe(
-            switchMap(() => this.fetchMessages$(channelId, limit)),
+            switchMap(() =>
+                this.fetchMessages$(channelId, limit).pipe(catchError(() => EMPTY))
+            ),
             map((page) => {
                 this.saveCache(channelId, page.messages);
 

@@ -34,11 +34,11 @@
             <p class="text-lg font-semibold text-ink">{{ 'settlements.detailed.population' | translate }}</p>
             <div class="flex flex-wrap gap-2">
                 @for (leaderPlayer of leaders; track leaderPlayer.user_id) {
-                    <app-player-chip [player]="leaderPlayer" [isLeader]="true" />
+                    <app-player-chip [player]="leaderPlayer" [isLeader]="true" [settlement]="settlementData" />
                 }
 
                 @for (item of users; track item.user_id) {
-                    <app-player-chip [player]="item" />
+                    <app-player-chip [player]="item" [settlement]="settlementData" />
                 }
             </div>
 

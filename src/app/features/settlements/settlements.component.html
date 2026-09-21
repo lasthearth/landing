@@ -2,95 +2,66 @@
     <div class="flex flex-col gap-4">
         <h1 class="lh-display text-2xl md:text-3xl lg:text-4xl font-bold text-ink">{{ 'settlements.list.title' | translate }}</h1>
 
-        <div class="flex flex-wrap gap-2">
+        <!--
+            Сортировка набрана кнопками `.nav-button` — той же идиомой, что
+            вкладки админки и навигация профиля. Активный ключ подсвечивается
+            брендовым градиентом (`--active`), а не `!important`-перекрытием
+            фона: перекрытие ломало тёмную тему и тени кнопки.
+        -->
+        <nav class="flex flex-wrap gap-2" [attr.aria-label]="'settlements.list.sort.label' | translate">
             <button
-                [class.bg-lh-primary-2!]="isSortActive('default')"
-                [class.text-white!]="isSortActive('default')"
+                type="button"
+                class="nav-button shrink-0"
+                [class.nav-button--active]="isSortActive('default')"
+                [attr.aria-current]="isSortActive('default') ? 'true' : null"
                 (click)="setSort('default')"
-                class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.default' | translate }}
-                <tui-icon icon="@tui.minus" class="size-4!" />
+                <tui-icon icon="@tui.minus" />
             </button>
             <button
-                [class.bg-lh-primary-2!]="isSortActive('population')"
-                [class.text-white!]="isSortActive('population')"
+                type="button"
+                class="nav-button shrink-0"
+                [class.nav-button--active]="isSortActive('population')"
+                [attr.aria-current]="isSortActive('population') ? 'true' : null"
                 (click)="setSort('population')"
-                class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.population' | translate }}
                 <tui-icon
                     [icon]="isSortActive('population') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="size-4! transition-transform duration-300 origin-center"
+                    class="transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('population') === 'asc'"
                 />
             </button>
             <button
-                [class.bg-lh-primary-2!]="isSortActive('online')"
-                [class.text-white!]="isSortActive('online')"
+                type="button"
+                class="nav-button shrink-0"
+                [class.nav-button--active]="isSortActive('online')"
+                [attr.aria-current]="isSortActive('online') ? 'true' : null"
                 (click)="setSort('online')"
-                class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.online' | translate }}
                 <tui-icon
                     [icon]="isSortActive('online') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="size-4! transition-transform duration-300 origin-center"
+                    class="transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('online') === 'asc'"
                 />
             </button>
             <button
-                [class.bg-lh-primary-2!]="isSortActive('east')"
-                [class.text-white!]="isSortActive('east')"
-                (click)="setSort('east')"
-                class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
-            >
-                {{ 'settlements.list.sort.east' | translate }}
-                <tui-icon
-                    [icon]="isSortActive('east') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="size-4! transition-transform duration-300 origin-center"
-                    [class.rotate-180]="getSortDirection('east') === 'asc'"
-                />
-            </button>
-            <button
-                [class.bg-lh-primary-2!]="isSortActive('west')"
-                [class.text-white!]="isSortActive('west')"
-                (click)="setSort('west')"
-                class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
-            >
-                {{ 'settlements.list.sort.west' | translate }}
-                <tui-icon
-                    [icon]="isSortActive('west') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="size-4! transition-transform duration-300 origin-center"
-                    [class.rotate-180]="getSortDirection('west') === 'asc'"
-                />
-            </button>
-            <button
-                [class.bg-lh-primary-2!]="isSortActive('suzerain')"
-                [class.text-white!]="isSortActive('suzerain')"
-                (click)="setSort('suzerain')"
-                class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
-            >
-                {{ 'settlements.list.sort.suzerain' | translate }}
-                <tui-icon
-                    [icon]="isSortActive('suzerain') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="size-4! transition-transform duration-300 origin-center"
-                    [class.rotate-180]="getSortDirection('suzerain') === 'asc'"
-                />
-            </button>
-            <button
-                [class.bg-lh-primary-2!]="isSortActive('diplomacy')"
-                [class.text-white!]="isSortActive('diplomacy')"
+                type="button"
+                class="nav-button shrink-0"
+                [class.nav-button--active]="isSortActive('diplomacy')"
+                [attr.aria-current]="isSortActive('diplomacy') ? 'true' : null"
                 (click)="setSort('diplomacy')"
-                class="lh-secondary-button text-lg py-1.5 px-3 flex items-center gap-1"
             >
                 {{ 'settlements.list.sort.diplomacy' | translate }}
                 <tui-icon
                     [icon]="isSortActive('diplomacy') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="size-4! transition-transform duration-300 origin-center"
+                    class="transition-transform duration-300 origin-center"
                     [class.rotate-180]="getSortDirection('diplomacy') === 'asc'"
                 />
             </button>
-        </div>
+        </nav>
     </div>
 
     @if (loading()) {

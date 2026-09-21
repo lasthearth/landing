@@ -61,20 +61,28 @@ export class HeaderComponent {
 
     /**
      * {@link Observable} Количества онлайна.
+     *
+     * При ошибке запроса (алерт подавлен через `SKIP_ERROR_ALERT`)
+     * деградирует к `null` — шаблон показывает прочерк.
      */
     protected readonly online$: Observable<{
         online: number;
         max_online: number;
-    }> = this.serverInformationService.getOnlinePlayersCount$().pipe(map((info) => info));
+    } | null> = this.serverInformationService.getOnlinePlayersCount$().pipe(
+        map((info) => info),
+        catchError(() => of(null))
+    );
 
     /**
      * {@link Observable} Даты и времени сервера.
      *
      * Локализует игровое время, которое бэкенд отдаёт в фиксированном
      * английском формате "DD. Month, Year Y, HH:mm".
+     * При ошибке запроса деградирует к `null` — шаблон показывает прочерк.
      */
-    protected readonly time$: Observable<string> = this.serverInformationService.getTime$().pipe(
-        map((info) => formatServerTime(info.time, this.language()))
+    protected readonly time$: Observable<string | null> = this.serverInformationService.getTime$().pipe(
+        map((info) => formatServerTime(info.time, this.language())),
+        catchError(() => of(null))
     );
 
     /**

@@ -5,7 +5,6 @@
 @let details = details$ | async;
 @let settlementOnline = settlementMembersOnline$ | async;
 @let hgStats = hungerGamesStats$ | async;
-@let purchases = purchases$ | async;
 @let isLoading = isLoading$ | async;
 
 @if (isLoading) {
@@ -272,93 +271,6 @@
                 </div>
             }
         </div>
-
-        <!-- История покупок -->
-        @if (getRoleName() !== 'profile.role.unverified') {
-            <div class="flex flex-col gap-3 mt-6">
-                <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'profile.purchases.title' | translate }}</h2>
-
-                @if (purchases; as list) {
-                    @if (list.length > 0) {
-                        <ng-template #purchaseItem let-purchase>
-                            @let meta = getPurchaseStatusMeta(purchase);
-
-                            <div
-                                class="flex items-center justify-between gap-4 lh-panel rounded-xl px-4 py-3"
-                            >
-                                <div class="flex flex-col gap-1 min-w-0">
-                                    <span class="text-lg font-bold text-lh-primary truncate">
-                                        {{ purchase.itemName || "—" }}
-                                    </span>
-                                    <span class="text-base text-ink-3">{{ purchase.formattedDate }}</span>
-                                </div>
-
-                                <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
-                                    <span class="inline-flex items-center gap-1 text-lg font-bold text-lh-primary">
-                                        {{ purchase.pricePaid }}
-                                        <img
-                                            src="/splinter-of-spark.webp"
-                                            [alt]="'profile.currency.shardAlt' | translate"
-                                            class="h-5 w-5 object-contain"
-                                        />
-                                    </span>
-
-                                    <span
-                                        [class]="
-                                            'inline-flex items-center gap-1.5 text-base font-medium ' +
-                                            meta.textClass
-                                        "
-                                    >
-                                        <span [class]="'w-2.5 h-2.5 rounded-full ' + meta.dotClass"></span>
-                                        {{ meta.label | translate }}
-                                    </span>
-                                </div>
-                            </div>
-                        </ng-template>
-
-                        <div class="flex flex-col gap-2">
-                            <ng-container *ngTemplateOutlet="purchaseItem; context: { $implicit: list[0] }" />
-
-                            @if (list.length > purchasesCollapsedCount) {
-                                <div
-                                    class="purchases-list"
-                                    [class.purchases-list--expanded]="isPurchasesExpanded()"
-                                >
-                                    <div class="purchases-list__inner">
-                                        @for (purchase of list.slice(purchasesCollapsedCount); track purchase.id) {
-                                            <ng-container
-                                                *ngTemplateOutlet="purchaseItem; context: { $implicit: purchase }"
-                                            />
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        </div>
-
-                        @if (list.length > purchasesCollapsedCount) {
-                            <button
-                                type="button"
-                                (click)="isPurchasesExpanded.set(!isPurchasesExpanded())"
-                                class="self-center flex items-center gap-2 text-lg font-semibold text-lh-accent hover:text-brand-hover transition-colors cursor-pointer"
-                            >
-                                {{ isPurchasesExpanded() ? ('profile.purchases.collapse' | translate) : ('profile.purchases.expand' | translate) }}
-                                <tui-icon
-                                    [icon]="isPurchasesExpanded() ? '@tui.chevron-up' : '@tui.chevron-down'"
-                                    class="size-5! purchases-toggle-icon"
-                                    [class.purchases-toggle-icon--expanded]="isPurchasesExpanded()"
-                                />
-                            </button>
-                        }
-                    } @else {
-                        <p
-                            class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
-                        >
-                            {{ 'profile.purchases.empty' | translate }}
-                        </p>
-                    }
-                }
-            </div>
-        }
 
         <!-- Сообщения о верификации -->
         @if (details?.status === "pending") {

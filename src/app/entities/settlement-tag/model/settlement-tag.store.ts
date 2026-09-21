@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 
-import { Observable, map, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 import { hexToColor } from '../lib/hex-to-color.function';
 import { ISettlementTag } from './i-settlement-tag';
 import { IColor } from './i-color';
@@ -79,7 +79,8 @@ export class SettlementTagStore {
                 error: () => {
                     this.loading.set(false);
                 },
-            })
+            }),
+            catchError(() => of([]))
         );
     }
 

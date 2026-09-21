@@ -35,6 +35,15 @@
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-leader) 50%, transparent);
 }
 
+/* Игрок с ролями: только нейтральная иконка-щит, без обводки и цвета.
+   Яркая рамка перебивала корону главы и конкурировала с точкой статуса;
+   приглушённый тон читается как «есть что показать», не выходя вперёд. */
+.player-chip__roles {
+    color: var(--lh-ink-3);
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
 /**
  * Портрет — контейнер позиционирования для точки статуса.
  * Точка размещается абсолютно, поэтому не влияет на поток и не требует
@@ -167,6 +176,23 @@
 
 .player-tooltip__role-icon {
     font-size: 0.875rem;
+}
+
+/**
+ * Роль игрока в поселении (из справочника ролей селения).
+ * Нейтральный тон, в отличие от бейджа главы: ролей может быть несколько,
+ * и каждая не должна спорить с короной по насыщенности.
+ */
+.player-tooltip__member-role {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.0625rem 0.375rem;
+    border-radius: 0.375rem;
+    background: color-mix(in srgb, var(--lh-surface-3) 75%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-border) 55%, transparent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--lh-ink-2);
 }
 
 .player-tooltip__name {

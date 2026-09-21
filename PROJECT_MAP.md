@@ -23,6 +23,69 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-7 Роли игрока в тултипе чипа
+
+> При наведении на чип игрока тултип теперь показывает роли игрока
+> в текущем поселении (рядом с короной владельца и статусом онлайн).
+
+- `entities/user/ui/player-chip/`: новый опциональный вход `settlement`
+  (`ISettlement | null`); computed `memberRoleNames` считает через
+  `getMemberRoleNames` из `@entities/settlement` (служебная роль `owner`
+  по-прежнему исключена — её обозначает корона). Все три потребителя
+  (`settlement-card`, `settlement-detailed`, страница управления) передают
+  свои данные поселения. Новый стиль `.player-tooltip__member-role` —
+  нейтральный бейдж, в отличие от бейджа главы.
+- Циклических зависимостей нет: `@entities/settlement` ничего не импортирует
+  из `@entities/user`.
+- Выделение чипов с ролями: computed `hasRoles` показывает перед именем
+  нейтральную иконку `@tui.shield` (`--lh-ink-3`) — приглашение навестись.
+  Акцентная обводка из первого варианта убрана: перебивала корону главы
+  и конкурировала с точкой статуса.
+- Тип ответа `invitePlayer` приведён к спеке: `InviteMemberResponse` пустой,
+  метод возвращает `Observable<void>` (был ошибочный `{users: any[]}`).
+- Контакты на карточке селения: если `contact_info` задан, под описанием
+  выводится строка с иконкой `@tui.contact-round` и клампом до двух строк
+  (`title` отдаёт полный текст). Ключи `settlements.card.contacts` (ru/en)
+  используются как aria/title-лейбл.
+- Сортировка списка селений переведена с `lh-secondary-button` +
+  `!important`-перекрытий фона на системный идиом `.nav-button` /
+  `.nav-button--active` (тот же, что вкладки админки и навигация профиля):
+  активный ключ — брендовый градиент, ховер-лифт и просадка как у всей
+  навигации. Ряд размечен как `<nav>` с `aria-label`/`aria-current`
+  (`settlements.list.sort.label`). Кнопки «Восток»/«Запад»/«Сюзеренство»
+  убраны вместе с ветками сортировки, обогащением `tagTypes` и хелпером
+  `getSpecialTagTypes`; ключи переводов `sort.east/west/suzerain` удалены
+  из обеих локалей. Прогрев `tagStore.loadTags$()` в конструкторе оставлен:
+  теги на карточках зависят от него.
+- Первая кнопка быстрых действий на главной зависит от авторизации
+  (`quickActions` стал computed): гость видит «Как начать» → `/start-game`,
+  авторизованный — «Где IP?» (`home.quickActions.whereIp`, иконка
+  `@tui.globe`) → `/profile/how-play`, где лежит IP сервера.
+
+### 3.-6 SSR-аудит и «welcome больше не показывается повторно»
+
+> Проведён аудит обращений к браузерным API на предмет серверного рендера,
+> приветственный экран после первого пролистывания больше не показывается.
+
+- **SSR-аудит:** кодовая база в целом безопасна — `LocalStorageService`
+  защищён `typeof localStorage`, FAQ/privacy/public-offer работают с DOM
+  только в `afterNextRender`, `RevealDirective` проверяет наличие
+  `IntersectionObserver`, game-chat/radio гейтятся `isPlatformBrowser`.
+  Исправлены два непоследовательных места:
+  - `game-chat-widget` обращался к `localStorage` напрямую (минуя сервис):
+    чтение настройки звука и `toggleSound` переведены на `LocalStorageService`,
+    ставший ненужным приватный метод `loadSoundSetting` удалён.
+  - `layout.component.ts` `updateScrollLock` проверял `typeof window`;
+    заменено на `isPlatformBrowser(this.platformId)` как единый стиль
+  проекта.
+- **Welcome один раз:** новый ключ `WELCOME_SEEN_STORAGE_KEY`
+  (`layout/welcome-seen-storage-key.constant.ts`, значение `lh_welcome_seen`).
+  `LayoutComponent` читает флаг через `LocalStorageService` при создании
+  (на сервере — всегда `false`, пререндер не ломается) и гейтит им
+  `showWelcome$`. Первое пролистывание (`onWelcomeScroll`) сохраняет флаг;
+  в текущей сессии компонент остаётся в DOM с классом `.scroll`, чтобы
+  доиграть анимацию ухода.
+
 ### 3.-5 Управление поселением: роли, заявки, владение, контакты, админка
 
 > Ветка `feat/settlement-management` = `main` + влитая `feat/settlement-roles-ownership`.
@@ -42,6 +105,37 @@ src/app/
 2. Гейт по праву **перед подпиской**: стрим не запускается, если права нет. Без
    первого слоя гонка при смене владельца всё равно дала бы 403; без второго
    запрос уходил бы зря.
+
+**Аудит вспомогательных GET (следующий этап той же борьбы с попапами).**
+Цель: у рядового пользователя не остаётся алертов на фоновых GET-ах, чьи
+потребители и так деградируют молча. Правило прежнее: `catchError` в
+компоненте не спасает — алерт ставит `errorInterceptor`, поэтому на запрос
+вешается `new HttpContext().set(SKIP_ERROR_ALERT, true)`, а у потребителя
+проверяется/добавляется catchError, иначе ошибка уйдёт в unhandled.
+
+Покрытые запросы (все с SKIP, потребители ловят ошибку):
+
+- `entities/donate` — `getMyBalance$`, `getMyPurchases$`.
+- `entities/referral` — `getMyCode$`, `getMyStats$` (виджет → null/нули).
+- `entities/user` — приватный `leaderboardStats$` (топ-200 для тултипов
+  player-chip; внутри `getPlayerStats$` уже был catchError → null).
+- `entities/settlement-tag` — `getTags$`; в `SettlementTagStore.loadTags$`
+  добавлен `catchError(() => of([]))`, без него ошибка летела бы в
+  конструктор `settlements.component`.
+- `entities/settlement` — `getSettlements` (страница селений и главная
+  имеют свои error-состояния, админ-панель ловит в catchError).
+- `entities/news` — `getList` (главная ловит → пустой список).
+- `entities/discord` — `getMessages$`, `getImages$` (дипломатия/галерея/чат
+  имеют собственные error-сигналы; раньше был двойной фидбек: алерт + свой
+  стейт). В `game-chat` `watchChat$` catchError внутри `switchMap`, чтобы
+  один сбой опроса не убивал polling-поток.
+- `core/services/server-information.service` — `getOnlinePlayersCount$`,
+  `getTime$`, `getLeaderBoard`, `getPlayerStats$` (шапка → null/прочерк,
+  статистика → пустая таблица, профиль → null).
+
+Намеренно оставлены с алертом: админские поверхности (hunger-games,
+верификации), `searchUser$` (поиск без результата-ошибки должен сообщать),
+POST/PUT/DELETE (фидбек через `RequestStatusService`).
 
 **API-слой (`entities/settlement/api/settlement.service.ts`)** приведён к живой
 спеке (`https://docs.lasthearth.ru/v1/openapi.yaml`; `API_CONTRACT.md` по
@@ -302,8 +396,46 @@ src/app/
 
 - `src/app/layout/header/header.component.{ts,html}` — Дипломатия вынесена в отдельную кнопку рядом с Селениями; Галерея + Видео в меню «Медиа».
 - `src/app/layout/layout.component.{ts,html}` — убран плавающий FAB тикета.
-- `src/app/features/profile/profile-navigation/` — тикет добавлен в навигацию профиля.
 - `src/app/features/home/home.component.{ts,html,less}` — в быстрых действиях добавлена Галерея, убрано Видео.
+
+### 3.6.1 Удалена система тикетов в Discord
+
+> Форма тикета слала заявки напрямую в Discord-вебхук, URL которого лежал
+> открытым в `environment.*.ts`. Система удалена целиком; игроки пишут
+> в канал #тех-поддержка Discord (так же описано в FAQ).
+
+- Удалены: `features/ticket/` (`ticket-form`, `ticket-fab`),
+  `shared/lib/ticket-webhook/`, `core/i18n/translations/features/ticket.i18n.ts`.
+- Из `environment.ts` / `environment.prod.ts` убран `discordTicketWebhookUrl`.
+- Из потребителей убраны кнопки и код: `home.component` (CTA «Оставить тикет»
+  в блоке recruit), `profile-navigation` (кнопка с иконкой `@tui.ticket`).
+- Из `translations/index.ts` убрана регистрация `TICKET_I18N`; из
+  `home.i18n.ts` — ключ `home.recruit.ticket`.
+- Тексты правил (`rules.i18n.ts`), описывающие тикеты в Discord как часть
+  игрового процесса, не тронуты — это контент, а не система.
+
+### 3.6.2 FAQ: убран флёрон перед заголовками экспандов
+
+- Из `faq.component.css` удалено правило
+  `.faq-scroll > div:first-child > p:first-child::before` (content '❧ ') —
+  декоративный флёрон перед заголовком каждого вопроса.
+- Chevron-иконки `@tui.chevron-down` в заголовках экспандов остаются —
+  они показывают состояние раскрытия (rotate-180).
+
+### 3.6.3 История покупок перенесена во вкладку статистики
+
+> Блок «История покупок» жил в шапке `profile.component` и показывался на всех
+> вкладках профиля. Перенесён в `statistics.component` — теперь виден только
+> на `/profile/stats`, над лидербордом.
+
+- Шаблон и логика (`purchases$`, `isPurchasesExpanded`, `purchasesCollapsedCount`,
+  `getPurchaseStatusMeta`) переехали в
+  `features/profile/statistics/statistics.component.{ts,html}`; стили
+  `.purchases-list` / `.purchases-toggle-icon` — в `statistics.component.less`.
+- Гейт по роли в статистике — `isVerifiedUser` (admin/player); в шапке профиля
+  блок и его участие в `isLoading$` удалены, `profile.component.css` очищен.
+- Словарь не двигался: ключи `profile.purchases.*` остаются в `profile.i18n.ts`,
+  который грузится на роуте профиля (статистика — его дочерний роут).
 
 ### 3.7 Discord-прокси на бэкенде (vsservice)
 
@@ -538,9 +670,13 @@ src/app/
 - [ ] Проверить `feat/settlement-management` на dev-стенде: гейтинг прав у
       обычного жителя (не должно быть ни одного попапа), матрица прав в тёмной
       теме и на мобильном, лимит активных заявок (число знает только бэкенд).
-- [ ] Прогон сборки нестабилен: `ng build` иногда падает на пререндере
-      `/unauthorized` с `TimeoutError` — воспроизводится и на чистом `main`,
-      к изменениям ветки отношения не имеет. Разобраться отдельно.
+- [x] Прогон сборки нестабилен: `ng build` иногда падал на пререндере
+      `/unauthorized` с `TimeoutError`. Причина: `/unauthorized` — роут-редирект
+      (`redirectTo: '/home'`), его пререндер бессмысленен (nginx всё равно
+      отдаёт index.html, клиентский роутер сам редиректит), а SSR-рендер
+      редиректа ждёт завершения второй навигации и периодически не успевал
+      к таймауту. Роут мёртвый — гарды шлют на `/home`. Убран из `routes.txt`
+      (11 → 10 роутов), 4 контрольных прогона сборки — стабильно.
 - [ ] Проверить дизайн-систему в браузере: тёмная тема, `prefers-reduced-motion`, автоплей видео в Firefox / Zen.
 - [ ] Сгенерировать proto-заглушки и goverter-мапперы в `vsservice` (`make proto && make generate`).
 - [ ] Проверить сборку и линтер `vsservice` (`make lint && make test && make build`).

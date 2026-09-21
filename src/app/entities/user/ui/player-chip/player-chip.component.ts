@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DecimalPipe } from '@angular/common';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { TranslatePipe } from '@core/i18n';
+import { ISettlement, getMemberRoleNames } from '@entities/settlement';
 import { IPlayer } from '../../model/i-player';
 import { IPlayerStats } from '../../model/i-player-stats';
 import { UserService } from '../../api/user.service';
@@ -23,7 +24,8 @@ import { UserService } from '../../api/user.service';
  *
  * Показывает аватар, статус онлайна и игровое имя. Лидер помечается
  * иконкой короны. При наведении разворачивает тултип с расширенной
- * информацией об игроке (статистика подгружается лениво, один раз).
+ * информацией об игроке: статистика подгружается лениво, один раз,
+ * а при передаче входа `settlement` — ещё и роли игрока в этом поселении.
  *
  * Заменяет три дублировавшихся блока разметки в карточке селения,
  * диалоге деталей и странице управления селением.
@@ -61,6 +63,14 @@ export class PlayerChipComponent {
      * Показывать ли кнопку исключения игрока (только на странице управления).
      */
     public readonly removable = input<boolean>(false);
+
+    /**
+     * Поселение, в списке жителей которого показан чип.
+     * Необязательный: когда передано, тултип показывает имена ролей
+     * игрока в этом поселении (без служебной роли владельца — её
+     * обозначает корона). Без поселения роли не выводятся.
+     */
+    public readonly settlement = input<ISettlement | null>(null);
 
     /**
      * Запрос на исключение игрока из селения.
@@ -102,6 +112,24 @@ export class PlayerChipComponent {
 
         return avatar?.original || avatar?.x96 || avatar?.x48 || '/default-avatar.webp';
     });
+
+    /**
+     * Имена ролей игрока в переданном поселении для бейджей тултипа.
+     * Пустой массив, если поселение не передано, роли отключены
+     * модерацией или у игрока их нет.
+     */
+    protected readonly memberRoleNames = computed(() => {
+        const settlement = this.settlement();
+
+        return settlement ? getMemberRoleNames(settlement, this.player().user_id) : [];
+    });
+
+    /**
+     * Признак того, что у игрока есть роли в переданном поселении.
+     * Чип с ролями получает акцентную обводку и иконку-щит, чтобы
+     * было видно, что на него есть смысл наводиться.
+     */
+    protected readonly hasRoles = computed(() => this.memberRoleNames().length > 0);
 
     /**
      * Реагирует на показ/скрытие тултипа.

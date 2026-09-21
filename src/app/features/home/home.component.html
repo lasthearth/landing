@@ -50,7 +50,7 @@
 <!-- Быстрые действия -->
 <div class="px-4 md:px-10 pt-6 md:pt-8 pb-3">
     <div class="quick-actions">
-        @for (action of quickActions; track action.label) {
+        @for (action of quickActions(); track action.label) {
             @if (action.external) {
                 <a
                     [href]="action.route"
@@ -243,12 +243,6 @@
                             <tui-icon icon="@tui.send" class="size-4!" />
                         </span>
                     </a>
-                    <button type="button" (click)="openTicket()" class="lh-cta lh-cta--ghost text-lg">
-                        {{ 'home.recruit.ticket' | translate }}
-                        <span class="lh-cta__icon">
-                            <tui-icon icon="@tui.file-text" class="size-4!" />
-                        </span>
-                    </button>
                 </div>
             </div>
         </div>

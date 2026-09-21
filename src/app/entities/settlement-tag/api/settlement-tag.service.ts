@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '@core/config/environments/environment';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ISettlementTag } from '../model/i-settlement-tag';
 import { ISettlementTagDto } from '../model/i-settlement-tag-dto';
 import { SettlementTagMapper } from '../model/settlement-tag.mapper';
@@ -28,11 +29,16 @@ export class SettlementTagService {
     /**
      * Возвращает список всех тегов.
      *
+     * Вспомогательный запрос: при ошибке алерт не показывается
+     * (`SKIP_ERROR_ALERT`), хранилище деградирует к пустому списку.
+     *
      * @returns Observable с массивом тегов.
      */
     public getTags$(): Observable<ISettlementTag[]> {
         return this.http
-            .get<{ tags: ISettlementTagDto[] }>(`${this.baseUrl}/settlements/tags`)
+            .get<{ tags: ISettlementTagDto[] }>(`${this.baseUrl}/settlements/tags`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
             .pipe(map((response) => response.tags.map(SettlementTagMapper.fromDto)));
     }
 

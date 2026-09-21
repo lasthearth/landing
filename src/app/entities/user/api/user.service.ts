@@ -21,10 +21,11 @@ import {
     take,
     tap,
 } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { convertTuiFileLikeToBase64 } from '@shared/lib/convert-file-to-base64.function';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { environment } from '@core/config/environments/environment';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { IJwtTokenLh } from '../model/i-jwt-token-lh';
 import { IUser } from '../model/i-user';
 import { IPlayer } from '../model/i-player';
@@ -421,6 +422,9 @@ export class UserService {
     /**
      * Кэшированный запрос топ‑200 таблицы лидеров (по убийствам).
      * Источник статистики для тултипов игроков; общий на все чипы.
+     *
+     * Вспомогательный запрос: при ошибке алерт не показывается
+     * (`SKIP_ERROR_ALERT`), чип деградирует к «Статистика недоступна».
      */
     private leaderboardStats$(): Observable<
         Array<{ name: string; deaths: number; kills: number; hours_played: number }>
@@ -431,7 +435,10 @@ export class UserService {
             this.leaderboardStatsCache$ = this.http
                 .get<{
                     entries: Array<{ name: string; deaths: number; kills: number; hours_played: number }>;
-                }>(`${this.baseUrl}/leaderboard`, { params })
+                }>(`${this.baseUrl}/leaderboard`, {
+                    params,
+                    context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+                })
                 .pipe(
                     map((response) => response.entries ?? []),
                     shareReplay({ bufferSize: 1, refCount: false })

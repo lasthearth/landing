@@ -1,15 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
-import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { TuiIcon } from '@taiga-ui/core';
 import { NewsCardComponent } from '@app/features/news/ui/news-card/news-card.component';
 import { NewsSkeletonComponent } from '@app/features/news/ui/news-skeleton/news-skeleton.component';
 import { NewsApiService, mapDtoToNews } from '@entities/news';
 import { UserService, Role } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
-import { TicketFormComponent } from '@features/ticket/ticket-form/ticket-form.component';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { environment } from '@core/config/environments/environment';
 import { ServerInformationService } from '@core/services/server-information.service';
@@ -58,11 +56,6 @@ export class HomeComponent {
      * Сервис диалогов подтверждения.
      */
     private readonly confirmDialog = inject(ConfirmDialogService);
-
-    /**
-     * Сервис диалогов Taiga UI (открытие формы тикета).
-     */
-    private readonly dialogs = inject(TuiDialogService);
 
     /**
      * Сервис информации о сервере (онлайн, игровое время).
@@ -178,39 +171,54 @@ export class HomeComponent {
     /**
      * Быстрые действия на главной странице.
      * Помогают новому игроку сразу найти путь в мир.
+     *
+     * Первое действие зависит от авторизации: гостю предлагается
+     * инструкция «Как начать», а авторизованному — короткий путь
+     * к IP сервера, который лежит в профиле (`/profile/how-play`).
      */
-    protected readonly quickActions = [
-        {
-            icon: '@tui.play',
-            label: 'home.quickActions.start',
-            route: '/start-game',
-            external: false,
-        },
-        {
-            icon: '@tui.map',
-            label: 'home.quickActions.settlements',
-            route: '/settlements',
-            external: false,
-        },
-        {
-            icon: '@tui.image',
-            label: 'home.quickActions.gallery',
-            route: '/gallery',
-            external: false,
-        },
-        {
-            icon: '@tui.message-circle',
-            label: 'home.quickActions.discord',
-            route: 'https://discord.com/invite/FZb7SGrSFy',
-            external: true,
-        },
-        {
-            icon: '@tui.heart',
-            label: 'home.quickActions.donate',
-            route: '/market',
-            external: false,
-        },
-    ];
+    protected readonly quickActions = computed(() => {
+        const startAction = this.isAuthed()
+            ? {
+                  icon: '@tui.globe',
+                  label: 'home.quickActions.whereIp',
+                  route: '/profile/how-play',
+                  external: false,
+              }
+            : {
+                  icon: '@tui.play',
+                  label: 'home.quickActions.start',
+                  route: '/start-game',
+                  external: false,
+              };
+
+        return [
+            startAction,
+            {
+                icon: '@tui.map',
+                label: 'home.quickActions.settlements',
+                route: '/settlements',
+                external: false,
+            },
+            {
+                icon: '@tui.image',
+                label: 'home.quickActions.gallery',
+                route: '/gallery',
+                external: false,
+            },
+            {
+                icon: '@tui.message-circle',
+                label: 'home.quickActions.discord',
+                route: 'https://discord.com/invite/FZb7SGrSFy',
+                external: true,
+            },
+            {
+                icon: '@tui.heart',
+                label: 'home.quickActions.donate',
+                route: '/market',
+                external: false,
+            },
+        ];
+    });
 
     /**
      * Команда проекта.
@@ -257,13 +265,6 @@ export class HomeComponent {
         { icon: '@tui.flame', key: 'events' },
         { icon: '@tui.users', key: 'promo' },
     ] as const;
-
-    /**
-     * Открывает диалог отправки тикета.
-     */
-    protected openTicket(): void {
-        this.dialogs.open(new PolymorpheusComponent(TicketFormComponent), { size: 'auto' }).subscribe();
-    }
 
     /**
      * Текущий онлайн сервера.

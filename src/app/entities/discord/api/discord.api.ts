@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import {
     DiscordImagesPageDto,
     DiscordMessagesPageDto,
@@ -48,7 +49,10 @@ export class DiscordApiService {
 
         return this.http.get<DiscordMessagesPageDto>(
             `${this.baseUrl}/discord/channels/${channelId}/messages`,
-            { params }
+            {
+                params,
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            }
         );
     }
 
@@ -73,7 +77,10 @@ export class DiscordApiService {
 
         return this.http.get<DiscordImagesPageDto>(
             `${this.baseUrl}/discord/channels/${channelId}/images`,
-            { params }
+            {
+                params,
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            }
         );
     }
 

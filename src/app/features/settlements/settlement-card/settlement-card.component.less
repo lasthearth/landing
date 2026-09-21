@@ -161,6 +161,28 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-lh-online) 20%, transparent);
 }
 
+/**
+ * Контакты поселения. Стили шрифта пришли из Tailwind-строки
+ * соседних элементов, здесь только раскладка иконки с текстом.
+ * Иконка инлайн, на базовой линии: при обрезке текста клампом
+ * она уходит вместе с первой строкой, а не висит отдельно.
+ */
+.settlement-card__contacts {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    font-weight: 600;
+    color: var(--lh-ink-3);
+}
+
+.settlement-card__contacts-icon {
+    font-size: 0.9375rem;
+    flex-shrink: 0;
+    translate: 0 0.125rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .settlement-card,
     .settlement-card__media app-image-loader {

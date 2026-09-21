@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { map, Observable } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ICreateSettlement } from '../model/i-create-settlement';
 import { IRequestSettlement } from '../model/i-request-settlement';
 import { ISettlement } from '../model/i-settlement';
@@ -100,13 +101,18 @@ export class SettlementService {
     /**
      * Получает список всех поселений.
      *
+     * Вспомогательный запрос: при ошибке алерт не показывается
+     * (`SKIP_ERROR_ALERT`), страницы деградируют к своим error-состояниям.
+     *
      * @returns Observable с массивом поселений.
      */
     public getSettlements(): Observable<ISettlement[]> {
         return this.http
             .get<{
                 settlements: ISettlement[];
-            }>(`${this.baseUrl}/settlements`)
+            }>(`${this.baseUrl}/settlements`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
             .pipe(map((data) => data.settlements));
     }
 
@@ -161,20 +167,22 @@ export class SettlementService {
     /**
      * Приглашает игрока в поселение.
      *
+     * Соответствует `POST /v1/settlements/{settlement_id}/invitations`:
+     * обязательные поля `settlement_id` и `user_id` идут и в пути, и в теле —
+     * без них бэкенд ответит `INVALID_ARGUMENT`. Ответ пустой
+     * (`InviteMemberResponse`), список приглашений перечитывается отдельно.
+     *
      * @param settlementId Идентификатор поселения.
-     * @param userId Идентификатор пользователя.
-     * @returns Observable с результатом операции.
+     * @param userId Идентификатор приглашаемого пользователя.
+     * @returns Пустой {@link Observable} — признак завершения операции.
      */
-    public invitePlayer(settlementId: string, userId: string) {
-        return this.http.post<{
-            users: any[];
-        }>(
+    public invitePlayer(settlementId: string, userId: string): Observable<void> {
+        return this.http.post<void>(
             `${this.baseUrl}/settlements/${settlementId}/invitations`,
             {
                 settlement_id: settlementId,
                 user_id: userId,
-            },
-            
+            }
         );
     }
 

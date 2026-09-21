@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, map, of, shareReplay, switchMap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { IShopItemDto, ICreateShopItemRequest, IUpdateShopItemRequest } from '../model/shop-item.interface';
 import { IPurchaseDto } from '../model/purchase.interface';
 import { IPendingPurchaseDto } from '../model/pending-purchase-dto.interface';
@@ -71,11 +72,16 @@ export class DonateService {
     /**
      * Получает текущий баланс донат-валюты авторизованного игрока.
      *
+     * Вспомогательный запрос: при ошибке алерт не показывается
+     * (`SKIP_ERROR_ALERT`), баланс просто не отрисуется.
+     *
      * @returns Observable с балансом.
      */
     public getMyBalance$(): Observable<IBalanceResponse> {
         return this.http
-            .get<IBalanceResponseDto>(`${this.baseUrl}/donate/me/balance`)
+            .get<IBalanceResponseDto>(`${this.baseUrl}/donate/me/balance`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
             .pipe(map(mapDtoToBalanceResponse));
     }
 
@@ -94,11 +100,16 @@ export class DonateService {
     /**
      * Получает историю покупок авторизованного игрока.
      *
+     * Вспомогательный запрос: при ошибке алерт не показывается
+     * (`SKIP_ERROR_ALERT`), список покупок скрывается молча.
+     *
      * @returns Observable с массивом покупок.
      */
     public getMyPurchases$(): Observable<IPurchase[]> {
         return this.http
-            .get<{ purchases: IPurchaseDto[] }>(`${this.baseUrl}/donate/me/purchases`)
+            .get<{ purchases: IPurchaseDto[] }>(`${this.baseUrl}/donate/me/purchases`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
             .pipe(map((response) => response.purchases.map(mapDtoToPurchase)));
     }
 

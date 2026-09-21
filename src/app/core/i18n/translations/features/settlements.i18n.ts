@@ -7,12 +7,10 @@ export const SETTLEMENTS_I18N = {
             list: {
                 title: 'Список поселений игроков',
                 sort: {
+                    label: 'Сортировка списка',
                     default: 'По умолчанию',
                     population: 'По населению',
                     online: 'По онлайну',
-                    east: 'Восток',
-                    west: 'Запад',
-                    suzerain: 'Сюзеренство',
                     diplomacy: 'Дипломатия',
                 },
                 error: {
@@ -32,6 +30,7 @@ export const SETTLEMENTS_I18N = {
                 more: 'Подробнее',
                 suzerainShort: 'БИ',
                 tier: 'Уровень селения: {{tier}} из 5',
+                contacts: 'Контакты поселения',
             },
             diplomacy: {
                 peaceful: 'Миролюбивый',
@@ -377,12 +376,10 @@ export const SETTLEMENTS_I18N = {
             list: {
                 title: 'Player settlement list',
                 sort: {
+                    label: 'Sort list',
                     default: 'Default',
                     population: 'By population',
                     online: 'By online',
-                    east: 'East',
-                    west: 'West',
-                    suzerain: 'Suzerainty',
                     diplomacy: 'Diplomacy',
                 },
                 error: {
@@ -402,6 +399,7 @@ export const SETTLEMENTS_I18N = {
                 more: 'More details',
                 suzerainShort: 'GS',
                 tier: 'Settlement tier: {{tier}} of 5',
+                contacts: 'Settlement contacts',
             },
             diplomacy: {
                 peaceful: 'Peaceful',

@@ -16,6 +16,9 @@
                             {{ 'settlements.player.leader' | translate }}
                         </span>
                     }
+                    @for (roleName of memberRoleNames(); track roleName) {
+                        <span class="player-tooltip__member-role">{{ roleName }}</span>
+                    }
                     <span class="player-tooltip__status" [class.player-tooltip__status--online]="player().is_online">
                         <span
                             class="player-tooltip__status-dot"
@@ -73,6 +76,9 @@
 
     @if (isLeader()) {
         <tui-icon icon="@tui.crown" class="player-chip__crown" />
+    }
+    @if (hasRoles()) {
+        <tui-icon icon="@tui.shield" class="player-chip__roles" />
     }
     <span class="player-chip__name">{{ player().user_game_name }}</span>
 
