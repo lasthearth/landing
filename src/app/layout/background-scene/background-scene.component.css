@@ -1,0 +1,163 @@
+/**
+ * Фоновая сцена прибита к вьюпорту и лежит под всеми слоями layout.
+ * z-index: -3 совпадает с виньеткой layout (::after), но сцена идёт раньше
+ * в дереве, поэтому виньетка, пульс очага и искры рисуются поверх неё.
+ *
+ * Цвет чернил — тёплый пергаментный тон бренда. Прозрачность держится
+ * в пределах нескольких процентов: карта должна читаться как фактура,
+ * а не как картинка, и не спорить с контентом за внимание.
+ */
+.background-scene {
+    --scene-ink: #d8b98a;
+    --scene-alpha: 1;
+
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    overflow: hidden;
+    pointer-events: none;
+    color: var(--scene-ink);
+    opacity: var(--scene-alpha);
+}
+
+:host-context(html[data-theme='dark']) .background-scene {
+    --scene-ink: #b9a888;
+    --scene-alpha: 0.85;
+}
+
+.background-scene__svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+}
+
+/* ---- Градусная сетка ---- */
+
+.background-scene__grid {
+    stroke-width: 0.6;
+    stroke-opacity: 0.05;
+}
+
+/* ---- Сетка румбов ---- */
+
+.background-scene__rhumbs {
+    stroke-width: 0.6;
+    stroke-opacity: 0.032;
+}
+
+.background-scene__rhumb--major {
+    stroke-opacity: 0.06;
+}
+
+/* ---- Горизонтали рельефа ---- */
+
+/* Горизонтали один раз прорисовываются «пером» при загрузке. */
+.background-scene__contour {
+    stroke-width: 0.9;
+    stroke-opacity: 0.075;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: scene-ink-draw 2.6s cubic-bezier(0.45, 0.05, 0.25, 1) forwards;
+}
+
+.background-scene__contour--major {
+    stroke-width: 1.4;
+    stroke-opacity: 0.12;
+}
+
+@keyframes scene-ink-draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Весь рельеф медленно «дышит» — дрейф в несколько пикселей за минуту. */
+.background-scene__relief {
+    animation: scene-drift 60s ease-in-out infinite alternate;
+}
+
+@keyframes scene-drift {
+    from {
+        transform: translate(-14px, 6px);
+    }
+
+    to {
+        transform: translate(14px, -6px);
+    }
+}
+
+/* ---- Маршрут ---- */
+
+.background-scene__route {
+    stroke-width: 1.3;
+    stroke-opacity: 0.16;
+    stroke-dasharray: 2 10;
+    animation: scene-march 40s linear infinite;
+}
+
+@keyframes scene-march {
+    to {
+        stroke-dashoffset: -240;
+    }
+}
+
+.background-scene__mark {
+    stroke-width: 2;
+    stroke-opacity: 0.22;
+}
+
+/* ---- Розы ветров ---- */
+
+.background-scene__rose-dial {
+    stroke-width: 0.8;
+    stroke-opacity: 0.14;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: scene-dial 240s linear infinite;
+}
+
+.background-scene__rose-ticks {
+    stroke-opacity: 0.8;
+}
+
+.background-scene__rose-star {
+    fill: currentColor;
+    fill-opacity: 0.05;
+    stroke-width: 0.9;
+    stroke-opacity: 0.2;
+}
+
+.background-scene__rose-hub {
+    fill: currentColor;
+    fill-opacity: 0.25;
+    stroke: none;
+}
+
+.background-scene__rose-north {
+    fill: currentColor;
+    fill-opacity: 0.22;
+    stroke: none;
+    font-family: 'Almendra', serif;
+    font-size: 22px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+@keyframes scene-dial {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .background-scene__svg * {
+        animation: none !important; /* Системная настройка сильнее любых анимаций сцены. */
+    }
+
+    .background-scene__contour {
+        stroke-dashoffset: 0;
+    }
+}

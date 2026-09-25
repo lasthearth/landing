@@ -9,6 +9,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { GameChatWidgetComponent } from '@features/game-chat/ui/game-chat-widget/game-chat-widget.component';
 import { BackgroundParticlesComponent } from './background-particles/background-particles.component';
+import { BackgroundSceneComponent } from './background-scene/background-scene.component';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { WELCOME_SEEN_STORAGE_KEY } from './welcome-seen-storage-key.constant';
@@ -20,7 +21,16 @@ import { WELCOME_SEEN_STORAGE_KEY } from './welcome-seen-storage-key.constant';
 @Component({
     standalone: true,
     selector: 'app-layout',
-    imports: [RouterOutlet, HeaderComponent, FooterComponent, AsyncPipe, WelcomeComponent, BackgroundParticlesComponent, GameChatWidgetComponent],
+    imports: [
+        RouterOutlet,
+        HeaderComponent,
+        FooterComponent,
+        AsyncPipe,
+        WelcomeComponent,
+        BackgroundSceneComponent,
+        BackgroundParticlesComponent,
+        GameChatWidgetComponent,
+    ],
     templateUrl: './layout.component.html',
     styleUrl: './layout.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
