@@ -1,0 +1,80 @@
+<div class="background-scene" aria-hidden="true">
+    <svg class="background-scene__svg" [attr.viewBox]="viewBox" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <defs>
+            <!-- Центр под колонкой контента приглушён: карта живёт по краям. -->
+            <radialGradient id="lhs-fade" cx="0.5" cy="0.5" r="0.62">
+                <stop offset="0" stop-color="#fff" stop-opacity="0.12" />
+                <stop offset="0.45" stop-color="#fff" stop-opacity="0.45" />
+                <stop offset="0.72" stop-color="#fff" stop-opacity="0.75" />
+                <stop offset="1" stop-color="#fff" stop-opacity="1" />
+            </radialGradient>
+
+            <mask id="lhs-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+                <rect x="0" y="0" width="1920" height="1080" fill="url(#lhs-fade)" stroke="none" />
+            </mask>
+
+        </defs>
+
+        <g class="background-scene__map" mask="url(#lhs-mask)">
+            <g class="background-scene__grid">
+                @for (x of meridians; track x) {
+                    <line [attr.x1]="x" y1="0" [attr.x2]="x" y2="1080" />
+                }
+                @for (y of parallels; track y) {
+                    <line x1="0" [attr.y1]="y" x2="1920" [attr.y2]="y" />
+                }
+            </g>
+
+            <!-- Румбы: короткие лучи за розой, а не линии через весь экран. -->
+            @for (rose of roses; track $index) {
+                <g class="background-scene__rhumbs" [attr.transform]="'translate(' + rose.x + ' ' + rose.y + ')'">
+                    @for (angle of rose.rayAngles; track $index) {
+                        <line
+                            class="background-scene__rhumb"
+                            [class.background-scene__rhumb--major]="$index % 4 === 0"
+                            [attr.transform]="'rotate(' + angle + ')'"
+                            x1="96"
+                            y1="0"
+                            x2="208"
+                            y2="0"
+                        />
+                    }
+                </g>
+            }
+
+            <g class="background-scene__relief">
+                @for (contour of contours; track $index) {
+                    <path
+                        class="background-scene__contour"
+                        [class.background-scene__contour--major]="contour.major"
+                        [attr.d]="contour.d"
+                        pathLength="1"
+                        [style.animation-delay]="$index * 45 + 'ms'"
+                    />
+                }
+            </g>
+
+            <!-- Пунктир маршрута из «клада» слева к розе: «муравьи» ползут очень медленно. -->
+            <path
+                class="background-scene__route"
+                d="M290,820 C520,700 560,520 820,470 S1250,560 1360,420 S1540,300 1600,280"
+            />
+            <g class="background-scene__mark" transform="translate(290 820)">
+                <path d="M-9,-9 L9,9 M9,-9 L-9,9" />
+            </g>
+
+            @for (rose of roses; track $index) {
+                <g class="background-scene__rose" [attr.transform]="'translate(' + rose.x + ' ' + rose.y + ')'">
+                    <g class="background-scene__rose-dial">
+                        <circle [attr.r]="rose.r * 1.22" />
+                        <circle [attr.r]="rose.r * 1.1" />
+                        <path class="background-scene__rose-ticks" [attr.d]="rose.ticks" />
+                    </g>
+                    <polygon class="background-scene__rose-star" [attr.points]="rose.star" />
+                    <circle class="background-scene__rose-hub" [attr.r]="rose.r * 0.06" />
+                    <text class="background-scene__rose-north" x="0" [attr.y]="-rose.r * 1.34">N</text>
+                </g>
+            }
+        </g>
+    </svg>
+</div>
