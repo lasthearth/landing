@@ -35,7 +35,9 @@
                     -->
                     <div class="flex items-baseline gap-3">
                         <h2 class="text-xl/7 md:text-2xl/8 uppercase font-bold text-ink min-w-0 break-words">
-                            {{ data() | settlementDisplayName }}
+                            <a [routerLink]="['/settlements', data().id]" class="settlement-card__title-link">
+                                {{ data() | settlementDisplayName }}
+                            </a>
                         </h2>
                         @if (tier() > 0) {
                             <span
@@ -154,17 +156,16 @@
                 <div class="flex flex-wrap items-center justify-between gap-3 mt-1">
                     <app-join-request-button [settlementId]="data().id" />
 
-                    <button
-                        type="button"
-                        (click)="openDetails()"
-                        class="group text-ink-2 border-wood/50 hover:border-wood transition-all ml-auto duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1"
+                    <a
+                        [routerLink]="['/settlements', data().id]"
+                        class="group text-ink-2 border-wood/50 hover:border-wood transition-all ml-auto duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1 no-underline"
                     >
                         {{ 'settlements.card.more' | translate }}
                         <tui-icon
                             icon="@tui.arrow-right"
                             class="size-4! transition-transform duration-300 group-hover:translate-x-0.5"
                         />
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

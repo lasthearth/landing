@@ -44,6 +44,23 @@ export class NewsApiService {
     }
 
     /**
+     * Получает самую свежую новость (лёгкий запрос на одну запись).
+     *
+     * Нужен, чтобы понять, появилось ли что-то новое, не скачивая всю ленту.
+     * Ошибка не показывается пользователю.
+     *
+     * @returns Observable со свежей новостью или `null`, если новостей нет.
+     */
+    getLatest(): Observable<NewsDto | null> {
+        return this.http
+            .get<{ news: NewsDto[] }>(`${this.baseUrl}/news`, {
+                params: { page_size: 1 },
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
+            .pipe(map((response) => response.news?.[0] ?? null));
+    }
+
+    /**
      * Получает новость по идентификатору.
      *
      * @param id Идентификатор новости.

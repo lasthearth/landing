@@ -93,14 +93,13 @@
                 }
             </h3>
             <div class="flex flex-wrap gap-2 items-center">
-                @if (publishedLabel() && publishedLabel() !== "—") {
+                @if (createdAt() || (date() && date() !== "—")) {
                     <time
+                        [appRelativeTime]="createdAt()"
+                        [fallback]="date()"
                         class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2 to-brand shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
-                        [attr.datetime]="publishedIso()"
-                        [attr.title]="publishedTitle()"
                     >
                         <tui-icon icon="@tui.clock" class="size-4!" />
-                        {{ publishedLabel() }}
                     </time>
                 }
                 @if (createdBy()) {

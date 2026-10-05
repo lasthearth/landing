@@ -1506,6 +1506,17 @@ html[data-theme='dark'] {
     overflow-wrap: break-word;
 }
 
+/*
+ * Буквица заявлений дипломатии. Глобально, потому что текст приходит через [innerHTML]
+ * и стили компонента до него не достают. Только для первого абзаца — не для заголовка или списка.
+ */
+.lh-rich-text.diplomacy-card__text > p:first-child::first-letter {
+    font-size: 1.65em;
+    font-weight: 700;
+    color: var(--lh-brand-ink);
+    line-height: 1;
+}
+
 .lh-rich-text > * + * {
     margin-top: 0.75em;
 }

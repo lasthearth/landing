@@ -13,6 +13,9 @@ import { BackgroundSceneComponent } from './background-scene/background-scene.co
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { WELCOME_SEEN_STORAGE_KEY } from './welcome-seen-storage-key.constant';
+import { SiteAnnouncementComponent } from '@features/announcement';
+import { TranslatePipe } from '@core/i18n';
+import { OnboardingService } from '@features/onboarding';
 
 
 /**
@@ -26,10 +29,12 @@ import { WELCOME_SEEN_STORAGE_KEY } from './welcome-seen-storage-key.constant';
         HeaderComponent,
         FooterComponent,
         AsyncPipe,
+        TranslatePipe,
         WelcomeComponent,
         BackgroundSceneComponent,
         BackgroundParticlesComponent,
         GameChatWidgetComponent,
+        SiteAnnouncementComponent,
     ],
     templateUrl: './layout.component.html',
     styleUrl: './layout.component.css',
@@ -94,6 +99,9 @@ export class LayoutComponent {
     protected isSetScrollClass = false;
 
     constructor() {
+        // Путь новичка: отмечает «открыл правила» и «заходил в Discord» на любой странице.
+        inject(OnboardingService).start();
+
         this.showWelcome$.pipe(takeUntilDestroyed()).subscribe((showWelcome) => {
             this.updateScrollLock(showWelcome && !this.isSetScrollClass);
         });

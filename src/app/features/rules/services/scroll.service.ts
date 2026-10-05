@@ -41,6 +41,21 @@ const DEFAULT_SCROLL_OPTIONS: ScrollOptions = {
 };
 
 /**
+ * Время, за которое успевает раскрыться свёрнутая секция (мс).
+ */
+const EXPAND_SETTLE_DELAY = 380;
+
+/**
+ * Через сколько проверять, что цель осталась на месте после прокрутки (мс).
+ */
+const SCROLL_CORRECTION_DELAY = 700;
+
+/**
+ * Допустимое отклонение цели от центра экрана (px).
+ */
+const SCROLL_TOLERANCE = 120;
+
+/**
  * Сервис для управления скроллингом к якорям.
  *
  * Регистрирует якоря и автоматически раскрывает секции при скролле.
@@ -119,19 +134,37 @@ export class ScrollService {
      * @param options - Опции скролла
      */
     public scrollToElement(elementId: string, options: ScrollOptions = {}): void {
-        const opts = { ...DEFAULT_SCROLL_OPTIONS, ...options };
         const element = document.getElementById(elementId);
 
         if (!element) {
             return;
         }
 
+        this.scrollToNode(element, options);
+    }
+
+    /**
+     * Выполняет скролл к DOM-элементу правил.
+     *
+     * Раскрывает свёрнутые секции на пути к элементу и, если раскрытие нужно,
+     * ждёт окончания анимации, чтобы не промахнуться мимо цели.
+     *
+     * @param element - DOM элемент
+     * @param options - Опции скролла
+     */
+    public scrollToNode(element: HTMLElement, options: ScrollOptions = {}): void {
+        const opts = { ...DEFAULT_SCROLL_OPTIONS, ...options };
+        const needsExpand = !!element.closest('tui-expand:not(._expanded)');
+
         // Раскрываем секции через DOM traversal
         this.expandSectionsForElement(element);
 
-        setTimeout(() => {
-            this.performScroll(element, opts);
-        }, opts.delay);
+        setTimeout(
+            () => {
+                this.performScroll(element, opts);
+            },
+            needsExpand ? Math.max(opts.delay ?? 0, EXPAND_SETTLE_DELAY) : opts.delay
+        );
     }
 
     /**
@@ -193,6 +226,18 @@ export class ScrollService {
 
         if (options.animate) {
             this.addShakeAnimation(element);
+        }
+
+        // Пока докручиваем, над целью могут доезжать раскрывающиеся секции —
+        // если цель уехала от нужной позиции, поправляем один раз.
+        if (options.block === 'center') {
+            setTimeout(() => {
+                const rect = element.getBoundingClientRect();
+                const offset = rect.top + rect.height / 2 - window.innerHeight / 2;
+                if (rect.height < window.innerHeight && Math.abs(offset) > SCROLL_TOLERANCE) {
+                    element.scrollIntoView({ behavior: options.behavior, block: 'center', inline: options.inline });
+                }
+            }, SCROLL_CORRECTION_DELAY);
         }
     }
 

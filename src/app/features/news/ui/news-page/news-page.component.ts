@@ -9,8 +9,8 @@ import { UserService } from '@entities/user';
 import { SeoService } from '@core/services/seo.service';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
-import { ClockService } from '@shared/lib/clock';
-import { formatFullDate, formatRelativeTime } from '@shared/lib/relative-time';
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
+import { ShareButtonComponent } from '@shared/ui/share-button';
 import { NewsCardComponent } from '../news-card/news-card.component';
 import { NewsSkeletonComponent } from '../news-skeleton/news-skeleton.component';
 import { NewsPageState } from '../../model/news-page-state';
@@ -36,7 +36,16 @@ const OTHER_NEWS_COUNT = 2;
 @Component({
     standalone: true,
     selector: 'app-news-page',
-    imports: [RouterLink, TuiIcon, TranslatePipe, ImageLoaderComponent, NewsCardComponent, NewsSkeletonComponent],
+    imports: [
+        RouterLink,
+        TuiIcon,
+        TranslatePipe,
+        ImageLoaderComponent,
+        NewsCardComponent,
+        NewsSkeletonComponent,
+        RelativeTimeComponent,
+        ShareButtonComponent,
+    ],
     templateUrl: './news-page.component.html',
     styleUrl: './news-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,11 +77,6 @@ export class NewsPageComponent {
     private readonly i18n = inject(I18nService);
 
     /**
-     * Текущее время для относительной даты.
-     */
-    private readonly clock = inject(ClockService);
-
-    /**
      * Ссылка уничтожения.
      */
     private readonly destroyRef = inject(DestroyRef);
@@ -81,11 +85,6 @@ export class NewsPageComponent {
      * Признак выполнения в браузере.
      */
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-
-    /**
-     * Ссылка скопирована (подтверждение на кнопке «Поделиться»).
-     */
-    protected readonly copied = signal(false);
 
     /**
      * Количество просмотров (обновляется после регистрации просмотра).
@@ -125,70 +124,6 @@ export class NewsPageComponent {
         const state = this.state();
         return state.status === 'ready' ? state.others : [];
     });
-
-    /**
-     * Подпись времени публикации («2 часа назад», «12 сентября»).
-     */
-    protected readonly publishedLabel = computed(() => {
-        const date = this.news()?.createdAt;
-
-        if (!date) {
-            return this.news()?.formattedDate ?? '';
-        }
-
-        const locale = this.i18n.language();
-
-        if (!this.isBrowser) {
-            return formatFullDate(date, locale);
-        }
-
-        return formatRelativeTime(date, this.clock.now(), locale, {
-            justNow: this.i18n.translate('news.time.justNow'),
-            minuteAgo: this.i18n.translate('news.time.minuteAgo'),
-            hourAgo: this.i18n.translate('news.time.hourAgo'),
-            weekAgo: this.i18n.translate('news.time.weekAgo'),
-        });
-    });
-
-    /**
-     * Полная дата публикации для подсказки.
-     */
-    protected readonly publishedTitle = computed(() => {
-        const date = this.news()?.createdAt;
-        return date ? formatFullDate(date, this.i18n.language()) : null;
-    });
-
-    /**
-     * Делится ссылкой на новость: системное меню «Поделиться» на телефонах,
-     * иначе копирование ссылки в буфер обмена.
-     */
-    protected async share(): Promise<void> {
-        const news = this.news();
-
-        if (!news || !this.isBrowser) {
-            return;
-        }
-
-        const url = `${SITE_URL}/news/${news.id}`;
-
-        if (typeof navigator.share === 'function' && window.matchMedia('(pointer: coarse)').matches) {
-            try {
-                await navigator.share({ title: news.title, url });
-                return;
-            } catch {
-                // Пользователь закрыл меню — ничего не делаем.
-                return;
-            }
-        }
-
-        try {
-            await navigator.clipboard.writeText(url);
-            this.copied.set(true);
-            setTimeout(() => this.copied.set(false), 2000);
-        } catch {
-            this.copied.set(false);
-        }
-    }
 
     /**
      * Загружает новость и список других новостей.

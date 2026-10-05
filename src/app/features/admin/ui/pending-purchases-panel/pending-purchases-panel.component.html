@@ -84,7 +84,12 @@
                     }
                     <div class="flex items-start gap-2 pl-7">
                         <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
-                        <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.formattedDate }}</span>
+                        @if (purchase.createdAt) {
+                            <!-- Покупка ждёт выдачи: дольше 12 часов — подсветка -->
+                            <app-waiting-badge [since]="purchase.createdAt" [staleHours]="12" />
+                        } @else {
+                            <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.formattedDate }}</span>
+                        }
                     </div>
                 </div>
 

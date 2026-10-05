@@ -110,6 +110,23 @@
     flex-direction: column;
 }
 
+/**
+ * Баннер объявления над шапкой: отступ сверху, как у шапки, по бокам — как у колонки контента.
+ */
+.layout-announcement {
+    padding: 1rem 1rem 0;
+}
+
+@media (min-width: 1280px) {
+    .layout-announcement {
+        padding: 1.25rem 0 0;
+    }
+}
+
+.layout-announcement:empty {
+    display: none;
+}
+
 .welcome {
     -webkit-box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
     -moz-box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);

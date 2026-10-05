@@ -1,48 +1,133 @@
 <div class="videos-page">
     <header class="videos-page__header">
-        <h1 class="videos-page__title lh-display">Видео</h1>
-        <p class="videos-page__subtitle">Последние ролики с нашего YouTube-канала</p>
+        <h1 class="videos-page__title lh-display">{{ "videos.title" | translate }}</h1>
+        <p class="videos-page__subtitle">{{ "videos.subtitle" | translate }}</p>
     </header>
 
-    @if (error()) {
-        <div class="videos-page__error">{{ error() }}</div>
-    }
+    <div class="videos-tabs" role="tablist" [attr.aria-label]="'videos.tabsLabel' | translate">
+        @for (item of kinds; track item) {
+            <button
+                type="button"
+                role="tab"
+                class="videos-tabs__tab"
+                [class.videos-tabs__tab--active]="item === kind()"
+                [attr.data-kind]="item"
+                [attr.aria-selected]="item === kind()"
+                [attr.tabindex]="item === kind() ? 0 : -1"
+                (click)="selectKind(item)"
+                (keydown)="onTabKeydown($event)"
+            >
+                {{ "videos.tabs." + item | translate }}
+            </button>
+        }
+    </div>
 
-    @if (videos().length === 0 && !error()) {
-        <div class="videos-page__empty">
-            <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
-            <span>Загрузка видео...</span>
-        </div>
-    }
-
-    @if (videos().length > 0) {
-        <div class="videos-page__grid">
-            @for (video of videos(); track video.id) {
-                <app-video-card [video]="video" (clickVideo)="openVideo(video.id)" />
+    <section class="videos-page__panel" role="tabpanel">
+        @if (state().loading && state().videos.length === 0) {
+            <div class="videos-page__status">
+                <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
+                <span>{{ "videos.loading" | translate }}</span>
+            </div>
+        } @else if (state().error && state().videos.length === 0) {
+            <div class="videos-page__status videos-page__status--error">
+                <span>{{ "videos.error" | translate }}</span>
+                <button type="button" class="lh-cta" (click)="retry()">{{ "videos.retry" | translate }}</button>
+            </div>
+        } @else if (state().loaded && state().videos.length === 0) {
+            <div class="videos-page__status">
+                <tui-icon icon="@tui.video-off" class="size-8" />
+                <span>{{ "videos.empty" | translate }}</span>
+            </div>
+        } @else {
+            @if (featured(); as video) {
+                <button
+                    type="button"
+                    class="videos-featured"
+                    [attr.aria-label]="('videos.watch' | translate) + ': ' + video.title"
+                    (click)="openVideo(video)"
+                >
+                    <img class="videos-featured__image" [src]="video.thumbnailUrl" [alt]="video.title" />
+                    <span class="videos-featured__shade"></span>
+                    <span class="videos-featured__play" aria-hidden="true">
+                        <tui-icon icon="@tui.play" class="size-8!" />
+                    </span>
+                    <span class="videos-featured__info">
+                        <span class="videos-featured__label">{{ "videos.featured." + kind() | translate }}</span>
+                        <span class="videos-featured__title">{{ video.title }}</span>
+                        <time class="videos-featured__time" [appRelativeTime]="video.publishedAt"></time>
+                    </span>
+                </button>
             }
-        </div>
-    }
 
-    @if (previewVideoId()) {
+            @if (visible().length > 0) {
+                <div class="videos-page__grid" [class.videos-page__grid--shorts]="isShorts()">
+                    @for (video of visible(); track video.id) {
+                        <app-video-card [video]="video" [vertical]="isShorts()" (clickVideo)="openVideo(video)" />
+                    }
+                </div>
+            }
+
+            @if (hiddenCount() > 0) {
+                <button
+                    type="button"
+                    class="lh-cta videos-page__more"
+                    [disabled]="state().loading"
+                    (click)="state().error ? retry() : showMore()"
+                >
+                    {{ (state().error ? "videos.retry" : "videos.showMore") | translate }}
+                    <span class="opacity-75 tabular-nums">({{ hiddenCount() }})</span>
+                    <span class="lh-cta__icon">
+                        <tui-icon
+                            [icon]="state().loading ? '@tui.loader' : '@tui.chevron-down'"
+                            class="size-4!"
+                            [class.animate-spin]="state().loading"
+                        />
+                    </span>
+                </button>
+            }
+        }
+    </section>
+
+    @if (previewVideoId(); as videoId) {
         <div class="videos-page__overlay" role="presentation" (click)="closeVideo()">
             <div
                 class="videos-page__modal"
+                [class.videos-page__modal--vertical]="previewVertical()"
                 role="dialog"
                 aria-modal="true"
-                aria-label="Просмотр видео"
+                [attr.aria-label]="'videos.player' | translate"
                 (click)="$event.stopPropagation()"
             >
-                <button type="button" class="videos-page__close" (click)="closeVideo()" aria-label="Закрыть">
-                    <tui-icon icon="@tui.x" class="size-6" />
-                </button>
                 <div class="videos-page__player">
                     <iframe
-                        [src]="('https://www.youtube.com/embed/' + previewVideoId() + '?autoplay=1') | safeUrl"
-                        frameborder="0"
-                        allow="autoplay; encrypted-media; fullscreen"
+                        [src]="'https://www.youtube.com/embed/' + videoId + '?autoplay=1' | safeUrl"
+                        [title]="'videos.player' | translate"
+                        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
                         allowfullscreen
                     ></iframe>
                 </div>
+            </div>
+            <div class="videos-page__actions" (click)="$event.stopPropagation()">
+                <app-share-button appearance="overlay" [iconOnly]="true" [url]="shareUrl(videoId)" />
+                <a
+                    class="videos-page__action"
+                    [href]="'https://www.youtube.com/watch?v=' + videoId"
+                    target="_blank"
+                    rel="noopener"
+                    [attr.aria-label]="'videos.openOnYoutube' | translate"
+                    [attr.title]="'videos.openOnYoutube' | translate"
+                >
+                    <tui-icon icon="@tui.external-link" class="size-5!" />
+                </a>
+                <button
+                    type="button"
+                    class="videos-page__action"
+                    [attr.aria-label]="'videos.close' | translate"
+                    [attr.title]="'videos.close' | translate"
+                    (click)="closeVideo()"
+                >
+                    <tui-icon icon="@tui.x" class="size-5!" />
+                </button>
             </div>
         </div>
     }

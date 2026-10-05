@@ -3,11 +3,12 @@ import { RouterLink } from '@angular/router';
 import { UserService } from '@entities/user';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@core/i18n';
+import { NewcomerPathComponent } from '@features/onboarding';
 
 @Component({
     standalone: true,
     selector: 'app-start-game',
-    imports: [RouterLink, AsyncPipe, TranslatePipe],
+    imports: [RouterLink, AsyncPipe, TranslatePipe, NewcomerPathComponent],
     templateUrl: './start-game.component.html',
     styleUrl: './start-game.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -14,6 +14,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { TranslatePipe } from '@core/i18n';
 import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
+import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
 
 /**
  * Компонент отображения запроса на верификацию от игрока.
@@ -21,7 +22,7 @@ import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.compone
 @Component({
     standalone: true,
     selector: 'app-player-verify-request',
-    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe],
+    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe, WaitingBadgeComponent],
     templateUrl: './player-verify-request.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

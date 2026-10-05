@@ -28,4 +28,14 @@ export interface IPlayerStats {
      * Количество убитых игроков (PvP).
      */
     players_killed: number;
+
+    /**
+     * Место игрока по наигранным часам среди всех игроков (1 — больше всех).
+     */
+    hours_rank?: number;
+
+    /**
+     * Сколько всего игроков в статистике.
+     */
+    total_players?: number;
 }

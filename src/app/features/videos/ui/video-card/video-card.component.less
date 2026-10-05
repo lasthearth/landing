@@ -126,3 +126,23 @@
     font-weight: 500;
     flex-shrink: 0;
 }
+
+/* Шортс: вертикальное превью. YouTube отдаёт превью 16:9 с полями, обрезаем по центру. */
+.video-card--vertical {
+    .video-card__thumb {
+        aspect-ratio: 9 / 16;
+    }
+
+    .video-card__play::before {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .video-card__info {
+        padding: 0.75rem;
+    }
+
+    .video-card__title {
+        font-size: 0.9375rem;
+    }
+}

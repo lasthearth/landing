@@ -1,3 +1,4 @@
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -8,7 +9,6 @@ import {
     Signal,
 } from '@angular/core';
 import { HttpContext, HttpErrorResponse } from '@angular/common/http';
-import { DatePipe } from '@angular/common';
 import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { catchError, finalize, Observable, of, tap } from 'rxjs';
@@ -90,8 +90,8 @@ import { PlayerInviteComponent } from '../player-invite/player-invite.component'
         RolesMatrixComponent,
         JoinRequestsPanelComponent,
         InvitationCardComponent,
+        RelativeTimeComponent,
     ],
-    providers: [DatePipe],
     templateUrl: './settlement.component.html',
     styleUrl: './settlement.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -127,10 +127,6 @@ export class SettlementComponent {
      */
     private readonly notificationService: NotificationService = inject(NotificationService);
 
-    /**
-     * Пайп форматирования дат.
-     */
-    private readonly datePipe: DatePipe = inject(DatePipe);
 
     /**
      * Сервис интернационализации.
@@ -870,23 +866,19 @@ export class SettlementComponent {
     }
 
     /**
-     * Форматирует Unix timestamp (в секундах) в локальную дату.
+     * Переводит время из API (unix-секунды строкой или числом) в миллисекунды.
      *
-     * @param value Timestamp в виде строки или числа.
-     * @returns Строка в формате «dd.MM.yy» или «—».
+     * @param value Значение из API.
+     * @returns Миллисекунды или null, если значения нет.
      */
-    protected formatTimestamp(value: string | number | null | undefined): string {
+    protected toMs(value: string | number | null | undefined): number | null {
         if (value === null || value === undefined || value === '') {
-            return '—';
+            return null;
         }
 
         const timestamp = Number(value);
 
-        if (Number.isNaN(timestamp)) {
-            return '—';
-        }
-
-        return this.datePipe.transform(timestamp * 1000, 'dd.MM.yy') ?? '—';
+        return Number.isNaN(timestamp) ? null : timestamp * 1000;
     }
 
     /**

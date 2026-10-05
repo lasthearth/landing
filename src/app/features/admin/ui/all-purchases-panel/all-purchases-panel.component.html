@@ -78,7 +78,7 @@
                     }
                     <div class="flex items-start gap-2 pl-7">
                         <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.date' | translate }}</span>
-                        <span class="text-lg text-ink-2 leading-6 break-words">{{ purchase.formattedDate }}</span>
+                        <time class="text-lg text-ink-2 leading-6 break-words" [appRelativeTime]="purchase.createdAt" [fallback]="purchase.formattedDate"></time>
                     </div>
                     @if (purchase.issuedBy) {
                         <div class="flex items-start gap-2 pl-7">

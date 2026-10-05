@@ -1,3 +1,15 @@
-<p [class]="paragraphClasses()" [attr.id]="anchor()" appScrollAnchor>
+<p [class]="paragraphClasses()" [attr.id]="paragraphId()" appScrollAnchor>
     <ng-content />
+    @if (paragraphId()) {
+        <button
+            type="button"
+            class="rule-paragraph__link"
+            [class.rule-paragraph__link--done]="copied()"
+            [attr.aria-label]="(copied() ? 'rules.linkCopied' : 'rules.copyLink') | translate"
+            [attr.title]="(copied() ? 'rules.linkCopied' : 'rules.copyLink') | translate"
+            (click)="copyLink($event)"
+        >
+            <tui-icon [icon]="copied() ? '@tui.check' : '@tui.link'" class="size-4!" />
+        </button>
+    }
 </p>

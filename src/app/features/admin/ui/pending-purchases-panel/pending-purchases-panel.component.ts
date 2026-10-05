@@ -10,6 +10,7 @@ import {
     ConfirmPurchaseActionComponent,
     IConfirmPurchaseActionData,
 } from '../../components/confirm-purchase-action/confirm-purchase-action.component';
+import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
 
 /**
  * Компонент панели ожидающих выдачи покупок в админке.
@@ -20,7 +21,7 @@ import {
 @Component({
     selector: 'app-pending-purchases-panel',
     standalone: true,
-    imports: [TuiIcon, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
+    imports: [TuiIcon, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe, WaitingBadgeComponent],
     templateUrl: './pending-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -75,9 +75,9 @@
                     }
                 </div>
                 <div class="flex flex-wrap gap-3 items-center text-[18px] text-ink-2 font-medium">
-                    <span>{{ 'settlements.settlement.created' | translate }} {{ formatTimestamp(data.created_at) }}</span>
+                    <span>{{ 'settlements.settlement.created' | translate }} <time [appRelativeTime]="toMs(data.created_at)"></time></span>
                     <span class="w-px h-4 bg-surface-4"></span>
-                    <span>{{ 'settlements.settlement.updated' | translate }} {{ formatTimestamp(data.updated_at) }}</span>
+                    <span>{{ 'settlements.settlement.updated' | translate }} <time [appRelativeTime]="toMs(data.updated_at)"></time></span>
                     <span class="w-px h-4 bg-surface-4"></span>
                     <span>
                         {{ 'settlements.settlement.coordinates' | translate }}

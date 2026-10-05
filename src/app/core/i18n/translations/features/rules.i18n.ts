@@ -8,6 +8,15 @@ export const RULES_I18N = {
             expandAll: 'Раскрыть всё',
             collapseAll: 'Скрыть всё',
             scrollTop: 'Наверх',
+            copyLink: 'Скопировать ссылку на пункт',
+            linkCopied: 'Ссылка скопирована',
+            search: {
+                label: 'Поиск по правилам',
+                placeholder: 'Поиск по правилам: слово или номер пункта, например 5.2',
+                found: 'Найдено: {{count}}',
+                empty: 'Ничего не нашлось. Попробуйте другое слово.',
+                clear: 'Очистить поиск',
+            },
             sections: {
                 terminology: 'Терминология',
                 base: '1. Основы',
@@ -1158,6 +1167,15 @@ export const RULES_I18N = {
             expandAll: 'Expand all',
             collapseAll: 'Collapse all',
             scrollTop: 'Back to top',
+            copyLink: 'Copy link to this rule',
+            linkCopied: 'Link copied',
+            search: {
+                label: 'Search the rules',
+                placeholder: 'Search the rules: a word or a rule number, e.g. 5.2',
+                found: 'Found: {{count}}',
+                empty: 'Nothing found. Try another word.',
+                clear: 'Clear search',
+            },
             sections: {
                 terminology: 'Terminology',
                 base: '1. Basics',

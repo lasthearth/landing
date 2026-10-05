@@ -1,3 +1,4 @@
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService } from '@taiga-ui/core';
@@ -28,7 +29,7 @@ import { ISelectedPlayer } from '../../model/selected-player.model';
 @Component({
     selector: 'app-admin-coin-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, AsyncPipe, TuiIcon, TuiLoader, LHInputComponent, ImageLoaderComponent, EmptyStateComponent, TranslatePipe],
+    imports: [ReactiveFormsModule, AsyncPipe, TuiIcon, TuiLoader, LHInputComponent, ImageLoaderComponent, EmptyStateComponent, TranslatePipe, RelativeTimeComponent],
     templateUrl: './admin-coin-panel.component.html',
     styleUrl: './admin-coin-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

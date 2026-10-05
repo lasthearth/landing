@@ -19,6 +19,7 @@ import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
 
 /**
  * Панель заявок на вступление со стороны поселения.
@@ -30,7 +31,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 @Component({
     selector: 'app-join-requests-panel',
     standalone: true,
-    imports: [TuiIcon, TranslatePipe, EmptyStateComponent],
+    imports: [TuiIcon, TranslatePipe, EmptyStateComponent, WaitingBadgeComponent],
     templateUrl: './join-requests-panel.component.html',
     styleUrl: './join-requests-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

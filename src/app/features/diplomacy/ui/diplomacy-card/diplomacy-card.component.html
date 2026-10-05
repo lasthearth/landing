@@ -1,0 +1,46 @@
+<article
+    class="diplomacy-card"
+    [class.diplomacy-card--featured]="featured()"
+    [class.diplomacy-card--highlighted]="highlighted()"
+    [attr.id]="statement().id ? 'statement-' + statement().id : null"
+>
+    <div class="diplomacy-card__seal" aria-hidden="true">
+        <tui-icon icon="@tui.scroll-text" class="size-6!" />
+    </div>
+
+    <div class="diplomacy-card__header">
+        <div class="diplomacy-card__author">
+            <span class="diplomacy-card__avatar" aria-hidden="true">
+                {{ statement().author.charAt(0).toUpperCase() }}
+            </span>
+            <div class="diplomacy-card__author-info">
+                <span class="diplomacy-card__author-name">{{ statement().author }}</span>
+                <span class="diplomacy-card__author-role">{{ "diplomacy.card.leader" | translate }}</span>
+            </div>
+        </div>
+        <div class="diplomacy-card__aside">
+            <time class="diplomacy-card__date" [appRelativeTime]="statement().timestamp"></time>
+            @if (statement().id) {
+                <app-share-button [url]="'/diplomacy#statement-' + statement().id" [iconOnly]="true" />
+            }
+        </div>
+    </div>
+
+    <div class="diplomacy-card__divider"></div>
+
+    <div
+        #textEl
+        class="diplomacy-card__text lh-rich-text"
+        [class.diplomacy-card__text--clamped]="!expanded()"
+        [class.diplomacy-card__text--fade]="!expanded() && canExpand()"
+        [style.max-height.px]="expandedHeight()"
+        [innerHTML]="statement().html"
+    ></div>
+
+    @if (canExpand()) {
+        <button type="button" class="diplomacy-card__toggle" [attr.aria-expanded]="expanded()" (click)="toggle()">
+            {{ (expanded() ? "diplomacy.card.collapse" : "diplomacy.card.readMore") | translate }}
+            <tui-icon icon="@tui.chevron-down" class="size-4!" [class.rotate-180]="expanded()" />
+        </button>
+    }
+</article>

@@ -9,4 +9,9 @@ export interface IVerifyRequest extends IVerifyData {
      * Идентификатор пользователя.
      */
     user_id: string;
+
+    /**
+     * Когда подана анкета. В контракте поля нет — показываем, если бэкенд его отдаёт.
+     */
+    created_at?: string;
 }

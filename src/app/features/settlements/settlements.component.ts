@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { SettlementService, ISettlement, getSettlementTypeByKey, getSettlementDisplayName, isGuildSettlement } from '@entities/settlement';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+    SettlementService,
+    ISettlement,
+    getSettlementTypeByKey,
+    getSettlementDisplayName,
+    isGuildSettlement,
+} from '@entities/settlement';
 import { IPlayer, UserService } from '@entities/user';
 import { SettlementTagStore } from '@entities/settlement-tag';
 import { MyJoinRequestsStore } from './join-request';
@@ -50,7 +57,14 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
  */
 @Component({
     selector: 'app-settlements',
-    imports: [SettlementCardComponent, SettlementCardSkeletonComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe, TuiIcon],
+    imports: [
+        SettlementCardComponent,
+        SettlementCardSkeletonComponent,
+        EmptyStateComponent,
+        ErrorStateComponent,
+        TranslatePipe,
+        TuiIcon,
+    ],
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -86,6 +100,74 @@ export class SettlementsComponent {
     });
 
     private readonly enrichedSettlements = signal<EnrichedSettlement[]>([]);
+
+    /**
+     * Роутер — фильтры хранятся в адресе (?q=&type=&course=), чтобы ссылкой можно было поделиться.
+     */
+    private readonly router = inject(Router);
+
+    /**
+     * Текущий маршрут.
+     */
+    private readonly route = inject(ActivatedRoute);
+
+    /**
+     * Поисковая строка: название поселения или ник жителя.
+     */
+    protected readonly query = signal<string>(this.route.snapshot.queryParamMap.get('q') ?? '');
+
+    /**
+     * Выбранный тип поселения (подпись типа) или null — все.
+     */
+    protected readonly typeFilter = signal<string | null>(this.route.snapshot.queryParamMap.get('type'));
+
+    /**
+     * Выбранный дипломатический курс или null — все.
+     */
+    protected readonly courseFilter = signal<string | null>(this.route.snapshot.queryParamMap.get('course'));
+
+    /**
+     * Типы, которые есть в списке, с количеством.
+     */
+    protected readonly typeOptions = computed(() => this.countBy((item) => this.getSettlementTypeLabel(item)));
+
+    /**
+     * Курсы, которые есть в списке, с количеством.
+     */
+    protected readonly courseOptions = computed(() => this.countBy((item) => item.diplomacy).filter((option) => option.value));
+
+    /**
+     * Включён ли хоть один фильтр.
+     */
+    protected readonly hasFilters = computed(() => !!this.query().trim() || !!this.typeFilter() || !!this.courseFilter());
+
+    /**
+     * Поселения после сортировки и фильтров.
+     */
+    protected readonly filteredSettlements = computed(() => {
+        const query = this.query().trim().toLowerCase();
+        const type = this.typeFilter();
+        const course = this.courseFilter();
+
+        return this.sortedSettlements().filter((item) => {
+            if (type && this.getSettlementTypeLabel(item) !== type) {
+                return false;
+            }
+
+            if (course && item.diplomacy !== course) {
+                return false;
+            }
+
+            if (!query) {
+                return true;
+            }
+
+            return (
+                getSettlementDisplayName(item).toLowerCase().includes(query) ||
+                item.players.some((player) => player.user_game_name?.toLowerCase().includes(query))
+            );
+        });
+    });
 
     /**
      * Отсортированный список селений.
@@ -174,6 +256,77 @@ export class SettlementsComponent {
                 );
                 this.loading.set(false);
             });
+    }
+
+    /**
+     * Меняет поисковую строку.
+     *
+     * @param event Событие ввода.
+     */
+    protected onQueryInput(event: Event): void {
+        this.query.set((event.target as HTMLInputElement).value);
+        this.syncQueryParams();
+    }
+
+    /**
+     * Включает или снимает фильтр по типу.
+     *
+     * @param value Подпись типа.
+     */
+    protected toggleType(value: string): void {
+        this.typeFilter.set(this.typeFilter() === value ? null : value);
+        this.syncQueryParams();
+    }
+
+    /**
+     * Включает или снимает фильтр по курсу.
+     *
+     * @param value Курс.
+     */
+    protected toggleCourse(value: string): void {
+        this.courseFilter.set(this.courseFilter() === value ? null : value);
+        this.syncQueryParams();
+    }
+
+    /**
+     * Сбрасывает поиск и фильтры.
+     */
+    protected resetFilters(): void {
+        this.query.set('');
+        this.typeFilter.set(null);
+        this.courseFilter.set(null);
+        this.syncQueryParams();
+    }
+
+    /**
+     * Пишет фильтры в адрес страницы без новой записи в истории.
+     */
+    private syncQueryParams(): void {
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {
+                q: this.query().trim() || null,
+                type: this.typeFilter(),
+                course: this.courseFilter(),
+            },
+            replaceUrl: true,
+        });
+    }
+
+    /**
+     * Группирует поселения по значению и считает их.
+     *
+     * @param pick Функция, извлекающая значение.
+     */
+    private countBy(pick: (item: EnrichedSettlement) => string): { value: string; count: number }[] {
+        const counts = new Map<string, number>();
+
+        for (const item of this.enrichedSettlements()) {
+            const value = pick(item);
+            counts.set(value, (counts.get(value) ?? 0) + 1);
+        }
+
+        return [...counts.entries()].map(([value, count]) => ({ value, count })).sort((a, b) => b.count - a.count);
     }
 
     /**

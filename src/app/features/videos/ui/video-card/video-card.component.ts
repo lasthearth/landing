@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { YoutubeVideo } from '../../model/youtube-video';
@@ -9,7 +9,7 @@ import { YoutubeVideo } from '../../model/youtube-video';
 @Component({
     selector: 'app-video-card',
     standalone: true,
-    imports: [CommonModule, TuiIcon],
+    imports: [TuiIcon, RelativeTimeComponent],
     templateUrl: './video-card.component.html',
     styleUrl: './video-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,17 +21,12 @@ export class VideoCardComponent {
     public readonly video = input.required<YoutubeVideo>();
 
     /**
+     * Вертикальная карточка для шортсов.
+     */
+    public readonly vertical = input(false);
+
+    /**
      * Событие клика по карточке.
      */
     public readonly clickVideo = output<void>();
-
-    /**
-     * Форматирует дату публикации.
-     *
-     * @param date Дата в формате ISO 8601.
-     * @returns Строка в формате "DD.MM.YYYY".
-     */
-    protected formatDate(date: string): string {
-        return new Date(date).toLocaleDateString('ru-RU');
-    }
 }

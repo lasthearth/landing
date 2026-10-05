@@ -120,13 +120,16 @@ export class SettlementService {
      * Получает поселение по идентификатору.
      *
      * @param settlementId Идентификатор поселения.
+     * @param silent Не показывать всплывающую ошибку (страница поселения обрабатывает 404 сама).
      * @returns Observable с данными поселения.
      */
-    public getSettlementById(settlementId: string): Observable<ISettlement> {
+    public getSettlementById(settlementId: string, silent = false): Observable<ISettlement> {
         return this.http
             .get<{
                 settlement: ISettlement;
-            }>(`${this.baseUrl}/settlements/${settlementId}`)
+            }>(`${this.baseUrl}/settlements/${settlementId}`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, silent),
+            })
             .pipe(map((data) => data.settlement));
     }
 

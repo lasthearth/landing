@@ -121,11 +121,14 @@
                     type="button"
                     (click)="showMobileMenu.set(!showMobileMenu())"
                     [ngClass]="{ 'nav-button--active': showMobileMenu() }"
-                    class="nav-button"
+                    class="nav-button relative"
                     [attr.aria-label]="'header.mainMenu' | translate"
                     [attr.aria-expanded]="showMobileMenu()"
                 >
                     <tui-icon icon="@tui.align-justify" />
+                    @if (newContent.isFresh('diplomacy') || newContent.mediaFresh()) {
+                        <span class="nav-dot"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                    }
                 </button>
 
                 @if (showMobileMenu()) {
@@ -213,6 +216,11 @@
                             <span class="flex items-center gap-2">
                                 <tui-icon icon="@tui.film" class="size-4!" />
                                 {{ "header.nav.media" | translate }}
+                                @if (newContent.mediaFresh()) {
+                                    <span class="nav-dot nav-dot--inline"
+                                        ><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span
+                                    >
+                                }
                             </span>
                             <tui-icon
                                 icon="@tui.chevron-down"
@@ -235,6 +243,11 @@
                                 >
                                     <tui-icon icon="@tui.image" class="size-4!" />
                                     {{ "header.nav.gallery" | translate }}
+                                    @if (newContent.isFresh('gallery')) {
+                                        <span class="nav-dot nav-dot--inline"
+                                            ><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span
+                                        >
+                                    }
                                 </button>
                                 <button
                                     type="button"
@@ -264,6 +277,11 @@
                         >
                             <tui-icon icon="@tui.scroll-text" class="size-4!" />
                             {{ "header.nav.diplomacy" | translate }}
+                            @if (newContent.isFresh('diplomacy')) {
+                                <span class="nav-dot nav-dot--inline"
+                                    ><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span
+                                >
+                            }
                         </button>
                     </div>
                 }
@@ -273,10 +291,13 @@
                 (click)="select = 'home'"
                 [routerLink]="['/home']"
                 [ngClass]="{ 'nav-button--active': select === 'home' }"
-                class="nav-button"
+                class="nav-button relative"
                 [attr.aria-label]="'header.nav.home' | translate"
             >
                 <tui-icon icon="@tui.house" />
+                @if (newContent.isFresh('news')) {
+                    <span class="nav-dot"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                }
             </button>
 
             <!-- Десктопная навигация -->
@@ -330,11 +351,14 @@
                 <button
                     [routerLink]="['/diplomacy']"
                     [ngClass]="{ 'nav-button--active': select === 'diplomacy' }"
-                    class="nav-button md:w-auto px-1.5"
+                    class="nav-button relative md:w-auto px-1.5"
                     [attr.aria-label]="'header.nav.diplomacy' | translate"
                 >
                     <tui-icon icon="@tui.scroll-text" />
                     <span class="hidden md:block">{{ "header.nav.diplomacy" | translate }}</span>
+                    @if (newContent.isFresh('diplomacy')) {
+                        <span class="nav-dot"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                    }
                 </button>
 
                 <button
@@ -353,10 +377,13 @@
                         type="button"
                         (click)="toggleMediaMenu()"
                         [ngClass]="{ 'nav-button--active': isMediaActive || showMediaMenu() }"
-                        class="nav-button md:w-auto px-1.5"
+                        class="nav-button relative md:w-auto px-1.5"
                         [attr.aria-label]="'header.nav.media' | translate"
                         [attr.aria-expanded]="showMediaMenu()"
                     >
+                        @if (newContent.mediaFresh()) {
+                            <span class="nav-dot"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                        }
                         <tui-icon icon="@tui.film" />
                         <span class="hidden md:block">{{ "header.nav.media" | translate }}</span>
                         <tui-icon
@@ -382,6 +409,11 @@
                             >
                                 <tui-icon icon="@tui.image" class="size-4!" />
                                 {{ "header.nav.gallery" | translate }}
+                                @if (newContent.isFresh('gallery')) {
+                                    <span class="nav-dot nav-dot--inline"
+                                        ><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span
+                                    >
+                                }
                             </button>
                             <button
                                 type="button"

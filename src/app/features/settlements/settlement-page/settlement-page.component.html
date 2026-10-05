@@ -1,0 +1,151 @@
+<div class="settlement-page px-4 md:px-10 pt-6 pb-8 flex flex-col gap-6">
+    <a routerLink="/settlements" class="settlement-page__back">
+        <tui-icon icon="@tui.arrow-left" class="size-4!" />
+        {{ "settlements.page.back" | translate }}
+    </a>
+
+    @if (settlement(); as item) {
+        <article class="settlement-page__article lh-panel">
+            <button
+                type="button"
+                class="settlement-page__cover"
+                [attr.aria-label]="'settlements.page.openPhoto' | translate"
+                [disabled]="gallery().length === 0"
+                (click)="viewerIndex.set(0)"
+            >
+                <app-image-loader [src]="cover(item)" [alt]="item | settlementDisplayName" [eager]="true" class="block size-full" />
+            </button>
+
+            <header class="flex flex-col gap-4">
+                <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                    <h1 class="settlement-page__title lh-display font-bold text-ink uppercase">
+                        {{ item | settlementDisplayName }}
+                    </h1>
+                    @if (tier() > 0) {
+                        <span class="settlement-page__tier" role="img" [attr.aria-label]="'settlements.card.tier' | translate: { tier: tier() }">
+                            @for (pip of tierScale; track pip) {
+                                <span class="settlement-page__pip" [class.settlement-page__pip--filled]="pip <= tier()"></span>
+                            }
+                        </span>
+                    }
+                </div>
+
+                <div class="flex flex-wrap gap-1.5">
+                    <app-settlement-badge [tone]="typeTone(item)" [icon]="typeIcon(item)" [uppercase]="true">
+                        {{ typeLabel(item) }}
+                    </app-settlement-badge>
+                    <app-settlement-badge [tone]="diplomacyTone(item)" [uppercase]="true">
+                        {{ diplomacyLabel(item) }}
+                    </app-settlement-badge>
+                    @for (tag of item.tags; track tag.id) {
+                        @if (tagStore.getTagById(tag.id); as tagData) {
+                            <app-settlement-tag [tag]="tagData" />
+                        }
+                    }
+                </div>
+
+                <div class="settlement-page__meta">
+                    <span class="inline-flex items-center gap-1.5">
+                        <tui-icon icon="@tui.users" class="size-4!" />
+                        {{ item.members.length }} {{ "settlements.card.residentsShort" | translate }}
+                    </span>
+                    <span class="inline-flex items-center gap-1.5" [class.text-peace]="onlineCount() > 0">
+                        <span class="settlement-page__dot" [class.settlement-page__dot--online]="onlineCount() > 0"></span>
+                        {{ onlineCount() }} {{ "settlements.card.onlineShort" | translate }}
+                    </span>
+                    @if (toMs(item.created_at); as created) {
+                        <span>
+                            {{ "settlements.page.founded" | translate }}
+                            <time [appRelativeTime]="created"></time>
+                        </span>
+                    }
+                    @if (toMs(item.updated_at); as updated) {
+                        <span>
+                            {{ "settlements.page.updated" | translate }}
+                            <time [appRelativeTime]="updated"></time>
+                        </span>
+                    }
+                    <app-share-button class="settlement-page__share" [url]="'/settlements/' + item.id" [title]="item | settlementDisplayName" />
+                </div>
+
+                <app-join-request-button [settlementId]="item.id" />
+            </header>
+
+            @if (item.description) {
+                <div class="settlement-page__text lh-rich-text text-ink" [innerHTML]="item.description"></div>
+            }
+
+            @if (item.contact_info) {
+                <p class="settlement-page__contacts">
+                    <tui-icon icon="@tui.contact-round" class="size-5! shrink-0" />
+                    <!-- Только интерполяция: сервер не экранирует контакты -->
+                    <span>{{ item.contact_info }}</span>
+                </p>
+            }
+
+            <section class="flex flex-col gap-3" aria-labelledby="settlement-population">
+                <h2 id="settlement-population" class="text-xl font-bold text-ink">
+                    {{ "settlements.detailed.population" | translate }}
+                </h2>
+                <div class="flex flex-wrap gap-2">
+                    @for (leader of leaders(); track leader.user_id) {
+                        <app-player-chip [player]="leader" [isLeader]="true" [settlement]="item" />
+                    }
+                    @for (resident of residents(); track resident.user_id) {
+                        <app-player-chip [player]="resident" [settlement]="item" />
+                    }
+                </div>
+            </section>
+
+            @if (gallery().length > 1) {
+                <section class="flex flex-col gap-3" aria-labelledby="settlement-photos">
+                    <h2 id="settlement-photos" class="text-xl font-bold text-ink">
+                        {{ "settlements.page.photos" | translate }}
+                    </h2>
+                    <div class="settlement-page__photos">
+                        @for (photo of gallery(); track $index) {
+                            <button type="button" class="settlement-page__photo" [attr.aria-label]="photo.alt" (click)="viewerIndex.set($index)">
+                                <img [src]="photo.src" [alt]="photo.alt" loading="lazy" />
+                            </button>
+                        }
+                    </div>
+                </section>
+            }
+        </article>
+
+        @if (others().length > 0) {
+            <section class="flex flex-col gap-4" aria-labelledby="settlement-others">
+                <h2 id="settlement-others" class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
+                    {{ "settlements.page.others" | translate }}
+                </h2>
+                <div class="settlement-page__others">
+                    @for (other of others(); track other.id) {
+                        <a class="settlement-page__other" [routerLink]="['/settlements', other.id]">
+                            <span class="settlement-page__other-image">
+                                <img [src]="cover(other)" [alt]="other | settlementDisplayName" loading="lazy" />
+                            </span>
+                            <span class="settlement-page__other-body">
+                                <span class="settlement-page__other-name">{{ other | settlementDisplayName }}</span>
+                                <span class="settlement-page__other-meta">
+                                    {{ typeLabel(other) }} · {{ other.members.length }} {{ "settlements.card.residentsShort" | translate }}
+                                </span>
+                            </span>
+                        </a>
+                    }
+                </div>
+            </section>
+        }
+
+        @if (viewerIndex() !== null) {
+            <app-image-viewer [images]="gallery()" [index]="viewerIndex()!" (indexChange)="viewerIndex.set($event)" (closed)="viewerIndex.set(null)" />
+        }
+    } @else if (state().status === "not-found") {
+        <div class="lh-panel flex flex-col items-start gap-4">
+            <h1 class="lh-display text-3xl font-bold text-ink">{{ "settlements.page.notFoundTitle" | translate }}</h1>
+            <p class="text-lg text-ink-2">{{ "settlements.page.notFoundText" | translate }}</p>
+            <a routerLink="/settlements" class="lh-cta">{{ "settlements.page.back" | translate }}</a>
+        </div>
+    } @else {
+        <app-settlement-detail-skeleton />
+    }
+</div>

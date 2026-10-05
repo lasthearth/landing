@@ -1,9 +1,17 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validators,
+} from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { NewsApiService, CreateNewsRequest, NewsDto } from '@entities/news';
+import { appendNewsBanner, NewsApiService, CreateNewsRequest, NewsDto, parseNewsBanner } from '@entities/news';
+import { AnnouncementBarComponent, Announcement } from '@features/announcement';
 import { MediaService } from '@entities/media';
 import { UserService } from '@entities/user';
 import { DiscordWebhookService } from '@shared/lib/discord-webhook/discord-webhook.service';
@@ -19,6 +27,18 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { newsMarkdownToDiscord, renderNewsMarkdown } from '@shared/lib/news-markdown';
 import { NewsPreviewMode } from './news-preview-mode';
 import { NewsDraft } from './news-draft';
+import { bannerUntilDefault } from './banner-until-default.function';
+
+/**
+ * Проверяет, что дата из `datetime-local` в будущем.
+ *
+ * @param control Поле формы.
+ * @returns Ошибка `past` или `null`.
+ */
+function futureDateValidator(control: AbstractControl<string>): ValidationErrors | null {
+    const time = new Date(control.value).getTime();
+    return Number.isNaN(time) || time <= Date.now() ? { past: true } : null;
+}
 
 /**
  * Ключ черновика новости в localStorage.
@@ -61,12 +81,18 @@ const MAX_COVER_SIZE = 10 * 1024 * 1024;
         TuiFilesComponent,
         NewsCardComponent,
         NewsContentEditorComponent,
+        AnnouncementBarComponent,
         TranslatePipe,
         RouterLink,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateNewsComponent {
+    /**
+     * Сервис переводов. Объявлен первым: им пользуются инициализаторы полей ниже (предпросмотр баннера).
+     */
+    private readonly i18n = inject(I18nService);
+
     /**
      * Ограничение длины заголовка (для счётчика в шаблоне).
      */
@@ -83,6 +109,12 @@ export class CreateNewsComponent {
         content: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
         preview: new FormControl<File | null>(null, Validators.required),
         publishToDiscord: new FormControl(true, { nonNullable: true }),
+        banner: new FormControl(false, { nonNullable: true }),
+        bannerUntil: new FormControl(bannerUntilDefault(), {
+            nonNullable: true,
+            validators: [futureDateValidator],
+        }),
+        bannerCountdown: new FormControl(false, { nonNullable: true }),
     });
 
     /**
@@ -147,6 +179,39 @@ export class CreateNewsComponent {
     );
 
     /**
+     * Включён ли баннер (для показа полей и предпросмотра).
+     */
+    protected readonly bannerEnabled = toSignal(
+        this.form.controls.banner.valueChanges.pipe(startWith(this.form.controls.banner.value)),
+        { initialValue: false }
+    );
+
+    /**
+     * Баннер для предпросмотра: заголовок новости и выбранные настройки.
+     */
+    protected readonly bannerPreview = toSignal(
+        merge(
+            this.form.controls.title.valueChanges,
+            this.form.controls.bannerUntil.valueChanges,
+            this.form.controls.bannerCountdown.valueChanges
+        ).pipe(
+            startWith(null),
+            map((): Announcement => {
+                const { title, bannerUntil, bannerCountdown } = this.form.getRawValue();
+                const until = new Date(bannerUntil);
+
+                return {
+                    id: 'preview',
+                    title: title.trim() || this.i18n.translate('news.create.titleFallback'),
+                    until: Number.isNaN(until.getTime()) ? new Date().toISOString() : until.toISOString(),
+                    countdown: bannerCountdown,
+                };
+            })
+        ),
+        { requireSync: true }
+    );
+
+    /**
      * Время публикации для предпросмотра — «только что».
      */
     protected readonly now = new Date();
@@ -161,7 +226,6 @@ export class CreateNewsComponent {
     private readonly newsApi = inject(NewsApiService);
     private readonly mediaService = inject(MediaService);
     private readonly storage = inject(LocalStorageService);
-    private readonly i18n = inject(I18nService);
     private readonly discordWebhook = inject(DiscordWebhookService);
 
     /**
@@ -199,7 +263,15 @@ export class CreateNewsComponent {
      * Сбрасывает форму и удаляет черновик.
      */
     protected clearDraft(): void {
-        this.form.reset({ title: '', content: '', preview: null, publishToDiscord: true });
+        this.form.reset({
+            title: '',
+            content: '',
+            preview: null,
+            publishToDiscord: true,
+            banner: false,
+            bannerUntil: bannerUntilDefault(),
+            bannerCountdown: false,
+        });
         this.storage.removeItem(DRAFT_STORAGE_KEY);
         this.draftRestored.set(false);
     }
@@ -215,7 +287,12 @@ export class CreateNewsComponent {
             return;
         }
 
-        if (this.form.invalid) {
+        const { banner } = this.form.getRawValue();
+        const invalid = Object.entries(this.form.controls).some(
+            ([name, control]) => control.invalid && (banner || !name.startsWith('banner'))
+        );
+
+        if (invalid) {
             this.form.markAllAsTouched();
             return;
         }
@@ -223,8 +300,9 @@ export class CreateNewsComponent {
         this.submitting.set(true);
         this.createdId.set(null);
 
-        const { title, content, preview, publishToDiscord } = this.form.getRawValue();
+        const { title, content, preview, publishToDiscord, bannerUntil, bannerCountdown } = this.form.getRawValue();
         const source = content.trim();
+        const html = renderNewsMarkdown(source);
 
         let previewUrl = '';
 
@@ -238,7 +316,9 @@ export class CreateNewsComponent {
 
         const request: CreateNewsRequest = {
             title: title.trim(),
-            content: renderNewsMarkdown(source),
+            content: banner
+                ? appendNewsBanner(html, { until: new Date(bannerUntil).toISOString(), countdown: bannerCountdown })
+                : html,
             preview: previewUrl,
         };
 
@@ -254,6 +334,12 @@ export class CreateNewsComponent {
                 next: (response) => {
                     // handleError теряет тип потока — ответ POST /news это NewsDto.
                     const createdNews = response as NewsDto;
+
+                    // Метка баннера живёт в HTML новости: если сервер её вырезал, честно говорим об этом.
+                    if (banner && createdNews.content && !parseNewsBanner(createdNews.content)) {
+                        this.requestStatusService.showError(this.i18n.translate('news.banner.form.lost'));
+                    }
+
                     this.clearDraft();
                     this.createdId.set(createdNews.id ?? null);
                     this.created.emit();

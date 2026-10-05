@@ -33,6 +33,11 @@ import { IPlayerStats } from '../model/i-player-stats';
 import { ISettlementInvitation } from '@entities/settlement';
 
 /**
+ * Лимит выдачи таблицы лидеров, при котором приходят все игроки сервера.
+ */
+const LEADERBOARD_ALL_LIMIT = '1000';
+
+/**
  * Максимальное количество идентификаторов в одном запросе `users:batchGet`.
  */
 const BATCH_GET_USERS_LIMIT = 100;
@@ -393,19 +398,24 @@ export class UserService {
      * Игрок вне топ‑200 → `null` («Статистика недоступна»).
      *
      * Ответ лидерборда кэшируется (`shareReplay`), поэтому наведение на
-     * несколько чипов не порождает повторных запросов топ‑200.
+     * несколько чипов не порождает повторных запросов.
      *
      * @param name Игровое имя игрока (`user_game_name`).
      * @returns Observable со статистикой {@link IPlayerStats} или `null`.
      */
     public getPlayerStats$(name: string): Observable<IPlayerStats | null> {
+        const key = name.trim().toLowerCase();
+
         return this.leaderboardStats$().pipe(
             map((entries) => {
-                const entry = entries.find((e) => e.name === name);
+                const entry = entries.find((e) => e.name?.trim().toLowerCase() === key);
 
                 if (!entry) {
                     return null;
                 }
+
+                // Место по часам считаем сами: в выдаче все игроки сервера.
+                const hoursRank = entries.filter((e) => e.hours_played > entry.hours_played).length + 1;
 
                 return {
                     name: entry.name,
@@ -413,6 +423,8 @@ export class UserService {
                     hours_played: entry.hours_played,
                     players_killed: entry.kills,
                     last_online: 0,
+                    hours_rank: hoursRank,
+                    total_players: entries.length,
                 } satisfies IPlayerStats;
             }),
             catchError(() => of(null))
@@ -420,7 +432,7 @@ export class UserService {
     }
 
     /**
-     * Кэшированный запрос топ‑200 таблицы лидеров (по убийствам).
+     * Кэшированный запрос всей таблицы лидеров (по убийствам).
      * Источник статистики для тултипов игроков; общий на все чипы.
      *
      * Вспомогательный запрос: при ошибке алерт не показывается
@@ -430,7 +442,9 @@ export class UserService {
         Array<{ name: string; deaths: number; kills: number; hours_played: number }>
     > {
         if (!this.leaderboardStatsCache$) {
-            const params = new HttpParams().set('filter', 'LEADERBOARD_FILTER_KILLS').set('limit', '200');
+            // Без лимита API отдаёт топ‑25. 1000 с запасом покрывает всех игроков сервера (~460 на октябрь 2026),
+            // иначе у игроков вне топа в подсказке было «Статистика недоступна».
+            const params = new HttpParams().set('filter', 'LEADERBOARD_FILTER_KILLS').set('limit', LEADERBOARD_ALL_LIMIT);
 
             this.leaderboardStatsCache$ = this.http
                 .get<{

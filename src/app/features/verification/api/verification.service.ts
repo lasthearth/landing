@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { map, Observable } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { IVerifyData } from '../model/i-verify-data';
 import { IVerifyRequest } from '../model/i-verify-request';
 
@@ -79,6 +80,22 @@ export class VerificationService {
      */
     public getCode() {
         return this.http.get<{ code: string }>(`${this.baseUrl}/user/verify/code`);
+    }
+
+    /**
+     * Публичный статус анкеты по игровому нику — без входа на сайт.
+     *
+     * Если анкеты с таким ником нет, бэкенд отвечает пустым статусом.
+     *
+     * @param nickname Игровой ник.
+     * @returns Observable со статусом: `pending`, `approved`, `rejected`, `verified` или пустая строка.
+     */
+    public getStatusByNickname(nickname: string): Observable<string> {
+        return this.http
+            .get<{ status?: string }>(`${this.baseUrl}/user/verify/${encodeURIComponent(nickname.trim())}/status`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
+            .pipe(map((response) => response.status ?? ''));
     }
 
     /**

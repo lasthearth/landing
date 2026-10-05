@@ -3,6 +3,7 @@
  *
  * Содержит DTO для API-контракта и UI-модель для отображения в компонентах.
  */
+import { NewsBanner } from './news-banner';
 
 /**
  * DTO новости, получаемый от API.
@@ -116,6 +117,11 @@ export interface News {
      * Идентификатор или имя автора новости.
      */
     createdBy: string;
+
+    /**
+     * Баннер над шапкой сайта, если новость его включает.
+     */
+    banner: NewsBanner | null;
 }
 
 /**

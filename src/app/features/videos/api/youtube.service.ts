@@ -3,9 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs/operators';
 import { YOUTUBE_CONFIG } from '../config/youtube-config';
+import { VIDEO_KIND_PLAYLIST_PREFIX } from '../config/video-kinds.constant';
+import { VideoKind } from '../model/video-kind';
 import { YoutubeVideo } from '../model/youtube-video';
+import { YoutubeVideoPage } from '../model/youtube-video-page';
 
 /**
  * Ответ API на запрос элементов плейлиста.
@@ -79,12 +82,22 @@ interface PlaylistItemsResponse {
      * Токен следующей страницы.
      */
     nextPageToken?: string;
+
+    /**
+     * Сведения о выдаче.
+     */
+    pageInfo?: {
+        /**
+         * Сколько всего элементов в плейлисте.
+         */
+        totalResults: number;
+    };
 }
 
 /**
- * Ключ для кэширования списка видео в localStorage.
+ * Префикс ключа кэша первой страницы раздела в localStorage.
  */
-const CACHE_KEY = 'lh:youtube:videos';
+const CACHE_KEY_PREFIX = 'lh:youtube:page:';
 
 /**
  * Время жизни кэша в миллисекундах (1 час).
@@ -114,57 +127,78 @@ export class YoutubeService {
     private readonly platformId = inject(PLATFORM_ID);
 
     /**
-     * Кэшированный Observable списка видео.
+     * Загруженные в этой вкладке страницы: ключ — раздел и токен страницы.
      */
-    private cachedVideos$: Observable<YoutubeVideo[]> | null = null;
+    private readonly pages = new Map<string, Observable<YoutubeVideoPage>>();
 
     /**
-     * Загружает видео из плейлиста загрузок канала.
+     * Загружает страницу роликов раздела.
      *
-     * @returns Observable со списком видео.
+     * Первая страница кэшируется в localStorage на час, остальные — только в памяти.
+     *
+     * @param kind Раздел: ролики, стримы или шортсы.
+     * @param pageToken Токен страницы; без него — первая страница.
+     * @returns Observable со страницей роликов.
      */
-    public getVideos(): Observable<YoutubeVideo[]> {
-        const cached = this.readCache();
-
-        if (cached) {
-            return of(cached);
+    public getPage(kind: VideoKind, pageToken?: string): Observable<YoutubeVideoPage> {
+        if (!pageToken) {
+            const cached = this.readCache(kind);
+            if (cached) {
+                return of(cached);
+            }
         }
 
-        if (this.cachedVideos$) {
-            return this.cachedVideos$;
+        const key = `${kind}:${pageToken ?? ''}`;
+        const existing = this.pages.get(key);
+        if (existing) {
+            return existing;
         }
 
-        const params = {
+        const params: Record<string, string | number> = {
             part: 'snippet',
-            playlistId: YOUTUBE_CONFIG.uploadsPlaylistId,
+            playlistId: this.playlistId(kind),
             maxResults: MAX_RESULTS,
             key: YOUTUBE_CONFIG.apiKey,
         };
 
-        this.cachedVideos$ = this.http
-            .get<PlaylistItemsResponse>(`${YOUTUBE_CONFIG.baseUrl}/playlistItems`, { params })
-            .pipe(
-                map((response) => this.mapResponse(response)),
-                shareReplay(1)
-            );
+        if (pageToken) {
+            params['pageToken'] = pageToken;
+        }
 
-        this.cachedVideos$.subscribe((videos) => {
-            this.writeCache(videos);
-        });
+        const request$ = this.http.get<PlaylistItemsResponse>(`${YOUTUBE_CONFIG.baseUrl}/playlistItems`, { params }).pipe(
+            map((response) => this.mapResponse(response)),
+            tap((page) => {
+                if (!pageToken) {
+                    this.writeCache(kind, page);
+                }
+            }),
+            shareReplay(1)
+        );
 
-        return this.cachedVideos$;
+        this.pages.set(key, request$);
+        return request$;
     }
 
     /**
-     * Преобразует ответ API в массив моделей видео.
+     * Возвращает id служебного плейлиста раздела.
+     *
+     * @param kind Раздел.
+     */
+    private playlistId(kind: VideoKind): string {
+        const channelSuffix = YOUTUBE_CONFIG.uploadsPlaylistId.slice(2);
+        return `${VIDEO_KIND_PLAYLIST_PREFIX[kind]}${channelSuffix}`;
+    }
+
+    /**
+     * Преобразует ответ API в страницу роликов.
      *
      * @param response Ответ API.
-     * @returns Массив видео.
+     * @returns Страница роликов.
      */
-    private mapResponse(response: PlaylistItemsResponse): YoutubeVideo[] {
-        return (response.items || [])
+    private mapResponse(response: PlaylistItemsResponse): YoutubeVideoPage {
+        const videos = (response.items || [])
             .filter((item) => item.snippet && item.snippet.resourceId && item.snippet.resourceId.videoId)
-            .map((item) => {
+            .map((item): YoutubeVideo => {
                 const snippet = item.snippet;
                 const thumbnails = snippet.thumbnails || {};
                 const thumbnailUrl =
@@ -185,51 +219,60 @@ export class YoutubeService {
                     channelTitle: snippet.channelTitle,
                 };
             });
+
+        return {
+            videos,
+            nextPageToken: response.nextPageToken ?? null,
+            total: response.pageInfo?.totalResults ?? videos.length,
+        };
     }
 
     /**
-     * Читает кэш видео из localStorage.
+     * Читает кэш первой страницы раздела из localStorage.
      *
-     * @returns Кэшированный список видео или null.
+     * @param kind Раздел.
+     * @returns Страница или null, если кэша нет или он устарел.
      */
-    private readCache(): YoutubeVideo[] | null {
+    private readCache(kind: VideoKind): YoutubeVideoPage | null {
         if (!isPlatformBrowser(this.platformId)) {
             return null;
         }
 
         try {
-            const raw = localStorage.getItem(CACHE_KEY);
+            const raw = localStorage.getItem(CACHE_KEY_PREFIX + kind);
 
             if (!raw) {
                 return null;
             }
 
-            const parsed = JSON.parse(raw) as { videos: YoutubeVideo[]; timestamp: number };
-            const age = Date.now() - parsed.timestamp;
+            const parsed = JSON.parse(raw) as { page: YoutubeVideoPage; timestamp: number };
 
-            if (age > CACHE_TTL_MS) {
-                localStorage.removeItem(CACHE_KEY);
+            if (Date.now() - parsed.timestamp > CACHE_TTL_MS || !Array.isArray(parsed.page?.videos)) {
+                localStorage.removeItem(CACHE_KEY_PREFIX + kind);
                 return null;
             }
 
-            return parsed.videos;
+            return parsed.page;
         } catch {
             return null;
         }
     }
 
     /**
-     * Записывает список видео в localStorage.
+     * Записывает первую страницу раздела в localStorage.
      *
-     * @param videos Список видео.
+     * @param kind Раздел.
+     * @param page Страница роликов.
      */
-    private writeCache(videos: YoutubeVideo[]): void {
+    private writeCache(kind: VideoKind, page: YoutubeVideoPage): void {
         if (!isPlatformBrowser(this.platformId)) {
             return;
         }
 
         try {
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ videos, timestamp: Date.now() }));
+            localStorage.setItem(CACHE_KEY_PREFIX + kind, JSON.stringify({ page, timestamp: Date.now() }));
+            // Старый общий кэш больше не читается.
+            localStorage.removeItem('lh:youtube:videos');
         } catch {
             // Игнорируем ошибки localStorage.
         }

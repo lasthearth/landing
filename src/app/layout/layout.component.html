@@ -10,6 +10,11 @@
 }
 
 <div class="content-wrapper">
+    <!-- Баннер объявления: узкая полоса над шапкой, пока есть действующее объявление -->
+    <div class="flex justify-center">
+        <app-site-announcement class="w-full xl:w-[60%] layout-announcement" />
+    </div>
+
     <div class="flex justify-center">
         <header class="w-full xl:w-[60%]">
             <app-header />
@@ -35,7 +40,7 @@
 @defer (on idle) {
     <app-game-chat-widget
         [channelId]="environment.discordGameChatChannelId"
-        [title]="'Игровой чат'"
+        [title]="'shared.gameChat.title' | translate"
         icon="@tui.message-square"
     />
 }
