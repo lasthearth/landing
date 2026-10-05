@@ -203,6 +203,9 @@ export class HeaderComponent {
                     case RouteKeys.diplomacy:
                         this.select = 'diplomacy';
                         break;
+                    case RouteKeys.news:
+                        this.select = 'home';
+                        break;
                 }
 
                 this.cdr.markForCheck();

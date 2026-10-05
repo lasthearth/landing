@@ -1,0 +1,87 @@
+<div class="news-page px-4 md:px-10 pt-6 pb-8 flex flex-col gap-6">
+    <a routerLink="/" fragment="news" class="news-page__back">
+        <tui-icon icon="@tui.arrow-left" class="size-4!" />
+        {{ "news.page.back" | translate }}
+    </a>
+
+    @if (news(); as item) {
+        <article class="news-page__article lh-panel">
+            @if (item.preview) {
+                <div class="news-page__cover">
+                    <app-image-loader [src]="item.preview" [alt]="item.title" [eager]="true" class="block size-full" />
+                </div>
+            }
+
+            <header class="flex flex-col gap-4">
+                <h1 class="news-page__title lh-display font-bold text-ink uppercase">{{ item.title }}</h1>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    @if (publishedLabel()) {
+                        <time
+                            class="news-page__chip news-page__chip--accent"
+                            [attr.datetime]="item.createdAt?.toISOString()"
+                            [attr.title]="publishedTitle()"
+                        >
+                            <tui-icon icon="@tui.clock" class="size-3.5!" />
+                            {{ publishedLabel() }}
+                        </time>
+                    }
+                    @if (authorName()) {
+                        <span class="news-page__chip">
+                            <tui-icon icon="@tui.user" class="size-3.5!" />
+                            {{ authorName() }}
+                        </span>
+                    }
+                    <span class="news-page__chip">
+                        <tui-icon icon="@tui.eye" class="size-3.5!" />
+                        {{ viewCount() }}
+                    </span>
+
+                    <button type="button" class="news-page__share" (click)="share()">
+                        <tui-icon [icon]="copied() ? '@tui.check' : '@tui.share-2'" class="size-4!" />
+                        {{ (copied() ? "news.page.copied" : "news.page.share") | translate }}
+                    </button>
+                </div>
+            </header>
+
+            <div class="news-page__text lh-rich-text text-ink" [innerHTML]="item.content"></div>
+        </article>
+
+        @if (others().length > 0) {
+            <section class="flex flex-col gap-4" aria-labelledby="news-page-others">
+                <h2 id="news-page-others" class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
+                    {{ "news.page.others" | translate }}
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    @for (other of others(); track other.id) {
+                        <app-news-card
+                            variant="compact"
+                            [id]="other.id"
+                            [title]="other.title"
+                            [content]="other.content"
+                            [preview]="other.preview"
+                            [date]="other.formattedDate"
+                            [createdAt]="other.createdAt"
+                            [viewCount]="other.viewCount"
+                            class="!h-auto w-full"
+                        />
+                    }
+                </div>
+                <a routerLink="/" fragment="news" class="lh-cta self-center">
+                    {{ "news.page.allNews" | translate }}
+                    <span class="lh-cta__icon">
+                        <tui-icon icon="@tui.arrow-right" class="size-4!" />
+                    </span>
+                </a>
+            </section>
+        }
+    } @else if (state().status === "not-found") {
+        <div class="lh-panel flex flex-col items-start gap-4">
+            <h1 class="lh-display text-3xl font-bold text-ink">{{ "news.page.notFoundTitle" | translate }}</h1>
+            <p class="text-lg text-ink-2">{{ "news.page.notFoundText" | translate }}</p>
+            <a routerLink="/" fragment="news" class="lh-cta">{{ "news.page.allNews" | translate }}</a>
+        </div>
+    } @else {
+        <app-news-skeleton class="!h-auto w-full" />
+    }
+</div>

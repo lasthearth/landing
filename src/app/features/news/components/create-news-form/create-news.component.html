@@ -1,17 +1,36 @@
 <div class="flex flex-col gap-6">
     <!-- Форма создания -->
     <div class="lh-panel">
-        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'news.create.title' | translate }}</p>
-        <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-4 mt-6">
-            <p class="text-[23px] leading-[32px] font-bold text-ink">{{ 'news.create.newsTitleLabel' | translate }}</p>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'news.create.title' | translate }}</p>
+            @if (draftRestored()) {
+                <div class="create-news__draft" role="status">
+                    <tui-icon icon="@tui.file-clock" class="size-4!" />
+                    {{ 'news.create.draftRestored' | translate }}
+                    <button type="button" class="create-news__link-button" (click)="clearDraft()">
+                        {{ 'news.create.clearDraft' | translate }}
+                    </button>
+                </div>
+            }
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4 mt-6">
+            <div class="flex items-end justify-between gap-3">
+                <p class="text-[23px] leading-[32px] font-bold text-ink">{{ 'news.create.newsTitleLabel' | translate }}</p>
+                <span
+                    class="create-news__counter tabular-nums"
+                    [class.create-news__counter--over]="titleValue().length > titleMaxLength"
+                >
+                    {{ titleValue().length }} / {{ titleMaxLength }}
+                </span>
+            </div>
             <lh-input formControlName="title" [placeholder]="'news.create.titlePlaceholder' | translate" />
             <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />
 
             <p class="text-[23px] leading-[32px] font-bold text-ink">{{ 'news.create.contentLabel' | translate }}</p>
-            <lh-input
+            <app-news-content-editor
                 formControlName="content"
                 [placeholder]="'news.create.contentPlaceholder' | translate"
-                type="textarea"
             />
             <tui-error formControlName="content" [error]="[] | tuiFieldError | async" />
 
@@ -46,28 +65,79 @@
 
             <tui-error formControlName="preview" [error]="[] | tuiFieldError | async" />
 
-            <button
-                type="submit"
-                class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-ink cursor-pointer transition-all duration-200 bg-surface-3 border border-line hover:bg-surface-4 self-end disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-                {{ 'news.create.createButton' | translate }}
-            </button>
+            <label class="create-news__checkbox">
+                <input type="checkbox" formControlName="publishToDiscord" />
+                <span>{{ 'news.create.publishToDiscord' | translate }}</span>
+            </label>
+
+            <div class="flex flex-wrap items-center justify-end gap-3">
+                @if (createdId(); as id) {
+                    <a [routerLink]="['/news', id]" class="create-news__link-button">
+                        {{ 'news.create.openCreated' | translate }}
+                    </a>
+                }
+                <button
+                    type="submit"
+                    class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-ink cursor-pointer transition-all duration-200 bg-surface-3 border border-line hover:bg-surface-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                    [disabled]="submitting()"
+                >
+                    {{ (submitting() ? 'news.create.publishing' : 'news.create.createButton') | translate }}
+                </button>
+            </div>
         </form>
     </div>
 
     <!-- Предпросмотр -->
     <div class="lh-panel">
-        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink text-center">{{ 'news.create.previewTitle' | translate }}</p>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'news.create.previewTitle' | translate }}</p>
+            <div class="create-news__modes" role="tablist" [attr.aria-label]="'news.create.previewTitle' | translate">
+                @for (mode of ['featured', 'compact', 'page']; track mode) {
+                    <button
+                        type="button"
+                        role="tab"
+                        class="create-news__mode"
+                        [class.create-news__mode--active]="previewMode() === mode"
+                        [attr.aria-selected]="previewMode() === mode"
+                        (click)="previewMode.set($any(mode))"
+                    >
+                        {{ 'news.create.previewModes.' + mode | translate }}
+                    </button>
+                }
+            </div>
+        </div>
+
         <div class="mt-6">
-            <app-news-card
-                title="{{ form.controls.title.value || ('news.create.titleFallback' | translate) }}"
-                content="{{ form.controls.content.value || ('news.create.contentFallback' | translate) }}"
-                [preview]="previewUrl || '/7.webp'"
-                date="{{ currentDate$ | async | date: 'dd.MM.yy - HH:mm' }}"
-                [createdAt]="currentTime"
-                [viewCount]="0"
-                [createdBy]="userService.userName || ''"
-            />
+            @switch (previewMode()) {
+                @case ('page') {
+                    <article class="create-news__page">
+                        @if (previewUrl(); as cover) {
+                            <img class="create-news__page-cover" [src]="cover" alt="" />
+                        }
+                        <h1 class="lh-display text-3xl md:text-5xl font-bold text-ink uppercase">
+                            {{ titleValue() || ('news.create.titleFallback' | translate) }}
+                        </h1>
+                        <div
+                            class="lh-rich-text text-ink text-lg md:text-xl"
+                            [innerHTML]="contentHtml() || ('news.create.contentFallback' | translate)"
+                        ></div>
+                    </article>
+                }
+                @default {
+                    <div [class.create-news__compact]="previewMode() === 'compact'">
+                        <app-news-card
+                            [variant]="previewMode() === 'compact' ? 'compact' : 'featured'"
+                            [title]="titleValue() || ('news.create.titleFallback' | translate)"
+                            [content]="contentHtml() || ('news.create.contentFallback' | translate)"
+                            [preview]="previewUrl() || '/7.webp'"
+                            date=""
+                            [createdAt]="now"
+                            [viewCount]="0"
+                            [createdBy]="userService.userName || ''"
+                        />
+                    </div>
+                }
+            }
         </div>
     </div>
 </div>

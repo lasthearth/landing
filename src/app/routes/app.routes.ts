@@ -208,6 +208,12 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.diplomacy, seo: routeSeoData.diplomacy },
             },
             {
+                path: 'news/:id',
+                loadComponent: () =>
+                    import('../features/news/ui/news-page/news-page.component').then((m) => m.NewsPageComponent),
+                data: { route_keys: RouteKeys.news, seo: routeSeoData.news },
+            },
+            {
                 path: 'unauthorized',
                 redirectTo: '/home',
                 pathMatch: 'full',

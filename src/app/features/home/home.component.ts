@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
 import { NewsCardComponent } from '@app/features/news/ui/news-card/news-card.component';
 import { NewsSkeletonComponent } from '@app/features/news/ui/news-skeleton/news-skeleton.component';
 import { NewsApiService, mapDtoToNews } from '@entities/news';
 import { UserService, Role } from '@entities/user';
-import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { environment } from '@core/config/environments/environment';
@@ -53,11 +53,6 @@ export class HomeComponent {
     private readonly refresh$ = new Subject<void>();
 
     /**
-     * Сервис диалогов подтверждения.
-     */
-    private readonly confirmDialog = inject(ConfirmDialogService);
-
-    /**
      * Сервис информации о сервере (онлайн, игровое время).
      */
     private readonly serverInfo = inject(ServerInformationService);
@@ -100,14 +95,19 @@ export class HomeComponent {
     protected carouselIndex: number = 0;
 
     /**
-     * Количество новостей на одной странице.
+     * Сколько новостей показано сразу: главная и две под ней.
      */
-    readonly pageSize = 2;
+    private static readonly INITIAL_NEWS_COUNT = 3;
 
     /**
-     * Текущий индекс страницы новостей.
+     * Сколько новостей добавляет кнопка «Показать ещё»: два ряда по две.
      */
-    readonly pageIndex = signal(0);
+    private static readonly NEWS_STEP = 4;
+
+    /**
+     * Сколько новостей сейчас показано (включая главную).
+     */
+    protected readonly visibleNewsCount = signal(HomeComponent.INITIAL_NEWS_COUNT);
 
     /**
      * Путь до элементов карусели.
@@ -389,21 +389,51 @@ export class HomeComponent {
     readonly news = toSignal(this.news$, { initialValue: [] });
 
     /**
-     * Общее количество страниц.
+     * Якорь из адреса: `/#news` открывает главную сразу на блоке новостей
+     * (ссылка «Все новости» со страницы новости).
      */
-    readonly totalPages = computed(() =>
-        Math.ceil(this.news().length / this.pageSize)
+    private readonly fragment = toSignal(inject(ActivatedRoute).fragment, { initialValue: null });
+
+    /**
+     * Признак выполнения в браузере.
+     */
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+    /**
+     * Прокручивает к блоку новостей, когда они загрузились и в адресе есть `#news`.
+     * Ждём загрузки, иначе скелетоны и карусель сдвинут блок после прокрутки.
+     */
+    private readonly scrollToNews = effect(() => {
+        if (!this.isBrowser || this.fragment() !== 'news' || this.loading()) {
+            return;
+        }
+
+        requestAnimationFrame(() => document.getElementById('news')?.scrollIntoView({ block: 'start' }));
+    });
+
+    /**
+     * Новости от новых к старым; новости без даты — в конце.
+     */
+    protected readonly sortedNews = computed(() =>
+        [...this.news()].sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0))
     );
 
     /**
-     * Новости текущей страницы.
+     * Главная (самая свежая) новость — крупная карточка на всю ширину.
      */
-    readonly pageNews = computed(() => {
-        const all = this.news();
-        const start = this.pageIndex() * this.pageSize;
+    protected readonly featuredNews = computed(() => this.sortedNews()[0] ?? null);
 
-        return all.slice(start, start + this.pageSize);
-    });
+    /**
+     * Остальные показанные новости — сетка в две колонки под главной.
+     */
+    protected readonly restNews = computed(() => this.sortedNews().slice(1, this.visibleNewsCount()));
+
+    /**
+     * Сколько новостей ещё скрыто за кнопкой «Показать ещё».
+     */
+    protected readonly hiddenNewsCount = computed(() =>
+        Math.max(0, this.sortedNews().length - this.visibleNewsCount())
+    );
 
     /**
      * Флаг, указывающий, является ли текущий пользователь администратором.
@@ -433,50 +463,32 @@ export class HomeComponent {
     }
 
     /**
-     * Возвращает количество страниц для всех новостей.
+     * Показывает следующую порцию новостей.
      */
-    protected getPagesCount(): number {
-        return this.totalPages();
-    }
-
-    /**
-     * Производит переход на страницу с номером.
-     *
-     * @param index Номер страницы.
-     */
-    protected goToPage(index: number): void {
-        this.pageIndex.set(index);
+    protected showMoreNews(): void {
+        this.visibleNewsCount.update((count) => count + HomeComponent.NEWS_STEP);
     }
 
     /**
      * Удаляет новость по идентификатору.
      *
-     * Запрашивает подтверждение у пользователя перед удалением.
+     * Вызывается карточкой новости уже после подтверждения пользователем.
      * После успешного удаления обновляет список новостей.
      *
      * @param id Идентификатор новости для удаления.
      */
     protected deleteNews(id: string): void {
-        this.confirmDialog
-            .open({
-                title: this.i18n.translate('home.news.deleteTitle'),
-                text: this.i18n.translate('home.news.deleteText'),
-            })
+        // Подтверждение уже показала карточка новости (NewsCardComponent.onDeleteClick);
+        // второй диалог здесь заставлял подтверждать удаление дважды.
+        this.api
+            .delete(id)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: (confirmed) => {
-                    if (!confirmed) {
-                        return;
-                    }
-
-                    this.api.delete(id).subscribe({
-                        next: () => {
-                            this.refresh$.next();
-                        },
-                        error: (err) => {
-                            console.error('[News] Ошибка удаления новости:', err);
-                        },
-                    });
+                next: () => {
+                    this.refresh$.next();
+                },
+                error: (err) => {
+                    console.error('[News] Ошибка удаления новости:', err);
                 },
             });
     }

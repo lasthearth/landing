@@ -1,11 +1,18 @@
 <div
     class="relative w-full overflow-hidden rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.25)] bg-night-2/80"
 >
-    <div class="p-8 flex gap-12 items-center justify-between w-full">
+    <div
+        class="w-full flex"
+        [class]="compact() ? 'p-5 md:p-6 flex-col gap-5' : 'p-8 gap-12 items-center justify-between'"
+    >
         <!-- Превью placeholder -->
-        <div
-            class="hidden md:block xl:hidden 2xl:block size-72 rounded-xl bg-wood-2/40 animate-pulse shrink-0"
-        ></div>
+        @if (compact()) {
+            <div class="h-40 md:h-44 w-full rounded-xl bg-wood-2/40 animate-pulse shrink-0"></div>
+        } @else {
+            <div
+                class="hidden md:block xl:hidden 2xl:block size-72 rounded-xl bg-wood-2/40 animate-pulse shrink-0"
+            ></div>
+        }
 
         <!-- Контент placeholder -->
         <div class="flex flex-col gap-6 w-full items-start">

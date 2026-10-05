@@ -1,0 +1,94 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.news-page {
+    &__back {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 0.5rem;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--color-ink-2, currentColor);
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+            text-underline-offset: 0.2em;
+        }
+    }
+
+    &__article {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    &__cover {
+        overflow: hidden;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        max-height: 30rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    &__title {
+        font-size: 1.875rem;
+        line-height: 1.15;
+
+        @media (min-width: 768px) {
+            font-size: 2.75rem;
+        }
+    }
+
+    &__chip,
+    &__share {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        height: 2rem;
+        padding: 0 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+    }
+
+    &__chip {
+        color: var(--lh-parchment-2);
+        background: linear-gradient(135deg, color-mix(in srgb, var(--lh-brand-deep-2) 80%, transparent), color-mix(in srgb, var(--lh-brand) 80%, transparent));
+
+        &--accent {
+            background: linear-gradient(135deg, var(--lh-brand-deep-2), var(--lh-brand));
+        }
+    }
+
+    &__share {
+        margin-left: auto;
+        cursor: pointer;
+        color: inherit;
+        border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+        background: transparent;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background: color-mix(in srgb, currentColor 8%, transparent);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--lh-brand);
+            outline-offset: 2px;
+        }
+    }
+
+    &__text {
+        font-size: 1.125rem;
+        max-width: 72ch;
+
+        @media (min-width: 768px) {
+            font-size: 1.25rem;
+        }
+    }
+}
