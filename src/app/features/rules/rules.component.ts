@@ -13,6 +13,7 @@ import { AdminRightsComponent } from './components/admin-rights/admin-rights.com
 import { ScrollService } from './services/scroll.service';
 import { GlobalExpandService } from './services/global-expand.service';
 import { ScrollAnchorDirective } from './directives/scroll-anchor.directive';
+import { RulesSearchComponent } from './ui/rules-search/rules-search.component';
 
 /**
  * Компонент правил сервера.
@@ -33,6 +34,7 @@ import { ScrollAnchorDirective } from './directives/scroll-anchor.directive';
         MilitaryActionsComponent,
         AdminRightsComponent,
         ScrollAnchorDirective,
+        RulesSearchComponent,
     ],
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.less', './styles/rules.less'],
@@ -66,6 +68,9 @@ export class RulesComponent implements OnDestroy {
 
     constructor() {
         afterNextRender(() => {
+            // Даём параграфам вычислить свои якоря, затем открываем ссылку вида /rules#rule-5-1-1.
+            setTimeout(() => this.scrollToFragment());
+
             if (typeof IntersectionObserver === 'undefined') {
                 return;
             }
@@ -109,6 +114,25 @@ export class RulesComponent implements OnDestroy {
         if (typeof window !== 'undefined') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+    }
+
+    /**
+     * Прокручивает к пункту из адресной строки, раскрывая нужные секции.
+     */
+    private scrollToFragment(): void {
+        const raw = window.location.hash.slice(1);
+        if (!raw) {
+            return;
+        }
+
+        let id = raw;
+        try {
+            id = decodeURIComponent(raw);
+        } catch {
+            // Оставляем фрагмент как есть.
+        }
+
+        this.scrollService.scrollToElement(id);
     }
 
     /**

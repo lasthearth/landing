@@ -1,107 +1,196 @@
-import { DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     DestroyRef,
-    ElementRef,
     inject,
+    PLATFORM_ID,
     signal,
-    TemplateRef,
-    ViewChild,
 } from '@angular/core';
+import { isPlatformBrowser, Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
+import { ImageViewerComponent, ImageViewerItem } from '@shared/ui/image-viewer';
+import { DiscordGalleryImage, DiscordGalleryService } from '@shared/lib/discord-gallery/discord-gallery.service';
 import { GalleryImageComponent } from './ui/gallery-image/gallery-image.component';
-import { TuiDialogContext, TuiIcon, TuiLoader } from '@taiga-ui/core';
-import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
-import { PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
-import {
-    DiscordGalleryImage,
-    DiscordGalleryService,
-} from '@shared/lib/discord-gallery/discord-gallery.service';
 
 /**
- * Компонент страницы галереи скриншотов.
+ * Сколько скриншотов показывать сразу (без «свежего кадра»).
+ */
+const INITIAL_COUNT = 24;
+
+/**
+ * Сколько скриншотов добавляет «Показать ещё».
+ */
+const STEP = 24;
+
+/**
+ * Страница галереи скриншотов из Discord.
  *
- * Загружает все изображения из Discord-канала при открытии страницы,
- * отображает их в адаптивной сетке и открывает предпросмотр по клику.
+ * Самый свежий скриншот показывается крупно («Свежий кадр»), остальные —
+ * кирпичной кладкой с кнопкой «Показать ещё». Клик открывает полноэкранный
+ * просмотрщик со стрелками; у каждого кадра своя ссылка `/gallery#<id>`,
+ * по которой просмотрщик открывается сразу на нём.
  */
 @Component({
     selector: 'app-gallery',
     standalone: true,
-    imports: [
-        DatePipe,
-        TuiIcon,
-        TuiPreview,
-        PolymorpheusOutlet,
-        TranslatePipe,
-        GalleryImageComponent,
-    ],
+    imports: [TuiIcon, TranslatePipe, GalleryImageComponent, RelativeTimeComponent, ImageViewerComponent],
     templateUrl: './gallery.component.html',
     styleUrl: './gallery.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryComponent {
-    /**
-     * Сервис загрузки скриншотов из Discord.
-     */
     private readonly galleryService = inject(DiscordGalleryService);
-
-    /**
-     * Сервис предпросмотра изображений.
-     */
-    private readonly previewService = inject(TuiPreviewDialogService);
-
-    /**
-     * Ссылка уничтожения компонента.
-     */
     private readonly destroyRef = inject(DestroyRef);
+    private readonly location = inject(Location);
+    private readonly route = inject(ActivatedRoute);
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     /**
-     * Список изображений галереи.
+     * Все скриншоты (как пришли из API).
      */
-    protected readonly images = signal<DiscordGalleryImage[]>([]);
+    private readonly images = signal<DiscordGalleryImage[]>([]);
 
     /**
-     * Признак загрузки изображений.
+     * Идёт загрузка.
      */
     protected readonly isLoading = signal(true);
 
     /**
-     * Признак ошибки загрузки.
+     * Ошибка загрузки.
      */
     protected readonly hasError = signal(false);
 
     /**
-     * Список индексов скелетонов для первичной загрузки.
+     * Заглушки для скелетона.
      */
-    protected readonly skeletons = signal(Array.from({ length: 16 }, (_, index) => index));
+    protected readonly skeletons = Array.from({ length: 12 }, (_, index) => index);
 
     /**
-     * Ссылка на шаблон окна предпросмотра.
+     * Сколько скриншотов сетки показано.
      */
-    @ViewChild('preview')
-    protected readonly preview?: TemplateRef<TuiDialogContext>;
+    protected readonly visibleCount = signal(INITIAL_COUNT);
 
     /**
-     * Содержимое предпросмотра (URL изображения).
+     * Индекс открытого в просмотрщике кадра или null.
      */
-    protected previewContent: PolymorpheusContent = '';
+    protected readonly viewerIndex = signal<number | null>(null);
 
     /**
-     * Подпись для окна предпросмотра.
+     * Скриншоты от новых к старым.
      */
-    protected previewCaption = '';
+    protected readonly sorted = computed(() =>
+        [...this.images()].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    );
 
     /**
-     * Инициализирует компонент и запускает загрузку изображений.
+     * Свежий кадр.
      */
+    protected readonly featured = computed(() => this.sorted()[0] ?? null);
+
+    /**
+     * Показанные кадры сетки (без свежего).
+     */
+    protected readonly visible = computed(() => this.sorted().slice(1, 1 + this.visibleCount()));
+
+    /**
+     * Сколько кадров ещё скрыто.
+     */
+    protected readonly hiddenCount = computed(() => Math.max(0, this.sorted().length - 1 - this.visibleCount()));
+
+    /**
+     * Кадры для просмотрщика — все, чтобы стрелками можно было пройти галерею целиком.
+     */
+    protected readonly viewerItems = computed<ImageViewerItem[]>(() =>
+        this.sorted().map((image) => ({
+            src: image.url,
+            alt: image.alt || image.author,
+            caption: image.author,
+            date: image.timestamp,
+            shareUrl: `/gallery#${encodeURIComponent(image.id)}`,
+        }))
+    );
+
     public constructor() {
         this.loadImages();
     }
 
     /**
-     * Загружает все изображения из Discord-канала.
+     * Показывает следующую порцию скриншотов.
+     */
+    protected showMore(): void {
+        this.visibleCount.update((count) => count + STEP);
+    }
+
+    /**
+     * Открывает кадр в просмотрщике.
+     *
+     * @param image Скриншот.
+     */
+    protected open(image: DiscordGalleryImage): void {
+        this.setViewerIndex(this.sorted().indexOf(image));
+    }
+
+    /**
+     * Меняет открытый кадр и адрес страницы (`#<id>`), чтобы ссылкой можно было поделиться.
+     *
+     * @param index Индекс кадра или null — закрыть.
+     */
+    protected setViewerIndex(index: number | null): void {
+        this.viewerIndex.set(index);
+
+        if (!this.isBrowser) {
+            return;
+        }
+
+        const image = index === null ? null : this.sorted()[index];
+        this.location.replaceState(image ? `/gallery#${encodeURIComponent(image.id)}` : '/gallery');
+    }
+
+    /**
+     * Новый ли кадр (последние сутки).
+     *
+     * @param timestamp Время публикации.
+     */
+    protected isNew(timestamp: string): boolean {
+        const publishedAt = new Date(timestamp).getTime();
+        return !Number.isNaN(publishedAt) && publishedAt > Date.now() - 24 * 60 * 60 * 1000;
+    }
+
+    /**
+     * Пропорции кадра для резервирования места до загрузки.
+     *
+     * @param image Скриншот.
+     */
+    protected getImageAspect(image: DiscordGalleryImage): string {
+        return image.width && image.height ? `${image.width} / ${image.height}` : '4 / 3';
+    }
+
+    /**
+     * Высота заглушки скелетона.
+     *
+     * @param index Номер заглушки.
+     */
+    protected getSkeletonHeight(index: number): number {
+        const heights = [260, 380, 300, 220, 340, 280];
+        return heights[index % heights.length];
+    }
+
+    /**
+     * Задержка анимации заглушки.
+     *
+     * @param index Номер заглушки.
+     */
+    protected getSkeletonDelay(index: number): number {
+        return (index % 6) * 120;
+    }
+
+    /**
+     * Загружает скриншоты (сначала из кэша, затем свежие).
      */
     private loadImages(): void {
         this.isLoading.set(true);
@@ -112,6 +201,7 @@ export class GalleryComponent {
         if (cached) {
             this.images.set(cached);
             this.isLoading.set(false);
+            this.openFromFragment();
         }
 
         this.galleryService
@@ -122,6 +212,7 @@ export class GalleryComponent {
                     this.images.set(loadedImages);
                     this.galleryService.saveCache(loadedImages);
                     this.isLoading.set(false);
+                    this.openFromFragment();
                 },
                 error: () => {
                     this.hasError.set(true);
@@ -131,66 +222,20 @@ export class GalleryComponent {
     }
 
     /**
-     * Открывает изображение в окне предпросмотра.
-     *
-     * @param image Изображение галереи.
+     * Открывает кадр из ссылки `/gallery#<id>` (один раз, после загрузки).
      */
-    protected openImage(image: DiscordGalleryImage): void {
-        this.previewContent = image.url;
-        this.previewCaption = `${image.author}${image.alt ? ' — ' + image.alt : ''}`;
-        this.previewService.open(this.preview || '').subscribe();
-    }
+    private openFromFragment(): void {
+        const fragment = this.route.snapshot.fragment;
 
-    /**
-     * Проверяет, опубликовано ли изображение менее суток назад.
-     *
-     * @param timestamp Дата публикации в формате ISO 8601.
-     * @returns `true`, если изображение опубликовано менее 24 часов назад.
-     */
-    protected isNew(timestamp: string): boolean {
-        const publishedAt = new Date(timestamp).getTime();
-        const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
+        if (!fragment || this.viewerIndex() !== null) {
+            return;
+        }
 
-        return !Number.isNaN(publishedAt) && publishedAt > dayAgo;
-    }
+        const id = decodeURIComponent(fragment);
+        const index = this.sorted().findIndex((image) => image.id === id);
 
-    /**
-     * Возвращает соотношение сторон карточки изображения.
-     *
-     * Использует реальные размеры изображения из API — без этого
-     * карточка с `object-cover` схлопывается до нулевой высоты.
-     *
-     * @param image Изображение галереи.
-     * @returns Строка с CSS-соотношением сторон.
-     */
-    protected getImageAspect(image: DiscordGalleryImage): string {
-        return image.width && image.height ? `${image.width} / ${image.height}` : '4 / 3';
-    }
-
-    /**
-     * Возвращает высоту скелетона в пикселях по его индексу.
-     *
-     * Высоты чередуются, чтобы сетка скелетонов повторяла
-     * masonry-раскладку реальных изображений.
-     *
-     * @param index Индекс скелетона.
-     * @returns Высота в пикселях.
-     */
-    protected getSkeletonHeight(index: number): number {
-        const heights = [260, 380, 300, 220, 340, 280];
-
-        return heights[index % heights.length];
-    }
-
-    /**
-     * Возвращает задержку анимации скелетона в миллисекундах.
-     *
-     * Каскадная задержка не даёт всем скелетонам мерцать синхронно.
-     *
-     * @param index Индекс скелетона.
-     * @returns Задержка в миллисекундах.
-     */
-    protected getSkeletonDelay(index: number): number {
-        return (index % 6) * 120;
+        if (index >= 0) {
+            this.viewerIndex.set(index);
+        }
     }
 }

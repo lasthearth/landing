@@ -1,0 +1,79 @@
+@if (current(); as image) {
+    <div
+        class="image-viewer"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="image.alt || ('shared.imageViewer.title' | translate)"
+        (click)="onBackdropClick($event)"
+    >
+        <div class="image-viewer__top">
+            @if (hasMany()) {
+                <span class="image-viewer__counter tabular-nums">{{ index() + 1 }} / {{ images().length }}</span>
+            }
+            <div class="image-viewer__actions">
+                @if (image.shareUrl) {
+                    <app-share-button [url]="image.shareUrl" [iconOnly]="true" appearance="overlay" />
+                }
+                <a
+                    class="image-viewer__action"
+                    [href]="image.src"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    [attr.aria-label]="'shared.imageViewer.original' | translate"
+                    [attr.title]="'shared.imageViewer.original' | translate"
+                >
+                    <tui-icon icon="@tui.external-link" class="size-5!" />
+                </a>
+                <button
+                    #closeButton
+                    type="button"
+                    class="image-viewer__action"
+                    [attr.aria-label]="'shared.imageViewer.close' | translate"
+                    [attr.title]="'shared.imageViewer.close' | translate"
+                    (click)="close()"
+                >
+                    <tui-icon icon="@tui.x" class="size-5!" />
+                </button>
+            </div>
+        </div>
+
+        @if (hasMany()) {
+            <button
+                type="button"
+                class="image-viewer__nav image-viewer__nav--prev"
+                [attr.aria-label]="'shared.imageViewer.prev' | translate"
+                (click)="prev()"
+            >
+                <tui-icon icon="@tui.chevron-left" class="size-7!" />
+            </button>
+            <button
+                type="button"
+                class="image-viewer__nav image-viewer__nav--next"
+                [attr.aria-label]="'shared.imageViewer.next' | translate"
+                (click)="next()"
+            >
+                <tui-icon icon="@tui.chevron-right" class="size-7!" />
+            </button>
+        }
+
+        <img
+            class="image-viewer__image"
+            [src]="image.src"
+            [alt]="image.alt"
+            draggable="false"
+            (pointerdown)="onPointerDown($event)"
+            (pointerup)="onPointerUp($event)"
+        />
+
+        @if (image.caption || image.date) {
+            <div class="image-viewer__caption">
+                @if (image.caption) {
+                    <span class="image-viewer__caption-text">{{ image.caption }}</span>
+                }
+                @if (image.date) {
+                    <time class="image-viewer__caption-time" [appRelativeTime]="image.date"></time>
+                }
+            </div>
+        }
+    </div>
+}

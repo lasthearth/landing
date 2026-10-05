@@ -1,0 +1,66 @@
+<div class="rules-search" (focusout)="open.set(false)">
+    <label class="rules-search__field">
+        <tui-icon icon="@tui.search" class="rules-search__icon size-5!" />
+        <input
+            type="search"
+            class="rules-search__input"
+            autocomplete="off"
+            role="combobox"
+            aria-controls="rules-search-results"
+            [attr.aria-expanded]="open() && hasQuery()"
+            [attr.aria-label]="'rules.search.label' | translate"
+            [placeholder]="'rules.search.placeholder' | translate"
+            [value]="query()"
+            (input)="onInput($event)"
+            (focus)="open.set(true)"
+            (keydown)="onKeydown($event)"
+        />
+        @if (query()) {
+            <button
+                type="button"
+                class="rules-search__clear"
+                [attr.aria-label]="'rules.search.clear' | translate"
+                (mousedown)="$event.preventDefault()"
+                (click)="clear()"
+            >
+                <tui-icon icon="@tui.x" class="size-4!" />
+            </button>
+        }
+    </label>
+
+    @if (open() && hasQuery()) {
+        <div id="rules-search-results" class="rules-search__dropdown" role="listbox">
+            @if (results().length) {
+                <p class="rules-search__count">
+                    {{ "rules.search.found" | translate: { count: allResults().length } }}
+                </p>
+                @for (result of results(); track $index) {
+                    <button
+                        type="button"
+                        role="option"
+                        class="rules-search__result"
+                        [class.rules-search__result--active]="$index === activeIndex()"
+                        [attr.aria-selected]="$index === activeIndex()"
+                        (mousedown)="$event.preventDefault()"
+                        (mouseenter)="activeIndex.set($index)"
+                        (click)="select(result)"
+                    >
+                        @if (result.number) {
+                            <span class="rules-search__number">{{ result.number }}</span>
+                        }
+                        <span class="rules-search__body">
+                            <span class="rules-search__snippet"
+                                >{{ result.before }}<mark>{{ result.match }}</mark>{{ result.after }}</span
+                            >
+                            @if (result.section) {
+                                <span class="rules-search__section">{{ result.section }}</span>
+                            }
+                        </span>
+                    </button>
+                }
+            } @else {
+                <p class="rules-search__empty">{{ "rules.search.empty" | translate }}</p>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,15 @@
+<button
+    type="button"
+    class="share-button"
+    [class.share-button--icon]="iconOnly()"
+    [class.share-button--done]="copied()"
+    [class.share-button--overlay]="appearance() === 'overlay'"
+    [attr.aria-label]="labelKey() | translate"
+    [attr.title]="labelKey() | translate"
+    (click)="share($event)"
+>
+    <tui-icon [icon]="copied() ? '@tui.check' : '@tui.share-2'" class="size-4!" />
+    @if (!iconOnly()) {
+        <span>{{ labelKey() | translate }}</span>
+    }
+</button>

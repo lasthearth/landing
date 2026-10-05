@@ -1,0 +1,9 @@
+@if (date(); as value) {
+    <span class="waiting-badge" [class.waiting-badge--stale]="stale()">
+        <tui-icon [icon]="stale() ? '@tui.alarm-clock' : '@tui.clock'" class="size-4!" />
+        <time [appRelativeTime]="value"></time>
+        @if (stale()) {
+            <span class="waiting-badge__note">· {{ "shared.waiting.stale" | translate }}</span>
+        }
+    </span>
+}

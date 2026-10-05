@@ -62,6 +62,64 @@
                 />
             </button>
         </nav>
+
+        <!-- Поиск и фильтры: состояние хранится в адресе, ссылкой на подборку можно поделиться -->
+        <div class="settlements-filters">
+            <label class="settlements-search">
+                <tui-icon icon="@tui.search" class="size-5! shrink-0" />
+                <input
+                    type="search"
+                    class="settlements-search__input"
+                    [value]="query()"
+                    [placeholder]="'settlements.list.search' | translate"
+                    [attr.aria-label]="'settlements.list.search' | translate"
+                    (input)="onQueryInput($event)"
+                />
+            </label>
+
+            @if (typeOptions().length > 1) {
+                <div class="settlements-chips" role="group" [attr.aria-label]="'settlements.list.filterType' | translate">
+                    @for (option of typeOptions(); track option.value) {
+                        <button
+                            type="button"
+                            class="settlements-chip"
+                            [class.settlements-chip--active]="typeFilter() === option.value"
+                            [attr.aria-pressed]="typeFilter() === option.value"
+                            (click)="toggleType(option.value)"
+                        >
+                            {{ option.value }}
+                            <span class="settlements-chip__count">{{ option.count }}</span>
+                        </button>
+                    }
+                </div>
+            }
+
+            @if (courseOptions().length > 1) {
+                <div class="settlements-chips" role="group" [attr.aria-label]="'settlements.list.filterCourse' | translate">
+                    @for (option of courseOptions(); track option.value) {
+                        <button
+                            type="button"
+                            class="settlements-chip"
+                            [class.settlements-chip--active]="courseFilter() === option.value"
+                            [attr.aria-pressed]="courseFilter() === option.value"
+                            (click)="toggleCourse(option.value)"
+                        >
+                            {{ option.value }}
+                            <span class="settlements-chip__count">{{ option.count }}</span>
+                        </button>
+                    }
+                </div>
+            }
+
+            @if (hasFilters() && !loading()) {
+                <p class="settlements-filters__summary">
+                    {{ "settlements.list.found" | translate: { count: filteredSettlements().length } }}
+                    <button type="button" class="settlements-filters__reset" (click)="resetFilters()">
+                        {{ "settlements.list.reset" | translate }}
+                    </button>
+                </p>
+            }
+        </div>
     </div>
 
     @if (loading()) {
@@ -82,9 +140,15 @@
             [title]="'settlements.list.empty.title' | translate"
             [description]="'settlements.list.empty.description' | translate"
         />
+    } @else if (filteredSettlements().length === 0) {
+        <app-empty-state
+            icon="@tui.search-x"
+            [title]="'settlements.list.notFound.title' | translate"
+            [description]="'settlements.list.notFound.description' | translate"
+        />
     } @else {
         <div class="settlements-grid lh-stagger-list">
-            @for (item of sortedSettlements(); track item.id) {
+            @for (item of filteredSettlements(); track item.id) {
                 <app-settlement-card
                     [data]="item"
                     [players]="item.players"

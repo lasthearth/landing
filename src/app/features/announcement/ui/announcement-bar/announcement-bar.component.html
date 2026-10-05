@@ -1,0 +1,27 @@
+<div class="announcement-bar" role="region" [attr.aria-label]="'news.banner.label' | translate">
+    <tui-icon icon="@tui.megaphone" class="announcement-bar__icon size-4!" />
+
+    @if (preview()) {
+        <span class="announcement-bar__text">{{ announcement().title }}</span>
+    } @else {
+        <a class="announcement-bar__text" [routerLink]="['/news', announcement().id]">{{ announcement().title }}</a>
+    }
+
+    @if (countdown()) {
+        <span class="announcement-bar__countdown">
+            {{ "news.banner.left" | translate: { time: countdown() } }}
+        </span>
+    }
+
+    @if (!preview()) {
+        <button
+            type="button"
+            class="announcement-bar__close"
+            [attr.aria-label]="'news.banner.dismiss' | translate"
+            [attr.title]="'news.banner.dismiss' | translate"
+            (click)="dismissed.emit()"
+        >
+            <tui-icon icon="@tui.x" class="size-4!" />
+        </button>
+    }
+</div>

@@ -123,7 +123,7 @@
                                             class="border-t border-lh-primary-2/10 hover:bg-lh-primary-2/5 transition-colors"
                                         >
                                             <td class="p-4 text-lh-primary whitespace-nowrap text-base">
-                                                {{ tx.formattedDate }}
+                                                <time [appRelativeTime]="tx.createdAt" [fallback]="tx.formattedDate"></time>
                                             </td>
                                             <td class="p-4 text-lh-primary text-base">
                                                 {{ formatTransactionType(tx.type) }}

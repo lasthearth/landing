@@ -1,3 +1,4 @@
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { BehaviorSubject, catchError, defaultIfEmpty, Observable, of, switchMap, tap } from 'rxjs';
 import { LeaderBoardType } from '@entities/user';
@@ -24,7 +25,7 @@ export type TypeLabel = string;
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [TuiTable, AsyncPipe, TuiTabs, LeaderCardComponent, StatisticsSkeletonComponent, ImageLoaderComponent, TranslatePipe, NgTemplateOutlet, TuiIcon],
+    imports: [TuiTable, AsyncPipe, TuiTabs, LeaderCardComponent, StatisticsSkeletonComponent, ImageLoaderComponent, TranslatePipe, NgTemplateOutlet, TuiIcon, RelativeTimeComponent],
     styleUrl: './statistics.component.less',
     templateUrl: './statistics.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

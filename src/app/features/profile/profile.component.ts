@@ -42,6 +42,7 @@ import {
     SettlementDisplayNamePipe,
 } from '@entities/settlement';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
+import { NewcomerPathComponent } from '@features/onboarding';
 @Component({
     standalone: true,
     imports: [
@@ -57,6 +58,7 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
         TranslatePipe,
         SettlementBadgeComponent,
         SettlementDisplayNamePipe,
+        NewcomerPathComponent,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',

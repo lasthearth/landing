@@ -101,3 +101,27 @@
         opacity: 0.97;
     }
 }
+
+/**
+ * Точка «есть новое с прошлого визита» на пункте меню.
+ */
+.nav-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--lh-brand);
+    box-shadow: 0 0 0 2px var(--color-lh-primary-2, #2b2d31);
+    pointer-events: none;
+}
+
+.nav-dot--inline {
+    position: static;
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    margin-left: auto;
+    box-shadow: none;
+}

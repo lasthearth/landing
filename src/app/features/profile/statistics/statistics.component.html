@@ -18,7 +18,7 @@
                             <span class="text-lg font-bold text-lh-primary truncate">
                                 {{ purchase.itemName || "—" }}
                             </span>
-                            <span class="text-base text-ink-3">{{ purchase.formattedDate }}</span>
+                            <time class="text-base text-ink-3" [appRelativeTime]="purchase.createdAt" [fallback]="purchase.formattedDate"></time>
                         </div>
 
                         <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">

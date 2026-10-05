@@ -4,7 +4,7 @@
         <p class="text-base md:text-lg text-lh-primary-2 max-w-3xl">{{ "diplomacy.subtitle" | translate }}</p>
     </header>
 
-    @if (isLoading() && visibleStatements().length === 0) {
+    @if (isLoading() && !hasStatements()) {
         <div class="diplomacy-page__loading">
             <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
             <span>{{ "diplomacy.loading" | translate }}</span>
@@ -18,7 +18,7 @@
         </div>
     }
 
-    @if (!isLoading() && visibleStatements().length === 0 && !error()) {
+    @if (!isLoading() && !hasStatements() && !error()) {
         <div class="diplomacy-page__empty">
             <tui-icon icon="@tui.scroll-text" class="size-16 opacity-60" />
             <p class="diplomacy-page__empty-title">{{ "diplomacy.empty.title" | translate }}</p>
@@ -26,35 +26,63 @@
         </div>
     }
 
-    @if (visibleStatements().length > 0) {
-        <div class="diplomacy-page__list lh-stagger-list">
-            @for (statement of visibleStatements(); track statement.id) {
-                <article class="diplomacy-card">
-                    <div class="diplomacy-card__seal">
-                        <tui-icon icon="@tui.scroll-text" class="size-6!" />
-                    </div>
-                    <div class="diplomacy-card__header">
-                        <div class="diplomacy-card__author">
-                            <span class="diplomacy-card__avatar">
-                                {{ statement.author.charAt(0).toUpperCase() }}
-                            </span>
-                            <div class="diplomacy-card__author-info">
-                                <span class="diplomacy-card__author-name">{{ statement.author }}</span>
-                                <span class="diplomacy-card__author-role">
-                                    {{ "diplomacy.card.leader" | translate }}
-                                </span>
-                            </div>
-                        </div>
-                        <time class="diplomacy-card__date" [attr.datetime]="statement.timestamp">
-                            <span class="diplomacy-card__date-day">{{ statement.timestamp | date: "dd.MM.yyyy" }}</span>
-                            <span class="diplomacy-card__date-time">{{ statement.timestamp | date: "HH:mm" }}</span>
-                        </time>
-                    </div>
-                    <div class="diplomacy-card__divider"></div>
-                    <div class="diplomacy-card__body">
-                        <p class="diplomacy-card__text" [innerHTML]="statement.content"></p>
-                    </div>
-                </article>
+    @if (hasStatements()) {
+        @if (authors().length > 1) {
+            <div class="diplomacy-page__authors" role="group" [attr.aria-label]="'diplomacy.filter' | translate">
+                <button
+                    type="button"
+                    class="diplomacy-page__author"
+                    [class.diplomacy-page__author--active]="authorFilter() === null"
+                    [attr.aria-pressed]="authorFilter() === null"
+                    (click)="toggleAuthor(null)"
+                >
+                    {{ "diplomacy.all" | translate }}
+                </button>
+                @for (author of authors(); track author.name) {
+                    <button
+                        type="button"
+                        class="diplomacy-page__author"
+                        [class.diplomacy-page__author--active]="authorFilter() === author.name"
+                        [attr.aria-pressed]="authorFilter() === author.name"
+                        (click)="toggleAuthor(author.name)"
+                    >
+                        {{ author.name }}
+                        <span class="diplomacy-page__author-count">{{ author.count }}</span>
+                    </button>
+                }
+            </div>
+        }
+
+        <div class="diplomacy-page__feed">
+            @if (featured(); as statement) {
+                <app-diplomacy-card
+                    [statement]="statement"
+                    [featured]="true"
+                    [initiallyExpanded]="statement.id === targetId()"
+                    [highlighted]="statement.id === targetId()"
+                />
+            }
+
+            @if (rest().length > 0) {
+                <div class="diplomacy-page__grid lh-stagger-list">
+                    @for (statement of rest(); track statement.id || statement.timestamp) {
+                        <app-diplomacy-card
+                            [statement]="statement"
+                            [initiallyExpanded]="statement.id === targetId()"
+                            [highlighted]="statement.id === targetId()"
+                        />
+                    }
+                </div>
+            }
+
+            @if (hiddenCount() > 0) {
+                <button type="button" class="lh-cta diplomacy-page__more" (click)="showMore()">
+                    {{ "diplomacy.showMore" | translate }}
+                    <span class="opacity-75 tabular-nums">({{ hiddenCount() }})</span>
+                    <span class="lh-cta__icon">
+                        <tui-icon icon="@tui.chevron-down" class="size-4!" />
+                    </span>
+                </button>
             }
         </div>
     }

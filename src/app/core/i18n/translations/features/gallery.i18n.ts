@@ -10,6 +10,8 @@ export const GALLERY_I18N = {
             empty: 'В канале пока нет скриншотов.',
             error: 'Не удалось загрузить галерею. Попробуйте обновить страницу.',
             newLabel: 'NEW',
+            featured: 'Свежий кадр',
+            showMore: 'Показать ещё',
         },
     },
     en: {
@@ -20,6 +22,8 @@ export const GALLERY_I18N = {
             empty: 'No screenshots in the channel yet.',
             error: 'Failed to load gallery. Please refresh the page.',
             newLabel: 'NEW',
+            featured: 'Latest shot',
+            showMore: 'Show more',
         },
     },
 };

@@ -11,6 +11,7 @@
             <span class="text-base text-ink-3 leading-5">{{ 'admin.playerForms.gameNameLabel' | translate }}</span>
             <span class="text-2xl font-bold text-ink truncate">{{ data().user_game_name }}</span>
         </div>
+        <app-waiting-badge class="ml-auto shrink-0" [since]="data().created_at" />
     </div>
 
     <!-- Вопросы и ответы -->

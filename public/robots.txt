@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /profile
-Disallow: /settlements/*
 
 Sitemap: https://lasthearth.ru/sitemap.xml

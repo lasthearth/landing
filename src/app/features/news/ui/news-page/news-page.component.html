@@ -16,14 +16,13 @@
                 <h1 class="news-page__title lh-display font-bold text-ink uppercase">{{ item.title }}</h1>
 
                 <div class="flex flex-wrap items-center gap-2">
-                    @if (publishedLabel()) {
+                    @if (item.createdAt || item.formattedDate !== "—") {
                         <time
+                            [appRelativeTime]="item.createdAt"
+                            [fallback]="item.formattedDate"
                             class="news-page__chip news-page__chip--accent"
-                            [attr.datetime]="item.createdAt?.toISOString()"
-                            [attr.title]="publishedTitle()"
                         >
                             <tui-icon icon="@tui.clock" class="size-3.5!" />
-                            {{ publishedLabel() }}
                         </time>
                     }
                     @if (authorName()) {
@@ -37,10 +36,7 @@
                         {{ viewCount() }}
                     </span>
 
-                    <button type="button" class="news-page__share" (click)="share()">
-                        <tui-icon [icon]="copied() ? '@tui.check' : '@tui.share-2'" class="size-4!" />
-                        {{ (copied() ? "news.page.copied" : "news.page.share") | translate }}
-                    </button>
+                    <app-share-button class="news-page__share" [url]="'/news/' + item.id" [title]="item.title" />
                 </div>
             </header>
 

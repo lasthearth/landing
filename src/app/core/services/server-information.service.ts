@@ -84,7 +84,9 @@ export class ServerInformationService {
      * @returns Observable со статистикой игрока или `null` если не найден.
      */
     public getPlayerStats$(name: string): Observable<ILeaderBoard | null> {
-        const params = new HttpParams().set('filter', '0').set('limit', '200');
+        // Без большого лимита в выдаче только верх таблицы, и у остальных игроков в профиле не было статистики.
+        const params = new HttpParams().set('filter', '0').set('limit', '1000');
+        const key = name.trim().toLowerCase();
 
         return this.http
             .get<{ entries: Array<ILeaderBoard> }>(`${this.baseUrl}/leaderboard`, {
@@ -93,7 +95,7 @@ export class ServerInformationService {
             })
             .pipe(
                 map((response: { entries: Array<ILeaderBoard> }) =>
-                    response.entries.find((entry: ILeaderBoard) => entry.name === name) ?? null
+                    response.entries.find((entry: ILeaderBoard) => entry.name?.trim().toLowerCase() === key) ?? null
                 )
             );
     }

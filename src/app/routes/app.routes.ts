@@ -187,8 +187,12 @@ export const routes: Routes = [
             {
                 path: 'videos',
                 loadComponent: () =>
-                    import('../features/videos/ui/videos-page/videos-page.component').then(
-                        (m) => m.VideosPageComponent
+                    loadPage(
+                        () =>
+                            import('../features/videos/ui/videos-page/videos-page.component').then(
+                                (m) => m.VideosPageComponent
+                            ),
+                        [() => import('@core/i18n/translations/features/videos.i18n').then((m) => m.VIDEOS_I18N)]
                     ),
                 data: { route_keys: RouteKeys.videos, seo: routeSeoData.videos },
             },
@@ -206,6 +210,23 @@ export const routes: Routes = [
                         ]
                     ),
                 data: { route_keys: RouteKeys.diplomacy, seo: routeSeoData.diplomacy },
+            },
+            {
+                path: 'settlements/:id',
+                loadComponent: () =>
+                    loadPage(
+                        () =>
+                            import('../features/settlements/settlement-page/settlement-page.component').then(
+                                (m) => m.SettlementPageComponent
+                            ),
+                        [
+                            () =>
+                                import('@core/i18n/translations/features/settlements.i18n').then(
+                                    (m) => m.SETTLEMENTS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.settlements, seo: routeSeoData.settlements },
             },
             {
                 path: 'news/:id',

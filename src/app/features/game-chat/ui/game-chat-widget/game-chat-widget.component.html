@@ -6,45 +6,46 @@
                 @if (isSounding()) {
                     <span class="game-chat-widget__sound-mark" role="status">
                         <tui-icon icon="@tui.volume-2" class="size-4" />
-                        звук отсюда
+                        {{ "shared.gameChat.soundHere" | translate }}
                     </span>
                 }
                 <button
                     type="button"
                     class="game-chat-widget__action"
                     (click)="toggleSound()"
-                    [attr.aria-label]="isSoundEnabled() ? 'Выключить звук' : 'Включить звук'"
+                    [attr.aria-label]="(isSoundEnabled() ? 'shared.gameChat.soundOff' : 'shared.gameChat.soundOn') | translate"
+                    [attr.title]="(isSoundEnabled() ? 'shared.gameChat.soundOff' : 'shared.gameChat.soundOn') | translate"
                 >
-                    <tui-icon
-                        [icon]="isSoundEnabled() ? '@tui.volume-2' : '@tui.volume-off'"
-                        class="size-5"
-                    />
+                    <tui-icon [icon]="isSoundEnabled() ? '@tui.volume-2' : '@tui.volume-off'" class="size-5" />
                 </button>
                 <button
                     type="button"
                     class="game-chat-widget__action"
                     (click)="toggleExpanded()"
-                    [attr.aria-label]="'Свернуть ' + title()"
+                    [attr.aria-label]="'shared.gameChat.collapse' | translate: { title: title() }"
                 >
                     <tui-icon icon="@tui.chevron-down" class="size-5" />
                 </button>
             </div>
         </div>
 
-        <div
-            #messagesContainer
-            class="game-chat-widget__messages"
-            (scroll)="onScroll($event)"
-        >
+        <div #messagesContainer class="game-chat-widget__messages" (scroll)="onScroll($event)">
             @if (isLoadingMore()) {
-                <div class="game-chat-widget__loader">Загрузка...</div>
+                <div class="game-chat-widget__loader">{{ "shared.gameChat.loading" | translate }}</div>
             }
 
-            @for (message of visibleMessages(); track message.id) {
-                <div class="game-chat-widget__message" [ngClass]="getTypeClass(message.type)">
-                    <span class="game-chat-widget__time">{{ message.timestamp | date: "HH:mm" }}</span>
-                    <span class="game-chat-widget__author">{{ message.author }}</span>
-                    <span class="game-chat-widget__text">{{ message.content }}</span>
+            @for (row of rows(); track row.message.id) {
+                @if (row.dayLabel) {
+                    <div class="game-chat-widget__day" role="separator">
+                        <span>{{ row.dayLabel }}</span>
+                    </div>
+                }
+                <div class="game-chat-widget__message" [ngClass]="getTypeClass(row.message.type)">
+                    <time class="game-chat-widget__time" [attr.datetime]="row.iso" [attr.title]="row.fullTime">{{
+                        row.time
+                    }}</time>
+                    <span class="game-chat-widget__author">{{ row.message.author }}</span>
+                    <span class="game-chat-widget__text lh-rich-text" [innerHTML]="row.html"></span>
                 </div>
             }
         </div>
@@ -53,7 +54,7 @@
     @if (isSounding() && !isExpanded()) {
         <span class="game-chat-widget__sound-hint" role="status">
             <tui-icon icon="@tui.volume-2" class="size-4" />
-            Звук: {{ title() }}
+            {{ "shared.gameChat.soundHint" | translate: { title: title() } }}
         </span>
     }
 
@@ -62,12 +63,16 @@
         class="game-chat-widget__fab"
         [class.game-chat-widget__fab--sounding]="isSounding()"
         (click)="toggleExpanded()"
-        [attr.aria-label]="'Открыть ' + title()"
+        [attr.aria-label]="
+            unreadCount() > 0
+                ? ('shared.gameChat.openUnread' | translate: { title: title(), count: unreadCount() })
+                : ('shared.gameChat.open' | translate: { title: title() })
+        "
     >
         <tui-icon [icon]="icon()" class="size-6" />
 
         @if (unreadCount() > 0) {
-            <span class="game-chat-widget__badge">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
+            <span class="game-chat-widget__badge" aria-hidden="true">{{ unreadCount() > 99 ? "99+" : unreadCount() }}</span>
         }
     </button>
 </div>

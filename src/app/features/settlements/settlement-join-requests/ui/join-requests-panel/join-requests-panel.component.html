@@ -13,7 +13,10 @@
         <ul class="flex flex-col gap-2">
             @for (request of requests(); track request.id) {
                 <li class="join-requests__row">
-                    <span class="text-lg font-semibold text-ink">{{ nameOf(request.user_id) }}</span>
+                    <span class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <span class="text-lg font-semibold text-ink">{{ nameOf(request.user_id) }}</span>
+                        <app-waiting-badge [since]="request.created_at" />
+                    </span>
 
                     <span class="flex gap-2">
                         <button

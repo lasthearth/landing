@@ -1,4 +1,6 @@
 import { NewsDto, News, CreateNewsRequest } from './news.types';
+import { parseNewsBanner } from '../lib/parse-news-banner.function';
+import { stripNewsBanner } from '../lib/strip-news-banner.function';
 
 /**
  * Преобразует DTO новости из API в UI-модель.
@@ -13,7 +15,8 @@ export function mapDtoToNews(dto: NewsDto): News {
     return {
         id: dto.id,
         title: dto.title,
-        content: dto.content,
+        content: stripNewsBanner(dto.content ?? ''),
+        banner: parseNewsBanner(dto.content),
         preview: dto.preview,
         viewCount: parseInt(dto.view_count, 10) || 0,
         createdAt: date,

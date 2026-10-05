@@ -70,6 +70,44 @@
                 <span>{{ 'news.create.publishToDiscord' | translate }}</span>
             </label>
 
+            <!-- Баннер над шапкой: метка прячется в HTML новости -->
+            <div class="create-news__banner">
+                <label class="create-news__checkbox">
+                    <input type="checkbox" formControlName="banner" />
+                    <span>{{ 'news.banner.form.toggle' | translate }}</span>
+                </label>
+
+                @if (bannerEnabled()) {
+                    <p class="create-news__banner-hint">{{ 'news.banner.form.hint' | translate }}</p>
+
+                    <div class="create-news__banner-fields">
+                        <label class="create-news__field">
+                            <span class="create-news__field-label">{{ 'news.banner.form.until' | translate }}</span>
+                            <input
+                                type="datetime-local"
+                                class="create-news__datetime"
+                                formControlName="bannerUntil"
+                                [attr.aria-invalid]="form.controls.bannerUntil.invalid"
+                            />
+                        </label>
+
+                        <label class="create-news__checkbox">
+                            <input type="checkbox" formControlName="bannerCountdown" />
+                            <span>{{ 'news.banner.form.countdown' | translate }}</span>
+                        </label>
+                    </div>
+
+                    @if (form.controls.bannerUntil.invalid && form.controls.bannerUntil.touched) {
+                        <p class="create-news__banner-error" role="alert">{{ 'news.banner.form.untilPast' | translate }}</p>
+                    }
+
+                    <div class="create-news__banner-preview">
+                        <span class="create-news__field-label">{{ 'news.banner.form.preview' | translate }}</span>
+                        <app-announcement-bar [announcement]="bannerPreview()" [preview]="true" />
+                    </div>
+                }
+            </div>
+
             <div class="flex flex-wrap items-center justify-end gap-3">
                 @if (createdId(); as id) {
                     <a [routerLink]="['/news', id]" class="create-news__link-button">

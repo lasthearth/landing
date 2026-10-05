@@ -10,6 +10,7 @@ import {
     Signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import {
@@ -33,7 +34,6 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { JoinRequestButtonComponent } from '../join-request';
 import { SetTagsComponent } from './set-tags/set-tags.component';
-import { SettlementDetailedComponent } from '../settlement-detailed/settlement-detailed.component';
 
 @Component({
     standalone: true,
@@ -50,6 +50,7 @@ import { SettlementDetailedComponent } from '../settlement-detailed/settlement-d
         SettlementDisplayNamePipe,
         PlayerChipComponent,
         JoinRequestButtonComponent,
+        RouterLink,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -279,15 +280,6 @@ export class SettlementCardComponent {
             .subscribe({
                 complete: () => this.tagsChanged.emit(),
             });
-    }
-
-    protected openDetails() {
-        this.dialogs
-            .open(new PolymorpheusComponent(SettlementDetailedComponent), {
-                size: 'auto',
-                data: { settlement: this.data(), players: this.players() },
-            })
-            .subscribe();
     }
 
     protected getTag(tagId: string) {

@@ -16,6 +16,7 @@ import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign
 import { I18nService, Language, TranslatePipe } from '@core/i18n';
 import { ThemeService } from '@core/services/theme.service';
 import { formatServerTime } from './lib/format-server-time.function';
+import { NewContentService } from '@features/new-content';
 
 /**
  * Компонент заголовка.
@@ -106,6 +107,11 @@ export class HeaderComponent {
     private readonly notificationService: NotificationService = inject(NotificationService);
 
     /**
+     * «Новое с прошлого визита» — точки на пунктах меню.
+     */
+    protected readonly newContent = inject(NewContentService);
+
+    /**
      * Сервис донат-валюты.
      */
     private readonly donateService: DonateService = inject(DonateService);
@@ -152,6 +158,8 @@ export class HeaderComponent {
      * Инициализирует компонент класса {@link LandingComponent}
      */
     public constructor() {
+        this.newContent.start();
+
         const updateSelect = () => {
             let route = this.activatedRoute;
 

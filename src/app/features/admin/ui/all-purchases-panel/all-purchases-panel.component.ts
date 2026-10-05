@@ -1,3 +1,4 @@
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { catchError, of } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
@@ -27,7 +28,7 @@ const PRIVILEGE_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
 @Component({
     selector: 'app-all-purchases-panel',
     standalone: true,
-    imports: [TuiIcon, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
+    imports: [TuiIcon, EmptyStateComponent, ErrorStateComponent, TranslatePipe, RelativeTimeComponent],
     templateUrl: './all-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -25,4 +25,9 @@ export interface IRequestSettlement {
 
         desc: string
     }[]
+
+    /**
+     * Когда подана заявка (как у поселения: unix-время строкой или ISO).
+     */
+    created_at?: string;
 }

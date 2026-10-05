@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -19,6 +19,13 @@ import { TuiIcon } from '@taiga-ui/core';
 import { GameChatMessage } from '@features/game-chat/model/game-chat-message';
 import { GameChatService } from '@features/game-chat/services/game-chat.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
+import { I18nService, TranslatePipe } from '@core/i18n';
+import { ClockService } from '@shared/lib/clock';
+import { formatFullDate } from '@shared/lib/relative-time';
+import { formatChatTime } from '@features/game-chat/lib/format-chat-time.function';
+import { formatChatDay, startOfDay } from '@features/game-chat/lib/format-chat-day.function';
+import { renderChatContent } from '@features/game-chat/lib/render-chat-content.function';
+import { GameChatRow } from '@features/game-chat/model/game-chat-row';
 
 /**
  * Максимальное количество сообщений в виджете.
@@ -29,6 +36,16 @@ const MAX_MESSAGES = 100;
  * Ключ для хранения настройки звука чата.
  */
 const SOUND_ENABLED_KEY = 'lh_game_chat_sound_enabled';
+
+/**
+ * Ключ localStorage: время последнего прочитанного сообщения (мс).
+ */
+const LAST_READ_KEY = 'lh_game_chat_last_read';
+
+/**
+ * Допуск на расхождение часов игрока и Discord при решении «играть ли звук» (мс).
+ */
+const SOUND_CLOCK_SKEW = 5000;
 
 /**
  * Сортирует сообщения по времени отправки от старых к новым.
@@ -66,7 +83,7 @@ function isScrolledToBottom(container: HTMLElement): boolean {
 @Component({
     selector: 'app-game-chat-widget',
     standalone: true,
-    imports: [DatePipe, NgClass, TuiIcon],
+    imports: [NgClass, TuiIcon, TranslatePipe],
     templateUrl: './game-chat-widget.component.html',
     styleUrl: './game-chat-widget.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -129,10 +146,6 @@ export class GameChatWidgetComponent implements OnInit {
      */
     protected readonly isExpanded = signal(false);
 
-    /**
-     * Количество новых сообщений, полученных в свёрнутом состоянии.
-     */
-    protected readonly unreadCount = signal(0);
 
     /**
      * Признак загрузки старых сообщений.
@@ -171,6 +184,39 @@ export class GameChatWidgetComponent implements OnInit {
     private readonly audioContext: AudioContext | null = null;
 
     /**
+     * Общие «часы» приложения — относительное время обновляется раз в минуту.
+     */
+    private readonly clock = inject(ClockService);
+
+    /**
+     * Сервис переводов.
+     */
+    private readonly i18n = inject(I18nService);
+
+    /**
+     * Время последнего прочитанного сообщения (мс) или `null`, если чат ещё не открывали.
+     */
+    private readonly lastRead = signal<number | null>(null);
+
+    /**
+     * Когда открыта страница (мс) — сообщения старше считаются историей.
+     */
+    private readonly openedAt = Date.now();
+
+    /**
+     * Непрочитанные — сообщения новее последнего прочитанного, в том числе с прошлого визита.
+     */
+    protected readonly unreadCount = computed(() => {
+        const lastRead = this.lastRead();
+
+        if (this.isExpanded() || lastRead === null) {
+            return 0;
+        }
+
+        return this.messages().filter((message) => new Date(message.timestamp).getTime() > lastRead).length;
+    });
+
+    /**
      * Отфильтрованные сообщения для отображения.
      */
     protected readonly visibleMessages = computed(() => {
@@ -179,8 +225,42 @@ export class GameChatWidgetComponent implements OnInit {
         return sortMessagesByTime(list).slice(-MAX_MESSAGES);
     });
 
+    /**
+     * Строки чата: HTML текста, время и разделители дней.
+     */
+    protected readonly rows = computed<GameChatRow[]>(() => {
+        const now = this.clock.now();
+        const locale = this.i18n.language();
+        const timeLabels = { now: this.i18n.translate('shared.gameChat.now') };
+        const dayLabels = {
+            today: this.i18n.translate('shared.gameChat.today'),
+            yesterday: this.i18n.translate('shared.gameChat.yesterday'),
+        };
+        let previousDay: number | null = null;
+
+        return this.visibleMessages().map((message) => {
+            const date = new Date(message.timestamp);
+            const valid = !Number.isNaN(date.getTime());
+            const day = valid ? startOfDay(date) : null;
+            const dayLabel = valid && day !== previousDay ? formatChatDay(date, now, locale, dayLabels) : null;
+            previousDay = day;
+
+            return {
+                message,
+                html: renderChatContent(message.content),
+                time: valid ? formatChatTime(date, now, locale, timeLabels) : '',
+                fullTime: valid ? formatFullDate(date, locale) : '',
+                iso: valid ? date.toISOString() : null,
+                dayLabel,
+            };
+        });
+    });
+
     public constructor() {
         this.isSoundEnabled.set(this.localStorage.getItem<boolean>(SOUND_ENABLED_KEY) ?? true);
+
+        const lastRead = Number(this.localStorage.getItem<number>(LAST_READ_KEY));
+        this.lastRead.set(Number.isFinite(lastRead) && lastRead > 0 ? lastRead : null);
 
         if (isPlatformBrowser(this.platformId)) {
             this.audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
@@ -219,6 +299,10 @@ export class GameChatWidgetComponent implements OnInit {
 
         if (cached) {
             this.messages.set(sortMessagesByTime(cached));
+
+            if (this.lastRead() === null) {
+                this.markRead();
+            }
             this.scrollToBottomAfterRender();
         }
 
@@ -255,9 +339,9 @@ export class GameChatWidgetComponent implements OnInit {
                 return false;
             }
 
-            this.unreadCount.set(0);
             this.isScrolledUp.set(false);
             this.scrollToBottomAfterRender();
+            this.markRead();
 
             return true;
         });
@@ -324,12 +408,19 @@ export class GameChatWidgetComponent implements OnInit {
      * @param freshMessages Свежие сообщения из чата.
      */
     private updateMessages(freshMessages: GameChatMessage[]): void {
-        const currentIds = new Set(this.messages().map((message) => message.id));
+        const current = this.messages();
+        const currentIds = new Set(current.map((message) => message.id));
         const newMessages = freshMessages.filter((message) => !currentIds.has(message.id));
 
         if (newMessages.length === 0) {
             return;
         }
+
+        // Звук — только для сообщений, пришедших, пока страница открыта. История при загрузке
+        // (в том числе догруженная поверх кэша) звучать не должна.
+        const reallyNew = newMessages.some(
+            (message) => new Date(message.timestamp).getTime() > this.openedAt - SOUND_CLOCK_SKEW
+        );
 
         this.messages.update((current) => {
             const merged = [...newMessages, ...current];
@@ -338,16 +429,35 @@ export class GameChatWidgetComponent implements OnInit {
             return sortMessagesByTime(unique).slice(-MAX_MESSAGES);
         });
 
-        if (!this.isExpanded()) {
-            this.unreadCount.update((count) => count + newMessages.length);
-        } else {
+        if (this.isExpanded()) {
             this.isScrolledUp.set(false);
             this.scrollToBottomAfterRender();
+            this.markRead();
+        } else if (this.lastRead() === null) {
+            // Чат ещё ни разу не открывали: не пугаем счётчиком на всю историю, считаем с этого момента.
+            this.markRead();
         }
 
-        if (this.isSoundEnabled() && this.soundEnabled()) {
+        if (reallyNew && this.isSoundEnabled() && this.soundEnabled()) {
             this.playNotificationSound();
         }
+    }
+
+    /**
+     * Отмечает все загруженные сообщения прочитанными и запоминает это между визитами.
+     */
+    private markRead(): void {
+        const newest = this.messages().reduce(
+            (max, message) => Math.max(max, new Date(message.timestamp).getTime() || 0),
+            this.lastRead() ?? 0
+        );
+
+        if (newest <= 0) {
+            return;
+        }
+
+        this.lastRead.set(newest);
+        this.localStorage.setItem(LAST_READ_KEY, newest);
     }
 
     /**

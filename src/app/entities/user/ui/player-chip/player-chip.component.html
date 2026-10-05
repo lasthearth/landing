@@ -50,6 +50,12 @@
                     <dd>{{ s.death_count }}</dd>
                 </div>
             </dl>
+            @if (s.hours_rank && s.total_players) {
+                <div class="player-tooltip__rank">
+                    <tui-icon icon="@tui.trophy" class="player-tooltip__rank-icon" />
+                    {{ 'settlements.player.hoursRank' | translate: { rank: s.hours_rank, total: s.total_players } }}
+                </div>
+            }
         } @else {
             <div class="player-tooltip__hint">{{ 'settlements.player.noStats' | translate }}</div>
         }

@@ -24,7 +24,7 @@ import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { ClockService } from '@shared/lib/clock';
-import { formatFullDate, formatRelativeTime } from '@shared/lib/relative-time';
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { NewsCardVariant } from './news-card-variant';
 
 /**
@@ -41,7 +41,7 @@ import { NewsCardVariant } from './news-card-variant';
 @Component({
     standalone: true,
     selector: 'app-news-card',
-    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe, NgTemplateOutlet, RouterLink],
+    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe, NgTemplateOutlet, RouterLink, RelativeTimeComponent],
     templateUrl: './news-card.component.html',
     styleUrl: './news-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -175,48 +175,6 @@ export class NewsCardComponent {
      * Признак того, что просмотр уже был зарегистрирован для текущей карточки.
      */
     private viewRegistered = false;
-
-    /**
-     * Подпись времени публикации.
-     *
-     * В браузере — относительная («5 минут назад», «вчера», «12 сентября»),
-     * обновляется раз в минуту. При серверном рендере — полная дата,
-     * иначе в пререндере навсегда осталось бы время на момент сборки.
-     */
-    protected readonly publishedLabel = computed(() => {
-        const date = this.createdAt();
-
-        if (!date) {
-            return this.date();
-        }
-
-        const locale = this.i18n.language();
-
-        if (!this.isBrowser) {
-            return formatFullDate(date, locale);
-        }
-
-        return formatRelativeTime(date, this.clock.now(), locale, {
-            justNow: this.i18n.translate('news.time.justNow'),
-            minuteAgo: this.i18n.translate('news.time.minuteAgo'),
-            hourAgo: this.i18n.translate('news.time.hourAgo'),
-            weekAgo: this.i18n.translate('news.time.weekAgo'),
-        });
-    });
-
-    /**
-     * Полная дата и время публикации для подсказки.
-     */
-    protected readonly publishedTitle = computed(() => {
-        const date = this.createdAt();
-
-        return date ? formatFullDate(date, this.i18n.language()) : null;
-    });
-
-    /**
-     * Дата публикации в ISO 8601 для атрибута `datetime`.
-     */
-    protected readonly publishedIso = computed(() => this.createdAt()?.toISOString() ?? null);
 
     /**
      * Признак того, что новость опубликована не позднее 24 часов назад.
