@@ -32,6 +32,7 @@ export const routeSeoData: {
     gallery: ISeoData;
     videos: ISeoData;
     diplomacy: ISeoData;
+    news: ISeoData;
 } = {
     home: {
         title: 'Last Hearth — ролевой сервер Vintage Story',
@@ -177,6 +178,18 @@ export const routeSeoData: {
         siteName,
         image: ogImage,
         imageAlt: 'Видео Last Hearth',
+    },
+    news: {
+        title: 'Новости — Last Hearth',
+        description:
+            'Новости ролевого сервера Last Hearth: обновления, события, войны и жизнь поселений Vintage Story.',
+        keywords: 'новости Last Hearth, обновления сервера, события Vintage Story',
+        url: `${siteUrl}/home`,
+        type: 'article',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Новости Last Hearth',
     },
     diplomacy: {
         title: 'Дипломатия — Last Hearth',

@@ -1,0 +1,77 @@
+<div class="news-editor" [class.news-editor--disabled]="disabled()">
+    <div class="news-editor__toolbar" role="toolbar" [attr.aria-label]="'news.editor.toolbar' | translate">
+        @for (group of toolbar; track $index) {
+            <div class="news-editor__group">
+                @for (button of group; track button.action) {
+                    <button
+                        type="button"
+                        class="news-editor__button"
+                        [attr.title]="(button.labelKey | translate) + (button.hotkey ? ' (' + button.hotkey + ')' : '')"
+                        [attr.aria-label]="button.labelKey | translate"
+                        [disabled]="disabled() || (button.action === 'image' && uploading())"
+                        (mousedown)="$event.preventDefault()"
+                        (click)="apply(button.action)"
+                    >
+                        <tui-icon [icon]="button.icon" class="size-4!" />
+                    </button>
+                }
+            </div>
+        }
+
+        @if (uploading()) {
+            <span class="news-editor__status" role="status">{{ 'news.editor.uploading' | translate }}</span>
+        }
+    </div>
+
+    <textarea
+        #area
+        class="news-editor__area"
+        rows="12"
+        [placeholder]="placeholder()"
+        [disabled]="disabled()"
+        (input)="onInput()"
+        (keydown)="onKeydown($event)"
+        (blur)="onTouched()"
+    ></textarea>
+
+    @if (uploadError(); as error) {
+        <p class="news-editor__error" role="alert">{{ error | translate }}</p>
+    }
+
+    <div class="news-editor__footer">
+        <details class="news-editor__help">
+            <summary>{{ 'news.editor.help.title' | translate }}</summary>
+            <dl>
+                <dt><code>**текст**</code></dt>
+                <dd>{{ 'news.editor.bold' | translate }}</dd>
+                <dt><code>*текст*</code></dt>
+                <dd>{{ 'news.editor.italic' | translate }}</dd>
+                <dt><code>__текст__</code></dt>
+                <dd>{{ 'news.editor.underline' | translate }}</dd>
+                <dt><code>~~текст~~</code></dt>
+                <dd>{{ 'news.editor.strike' | translate }}</dd>
+                <dt><code>||текст||</code></dt>
+                <dd>{{ 'news.editor.spoiler' | translate }}</dd>
+                <dt><code>## Заголовок</code></dt>
+                <dd>{{ 'news.editor.heading' | translate }}</dd>
+                <dt><code>- пункт</code> / <code>1. пункт</code></dt>
+                <dd>{{ 'news.editor.help.lists' | translate }}</dd>
+                <dt><code>&gt; цитата</code></dt>
+                <dd>{{ 'news.editor.quote' | translate }}</dd>
+                <dt><code>[текст](https://…)</code></dt>
+                <dd>{{ 'news.editor.link' | translate }}</dd>
+                <dt><code>![подпись](https://…)</code></dt>
+                <dd>{{ 'news.editor.help.image' | translate }}</dd>
+                <dt><code>---</code></dt>
+                <dd>{{ 'news.editor.divider' | translate }}</dd>
+            </dl>
+            <p>{{ 'news.editor.help.paragraphs' | translate }}</p>
+        </details>
+
+        <span class="news-editor__counter tabular-nums">
+            {{ 'news.editor.counter' | translate: { count: value().length } }}
+        </span>
+    </div>
+
+    <input #fileInput type="file" accept="image/*" hidden (change)="onImageSelected($event)" />
+</div>

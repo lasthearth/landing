@@ -32,4 +32,6 @@ export enum RouteKeys {
     videos = 15,
 
     diplomacy = 16,
+
+    news = 17,
 }

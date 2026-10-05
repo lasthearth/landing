@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 /**
  * Скелетон загрузки карточки новости.
  *
  * Отображает пульсирующий placeholder пока новости загружаются.
+ * В компактном варианте превью стоит сверху, как у карточки сетки.
  */
 @Component({
     selector: 'app-news-skeleton',
@@ -11,4 +12,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     templateUrl: './news-skeleton.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewsSkeletonComponent {}
+export class NewsSkeletonComponent {
+    /**
+     * Компактный вариант для сетки в две колонки.
+     */
+    public readonly compact = input<boolean>(false);
+}

@@ -36,6 +36,8 @@ export class NewsApiService {
     getList(): Observable<NewsDto[]> {
         return this.http
             .get<{ news: NewsDto[] }>(`${this.baseUrl}/news`, {
+                // По умолчанию API отдаёт 15 записей; 50 — максимум по контракту.
+                params: { page_size: 50 },
                 context: new HttpContext().set(SKIP_ERROR_ALERT, true),
             })
             .pipe(map((response) => response.news));
@@ -48,7 +50,10 @@ export class NewsApiService {
      * @returns Observable с DTO новости.
      */
     getById(id: string): Observable<NewsDto> {
-        return this.http.get<NewsDto>(`${this.baseUrl}/news/${id}`);
+        return this.http.get<NewsDto>(`${this.baseUrl}/news/${id}`, {
+            // Отсутствие новости страница обрабатывает сама — без всплывающей ошибки.
+            context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+        });
     }
 
     /**

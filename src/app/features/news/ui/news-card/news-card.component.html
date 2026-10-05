@@ -1,8 +1,9 @@
-<div class="news-card group lh-card-glow">
-    <div
-        class="news-card__bg"
-        [style.backgroundImage]="preview() ? 'url(' + preview() + ')' : 'url(/images/screenshots/screen_1.webp)'"
-    ></div>
+<article
+    class="news-card group lh-card-glow"
+    [class.news-card--featured]="variant() === 'featured'"
+    [class.news-card--compact]="variant() === 'compact'"
+>
+    <div class="news-card__bg" [style.backgroundImage]="'url(' + (preview() || '/landing-carousel/1.webp') + ')'"></div>
     <div class="news-card__overlay"></div>
     <div class="news-card__accent-border" aria-hidden="true"></div>
 
@@ -12,6 +13,7 @@
             (click)="onDeleteClick($event)"
             class="absolute top-4 right-4 z-30 size-9 flex items-center justify-center rounded-lg bg-lh-primary-2/60 hover:bg-lh-danger/80 backdrop-blur-md transition-all duration-200 cursor-pointer"
             [title]="'news.card.deleteTitle' | translate"
+            [attr.aria-label]="'news.card.deleteTitle' | translate"
         >
             <tui-icon icon="@tui.trash-2" class="text-neutral-200 size-4" />
         </button>
@@ -23,56 +25,113 @@
             [class.news-card__new-badge--with-delete]="canDelete()"
             [title]="'news.card.newLabel' | translate"
         >
-            {{ 'news.card.newLabel' | translate }}
+            {{ "news.card.newLabel" | translate }}
         </span>
     }
 
     <div class="news-card__content">
-        <div class="news-card__inner flex gap-6 lg:gap-8 p-6 md:p-8 w-full">
+        @if (variant() === "featured") {
             <div
-                class="news-card__image-wrapper hidden md:block xl:hidden 2xl:block shrink-0 size-64 lg:size-72 shadow-2xl shadow-black/60 overflow-clip rounded-xl border-2 border-[rgba(232,216,184,0.12)]"
+                class="news-card__inner flex flex-col md:flex-row xl:flex-col 2xl:flex-row gap-5 md:gap-6 lg:gap-8 p-5 md:p-8 w-full"
             >
-                <app-image-loader
-                    [src]="preview()"
-                    [alt]="'news.card.previewAlt' | translate:{title: title()}"
-                    class="size-64 lg:size-72"
-                />
-            </div>
-            <div class="flex flex-col min-w-0 flex-1">
-            <div class="flex flex-col gap-3 items-start mb-5">
-                <h2
-                    class="text-2xl/7.5 md:text-4xl uppercase font-bold text-shadow-md text-neutral-100 group-hover:text-accent-soft transition-colors duration-300"
+                <!-- Обложка сверху там, где для превью сбоку не хватает ширины -->
+                @if (preview()) {
+                    <div
+                        class="news-card__cover block md:hidden xl:block 2xl:hidden shrink-0 w-full h-44 xl:h-56 shadow-xl shadow-black/50 overflow-clip rounded-xl border-2 border-[rgba(232,216,184,0.12)]"
+                    >
+                        <app-image-loader
+                            [src]="preview()"
+                            [alt]="'news.card.previewAlt' | translate: { title: title() }"
+                            class="block size-full"
+                        />
+                    </div>
+                }
+                <div
+                    class="news-card__image-wrapper hidden md:block xl:hidden 2xl:block shrink-0 size-64 lg:size-72 shadow-2xl shadow-black/60 overflow-clip rounded-xl border-2 border-[rgba(232,216,184,0.12)]"
                 >
+                    <app-image-loader
+                        [src]="preview()"
+                        [alt]="'news.card.previewAlt' | translate: { title: title() }"
+                        class="size-64 lg:size-72"
+                    />
+                </div>
+                <ng-container [ngTemplateOutlet]="body" />
+            </div>
+        } @else {
+            <div class="news-card__inner flex flex-col gap-5 p-5 md:p-6 w-full">
+                @if (preview()) {
+                    <div
+                        class="news-card__cover shrink-0 w-full h-40 md:h-44 shadow-xl shadow-black/50 overflow-clip rounded-xl border-2 border-[rgba(232,216,184,0.12)]"
+                    >
+                        <app-image-loader
+                            [src]="preview()"
+                            [alt]="'news.card.previewAlt' | translate: { title: title() }"
+                            class="block size-full"
+                        />
+                    </div>
+                }
+                <ng-container [ngTemplateOutlet]="body" />
+            </div>
+        }
+    </div>
+</article>
+
+<ng-template #body>
+    <div class="news-card__body flex flex-col flex-1 min-w-0">
+        <div class="flex flex-col gap-3 items-start mb-5">
+            <h3
+                class="news-card__title uppercase font-bold text-shadow-md text-neutral-100 group-hover:text-accent-soft transition-colors duration-300"
+                [class.news-card__title--with-badge]="isNew() && !canDelete()"
+                [class.news-card__title--with-badge-and-delete]="isNew() && canDelete()"
+                [class.news-card__title--with-delete]="!isNew() && canDelete()"
+            >
+                @if (link(); as url) {
+                    <!-- Растянутая ссылка: ::after перекрывает карточку, вся карточка кликабельна -->
+                    <a [routerLink]="url" class="news-card__link">{{ title() }}</a>
+                } @else {
                     {{ title() }}
-                </h2>
-                <div class="flex flex-wrap gap-2 items-center">
-                    @if (date() !== "—") {
-                        <span
-                            class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2 to-brand shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
-                        >
-                            {{ date() }}
-                        </span>
-                    }
-                    @if (createdBy()) {
-                        <span
-                            class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2/75 to-brand/75"
-                        >
-                            {{ createdBy() }}
-                        </span>
-                    }
+                }
+            </h3>
+            <div class="flex flex-wrap gap-2 items-center">
+                @if (publishedLabel() && publishedLabel() !== "—") {
+                    <time
+                        class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2 to-brand shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                        [attr.datetime]="publishedIso()"
+                        [attr.title]="publishedTitle()"
+                    >
+                        <tui-icon icon="@tui.clock" class="size-4!" />
+                        {{ publishedLabel() }}
+                    </time>
+                }
+                @if (createdBy()) {
                     <span
                         class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2/75 to-brand/75"
                     >
-                        <tui-icon icon="@tui.eye" class="size-3.5" />
-                        {{ viewCount() }}
+                        {{ createdBy() }}
                     </span>
-                </div>
-            </div>
-            <p
-                class="news-card__text text-base md:text-xl font-medium text-shadow-md text-neutral-200 leading-normal"
-                [innerHTML]="content()"
-            ></p>
+                }
+                <span
+                    class="inline-flex items-center gap-1.5 h-7 px-3 rounded-md text-sm font-bold text-parchment-2 bg-gradient-to-br from-brand-deep-2/75 to-brand/75"
+                >
+                    <tui-icon icon="@tui.eye" class="size-4!" />
+                    {{ viewCount() }}
+                </span>
             </div>
         </div>
+
+        <div
+            #textEl
+            class="news-card__text lh-rich-text lh-rich-text--preview font-medium text-shadow-md text-neutral-200"
+            [class.news-card__text--fade]="isClamped()"
+            [innerHTML]="content()"
+        ></div>
+
+        @if (link(); as url) {
+            <!-- Дублирует ссылку заголовка, поэтому скрыта от скринридеров и Tab -->
+            <a [routerLink]="url" class="news-card__more" aria-hidden="true" tabindex="-1">
+                {{ "news.card.readMore" | translate }}
+                <tui-icon icon="@tui.arrow-right" class="size-4!" />
+            </a>
+        }
     </div>
-</div>
+</ng-template>

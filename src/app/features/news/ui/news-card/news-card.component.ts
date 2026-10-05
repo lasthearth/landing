@@ -1,5 +1,21 @@
-
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, model, output } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    ElementRef,
+    inject,
+    input,
+    model,
+    output,
+    PLATFORM_ID,
+    signal,
+    viewChild,
+} from '@angular/core';
+import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { catchError, EMPTY, of, switchMap, take } from 'rxjs';
 import { NewsApiService } from '@entities/news';
@@ -7,19 +23,25 @@ import { UserService } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
-
+import { ClockService } from '@shared/lib/clock';
+import { formatFullDate, formatRelativeTime } from '@shared/lib/relative-time';
+import { NewsCardVariant } from './news-card-variant';
 
 /**
  * Компонент карточки новости.
  *
- * Отображает заголовок, содержание, превью и дату публикации.
+ * Отображает заголовок, содержание, превью и время публикации.
+ * Время показывается относительно текущего момента («5 минут назад», «вчера»),
+ * а старше двух недель — датой; полная дата доступна в подсказке.
+ * Длинный текст обрезается с плавным затуханием; карточка целиком ведёт
+ * на страницу новости `/news/:id` (если передан `id`).
  * При наличии прав доступа отображает кнопку удаления.
  * При появлении карточки в зоне видимости регистрирует просмотр авторизованным пользователем.
  */
 @Component({
     standalone: true,
     selector: 'app-news-card',
-    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe],
+    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe, NgTemplateOutlet, RouterLink],
     templateUrl: './news-card.component.html',
     styleUrl: './news-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,9 +68,19 @@ export class NewsCardComponent {
     private readonly i18n = inject(I18nService);
 
     /**
+     * Текущее время, обновляемое раз в минуту.
+     */
+    private readonly clock = inject(ClockService);
+
+    /**
+     * Признак выполнения в браузере.
+     */
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+    /**
      * Ссылка на DOM-элемент компонента.
      */
-    private readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /**
      * Ссылка для отмены наблюдателя при уничтожении компонента.
@@ -56,9 +88,19 @@ export class NewsCardComponent {
     private readonly destroyRef = inject(DestroyRef);
 
     /**
+     * Блок с текстом новости.
+     */
+    private readonly textRef = viewChild<ElementRef<HTMLElement>>('textEl');
+
+    /**
      * Уникальный идентификатор новости.
      */
     public readonly id = input<string>('');
+
+    /**
+     * Вариант отображения: крупная главная новость или компактная карточка сетки.
+     */
+    public readonly variant = input<NewsCardVariant>('featured');
 
     /**
      * Заголовок новости.
@@ -77,13 +119,15 @@ export class NewsCardComponent {
 
     /**
      * Дата публикации новости в отформатированном виде.
+     *
+     * Используется как запасной вариант, если `createdAt` не передан.
      */
     public readonly date = input.required<string>();
 
     /**
      * Дата публикации новости как объект Date.
      *
-     * Используется для определения, является ли новость недавней.
+     * Используется для относительного времени и признака «новая».
      */
     public readonly createdAt = input<Date | null>(null);
 
@@ -110,9 +154,69 @@ export class NewsCardComponent {
     public readonly trackViews = input<boolean>(false);
 
     /**
+     * Событие удаления новости.
+     *
+     * Вызывается после подтверждения в диалоге.
+     */
+    public readonly delete = output<void>();
+
+    /**
+     * Текст не помещается в отведённую высоту — внизу показывается затухание.
+     */
+    protected readonly isClamped = signal(false);
+
+    /**
+     * Ссылка на страницу новости или null, если идентификатора нет
+     * (например, в предпросмотре формы создания).
+     */
+    protected readonly link = computed(() => (this.id() ? ['/news', this.id()] : null));
+
+    /**
      * Признак того, что просмотр уже был зарегистрирован для текущей карточки.
      */
     private viewRegistered = false;
+
+    /**
+     * Подпись времени публикации.
+     *
+     * В браузере — относительная («5 минут назад», «вчера», «12 сентября»),
+     * обновляется раз в минуту. При серверном рендере — полная дата,
+     * иначе в пререндере навсегда осталось бы время на момент сборки.
+     */
+    protected readonly publishedLabel = computed(() => {
+        const date = this.createdAt();
+
+        if (!date) {
+            return this.date();
+        }
+
+        const locale = this.i18n.language();
+
+        if (!this.isBrowser) {
+            return formatFullDate(date, locale);
+        }
+
+        return formatRelativeTime(date, this.clock.now(), locale, {
+            justNow: this.i18n.translate('news.time.justNow'),
+            minuteAgo: this.i18n.translate('news.time.minuteAgo'),
+            hourAgo: this.i18n.translate('news.time.hourAgo'),
+            weekAgo: this.i18n.translate('news.time.weekAgo'),
+        });
+    });
+
+    /**
+     * Полная дата и время публикации для подсказки.
+     */
+    protected readonly publishedTitle = computed(() => {
+        const date = this.createdAt();
+
+        return date ? formatFullDate(date, this.i18n.language()) : null;
+    });
+
+    /**
+     * Дата публикации в ISO 8601 для атрибута `datetime`.
+     */
+    protected readonly publishedIso = computed(() => this.createdAt()?.toISOString() ?? null);
 
     /**
      * Признак того, что новость опубликована не позднее 24 часов назад.
@@ -125,15 +229,90 @@ export class NewsCardComponent {
         }
 
         const dayInMs = 24 * 60 * 60 * 1000;
-        const diff = Date.now() - date.getTime();
+        const diff = this.clock.now() - date.getTime();
 
-        return diff >= 0 && diff <= dayInMs;
+        return diff <= dayInMs;
     });
 
     constructor() {
         afterNextRender(() => {
             this.initIntersectionObserver();
+            this.initOverflowObserver();
         });
+
+        // Содержимое может меняться (живой предпросмотр в форме создания) —
+        // после перерисовки заново проверяем, помещается ли текст.
+        effect(() => {
+            this.content();
+
+            if (this.isBrowser) {
+                requestAnimationFrame(() => this.updateClamped());
+            }
+        });
+    }
+
+    /**
+     * Обрабатывает клик по кнопке удаления.
+     *
+     * Показывает диалог подтверждения и эмитит запрос на удаление
+     * только после подтверждения пользователя.
+     *
+     * @param event Событие клика мыши.
+     */
+    protected onDeleteClick(event: MouseEvent): void {
+        event.stopPropagation();
+
+        this.confirmDialog
+            .open({
+                title: this.i18n.translate('news.card.confirmDeleteTitle'),
+                text: this.i18n.translate('news.card.confirmDeleteText', { title: this.title() }),
+            })
+            .subscribe((confirmed) => {
+                if (confirmed) {
+                    this.delete.emit();
+                }
+            });
+    }
+
+    /**
+     * Следит за размером блока текста и шрифтами, чтобы показывать
+     * затухание только когда текст действительно обрезан.
+     */
+    private initOverflowObserver(): void {
+        const text = this.textRef()?.nativeElement;
+
+        if (!text) {
+            return;
+        }
+
+        const check = (): void => this.updateClamped();
+
+        // Картинки внутри текста меняют его высоту после загрузки;
+        // событие load не всплывает, поэтому слушаем на фазе перехвата.
+        text.addEventListener('load', check, true);
+        this.destroyRef.onDestroy(() => text.removeEventListener('load', check, true));
+
+        if (typeof ResizeObserver !== 'undefined') {
+            const observer = new ResizeObserver(check);
+            observer.observe(text);
+            this.destroyRef.onDestroy(() => observer.disconnect());
+        }
+
+        void document.fonts?.ready.then(check);
+        check();
+    }
+
+    /**
+     * Пересчитывает, обрезан ли текст.
+     */
+    private updateClamped(): void {
+        const text = this.textRef()?.nativeElement;
+
+        if (!text) {
+            return;
+        }
+
+        this.isClamped.set(text.scrollHeight - text.clientHeight > 2);
     }
 
     /**
@@ -181,9 +360,7 @@ export class NewsCardComponent {
                         return EMPTY;
                     }
 
-                    return this.api
-                        .addView(this.id())
-                        .pipe(catchError(() => of(null)));
+                    return this.api.addView(this.id()).pipe(catchError(() => of(null)));
                 }),
                 catchError(() => EMPTY)
             )
@@ -193,35 +370,4 @@ export class NewsCardComponent {
                 }
             });
     }
-
-    /**
-     * Обрабатывает клик по кнопке удаления.
-     *
-     * Показывает диалог подтверждения и эмитит запрос на удаление
-     * только после подтверждения пользователя.
-     *
-     * @param event Событие клика мыши.
-     */
-    protected onDeleteClick(event: MouseEvent): void {
-        event.stopPropagation();
-
-        this.confirmDialog
-            .open({
-                title: this.i18n.translate('news.card.confirmDeleteTitle'),
-                text: this.i18n.translate('news.card.confirmDeleteText', { title: this.title() }),
-            })
-            .subscribe((confirmed) => {
-                if (confirmed) {
-                    this.delete.emit();
-                }
-            });
-    }
-
-    /**
-     * Событие удаления новости.
-     *
-     * Вызывается при нажатии на кнопку удаления.
-     */
-    public readonly delete = output<void>();
-
 }

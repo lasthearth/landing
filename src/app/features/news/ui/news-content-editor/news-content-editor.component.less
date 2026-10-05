@@ -1,0 +1,140 @@
+:host {
+    display: block;
+}
+
+.news-editor {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--color-line, rgba(0, 0, 0, 0.15));
+    border-radius: 1rem;
+    background: var(--color-surface, transparent);
+
+    &:focus-within {
+        border-color: var(--lh-brand);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-brand) 20%, transparent);
+    }
+
+    &--disabled {
+        opacity: 0.6;
+    }
+
+    &__toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        border-bottom: 1px solid var(--color-line, rgba(0, 0, 0, 0.15));
+        background: var(--color-surface-2, transparent);
+    }
+
+    &__group {
+        display: flex;
+        gap: 0.125rem;
+
+        & + & {
+            padding-left: 0.5rem;
+            border-left: 1px solid var(--color-line, rgba(0, 0, 0, 0.15));
+        }
+    }
+
+    &__button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 0.5rem;
+        color: var(--color-ink, currentColor);
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+
+        &:hover:not(:disabled) {
+            background: color-mix(in srgb, currentColor 10%, transparent);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--lh-brand);
+            outline-offset: 1px;
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    }
+
+    &__status {
+        margin-left: auto;
+        font-size: 0.875rem;
+        color: var(--color-ink-2, currentColor);
+    }
+
+    &__area {
+        display: block;
+        width: 100%;
+        min-height: 16rem;
+        padding: 1rem;
+        resize: vertical;
+        border: 0;
+        outline: none;
+        background: transparent;
+        color: var(--color-ink, currentColor);
+        font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    &__error {
+        padding: 0 1rem 0.5rem;
+        color: var(--lh-danger, #c0392b);
+        font-size: 0.9375rem;
+    }
+
+    &__footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.5rem 1rem;
+        padding: 0.5rem 1rem 0.75rem;
+        border-top: 1px solid var(--color-line, rgba(0, 0, 0, 0.15));
+        color: var(--color-ink-2, currentColor);
+        font-size: 0.9375rem;
+    }
+
+    &__help {
+        flex: 1;
+
+        summary {
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        dl {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: 0.25rem 1rem;
+            margin-top: 0.5rem;
+        }
+
+        code {
+            padding: 0.05em 0.35em;
+            border-radius: 0.3em;
+            font-size: 0.9em;
+            background: color-mix(in srgb, currentColor 10%, transparent);
+        }
+
+        p {
+            margin-top: 0.5rem;
+        }
+    }
+
+    &__counter {
+        white-space: nowrap;
+    }
+}
