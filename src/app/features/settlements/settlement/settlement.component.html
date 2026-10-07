@@ -91,7 +91,7 @@
             <!-- Описание -->
             <div class="flex-1">
                 <h2 class="text-lg font-semibold text-ink mb-2">{{ 'settlements.settlement.about' | translate }}</h2>
-                <p class="text-lg text-ink-2 break-words leading-7 text-justify">{{ data.description }}</p>
+                <div class="text-lg text-ink-2 break-words leading-7 lh-rich-text" [innerHTML]="data.description | markup"></div>
 
                 <div class="flex flex-wrap items-baseline gap-3 mt-4 mb-2">
                     <h2 class="text-lg font-semibold text-ink">{{ 'settlements.settlement.contactInfo' | translate }}</h2>

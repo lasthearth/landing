@@ -30,6 +30,7 @@ import { ImageViewerComponent, ImageViewerItem } from '@shared/ui/image-viewer';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { JoinRequestButtonComponent, MyJoinRequestsStore } from '../join-request';
 import { SettlementPageState } from './settlement-page-state';
+import { MarkupPipe, newsMarkdownToPlain } from '@shared/lib/news-markdown';
 
 /**
  * Адрес сайта для канонических ссылок.
@@ -56,7 +57,7 @@ const OTHERS_COUNT = 3;
 @Component({
     standalone: true,
     selector: 'app-settlement-page',
-    imports: [
+    imports: [MarkupPipe, 
         RouterLink,
         TuiIcon,
         TranslatePipe,
@@ -322,10 +323,7 @@ export class SettlementPageComponent {
 
         const { settlement } = state;
         const name = getSettlementDisplayName(settlement);
-        const text = (settlement.description ?? '')
-            .replace(/<[^>]*>/g, ' ')
-            .replace(/\s+/g, ' ')
-            .trim();
+        const text = newsMarkdownToPlain((settlement.description ?? '').replace(/<[^>]*>/g, ' '));
         const description =
             text.length > 160
                 ? `${text.slice(0, 157)}...`

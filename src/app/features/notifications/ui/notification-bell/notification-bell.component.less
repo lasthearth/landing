@@ -1,0 +1,346 @@
+:host {
+    position: relative;
+    display: inline-flex;
+    /* Не растягиваемся по высоте ряда, иначе список уезжает под растянутый хост */
+    align-self: flex-start;
+}
+
+.bell__badge {
+    position: absolute;
+    top: 2px;
+    right: 1px;
+    min-width: 1.125rem;
+    height: 1.125rem;
+    padding: 0 0.25rem;
+    border-radius: 999px;
+    background: var(--lh-brand);
+    box-shadow: 0 0 0 2px var(--color-lh-primary-2, #2b2d31);
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    line-height: 1.125rem;
+    text-align: center;
+    pointer-events: none;
+}
+
+.bell__panel {
+    position: absolute;
+    top: calc(100% + 0.375rem);
+    right: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    width: min(22rem, calc(100vw - 2rem));
+    max-height: min(28rem, 70vh);
+    overflow: hidden;
+    border: 1px solid var(--lh-border);
+    border-radius: 0.875rem;
+    background: var(--lh-surface);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    color: var(--lh-ink);
+    animation: bell-panel-enter var(--lh-dur-fast, 0.15s) var(--lh-ease-smooth, ease-out);
+}
+
+/* Как у остальных выпадающих меню шапки */
+@keyframes bell-panel-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bell__panel {
+        animation: none;
+    }
+}
+
+.bell__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--lh-border);
+}
+
+.bell__title {
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.bell__read-all {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--lh-ink-2);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--lh-ink);
+    }
+}
+
+.bell__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 2rem 1rem;
+    color: var(--lh-ink-3);
+    font-size: 0.9375rem;
+    text-align: center;
+}
+
+.bell__list {
+    margin: 0;
+    padding: 0.375rem;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.bell__item {
+    display: flex;
+    gap: 0.625rem;
+    width: 100%;
+    padding: 0.625rem;
+    border: 0;
+    border-radius: 0.625rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: default;
+
+    &:hover {
+        background: var(--lh-surface-2);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: -2px;
+    }
+}
+
+.bell__item--link,
+.bell__item--unread {
+    cursor: pointer;
+}
+
+.bell__dot {
+    flex-shrink: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.375rem;
+    border-radius: 999px;
+    background: transparent;
+}
+
+.bell__item--unread .bell__dot {
+    background: var(--lh-brand);
+}
+
+.bell__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.bell__item-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--lh-ink-2);
+}
+
+.bell__item--unread .bell__item-title {
+    font-weight: 800;
+    color: var(--lh-ink);
+}
+
+.bell__message {
+    overflow-wrap: anywhere;
+    color: var(--lh-ink-2);
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.bell__time {
+    color: var(--lh-ink-3);
+    font-size: 0.75rem;
+}
+
+.bell__head-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.bell__gear,
+.bell__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: none;
+    color: var(--lh-ink-2);
+    font: inherit;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--lh-ink);
+        background: var(--lh-surface-2);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 1px;
+    }
+}
+
+.bell__back {
+    padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--lh-ink);
+}
+
+/* Часть категорий скрыта — точка на шестерёнке */
+.bell__gear--filtered {
+    position: relative;
+    color: var(--lh-brand-ink);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 0.4rem;
+        height: 0.4rem;
+        border-radius: 50%;
+        background: var(--lh-brand);
+    }
+}
+
+.bell__settings {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.625rem;
+    overflow-y: auto;
+}
+
+.bell__settings-hint,
+.bell__settings-note {
+    margin: 0;
+    padding: 0.25rem 0.375rem 0.5rem;
+    color: var(--lh-ink-3);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+.bell__settings-note {
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
+}
+
+.bell__pref {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.625rem;
+    border: 0;
+    border-radius: 0.625rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--lh-surface-2);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: -2px;
+    }
+}
+
+.bell__pref-icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.25rem;
+    color: var(--lh-ink-3);
+}
+
+.bell__pref[aria-checked='true'] .bell__pref-icon {
+    color: var(--lh-brand-ink);
+}
+
+.bell__pref-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.bell__pref-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+.bell__pref-text {
+    color: var(--lh-ink-3);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+}
+
+.bell__switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--lh-ink) 18%, transparent);
+    transition: background 0.2s ease;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: calc(1.25rem - 4px);
+        height: calc(1.25rem - 4px);
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease;
+    }
+}
+
+.bell__pref[aria-checked='true'] .bell__switch {
+    background: var(--lh-brand);
+
+    &::after {
+        transform: translateX(1rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bell__switch,
+    .bell__switch::after {
+        transition: none;
+    }
+}

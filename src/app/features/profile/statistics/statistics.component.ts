@@ -8,7 +8,6 @@ import { UserService } from '@entities/user';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { TuiTable } from '@taiga-ui/addon-table';
 
-import { TuiTabs } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
 import { LeaderCardComponent } from './leader-card/leader-card.component';
 import { StatisticsSkeletonComponent } from '@shared/ui/skeletons';
@@ -16,6 +15,8 @@ import { TUI_IS_MOBILE } from '@taiga-ui/cdk';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { DonateService, IPurchase } from '@entities/donate';
+import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RouterLink } from '@angular/router';
 
 export type TypeLabel = string;
 
@@ -25,7 +26,7 @@ export type TypeLabel = string;
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [TuiTable, AsyncPipe, TuiTabs, LeaderCardComponent, StatisticsSkeletonComponent, ImageLoaderComponent, TranslatePipe, NgTemplateOutlet, TuiIcon, RelativeTimeComponent],
+    imports: [RouterLink, PageHeaderComponent, TuiTable, AsyncPipe, LeaderCardComponent, StatisticsSkeletonComponent, ImageLoaderComponent, TranslatePipe, NgTemplateOutlet, TuiIcon, RelativeTimeComponent],
     styleUrl: './statistics.component.less',
     templateUrl: './statistics.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

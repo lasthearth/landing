@@ -1,11 +1,34 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subject, tap } from 'rxjs';
+import { LocalStorageService } from '@core/services/local-storage.service';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { IVerifyData } from '../model/i-verify-data';
 import { IVerifyRequest } from '../model/i-verify-request';
+
+/**
+ * Ключ localStorage: когда и с каким ником игрок отправил анкету.
+ *
+ * Сервер дату подачи не отдаёт, а игроку важно видеть «отправлена 5 часов назад».
+ */
+const SUBMISSION_KEY = 'lh_verification_submitted';
+
+/**
+ * Отправленная с этого браузера анкета.
+ */
+export interface VerificationSubmission {
+    /**
+     * Когда отправлена (ISO 8601).
+     */
+    at: string;
+
+    /**
+     * Игровой ник из анкеты.
+     */
+    nickname: string;
+}
 
 /**
  * API-сервис для работы с верификацией игроков.
@@ -28,13 +51,40 @@ export class VerificationService {
     private readonly http: HttpClient = inject(HttpClient);
 
     /**
+     * Обёртка над localStorage.
+     */
+    private readonly storage = inject(LocalStorageService);
+
+    /**
+     * Анкета отправлена — профилю пора перезапросить статус.
+     */
+    public readonly submitted$ = new Subject<void>();
+
+    /**
+     * Последняя анкета, отправленная с этого браузера.
+     *
+     * @returns Дата и ник или `null`.
+     */
+    public lastSubmission(): VerificationSubmission | null {
+        return this.storage.getItem<VerificationSubmission>(SUBMISSION_KEY);
+    }
+
+    /**
      * Отправляет заявку на верификацию пользователя.
      *
      * @param data Данные для верификации.
      * @returns Observable с результатом операции.
      */
     public postVerifyUser(data: IVerifyData) {
-        return this.http.post<{ verify_request: IVerifyData }>(`${this.baseUrl}/verification`, data);
+        return this.http.post<{ verify_request: IVerifyData }>(`${this.baseUrl}/verification`, data).pipe(
+            tap(() => {
+                this.storage.setItem(SUBMISSION_KEY, {
+                    at: new Date().toISOString(),
+                    nickname: data.user_game_name,
+                } satisfies VerificationSubmission);
+                this.submitted$.next();
+            })
+        );
     }
 
     /**
@@ -66,11 +116,9 @@ export class VerificationService {
      * @returns Observable с результатом операции.
      */
     public postVerifyDeny(userId: string, rejectReason: string) {
-        return this.http.post<{ rejection_reason: string }>(
-            `${this.baseUrl}/verification/${userId}/reject`,
-            { rejection_reason: rejectReason },
-            
-        );
+        return this.http.post<{ rejection_reason: string }>(`${this.baseUrl}/verification/${userId}/reject`, {
+            rejection_reason: rejectReason,
+        });
     }
 
     /**

@@ -125,6 +125,10 @@
             [innerHTML]="content()"
         ></div>
 
+        @if (id()) {
+            <app-reactions class="news-card__reactions" kind="news" [contentId]="id()" />
+        }
+
         @if (link(); as url) {
             <!-- Дублирует ссылку заголовка, поэтому скрыта от скринридеров и Tab -->
             <a [routerLink]="url" class="news-card__more" aria-hidden="true" tabindex="-1">

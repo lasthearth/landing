@@ -13,6 +13,7 @@ import { VideoKindState } from '../../model/video-kind-state';
 import { YoutubeVideo } from '../../model/youtube-video';
 import { VideoCardComponent } from '../video-card/video-card.component';
 import { SafeUrlPipe } from '../../lib/safe-url.pipe';
+import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
  * Сколько карточек показывать сразу и добавлять по «Показать ещё».
@@ -49,7 +50,7 @@ const EMPTY_STATE: VideoKindState = {
 @Component({
     selector: 'app-videos-page',
     standalone: true,
-    imports: [TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, VideoCardComponent, SafeUrlPipe],
+    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, VideoCardComponent, SafeUrlPipe],
     templateUrl: './videos-page.component.html',
     styleUrl: './videos-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

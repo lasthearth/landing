@@ -16,6 +16,7 @@ import { ISettlement, IUpdateSettlementRequest, SettlementService, getSettlement
 import { RequestStatusService } from '@core/services/request-status.service';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
+import { MarkupEditorComponent } from '@shared/ui/markup-editor';
 
 /**
  * Компонент формы редактирования данных поселения.
@@ -25,7 +26,7 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 @Component({
     selector: 'app-edit-settlement-form',
     standalone: true,
-    imports: [ReactiveFormsModule, TuiIcon, LHInputComponent, TranslatePipe],
+    imports: [MarkupEditorComponent, ReactiveFormsModule, TuiIcon, LHInputComponent, TranslatePipe],
     templateUrl: './edit-settlement-form.component.html',
     styleUrl: './edit-settlement-form.component.less',
 })

@@ -1,0 +1,80 @@
+<section class="events-page">
+    <app-page-header [title]="'events.title' | translate" [subtitle]="'events.subtitle' | translate">
+        @if (canManage() && editing() === null) {
+            <button type="button" class="lh-cta events-page__create" (click)="create()">
+                <tui-icon icon="@tui.plus" class="size-4!" />
+                {{ "events.admin.create" | translate }}
+            </button>
+        }
+    </app-page-header>
+
+    @if (editing(); as current) {
+        <div id="events-form">
+            <app-event-form
+                [event]="current === 'new' ? null : current"
+                (saved)="onSaved($event)"
+                (cancelled)="editing.set(null)"
+            />
+        </div>
+    }
+
+    <div class="lh-chips" role="tablist">
+        <button
+            type="button"
+            role="tab"
+            class="lh-chip lh-chip--lg"
+            [attr.aria-selected]="tab() === 'upcoming'"
+            (click)="selectTab('upcoming')"
+        >
+            <tui-icon icon="@tui.calendar-days" class="size-4!" />
+            {{ "events.tabs.upcoming" | translate }}
+        </button>
+        <button
+            type="button"
+            role="tab"
+            class="lh-chip lh-chip--lg"
+            [attr.aria-selected]="tab() === 'past'"
+            (click)="selectTab('past')"
+        >
+            <tui-icon icon="@tui.history" class="size-4!" />
+            {{ "events.tabs.past" | translate }}
+        </button>
+    </div>
+
+    <div role="tabpanel">
+        @if (error()) {
+            <div class="events-page__state events-page__state--error" role="alert">
+                <tui-icon icon="@tui.triangle-alert" class="size-8" />
+                <span>{{ "events.error" | translate }}</span>
+            </div>
+        } @else if (events() === null) {
+            <div class="events-page__state" role="status">
+                <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
+                <span>{{ "events.loading" | translate }}</span>
+            </div>
+        } @else if (events()!.length === 0) {
+            <div class="events-page__state">
+                <tui-icon icon="@tui.calendar" class="size-14 opacity-60" />
+                <p class="events-page__empty-title">
+                    {{ (tab() === "upcoming" ? "events.empty.upcoming" : "events.empty.past") | translate }}
+                </p>
+                @if (tab() === "upcoming") {
+                    <p class="events-page__empty-text">{{ "events.empty.upcomingHint" | translate }}</p>
+                }
+            </div>
+        } @else {
+            <div class="events-page__list">
+                @for (event of events(); track event.id) {
+                    <app-event-card
+                        [event]="event"
+                        [highlighted]="event.id === targetId()"
+                        [canManage]="canManage()"
+                        (addToCalendar)="download(event)"
+                        (edit)="edit(event)"
+                        (remove)="remove(event)"
+                    />
+                }
+            </div>
+        }
+    </div>
+</section>

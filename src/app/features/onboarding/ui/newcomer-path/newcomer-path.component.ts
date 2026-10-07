@@ -1,10 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    output,
+    signal,
+} from '@angular/core';
 import { HttpContext } from '@angular/common/http';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
+import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
@@ -17,6 +28,16 @@ import { OnboardingStepKey } from '../../model/onboarding-step-key';
  * Приглашение в Discord сервера.
  */
 const DISCORD_INVITE = 'https://discord.com/invite/FZb7SGrSFy';
+
+/**
+ * Где купить игру.
+ */
+const OFFICIAL_STORE = 'https://www.vintagestory.at/store/category/1-game-account-game-servers/';
+
+/**
+ * Бесплатная версия для знакомства с игрой.
+ */
+const FREE_VERSION = 'https://fplay.su/vs/';
 
 /**
  * Ответы проверки по нику, для которых есть подписи.
@@ -39,7 +60,10 @@ interface ApplicationDetails {
 }
 
 /**
- * Путь новичка: аккаунт → правила → анкета → поселение → Discord, с отметками о готовности.
+ * Путь новичка: игра → аккаунт → правила → анкета → вход на сервер, а по желанию — поселение и Discord.
+ *
+ * Шаги отмечаются сами (вход на сайт, статус анкеты, открытые правила, скопированный адрес)
+ * или кнопкой («Игра уже установлена»). Текущий шаг раскрыт, остальные можно раскрыть кликом.
  *
  * На странице «Начать игру» данные загружает сам; в профиле получает их от родителя,
  * чтобы не повторять запросы, и прячется, когда всё сделано или игрок его скрыл.
@@ -102,6 +126,41 @@ export class NewcomerPathComponent {
      * Приглашение в Discord.
      */
     protected readonly discordInvite = DISCORD_INVITE;
+
+    /**
+     * Магазин игры.
+     */
+    protected readonly officialStore = OFFICIAL_STORE;
+
+    /**
+     * Бесплатная версия.
+     */
+    protected readonly freeVersion = FREE_VERSION;
+
+    /**
+     * Версия игры на сервере.
+     */
+    protected readonly gameVersion = environment.gameVersion;
+
+    /**
+     * Адрес сервера.
+     */
+    protected readonly serverIp = environment.gameServerIp;
+
+    /**
+     * Пароль сервера (показывается только одобренным игрокам, как в профиле).
+     */
+    protected readonly serverPassword = environment.gameServerPassword;
+
+    /**
+     * Что скопировано последним (для подписи «Скопировано»).
+     */
+    protected readonly copied = signal<'ip' | 'password' | null>(null);
+
+    /**
+     * Шаг, раскрытый игроком: `null` — раскрыт текущий, `'none'` — игрок всё свернул.
+     */
+    private readonly opened = signal<OnboardingStepKey | 'none' | null>(null);
 
     /**
      * Игрок вошёл на сайт.
@@ -167,36 +226,57 @@ export class NewcomerPathComponent {
      */
     protected readonly steps = computed<OnboardingStep[]>(() => {
         const status = this.applicationDetails()?.status ?? '';
-        const raw: Array<[OnboardingStepKey, OnboardingStep['state']]> = [
-            ['account', this.isAuth() ? 'done' : 'todo'],
-            ['rules', this.onboarding.rulesOpened() ? 'done' : 'todo'],
+        const verified = this.verified();
+        const raw: Array<[OnboardingStepKey, OnboardingStep['state'], boolean]> = [
+            ['install', this.onboarding.installed() || verified ? 'done' : 'todo', false],
+            ['account', this.isAuth() ? 'done' : 'todo', false],
+            ['rules', this.onboarding.rulesOpened() ? 'done' : 'todo', false],
             [
                 'application',
-                this.verified()
-                    ? 'done'
-                    : status === 'pending'
-                      ? 'waiting'
-                      : status === 'rejected'
-                        ? 'rejected'
-                        : 'todo',
+                verified ? 'done' : status === 'pending' ? 'waiting' : status === 'rejected' ? 'rejected' : 'todo',
+                false,
             ],
-            ['settlement', this.settlement() ? 'done' : 'todo'],
-            ['discord', this.onboarding.discordOpened() ? 'done' : 'todo'],
+            // В профиле адрес и пароль и так на вкладке «Как играть» — шаг не напоминает о себе.
+            [
+                'connect',
+                verified && (this.onboarding.connected() || this.variant() === 'profile') ? 'done' : 'todo',
+                false,
+            ],
+            ['settlement', this.settlement() ? 'done' : 'todo', true],
+            ['discord', this.onboarding.discordOpened() ? 'done' : 'todo', true],
         ];
 
+        // В профиле игрок уже вошёл, а игру поставил до анкеты — путь начинается с правил и анкеты.
+        const relevant =
+            this.variant() === 'profile' ? raw.filter(([key]) => key !== 'install' && key !== 'account') : raw;
+
         let currentMarked = false;
-        return raw.map(([key, state]) => {
+        return relevant.map(([key, state, optional]) => {
             if (state === 'todo' && !currentMarked) {
                 currentMarked = true;
-                return { key, state: 'current' };
+                return { key, state: 'current', optional };
             }
 
-            if (state === 'rejected') {
+            if (state === 'rejected' || state === 'waiting') {
                 currentMarked = true;
             }
 
-            return { key, state };
+            return { key, state, optional };
         });
+    });
+
+    /**
+     * Раскрытый шаг: выбранный игроком или первый, требующий действия.
+     */
+    protected readonly expanded = computed<OnboardingStepKey | null>(() => {
+        const chosen = this.opened();
+
+        if (chosen) {
+            return chosen === 'none' ? null : chosen;
+        }
+
+        const active = this.steps().find((step) => ['current', 'waiting', 'rejected'].includes(step.state));
+        return active?.key ?? null;
     });
 
     /**
@@ -205,9 +285,9 @@ export class NewcomerPathComponent {
     protected readonly doneCount = computed(() => this.steps().filter((step) => step.state === 'done').length);
 
     /**
-     * Всё сделано.
+     * Обязательные шаги пройдены: можно играть.
      */
-    protected readonly complete = computed(() => this.doneCount() === this.steps().length);
+    protected readonly complete = computed(() => this.steps().every((step) => step.optional || step.state === 'done'));
 
     /**
      * Показывать ли путь (в профиле прячется, когда всё сделано или скрыт игроком).
@@ -249,6 +329,36 @@ export class NewcomerPathComponent {
     }
 
     /**
+     * Раскрывает шаг или сворачивает уже раскрытый.
+     *
+     * @param key Шаг.
+     */
+    protected toggle(key: OnboardingStepKey): void {
+        this.opened.set(this.expanded() === key ? 'none' : key);
+    }
+
+    /**
+     * Копирует адрес или пароль сервера; адрес заодно отмечает шаг «Вход на сервер».
+     *
+     * @param what Что копировать.
+     */
+    protected async copy(what: 'ip' | 'password'): Promise<void> {
+        const value = what === 'ip' ? this.serverIp : this.serverPassword;
+
+        try {
+            await navigator.clipboard.writeText(value);
+            this.copied.set(what);
+            setTimeout(() => this.copied.update((current) => (current === what ? null : current)), 2000);
+        } catch {
+            this.copied.set(null);
+        }
+
+        if (what === 'ip') {
+            this.onboarding.markConnected();
+        }
+    }
+
+    /**
      * Вход на сайт.
      */
     protected signIn(): void {
@@ -287,9 +397,7 @@ export class NewcomerPathComponent {
             )
             .subscribe((status) => {
                 this.checking.set(false);
-                this.nicknameStatus.set(
-                    !status ? 'none' : KNOWN_CHECK_RESULTS.includes(status) ? status : 'unknown'
-                );
+                this.nicknameStatus.set(!status ? 'none' : KNOWN_CHECK_RESULTS.includes(status) ? status : 'unknown');
             });
     }
 }

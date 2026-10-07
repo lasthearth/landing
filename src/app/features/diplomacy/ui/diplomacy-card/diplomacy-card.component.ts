@@ -15,6 +15,7 @@ import { TranslatePipe } from '@core/i18n';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ShareButtonComponent } from '@shared/ui/share-button';
 import { DiplomacyStatement } from '../../model/diplomacy-statement';
+import { ReactionsComponent } from '@features/reactions';
 
 /**
  * Длительность анимации раскрытия, мс (совпадает с transition в стилях).
@@ -31,7 +32,7 @@ const EXPAND_DURATION_MS = 320;
 @Component({
     standalone: true,
     selector: 'app-diplomacy-card',
-    imports: [TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent],
+    imports: [TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, ReactionsComponent],
     templateUrl: './diplomacy-card.component.html',
     styleUrl: './diplomacy-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

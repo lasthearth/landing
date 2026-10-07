@@ -34,4 +34,8 @@ export enum RouteKeys {
     diplomacy = 16,
 
     news = 17,
+
+    events = 18,
+
+    player = 19,
 }

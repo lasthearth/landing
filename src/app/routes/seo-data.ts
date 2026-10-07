@@ -33,6 +33,8 @@ export const routeSeoData: {
     videos: ISeoData;
     diplomacy: ISeoData;
     news: ISeoData;
+    events: ISeoData;
+    player: ISeoData;
 } = {
     home: {
         title: 'Last Hearth — ролевой сервер Vintage Story',
@@ -203,5 +205,29 @@ export const routeSeoData: {
         siteName,
         image: ogImage,
         imageAlt: 'Дипломатия Last Hearth',
+    },
+    events: {
+        title: 'События — Last Hearth',
+        description:
+            'Календарь событий сервера Last Hearth: осады, ярмарки, турниры и вайпы. Добавляйте события в свой календарь.',
+        keywords: 'события Last Hearth, календарь сервера, осада, турнир, вайп, Vintage Story ивенты',
+        url: `${siteUrl}/events`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'События Last Hearth',
+    },
+    player: {
+        title: 'Игрок — Last Hearth',
+        description: 'Профиль игрока сервера Last Hearth: поселение, статистика и значки.',
+        keywords: 'игрок Last Hearth, профиль игрока, статистика Vintage Story',
+        url: `${siteUrl}/player`,
+        type: 'profile',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Игрок Last Hearth',
+        robots: 'noindex, follow',
     },
 };

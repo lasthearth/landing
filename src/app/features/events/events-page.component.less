@@ -1,0 +1,46 @@
+.events-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding: 1.5rem;
+}
+
+.events-page__create {
+    padding: 0.75rem 1.25rem;
+}
+
+.events-page__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.events-page__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.875rem;
+    padding: 4rem 1rem;
+    text-align: center;
+    color: var(--lh-ink);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--lh-ink) 15%, transparent);
+}
+
+.events-page__state--error {
+    color: var(--lh-danger-ink);
+    background: color-mix(in srgb, var(--lh-danger-ink) 6%, transparent);
+    border-style: solid;
+}
+
+.events-page__empty-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.events-page__empty-text {
+    max-width: 28rem;
+    color: var(--lh-ink-2);
+}

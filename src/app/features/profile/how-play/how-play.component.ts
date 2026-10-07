@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { environment } from '@core/config/environments/environment';
 import { TranslatePipe } from '@core/i18n';
+import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
  * Компонент страницы "Как зайти".
@@ -11,7 +12,7 @@ import { TranslatePipe } from '@core/i18n';
     selector: 'app-how-play',
     templateUrl: './how-play.component.html',
     styleUrl: './how-play.component.css',
-    imports: [TuiIcon, TranslatePipe],
+    imports: [PageHeaderComponent, TuiIcon, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HowPlayComponent {

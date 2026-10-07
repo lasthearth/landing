@@ -14,6 +14,7 @@ import { ScrollService } from './services/scroll.service';
 import { GlobalExpandService } from './services/global-expand.service';
 import { ScrollAnchorDirective } from './directives/scroll-anchor.directive';
 import { RulesSearchComponent } from './ui/rules-search/rules-search.component';
+import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
  * Компонент правил сервера.
@@ -21,7 +22,7 @@ import { RulesSearchComponent } from './ui/rules-search/rules-search.component';
 @Component({
     standalone: true,
     selector: 'app-rules',
-    imports: [
+    imports: [PageHeaderComponent, 
         CommonModule,
         TuiIcon,
         TranslatePipe,

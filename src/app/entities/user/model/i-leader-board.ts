@@ -26,4 +26,9 @@ export interface ILeaderBoard {
      * Идентификатор пользователя.
      */
     user_id: string;
+
+    /**
+     * Когда игрок последний раз был в игре (ISO 8601), если игра это записала.
+     */
+    last_online?: string;
 }

@@ -17,6 +17,7 @@ import { I18nService, Language, TranslatePipe } from '@core/i18n';
 import { ThemeService } from '@core/services/theme.service';
 import { formatServerTime } from './lib/format-server-time.function';
 import { NewContentService } from '@features/new-content';
+import { NotificationBellComponent } from '@features/notifications';
 
 /**
  * Компонент заголовка.
@@ -24,7 +25,17 @@ import { NewContentService } from '@features/new-content';
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [TuiProgress, AsyncPipe, TuiIcon, NgClass, RouterLink, TuiPulse, ImageLoaderComponent, TranslatePipe],
+    imports: [
+        TuiProgress,
+        AsyncPipe,
+        TuiIcon,
+        NgClass,
+        RouterLink,
+        TuiPulse,
+        ImageLoaderComponent,
+        TranslatePipe,
+        NotificationBellComponent,
+    ],
     templateUrl: './header.component.html',
     styleUrl: './header.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -210,6 +221,9 @@ export class HeaderComponent {
                         break;
                     case RouteKeys.diplomacy:
                         this.select = 'diplomacy';
+                        break;
+                    case RouteKeys.events:
+                        this.select = 'events';
                         break;
                     case RouteKeys.news:
                         this.select = 'home';

@@ -26,6 +26,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { ClockService } from '@shared/lib/clock';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { NewsCardVariant } from './news-card-variant';
+import { ReactionsComponent } from '@features/reactions';
 
 /**
  * Компонент карточки новости.
@@ -41,7 +42,15 @@ import { NewsCardVariant } from './news-card-variant';
 @Component({
     standalone: true,
     selector: 'app-news-card',
-    imports: [TuiIcon, ImageLoaderComponent, TranslatePipe, NgTemplateOutlet, RouterLink, RelativeTimeComponent],
+    imports: [
+        TuiIcon,
+        ImageLoaderComponent,
+        TranslatePipe,
+        NgTemplateOutlet,
+        RouterLink,
+        RelativeTimeComponent,
+        ReactionsComponent,
+    ],
     templateUrl: './news-card.component.html',
     styleUrl: './news-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

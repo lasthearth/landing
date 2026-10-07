@@ -41,6 +41,8 @@
             </header>
 
             <div class="news-page__text lh-rich-text text-ink" [innerHTML]="item.content"></div>
+
+            <app-reactions class="news-page__reactions" kind="news" [contentId]="item.id" tone="surface" />
         </article>
 
         @if (others().length > 0) {

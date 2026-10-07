@@ -60,6 +60,7 @@ import {
 import { ContactInfoDialogComponent } from '../settlement-contact-info';
 import { InvitationCardComponent } from '../settlement-invitation';
 import { PlayerInviteComponent } from '../player-invite/player-invite.component';
+import { MarkupPipe } from '@shared/lib/news-markdown';
 
 /**
  * Страница управления собственным поселением.
@@ -77,7 +78,7 @@ import { PlayerInviteComponent } from '../player-invite/player-invite.component'
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [
+    imports: [MarkupPipe, 
         TuiIcon,
         TuiLoader,
         SettlementBadgeComponent,

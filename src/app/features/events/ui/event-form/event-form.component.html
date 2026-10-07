@@ -1,0 +1,122 @@
+<form class="event-form lh-panel" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <header class="event-form__header">
+        <h2 class="event-form__heading lh-display">
+            {{ (event() ? "events.admin.editTitle" : "events.admin.createTitle") | translate }}
+        </h2>
+        @if (!event()) {
+            <p class="event-form__hint">
+                <tui-icon icon="@tui.bell" class="size-4!" />
+                {{ "events.admin.notifyHint" | translate }}
+            </p>
+        }
+    </header>
+
+    <label class="event-form__field">
+        <span class="event-form__label">
+            {{ "events.admin.title" | translate }}
+            <span class="event-form__counter tabular-nums">
+                {{ form.controls.title.value.length }} / {{ textMaxLength }}
+            </span>
+        </span>
+        <input
+            type="text"
+            class="event-form__input"
+            formControlName="title"
+            [maxlength]="textMaxLength"
+            [placeholder]="'events.admin.titlePlaceholder' | translate"
+            [attr.aria-invalid]="form.controls.title.invalid && form.controls.title.touched"
+        />
+        @if (form.controls.title.invalid && form.controls.title.touched) {
+            <span class="event-form__error" role="alert">{{ "events.admin.required" | translate }}</span>
+        }
+    </label>
+
+    <div class="event-form__row">
+        <label class="event-form__field">
+            <span class="event-form__label">{{ "events.admin.startsAt" | translate }}</span>
+            <input
+                type="datetime-local"
+                class="event-form__input"
+                formControlName="startsAt"
+                [attr.aria-invalid]="form.controls.startsAt.invalid && form.controls.startsAt.touched"
+            />
+            @if (form.controls.startsAt.invalid && form.controls.startsAt.touched) {
+                <span class="event-form__error" role="alert">{{ "events.admin.required" | translate }}</span>
+            }
+        </label>
+
+        <label class="event-form__field">
+            <span class="event-form__label">{{ "events.admin.endsAt" | translate }}</span>
+            <input
+                type="datetime-local"
+                class="event-form__input"
+                formControlName="endsAt"
+                [attr.aria-invalid]="form.hasError('endBeforeStart')"
+            />
+            @if (form.hasError("endBeforeStart")) {
+                <span class="event-form__error" role="alert">{{ "events.admin.endsBeforeStart" | translate }}</span>
+            }
+        </label>
+    </div>
+
+    <label class="event-form__field">
+        <span class="event-form__label">{{ "events.admin.location" | translate }}</span>
+        <input
+            type="text"
+            class="event-form__input"
+            formControlName="location"
+            [maxlength]="textMaxLength"
+            [placeholder]="'events.admin.locationPlaceholder' | translate"
+        />
+    </label>
+
+    <div class="event-form__field">
+        <span class="event-form__label">{{ "events.admin.description" | translate }}</span>
+        <app-markup-editor formControlName="description" [uploadImage]="uploadImage" [preview]="true" [rows]="8" />
+    </div>
+
+    <div class="event-form__field">
+        <span class="event-form__label">{{ "events.admin.cover" | translate }}</span>
+        @if (coverPreview()) {
+            <div class="event-form__cover">
+                <img [src]="coverPreview()" alt="" />
+                <button
+                    type="button"
+                    class="event-form__cover-remove"
+                    [title]="'events.admin.coverRemove' | translate"
+                    [attr.aria-label]="'events.admin.coverRemove' | translate"
+                    (click)="removeCover()"
+                >
+                    <tui-icon icon="@tui.x" class="size-4!" />
+                </button>
+            </div>
+        }
+        <label class="event-form__file">
+            <tui-icon icon="@tui.image-plus" class="size-4!" />
+            {{ "events.admin.coverChoose" | translate }}
+            <input
+                #coverInput
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                class="sr-only"
+                (change)="onCoverSelected(coverInput)"
+            />
+        </label>
+        <span class="event-form__note">{{ "events.admin.coverHint" | translate }}</span>
+        @if (coverError(); as error) {
+            <span class="event-form__error" role="alert">{{ error | translate }}</span>
+        }
+    </div>
+
+    <div class="event-form__buttons">
+        <button type="button" class="lh-cta lh-cta--ghost" (click)="cancelled.emit()">
+            {{ "events.admin.cancel" | translate }}
+        </button>
+        <button type="submit" class="lh-cta" [disabled]="submitting()">
+            @if (submitting()) {
+                <tui-icon icon="@tui.loader" class="size-4! animate-spin" />
+            }
+            {{ (event() ? "events.admin.save" : "events.admin.publish") | translate }}
+        </button>
+    </div>
+</form>

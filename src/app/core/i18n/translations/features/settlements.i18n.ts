@@ -1,6 +1,43 @@
 export const SETTLEMENTS_I18N = {
     ru: {
         settlements: {
+            finder: {
+                title: 'Подбор поселения',
+                action: 'Подобрать поселение',
+                progress: 'Вопрос {{step}} из {{total}}',
+                back: 'Назад',
+                restart: 'Пройти заново',
+                loading: 'Ищем подходящие поселения...',
+                resultTitle: 'Вам подойдут',
+                match: 'совпадение {{percent}}%',
+                members: 'жителей: {{count}}',
+                online: 'в игре: {{count}}',
+                open: 'Открыть поселение',
+                note: 'Подбор учитывает дипломатию, размер, кто сейчас в игре и как давно поселение обновлялось. Напишите главе или подайте заявку на странице поселения.',
+                empty: 'Поселений пока нет — можно основать своё.',
+                error: 'Не удалось загрузить поселения. Попробуйте позже.',
+                questions: {
+                    style: {
+                        title: 'Чем хотите заниматься?',
+                        peace: { title: 'Строить и обживаться', hint: 'Мирные поселения: хозяйство, стройка, торговля' },
+                        neutral: { title: 'По обстоятельствам', hint: 'Нейтральные: мир, но умеют за себя постоять' },
+                        war: { title: 'Воевать и рисковать', hint: 'Агрессивные: набеги, осады, PvP' },
+                        any: { title: 'Не важно', hint: 'Покажем лучшие по остальным ответам' },
+                    },
+                    size: {
+                        title: 'Какое сообщество по душе?',
+                        small: { title: 'Небольшая компания', hint: 'До 5 жителей — все друг друга знают' },
+                        medium: { title: 'Крепкая община', hint: '6–15 жителей' },
+                        large: { title: 'Большой город', hint: 'Больше 15 жителей, своя иерархия' },
+                        any: { title: 'Не важно', hint: 'Размер не главное' },
+                    },
+                    activity: {
+                        title: 'Важно, чтобы кто-то был в игре прямо сейчас?',
+                        online: { title: 'Да, хочу играть вместе', hint: 'Выше те, у кого сейчас есть игроки онлайн' },
+                        any: { title: 'Не обязательно', hint: 'Играю в своём темпе' },
+                    },
+                },
+            },
             types: {
                 guild: 'Гильдия',
             },
@@ -91,6 +128,7 @@ export const SETTLEMENTS_I18N = {
                 onlineShort: 'онл.',
             },
             player: {
+                openProfile: 'Открыть профиль игрока',
                 online: 'В сети',
                 offline: 'Не в сети',
                 leader: 'Глава',
@@ -103,6 +141,7 @@ export const SETTLEMENTS_I18N = {
                     deaths: 'Смертей',
                 },
                 hoursRank: '{{rank}}-е место по часам из {{total}}',
+                lastOnline: 'Последний вход:',
             },
             settlement: {
                 inviteTitle: 'Вас приглашают вступить в селение',
@@ -390,6 +429,43 @@ export const SETTLEMENTS_I18N = {
     },
     en: {
         settlements: {
+            finder: {
+                title: 'Find a settlement',
+                action: 'Find a settlement',
+                progress: 'Question {{step}} of {{total}}',
+                back: 'Back',
+                restart: 'Start over',
+                loading: 'Looking for matching settlements...',
+                resultTitle: 'These may suit you',
+                match: '{{percent}}% match',
+                members: 'residents: {{count}}',
+                online: 'in game: {{count}}',
+                open: 'Open settlement',
+                note: 'The match considers diplomacy, size, who is in game now and how recently the settlement was updated. Message the leader or apply on the settlement page.',
+                empty: 'No settlements yet — you can found your own.',
+                error: 'Could not load settlements. Try again later.',
+                questions: {
+                    style: {
+                        title: 'What do you want to do?',
+                        peace: { title: 'Build and settle', hint: 'Peaceful settlements: farming, building, trade' },
+                        neutral: { title: 'Depends', hint: 'Neutral: peaceful, but can stand their ground' },
+                        war: { title: 'Fight and take risks', hint: 'Aggressive: raids, sieges, PvP' },
+                        any: { title: 'Does not matter', hint: 'We will rank by your other answers' },
+                    },
+                    size: {
+                        title: 'What kind of community?',
+                        small: { title: 'A small group', hint: 'Up to 5 residents — everyone knows each other' },
+                        medium: { title: 'A solid community', hint: '6–15 residents' },
+                        large: { title: 'A big city', hint: 'Over 15 residents, with its own hierarchy' },
+                        any: { title: 'Does not matter', hint: 'Size is not the point' },
+                    },
+                    activity: {
+                        title: 'Should someone be in game right now?',
+                        online: { title: 'Yes, I want to play together', hint: 'Settlements with players online rank higher' },
+                        any: { title: 'Not necessary', hint: 'I play at my own pace' },
+                    },
+                },
+            },
             types: {
                 guild: 'Guild',
             },
@@ -480,6 +556,7 @@ export const SETTLEMENTS_I18N = {
                 onlineShort: 'onl.',
             },
             player: {
+                openProfile: 'Open player profile',
                 online: 'Online',
                 offline: 'Offline',
                 leader: 'Leader',
@@ -492,6 +569,7 @@ export const SETTLEMENTS_I18N = {
                     deaths: 'Deaths',
                 },
                 hoursRank: '#{{rank}} by hours played of {{total}}',
+                lastOnline: 'Last seen:',
             },
             settlement: {
                 inviteTitle: 'You are invited to join the settlement',

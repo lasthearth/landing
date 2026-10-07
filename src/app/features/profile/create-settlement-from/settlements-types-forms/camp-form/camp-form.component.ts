@@ -19,12 +19,13 @@ import { TuiLoader, TuiError } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
+import { MarkupEditorComponent } from '@shared/ui/markup-editor';
 /**
  * Форма лагеря
  */
 @Component({
     selector: 'app-camp-form',
-    imports: [
+    imports: [MarkupEditorComponent, 
         LHInputComponent,
         FormsModule,
         ReactiveFormsModule,

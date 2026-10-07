@@ -20,6 +20,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ModerateSettlementRequestComponent } from '../moderate-settlement-request/moderate-settlement-request.component';
 import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
+import { MarkupPipe } from '@shared/lib/news-markdown';
 
 /**
  * Компонент отображения запроса на верификацию селения.
@@ -27,7 +28,7 @@ import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
 @Component({
     standalone: true,
     selector: 'app-settlement-verification-request',
-    imports: [PolymorpheusOutlet, TuiButton, TuiPreview, TuiIcon, ImageLoaderComponent, TranslatePipe, WaitingBadgeComponent],
+    imports: [MarkupPipe, PolymorpheusOutlet, TuiButton, TuiPreview, TuiIcon, ImageLoaderComponent, TranslatePipe, WaitingBadgeComponent],
     templateUrl: './settlement-verification-request.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

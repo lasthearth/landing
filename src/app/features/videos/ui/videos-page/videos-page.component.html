@@ -1,16 +1,12 @@
 <div class="videos-page">
-    <header class="videos-page__header">
-        <h1 class="videos-page__title lh-display">{{ "videos.title" | translate }}</h1>
-        <p class="videos-page__subtitle">{{ "videos.subtitle" | translate }}</p>
-    </header>
+    <app-page-header class="videos-page__header" [title]="'videos.title' | translate" [subtitle]="'videos.subtitle' | translate" />
 
-    <div class="videos-tabs" role="tablist" [attr.aria-label]="'videos.tabsLabel' | translate">
+    <div class="videos-tabs lh-chips" role="tablist" [attr.aria-label]="'videos.tabsLabel' | translate">
         @for (item of kinds; track item) {
             <button
                 type="button"
                 role="tab"
-                class="videos-tabs__tab"
-                [class.videos-tabs__tab--active]="item === kind()"
+                class="lh-chip lh-chip--lg"
                 [attr.data-kind]="item"
                 [attr.aria-selected]="item === kind()"
                 [attr.tabindex]="item === kind() ? 0 : -1"

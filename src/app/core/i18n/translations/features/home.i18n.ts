@@ -54,6 +54,13 @@ export const HOME_I18N = {
                 deleteTitle: 'Удаление новости',
                 deleteText: 'Вы уверены, что хотите удалить эту новость? Это действие нельзя отменить.',
             },
+            events: {
+                title: 'Ближайшее событие',
+                startsIn: 'Начало через {{time}}',
+                live: 'Идёт сейчас',
+                all: 'Все события',
+                more: 'И ещё {{count}} в календаре',
+            },
             team: {
                 title: 'Команда проекта',
                 subtitle: 'Люди, которые хранят огонь Last Hearth: развивают мир, следят за порядком и помогают игрокам.',
@@ -156,6 +163,13 @@ export const HOME_I18N = {
                 title: 'News',
                 deleteTitle: 'Delete news',
                 deleteText: 'Are you sure you want to delete this news? This action cannot be undone.',
+            },
+            events: {
+                title: 'Upcoming event',
+                startsIn: 'Starts in {{time}}',
+                live: 'Happening now',
+                all: 'All events',
+                more: '{{count}} more in the calendar',
             },
             team: {
                 title: 'Project team',

@@ -18,6 +18,8 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
+import { PageHeaderComponent } from '@shared/ui/page-header';
+import { SettlementFinderService } from './settlement-finder/settlement-finder.service';
 
 /**
  * Поле сортировки списка селений.
@@ -57,7 +59,7 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
  */
 @Component({
     selector: 'app-settlements',
-    imports: [
+    imports: [PageHeaderComponent, 
         SettlementCardComponent,
         SettlementCardSkeletonComponent,
         EmptyStateComponent,
@@ -335,6 +337,23 @@ export class SettlementsComponent {
     protected retryLoad(): void {
         this.loadSettlements();
     }
+
+    /**
+     * Подбор поселения по ответам игрока.
+     */
+    private readonly finder = inject(SettlementFinderService);
+
+    /**
+     * Открывает «Подбери поселение».
+     */
+    protected openFinder(): void {
+        this.finder.open().subscribe();
+    }
+
+    /**
+     * Ключи сортировки в порядке кнопок.
+     */
+    protected readonly sortKeys: readonly SortField[] = ['default', 'population', 'online', 'diplomacy'];
 
     /**
      * Устанавливает поле сортировки. При повторном нажатии меняет направление.

@@ -1,0 +1,99 @@
+<div class="finder">
+    <header class="finder__header">
+        <h2 class="finder__title lh-display">{{ "settlements.finder.title" | translate }}</h2>
+        @if (question()) {
+            <div
+                class="finder__progress"
+                [attr.aria-label]="
+                    'settlements.finder.progress' | translate: { step: step() + 1, total: questions.length }
+                "
+            >
+                @for (item of questions; track item.key; let index = $index) {
+                    <span
+                        class="finder__dot"
+                        [class.finder__dot--done]="index < step()"
+                        [class.finder__dot--current]="index === step()"
+                    ></span>
+                }
+            </div>
+        }
+    </header>
+
+    @if (question(); as q) {
+        <p class="finder__question">{{ "settlements.finder.questions." + q.key + ".title" | translate }}</p>
+        <div class="finder__options">
+            @for (option of q.options; track option.value) {
+                <button
+                    type="button"
+                    class="finder__option"
+                    [class.finder__option--chosen]="$any(answers())[q.key] === option.value"
+                    (click)="choose(q.key, option.value)"
+                >
+                    <tui-icon [icon]="option.icon" class="finder__option-icon" />
+                    <span class="finder__option-text">
+                        <span class="finder__option-title">
+                            {{ "settlements.finder.questions." + q.key + "." + option.value + ".title" | translate }}
+                        </span>
+                        <span class="finder__option-hint">
+                            {{ "settlements.finder.questions." + q.key + "." + option.value + ".hint" | translate }}
+                        </span>
+                    </span>
+                </button>
+            }
+        </div>
+        @if (step() > 0) {
+            <button type="button" class="finder__link" (click)="back()">
+                <tui-icon icon="@tui.arrow-left" class="size-4!" />
+                {{ "settlements.finder.back" | translate }}
+            </button>
+        }
+    } @else {
+        @if (matches(); as list) {
+            @if (failed()) {
+                <p class="finder__empty">{{ "settlements.finder.error" | translate }}</p>
+            } @else if (list.length === 0) {
+                <p class="finder__empty">{{ "settlements.finder.empty" | translate }}</p>
+            } @else {
+                <p class="finder__question">{{ "settlements.finder.resultTitle" | translate }}</p>
+                <ol class="finder__results">
+                    @for (match of list; track match.id; let index = $index) {
+                        <li class="finder__result" [class.finder__result--best]="index === 0">
+                            <div class="finder__result-head">
+                                <span class="finder__result-name">{{ match.name }}</span>
+                                <span class="finder__percent">
+                                    {{ "settlements.finder.match" | translate: { percent: match.percent } }}
+                                </span>
+                            </div>
+                            <div class="finder__facts">
+                                <span>{{ match.typeLabel }}</span>
+                                @if (match.diplomacy) {
+                                    <span>{{ match.diplomacy }}</span>
+                                }
+                                <span>{{ "settlements.finder.members" | translate: { count: match.members } }}</span>
+                                @if (match.online > 0) {
+                                    <span class="finder__online">
+                                        {{ "settlements.finder.online" | translate: { count: match.online } }}
+                                    </span>
+                                }
+                            </div>
+                            <a class="lh-chip" [routerLink]="['/settlements', match.id]" (click)="close()">
+                                {{ "settlements.finder.open" | translate }}
+                                <tui-icon icon="@tui.arrow-right" />
+                            </a>
+                        </li>
+                    }
+                </ol>
+                <p class="finder__note">{{ "settlements.finder.note" | translate }}</p>
+            }
+            <button type="button" class="finder__link" (click)="restart()">
+                <tui-icon icon="@tui.rotate-ccw" class="size-4!" />
+                {{ "settlements.finder.restart" | translate }}
+            </button>
+        } @else {
+            <div class="finder__loading" role="status">
+                <tui-icon icon="@tui.loader" class="size-6 animate-spin" />
+                {{ "settlements.finder.loading" | translate }}
+            </div>
+        }
+    }
+</div>

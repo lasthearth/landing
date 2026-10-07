@@ -17,6 +17,7 @@ import { TuiError, TuiLoader } from '@taiga-ui/core';
 import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, map, finalize, timeout } from 'rxjs';
 import { fileFields, FileKeyGuild } from './guild-form.types';
+import { MarkupEditorComponent } from '@shared/ui/markup-editor';
 
 /**
  * Форма гильдии.
@@ -27,7 +28,7 @@ import { fileFields, FileKeyGuild } from './guild-form.types';
  */
 @Component({
     selector: 'app-guild-form',
-    imports: [
+    imports: [MarkupEditorComponent, 
         LHInputComponent,
         FormsModule,
         ReactiveFormsModule,

@@ -13,11 +13,13 @@ import { catchError, finalize, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DecimalPipe } from '@angular/common';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { TranslatePipe } from '@core/i18n';
 import { ISettlement, getMemberRoleNames } from '@entities/settlement';
 import { IPlayer } from '../../model/i-player';
 import { IPlayerStats } from '../../model/i-player-stats';
 import { UserService } from '../../api/user.service';
+import { RouterLink } from '@angular/router';
 
 /**
  * Чип игрока для списков населения поселения.
@@ -35,7 +37,7 @@ import { UserService } from '../../api/user.service';
     standalone: true,
     templateUrl: './player-chip.component.html',
     styleUrl: './player-chip.component.less',
-    imports: [TuiHint, TuiIcon, DecimalPipe, ImageLoaderComponent, TranslatePipe],
+    imports: [RouterLink, TuiHint, TuiIcon, DecimalPipe, ImageLoaderComponent, TranslatePipe, RelativeTimeComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerChipComponent {

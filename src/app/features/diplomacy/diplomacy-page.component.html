@@ -1,8 +1,5 @@
 <section class="diplomacy-page">
-    <header class="diplomacy-page__header">
-        <h1 class="lh-display text-4xl font-bold text-lh-primary-2">{{ "diplomacy.title" | translate }}</h1>
-        <p class="text-base md:text-lg text-lh-primary-2 max-w-3xl">{{ "diplomacy.subtitle" | translate }}</p>
-    </header>
+    <app-page-header [title]="'diplomacy.title' | translate" [subtitle]="'diplomacy.subtitle' | translate" />
 
     @if (isLoading() && !hasStatements()) {
         <div class="diplomacy-page__loading">
@@ -28,11 +25,10 @@
 
     @if (hasStatements()) {
         @if (authors().length > 1) {
-            <div class="diplomacy-page__authors" role="group" [attr.aria-label]="'diplomacy.filter' | translate">
+            <div class="lh-chips" role="group" [attr.aria-label]="'diplomacy.filter' | translate">
                 <button
                     type="button"
-                    class="diplomacy-page__author"
-                    [class.diplomacy-page__author--active]="authorFilter() === null"
+                    class="lh-chip"
                     [attr.aria-pressed]="authorFilter() === null"
                     (click)="toggleAuthor(null)"
                 >
@@ -41,13 +37,12 @@
                 @for (author of authors(); track author.name) {
                     <button
                         type="button"
-                        class="diplomacy-page__author"
-                        [class.diplomacy-page__author--active]="authorFilter() === author.name"
+                        class="lh-chip"
                         [attr.aria-pressed]="authorFilter() === author.name"
                         (click)="toggleAuthor(author.name)"
                     >
                         {{ author.name }}
-                        <span class="diplomacy-page__author-count">{{ author.count }}</span>
+                        <span class="lh-chip__count">{{ author.count }}</span>
                     </button>
                 }
             </div>

@@ -34,13 +34,14 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { JoinRequestButtonComponent } from '../join-request';
 import { SetTagsComponent } from './set-tags/set-tags.component';
+import { MarkupPipe } from '@shared/lib/news-markdown';
 
 @Component({
     standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
     styleUrl: './settlement-card.component.less',
-    imports: [
+    imports: [MarkupPipe, 
         CommonModule,
         TuiIcon,
         ImageLoaderComponent,

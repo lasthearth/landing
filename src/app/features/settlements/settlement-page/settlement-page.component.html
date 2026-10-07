@@ -72,7 +72,7 @@
             </header>
 
             @if (item.description) {
-                <div class="settlement-page__text lh-rich-text text-ink" [innerHTML]="item.description"></div>
+                <div class="settlement-page__text lh-rich-text text-ink" [innerHTML]="item.description | markup"></div>
             }
 
             @if (item.contact_info) {

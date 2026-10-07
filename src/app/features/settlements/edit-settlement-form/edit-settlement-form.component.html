@@ -3,7 +3,12 @@
 
     <div class="flex flex-col gap-4">
         <lh-input type="input" [placeholder]="'settlements.editForm.namePlaceholder' | translate" [formControl]="form.controls.name" />
-        <lh-input type="textarea" [placeholder]="'settlements.editForm.descriptionPlaceholder' | translate" [rows]="6" [formControl]="form.controls.description" />
+        <app-markup-editor
+            [formControl]="form.controls.description"
+            [placeholder]="'settlements.editForm.descriptionPlaceholder' | translate"
+            [preview]="true"
+            [rows]="7"
+        />
     </div>
 
     <div class="flex flex-col gap-3">

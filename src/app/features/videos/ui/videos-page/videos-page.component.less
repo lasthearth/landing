@@ -1,26 +1,11 @@
 .videos-page {
-    padding: 2rem 1rem;
+    padding: 1.5rem;
     max-width: 80rem;
     margin: 0 auto;
 }
 
 .videos-page__header {
     margin-bottom: 2rem;
-}
-
-.videos-page__title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--lh-ink);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin: 0 0 0.5rem;
-}
-
-.videos-page__subtitle {
-    font-size: 1rem;
-    color: var(--lh-ink-2);
-    margin: 0;
 }
 
 .videos-page__panel {
@@ -60,52 +45,9 @@
     color: var(--lh-danger-ink);
 }
 
-/* Вкладки: сегментированный переключатель в общем стиле чипов */
+/* Вкладки — общие чипы `.lh-chip` */
 .videos-tabs {
-    display: inline-flex;
-    gap: 0.25rem;
     margin-bottom: 1.5rem;
-    padding: 0.25rem;
-    border: 1px solid var(--lh-border);
-    border-radius: 999px;
-    background: var(--lh-surface-2);
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-.videos-tabs__tab {
-    flex-shrink: 0;
-    height: 2.25rem;
-    padding: 0 1.125rem;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--lh-ink-2);
-    font: inherit;
-    font-size: 0.9375rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-        background-color 0.15s ease,
-        color 0.15s ease;
-
-    &:hover {
-        color: var(--lh-ink);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--lh-brand);
-        outline-offset: 2px;
-    }
-}
-
-.videos-tabs__tab--active {
-    color: #fff;
-    background: linear-gradient(150deg, var(--lh-brand-deep), var(--lh-brand-deep-2));
-
-    &:hover {
-        color: #fff;
-    }
 }
 
 /* Свежий ролик раздела — крупно, как «Свежий кадр» в галерее */
@@ -322,7 +264,4 @@
         height: 3.5rem;
     }
 
-    .videos-page__title {
-        font-size: 1.75rem;
-    }
 }

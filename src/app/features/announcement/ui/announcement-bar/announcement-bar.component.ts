@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ClockService } from '@shared/lib/clock';
-import { formatCountdown } from '../../lib/format-countdown.function';
+import { formatCountdown } from '@shared/lib/relative-time';
 import { Announcement } from '../../model/announcement';
 
 /**

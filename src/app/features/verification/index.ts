@@ -3,5 +3,6 @@
  */
 
 export { VerificationService } from './api/verification.service';
+export type { VerificationSubmission } from './api/verification.service';
 export type { IVerifyData } from './model/i-verify-data';
 export type { IVerifyRequest } from './model/i-verify-request';

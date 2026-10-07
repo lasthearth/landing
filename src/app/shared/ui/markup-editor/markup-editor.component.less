@@ -2,7 +2,7 @@
     display: block;
 }
 
-.news-editor {
+.markup-editor {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -77,7 +77,7 @@
     &__area {
         display: block;
         width: 100%;
-        min-height: 16rem;
+        min-height: 8rem;
         padding: 1rem;
         resize: vertical;
         border: 0;
@@ -136,5 +136,24 @@
 
     &__counter {
         white-space: nowrap;
+
+        &--over {
+            font-weight: 700;
+            color: var(--lh-danger-ink);
+        }
+    }
+
+    &__modes {
+        margin-left: auto;
+    }
+
+    &__preview {
+        padding: 1rem;
+        overflow-wrap: anywhere;
+    }
+
+    &__preview-empty {
+        color: var(--color-ink-3, currentColor);
+        font-style: italic;
     }
 }

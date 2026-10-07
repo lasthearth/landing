@@ -16,10 +16,24 @@ import { HttpContext } from '@angular/common/http';
 import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
-import { RouterOutlet } from '@angular/router';
-import { VerificationService } from '@features/verification';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { VerificationService, VerificationSubmission } from '@features/verification';
 import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
-import { catchError, combineLatest, defaultIfEmpty, map, Observable, of, startWith, switchMap, take, tap } from 'rxjs';
+import {
+    catchError,
+    combineLatest,
+    defaultIfEmpty,
+    map,
+    merge,
+    Observable,
+    of,
+    shareReplay,
+    startWith,
+    Subject,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
@@ -43,6 +57,11 @@ import {
 } from '@entities/settlement';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
 import { NewcomerPathComponent } from '@features/onboarding';
+import { PlayerBadgesComponent, PlayerProfile, PlayerProfileService } from '@features/player';
+import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
+import { ApplicationCardComponent, ApplicationState } from './ui/application-card/application-card.component';
+import { ProfileWaitingComponent } from './ui/profile-waiting/profile-waiting.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
     standalone: true,
     imports: [
@@ -59,6 +78,11 @@ import { NewcomerPathComponent } from '@features/onboarding';
         SettlementBadgeComponent,
         SettlementDisplayNamePipe,
         NewcomerPathComponent,
+        RouterLink,
+        ApplicationCardComponent,
+        ProfileWaitingComponent,
+        PlayerBadgesComponent,
+        ShareButtonComponent,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
@@ -90,6 +114,18 @@ export class ProfileComponent {
 
     private readonly verificationService = inject(VerificationService);
 
+    private readonly playerProfiles = inject(PlayerProfileService);
+
+    /**
+     * Перезапрос статуса анкеты по кнопке «Обновить статус».
+     */
+    private readonly refreshDetails$ = new Subject<void>();
+
+    /**
+     * Анкета, отправленная с этого браузера: дата и ник для карточки.
+     */
+    protected readonly submission = signal<VerificationSubmission | null>(this.verificationService.lastSubmission());
+
     /**
      * Код верификации текущего пользователя.
      * При ошибке возвращает null, чтобы не ломать UI.
@@ -112,8 +148,11 @@ export class ProfileComponent {
      * При отсутствии заявки на верификацию (404) возвращает null,
      * чтобы не блокировать загрузку профиля.
      */
-    protected readonly details$ = this.userService.authState$.pipe(
-        switchMap((isAuth) => {
+    protected readonly details$ = combineLatest([
+        this.userService.authState$,
+        merge(this.refreshDetails$, this.verificationService.submitted$).pipe(startWith(undefined)),
+    ]).pipe(
+        switchMap(([isAuth]) => {
             if (!isAuth) {
                 return of(null);
             }
@@ -122,7 +161,8 @@ export class ProfileComponent {
                 catchError(() => of(null)),
                 defaultIfEmpty(null)
             );
-        })
+        }),
+        shareReplay({ bufferSize: 1, refCount: true })
     );
 
     protected readonly player$ = this.userService.authState$.pipe(
@@ -137,7 +177,25 @@ export class ProfileComponent {
         })
     );
 
-    protected readonly userGameName$ = this.player$.pipe(map((data) => data?.user_game_name ?? ''));
+    protected readonly userGameName$ = this.player$.pipe(
+        map((data) => data?.user_game_name ?? ''),
+        shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+    /**
+     * Публичный профиль игрока: места в рейтинге и значки.
+     * Грузится отдельно и не задерживает показ профиля.
+     */
+    protected readonly selfProfile$: Observable<PlayerProfile | null> = this.userGameName$.pipe(
+        switchMap((name) =>
+            name
+                ? this.playerProfiles.load(name).pipe(
+                      catchError(() => of(null)),
+                      startWith(null)
+                  )
+                : of(null)
+        )
+    );
 
     protected readonly isOnline$ = this.player$.pipe(map((data) => data?.is_online ?? false));
 
@@ -330,6 +388,10 @@ export class ProfileComponent {
      * Загружает список сезонов «Голодных игр» и выбирает активный.
      */
     constructor() {
+        this.verificationService.submitted$
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.submission.set(this.verificationService.lastSubmission()));
+
         this.hungerGamesService
             .getSeasons$()
             .pipe(take(1))
@@ -359,6 +421,39 @@ export class ProfileComponent {
      */
     private isVerifiedUser(): boolean {
         return this.userService.roles.includes('admin') || this.userService.roles.includes('player');
+    }
+
+    /**
+     * Состояние анкеты для бейджа в шапке.
+     *
+     * @param status Статус анкеты с сервера.
+     * @returns Состояние.
+     */
+    protected applicationState(status: string | null | undefined): ApplicationState {
+        switch (status) {
+            case 'pending':
+            case 'rejected':
+                return status;
+            case 'approved':
+            case 'verified':
+                return 'approved';
+            default:
+                return 'none';
+        }
+    }
+
+    /**
+     * Перезапрашивает статус анкеты.
+     */
+    protected refreshApplication(): void {
+        this.refreshDetails$.next();
+    }
+
+    /**
+     * Повторный вход: после одобрения токен должен получить роль игрока.
+     */
+    protected relogin(): void {
+        this.userService.signIn();
     }
 
     protected verification() {

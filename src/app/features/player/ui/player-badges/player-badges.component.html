@@ -1,0 +1,24 @@
+@if (variant() === "compact") {
+    <ul class="badges badges--compact">
+        @for (badge of badges(); track badge.key) {
+            <li class="badge badge--{{ badge.tier }}" [title]="'player.badges.' + badge.key + '.text' | translate">
+                <tui-icon [icon]="badge.icon" class="badge__icon" />
+                <span>{{ "player.badges." + badge.key + ".title" | translate }}</span>
+            </li>
+        }
+    </ul>
+} @else {
+    <ul class="badges badges--full">
+        @for (badge of badges(); track badge.key) {
+            <li class="badge-card badge-card--{{ badge.tier }}">
+                <span class="badge-card__icon" aria-hidden="true">
+                    <tui-icon [icon]="badge.icon" />
+                </span>
+                <span class="badge-card__body">
+                    <span class="badge-card__title">{{ "player.badges." + badge.key + ".title" | translate }}</span>
+                    <span class="badge-card__text">{{ "player.badges." + badge.key + ".text" | translate }}</span>
+                </span>
+            </li>
+        }
+    </ul>
+}

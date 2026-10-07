@@ -117,7 +117,7 @@
                     }
                 </div>
 
-                <p class="text-lg text-ink-2 leading-6 line-clamp-3" [innerHTML]="data().description"></p>
+                <p class="text-lg text-ink-2 leading-6 line-clamp-3" >{{ data().description | markup: 'plain' }}</p>
 
                 <!--
                     Контакты поселения. Иконка стоит на базовой линии текста,

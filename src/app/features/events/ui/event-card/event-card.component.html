@@ -1,0 +1,108 @@
+<article
+    class="event-card lh-panel"
+    [class.event-card--live]="status() === 'live'"
+    [class.event-card--ended]="status() === 'ended'"
+    [class.event-card--highlighted]="highlighted()"
+    [attr.id]="'event-' + event().id"
+>
+    @if (event().cover) {
+        <div class="event-card__cover">
+            <app-image-loader
+                [src]="event().cover"
+                [alt]="'events.card.coverAlt' | translate: { title: event().title }"
+                class="block size-full"
+            />
+        </div>
+    }
+
+    <div class="event-card__main">
+        <time class="event-card__date" [attr.datetime]="startIso()">
+            <span class="event-card__weekday">{{ weekday() }}</span>
+            <span class="event-card__day">{{ day() }}</span>
+            <span class="event-card__month">{{ month() }}</span>
+        </time>
+
+        <div class="event-card__body">
+            <div class="event-card__status-row">
+                @switch (status()) {
+                    @case ("live") {
+                        <span class="event-card__status event-card__status--live">
+                            <span class="event-card__pulse" aria-hidden="true"></span>
+                            {{ "events.card.live" | translate }}
+                        </span>
+                    }
+                    @case ("upcoming") {
+                        <span class="event-card__status">
+                            <tui-icon icon="@tui.hourglass" class="size-3.5!" />
+                            {{ "events.card.startsIn" | translate: { time: countdown() } }}
+                        </span>
+                    }
+                    @default {
+                        <span class="event-card__status event-card__status--ended">
+                            {{ "events.card.ended" | translate }}
+                        </span>
+                    }
+                }
+            </div>
+
+            <h3 class="event-card__title lh-display">{{ event().title }}</h3>
+
+            <ul class="event-card__meta">
+                <li>
+                    <tui-icon icon="@tui.calendar-clock" class="size-4!" />
+                    <span>{{ timeRange() }}</span>
+                </li>
+                @if (event().location) {
+                    <li>
+                        <tui-icon icon="@tui.map-pin" class="size-4!" />
+                        <span class="sr-only">{{ "events.card.location" | translate }}:</span>
+                        <span>{{ event().location }}</span>
+                    </li>
+                }
+            </ul>
+
+            @if (event().description) {
+                <div class="event-card__text lh-rich-text text-ink" [innerHTML]="descriptionHtml()"></div>
+            }
+
+            <footer class="event-card__footer">
+                <app-reactions kind="event" [contentId]="event().id" tone="surface" />
+
+                <div class="event-card__actions">
+                    @if (status() !== "ended") {
+                        <button
+                            type="button"
+                            class="event-card__action"
+                            [title]="'events.card.addToCalendarTitle' | translate"
+                            (click)="addToCalendar.emit()"
+                        >
+                            <tui-icon icon="@tui.calendar-plus" class="size-4!" />
+                            {{ "events.card.addToCalendar" | translate }}
+                        </button>
+                    }
+                    <app-share-button [url]="'/events#event-' + event().id" [title]="event().title" [iconOnly]="true" />
+                    @if (canManage()) {
+                        <button
+                            type="button"
+                            class="event-card__icon-action"
+                            [title]="'events.card.edit' | translate"
+                            [attr.aria-label]="'events.card.edit' | translate"
+                            (click)="edit.emit()"
+                        >
+                            <tui-icon icon="@tui.pencil" class="size-4!" />
+                        </button>
+                        <button
+                            type="button"
+                            class="event-card__icon-action event-card__icon-action--danger"
+                            [title]="'events.card.delete' | translate"
+                            [attr.aria-label]="'events.card.delete' | translate"
+                            (click)="remove.emit()"
+                        >
+                            <tui-icon icon="@tui.trash-2" class="size-4!" />
+                        </button>
+                    }
+                </div>
+            </footer>
+        </div>
+    </div>
+</article>

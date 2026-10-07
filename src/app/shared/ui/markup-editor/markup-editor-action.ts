@@ -1,7 +1,7 @@
 /**
- * Действие панели форматирования редактора новостей.
+ * Действие панели форматирования редактора разметки.
  */
-export type NewsEditorAction =
+export type MarkupEditorAction =
     | 'bold'
     | 'italic'
     | 'underline'

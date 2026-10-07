@@ -1,0 +1,53 @@
+@if (event(); as item) {
+    <section class="upcoming-event" aria-labelledby="upcoming-event-title">
+        <a class="upcoming-event__card" [routerLink]="['/events']" [fragment]="'event-' + item.id">
+            @if (item.cover) {
+                <span
+                    class="upcoming-event__bg"
+                    [style.backgroundImage]="'url(' + item.cover + ')'"
+                    aria-hidden="true"
+                ></span>
+            }
+            <span class="upcoming-event__overlay" aria-hidden="true"></span>
+
+            <span class="upcoming-event__icon" aria-hidden="true">
+                <tui-icon icon="@tui.calendar-clock" class="size-6!" />
+            </span>
+
+            <span class="upcoming-event__body">
+                <span id="upcoming-event-title" class="upcoming-event__eyebrow">
+                    {{ "home.events.title" | translate }}
+                </span>
+                <span class="upcoming-event__title lh-display">{{ item.title }}</span>
+                <span class="upcoming-event__meta">
+                    <span>{{ when() }}</span>
+                    @if (item.location) {
+                        <span class="upcoming-event__dot" aria-hidden="true">·</span>
+                        <span>{{ item.location }}</span>
+                    }
+                </span>
+            </span>
+
+            <span class="upcoming-event__side">
+                @if (live()) {
+                    <span class="upcoming-event__badge upcoming-event__badge--live">
+                        <span class="upcoming-event__pulse" aria-hidden="true"></span>
+                        {{ "home.events.live" | translate }}
+                    </span>
+                } @else {
+                    <span class="upcoming-event__badge">
+                        {{ "home.events.startsIn" | translate: { time: countdown() } }}
+                    </span>
+                }
+                <span class="upcoming-event__all">
+                    @if (moreCount() > 0) {
+                        {{ "home.events.more" | translate: { count: moreCount() } }}
+                    } @else {
+                        {{ "home.events.all" | translate }}
+                    }
+                    <tui-icon icon="@tui.arrow-right" class="size-4!" />
+                </span>
+            </span>
+        </a>
+    </section>
+}

@@ -21,7 +21,7 @@ import { TuiError, TuiIcon } from '@taiga-ui/core';
 import { TuiFieldErrorPipe, TuiFile, TuiFilesComponent, TuiFiles } from '@taiga-ui/kit';
 import { debounceTime, finalize, map, merge, Observable, of, startWith, Subject, switchMap, timer } from 'rxjs';
 import { NewsCardComponent } from '@app/features/news/ui/news-card/news-card.component';
-import { NewsContentEditorComponent } from '@app/features/news/ui/news-content-editor/news-content-editor.component';
+import { MarkupEditorComponent } from '@shared/ui/markup-editor';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { newsMarkdownToDiscord, renderNewsMarkdown } from '@shared/lib/news-markdown';
@@ -80,7 +80,7 @@ const MAX_COVER_SIZE = 10 * 1024 * 1024;
         TuiFiles,
         TuiFilesComponent,
         NewsCardComponent,
-        NewsContentEditorComponent,
+        MarkupEditorComponent,
         AnnouncementBarComponent,
         TranslatePipe,
         RouterLink,
@@ -225,6 +225,12 @@ export class CreateNewsComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly newsApi = inject(NewsApiService);
     private readonly mediaService = inject(MediaService);
+
+    /**
+     * Загрузка картинок в текст новости.
+     */
+    protected readonly uploadImage = (file: File): Promise<string> =>
+        this.mediaService.uploadFile(file, 'UPLOAD_PURPOSE_NEWS');
     private readonly storage = inject(LocalStorageService);
     private readonly discordWebhook = inject(DiscordWebhookService);
 

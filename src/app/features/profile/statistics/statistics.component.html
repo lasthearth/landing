@@ -88,23 +88,41 @@
     </div>
 }
 
-<p class="text-2xl md:text-3xl lg:text-4xl font-bold mb-8">{{ 'profile.statistics.title' | translate }}</p>
+<app-page-header class="block mb-8" [level]="2" [title]="'profile.statistics.title' | translate" />
 
 @if (leaderBoard === null) {
     <app-statistics-skeleton />
 }
 @if (leaderBoard) {
-    <tui-tabs [(activeItemIndex)]="activeItemIndex" class="!text-xl mt-4 mb-16 !font-semibold !w-full content-tabs">
-        <button tuiTab type="button" (click)="getDeaths()" class="text-lg md:text-2xl/7.5 uppercase !font-bold">
+    <div class="lh-chips mt-4 mb-16" role="tablist" [attr.aria-label]="'profile.statistics.title' | translate">
+        <button
+            type="button"
+            role="tab"
+            class="lh-chip lh-chip--lg"
+            [attr.aria-selected]="activeItemIndex === 0"
+            (click)="activeItemIndex = 0; getDeaths()"
+        >
             {{ isMobile ? ('profile.statistics.tabs.deathsShort' | translate) : ('profile.statistics.tabs.deaths' | translate) }}
         </button>
-        <button tuiTab type="button" (click)="getHoursPlayed()" class="text-lg md:text-2xl/7.5 uppercase !font-bold">
+        <button
+            type="button"
+            role="tab"
+            class="lh-chip lh-chip--lg"
+            [attr.aria-selected]="activeItemIndex === 1"
+            (click)="activeItemIndex = 1; getHoursPlayed()"
+        >
             {{ isMobile ? ('profile.statistics.tabs.hoursShort' | translate) : ('profile.statistics.tabs.hours' | translate) }}
         </button>
-        <button tuiTab type="button" (click)="getKills()" class="text-lg md:text-2xl/7.5 uppercase !font-bold">
+        <button
+            type="button"
+            role="tab"
+            class="lh-chip lh-chip--lg"
+            [attr.aria-selected]="activeItemIndex === 2"
+            (click)="activeItemIndex = 2; getKills()"
+        >
             {{ isMobile ? ('profile.statistics.tabs.killsShort' | translate) : ('profile.statistics.tabs.kills' | translate) }}
         </button>
-    </tui-tabs>
+    </div>
 
     @if (leaderBoard.length >= 3) {
         <div class="flex gap-8 lg:gap-16 items-center justify-center mb-16">
@@ -153,7 +171,11 @@
                                 objectFit="cover"
                                 [alt]="'profile.statistics.avatarAlt' | translate"
                             />
-                            <span class="font-semibold text-parchment-3 text-xl sm:text-2xl">{{ item.name }}</span>
+                            <a
+                                class="font-semibold text-parchment-3 text-xl sm:text-2xl hover:underline underline-offset-4"
+                                [routerLink]="['/player', item.name]"
+                                >{{ item.name }}</a
+                            >
                         </div>
                         <div class="flex flex-col items-end">
                             @if (activeItemIndex === 0) {

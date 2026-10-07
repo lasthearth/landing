@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { TuiExpand, TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
+import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
  * Компонент страницы "Политика конфиденциальности".
@@ -11,7 +12,7 @@ import { TranslatePipe } from '@core/i18n';
 @Component({
     standalone: true,
     selector: 'app-privacy-policy',
-    imports: [TuiIcon, CommonModule, TuiExpand, TranslatePipe],
+    imports: [PageHeaderComponent, TuiIcon, CommonModule, TuiExpand, TranslatePipe],
     templateUrl: './privacy-policy.component.html',
     styleUrl: './privacy-policy.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

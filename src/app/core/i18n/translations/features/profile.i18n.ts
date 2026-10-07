@@ -32,8 +32,82 @@ export const PROFILE_I18N = {
                 button: 'ПРОЙТИ ВЕРИФИКАЦИЮ',
                 pending: 'Ваша анкета отправлена. Ожидайте проверки.',
                 rejected: 'Вашу анкету отклонили:',
-                required: 'Что бы попасть на сервер, необходимо пройти верификацию.',
+                required: 'Чтобы попасть на сервер, необходимо пройти верификацию.',
             },
+            application: {
+                title: 'Анкета на сервер',
+                state: {
+                    none: 'Не отправлена',
+                    pending: 'На проверке',
+                    rejected: 'Нужны правки',
+                    approved: 'Одобрена',
+                },
+                sentAt: 'Ник «{{nickname}}», отправлена',
+                timeline: {
+                    sent: 'Отправлена',
+                    review: 'Проверка',
+                    access: 'Доступ',
+                },
+                none: {
+                    text: 'Чтобы играть на сервере, заполните короткую анкету. Обычно её проверяют в течение суток.',
+                    need: {
+                        nickname: 'Ваш ник в Vintage Story',
+                        contacts: 'Discord или Telegram для связи',
+                        questions: 'Пара ответов о себе',
+                    },
+                    action: 'Заполнить анкету',
+                    rules: 'Правила сервера',
+                },
+                pending: {
+                    text: 'Анкету проверяет администрация. Как только её одобрят, здесь появится доступ к серверу.',
+                    refresh: 'Обновить статус',
+                },
+                rejected: {
+                    text: 'Анкету вернули на доработку. Исправьте замечания и отправьте снова.',
+                    action: 'Исправить анкету',
+                },
+                approved: {
+                    text: 'Анкета одобрена! Войдите заново, чтобы профиль обновился и открылся доступ.',
+                    action: 'Войти заново',
+                },
+            },
+            hero: {
+                account: 'Аккаунт сайта',
+                status: {
+                    none: 'Без доступа к серверу',
+                    pending: 'Анкета на проверке',
+                    rejected: 'Анкета на доработке',
+                    approved: 'Анкета одобрена',
+                },
+            },
+            waiting: {
+                title: 'Пока ждёте',
+                subtitle: 'Осмотритесь: чем живёт сервер прямо сейчас.',
+                event: {
+                    title: 'Ближайшее событие',
+                    empty: 'Событий пока не запланировано.',
+                    live: 'Идёт сейчас',
+                    all: 'Все события',
+                },
+                news: {
+                    title: 'Свежие новости',
+                    empty: 'Новостей пока нет.',
+                    all: 'Все новости',
+                },
+                finder: {
+                    title: 'Подберите поселение',
+                    text: 'Три вопроса — и мы покажем, куда стоит проситься после проверки.',
+                    action: 'Подобрать',
+                },
+                explore: {
+                    title: 'Осмотритесь',
+                    settlements: 'Поселения',
+                    gallery: 'Галерея',
+                    diplomacy: 'Дипломатия',
+                    rules: 'Правила',
+                },
+            },
+            share: 'Поделиться профилем',
             hungerGames: {
                 title: 'Голодные игры',
                 prevAria: 'Предыдущий сезон голодных игр',
@@ -167,6 +241,80 @@ export const PROFILE_I18N = {
                 rejected: 'Your application was rejected:',
                 required: 'To join the server, you must complete verification.',
             },
+            application: {
+                title: 'Server application',
+                state: {
+                    none: 'Not sent',
+                    pending: 'Under review',
+                    rejected: 'Needs changes',
+                    approved: 'Approved',
+                },
+                sentAt: 'Nickname “{{nickname}}”, sent',
+                timeline: {
+                    sent: 'Sent',
+                    review: 'Review',
+                    access: 'Access',
+                },
+                none: {
+                    text: 'To play on the server, fill in a short application. It is usually reviewed within a day.',
+                    need: {
+                        nickname: 'Your Vintage Story nickname',
+                        contacts: 'Discord or Telegram to reach you',
+                        questions: 'A couple of answers about yourself',
+                    },
+                    action: 'Fill in the application',
+                    rules: 'Server rules',
+                },
+                pending: {
+                    text: 'The staff is reviewing your application. Once it is approved, server access will appear here.',
+                    refresh: 'Refresh status',
+                },
+                rejected: {
+                    text: 'Your application was sent back. Address the notes and submit it again.',
+                    action: 'Fix the application',
+                },
+                approved: {
+                    text: 'Your application is approved! Sign in again to refresh your profile and unlock access.',
+                    action: 'Sign in again',
+                },
+            },
+            hero: {
+                account: 'Site account',
+                status: {
+                    none: 'No server access',
+                    pending: 'Application under review',
+                    rejected: 'Application needs changes',
+                    approved: 'Application approved',
+                },
+            },
+            waiting: {
+                title: 'While you wait',
+                subtitle: 'Look around: what is happening on the server right now.',
+                event: {
+                    title: 'Next event',
+                    empty: 'No events scheduled yet.',
+                    live: 'Happening now',
+                    all: 'All events',
+                },
+                news: {
+                    title: 'Latest news',
+                    empty: 'No news yet.',
+                    all: 'All news',
+                },
+                finder: {
+                    title: 'Find a settlement',
+                    text: 'Three questions, and we will show where to apply once you are verified.',
+                    action: 'Find',
+                },
+                explore: {
+                    title: 'Look around',
+                    settlements: 'Settlements',
+                    gallery: 'Gallery',
+                    diplomacy: 'Diplomacy',
+                    rules: 'Rules',
+                },
+            },
+            share: 'Share profile',
             hungerGames: {
                 title: 'Hunger Games',
                 prevAria: 'Previous Hunger Games season',

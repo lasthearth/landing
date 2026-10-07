@@ -43,4 +43,8 @@
             <tui-icon icon="@tui.chevron-down" class="size-4!" [class.rotate-180]="expanded()" />
         </button>
     }
+
+    @if (statement().id) {
+        <app-reactions class="diplomacy-card__reactions" kind="diplomacy" [contentId]="statement().id" tone="surface" />
+    }
 </article>

@@ -18,7 +18,7 @@
             [alt]="'profile.statistics.avatarAlt' | translate"
         />
         <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-parchment-3">
-            {{ playerName() }}
+            <a class="hover:underline underline-offset-4" [routerLink]="['/player', playerName()]">{{ playerName() }}</a>
         </p>
         <p
             [class.gold-text]="ratingPlace() === '1'"

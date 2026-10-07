@@ -20,6 +20,7 @@ import { renderNewsMarkdown } from '@shared/lib/news-markdown';
 import { stripDiscordTokens } from '@shared/lib/discord-markup';
 import { DiplomacyStatement } from './model/diplomacy-statement';
 import { DiplomacyCardComponent } from './ui/diplomacy-card/diplomacy-card.component';
+import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
  * Максимум заявлений, которые держим в памяти.
@@ -62,7 +63,7 @@ function sortMessagesByTimeDesc(messages: GameChatMessage[]): GameChatMessage[] 
 @Component({
     selector: 'app-diplomacy-page',
     standalone: true,
-    imports: [TuiIcon, TranslatePipe, DiplomacyCardComponent],
+    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, DiplomacyCardComponent],
     templateUrl: './diplomacy-page.component.html',
     styleUrl: './diplomacy-page.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

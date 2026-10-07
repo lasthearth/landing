@@ -52,6 +52,7 @@ export const routes: Routes = [
                         () => import('../features/profile/profile.component').then((m) => m.ProfileComponent),
                         [
                             () => import('@core/i18n/translations/features/profile.i18n').then((m) => m.PROFILE_I18N),
+                            () => import('@core/i18n/translations/features/player.i18n').then((m) => m.PLAYER_I18N),
                             () =>
                                 import('@core/i18n/translations/features/settlements.i18n').then(
                                     (m) => m.SETTLEMENTS_I18N
@@ -210,6 +211,33 @@ export const routes: Routes = [
                         ]
                     ),
                 data: { route_keys: RouteKeys.diplomacy, seo: routeSeoData.diplomacy },
+            },
+            {
+                path: 'events',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('../features/events/events-page.component').then((m) => m.EventsPageComponent),
+                        [() => import('@core/i18n/translations/features/events.i18n').then((m) => m.EVENTS_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.events, seo: routeSeoData.events },
+            },
+            {
+                path: 'player/:nick',
+                loadComponent: () =>
+                    loadPage(
+                        () =>
+                            import('../features/player/ui/player-page/player-page.component').then(
+                                (m) => m.PlayerPageComponent
+                            ),
+                        [
+                            () => import('@core/i18n/translations/features/player.i18n').then((m) => m.PLAYER_I18N),
+                            () =>
+                                import('@core/i18n/translations/features/settlements.i18n').then(
+                                    (m) => m.SETTLEMENTS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.player, seo: routeSeoData.player },
             },
             {
                 path: 'settlements/:id',

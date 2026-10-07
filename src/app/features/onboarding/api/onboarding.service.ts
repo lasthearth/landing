@@ -16,6 +16,16 @@ const RULES_OPENED_KEY = 'lh_onboarding_rules_opened';
 const DISCORD_OPENED_KEY = 'lh_onboarding_discord_opened';
 
 /**
+ * Ключ localStorage: игрок отметил, что игра установлена.
+ */
+const INSTALLED_KEY = 'lh_onboarding_installed';
+
+/**
+ * Ключ localStorage: игрок скопировал адрес сервера или отметил, что уже играет.
+ */
+const CONNECTED_KEY = 'lh_onboarding_connected';
+
+/**
  * Ключ localStorage: игрок скрыл путь новичка в профиле.
  */
 const HIDDEN_KEY = 'lh_onboarding_hidden';
@@ -68,6 +78,16 @@ export class OnboardingService {
     public readonly discordOpened = signal(this.read(DISCORD_OPENED_KEY));
 
     /**
+     * Игрок отметил, что игра установлена.
+     */
+    public readonly installed = signal(this.read(INSTALLED_KEY));
+
+    /**
+     * Игрок скопировал адрес сервера или отметил, что уже играет.
+     */
+    public readonly connected = signal(this.read(CONNECTED_KEY));
+
+    /**
      * Игрок скрыл путь новичка в профиле.
      */
     public readonly hidden = signal(this.read(HIDDEN_KEY));
@@ -107,6 +127,20 @@ export class OnboardingService {
 
         this.document.addEventListener('click', onClick, true);
         this.destroyRef.onDestroy(() => this.document.removeEventListener('click', onClick, true));
+    }
+
+    /**
+     * Отмечает, что игра установлена.
+     */
+    public markInstalled(): void {
+        this.set(INSTALLED_KEY, this.installed);
+    }
+
+    /**
+     * Отмечает, что игрок подключился к серверу.
+     */
+    public markConnected(): void {
+        this.set(CONNECTED_KEY, this.connected);
     }
 
     /**

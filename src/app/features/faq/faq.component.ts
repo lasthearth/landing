@@ -3,13 +3,14 @@ import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component,
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
 import { TranslatePipe } from '@core/i18n';
+import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
  * Компонент "FAQ".
  */
 @Component({
     selector: 'app-faq',
-    imports: [TuiExpand, TuiIcon, CommonModule, TranslatePipe],
+    imports: [PageHeaderComponent, TuiExpand, TuiIcon, CommonModule, TranslatePipe],
     templateUrl: './faq.component.html',
     styleUrl: './faq.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

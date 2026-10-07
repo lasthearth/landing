@@ -18,6 +18,7 @@ import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-se
 import { TuiError, TuiLoader } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
 import { I18nService, TranslatePipe } from '@core/i18n';
+import { MarkupEditorComponent } from '@shared/ui/markup-editor';
 
 /**
  * Форма города
@@ -25,7 +26,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 @Component({
     selector: 'app-city-form',
     templateUrl: './city-form.component.html',
-    imports: [
+    imports: [MarkupEditorComponent, 
         LHInputComponent,
         FormsModule,
         ReactiveFormsModule,

@@ -1,13 +1,13 @@
-import { NewsEditorAction } from './news-editor-action';
+import { MarkupEditorAction } from './markup-editor-action';
 
 /**
  * Кнопка панели форматирования.
  */
-export interface NewsEditorButton {
+export interface MarkupEditorButton {
     /**
      * Выполняемое действие.
      */
-    action: NewsEditorAction;
+    action: MarkupEditorAction;
 
     /**
      * Иконка Taiga UI.

@@ -1,0 +1,126 @@
+<div class="markup-editor" [class.markup-editor--disabled]="disabled()">
+    <div class="markup-editor__toolbar" role="toolbar" [attr.aria-label]="'news.editor.toolbar' | translate">
+        @for (group of toolbar(); track $index) {
+            <div class="markup-editor__group">
+                @for (button of group; track button.action) {
+                    <button
+                        type="button"
+                        class="markup-editor__button"
+                        [attr.title]="(button.labelKey | translate) + (button.hotkey ? ' (' + button.hotkey + ')' : '')"
+                        [attr.aria-label]="button.labelKey | translate"
+                        [disabled]="disabled() || (button.action === 'image' && uploading())"
+                        (mousedown)="$event.preventDefault()"
+                        (click)="apply(button.action)"
+                    >
+                        <tui-icon [icon]="button.icon" class="size-4!" />
+                    </button>
+                }
+            </div>
+        }
+
+        @if (uploading()) {
+            <span class="markup-editor__status" role="status">{{ "news.editor.uploading" | translate }}</span>
+        }
+
+        @if (preview()) {
+            <div class="markup-editor__modes lh-chips" role="tablist">
+                <button
+                    type="button"
+                    role="tab"
+                    class="lh-chip"
+                    [attr.aria-selected]="!previewing()"
+                    (click)="previewing.set(false)"
+                >
+                    <tui-icon icon="@tui.pencil" />
+                    {{ "news.editor.modeWrite" | translate }}
+                </button>
+                <button
+                    type="button"
+                    role="tab"
+                    class="lh-chip"
+                    [attr.aria-selected]="previewing()"
+                    (click)="previewing.set(true)"
+                >
+                    <tui-icon icon="@tui.eye" />
+                    {{ "news.editor.modePreview" | translate }}
+                </button>
+            </div>
+        }
+    </div>
+
+    <textarea
+        #area
+        class="markup-editor__area"
+        [rows]="rows()"
+        [hidden]="previewing()"
+        [placeholder]="placeholder()"
+        [disabled]="disabled()"
+        (input)="onInput()"
+        (keydown)="onKeydown($event)"
+        (blur)="onTouched()"
+    ></textarea>
+
+    @if (previewing()) {
+        <div class="markup-editor__preview lh-rich-text text-ink" [style.min-height.rem]="rows() * 1.6">
+            @if (value().trim()) {
+                <div [innerHTML]="previewHtml()"></div>
+            } @else {
+                <p class="markup-editor__preview-empty">{{ "news.editor.previewEmpty" | translate }}</p>
+            }
+        </div>
+    }
+
+    @if (uploadError(); as error) {
+        <p class="markup-editor__error" role="alert">{{ error | translate }}</p>
+    }
+
+    <div class="markup-editor__footer">
+        <details class="markup-editor__help">
+            <summary>{{ "news.editor.help.title" | translate }}</summary>
+            <dl>
+                <dt><code>**текст**</code></dt>
+                <dd>{{ "news.editor.bold" | translate }}</dd>
+                <dt><code>*текст*</code></dt>
+                <dd>{{ "news.editor.italic" | translate }}</dd>
+                <dt><code>__текст__</code></dt>
+                <dd>{{ "news.editor.underline" | translate }}</dd>
+                <dt><code>~~текст~~</code></dt>
+                <dd>{{ "news.editor.strike" | translate }}</dd>
+                <dt><code>||текст||</code></dt>
+                <dd>{{ "news.editor.spoiler" | translate }}</dd>
+                <dt><code>## Заголовок</code></dt>
+                <dd>{{ "news.editor.heading" | translate }}</dd>
+                <dt>
+                    <code>- пункт</code>
+                    /
+                    <code>1. пункт</code>
+                </dt>
+                <dd>{{ "news.editor.help.lists" | translate }}</dd>
+                <dt><code>&gt; цитата</code></dt>
+                <dd>{{ "news.editor.quote" | translate }}</dd>
+                <dt><code>[текст](https://…)</code></dt>
+                <dd>{{ "news.editor.link" | translate }}</dd>
+                @if (uploadImage()) {
+                    <dt><code>![подпись](https://…)</code></dt>
+                    <dd>{{ "news.editor.help.image" | translate }}</dd>
+                }
+                <dt><code>---</code></dt>
+                <dd>{{ "news.editor.divider" | translate }}</dd>
+            </dl>
+            <p>{{ "news.editor.help.paragraphs" | translate }}</p>
+        </details>
+
+        <span
+            class="markup-editor__counter tabular-nums"
+            [class.markup-editor__counter--over]="maxLength() !== null && value().length > maxLength()!"
+        >
+            @if (maxLength(); as max) {
+                {{ value().length }} / {{ max }}
+            } @else {
+                {{ "news.editor.counter" | translate: { count: value().length } }}
+            }
+        </span>
+    </div>
+
+    <input #fileInput type="file" accept="image/*" hidden (change)="onImageSelected($event)" />
+</div>

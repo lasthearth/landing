@@ -1,9 +1,9 @@
-import { NewsEditorButton } from './news-editor-button';
+import { MarkupEditorButton } from './markup-editor-button';
 
 /**
  * Группы кнопок панели форматирования: текст, блоки, вставки.
  */
-export const NEWS_EDITOR_TOOLBAR: readonly (readonly NewsEditorButton[])[] = [
+export const MARKUP_EDITOR_TOOLBAR: readonly (readonly MarkupEditorButton[])[] = [
     [
         { action: 'bold', icon: '@tui.bold', labelKey: 'news.editor.bold', hotkey: 'Ctrl+B' },
         { action: 'italic', icon: '@tui.italic', labelKey: 'news.editor.italic', hotkey: 'Ctrl+I' },

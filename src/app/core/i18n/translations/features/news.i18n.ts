@@ -61,6 +61,9 @@ export const NEWS_I18N = {
             },
             editor: {
                 toolbar: 'Форматирование',
+                modeWrite: 'Текст',
+                modePreview: 'Как увидят',
+                previewEmpty: 'Пока пусто — напишите что-нибудь во вкладке «Текст».',
                 bold: 'Жирный',
                 italic: 'Курсив',
                 underline: 'Подчёркнутый',
@@ -157,6 +160,9 @@ export const NEWS_I18N = {
             },
             editor: {
                 toolbar: 'Formatting',
+                modeWrite: 'Write',
+                modePreview: 'Preview',
+                previewEmpty: 'Nothing yet — write something on the “Write” tab.',
                 bold: 'Bold',
                 italic: 'Italic',
                 underline: 'Underline',

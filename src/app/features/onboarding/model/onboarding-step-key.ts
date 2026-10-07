@@ -1,4 +1,11 @@
 /**
  * Шаг пути новичка.
  */
-export type OnboardingStepKey = 'account' | 'rules' | 'application' | 'settlement' | 'discord';
+export type OnboardingStepKey =
+    | 'install'
+    | 'account'
+    | 'rules'
+    | 'application'
+    | 'connect'
+    | 'settlement'
+    | 'discord';

@@ -1,0 +1,104 @@
+<section class="waiting" aria-labelledby="waiting-title">
+    <header class="waiting__header">
+        <h2 id="waiting-title" class="waiting__title">{{ "profile.waiting.title" | translate }}</h2>
+        <p class="waiting__subtitle">{{ "profile.waiting.subtitle" | translate }}</p>
+    </header>
+
+    <div class="waiting__grid">
+        <!-- Ближайшее событие -->
+        <article class="waiting__card lh-panel">
+            <h3 class="waiting__card-title">
+                <tui-icon icon="@tui.calendar-clock" />
+                {{ "profile.waiting.event.title" | translate }}
+            </h3>
+            @if (eventsLoading()) {
+                <span class="waiting__skeleton" aria-hidden="true"></span>
+            } @else if (event(); as item) {
+                <a class="waiting__event" [routerLink]="['/events']" [fragment]="'event-' + item.id">
+                    <span class="waiting__event-title">{{ item.title }}</span>
+                    <span class="waiting__event-meta">
+                        {{ when() }}
+                        @if (item.location) {
+                            · {{ item.location }}
+                        }
+                    </span>
+                    @if (live()) {
+                        <span class="waiting__pill waiting__pill--live">
+                            {{ "profile.waiting.event.live" | translate }}
+                        </span>
+                    } @else if (countdown()) {
+                        <span class="waiting__pill">{{ countdown() }}</span>
+                    }
+                </a>
+            } @else {
+                <p class="waiting__empty">{{ "profile.waiting.event.empty" | translate }}</p>
+            }
+            <a class="waiting__more" routerLink="/events">
+                {{ "profile.waiting.event.all" | translate }}
+                <tui-icon icon="@tui.arrow-right" />
+            </a>
+        </article>
+
+        <!-- Свежие новости -->
+        <article class="waiting__card lh-panel">
+            <h3 class="waiting__card-title">
+                <tui-icon icon="@tui.newspaper" />
+                {{ "profile.waiting.news.title" | translate }}
+            </h3>
+            @if (news(); as list) {
+                @if (list.length) {
+                    <ul class="waiting__news">
+                        @for (item of list; track item.id) {
+                            <li>
+                                <a class="waiting__news-link" [routerLink]="['/news', item.id]">
+                                    <span class="waiting__news-title">{{ item.title }}</span>
+                                    @if (newsDate(item); as date) {
+                                        <time class="waiting__news-date" [appRelativeTime]="date"></time>
+                                    }
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                } @else {
+                    <p class="waiting__empty">{{ "profile.waiting.news.empty" | translate }}</p>
+                }
+            } @else {
+                <span class="waiting__skeleton" aria-hidden="true"></span>
+                <span class="waiting__skeleton" aria-hidden="true"></span>
+            }
+            <a class="waiting__more" routerLink="/" fragment="news">
+                {{ "profile.waiting.news.all" | translate }}
+                <tui-icon icon="@tui.arrow-right" />
+            </a>
+        </article>
+
+        <!-- Подбор поселения -->
+        <article class="waiting__card waiting__card--accent lh-panel">
+            <h3 class="waiting__card-title">
+                <tui-icon icon="@tui.compass" />
+                {{ "profile.waiting.finder.title" | translate }}
+            </h3>
+            <p class="waiting__text">{{ "profile.waiting.finder.text" | translate }}</p>
+            <button type="button" class="lh-cta waiting__finder" (click)="openFinder()">
+                {{ "profile.waiting.finder.action" | translate }}
+                <span class="lh-cta__icon"><tui-icon icon="@tui.arrow-right" class="size-4!" /></span>
+            </button>
+        </article>
+
+        <!-- Осмотритесь -->
+        <article class="waiting__card lh-panel">
+            <h3 class="waiting__card-title">
+                <tui-icon icon="@tui.map" />
+                {{ "profile.waiting.explore.title" | translate }}
+            </h3>
+            <nav class="waiting__explore" [attr.aria-label]="'profile.waiting.explore.title' | translate">
+                @for (item of exploreLinks; track item.key) {
+                    <a class="waiting__explore-link" [routerLink]="item.link">
+                        <tui-icon [icon]="item.icon" />
+                        {{ "profile.waiting.explore." + item.key | translate }}
+                    </a>
+                }
+            </nav>
+        </article>
+    </div>
+</section>

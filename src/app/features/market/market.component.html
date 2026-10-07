@@ -1,15 +1,6 @@
 <div class="p-6 flex flex-col gap-8">
     <!-- Шапка: заголовок, баланс и быстрый доступ к пополнению -->
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-        <div class="flex flex-col gap-2">
-            <h1 class="lh-display text-2xl md:text-3xl lg:text-4xl font-bold text-lh-primary">
-                {{ 'market.marketPage.title' | translate }}
-            </h1>
-            <p class="text-base md:text-lg text-ink-2 max-w-2xl">
-                {{ 'market.marketPage.subtitle' | translate }}
-            </p>
-        </div>
-
+    <app-page-header [title]="'market.marketPage.title' | translate" [subtitle]="'market.marketPage.subtitle' | translate">
         <div class="flex flex-wrap items-center gap-3">
             @if (balance$ | async; as balance) {
                 <div
@@ -29,13 +20,13 @@
             <button
                 type="button"
                 (click)="howToBuy()"
-                class="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-deep to-brand-lit px-5 py-2.5 text-base lg:text-lg font-bold uppercase tracking-wide text-white shadow-[0_4px_16px_rgba(195,90,23,0.35)] transition-all duration-200 hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] cursor-pointer"
+                class="lh-cta"
             >
                 <tui-icon icon="@tui.plus" class="size-5!" />
                 {{ 'market.marketPage.topUp' | translate }}
             </button>
         </div>
-    </div>
+    </app-page-header>
 
     <!-- Аргументы доверия -->
     <div class="flex flex-wrap gap-x-6 gap-y-2 -mt-4 text-sm md:text-base text-ink-2">
@@ -50,61 +41,18 @@
     </div>
 
     <!-- Вкладки -->
-    <div class="flex gap-3">
-        <button
-            type="button"
-            (click)="activeItemIndex.set(0)"
-            class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
-            [class.border-line-strong]="activeItemIndex() === 0"
-            [class.bg-gradient-to-r]="activeItemIndex() === 0"
-            [class.from-night-grad-1]="activeItemIndex() === 0"
-            [class.via-night-grad-2]="activeItemIndex() === 0"
-            [class.to-night-grad-3]="activeItemIndex() === 0"
-            [class.text-parchment-2]="activeItemIndex() === 0"
-            [class.shadow-md]="activeItemIndex() === 0"
-            [class.border-line]="activeItemIndex() !== 0"
-            [class.bg-surface-3]="activeItemIndex() !== 0"
-            [class.text-ink]="activeItemIndex() !== 0"
-            [class.hover:bg-surface-4]="activeItemIndex() !== 0"
-        >
-            {{ 'market.marketPage.tabPrivileges' | translate }}
-        </button>
-        <button
-            type="button"
-            (click)="activeItemIndex.set(1)"
-            class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
-            [class.border-line-strong]="activeItemIndex() === 1"
-            [class.bg-gradient-to-r]="activeItemIndex() === 1"
-            [class.from-night-grad-1]="activeItemIndex() === 1"
-            [class.via-night-grad-2]="activeItemIndex() === 1"
-            [class.to-night-grad-3]="activeItemIndex() === 1"
-            [class.text-parchment-2]="activeItemIndex() === 1"
-            [class.shadow-md]="activeItemIndex() === 1"
-            [class.border-line]="activeItemIndex() !== 1"
-            [class.bg-surface-3]="activeItemIndex() !== 1"
-            [class.text-ink]="activeItemIndex() !== 1"
-            [class.hover:bg-surface-4]="activeItemIndex() !== 1"
-        >
-            {{ 'market.marketPage.tabKits' | translate }}
-        </button>
-        <button
-            type="button"
-            (click)="activeItemIndex.set(2)"
-            class="flex-1 min-w-0 py-2.5 lg:py-3.5 rounded-xl border-2 text-sm sm:text-base lg:text-xl font-bold uppercase transition-all duration-200"
-            [class.border-line-strong]="activeItemIndex() === 2"
-            [class.bg-gradient-to-r]="activeItemIndex() === 2"
-            [class.from-night-grad-1]="activeItemIndex() === 2"
-            [class.via-night-grad-2]="activeItemIndex() === 2"
-            [class.to-night-grad-3]="activeItemIndex() === 2"
-            [class.text-parchment-2]="activeItemIndex() === 2"
-            [class.shadow-md]="activeItemIndex() === 2"
-            [class.border-line]="activeItemIndex() !== 2"
-            [class.bg-surface-3]="activeItemIndex() !== 2"
-            [class.text-ink]="activeItemIndex() !== 2"
-            [class.hover:bg-surface-4]="activeItemIndex() !== 2"
-        >
-            {{ 'market.marketPage.tabSpecial' | translate }}
-        </button>
+    <div class="lh-chips" role="tablist" [attr.aria-label]="'market.marketPage.title' | translate">
+        @for (tab of tabs; track tab; let index = $index) {
+            <button
+                type="button"
+                role="tab"
+                class="lh-chip lh-chip--lg"
+                [attr.aria-selected]="activeItemIndex() === index"
+                (click)="activeItemIndex.set(index)"
+            >
+                {{ tab | translate }}
+            </button>
+        }
     </div>
 
     @switch (activeItemIndex()) {

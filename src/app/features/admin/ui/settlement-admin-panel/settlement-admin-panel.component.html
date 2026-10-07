@@ -122,12 +122,11 @@
                 <span class="text-lg font-semibold text-ink">
                     {{ 'admin.settlementAdmin.diplomacyTitle' | translate }}
                 </span>
-                <div class="flex flex-wrap gap-2">
+                <div class="lh-chips">
                     @for (option of diplomacyOptions; track option.value) {
                         <button
                             type="button"
-                            class="settlement-admin__diplomacy"
-                            [class.settlement-admin__diplomacy--active]="current.diplomacy === option.value"
+                            class="lh-chip"
                             [attr.aria-pressed]="current.diplomacy === option.value"
                             [disabled]="busy()"
                             (click)="setDiplomacy(current, option.value)"

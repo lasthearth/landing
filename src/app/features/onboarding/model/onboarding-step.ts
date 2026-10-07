@@ -14,4 +14,9 @@ export interface OnboardingStep {
      * Состояние шага.
      */
     state: OnboardingStepState;
+
+    /**
+     * Шаг по желанию: не мешает считать путь пройденным.
+     */
+    optional: boolean;
 }

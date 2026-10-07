@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     forwardRef,
     inject,
@@ -10,13 +11,13 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TuiIcon } from '@taiga-ui/core';
-import { MediaService } from '@entities/media';
+import { renderNewsMarkdown } from '@shared/lib/news-markdown';
 import { I18nService, TranslatePipe } from '@core/i18n';
-import { NewsEditorAction } from './news-editor-action';
-import { NEWS_EDITOR_TOOLBAR } from './news-editor-toolbar.constant';
+import { MarkupEditorAction } from './markup-editor-action';
+import { MARKUP_EDITOR_TOOLBAR } from './markup-editor-toolbar.constant';
 
 /**
- * Максимальный размер картинки в тексте новости, байт.
+ * Максимальный размер картинки в тексте, байт.
  */
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 
@@ -36,36 +37,35 @@ const LINE_PREFIX: Record<'heading' | 'list' | 'orderedList' | 'quote', RegExp> 
 const ANY_LINE_PREFIX = /^(#{1,3}\s+|\s*[-*•]\s+|\s*\d+[.)]\s+|>\s?)/;
 
 /**
- * Редактор текста новости.
+ * Редактор текста с разметкой: новости, события, описания поселений.
  *
  * Текст пишется в разметке, совместимой с Discord (`**жирный**`, `## заголовок`,
  * `- список`, `||спойлер||`…), а панель и сочетания клавиш расставляют её
- * за автора. Картинки загружаются прямо в текст. Вставка идёт через
- * `execCommand('insertText')`, поэтому Ctrl+Z отменяет и действия панели.
+ * за автора. Вставка идёт через `execCommand('insertText')`, поэтому Ctrl+Z
+ * отменяет и действия панели.
+ *
+ * Картинки в текст доступны, только если передан загрузчик `uploadImage`
+ * (у игроков нет прав на загрузку в медиасервис — им кнопка не показывается).
+ * С `preview` рядом с полем появляется переключатель «Текст / Как увидят».
  *
  * Значение контрола — исходный текст; в HTML его превращает `renderNewsMarkdown`.
  */
 @Component({
     standalone: true,
-    selector: 'app-news-content-editor',
+    selector: 'app-markup-editor',
     imports: [TuiIcon, TranslatePipe],
-    templateUrl: './news-content-editor.component.html',
-    styleUrl: './news-content-editor.component.less',
+    templateUrl: './markup-editor.component.html',
+    styleUrl: './markup-editor.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NewsContentEditorComponent),
+            useExisting: forwardRef(() => MarkupEditorComponent),
             multi: true,
         },
     ],
 })
-export class NewsContentEditorComponent implements ControlValueAccessor {
-    /**
-     * Сервис загрузки файлов.
-     */
-    private readonly mediaService = inject(MediaService);
-
+export class MarkupEditorComponent implements ControlValueAccessor {
     /**
      * Переводы (тексты-заготовки при вставке разметки).
      */
@@ -97,9 +97,44 @@ export class NewsContentEditorComponent implements ControlValueAccessor {
     public readonly placeholder = input<string>('');
 
     /**
-     * Группы кнопок панели.
+     * Загрузчик картинок: получает файл, возвращает публичный URL.
+     * Без него кнопки «Картинка» нет.
      */
-    protected readonly toolbar = NEWS_EDITOR_TOOLBAR;
+    public readonly uploadImage = input<((file: File) => Promise<string>) | null>(null);
+
+    /**
+     * Высота поля в строках.
+     */
+    public readonly rows = input(12);
+
+    /**
+     * Показывать переключатель предпросмотра.
+     */
+    public readonly preview = input(false);
+
+    /**
+     * Ограничение длины (для счётчика), если есть.
+     */
+    public readonly maxLength = input<number | null>(null);
+
+    /**
+     * Открыт предпросмотр вместо поля.
+     */
+    protected readonly previewing = signal(false);
+
+    /**
+     * HTML предпросмотра.
+     */
+    protected readonly previewHtml = computed(() => (this.previewing() ? renderNewsMarkdown(this.value()) : ''));
+
+    /**
+     * Группы кнопок панели (без «Картинки», если загрузчика нет).
+     */
+    protected readonly toolbar = computed(() =>
+        this.uploadImage()
+            ? MARKUP_EDITOR_TOOLBAR
+            : MARKUP_EDITOR_TOOLBAR.map((group) => group.filter((button) => button.action !== 'image'))
+    );
 
     /**
      * Текущее значение (для счётчика символов).
@@ -176,7 +211,7 @@ export class NewsContentEditorComponent implements ControlValueAccessor {
             return;
         }
 
-        const map: Record<string, NewsEditorAction> = { b: 'bold', i: 'italic', u: 'underline', k: 'link' };
+        const map: Record<string, MarkupEditorAction> = { b: 'bold', i: 'italic', u: 'underline', k: 'link' };
         // event.code не зависит от раскладки: Ctrl+B работает и на русской.
         const key = event.code.startsWith('Key') ? event.code.slice(3).toLowerCase() : event.key.toLowerCase();
         const action = map[key];
@@ -192,8 +227,15 @@ export class NewsContentEditorComponent implements ControlValueAccessor {
      *
      * @param action Действие.
      */
-    protected apply(action: NewsEditorAction): void {
+    protected apply(action: MarkupEditorAction): void {
         if (this.disabled()) {
+            return;
+        }
+
+        // Действие панели из предпросмотра возвращает к тексту.
+        if (this.previewing()) {
+            this.previewing.set(false);
+            queueMicrotask(() => this.apply(action));
             return;
         }
 
@@ -218,6 +260,9 @@ export class NewsContentEditorComponent implements ControlValueAccessor {
             case 'divider':
                 return this.insertBlock('---');
             case 'image':
+                if (!this.uploadImage()) {
+                    return;
+                }
                 this.uploadError.set(null);
                 this.fileRef().nativeElement.click();
                 return;
@@ -243,10 +288,16 @@ export class NewsContentEditorComponent implements ControlValueAccessor {
             return;
         }
 
+        const upload = this.uploadImage();
+
+        if (!upload) {
+            return;
+        }
+
         this.uploading.set(true);
 
         try {
-            const url = await this.mediaService.uploadFile(file, 'UPLOAD_PURPOSE_NEWS');
+            const url = await upload(file);
             this.insertBlock(`![](${url})`, 2);
         } catch {
             this.uploadError.set('news.editor.uploadError');

@@ -28,8 +28,9 @@
             <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />
 
             <p class="text-[23px] leading-[32px] font-bold text-ink">{{ 'news.create.contentLabel' | translate }}</p>
-            <app-news-content-editor
+            <app-markup-editor
                 formControlName="content"
+                [uploadImage]="uploadImage"
                 [placeholder]="'news.create.contentPlaceholder' | translate"
             />
             <tui-error formControlName="content" [error]="[] | tuiFieldError | async" />
@@ -129,13 +130,12 @@
     <div class="lh-panel">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'news.create.previewTitle' | translate }}</p>
-            <div class="create-news__modes" role="tablist" [attr.aria-label]="'news.create.previewTitle' | translate">
+            <div class="lh-chips" role="tablist" [attr.aria-label]="'news.create.previewTitle' | translate">
                 @for (mode of ['featured', 'compact', 'page']; track mode) {
                     <button
                         type="button"
                         role="tab"
-                        class="create-news__mode"
-                        [class.create-news__mode--active]="previewMode() === mode"
+                        class="lh-chip"
                         [attr.aria-selected]="previewMode() === mode"
                         (click)="previewMode.set($any(mode))"
                     >

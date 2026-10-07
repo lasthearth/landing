@@ -10,13 +10,14 @@ import { TitlesComponent } from './components/titles/titles.component';
 import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
 import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
+import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
  * Компонент магазина привилегий.
  */
 @Component({
     selector: 'app-market',
-    imports: [TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe],
+    imports: [PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -25,6 +26,15 @@ export class MarketComponent {
      * Индекс открытой вкладки.
      */
     protected activeItemIndex = signal(0);
+
+    /**
+     * Подписи вкладок магазина (ключи переводов) в порядке `activeItemIndex`.
+     */
+    protected readonly tabs = [
+        'market.marketPage.tabPrivileges',
+        'market.marketPage.tabKits',
+        'market.marketPage.tabSpecial',
+    ] as const;
 
     private readonly dialogs = inject(TuiDialogService);
 

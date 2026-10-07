@@ -29,6 +29,7 @@ import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { IJwtTokenLh } from '../model/i-jwt-token-lh';
 import { IUser } from '../model/i-user';
 import { IPlayer } from '../model/i-player';
+import { ILeaderBoard } from '../model/i-leader-board';
 import { IPlayerStats } from '../model/i-player-stats';
 import { ISettlementInvitation } from '@entities/settlement';
 
@@ -422,7 +423,7 @@ export class UserService {
                     death_count: entry.deaths,
                     hours_played: entry.hours_played,
                     players_killed: entry.kills,
-                    last_online: 0,
+                    last_online: entry.last_online ?? 0,
                     hours_rank: hoursRank,
                     total_players: entries.length,
                 } satisfies IPlayerStats;
@@ -432,24 +433,31 @@ export class UserService {
     }
 
     /**
+     * Все игроки сервера из таблицы лидеров (кэш, общий с подсказками на чипах).
+     *
+     * Ошибка не показывается: потребитель получает пустой список.
+     *
+     * @returns Observable со всеми записями таблицы лидеров.
+     */
+    public getAllPlayersStats$(): Observable<ILeaderBoard[]> {
+        return this.leaderboardStats$().pipe(catchError(() => of([] as ILeaderBoard[])));
+    }
+
+    /**
      * Кэшированный запрос всей таблицы лидеров (по убийствам).
      * Источник статистики для тултипов игроков; общий на все чипы.
      *
      * Вспомогательный запрос: при ошибке алерт не показывается
      * (`SKIP_ERROR_ALERT`), чип деградирует к «Статистика недоступна».
      */
-    private leaderboardStats$(): Observable<
-        Array<{ name: string; deaths: number; kills: number; hours_played: number }>
-    > {
+    private leaderboardStats$(): Observable<ILeaderBoard[]> {
         if (!this.leaderboardStatsCache$) {
             // Без лимита API отдаёт топ‑25. 1000 с запасом покрывает всех игроков сервера (~460 на октябрь 2026),
             // иначе у игроков вне топа в подсказке было «Статистика недоступна».
             const params = new HttpParams().set('filter', 'LEADERBOARD_FILTER_KILLS').set('limit', LEADERBOARD_ALL_LIMIT);
 
             this.leaderboardStatsCache$ = this.http
-                .get<{
-                    entries: Array<{ name: string; deaths: number; kills: number; hours_played: number }>;
-                }>(`${this.baseUrl}/leaderboard`, {
+                .get<{ entries: ILeaderBoard[] }>(`${this.baseUrl}/leaderboard`, {
                     params,
                     context: new HttpContext().set(SKIP_ERROR_ALERT, true),
                 })
@@ -465,9 +473,7 @@ export class UserService {
     /**
      * Кэш таблицы лидеров для статистики игроков (см. {@link leaderboardStats$}).
      */
-    private leaderboardStatsCache$?: Observable<
-        Array<{ name: string; deaths: number; kills: number; hours_played: number }>
-    >;
+    private leaderboardStatsCache$?: Observable<ILeaderBoard[]>;
 
     /**
      * Создает запрос на изменение игрового никнейма пользователя.

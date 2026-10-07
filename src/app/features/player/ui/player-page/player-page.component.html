@@ -1,0 +1,149 @@
+<section class="player-page">
+    @switch (state().status) {
+        @case ("loading") {
+            <div class="player-page__state" role="status">
+                <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
+                <span>{{ "player.loading" | translate }}</span>
+            </div>
+        }
+        @case ("not-found") {
+            <div class="player-page__state">
+                <tui-icon icon="@tui.user-round-search" class="size-14 opacity-60" />
+                <h1 class="player-page__state-title">{{ "player.notFound.title" | translate }}</h1>
+                <p class="player-page__state-text">{{ "player.notFound.text" | translate }}</p>
+                <a class="lh-chip lh-chip--lg" [routerLink]="['/settlements']">
+                    {{ "player.notFound.action" | translate }}
+                </a>
+            </div>
+        }
+        @case ("ready") {
+            @if (profile(); as p) {
+                <header class="player-hero lh-panel">
+                    <app-image-loader
+                        class="player-hero__avatar"
+                        [src]="p.avatarUrl"
+                        [alt]="p.nickname"
+                        imageClass="h-full w-full object-cover"
+                    />
+
+                    <div class="player-hero__info">
+                        <h1 class="player-hero__name lh-display">{{ p.nickname }}</h1>
+
+                        <p class="player-hero__status" [class.player-hero__status--online]="p.isOnline">
+                            <span class="player-hero__dot" aria-hidden="true"></span>
+                            @if (p.isOnline) {
+                                {{ "player.online" | translate }}
+                            } @else if (p.lastOnline) {
+                                {{ "player.lastOnline" | translate }}
+                                <time [appRelativeTime]="p.lastOnline"></time>
+                            } @else {
+                                {{ "player.offline" | translate }}
+                            }
+                        </p>
+
+                        @if (p.settlement; as settlement) {
+                            <a class="player-hero__settlement" [routerLink]="['/settlements', settlement.id]">
+                                <tui-icon
+                                    [icon]="p.settlementRole === 'leader' ? '@tui.crown' : '@tui.house'"
+                                    class="size-4!"
+                                />
+                                {{ "player.settlementRole." + p.settlementRole | translate }}
+                                «{{ settlement | settlementDisplayName }}»
+                            </a>
+                        } @else {
+                            <span class="player-hero__settlement player-hero__settlement--none">
+                                <tui-icon icon="@tui.tent" class="size-4!" />
+                                {{ "player.noSettlement" | translate }}
+                            </span>
+                        }
+
+                        <app-player-badges [badges]="p.badges" />
+                    </div>
+
+                    <app-share-button
+                        class="player-hero__share"
+                        [url]="'/player/' + p.nickname"
+                        [title]="p.nickname"
+                        [iconOnly]="true"
+                    />
+                </header>
+
+                <section class="player-stats" [attr.aria-label]="'player.stats.title' | translate">
+                    <div class="player-stat">
+                        <tui-icon icon="@tui.clock" class="player-stat__icon" />
+                        <span class="player-stat__value">{{ p.hours.toFixed(0) }}</span>
+                        <span class="player-stat__label">{{ "player.stats.hours" | translate }}</span>
+                        <span class="player-stat__rank">
+                            {{ "player.stats.rank" | translate: { rank: p.hoursRank, total: p.totalPlayers } }}
+                        </span>
+                    </div>
+                    <div class="player-stat">
+                        <tui-icon icon="@tui.swords" class="player-stat__icon" />
+                        <span class="player-stat__value">{{ p.kills }}</span>
+                        <span class="player-stat__label">{{ "player.stats.kills" | translate }}</span>
+                        <span class="player-stat__rank">
+                            {{ "player.stats.rank" | translate: { rank: p.killsRank, total: p.totalPlayers } }}
+                        </span>
+                    </div>
+                    <div class="player-stat">
+                        <tui-icon icon="@tui.skull" class="player-stat__icon" />
+                        <span class="player-stat__value">{{ p.deaths }}</span>
+                        <span class="player-stat__label">{{ "player.stats.deaths" | translate }}</span>
+                        @if (p.hours > 0) {
+                            <span class="player-stat__rank">
+                                {{
+                                    "player.stats.perDeath"
+                                        | translate
+                                            : { hours: p.deaths ? (p.hours / p.deaths).toFixed(1) : p.hours.toFixed(0) }
+                                }}
+                            </span>
+                        }
+                    </div>
+                </section>
+
+                @if (p.hungerGames; as hg) {
+                    <section class="player-hg lh-panel">
+                        <h2 class="player-section-title">
+                            <tui-icon icon="@tui.flame" class="size-5!" />
+                            {{ "player.hungerGames.title" | translate: { season: hg.season } }}
+                            @if (hg.active) {
+                                <span class="player-hg__live">{{ "player.hungerGames.active" | translate }}</span>
+                            }
+                        </h2>
+                        <dl class="player-hg__facts">
+                            <div>
+                                <dt>{{ "player.hungerGames.elo" | translate }}</dt>
+                                <dd>{{ hg.elo }}</dd>
+                            </div>
+                            <div>
+                                <dt>{{ "player.hungerGames.wins" | translate }}</dt>
+                                <dd>{{ hg.wins }}</dd>
+                            </div>
+                            <div>
+                                <dt>{{ "player.hungerGames.kills" | translate }}</dt>
+                                <dd>{{ hg.kills }}</dd>
+                            </div>
+                            @if (hg.rank > 0) {
+                                <div>
+                                    <dt>{{ "player.hungerGames.rank" | translate }}</dt>
+                                    <dd>#{{ hg.rank }}</dd>
+                                </div>
+                            }
+                        </dl>
+                    </section>
+                }
+
+                @if (p.badges.length) {
+                    <section class="player-badges-section">
+                        <h2 class="player-section-title">
+                            <tui-icon icon="@tui.award" class="size-5!" />
+                            {{ "player.badgesTitle" | translate }}
+                        </h2>
+                        <app-player-badges [badges]="p.badges" variant="full" />
+                        <p class="player-note">{{ "player.badgesNote" | translate }}</p>
+                    </section>
+                }
+            }
+        }
+    }
+</section>

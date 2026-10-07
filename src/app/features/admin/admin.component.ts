@@ -22,6 +22,7 @@ import { SettlementAdminPanelComponent } from './ui/settlement-admin-panel/settl
 import { TuiPulse } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
+import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
  * Компонент страницы администратора.
@@ -29,7 +30,7 @@ import { TranslatePipe } from '@core/i18n';
 @Component({
     standalone: true,
     selector: 'app-admin',
-    imports: [
+    imports: [PageHeaderComponent, 
         PlayerVerifyRequestComponent,
         AsyncPipe,
         SettlementVerificationRequestComponent,

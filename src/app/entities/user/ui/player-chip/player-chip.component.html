@@ -50,6 +50,13 @@
                     <dd>{{ s.death_count }}</dd>
                 </div>
             </dl>
+            @if (!player().is_online && s.last_online) {
+                <div class="player-tooltip__rank">
+                    <tui-icon icon="@tui.clock" class="player-tooltip__rank-icon" />
+                    {{ 'settlements.player.lastOnline' | translate }}
+                    <time [appRelativeTime]="s.last_online"></time>
+                </div>
+            }
             @if (s.hours_rank && s.total_players) {
                 <div class="player-tooltip__rank">
                     <tui-icon icon="@tui.trophy" class="player-tooltip__rank-icon" />
@@ -86,7 +93,12 @@
     @if (hasRoles()) {
         <tui-icon icon="@tui.shield" class="player-chip__roles" />
     }
-    <span class="player-chip__name">{{ player().user_game_name }}</span>
+    <a
+        class="player-chip__name"
+        [routerLink]="['/player', player().user_game_name]"
+        [title]="'settlements.player.openProfile' | translate"
+        >{{ player().user_game_name }}</a
+    >
 
     @if (removable()) {
         <button

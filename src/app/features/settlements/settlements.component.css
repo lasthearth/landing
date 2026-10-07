@@ -61,48 +61,6 @@
     font-size: 1.0625rem;
 }
 
-.settlements-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.settlements-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    height: 2.25rem;
-    padding: 0 0.875rem;
-    border: 1px solid var(--color-line);
-    border-radius: 999px;
-    background: var(--color-surface);
-    color: var(--color-ink);
-    font-size: 0.9375rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.settlements-chip:hover {
-    border-color: var(--lh-brand);
-}
-
-.settlements-chip:focus-visible {
-    outline: 2px solid var(--lh-brand);
-    outline-offset: 2px;
-}
-
-.settlements-chip--active {
-    color: #fff;
-    border-color: transparent;
-    background: linear-gradient(150deg, var(--lh-brand-deep), var(--lh-brand-deep-2));
-}
-
-.settlements-chip__count {
-    font-size: 0.8125rem;
-    opacity: 0.7;
-}
-
 .settlements-filters__summary {
     display: flex;
     flex-wrap: wrap;

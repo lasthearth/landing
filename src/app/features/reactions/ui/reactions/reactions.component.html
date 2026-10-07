@@ -1,0 +1,48 @@
+<div class="reactions" role="group" [attr.aria-label]="'shared.reactions.label' | translate">
+    @for (emoji of shown(); track emoji.key) {
+        <button
+            type="button"
+            class="reactions__pill"
+            [class.reactions__pill--mine]="emoji.mine"
+            [attr.aria-pressed]="emoji.mine"
+            [attr.aria-label]="'shared.reactions.' + emoji.key | translate"
+            [title]="'shared.reactions.' + emoji.key | translate"
+            (click)="toggle(emoji.key, $event)"
+        >
+            <span class="reactions__glyph" aria-hidden="true">{{ emoji.glyph }}</span>
+            <span class="reactions__count">{{ emoji.count }}</span>
+        </button>
+    }
+
+    <div class="reactions__add-wrap">
+        <button
+            type="button"
+            class="reactions__add"
+            [attr.aria-expanded]="pickerOpen()"
+            [attr.aria-label]="'shared.reactions.add' | translate"
+            [title]="'shared.reactions.add' | translate"
+            (click)="togglePicker($event)"
+        >
+            <tui-icon icon="@tui.smile-plus" class="size-4!" />
+        </button>
+
+        @if (pickerOpen()) {
+            <div class="reactions__picker" role="menu">
+                @for (emoji of emojis; track emoji.key) {
+                    <button
+                        type="button"
+                        role="menuitemcheckbox"
+                        class="reactions__option"
+                        [class.reactions__option--mine]="mine().includes(emoji.key)"
+                        [attr.aria-checked]="mine().includes(emoji.key)"
+                        [attr.aria-label]="'shared.reactions.' + emoji.key | translate"
+                        [title]="'shared.reactions.' + emoji.key | translate"
+                        (click)="toggle(emoji.key, $event)"
+                    >
+                        {{ emoji.glyph }}
+                    </button>
+                }
+            </div>
+        }
+    </div>
+</div>

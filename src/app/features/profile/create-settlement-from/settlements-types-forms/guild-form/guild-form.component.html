@@ -37,7 +37,12 @@
             <span class="text-lh-danger">*</span>
             <lh-hint [hintText]="'settlements.form.descriptionHint' | translate" />
         </p>
-        <lh-input [placeholder]="'settlements.form.descriptionPlaceholder' | translate" type="textarea" formControlName="description" />
+        <app-markup-editor
+            formControlName="description"
+            [placeholder]="'settlements.form.descriptionPlaceholder' | translate"
+            [preview]="true"
+            [rows]="7"
+        />
     </div>
 
     <div *ngFor="let key of fileFields">

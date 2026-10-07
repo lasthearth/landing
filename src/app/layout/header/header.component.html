@@ -283,6 +283,19 @@
                                 >
                             }
                         </button>
+                        <button
+                            type="button"
+                            [routerLink]="['/events']"
+                            (click)="showMobileMenu.set(false)"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': select === 'events',
+                                'text-lh-primary hover:bg-surface-3': select !== 'events',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                            <tui-icon icon="@tui.calendar-days" class="size-4!" />
+                            {{ "header.nav.events" | translate }}
+                        </button>
                     </div>
                 }
             </div>
@@ -359,6 +372,16 @@
                     @if (newContent.isFresh('diplomacy')) {
                         <span class="nav-dot"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
                     }
+                </button>
+
+                <button
+                    [routerLink]="['/events']"
+                    [ngClass]="{ 'nav-button--active': select === 'events' }"
+                    class="nav-button md:w-auto px-1.5"
+                    [attr.aria-label]="'header.nav.events' | translate"
+                >
+                    <tui-icon icon="@tui.calendar-days" />
+                    <span class="hidden md:block">{{ "header.nav.events" | translate }}</span>
                 </button>
 
                 <button
@@ -484,6 +507,10 @@
                     </div>
                 }
             </div>
+
+            @if (isAuth) {
+                <app-notification-bell />
+            }
 
             <button
                 (click)="isAuth ? '' : signIn()"

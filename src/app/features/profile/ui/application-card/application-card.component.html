@@ -1,0 +1,102 @@
+<section class="application lh-panel" [class]="'application--' + state()" aria-labelledby="application-title">
+    <header class="application__header">
+        <div class="application__heading">
+            <h2 id="application-title" class="application__title">{{ "profile.application.title" | translate }}</h2>
+            <span class="application__badge">{{ "profile.application.state." + state() | translate }}</span>
+        </div>
+        @if (submission(); as sent) {
+            @if (state() !== "none") {
+                <p class="application__meta">
+                    {{ "profile.application.sentAt" | translate: { nickname: sent.nickname } }}
+                    <time [appRelativeTime]="sent.at"></time>
+                </p>
+            }
+        }
+    </header>
+
+    <ol class="application__timeline">
+        @for (item of timeline(); track item.key) {
+            <li class="application__node" [class]="'application__node--' + item.state">
+                <span class="application__marker" aria-hidden="true">
+                    @switch (item.state) {
+                        @case ("done") {
+                            <tui-icon icon="@tui.check" />
+                        }
+                        @case ("current") {
+                            <tui-icon icon="@tui.hourglass" />
+                        }
+                        @case ("failed") {
+                            <tui-icon icon="@tui.x" />
+                        }
+                        @default {
+                            <span class="application__marker-dot"></span>
+                        }
+                    }
+                </span>
+                <span class="application__node-label">
+                    {{ "profile.application.timeline." + item.key | translate }}
+                </span>
+            </li>
+        }
+    </ol>
+
+    <div class="application__body">
+        @switch (state()) {
+            @case ("none") {
+                <p class="application__text">{{ "profile.application.none.text" | translate }}</p>
+                <ul class="application__checklist">
+                    <li>
+                        <tui-icon icon="@tui.gamepad-2" />
+                        {{ "profile.application.none.need.nickname" | translate }}
+                    </li>
+                    <li>
+                        <tui-icon icon="@tui.message-circle" />
+                        {{ "profile.application.none.need.contacts" | translate }}
+                    </li>
+                    <li>
+                        <tui-icon icon="@tui.file-text" />
+                        {{ "profile.application.none.need.questions" | translate }}
+                    </li>
+                </ul>
+                <div class="application__actions">
+                    <button type="button" class="lh-cta" (click)="fill.emit()">
+                        {{ "profile.application.none.action" | translate }}
+                        <span class="lh-cta__icon"><tui-icon icon="@tui.arrow-right" class="size-4!" /></span>
+                    </button>
+                    <a class="lh-chip lh-chip--lg" [routerLink]="['/rules']">
+                        {{ "profile.application.none.rules" | translate }}
+                    </a>
+                </div>
+            }
+            @case ("pending") {
+                <p class="application__text">{{ "profile.application.pending.text" | translate }}</p>
+                <div class="application__actions">
+                    <button type="button" class="lh-chip lh-chip--lg" (click)="refresh.emit()">
+                        <tui-icon icon="@tui.refresh-cw" />
+                        {{ "profile.application.pending.refresh" | translate }}
+                    </button>
+                </div>
+            }
+            @case ("rejected") {
+                <p class="application__text">{{ "profile.application.rejected.text" | translate }}</p>
+                @if (rejectionReason()) {
+                    <blockquote class="application__reason">{{ rejectionReason() }}</blockquote>
+                }
+                <div class="application__actions">
+                    <button type="button" class="lh-cta" (click)="fill.emit()">
+                        {{ "profile.application.rejected.action" | translate }}
+                    </button>
+                </div>
+            }
+            @case ("approved") {
+                <p class="application__text">{{ "profile.application.approved.text" | translate }}</p>
+                <div class="application__actions">
+                    <button type="button" class="lh-cta" (click)="relogin.emit()">
+                        <tui-icon icon="@tui.log-in" class="size-4!" />
+                        {{ "profile.application.approved.action" | translate }}
+                    </button>
+                </div>
+            }
+        }
+    </div>
+</section>

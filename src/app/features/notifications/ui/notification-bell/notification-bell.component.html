@@ -1,0 +1,117 @@
+<button
+    type="button"
+    class="nav-button relative !px-2.5"
+    [class.nav-button--active]="open()"
+    [attr.aria-expanded]="open()"
+    aria-haspopup="true"
+    [attr.aria-label]="
+        feed.unreadCount() > 0
+            ? ('shared.notifications.titleUnread' | translate: { count: feed.unreadCount() })
+            : ('shared.notifications.title' | translate)
+    "
+    (click)="toggle()"
+>
+    <tui-icon icon="@tui.bell" class="size-4!" />
+    @if (feed.unreadCount() > 0) {
+        <span class="bell__badge" aria-hidden="true">{{ feed.unreadCount() > 9 ? "9+" : feed.unreadCount() }}</span>
+    }
+</button>
+
+@if (open()) {
+    <div class="bell__panel" role="dialog" [attr.aria-label]="'shared.notifications.title' | translate">
+        <div class="bell__head">
+            @if (settings()) {
+                <button type="button" class="bell__back" (click)="toggleSettings()">
+                    <tui-icon icon="@tui.arrow-left" class="size-4!" />
+                    {{ "shared.notifications.settings.title" | translate }}
+                </button>
+            } @else {
+                <span class="bell__title">{{ "shared.notifications.title" | translate }}</span>
+                <span class="bell__head-actions">
+                    @if (feed.unreadCount() > 0) {
+                        <button type="button" class="bell__read-all" (click)="feed.markAllRead()">
+                            {{ "shared.notifications.readAll" | translate }}
+                        </button>
+                    }
+                    <button
+                        type="button"
+                        class="bell__gear"
+                        [class.bell__gear--filtered]="feed.hiddenCount() > 0"
+                        [attr.aria-label]="'shared.notifications.settings.open' | translate"
+                        [title]="'shared.notifications.settings.open' | translate"
+                        (click)="toggleSettings()"
+                    >
+                        <tui-icon icon="@tui.settings" class="size-4!" />
+                    </button>
+                </span>
+            }
+        </div>
+
+        @if (settings()) {
+            <div class="bell__settings">
+                <p class="bell__settings-hint">{{ "shared.notifications.settings.hint" | translate }}</p>
+                @for (category of categories; track category) {
+                    <button
+                        type="button"
+                        role="switch"
+                        class="bell__pref"
+                        [attr.aria-checked]="feed.prefs()[category]"
+                        (click)="feed.setPref(category, !feed.prefs()[category])"
+                    >
+                        <tui-icon class="bell__pref-icon" [icon]="categoryIcons[category]" />
+                        <span class="bell__pref-body">
+                            <span class="bell__pref-title">
+                                {{ "shared.notifications.settings." + category + ".title" | translate }}
+                            </span>
+                            <span class="bell__pref-text">
+                                {{ "shared.notifications.settings." + category + ".text" | translate }}
+                            </span>
+                        </span>
+                        <span class="bell__switch" aria-hidden="true"></span>
+                    </button>
+                }
+                <p class="bell__settings-note">{{ "shared.notifications.settings.note" | translate }}</p>
+            </div>
+        } @else if (feed.items().length === 0) {
+            <p class="bell__empty">
+                <tui-icon icon="@tui.bell-off" class="size-5!" />
+                @if (feed.allItems().length > 0) {
+                    {{ "shared.notifications.allHidden" | translate }}
+                    <button type="button" class="bell__read-all" (click)="toggleSettings()">
+                        {{ "shared.notifications.settings.open" | translate }}
+                    </button>
+                } @else {
+                    {{ "shared.notifications.empty" | translate }}
+                }
+            </p>
+        } @else {
+            <ul class="bell__list">
+                @for (item of feed.items(); track item.id) {
+                    <li>
+                        <button
+                            type="button"
+                            class="bell__item"
+                            [class.bell__item--unread]="!item.read"
+                            [class.bell__item--link]="item.link"
+                            (click)="select(item)"
+                        >
+                            <span class="bell__dot" aria-hidden="true"></span>
+                            <span class="bell__body">
+                                <span class="bell__item-title">
+                                    {{ item.title }}
+                                    @if (!item.read) {
+                                        <span class="sr-only">— {{ "shared.notifications.unread" | translate }}</span>
+                                    }
+                                </span>
+                                <span class="bell__message">{{ item.message }}</span>
+                                @if (item.createdAt) {
+                                    <time class="bell__time" [appRelativeTime]="item.createdAt"></time>
+                                }
+                            </span>
+                        </button>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+}

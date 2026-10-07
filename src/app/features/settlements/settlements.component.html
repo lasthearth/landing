@@ -1,66 +1,27 @@
 <div class="flex flex-col gap-6 p-6">
     <div class="flex flex-col gap-4">
-        <h1 class="lh-display text-2xl md:text-3xl lg:text-4xl font-bold text-ink">{{ 'settlements.list.title' | translate }}</h1>
+        <app-page-header [title]="'settlements.list.title' | translate">
+            <button type="button" class="lh-cta" (click)="openFinder()">
+                <tui-icon icon="@tui.compass" class="size-4!" />
+                {{ 'settlements.finder.action' | translate }}
+            </button>
+        </app-page-header>
 
-        <!--
-            Сортировка набрана кнопками `.nav-button` — той же идиомой, что
-            вкладки админки и навигация профиля. Активный ключ подсвечивается
-            брендовым градиентом (`--active`), а не `!important`-перекрытием
-            фона: перекрытие ломало тёмную тему и тени кнопки.
-        -->
-        <nav class="flex flex-wrap gap-2" [attr.aria-label]="'settlements.list.sort.label' | translate">
-            <button
-                type="button"
-                class="nav-button shrink-0"
-                [class.nav-button--active]="isSortActive('default')"
-                [attr.aria-current]="isSortActive('default') ? 'true' : null"
-                (click)="setSort('default')"
-            >
-                {{ 'settlements.list.sort.default' | translate }}
-                <tui-icon icon="@tui.minus" />
-            </button>
-            <button
-                type="button"
-                class="nav-button shrink-0"
-                [class.nav-button--active]="isSortActive('population')"
-                [attr.aria-current]="isSortActive('population') ? 'true' : null"
-                (click)="setSort('population')"
-            >
-                {{ 'settlements.list.sort.population' | translate }}
-                <tui-icon
-                    [icon]="isSortActive('population') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="transition-transform duration-300 origin-center"
-                    [class.rotate-180]="getSortDirection('population') === 'asc'"
-                />
-            </button>
-            <button
-                type="button"
-                class="nav-button shrink-0"
-                [class.nav-button--active]="isSortActive('online')"
-                [attr.aria-current]="isSortActive('online') ? 'true' : null"
-                (click)="setSort('online')"
-            >
-                {{ 'settlements.list.sort.online' | translate }}
-                <tui-icon
-                    [icon]="isSortActive('online') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="transition-transform duration-300 origin-center"
-                    [class.rotate-180]="getSortDirection('online') === 'asc'"
-                />
-            </button>
-            <button
-                type="button"
-                class="nav-button shrink-0"
-                [class.nav-button--active]="isSortActive('diplomacy')"
-                [attr.aria-current]="isSortActive('diplomacy') ? 'true' : null"
-                (click)="setSort('diplomacy')"
-            >
-                {{ 'settlements.list.sort.diplomacy' | translate }}
-                <tui-icon
-                    [icon]="isSortActive('diplomacy') ? '@tui.chevron-down' : '@tui.minus'"
-                    class="transition-transform duration-300 origin-center"
-                    [class.rotate-180]="getSortDirection('diplomacy') === 'asc'"
-                />
-            </button>
+        <!-- Сортировка: повторный клик по активному ключу меняет направление -->
+        <nav class="lh-chips" [attr.aria-label]="'settlements.list.sort.label' | translate">
+            @for (key of sortKeys; track key) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-current]="isSortActive(key) ? 'true' : null"
+                    (click)="setSort(key)"
+                >
+                    {{ 'settlements.list.sort.' + key | translate }}
+                    @if (key !== 'default' && isSortActive(key)) {
+                        <tui-icon [icon]="getSortDirection(key) === 'asc' ? '@tui.arrow-up' : '@tui.arrow-down'" />
+                    }
+                </button>
+            }
         </nav>
 
         <!-- Поиск и фильтры: состояние хранится в адресе, ссылкой на подборку можно поделиться -->
@@ -78,34 +39,32 @@
             </label>
 
             @if (typeOptions().length > 1) {
-                <div class="settlements-chips" role="group" [attr.aria-label]="'settlements.list.filterType' | translate">
+                <div class="lh-chips" role="group" [attr.aria-label]="'settlements.list.filterType' | translate">
                     @for (option of typeOptions(); track option.value) {
                         <button
                             type="button"
-                            class="settlements-chip"
-                            [class.settlements-chip--active]="typeFilter() === option.value"
+                            class="lh-chip"
                             [attr.aria-pressed]="typeFilter() === option.value"
                             (click)="toggleType(option.value)"
                         >
                             {{ option.value }}
-                            <span class="settlements-chip__count">{{ option.count }}</span>
+                            <span class="lh-chip__count">{{ option.count }}</span>
                         </button>
                     }
                 </div>
             }
 
             @if (courseOptions().length > 1) {
-                <div class="settlements-chips" role="group" [attr.aria-label]="'settlements.list.filterCourse' | translate">
+                <div class="lh-chips" role="group" [attr.aria-label]="'settlements.list.filterCourse' | translate">
                     @for (option of courseOptions(); track option.value) {
                         <button
                             type="button"
-                            class="settlements-chip"
-                            [class.settlements-chip--active]="courseFilter() === option.value"
+                            class="lh-chip"
                             [attr.aria-pressed]="courseFilter() === option.value"
                             (click)="toggleCourse(option.value)"
                         >
                             {{ option.value }}
-                            <span class="settlements-chip__count">{{ option.count }}</span>
+                            <span class="lh-chip__count">{{ option.count }}</span>
                         </button>
                     }
                 </div>
