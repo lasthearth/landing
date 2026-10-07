@@ -1,0 +1,101 @@
+<article
+    class="lfg-card lh-panel"
+    [class.lfg-card--highlighted]="highlighted()"
+    [class.lfg-card--mine]="isAuthor()"
+    [attr.id]="'post-' + post().id"
+>
+    <header class="lfg-card__head">
+        @for (activity of activities(); track activity.value) {
+            <span class="lfg-card__activity">
+                <tui-icon [icon]="activity.icon" class="size-4!" />
+                {{ "lfg.activities." + activity.key | translate }}
+            </span>
+        }
+
+        @if (live()) {
+            <span class="lfg-card__when lfg-card__when--live">
+                <span class="lfg-card__pulse" aria-hidden="true"></span>
+                {{ "lfg.card.live" | translate }}
+            </span>
+        } @else {
+            <span class="lfg-card__when">
+                <tui-icon icon="@tui.hourglass" class="size-3.5!" />
+                {{ "lfg.card.startsIn" | translate: { time: countdown() } }}
+            </span>
+        }
+        <span class="lfg-card__time">{{ when() }}</span>
+
+        @if (isAuthor()) {
+            <span class="lfg-card__own">{{ "lfg.card.own" | translate }}</span>
+        }
+    </header>
+
+    <h3 class="lfg-card__title lh-display">{{ post().title }}</h3>
+    @if (post().description) {
+        <p class="lfg-card__text">{{ post().description }}</p>
+    }
+
+    <div class="lfg-card__people">
+        <div class="lfg-card__group">
+            <span class="lfg-card__label">{{ "lfg.card.author" | translate }}</span>
+            <app-player-chip [player]="playerOf(post().authorId)" />
+        </div>
+
+        <div class="lfg-card__group">
+            <span class="lfg-card__label">
+                {{ "lfg.card.slots" | translate: { taken: post().responders.length, total: post().slots } }}
+            </span>
+            <div class="lfg-card__slots">
+                @for (id of post().responders; track id) {
+                    <app-player-chip [player]="playerOf(id)" />
+                }
+                @for (slot of freeSlots(); track $index) {
+                    <span class="lfg-card__free" aria-hidden="true"></span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <footer class="lfg-card__footer">
+        <div class="lfg-card__actions">
+            @if (isAuthor()) {
+                <button type="button" class="lh-cta lh-cta--ghost" [disabled]="busy()" (click)="closePost.emit()">
+                    <tui-icon icon="@tui.circle-x" class="size-4!" />
+                    {{ "lfg.card.close" | translate }}
+                </button>
+            } @else if (!viewer().userId) {
+                <button type="button" class="lh-cta" (click)="signIn.emit()">
+                    <tui-icon icon="@tui.log-in" class="size-4!" />
+                    {{ "lfg.card.signIn" | translate }}
+                </button>
+            } @else if (!viewer().verified) {
+                <span class="lfg-card__note">
+                    <tui-icon icon="@tui.lock" class="size-4!" />
+                    {{ "lfg.card.verifyFirst" | translate }}
+                </span>
+            } @else if (joined()) {
+                <button
+                    type="button"
+                    class="lh-cta lh-cta--ghost lfg-card__leave"
+                    [disabled]="busy()"
+                    (click)="respond.emit()"
+                >
+                    <tui-icon icon="@tui.check" class="size-4!" />
+                    {{ "lfg.card.leave" | translate }}
+                </button>
+            } @else if (full()) {
+                <button type="button" class="lh-cta" disabled>{{ "lfg.card.full" | translate }}</button>
+            } @else {
+                <button type="button" class="lh-cta" [disabled]="busy()" (click)="respond.emit()">
+                    <tui-icon icon="@tui.user-round-plus" class="size-4!" />
+                    {{ "lfg.card.join" | translate }}
+                </button>
+            }
+            @if (post().hasContact && !isAuthor() && viewer().userId) {
+                <app-lfg-contact [postId]="post().id" [authed]="!!viewer().userId" (signIn)="signIn.emit()" />
+            }
+        </div>
+
+        <app-share-button [url]="'/lfg#post-' + post().id" [title]="post().title" [iconOnly]="true" />
+    </footer>
+</article>

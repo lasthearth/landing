@@ -1,0 +1,164 @@
+<article
+    class="mate lh-panel"
+    [class.mate--highlighted]="highlighted()"
+    [class.mate--mine]="isAuthor()"
+    [attr.id]="'post-' + post().id"
+>
+    <header class="mate__head">
+        @for (activity of activities(); track activity.value) {
+            <span class="mate__activity">
+                <tui-icon [icon]="activity.icon" class="size-4!" />
+                {{ "lfg.activities." + activity.key | translate }}
+            </span>
+        }
+        @if (isAuthor()) {
+            <span class="mate__own">{{ "lfg.card.own" | translate }}</span>
+        }
+    </header>
+
+    <h3 class="mate__title lh-display">{{ post().title }}</h3>
+    @if (post().description) {
+        <p class="mate__text">{{ post().description }}</p>
+    }
+
+    <dl class="mate__facts">
+        <div class="mate__fact">
+            <dt class="mate__fact-label">
+                <tui-icon icon="@tui.calendar-days" class="size-4!" />
+                {{ "lfg.mate.days" | translate }}
+            </dt>
+            <dd class="mate__fact-value">
+                @if (post().playDays.length) {
+                    <span class="mate__days">
+                        @for (item of days(); track item.day) {
+                            <span class="mate__day" [class.mate__day--on]="item.active">{{ item.label }}</span>
+                        }
+                    </span>
+                } @else {
+                    {{ "lfg.mate.anyDay" | translate }}
+                }
+            </dd>
+        </div>
+
+        <div class="mate__fact">
+            <dt class="mate__fact-label">
+                <tui-icon icon="@tui.clock" class="size-4!" />
+                {{ "lfg.mate.times" | translate }}
+            </dt>
+            <dd class="mate__fact-value">
+                @for (time of times(); track time.value) {
+                    <span class="mate__tag">
+                        <tui-icon [icon]="time.icon" class="size-3.5!" />
+                        {{ "lfg.playTimes." + time.key | translate }}
+                    </span>
+                } @empty {
+                    {{ "lfg.mate.anyTime" | translate }}
+                }
+            </dd>
+        </div>
+
+        @if (experience() || post().voice) {
+            <div class="mate__fact">
+                <dt class="mate__fact-label">
+                    <tui-icon icon="@tui.user-round" class="size-4!" />
+                    {{ "lfg.mate.about" | translate }}
+                </dt>
+                <dd class="mate__fact-value">
+                    @if (experience(); as exp) {
+                        <span class="mate__tag">
+                            <tui-icon [icon]="exp.icon" class="size-3.5!" />
+                            {{ "lfg.experiences." + exp.key | translate }}
+                        </span>
+                    }
+                    @if (post().voice) {
+                        <span class="mate__tag">
+                            <tui-icon icon="@tui.mic" class="size-3.5!" />
+                            {{ "lfg.mate.voice" | translate }}
+                        </span>
+                    }
+                </dd>
+            </div>
+        }
+    </dl>
+
+    <div class="mate__people">
+        <div class="mate__group">
+            <span class="mate__label">{{ "lfg.mate.author" | translate: { count: post().slots } }}</span>
+            <app-player-chip [player]="playerOf(post().authorId)" />
+        </div>
+
+        <div class="mate__group">
+            <span class="mate__label">
+                {{ "lfg.mate.interested" | translate: { count: post().responders.length } }}
+            </span>
+            <div class="mate__responders">
+                @for (id of shownResponders(); track id) {
+                    <app-player-chip [player]="playerOf(id)" />
+                } @empty {
+                    <span class="mate__muted">{{ "lfg.mate.noOne" | translate }}</span>
+                }
+                @if (moreResponders()) {
+                    <span class="mate__more">+{{ moreResponders() }}</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <footer class="mate__footer">
+        <div class="mate__actions">
+            @if (isAuthor()) {
+                <button
+                    type="button"
+                    class="lh-cta"
+                    [disabled]="busy() || !!renewIn()"
+                    [title]="renewIn() ? ('lfg.mate.renewIn' | translate: { time: renewIn() }) : ''"
+                    (click)="renew.emit()"
+                >
+                    <tui-icon icon="@tui.refresh-cw" class="size-4!" />
+                    {{ "lfg.mate.renew" | translate }}
+                </button>
+                <button type="button" class="lh-cta lh-cta--ghost" [disabled]="busy()" (click)="closePost.emit()">
+                    <tui-icon icon="@tui.circle-x" class="size-4!" />
+                    {{ "lfg.card.close" | translate }}
+                </button>
+            } @else {
+                <app-lfg-contact
+                    [postId]="post().id"
+                    [authed]="!!viewer().userId"
+                    [primary]="true"
+                    (signIn)="signIn.emit()"
+                />
+                @if (viewer().userId && viewer().verified) {
+                    <button
+                        type="button"
+                        class="lh-cta lh-cta--ghost mate__interest"
+                        [class.mate__interest--on]="interested()"
+                        [attr.aria-pressed]="interested()"
+                        [disabled]="busy()"
+                        (click)="respond.emit()"
+                    >
+                        <tui-icon icon="@tui.heart" class="size-4!" />
+                        {{ (interested() ? "lfg.mate.interestedOn" : "lfg.mate.interest") | translate }}
+                    </button>
+                }
+            }
+        </div>
+
+        <app-share-button [url]="'/lfg?tab=teammate#post-' + post().id" [title]="post().title" [iconOnly]="true" />
+    </footer>
+
+    <p class="mate__meta">
+        <span>
+            {{ "lfg.mate.updated" | translate }}
+            <time [appRelativeTime]="post().bumpedAt"></time>
+        </span>
+        @if (expiresIn()) {
+            <span aria-hidden="true">·</span>
+            <span>{{ "lfg.mate.expiresIn" | translate: { time: expiresIn() } }}</span>
+        }
+        @if (isAuthor() && renewIn()) {
+            <span aria-hidden="true">·</span>
+            <span>{{ "lfg.mate.renewIn" | translate: { time: renewIn() } }}</span>
+        }
+    </p>
+</article>

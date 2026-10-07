@@ -335,6 +335,11 @@
             }
         </div>
 
+        <!-- Приглашение в поселение, открытое по ссылке -->
+        @if (!settlement) {
+            <app-pending-invite-banner class="mt-4" [verified]="verified" />
+        }
+
         @if (verified) {
             <!-- Путь новичка: прячется, когда всё сделано или игрок его скрыл -->
             <app-newcomer-path

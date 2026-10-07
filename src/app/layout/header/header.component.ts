@@ -225,6 +225,9 @@ export class HeaderComponent {
                     case RouteKeys.events:
                         this.select = 'events';
                         break;
+                    case RouteKeys.lfg:
+                        this.select = 'lfg';
+                        break;
                     case RouteKeys.news:
                         this.select = 'home';
                         break;

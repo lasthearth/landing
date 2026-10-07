@@ -1,0 +1,97 @@
+<section class="invite-links lh-panel" aria-labelledby="invite-links-title">
+    <header class="invite-links__header">
+        <h2 id="invite-links-title" class="lh-display text-2xl text-ink">
+            {{ "settlements.inviteLinks.title" | translate }}
+        </h2>
+        <p class="invite-links__description">{{ "settlements.inviteLinks.description" | translate }}</p>
+    </header>
+
+    <div class="invite-links__create">
+        <div class="invite-links__option">
+            <span class="invite-links__label">{{ "settlements.inviteLinks.ttl" | translate }}</span>
+            <div class="lh-chips">
+                @for (option of ttlOptions; track option.key) {
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-pressed]="ttl() === option.hours"
+                        (click)="ttl.set(option.hours)"
+                    >
+                        {{ "settlements.inviteLinks.ttlOptions." + option.key | translate }}
+                    </button>
+                }
+            </div>
+        </div>
+        <div class="invite-links__option">
+            <span class="invite-links__label">{{ "settlements.inviteLinks.uses" | translate }}</span>
+            <div class="lh-chips">
+                @for (option of usesOptions; track option.key) {
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-pressed]="uses() === option.uses"
+                        (click)="uses.set(option.uses)"
+                    >
+                        {{ "settlements.inviteLinks.usesOptions." + option.key | translate }}
+                    </button>
+                }
+            </div>
+        </div>
+        <button type="button" class="lh-cta invite-links__submit" [disabled]="busy()" (click)="create()">
+            <tui-icon [icon]="busy() ? '@tui.loader' : '@tui.link'" class="size-4!" [class.animate-spin]="busy()" />
+            {{ "settlements.inviteLinks.create" | translate }}
+        </button>
+    </div>
+
+    @if (links() === null) {
+        <p class="invite-links__muted">{{ "settlements.inviteLinks.loading" | translate }}</p>
+    } @else if (sorted().length === 0) {
+        <p class="invite-links__muted">{{ "settlements.inviteLinks.empty" | translate }}</p>
+    } @else {
+        <ul class="invite-links__list">
+            @for (link of sorted(); track link.id) {
+                <li
+                    class="invite-links__row"
+                    [class.invite-links__row--inactive]="link.status !== 'INVITE_LINK_STATUS_ACTIVE'"
+                >
+                    <div class="invite-links__main">
+                        <code class="invite-links__url">{{ urlOf(link) }}</code>
+                        <span class="invite-links__meta">
+                            <span class="invite-links__status" [class]="'invite-links__status--' + link.status">
+                                {{ "settlements.inviteLinks.status." + link.status | translate }}
+                            </span>
+                            <span>{{ usesOf(link) }}</span>
+                            <span>{{ expiresOf(link) }}</span>
+                        </span>
+                    </div>
+                    <div class="invite-links__actions">
+                        @if (link.status === "INVITE_LINK_STATUS_ACTIVE") {
+                            <button
+                                type="button"
+                                class="invite-links__icon-btn"
+                                [title]="'settlements.inviteLinks.copy' | translate"
+                                [attr.aria-label]="'settlements.inviteLinks.copy' | translate"
+                                (click)="copy(link)"
+                            >
+                                <tui-icon
+                                    [icon]="copiedId() === link.id ? '@tui.check' : '@tui.copy'"
+                                    class="size-4!"
+                                />
+                            </button>
+                        }
+                        <button
+                            type="button"
+                            class="invite-links__icon-btn invite-links__icon-btn--danger"
+                            [title]="'settlements.inviteLinks.revoke' | translate"
+                            [attr.aria-label]="'settlements.inviteLinks.revoke' | translate"
+                            (click)="revoke(link)"
+                        >
+                            <tui-icon icon="@tui.trash-2" class="size-4!" />
+                        </button>
+                    </div>
+                </li>
+            }
+        </ul>
+        <p class="invite-links__muted">{{ "settlements.inviteLinks.limitNote" | translate }}</p>
+    }
+</section>

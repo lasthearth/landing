@@ -39,7 +39,8 @@ export function formatCountdown(msLeft: number, locale: string): string {
     const minutes = Math.max(1, Math.ceil((msLeft % HOUR) / MINUTE));
 
     if (hours === 0) {
-        return unit(minutes, 'minute', 'short');
+        // 59 мин 40 с округляются вверх до «60 мин» — это уже час.
+        return minutes === 60 ? unit(1, 'hour', 'short') : unit(minutes, 'minute', 'short');
     }
 
     return minutes === 60

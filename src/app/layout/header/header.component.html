@@ -296,6 +296,19 @@
                             <tui-icon icon="@tui.calendar-days" class="size-4!" />
                             {{ "header.nav.events" | translate }}
                         </button>
+                        <button
+                            type="button"
+                            [routerLink]="['/lfg']"
+                            (click)="showMobileMenu.set(false)"
+                            [ngClass]="{
+                                'bg-lh-accent text-white': select === 'lfg',
+                                'text-lh-primary hover:bg-surface-3': select !== 'lfg',
+                            }"
+                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                            <tui-icon icon="@tui.users" class="size-4!" />
+                            {{ "header.nav.lfgFull" | translate }}
+                        </button>
                     </div>
                 }
             </div>
@@ -382,6 +395,17 @@
                 >
                     <tui-icon icon="@tui.calendar-days" />
                     <span class="hidden md:block">{{ "header.nav.events" | translate }}</span>
+                </button>
+
+                <button
+                    [routerLink]="['/lfg']"
+                    [ngClass]="{ 'nav-button--active': select === 'lfg' }"
+                    class="nav-button md:w-auto px-1.5"
+                    [attr.aria-label]="'header.nav.lfgFull' | translate"
+                    [title]="'header.nav.lfgFull' | translate"
+                >
+                    <tui-icon icon="@tui.users" />
+                    <span class="hidden md:block">{{ "header.nav.lfg" | translate }}</span>
                 </button>
 
                 <button

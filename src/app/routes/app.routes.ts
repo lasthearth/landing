@@ -222,6 +222,38 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.events, seo: routeSeoData.events },
             },
             {
+                path: 'lfg',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('../features/lfg/lfg-page.component').then((m) => m.LfgPageComponent),
+                        [
+                            () => import('@core/i18n/translations/features/lfg.i18n').then((m) => m.LFG_I18N),
+                            () =>
+                                import('@core/i18n/translations/features/settlements.i18n').then(
+                                    (m) => m.SETTLEMENTS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.lfg, seo: routeSeoData.lfg },
+            },
+            {
+                path: 'join/:code',
+                loadComponent: () =>
+                    loadPage(
+                        () =>
+                            import('../features/settlements/join-by-invite/join-by-invite-page.component').then(
+                                (m) => m.JoinByInvitePageComponent
+                            ),
+                        [
+                            () =>
+                                import('@core/i18n/translations/features/settlements.i18n').then(
+                                    (m) => m.SETTLEMENTS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.join, seo: routeSeoData.join },
+            },
+            {
                 path: 'player/:nick',
                 loadComponent: () =>
                     loadPage(

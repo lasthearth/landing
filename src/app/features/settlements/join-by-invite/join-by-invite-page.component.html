@@ -1,0 +1,154 @@
+<section class="invite-page">
+    @switch (state().status) {
+        @case ("loading") {
+            <div class="invite-page__state" role="status">
+                <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
+                <span>{{ "settlements.joinByInvite.loading" | translate }}</span>
+            </div>
+        }
+        @case ("not-found") {
+            <div class="invite-page__state">
+                <tui-icon icon="@tui.link-2-off" class="size-12 opacity-60" />
+                <h1 class="invite-page__state-title lh-display">
+                    {{ "settlements.joinByInvite.notFound.title" | translate }}
+                </h1>
+                <p class="invite-page__muted">{{ "settlements.joinByInvite.notFound.text" | translate }}</p>
+                <a class="lh-cta" routerLink="/settlements">
+                    {{ "settlements.joinByInvite.otherSettlements" | translate }}
+                </a>
+            </div>
+        }
+        @case ("ready") {
+            @if (settlement(); as s) {
+                <article class="invite-card lh-panel">
+                    <p class="invite-card__eyebrow">
+                        <tui-icon icon="@tui.mail-open" class="size-4!" />
+                        {{ "settlements.joinByInvite.eyebrow" | translate }}
+                    </p>
+
+                    <h1 class="invite-card__name lh-display">{{ name() }}</h1>
+
+                    <div class="invite-card__badges">
+                        <app-settlement-badge [tone]="typeTone()" [uppercase]="true">
+                            {{ typeLabel() }}
+                        </app-settlement-badge>
+                        <app-settlement-badge tone="leader">
+                            {{ "settlements.joinByInvite.members" | translate: { count: s.members.length } }}
+                        </app-settlement-badge>
+                    </div>
+
+                    @if (s.description) {
+                        <div class="invite-card__description lh-rich-text" [innerHTML]="s.description | markup"></div>
+                    }
+
+                    <div class="invite-card__people">
+                        <div class="invite-card__group">
+                            <span class="invite-card__label">
+                                {{ "settlements.joinByInvite.invitedBy" | translate }}
+                            </span>
+                            <app-player-chip [player]="playerOf(preview()!.created_by)" />
+                        </div>
+                        @if (ownerIds().length) {
+                            <div class="invite-card__group">
+                                <span class="invite-card__label">
+                                    {{ "settlements.joinByInvite.leaders" | translate }}
+                                </span>
+                                <div class="invite-card__chips">
+                                    @for (id of ownerIds(); track id) {
+                                        <app-player-chip [player]="playerOf(id)" [isLeader]="true" [settlement]="s" />
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <footer class="invite-card__footer">
+                        @if (!active()) {
+                            <p class="invite-card__notice invite-card__notice--bad" role="status">
+                                <tui-icon icon="@tui.circle-alert" class="size-5!" />
+                                {{ "settlements.joinByInvite.status." + preview()!.status | translate }}
+                            </p>
+                            <div class="invite-card__actions">
+                                <a class="lh-cta" [routerLink]="['/settlements', s.id]">
+                                    {{ "settlements.joinByInvite.openSettlement" | translate }}
+                                </a>
+                                <a class="lh-cta lh-cta--ghost" routerLink="/settlements">
+                                    {{ "settlements.joinByInvite.otherSettlements" | translate }}
+                                </a>
+                            </div>
+                        } @else {
+                            <p class="invite-card__meta">
+                                @if (validUntil(); as date) {
+                                    <span>
+                                        <tui-icon icon="@tui.calendar-clock" class="size-4!" />
+                                        {{ "settlements.joinByInvite.validUntil" | translate: { date: date } }}
+                                    </span>
+                                }
+                                @if (usesLeft() !== null) {
+                                    <span>
+                                        <tui-icon icon="@tui.users" class="size-4!" />
+                                        {{ "settlements.joinByInvite.usesLeft" | translate: { count: usesLeft() } }}
+                                    </span>
+                                }
+                            </p>
+
+                            @if (!userId()) {
+                                <div class="invite-card__actions">
+                                    <button type="button" class="lh-cta" (click)="signIn()">
+                                        <tui-icon icon="@tui.log-in" class="size-4!" />
+                                        {{ "settlements.joinByInvite.signIn" | translate }}
+                                    </button>
+                                </div>
+                            } @else if (!verified()) {
+                                <p class="invite-card__notice">
+                                    <tui-icon icon="@tui.hourglass" class="size-5!" />
+                                    {{ "settlements.joinByInvite.verifyFirst" | translate }}
+                                </p>
+                                <div class="invite-card__actions">
+                                    <button type="button" class="lh-cta" (click)="toApplication()">
+                                        {{ "settlements.joinByInvite.fillApplication" | translate }}
+                                    </button>
+                                </div>
+                            } @else if (mySettlement(); as mine) {
+                                <p class="invite-card__notice">
+                                    <tui-icon icon="@tui.house" class="size-5!" />
+                                    @if (mine.id === s.id) {
+                                        {{ "settlements.joinByInvite.alreadyHere" | translate }}
+                                    } @else {
+                                        {{
+                                            "settlements.joinByInvite.alreadyElsewhere" | translate: { name: mine.name }
+                                        }}
+                                    }
+                                </p>
+                                <div class="invite-card__actions">
+                                    <a class="lh-cta lh-cta--ghost" [routerLink]="['/settlements', s.id]">
+                                        {{ "settlements.joinByInvite.openSettlement" | translate }}
+                                    </a>
+                                </div>
+                            } @else if (mySettlement() === null) {
+                                <div class="invite-card__actions">
+                                    <button
+                                        type="button"
+                                        class="lh-cta invite-card__join"
+                                        [disabled]="joining()"
+                                        (click)="join()"
+                                    >
+                                        <tui-icon
+                                            [icon]="joining() ? '@tui.loader' : '@tui.door-open'"
+                                            class="size-5!"
+                                            [class.animate-spin]="joining()"
+                                        />
+                                        {{ "settlements.joinByInvite.join" | translate }}
+                                    </button>
+                                    <a class="lh-cta lh-cta--ghost" [routerLink]="['/settlements', s.id]">
+                                        {{ "settlements.joinByInvite.openSettlement" | translate }}
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </footer>
+                </article>
+            }
+        }
+    }
+</section>

@@ -35,6 +35,8 @@ export const routeSeoData: {
     news: ISeoData;
     events: ISeoData;
     player: ISeoData;
+    lfg: ISeoData;
+    join: ISeoData;
 } = {
     home: {
         title: 'Last Hearth — ролевой сервер Vintage Story',
@@ -229,5 +231,29 @@ export const routeSeoData: {
         image: ogImage,
         imageAlt: 'Игрок Last Hearth',
         robots: 'noindex, follow',
+    },
+    lfg: {
+        title: 'Ищу компанию — Last Hearth',
+        description:
+            'Доска «Ищу компанию» сервера Last Hearth: найдите напарника для постоянной игры или соберите отряд в шахту, поход и на стройку прямо сейчас.',
+        keywords: 'ищу напарника Vintage Story, тиммейт, ищу компанию, отряд, Last Hearth, совместная игра',
+        url: `${siteUrl}/lfg`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Ищу компанию — Last Hearth',
+    },
+    join: {
+        title: 'Приглашение в поселение — Last Hearth',
+        description: 'Вас пригласили в поселение на сервере Last Hearth.',
+        keywords: 'приглашение в поселение, Last Hearth',
+        url: `${siteUrl}/join`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Приглашение в поселение Last Hearth',
+        robots: 'noindex, nofollow',
     },
 };

@@ -1,0 +1,222 @@
+:host {
+    display: block;
+}
+
+.mate {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    scroll-margin-top: 6rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.mate--highlighted {
+    box-shadow:
+        0 0 0 2px var(--lh-brand),
+        0 12px 40px -12px color-mix(in srgb, var(--lh-brand) 55%, transparent);
+}
+
+.mate--mine {
+    border-color: color-mix(in srgb, var(--lh-brand) 35%, transparent);
+}
+
+.mate__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mate__activity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #fff;
+    background-image: linear-gradient(160deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
+}
+
+.mate__own {
+    margin-left: auto;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--lh-brand-ink);
+}
+
+.mate__title {
+    margin: 0;
+    font-size: 1.375rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--lh-ink);
+    overflow-wrap: anywhere;
+}
+
+.mate__text {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--lh-ink-2);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.mate__facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0.75rem 0.875rem;
+    border-radius: 0.875rem;
+    background: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+}
+
+.mate__fact {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.75rem;
+
+    @media (max-width: 480px) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.3rem;
+    }
+}
+
+.mate__fact-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--lh-ink-3);
+}
+
+.mate__fact-value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--lh-ink-2);
+}
+
+.mate__days {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.mate__day {
+    min-width: 2.1rem;
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: capitalize;
+    color: color-mix(in srgb, var(--lh-ink) 40%, transparent);
+    background: color-mix(in srgb, var(--lh-ink) 6%, transparent);
+}
+
+.mate__day--on {
+    color: var(--lh-brand-ink);
+    background: color-mix(in srgb, var(--lh-brand) 20%, transparent);
+}
+
+.mate__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--lh-ink);
+    background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+}
+
+.mate__people {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+}
+
+.mate__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.mate__label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--lh-ink-3);
+}
+
+.mate__responders {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.mate__muted {
+    font-size: 0.875rem;
+    color: var(--lh-ink-3);
+}
+
+.mate__more {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: var(--lh-ink-2);
+}
+
+.mate__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid color-mix(in srgb, var(--lh-ink) 10%, transparent);
+}
+
+.mate__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.mate__interest--on {
+    color: var(--lh-danger-ink);
+    border-color: color-mix(in srgb, var(--lh-danger-ink) 45%, transparent);
+    background: color-mix(in srgb, var(--lh-danger-ink) 8%, transparent);
+}
+
+.mate__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    margin: -0.25rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.mate .lh-cta {
+    padding: 0.6rem 1.1rem;
+}
+
+.mate .lh-cta:disabled {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+}

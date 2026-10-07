@@ -1,0 +1,240 @@
+<form class="lfg-form lh-panel" (ngSubmit)="submit()" novalidate>
+    <header class="lfg-form__header">
+        <h2 class="lfg-form__heading lh-display">
+            {{ (teammate() ? "lfg.form.headingMate" : "lfg.form.heading") | translate }}
+        </h2>
+        <p class="lfg-form__hint">
+            <tui-icon icon="@tui.clock" class="size-4!" />
+            {{ (teammate() ? "lfg.form.hintMate" : "lfg.form.hint") | translate }}
+        </p>
+    </header>
+
+    <fieldset class="lfg-form__field">
+        <legend class="lfg-form__label">
+            {{ (teammate() ? "lfg.form.activitiesMate" : "lfg.form.activity") | translate }}
+            @if (teammate()) {
+                <span class="lfg-form__counter tabular-nums">{{ chosen().length }} / {{ activitiesMax }}</span>
+            }
+        </legend>
+        <div class="lh-chips">
+            @for (item of activities; track item.value) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-pressed]="chosen().includes(item.value)"
+                    [disabled]="teammate() && !chosen().includes(item.value) && chosen().length >= activitiesMax"
+                    (click)="toggleActivity(item.value)"
+                >
+                    <tui-icon [icon]="item.icon" />
+                    {{ "lfg.activities." + item.key | translate }}
+                </button>
+            }
+        </div>
+    </fieldset>
+
+    <label class="lfg-form__field">
+        <span class="lfg-form__label">
+            {{ "lfg.form.titleLabel" | translate }}
+            <span class="lfg-form__counter tabular-nums">{{ title().length }} / {{ titleMax }}</span>
+        </span>
+        <input
+            type="text"
+            name="title"
+            class="lfg-form__input"
+            [maxlength]="titleMax"
+            [ngModel]="title()"
+            (ngModelChange)="title.set($event)"
+            [placeholder]="(teammate() ? 'lfg.form.titlePlaceholderMate' : 'lfg.form.titlePlaceholder') | translate"
+            [attr.aria-invalid]="touched() && title().trim().length < 3"
+        />
+    </label>
+
+    <label class="lfg-form__field">
+        <span class="lfg-form__label">
+            {{ (teammate() ? "lfg.form.descriptionMate" : "lfg.form.description") | translate }}
+            <span class="lfg-form__counter tabular-nums">{{ description().length }} / {{ descriptionMax }}</span>
+        </span>
+        <textarea
+            name="description"
+            rows="3"
+            class="lfg-form__input lfg-form__textarea"
+            [maxlength]="descriptionMax"
+            [ngModel]="description()"
+            (ngModelChange)="description.set($event)"
+            [placeholder]="
+                (teammate() ? 'lfg.form.descriptionPlaceholderMate' : 'lfg.form.descriptionPlaceholder') | translate
+            "
+        ></textarea>
+    </label>
+
+    @if (teammate()) {
+        <fieldset class="lfg-form__field">
+            <legend class="lfg-form__label">
+                {{ "lfg.form.days" | translate }}
+                <span class="lfg-form__counter">{{ "lfg.form.daysHint" | translate }}</span>
+            </legend>
+            <div class="lh-chips">
+                @for (item of weekdays(); track item.day) {
+                    <button
+                        type="button"
+                        class="lh-chip lfg-form__day"
+                        [attr.aria-pressed]="days().includes(item.day)"
+                        (click)="toggleDay(item.day)"
+                    >
+                        {{ item.label }}
+                    </button>
+                }
+            </div>
+        </fieldset>
+
+        <fieldset class="lfg-form__field">
+            <legend class="lfg-form__label">
+                {{ "lfg.form.times" | translate }}
+                <span class="lfg-form__counter">{{ "lfg.form.timesHint" | translate }}</span>
+            </legend>
+            <div class="lh-chips">
+                @for (item of playTimes; track item.value) {
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-pressed]="times().includes(item.value)"
+                        (click)="toggleTime(item.value)"
+                    >
+                        <tui-icon [icon]="item.icon" />
+                        {{ "lfg.playTimes." + item.key | translate }}
+                    </button>
+                }
+            </div>
+        </fieldset>
+
+        <div class="lfg-form__row">
+            <fieldset class="lfg-form__field">
+                <legend class="lfg-form__label">{{ "lfg.form.experience" | translate }}</legend>
+                <div class="lh-chips">
+                    @for (item of experiences; track item.value) {
+                        <button
+                            type="button"
+                            class="lh-chip"
+                            [attr.aria-pressed]="experience() === item.value"
+                            (click)="toggleExperience(item.value)"
+                        >
+                            <tui-icon [icon]="item.icon" />
+                            {{ "lfg.experiences." + item.key | translate }}
+                        </button>
+                    }
+                    <button type="button" class="lh-chip" [attr.aria-pressed]="voice()" (click)="voice.set(!voice())">
+                        <tui-icon icon="@tui.mic" />
+                        {{ "lfg.mate.voice" | translate }}
+                    </button>
+                </div>
+            </fieldset>
+
+            <div class="lfg-form__field">
+                <span class="lfg-form__label">{{ "lfg.form.slotsMate" | translate }}</span>
+                <ng-container *ngTemplateOutlet="stepper" />
+            </div>
+        </div>
+    } @else {
+        <div class="lfg-form__row">
+            <fieldset class="lfg-form__field">
+                <legend class="lfg-form__label">{{ "lfg.form.when" | translate }}</legend>
+                <div class="lh-chips">
+                    @for (choice of startChoices; track choice.key) {
+                        <button
+                            type="button"
+                            class="lh-chip"
+                            [attr.aria-pressed]="start() === choice.value"
+                            (click)="start.set(choice.value)"
+                        >
+                            {{ "lfg.form." + choice.key | translate }}
+                        </button>
+                    }
+                </div>
+                @if (start() === "custom") {
+                    <input
+                        type="datetime-local"
+                        name="customStart"
+                        class="lfg-form__input"
+                        [ngModel]="customStart()"
+                        (ngModelChange)="customStart.set($event)"
+                        [attr.aria-invalid]="customInvalid()"
+                    />
+                    @if (customInvalid()) {
+                        <span class="lfg-form__error" role="alert">{{ "lfg.form.customInvalid" | translate }}</span>
+                    }
+                }
+            </fieldset>
+
+            <div class="lfg-form__field">
+                <span class="lfg-form__label">{{ "lfg.form.slots" | translate }}</span>
+                <ng-container *ngTemplateOutlet="stepper" />
+            </div>
+        </div>
+    }
+
+    <label class="lfg-form__field">
+        <span class="lfg-form__label">
+            {{ (teammate() ? "lfg.form.contactMate" : "lfg.form.contact") | translate }}
+            <span class="lfg-form__counter tabular-nums">{{ contact().length }} / {{ contactMax }}</span>
+        </span>
+        <input
+            type="text"
+            name="contact"
+            class="lfg-form__input"
+            autocomplete="off"
+            [maxlength]="contactMax"
+            [ngModel]="contact()"
+            (ngModelChange)="contact.set($event)"
+            [placeholder]="'lfg.form.contactPlaceholder' | translate"
+            [attr.aria-invalid]="touched() && contactInvalid()"
+        />
+        <span class="lfg-form__note">
+            <tui-icon icon="@tui.lock" class="size-3.5!" />
+            {{ "lfg.form.contactNote" | translate }}
+        </span>
+    </label>
+
+    @if (touched() && !valid() && !customInvalid()) {
+        <p class="lfg-form__error" role="alert">
+            {{ (teammate() ? "lfg.form.requiredMate" : "lfg.form.required") | translate }}
+        </p>
+    }
+
+    <div class="lfg-form__buttons">
+        <button type="button" class="lh-cta lh-cta--ghost" (click)="cancelled.emit()">
+            {{ "lfg.form.cancel" | translate }}
+        </button>
+        <button type="submit" class="lh-cta" [disabled]="submitting()">
+            <tui-icon
+                [icon]="submitting() ? '@tui.loader' : '@tui.send'"
+                class="size-4!"
+                [class.animate-spin]="submitting()"
+            />
+            {{ "lfg.form.submit" | translate }}
+        </button>
+    </div>
+</form>
+
+<ng-template #stepper>
+    <div class="lfg-form__stepper">
+        <button
+            type="button"
+            class="lfg-form__step"
+            [disabled]="slots() <= 1"
+            [attr.aria-label]="'lfg.form.less' | translate"
+            (click)="changeSlots(-1)"
+        >
+            <tui-icon icon="@tui.minus" class="size-4!" />
+        </button>
+        <span class="lfg-form__slots tabular-nums" aria-live="polite">{{ slots() }}</span>
+        <button
+            type="button"
+            class="lfg-form__step"
+            [disabled]="slots() >= slotsMax"
+            [attr.aria-label]="'lfg.form.more' | translate"
+            (click)="changeSlots(1)"
+        >
+            <tui-icon icon="@tui.plus" class="size-4!" />
+        </button>
+    </div>
+</ng-template>

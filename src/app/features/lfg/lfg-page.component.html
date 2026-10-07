@@ -1,0 +1,140 @@
+<section class="lfg-page">
+    <app-page-header [title]="'lfg.title' | translate" [subtitle]="'lfg.subtitle' | translate">
+        @if (!creating() && !hasOwnMatePost() && (!viewer().userId || viewer().verified)) {
+            <button type="button" class="lh-cta lfg-page__create" (click)="create()">
+                <tui-icon icon="@tui.plus" class="size-4!" />
+                {{ (teammate() ? "lfg.createMate" : "lfg.create") | translate }}
+            </button>
+        }
+    </app-page-header>
+
+    <div class="lfg-page__tabs" role="tablist" [attr.aria-label]="'lfg.tabs.label' | translate">
+        @for (item of kinds; track item.value) {
+            <button
+                type="button"
+                role="tab"
+                class="lfg-page__tab"
+                [class.lfg-page__tab--active]="kind() === item.value"
+                [attr.aria-selected]="kind() === item.value"
+                (click)="selectKind(item.value)"
+            >
+                <tui-icon [icon]="item.icon" class="lfg-page__tab-icon" />
+                <span class="lfg-page__tab-text">
+                    <span class="lfg-page__tab-title">{{ "lfg.tabs." + item.key | translate }}</span>
+                    <span class="lfg-page__tab-hint">{{ "lfg.tabs." + item.key + "Hint" | translate }}</span>
+                </span>
+            </button>
+        }
+    </div>
+
+    @if (creating()) {
+        <app-lfg-post-form
+            [kind]="kind()"
+            (created)="onCreated($event)"
+            (cancelled)="creating.set(false)"
+            (failed)="onFailed($event)"
+        />
+    }
+
+    <div class="lfg-page__filters">
+        <div class="lh-chips" role="group" [attr.aria-label]="'lfg.filters.label' | translate">
+            <button
+                type="button"
+                class="lh-chip"
+                [attr.aria-pressed]="activity() === null"
+                (click)="activity.set(null)"
+            >
+                {{ "lfg.filters.all" | translate }}
+                @if (posts()?.length) {
+                    <span class="lfg-page__count">{{ posts()!.length }}</span>
+                }
+            </button>
+            @for (item of activities; track item.value) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-pressed]="activity() === item.value"
+                    (click)="activity.set(activity() === item.value ? null : item.value)"
+                >
+                    <tui-icon [icon]="item.icon" />
+                    {{ "lfg.activities." + item.key | translate }}
+                    @if (counts()[item.value]; as count) {
+                        <span class="lfg-page__count">{{ count }}</span>
+                    }
+                </button>
+            }
+        </div>
+
+        @if (teammate()) {
+            <div class="lh-chips" role="group" [attr.aria-label]="'lfg.filters.time' | translate">
+                <span class="lfg-page__filter-label">{{ "lfg.filters.time" | translate }}</span>
+                @for (item of playTimes; track item.value) {
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-pressed]="playTime() === item.value"
+                        (click)="playTime.set(playTime() === item.value ? null : item.value)"
+                    >
+                        <tui-icon [icon]="item.icon" />
+                        {{ "lfg.playTimes." + item.key | translate }}
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    @if (error()) {
+        <div class="lfg-page__state lfg-page__state--error" role="alert">
+            <tui-icon icon="@tui.triangle-alert" class="size-8" />
+            <span>{{ "lfg.error" | translate }}</span>
+            <button type="button" class="lh-cta lh-cta--ghost" (click)="load()">{{ "lfg.retry" | translate }}</button>
+        </div>
+    } @else if (posts() === null) {
+        <div class="lfg-page__state" role="status">
+            <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
+            <span>{{ "lfg.loading" | translate }}</span>
+        </div>
+    } @else if (shown().length === 0) {
+        <div class="lfg-page__state">
+            <tui-icon [icon]="teammate() ? '@tui.handshake' : '@tui.users'" class="size-14 opacity-60" />
+            @if (activity() || (teammate() && playTime())) {
+                <p class="lfg-page__empty-title">{{ "lfg.empty.filtered" | translate }}</p>
+            } @else if (teammate()) {
+                <p class="lfg-page__empty-title">{{ "lfg.empty.titleMate" | translate }}</p>
+                <p class="lfg-page__empty-text">{{ "lfg.empty.textMate" | translate }}</p>
+            } @else {
+                <p class="lfg-page__empty-title">{{ "lfg.empty.title" | translate }}</p>
+                <p class="lfg-page__empty-text">{{ "lfg.empty.text" | translate }}</p>
+            }
+        </div>
+    } @else {
+        <div class="lfg-page__list">
+            @for (post of shown(); track post.id) {
+                @if (post.kind === "POST_KIND_TEAMMATE") {
+                    <app-lfg-teammate-card
+                        [post]="post"
+                        [viewer]="viewer()"
+                        [players]="players()"
+                        [highlighted]="post.id === targetId()"
+                        [busy]="busyId() === post.id"
+                        (respond)="respond(post)"
+                        (closePost)="close(post)"
+                        (renew)="renew(post)"
+                        (signIn)="signIn()"
+                    />
+                } @else {
+                    <app-lfg-post-card
+                        [post]="post"
+                        [viewer]="viewer()"
+                        [players]="players()"
+                        [highlighted]="post.id === targetId()"
+                        [busy]="busyId() === post.id"
+                        (respond)="respond(post)"
+                        (closePost)="close(post)"
+                        (signIn)="signIn()"
+                    />
+                }
+            }
+        </div>
+    }
+</section>

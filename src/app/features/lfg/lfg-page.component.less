@@ -1,0 +1,136 @@
+.lfg-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+.lfg-page__create {
+    padding: 0.75rem 1.25rem;
+}
+
+.lfg-page__count {
+    min-width: 1.25rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1.25rem;
+    text-align: center;
+    background: color-mix(in srgb, var(--lh-ink) 12%, transparent);
+}
+
+.lfg-page__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.lfg-page__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.875rem;
+    padding: 4rem 1rem;
+    text-align: center;
+    color: var(--lh-ink);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--lh-ink) 15%, transparent);
+}
+
+.lfg-page__state--error {
+    color: var(--lh-danger-ink);
+    background: color-mix(in srgb, var(--lh-danger-ink) 6%, transparent);
+    border-style: solid;
+}
+
+.lfg-page__empty-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.lfg-page__empty-text {
+    max-width: 28rem;
+    color: var(--lh-ink-2);
+}
+
+.lfg-page__tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+
+    @media (max-width: 560px) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.lfg-page__tab {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1.125rem;
+    border: 2px solid color-mix(in srgb, var(--lh-ink) 12%, transparent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--lh-ink) 3%, transparent);
+    color: var(--lh-ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease;
+
+    &:hover {
+        border-color: color-mix(in srgb, var(--lh-brand) 45%, transparent);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 2px;
+    }
+}
+
+.lfg-page__tab--active {
+    border-color: var(--lh-brand);
+    background: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+}
+
+.lfg-page__tab-icon {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    color: var(--lh-brand-ink);
+}
+
+.lfg-page__tab-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.lfg-page__tab-title {
+    font-size: 1.0625rem;
+    font-weight: 800;
+}
+
+.lfg-page__tab-hint {
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.lfg-page__filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.lfg-page__filter-label {
+    align-self: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--lh-ink-3);
+}

@@ -27,21 +27,64 @@
         </button>
 
         @if (pickerOpen()) {
-            <div class="reactions__picker" role="menu">
-                @for (emoji of emojis; track emoji.key) {
-                    <button
-                        type="button"
-                        role="menuitemcheckbox"
-                        class="reactions__option"
-                        [class.reactions__option--mine]="mine().includes(emoji.key)"
-                        [attr.aria-checked]="mine().includes(emoji.key)"
-                        [attr.aria-label]="'shared.reactions.' + emoji.key | translate"
-                        [title]="'shared.reactions.' + emoji.key | translate"
-                        (click)="toggle(emoji.key, $event)"
-                    >
-                        {{ emoji.glyph }}
-                    </button>
-                }
+            <div class="reactions__picker" role="dialog" [attr.aria-label]="'shared.reactions.add' | translate">
+                <div class="reactions__tabs" role="tablist">
+                    @if (hasRecent()) {
+                        <button
+                            type="button"
+                            role="tab"
+                            class="reactions__tab"
+                            [class.reactions__tab--active]="tab() === 'recent'"
+                            [attr.aria-selected]="tab() === 'recent'"
+                            [attr.aria-label]="'shared.reactions.groups.recent' | translate"
+                            [title]="'shared.reactions.groups.recent' | translate"
+                            (click)="selectTab('recent', $event)"
+                        >
+                            <tui-icon icon="@tui.history" class="size-4!" />
+                        </button>
+                    }
+                    @for (group of groups; track group.key) {
+                        <button
+                            type="button"
+                            role="tab"
+                            class="reactions__tab"
+                            [class.reactions__tab--active]="tab() === group.key"
+                            [attr.aria-selected]="tab() === group.key"
+                            [attr.aria-label]="'shared.reactions.groups.' + group.key | translate"
+                            [title]="'shared.reactions.groups.' + group.key | translate"
+                            (click)="selectTab(group.key, $event)"
+                        >
+                            {{ group.emojis[0].glyph }}
+                        </button>
+                    }
+                </div>
+
+                <div class="reactions__grid" role="menu" (mouseleave)="hovered.set(null)">
+                    @for (emoji of tabEmojis(); track emoji.key) {
+                        <button
+                            type="button"
+                            role="menuitemcheckbox"
+                            class="reactions__option"
+                            [class.reactions__option--mine]="mine().includes(emoji.key)"
+                            [attr.aria-checked]="mine().includes(emoji.key)"
+                            [attr.aria-label]="'shared.reactions.' + emoji.key | translate"
+                            (mouseenter)="hovered.set(emoji)"
+                            (focus)="hovered.set(emoji)"
+                            (click)="toggle(emoji.key, $event)"
+                        >
+                            {{ emoji.glyph }}
+                        </button>
+                    }
+                </div>
+
+                <div class="reactions__caption" aria-hidden="true">
+                    @if (hovered(); as emoji) {
+                        <span class="reactions__caption-glyph">{{ emoji.glyph }}</span>
+                        {{ "shared.reactions." + emoji.key | translate }}
+                    } @else {
+                        {{ "shared.reactions.groups." + tab() | translate }}
+                    }
+                </div>
             </div>
         }
     </div>

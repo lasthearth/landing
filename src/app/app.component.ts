@@ -7,6 +7,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { SeoService } from '@core/services/seo.service';
 import { ISeoData } from '@core/types/i-seo-data';
 import { ReferralApplierService } from '@features/referral';
+import { PendingInviteService } from '@features/settlements/join-by-invite';
 
 /**
  * Корневой компонент приложения.
@@ -33,6 +34,11 @@ export class AppComponent {
      * Сервис автоматического применения реферального кода из URL (?ref=).
      */
     private readonly referralApplier: ReferralApplierService = inject(ReferralApplierService);
+
+    /**
+     * Возвращает игрока на страницу приглашения в поселение после входа.
+     */
+    private readonly pendingInvite = inject(PendingInviteService);
 
     /**
      * Fallback SEO-данные, если роут не содержит своих.

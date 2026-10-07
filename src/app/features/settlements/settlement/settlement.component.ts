@@ -45,6 +45,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { compressImage } from '@shared/lib/compress-image.function';
 import { CreateSettlementFormComponent } from '@app/features/profile/create-settlement-from/create-settlement-from.component';
+import { InviteLinksPanelComponent } from '../settlement-invite-links';
 import {
     MemberRolesDialogComponent,
     MemberRolesDialogData,
@@ -90,6 +91,7 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
         PlayerChipComponent,
         RolesMatrixComponent,
         JoinRequestsPanelComponent,
+        InviteLinksPanelComponent,
         InvitationCardComponent,
         RelativeTimeComponent,
     ],

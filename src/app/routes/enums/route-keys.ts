@@ -38,4 +38,8 @@ export enum RouteKeys {
     events = 18,
 
     player = 19,
+
+    lfg = 20,
+
+    join = 21,
 }

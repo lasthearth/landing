@@ -59,6 +59,7 @@ import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hung
 import { NewcomerPathComponent } from '@features/onboarding';
 import { PlayerBadgesComponent, PlayerProfile, PlayerProfileService } from '@features/player';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
+import { PendingInviteBannerComponent } from '@features/settlements/join-by-invite';
 import { ApplicationCardComponent, ApplicationState } from './ui/application-card/application-card.component';
 import { ProfileWaitingComponent } from './ui/profile-waiting/profile-waiting.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -83,6 +84,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         ProfileWaitingComponent,
         PlayerBadgesComponent,
         ShareButtonComponent,
+        PendingInviteBannerComponent,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',

@@ -10,6 +10,7 @@ export * from './model/i-settlement';
 export * from './model/i-update-settlement';
 export * from './model/i-role';
 export * from './model/i-join-request';
+export * from './model/i-invite-link';
 export { Permission } from './model/permission';
 export { OWNER_ROLE_ID } from './lib/owner-role-id.constant';
 export { getOwnerIds } from './lib/get-owner-ids.function';

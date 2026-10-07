@@ -214,6 +214,11 @@
         <app-join-requests-panel [settlement]="data" (membersChanged)="onInvitationResolved()" />
     }
 
+    <!-- Ссылки-приглашения -->
+    @if (canInvite()) {
+        <app-invite-links-panel [settlement]="data" />
+    }
+
     <!-- Отправленные приглашения -->
     @if (canInvite() && sentInvitations().length) {
         <div class="lh-panel flex flex-col gap-4">

@@ -1,0 +1,23 @@
+@if (pending.invite(); as invite) {
+    <aside class="pending-invite" role="status">
+        <span class="pending-invite__icon" aria-hidden="true">
+            <tui-icon icon="@tui.mail-open" class="size-6!" />
+        </span>
+        <div class="pending-invite__body">
+            <p class="pending-invite__title">
+                {{ "settlements.joinByInvite.pending.title" | translate: { name: invite.settlementName } }}
+            </p>
+            @if (!verified()) {
+                <p class="pending-invite__text">{{ "settlements.joinByInvite.pending.waiting" | translate }}</p>
+            }
+        </div>
+        <div class="pending-invite__actions">
+            <a class="lh-cta pending-invite__open" [routerLink]="['/join', invite.code]">
+                {{ "settlements.joinByInvite.pending.open" | translate }}
+            </a>
+            <button type="button" class="pending-invite__dismiss" (click)="pending.clear()">
+                {{ "settlements.joinByInvite.pending.dismiss" | translate }}
+            </button>
+        </div>
+    </aside>
+}

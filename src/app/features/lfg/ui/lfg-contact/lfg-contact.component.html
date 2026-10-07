@@ -1,0 +1,35 @@
+@if (!authed()) {
+    <button type="button" class="lh-cta lh-cta--ghost" (click)="signIn.emit()">
+        <tui-icon icon="@tui.lock" class="size-4!" />
+        {{ "lfg.contact.signIn" | translate }}
+    </button>
+} @else if (state() === "shown" && contact()) {
+    <div class="lfg-contact" role="status">
+        <tui-icon icon="@tui.message-circle" class="size-4! lfg-contact__icon" />
+        <span class="lfg-contact__value">{{ contact() }}</span>
+        <button
+            type="button"
+            class="lfg-contact__copy"
+            [attr.aria-label]="'lfg.contact.copy' | translate"
+            [title]="'lfg.contact.copy' | translate"
+            (click)="copy()"
+        >
+            <tui-icon [icon]="copied() ? '@tui.check' : '@tui.copy'" class="size-4!" />
+        </button>
+    </div>
+} @else {
+    <button
+        type="button"
+        class="lh-cta"
+        [class.lh-cta--ghost]="!primary()"
+        [disabled]="state() === 'loading'"
+        (click)="reveal()"
+    >
+        <tui-icon
+            [icon]="state() === 'loading' ? '@tui.loader' : '@tui.eye'"
+            class="size-4!"
+            [class.animate-spin]="state() === 'loading'"
+        />
+        {{ (state() === "error" ? "lfg.contact.retry" : "lfg.contact.show") | translate }}
+    </button>
+}

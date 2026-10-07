@@ -2,10 +2,9 @@
  * Типы сущности «Реакция».
  */
 
-/**
- * Реакция, которую может поставить игрок.
- */
-export type ReactionEmoji = 'like' | 'heart' | 'fire' | 'laugh' | 'swords';
+import type { ReactionEmoji } from './reaction-emojis.constant';
+
+export type { ReactionEmoji };
 
 /**
  * Вид контента, на который ставятся реакции.

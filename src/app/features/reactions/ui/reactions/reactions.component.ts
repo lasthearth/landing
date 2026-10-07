@@ -1,8 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, signal } from '@angular/core';
 import { TranslatePipe } from '@core/i18n';
-import { REACTION_EMOJIS, ReactionEmoji, ReactionTarget, ReactionTargetKind } from '@entities/reaction';
+import {
+    REACTION_EMOJIS,
+    REACTION_GROUPS,
+    ReactionEmoji,
+    ReactionEmojiDef,
+    ReactionGroupKey,
+    reactionGlyph,
+    ReactionTarget,
+    ReactionTargetKind,
+} from '@entities/reaction';
 import { TuiIcon } from '@taiga-ui/core';
 import { ReactionsStoreService } from '../../api/reactions-store.service';
+import { RecentReactionsService } from '../../api/recent-reactions.service';
+
+/**
+ * Вкладка выбора: недавние или группа.
+ */
+type PickerTab = 'recent' | ReactionGroupKey;
 
 /**
  * Реакции под контентом: поставленные реакции со счётчиками и кнопка выбора новой.
@@ -61,9 +76,47 @@ export class ReactionsComponent {
     protected readonly pickerOpen = signal(false);
 
     /**
-     * Все реакции (для выбора).
+     * Недавние реакции этого браузера.
      */
-    protected readonly emojis = REACTION_EMOJIS;
+    private readonly recent = inject(RecentReactionsService);
+
+    /**
+     * Группы для вкладок выбора.
+     */
+    protected readonly groups = REACTION_GROUPS;
+
+    /**
+     * Выбранная вкладка (`null` — по умолчанию: недавние, если они есть).
+     */
+    private readonly chosenTab = signal<PickerTab | null>(null);
+
+    /**
+     * Открытая вкладка выбора.
+     */
+    protected readonly tab = computed<PickerTab>(
+        () => this.chosenTab() ?? (this.recent.items().length ? 'recent' : 'emotions')
+    );
+
+    /**
+     * Есть ли недавние реакции (иначе вкладку не показываем).
+     */
+    protected readonly hasRecent = computed(() => this.recent.items().length > 0);
+
+    /**
+     * Реакции открытой вкладки.
+     */
+    protected readonly tabEmojis = computed((): readonly ReactionEmojiDef[] => {
+        const tab = this.tab();
+        if (tab === 'recent') {
+            return this.recent.items().map((key) => ({ key, glyph: reactionGlyph(key) }));
+        }
+        return REACTION_GROUPS.find((group) => group.key === tab)?.emojis ?? [];
+    });
+
+    /**
+     * Реакция под курсором или фокусом — её название в подвале выбора.
+     */
+    protected readonly hovered = signal<ReactionEmojiDef | null>(null);
 
     /**
      * Реакции цели.
@@ -71,16 +124,20 @@ export class ReactionsComponent {
     private readonly reactions = computed(() => this.store.get(this.target()));
 
     /**
-     * Поставленные реакции: ненулевые или свои, в фиксированном порядке.
+     * Поставленные реакции: ненулевые или свои. Популярные первыми,
+     * при равенстве — в порядке каталога.
      */
     protected readonly shown = computed(() => {
         const { counts, mine } = this.reactions();
 
-        return REACTION_EMOJIS.map((emoji) => ({
+        return REACTION_EMOJIS.map((emoji, order) => ({
             ...emoji,
+            order,
             count: counts[emoji.key] ?? 0,
             mine: mine.includes(emoji.key),
-        })).filter((emoji) => emoji.count > 0 || emoji.mine);
+        }))
+            .filter((emoji) => emoji.count > 0 || emoji.mine)
+            .sort((a, b) => b.count - a.count || a.order - b.order);
     });
 
     /**
@@ -102,7 +159,23 @@ export class ReactionsComponent {
         event.preventDefault();
         event.stopPropagation();
         this.pickerOpen.set(false);
+        if (!this.reactions().mine.includes(emoji)) {
+            this.recent.remember(emoji);
+        }
         this.store.toggle(this.target(), emoji);
+    }
+
+    /**
+     * Переключает вкладку выбора.
+     *
+     * @param tab Вкладка.
+     * @param event Клик (не закрываем выбор и не идём по ссылке карточки).
+     */
+    protected selectTab(tab: PickerTab, event: Event): void {
+        event.preventDefault();
+        event.stopPropagation();
+        this.chosenTab.set(tab);
+        this.hovered.set(null);
     }
 
     /**
@@ -114,6 +187,8 @@ export class ReactionsComponent {
         event.preventDefault();
         event.stopPropagation();
         this.pickerOpen.update((open) => !open);
+        this.chosenTab.set(null);
+        this.hovered.set(null);
     }
 
     /**
@@ -122,7 +197,8 @@ export class ReactionsComponent {
      * @param event Клик в документе.
      */
     protected onDocumentClick(event: MouseEvent): void {
-        if (this.pickerOpen() && !this.host.nativeElement.contains(event.target as Node)) {
+        // composedPath: переключение вкладки убирает нажатую кнопку из DOM до этого обработчика.
+        if (this.pickerOpen() && !event.composedPath().includes(this.host.nativeElement)) {
             this.pickerOpen.set(false);
         }
     }

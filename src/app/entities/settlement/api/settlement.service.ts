@@ -10,6 +10,7 @@ import { ISettlement } from '../model/i-settlement';
 import { ISettlementInvitation } from '../model/i-settlement-invitation';
 import { IUpdateSettlementRequest } from '../model/i-update-settlement';
 import { IJoinRequest } from '../model/i-join-request';
+import { ICreateInviteLink, IInviteLink, IInviteLinkPreview } from '../model/i-invite-link';
 import { Permission } from '../model/permission';
 /**
  * API-сервис для работы с поселениями.
@@ -658,4 +659,72 @@ export class SettlementService {
         return this.http.delete(`${this.baseUrl}/admin/settlements/${settlementId}`);
     }
 
+    // ─── Ссылки-приглашения ───
+
+    /**
+     * Создаёт ссылку-приглашение. Требует право приглашать (или owner).
+     *
+     * @param settlementId Поселение.
+     * @param request Срок и число использований.
+     * @returns Observable с созданной ссылкой.
+     */
+    public createInviteLink$(settlementId: string, request: ICreateInviteLink): Observable<IInviteLink> {
+        return this.http.post<IInviteLink>(`${this.baseUrl}/settlements/${settlementId}/invite-links`, request);
+    }
+
+    /**
+     * Возвращает ссылки-приглашения поселения (кроме отозванных), новые первыми.
+     *
+     * Без всплывающей ошибки: право могли отобрать, панель просто опустеет.
+     *
+     * @param settlementId Поселение.
+     * @returns Observable со списком.
+     */
+    public getInviteLinks$(settlementId: string): Observable<IInviteLink[]> {
+        return this.http
+            .get<{ invite_links?: IInviteLink[] }>(`${this.baseUrl}/settlements/${settlementId}/invite-links`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
+            .pipe(map((data) => data.invite_links ?? []));
+    }
+
+    /**
+     * Отзывает ссылку-приглашение.
+     *
+     * @param settlementId Поселение.
+     * @param linkId Ссылка.
+     * @returns Observable с отозванной ссылкой.
+     */
+    public revokeInviteLink$(settlementId: string, linkId: string): Observable<IInviteLink> {
+        return this.http.post<IInviteLink>(
+            `${this.baseUrl}/settlements/${settlementId}/invite-links/${linkId}:revoke`,
+            {}
+        );
+    }
+
+    /**
+     * Открывает ссылку-приглашение: её состояние и поселение. Работает и для гостя.
+     *
+     * @param code Код из ссылки.
+     * @returns Observable с превью.
+     */
+    public getInviteLink$(code: string): Observable<IInviteLinkPreview> {
+        return this.http.get<IInviteLinkPreview>(`${this.baseUrl}/invite-links/${encodeURIComponent(code)}`, {
+            context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+        });
+    }
+
+    /**
+     * Вступает в поселение по ссылке-приглашению.
+     *
+     * @param code Код из ссылки.
+     * @returns Observable с идентификатором поселения.
+     */
+    public joinByInviteLink$(code: string): Observable<string> {
+        return this.http
+            .post<{
+                settlement_id: string;
+            }>(`${this.baseUrl}/invite-links/${encodeURIComponent(code)}:join`, {}, { context: new HttpContext().set(SKIP_ERROR_ALERT, true) })
+            .pipe(map((data) => data.settlement_id));
+    }
 }
