@@ -275,3 +275,14 @@
         height: 28rem;
     }
 }
+
+/**
+ * На страницах профиля ниже xl внизу экрана фиксирована панель навигации
+ * (~4.25rem: кнопки 2.75rem + отступы 0.75rem). Поднимаем чат над ней,
+ * чтобы кнопка не перекрывала навигацию. Класс ставит LandingComponent.
+ */
+@media (max-width: 1279px) {
+    :host-context(body.lh-has-bottom-bar) .game-chat-widget {
+        bottom: 5.25rem;
+    }
+}

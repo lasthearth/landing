@@ -63,7 +63,6 @@ export const MARKET_I18N = {
                 supportTitle: 'Поддержка сервера',
                 supportDescription:
                     'Ваш вклад помогает миру у очага оставаться живым. Любая покупка на сервере — помогает оплатить аренду хостинга, доменного имени и работу команды.',
-                howToBuyButton: 'Как пополнить осколки',
                 fundingHosting: {
                     title: 'Хостинг',
                     description: 'Аренда мощностей для стабильной работы сервера',
@@ -186,7 +185,6 @@ export const MARKET_I18N = {
                 supportTitle: 'Support the server',
                 supportDescription:
                     'Your contribution helps the world by the Hearth stay alive. Every purchase on the server helps pay for hosting, the domain name, and the team\'s work.',
-                howToBuyButton: 'How to top up shards',
                 fundingHosting: {
                     title: 'Hosting',
                     description: 'Renting capacity for stable server operation',
