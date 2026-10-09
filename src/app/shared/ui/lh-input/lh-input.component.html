@@ -1,3 +1,6 @@
+@if (label()) {
+    <label class="flexible-input__label" [for]="inputId">{{ label() }}</label>
+}
 <div
     [class.select-mode]="type() === 'select'"
     [class.has-icon]="icon() && type() !== 'select'"
@@ -6,6 +9,8 @@
     @if (type() === "input" || type() === "inputNumber") {
         <input
             type="text"
+            [id]="inputId"
+            [attr.aria-label]="label() ? null : ariaLabel() || null"
             [placeholder]="placeholder()"
             [value]="displayedValue"
             [disabled]="disabled"
@@ -16,6 +21,8 @@
 
     @if (type() === "textarea") {
         <textarea
+            [id]="inputId"
+            [attr.aria-label]="label() ? null : ariaLabel() || null"
             [placeholder]="placeholder()"
             [value]="displayedValue"
             [disabled]="disabled"
@@ -31,7 +38,8 @@
             role="combobox"
             aria-haspopup="listbox"
             [attr.aria-expanded]="dropdownOpen()"
-            [attr.aria-label]="placeholder()"
+            [id]="inputId"
+            [attr.aria-label]="label() ? null : ariaLabel() || placeholder()"
             [disabled]="disabled"
             (click)="toggleDropdown()"
             (keydown.escape)="dropdownOpen.set(false)"

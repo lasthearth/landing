@@ -25,7 +25,8 @@
 
     @if (hasStatements()) {
         @if (authors().length > 1) {
-            <div class="lh-chips" role="group" [attr.aria-label]="'diplomacy.filter' | translate">
+            <div class="lh-chips" role="group" aria-labelledby="diplomacy-filter-label">
+                <span id="diplomacy-filter-label" class="lh-chips__label">{{ "diplomacy.filter" | translate }}</span>
                 <button
                     type="button"
                     class="lh-chip"

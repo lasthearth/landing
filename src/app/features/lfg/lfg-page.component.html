@@ -37,7 +37,8 @@
     }
 
     <div class="lfg-page__filters">
-        <div class="lh-chips" role="group" [attr.aria-label]="'lfg.filters.label' | translate">
+        <div class="lh-chips" role="group" aria-labelledby="lfg-activity-label">
+            <span id="lfg-activity-label" class="lh-chips__label">{{ "lfg.filters.label" | translate }}</span>
             <button
                 type="button"
                 class="lh-chip"
@@ -66,8 +67,8 @@
         </div>
 
         @if (teammate()) {
-            <div class="lh-chips" role="group" [attr.aria-label]="'lfg.filters.time' | translate">
-                <span class="lfg-page__filter-label">{{ "lfg.filters.time" | translate }}</span>
+            <div class="lh-chips" role="group" aria-labelledby="lfg-time-label">
+                <span id="lfg-time-label" class="lh-chips__label">{{ "lfg.filters.time" | translate }}</span>
                 @for (item of playTimes; track item.value) {
                     <button
                         type="button"

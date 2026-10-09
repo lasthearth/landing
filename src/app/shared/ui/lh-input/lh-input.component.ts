@@ -22,6 +22,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 /**
  * Тип поля
  */
+/**
+ * Счётчик для генерации уникальных id полей ввода.
+ */
+let nextLhInputId = 0;
+
 export type LHInputType = 'input' | 'select' | 'textarea' | 'inputNumber';
 
 /**
@@ -96,6 +101,23 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
         this.onChange(val);
         this.onTouched();
     }
+
+    /**
+     * Видимая подпись поля. Если задана — выводится над полем
+     * и связывается с ним через for/id; placeholder остаётся подсказкой.
+     */
+    public label: InputSignal<string> = input('');
+
+    /**
+     * Доступное имя поля для скринридеров, когда видимой подписи нет
+     * (например, поле поиска под заголовком секции). Игнорируется, если задан label.
+     */
+    public ariaLabel: InputSignal<string> = input('');
+
+    /**
+     * Уникальный id поля ввода для связи с видимой подписью.
+     */
+    protected readonly inputId: string = `lh-input-${nextLhInputId++}`;
 
     /**
      * Событие изменения значения.

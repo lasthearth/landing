@@ -44,7 +44,7 @@ export const SETTLEMENTS_I18N = {
             list: {
                 title: 'Список поселений игроков',
                 sort: {
-                    label: 'Сортировка списка',
+                    label: 'Сортировка',
                     default: 'По умолчанию',
                     population: 'По населению',
                     online: 'По онлайну',
@@ -59,8 +59,8 @@ export const SETTLEMENTS_I18N = {
                     description: 'Станьте первым, кто основал поселение у очага.',
                 },
                 search: 'Название поселения или ник жителя',
-                filterType: 'Тип поселения',
-                filterCourse: 'Дипломатический курс',
+                filterType: 'Тип',
+                filterCourse: 'Курс',
                 found: 'Найдено: {{count}}',
                 reset: 'Сбросить фильтры',
                 notFound: {
@@ -111,6 +111,8 @@ export const SETTLEMENTS_I18N = {
                 createTitle: 'Создать новый тег',
                 createButton: 'Создать',
                 namePlaceholder: 'Название тега...',
+                nameLabel: 'Название',
+                descriptionLabel: 'Описание',
                 descriptionPlaceholder: 'Описание (необязательно)...',
                 colorLabel: 'Цвет:',
                 createError: 'Не удалось создать тег',
@@ -555,7 +557,7 @@ export const SETTLEMENTS_I18N = {
             list: {
                 title: 'Player settlement list',
                 sort: {
-                    label: 'Sort list',
+                    label: 'Sort',
                     default: 'Default',
                     population: 'By population',
                     online: 'By online',
@@ -570,8 +572,8 @@ export const SETTLEMENTS_I18N = {
                     description: 'Be the first to found a settlement by the hearth.',
                 },
                 search: 'Settlement name or resident nickname',
-                filterType: 'Settlement type',
-                filterCourse: 'Diplomatic course',
+                filterType: 'Type',
+                filterCourse: 'Course',
                 found: 'Found: {{count}}',
                 reset: 'Reset filters',
                 notFound: {
@@ -622,6 +624,8 @@ export const SETTLEMENTS_I18N = {
                 createTitle: 'Create new tag',
                 createButton: 'Create',
                 namePlaceholder: 'Tag name...',
+                nameLabel: 'Name',
+                descriptionLabel: 'Description',
                 descriptionPlaceholder: 'Description (optional)...',
                 colorLabel: 'Color:',
                 createError: 'Failed to create tag',

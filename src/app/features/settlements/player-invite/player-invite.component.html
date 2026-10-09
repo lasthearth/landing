@@ -6,7 +6,7 @@
     <div class="flex flex-col gap-4">
         <div class="flex flex-col gap-2">
             <p class="text-xl text-ink font-semibold">{{ 'settlements.invite.nicknameLabel' | translate }}</p>
-            <lh-input [placeholder]="'settlements.invite.nicknamePlaceholder' | translate" [formControl]="playerNickControl" />
+            <lh-input [ariaLabel]="'settlements.invite.nicknameLabel' | translate" [placeholder]="'settlements.invite.nicknamePlaceholder' | translate" [formControl]="playerNickControl" />
         </div>
 
         <div class="flex flex-col">

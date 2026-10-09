@@ -7,7 +7,7 @@ export const DIPLOMACY_I18N = {
             title: 'Дипломатия',
             subtitle: 'Заявления глав селений и дипломатические обращения сервера.',
             loading: 'Загружаем заявления...',
-            filter: 'Фильтр по автору',
+            filter: 'Автор',
             all: 'Все',
             showMore: 'Показать ещё',
             card: {
@@ -26,7 +26,7 @@ export const DIPLOMACY_I18N = {
             title: 'Diplomacy',
             subtitle: 'Statements from settlement leaders and diplomatic appeals.',
             loading: 'Loading statements...',
-            filter: 'Filter by author',
+            filter: 'Author',
             all: 'All',
             showMore: 'Show more',
             card: {

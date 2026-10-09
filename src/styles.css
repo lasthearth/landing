@@ -819,7 +819,22 @@ tui-pulse.offline {
     .lh-chips {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         gap: 0.5rem;
+    }
+
+    /**
+     * Видимая подпись группы чипов («Тип», «Сортировка»).
+     * Стоит первым элементом ряда и связывается с группой через aria-labelledby,
+     * чтобы назначение ряда было понятно без наведения и без скринридера.
+     */
+    .lh-chips__label {
+        margin-right: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--lh-ink-3);
     }
 
     .lh-chip {

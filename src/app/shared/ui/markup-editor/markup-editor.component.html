@@ -54,6 +54,7 @@
         [rows]="rows()"
         [hidden]="previewing()"
         [placeholder]="placeholder()"
+        [attr.aria-label]="ariaLabel() || placeholder() || null"
         [disabled]="disabled()"
         (input)="onInput()"
         (keydown)="onKeydown($event)"
