@@ -34,6 +34,11 @@ import { UpcomingEventComponent } from '@features/events';
 })
 export class HomeComponent {
     /**
+     * Ссылка-приглашение на Discord-сервер проекта.
+     */
+    protected readonly discordInviteUrl: string = environment.discordInviteUrl;
+
+    /**
      * API-сервис для работы с новостями.
      */
     private readonly api = inject(NewsApiService);
@@ -219,7 +224,7 @@ export class HomeComponent {
             {
                 icon: '@tui.message-circle',
                 label: 'home.quickActions.discord',
-                route: 'https://discord.com/invite/FZb7SGrSFy',
+                route: environment.discordInviteUrl,
                 external: true,
             },
             {

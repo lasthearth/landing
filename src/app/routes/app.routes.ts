@@ -19,13 +19,11 @@ export const routes: Routes = [
         loadComponent: () => import('../features/landing/landing.component').then((m) => m.LandingComponent),
         children: [
             {
+                // Канонический адрес главной — /home; корень перенаправляет туда,
+                // чтобы у поисковиков не было двух одинаковых страниц.
                 path: '',
-                loadComponent: () =>
-                    loadPage(
-                        () => import('../features/home/home.component').then((m) => m.HomeComponent),
-                        [() => import('@core/i18n/translations/features/home.i18n').then((m) => m.HOME_I18N)]
-                    ),
-                data: { route_keys: RouteKeys.home, seo: routeSeoData.home },
+                redirectTo: 'home',
+                pathMatch: 'full',
             },
             {
                 path: 'home',

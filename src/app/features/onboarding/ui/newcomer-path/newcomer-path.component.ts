@@ -27,7 +27,7 @@ import { OnboardingStepKey } from '../../model/onboarding-step-key';
 /**
  * Приглашение в Discord сервера.
  */
-const DISCORD_INVITE = 'https://discord.com/invite/FZb7SGrSFy';
+const DISCORD_INVITE = environment.discordInviteUrl;
 
 /**
  * Где купить игру.

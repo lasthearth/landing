@@ -18,6 +18,11 @@ import { RouterLink } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HowPlayComponent {
+    /**
+     * Ссылка-приглашение на Discord-сервер проекта.
+     */
+    protected readonly discordInviteUrl: string = environment.discordInviteUrl;
+
     protected readonly environment = environment;
 
     /**

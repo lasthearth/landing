@@ -120,7 +120,7 @@
                         <tui-icon icon="@tui.castle" />
                         {{ "profile.howToPlay.linkSettlements" | translate }}
                     </a>
-                    <a class="lh-chip" href="https://discord.gg/FZb7SGrSFy" target="_blank" rel="noopener">
+                    <a class="lh-chip" [href]="discordInviteUrl" target="_blank" rel="noopener">
                         <tui-icon icon="@tui.message-circle" />
                         {{ "profile.howToPlay.linkDiscord" | translate }}
                     </a>
@@ -140,7 +140,7 @@
             <li>{{ "profile.howToPlay.help2" | translate }}</li>
             <li>
                 {{ "profile.howToPlay.help3" | translate }}
-                <a href="https://discord.gg/FZb7SGrSFy" target="_blank" rel="noopener">Discord</a>.
+                <a [href]="discordInviteUrl" target="_blank" rel="noopener">Discord</a>.
             </li>
         </ul>
     </aside>

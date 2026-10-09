@@ -17,8 +17,8 @@
 
                 <span class="text-lh-primary hidden sm:block">•</span>
 
-                <a href="https://docs.lasthearth.ru/" target="_blank" class="self-start">
-                    {{ "footer.version" | translate: { version: environment.siteVersion, date: "21.09.2026" } }}
+                <a href="https://docs.lasthearth.ru/" target="_blank" rel="noopener noreferrer" class="self-start">
+                    {{ "footer.version" | translate: { version: environment.siteVersion, date: environment.siteVersionDate } }}
                 </a>
             </div>
         </div>
@@ -61,7 +61,7 @@
                 >
                     <a
                         class="z-10 nav-button"
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="environment.discordInviteUrl"
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="Discord"

@@ -12,6 +12,7 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { UserService } from '@entities/user/api/user.service';
 import { IPlayer } from '@entities/user/model/i-player';
 import { SBP_REQUISITES } from './sbp.config';
+import { environment } from '@core/config/environments/environment';
 
 /**
  * Диалог пополнения осколков (донат-валюты).
@@ -28,6 +29,11 @@ import { SBP_REQUISITES } from './sbp.config';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HowToBuyComponent implements OnInit {
+    /**
+     * Ссылка-приглашение на Discord-сервер проекта.
+     */
+    protected readonly discordInviteUrl: string = environment.discordInviteUrl;
+
     /**
      * Курс обмена: 1 рубль = 10 осколков.
      */

@@ -1,5 +1,5 @@
 <div class="news-page lh-page-container flex flex-col gap-6">
-    <a routerLink="/" fragment="news" class="news-page__back">
+    <a routerLink="/home" fragment="news" class="news-page__back">
         <tui-icon icon="@tui.arrow-left" class="size-4!" />
         {{ "news.page.back" | translate }}
     </a>
@@ -65,7 +65,7 @@
                         />
                     }
                 </div>
-                <a routerLink="/" fragment="news" class="lh-cta self-center">
+                <a routerLink="/home" fragment="news" class="lh-cta self-center">
                     {{ "news.page.allNews" | translate }}
                     <span class="lh-cta__icon">
                         <tui-icon icon="@tui.arrow-right" class="size-4!" />
@@ -77,7 +77,7 @@
         <div class="lh-panel flex flex-col items-start gap-4">
             <h1 class="lh-display text-3xl font-bold text-ink">{{ "news.page.notFoundTitle" | translate }}</h1>
             <p class="text-lg text-ink-2">{{ "news.page.notFoundText" | translate }}</p>
-            <a routerLink="/" fragment="news" class="lh-cta">{{ "news.page.allNews" | translate }}</a>
+            <a routerLink="/home" fragment="news" class="lh-cta">{{ "news.page.allNews" | translate }}</a>
         </div>
     } @else {
         <app-news-skeleton class="!h-auto w-full" />

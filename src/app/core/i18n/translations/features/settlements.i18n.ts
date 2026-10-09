@@ -79,6 +79,7 @@ export const SETTLEMENTS_I18N = {
                 notFoundText: 'Возможно, его распустили или ссылка неверна.',
             },
             card: {
+                pinned: 'Закреплённое поселение',
                 imageAlt: 'Изображение поселения {{name}}',
                 residentsShort: 'жит.',
                 onlineShort: 'онл.',
@@ -592,6 +593,7 @@ export const SETTLEMENTS_I18N = {
                 notFoundText: 'It may have been disbanded or the link is wrong.',
             },
             card: {
+                pinned: 'Pinned settlement',
                 imageAlt: 'Settlement image {{name}}',
                 residentsShort: 'res.',
                 onlineShort: 'onl.',

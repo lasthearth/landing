@@ -12,6 +12,9 @@
             @if (isPinned(data())) {
                 <div
                     class="absolute top-3 right-3 z-10 bg-lh-accent text-white rounded-lg px-2 py-1 shadow-md flex items-center gap-1"
+                    role="img"
+                    [attr.aria-label]="'settlements.card.pinned' | translate"
+                    [title]="'settlements.card.pinned' | translate"
                 >
                     <tui-icon icon="@tui.pin" class="size-4!" />
                 </div>

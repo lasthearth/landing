@@ -4,6 +4,10 @@
         @if (question()) {
             <div
                 class="finder__progress"
+                role="progressbar"
+                aria-valuemin="1"
+                [attr.aria-valuemax]="questions.length"
+                [attr.aria-valuenow]="step() + 1"
                 [attr.aria-label]="
                     'settlements.finder.progress' | translate: { step: step() + 1, total: questions.length }
                 "

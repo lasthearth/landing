@@ -13,7 +13,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
 /**
  * Приглашение в Discord сервера.
  */
-const DISCORD_INVITE = 'https://discord.com/invite/FZb7SGrSFy';
+const DISCORD_INVITE = environment.discordInviteUrl;
 
 /**
  * Страница «Начать игру»: путь новичка с отметками и справка о сервере сбоку.
