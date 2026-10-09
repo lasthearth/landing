@@ -15,6 +15,8 @@ import { EventsTab } from './model/events-tab';
 import { EventCardComponent } from './ui/event-card/event-card.component';
 import { EventFormComponent } from './ui/event-form/event-form.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 
 /**
  * Календарь событий сервера: предстоящие и прошедшие.
@@ -26,7 +28,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
     selector: 'app-events-page',
     templateUrl: './events-page.component.html',
     styleUrl: './events-page.component.less',
-    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, EventCardComponent, EventFormComponent],
+    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, EventCardComponent, EventFormComponent, EmptyStateComponent, ErrorStateComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsPageComponent {
@@ -222,6 +224,13 @@ export class EventsPageComponent {
      *
      * @param tab Вкладка.
      */
+    /**
+     * Повторяет загрузку текущей вкладки после ошибки.
+     */
+    protected retry(): void {
+        this.load(this.tab());
+    }
+
     private load(tab: EventsTab): void {
         this.api
             .list(tab === 'past')

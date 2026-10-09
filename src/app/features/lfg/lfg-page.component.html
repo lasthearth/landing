@@ -85,29 +85,20 @@
     </div>
 
     @if (error()) {
-        <div class="lfg-page__state lfg-page__state--error" role="alert">
-            <tui-icon icon="@tui.triangle-alert" class="size-8" />
-            <span>{{ "lfg.error" | translate }}</span>
-            <button type="button" class="lh-cta lh-cta--ghost" (click)="load()">{{ "lfg.retry" | translate }}</button>
-        </div>
+        <app-error-state description="lfg.error" retryText="lfg.retry" (retry)="load()" />
     } @else if (posts() === null) {
         <div class="lfg-page__state" role="status">
             <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
             <span>{{ "lfg.loading" | translate }}</span>
         </div>
     } @else if (shown().length === 0) {
-        <div class="lfg-page__state">
-            <tui-icon [icon]="teammate() ? '@tui.handshake' : '@tui.users'" class="size-14 opacity-60" />
-            @if (activity() || (teammate() && playTime())) {
-                <p class="lfg-page__empty-title">{{ "lfg.empty.filtered" | translate }}</p>
-            } @else if (teammate()) {
-                <p class="lfg-page__empty-title">{{ "lfg.empty.titleMate" | translate }}</p>
-                <p class="lfg-page__empty-text">{{ "lfg.empty.textMate" | translate }}</p>
-            } @else {
-                <p class="lfg-page__empty-title">{{ "lfg.empty.title" | translate }}</p>
-                <p class="lfg-page__empty-text">{{ "lfg.empty.text" | translate }}</p>
-            }
-        </div>
+        @if (activity() || (teammate() && playTime())) {
+            <app-empty-state icon="@tui.search-x" title="lfg.empty.filtered" />
+        } @else if (teammate()) {
+            <app-empty-state icon="@tui.handshake" title="lfg.empty.titleMate" description="lfg.empty.textMate" />
+        } @else {
+            <app-empty-state icon="@tui.users" title="lfg.empty.title" description="lfg.empty.text" />
+        }
     } @else {
         <div class="lfg-page__list">
             @for (post of shown(); track post.id) {

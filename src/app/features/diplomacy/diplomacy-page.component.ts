@@ -21,6 +21,8 @@ import { stripDiscordTokens } from '@shared/lib/discord-markup';
 import { DiplomacyStatement } from './model/diplomacy-statement';
 import { DiplomacyCardComponent } from './ui/diplomacy-card/diplomacy-card.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 
 /**
  * Максимум заявлений, которые держим в памяти.
@@ -63,7 +65,7 @@ function sortMessagesByTimeDesc(messages: GameChatMessage[]): GameChatMessage[] 
 @Component({
     selector: 'app-diplomacy-page',
     standalone: true,
-    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, DiplomacyCardComponent],
+    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, DiplomacyCardComponent, EmptyStateComponent, ErrorStateComponent],
     templateUrl: './diplomacy-page.component.html',
     styleUrl: './diplomacy-page.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -181,6 +183,17 @@ export class DiplomacyPageComponent {
             this.revealTarget();
         }
 
+        this.load();
+    }
+
+    /**
+     * Загружает заявления и подписывается на обновления канала.
+     * Вызывается при создании страницы и по кнопке «Повторить» после ошибки.
+     */
+    protected load(): void {
+        this.error.set(null);
+        this.isLoading.set(!this.hasStatements());
+
         this.chatService
             .fetchAllMessages$(this.channelId)
             .pipe(
@@ -197,7 +210,7 @@ export class DiplomacyPageComponent {
                     this.updateStatements(freshMessages);
                 },
                 error: () => {
-                    this.error.set('Не удалось загрузить заявления.');
+                    this.error.set('diplomacy.error');
                     this.isLoading.set(false);
                 },
             });
