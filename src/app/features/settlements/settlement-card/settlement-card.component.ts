@@ -29,8 +29,6 @@ import {
     SettlementDisplayNamePipe,
 } from '@entities/settlement';
 import { IPlayer, UserService, PlayerChipComponent } from '@entities/user';
-import { SettlementTagStore, SettlementTagComponent } from '@entities/settlement-tag';
-import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { JoinRequestButtonComponent } from '../join-request';
@@ -48,7 +46,6 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
         ImageLoaderComponent,
         TranslatePipe,
         SettlementBadgeComponent,
-        SettlementTagComponent,
         SettlementDisplayNamePipe,
         PlayerChipComponent,
         JoinRequestButtonComponent,
@@ -88,12 +85,6 @@ export class SettlementCardComponent {
      */
     private readonly dialogs: TuiDialogService = inject(TuiDialogService);
 
-    /**
-     * Хранилище тегов поселений.
-     */
-    protected readonly tagStore: SettlementTagStore = inject(SettlementTagStore);
-
-    protected readonly environment = environment;
 
     /**
      * Сервис интернационализации.
@@ -122,25 +113,29 @@ export class SettlementCardComponent {
     });
 
     /**
-     * Максимум чипов жителей, помещающихся в карточку (включая лидера).
+     * Максимум чипов жителей в сети, показываемых в карточке (без главы).
      */
-    private readonly MAX_VISIBLE_CHIPS = 5;
+    private readonly MAX_ONLINE_CHIPS = 3;
 
     /**
-     * Участники, влезающие в карточку с учётом места под владельцев.
-     * Остаток сворачивается в бейдж «+N».
+     * Жители (не владельцы), которые сейчас в сети.
      */
-    protected readonly visibleUsers: Signal<IPlayer[]> = computed(() => {
-        const reserveForLeaders = this.leaders().length;
-
-        return this.users().slice(0, Math.max(0, this.MAX_VISIBLE_CHIPS - reserveForLeaders));
-    });
+    protected readonly onlineUsers: Signal<IPlayer[]> = computed(() =>
+        this.users().filter((player) => player.is_online)
+    );
 
     /**
-     * Число скрытых жителей, не поместившихся в карточку.
+     * Жители в сети, влезающие в карточку. Остаток сворачивается в «+N».
      */
-    protected readonly hiddenCount: Signal<number> = computed(() =>
-        Math.max(0, this.users().length - this.visibleUsers().length)
+    protected readonly visibleOnlineUsers: Signal<IPlayer[]> = computed(() =>
+        this.onlineUsers().slice(0, this.MAX_ONLINE_CHIPS)
+    );
+
+    /**
+     * Число жителей в сети, не поместившихся в карточку.
+     */
+    protected readonly hiddenOnlineCount: Signal<number> = computed(() =>
+        Math.max(0, this.onlineUsers().length - this.visibleOnlineUsers().length)
     );
 
     /**
@@ -284,9 +279,6 @@ export class SettlementCardComponent {
             });
     }
 
-    protected getTag(tagId: string) {
-        return this.tagStore.getTagById(tagId);
-    }
 
     /**
      * Возвращает признак, является ли пользователь администратором.
@@ -295,19 +287,7 @@ export class SettlementCardComponent {
         return this.userService.roles.includes('admin');
     }
 
-    protected isEastSuzerain(settlement: ISettlement): boolean {
-        return (
-            this.tagStore.hasSpecialTag(settlement.tags, 'suzerain') &&
-            this.tagStore.hasSpecialTag(settlement.tags, 'east')
-        );
-    }
 
-    protected isWestSuzerain(settlement: ISettlement): boolean {
-        return (
-            this.tagStore.hasSpecialTag(settlement.tags, 'suzerain') &&
-            this.tagStore.hasSpecialTag(settlement.tags, 'west')
-        );
-    }
 
     /**
      * Возвращает CSS-класс окантовки карточки в зависимости от типа селения.

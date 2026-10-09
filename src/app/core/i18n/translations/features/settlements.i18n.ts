@@ -80,6 +80,8 @@ export const SETTLEMENTS_I18N = {
             },
             card: {
                 pinned: 'Закреплённое поселение',
+                onlineNow: 'В сети: {{count}}',
+                residentsTotal: 'жителей: {{count}}',
                 imageAlt: 'Изображение поселения {{name}}',
                 residentsShort: 'жит.',
                 onlineShort: 'онл.',
@@ -594,6 +596,8 @@ export const SETTLEMENTS_I18N = {
             },
             card: {
                 pinned: 'Pinned settlement',
+                onlineNow: 'Online: {{count}}',
+                residentsTotal: 'residents: {{count}}',
                 imageAlt: 'Settlement image {{name}}',
                 residentsShort: 'res.',
                 onlineShort: 'onl.',
