@@ -3,7 +3,6 @@
     flex-direction: column;
     gap: 1.5rem;
     width: 100%;
-    padding: 1.5rem;
 }
 
 /* Путь слева, справка справа; на узком экране — одна колонка */

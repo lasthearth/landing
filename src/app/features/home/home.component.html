@@ -53,7 +53,7 @@
 }
 
 <!-- Быстрые действия -->
-<div class="px-4 md:px-10 pt-6 md:pt-8 pb-3">
+<div class="lh-page-container pt-6 md:pt-8 pb-3">
     <div class="quick-actions">
         @for (action of quickActions(); track action.label) {
             @if (action.external) {
@@ -83,7 +83,7 @@
 <app-upcoming-event />
 
 @if (loading()) {
-    <section class="px-4 md:px-10 pb-3 flex flex-col gap-5">
+    <section class="lh-page-container pb-3 flex flex-col gap-5">
         <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
             {{ "home.news.title" | translate }}
         </h2>
@@ -94,7 +94,7 @@
         </div>
     </section>
 } @else if (featuredNews(); as featured) {
-    <section id="news" class="home-news px-4 md:px-10 pb-3 flex flex-col gap-5" aria-labelledby="home-news-title">
+    <section id="news" class="home-news lh-page-container pb-3 flex flex-col gap-5" aria-labelledby="home-news-title">
         <h2 id="home-news-title" class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
             {{ "home.news.title" | translate }}
         </h2>
@@ -154,7 +154,7 @@
 }
 
 <!-- Пульс сервера -->
-<section class="px-4 md:px-10 pb-6 flex flex-col gap-3">
+<section class="lh-page-container pb-6 flex flex-col gap-3">
     <h2 appReveal class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
         {{ "home.pulse.title" | translate }}
     </h2>
@@ -179,7 +179,7 @@
 </section>
 
 <!-- Команда проекта -->
-<!-- <section class="px-4 md:px-10 pb-6 flex flex-col gap-4">
+<!-- <section class="lh-page-container pb-6 flex flex-col gap-4">
     <div class="flex flex-col gap-1">
         <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
             {{ "home.team.title" | translate }}
@@ -219,7 +219,7 @@
 </section> -->
 
 <!-- Присоединиться к команде -->
-<section class="px-4 md:px-10 pt-6 pb-8">
+<section class="lh-page-container pt-6 pb-8">
     <div
         class="recruit-panel flex flex-col lg:flex-row gap-0 rounded-2xl shadow-[inset_0_0_48px_rgba(255,255,255,0.04),inset_0_1px_0_rgba(255,255,255,0.08)] overflow-hidden"
     >
@@ -307,7 +307,7 @@
 
 <!-- Лента последних скриншотов -->
 @if (galleryStrip().length > 0) {
-    <section class="px-4 md:px-10 pb-8 flex flex-col gap-4">
+    <section class="lh-page-container pb-8 flex flex-col gap-4">
         <div class="flex items-center justify-between gap-4">
             <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
                 {{ "home.galleryStrip.title" | translate }}

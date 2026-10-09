@@ -1,4 +1,4 @@
-<section class="lfg-page">
+<section class="lfg-page lh-page-container">
     <app-page-header [title]="'lfg.title' | translate" [subtitle]="'lfg.subtitle' | translate">
         @if (!creating() && !hasOwnMatePost() && (!viewer().userId || viewer().verified)) {
             <button type="button" class="lh-cta lfg-page__create" (click)="create()">

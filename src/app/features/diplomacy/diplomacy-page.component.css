@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    padding: 1.5rem;
 }
 
 .diplomacy-page__loading,

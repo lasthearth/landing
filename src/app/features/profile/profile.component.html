@@ -13,12 +13,12 @@
 @if (isLoading) {
     <app-profile-skeleton />
 } @else {
-    <div class="text-lh-primary flex flex-col gap-2 p-6">
+    <div class="lh-page-container text-lh-primary flex flex-col gap-4">
         <!-- Шапка профиля -->
-        <div class="grid gap-4 grid-cols-[1fr_auto_auto] max-[1710px]:grid-cols-1">
+        <div class="grid gap-4 grid-cols-1 xl:grid-cols-[1fr_auto_auto]">
             <!-- Колонка 1: Профиль. Баннер игрока мягко проступает за аватаром -->
             @let look = looks.lookOf(userService.userId);
-            <div class="profile-cover flex gap-5 max-[640px]:flex-col">
+            <div class="profile-cover flex gap-5 flex-col sm:flex-row">
                 @if (look.bannerId !== 'none') {
                     <app-profile-banner
                         class="profile-cover__banner"
@@ -66,7 +66,7 @@
                             </span>
                         </div>
                     } @else {
-                        <div class="flex items-stretch gap-3 max-[530px]:flex-col">
+                        <div class="flex items-stretch gap-3 flex-col sm:flex-row">
                             <!-- Роль -->
                             <div class="flex-1 flex flex-col justify-center lh-panel rounded-xl px-3 py-2">
                                 <p class="text-lg leading-[27px] text-ink-3 mb-1">
@@ -137,7 +137,7 @@
                         </div>
                     } @else if (verified) {
                         <div
-                            class="bg-lh-primary-2/10 rounded-xl px-4 py-3 text-center border border-lh-primary-2/10 w-full"
+                            class="bg-surface-card rounded-xl px-4 py-3 text-center border border-subtle w-full"
                         >
                             <span class="text-lg leading-[27px] text-ink-3">
                                 {{ "profile.settlement.noSettlement" | translate }}
@@ -172,7 +172,7 @@
             <!-- Колонка 2: Голодные игры — только после верификации, как и баланс -->
             @if (getRoleName() !== "profile.role.unverified") {
                 <div
-                    class="bg-lh-primary-2/10 shrink-0 rounded-xl px-4 py-3 border border-lh-primary-2/10 text-center flex flex-col justify-between"
+                    class="bg-surface-card shrink-0 rounded-xl px-4 py-3 border border-subtle text-center flex flex-col justify-between"
                 >
                     <div class="flex items-center justify-center gap-2 mb-1">
                         <tui-icon icon="@tui.flame" class="size-5! text-lh-accent" />
@@ -303,7 +303,7 @@
                     <!-- Статистика -->
                     <div class="flex gap-3 w-full">
                         <div
-                            class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                            class="flex-1 min-w-24 flex flex-col items-center bg-surface-card rounded-xl px-3 py-2 gap-0.5 border border-subtle"
                         >
                             <tui-icon icon="@tui.skull" class="size-6! text-danger-soft mb-1" />
                             <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">
@@ -312,7 +312,7 @@
                             <span class="text-lg leading-[27px] font-bold">{{ stats?.deaths ?? "—" }}</span>
                         </div>
                         <div
-                            class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                            class="flex-1 min-w-24 flex flex-col items-center bg-surface-card rounded-xl px-3 py-2 gap-0.5 border border-subtle"
                         >
                             <tui-icon icon="@tui.swords" class="size-6! text-parchment-dim mb-1" />
                             <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">
@@ -326,7 +326,7 @@
                             }
                         </div>
                         <div
-                            class="flex-1 min-w-24 flex flex-col items-center bg-lh-primary-2/10 rounded-xl px-3 py-2 gap-0.5 border border-lh-primary-2/10"
+                            class="flex-1 min-w-24 flex flex-col items-center bg-surface-card rounded-xl px-3 py-2 gap-0.5 border border-subtle"
                         >
                             <tui-icon icon="@tui.clock" class="size-6! text-leader-soft mb-1" />
                             <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">

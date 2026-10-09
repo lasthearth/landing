@@ -294,6 +294,10 @@
     --color-lh-base-02: var(--lh-base-02);
     --color-lh-base-03: var(--lh-base-03);
 
+    --color-surface-card: #332c261a;
+    --color-surface-card-hover: #332c2626;
+    --color-subtle: #332c2633;
+
     /* Purple */
     --color-lh-tag-purple: var(--lh-tag-purple);
     --color-lh-tag-purple-bg: var(--lh-tag-purple-bg);
@@ -1695,4 +1699,16 @@ html[data-theme='dark'] {
 .lh-rich-text--preview figure,
 .lh-rich-text--preview hr {
     display: none;
+}
+
+.lh-page-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .lh-page-container {
+        padding: 1.5rem;
+    }
 }
