@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import {
+    DEFAULT_SETTLEMENT_COVER,
     ISettlement,
     getSettlementTypeByKey,
     getSettlementDisplayName,
@@ -148,7 +149,7 @@ export class SettlementCardComponent {
      * массив вложений приходит пустым, и шаблон падал на чтении `.url`.
      */
     protected readonly imageUrl: Signal<string> = computed(
-        () => this.data().attachments[0]?.url || '/images/screenshots/screen_1.png'
+        () => this.data().attachments[0]?.url || DEFAULT_SETTLEMENT_COVER
     );
 
     /**

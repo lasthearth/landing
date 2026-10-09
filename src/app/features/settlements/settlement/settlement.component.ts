@@ -14,6 +14,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { catchError, finalize, Observable, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+    DEFAULT_SETTLEMENT_COVER,
     getDiplomacyTone,
     getMemberRoleNames,
     getOwnerIds,
@@ -227,7 +228,7 @@ export class SettlementComponent {
      * У части селений массив вложений пуст, и шаблон падал на чтении `.url`.
      */
     protected readonly imageUrl: Signal<string> = computed(
-        () => this.settlement()?.attachments?.[0]?.url || '/images/screenshots/screen_1.png'
+        () => this.settlement()?.attachments?.[0]?.url || DEFAULT_SETTLEMENT_COVER
     );
 
     /**

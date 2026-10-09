@@ -1,6 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { ISettlement, getOwnerIds, isGuildSettlement, SettlementBadgeComponent, SettlementDisplayNamePipe } from '@entities/settlement';
+import {
+    DEFAULT_SETTLEMENT_COVER,
+    ISettlement,
+    getOwnerIds,
+    isGuildSettlement,
+    SettlementBadgeComponent,
+    SettlementDisplayNamePipe,
+} from '@entities/settlement';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { IPlayer, PlayerChipComponent } from '@entities/user';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
@@ -61,7 +68,7 @@ export class SettlementDetailedComponent {
      * и шаблон падал на чтении `.url`.
      */
     protected readonly imageUrl: string =
-        this.settlementData.attachments?.[0]?.url || '/images/screenshots/screen_1.png';
+        this.settlementData.attachments?.[0]?.url || DEFAULT_SETTLEMENT_COVER;
 
     /**
      * Проверяет, является ли селение гильдией.

@@ -5,6 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TuiIcon } from '@taiga-ui/core';
 import { catchError, forkJoin, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
 import {
+    DEFAULT_SETTLEMENT_COVER,
     getDiplomacyTone,
     getOwnerIds,
     getSettlementDisplayName,
@@ -265,7 +266,7 @@ export class SettlementPageComponent {
      * @param settlement Поселение.
      */
     protected cover(settlement: ISettlement): string {
-        return settlement.attachments?.[0]?.url || '/landing-carousel/1.webp';
+        return settlement.attachments?.[0]?.url || DEFAULT_SETTLEMENT_COVER;
     }
 
     /**

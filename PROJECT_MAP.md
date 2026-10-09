@@ -312,6 +312,8 @@ POST/PUT/DELETE (фидбек через `RequestStatusService`).
   - `is-owner.function.ts` — `isOwner(settlement, userId)`.
   - `member-has-permission.function.ts` — `memberHasPermission(settlement, userId, permission)` (owner = все права; при `roles_enabled=false` только owner).
 - API (`entities/settlement/api/settlement.service.ts`): `createJoinRequest$`, `cancelJoinRequest$`, `getMyJoinRequests$`, `getJoinRequests$`, `approveJoinRequest$`, `rejectJoinRequest$`, `createRole$`, `updateRole$`, `deleteRole$`, `assignMemberRole$`, `removeMemberRole$`, `transferOwnership$`, `leaveSettlement$`, `updateContactInfo$`, `adminAddOwner$`, `adminRemoveOwner$`, `adminSetRolesEnabled$`, `adminDeleteSettlement$`.
+- Конфиг (`entities/settlement/config/`):
+  - `default-settlement-cover.constant.ts` — `DEFAULT_SETTLEMENT_COVER = '/landing-carousel/1.webp'`.
 - UI-потребители переведены с `.leader` на owner-модель: `settlements.component`, `settlement-card`, `settlement-detailed`, `features/settlements/settlement`, `features/profile`.
   - Кнопки гейтятся: инвайты по `canInvite` (`PERMISSION_INVITE_MEMBER`/owner), уровень/редактирование/картинка — по `isOwner`, выход — не-owner.
   - Бейджи ролей члена — `getMemberRoleNames`, скрыты при `roles_enabled=false`.
