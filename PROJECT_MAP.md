@@ -37,6 +37,20 @@ src/app/
   `settlement-detailed`, `edit-settlement-form`, `market/ui/privilege-card`,
   `market/templates/privilege-carousel-template`, `public/images/logo.png`,
   `rules.i18n.ts.old`. Упоминания ниже — история.
+- Меню шапки собирается из `layout/header/config/header-{main,community}-links.constant.ts`
+  (модель `layout/header/model/header-nav-link.interface.ts`): 5 разделов + «Сообщество ▾».
+  FAQ — в футере. Колонка контента `xl:w-[min(72rem,85%)]`.
+- Токены в `styles.css`: `--lh-space-*`, `--lh-section-gap`, `--lh-radius-*`, `--lh-z-*`.
+  Отступы в LESS — на сетке 2px; font-size — на ступенях.
+- Вкладки (`.lh-chips[role=tablist]`) — сегментированный переключатель; вкладка
+  маркета в `?tab=`. Подписи фильтров — `.lh-chips__label`.
+- Анимации: бесконечные убраны (фон, скидки, статусы, leader-card); косметика игрока
+  ставится на паузу вне экрана — `PauseOffscreenDirective` (`@shared/lib/directives`).
+  Компонент частиц `layout/background-particles/` удалён.
+- Состояния ошибки/пустоты в дипломатии, событиях, LFG — `app-error-state` / `app-empty-state`.
+- Карточка поселения: тип, дипломатия, «В сети: N · жителей: M», глава + до 3 онлайн.
+- `environment`: `discordInviteUrl`, `siteVersionDate`. Главная — канон `/home`.
+- Все компонентные стили — `.less` (бывшие `.component.css` переименованы).
 
 ### 3.-8 Выгрузка правил в Markdown для редактирования
 
