@@ -3,7 +3,7 @@ import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { RouterLink, ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { RouterLink, RouterLinkActive, ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { RouteKeys } from '@app/routes/enums/route-keys';
@@ -32,6 +32,7 @@ import { NotificationBellComponent } from '@features/notifications';
         TuiIcon,
         NgClass,
         RouterLink,
+        RouterLinkActive,
         TuiPulse,
         ImageLoaderComponent,
         TranslatePipe,
