@@ -13,7 +13,7 @@
             (click)="isServerConcept = !isServerConcept"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.serverConcept" | translate }}
             </p>
             <tui-icon
@@ -23,7 +23,7 @@
             />
         </div>
         <tui-expand [expanded]="isServerConcept">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <b>Last Hearth</b>
                     — это уникальный ролевой политико-экономический проект с глубокой системой PvP-взаимодействий,
@@ -88,7 +88,7 @@
             (click)="isPasswordLost = !isPasswordLost"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.passwordLost" | translate }}
             </p>
             <tui-icon
@@ -98,7 +98,7 @@
             />
         </div>
         <tui-expand [expanded]="isPasswordLost">
-            <p class="text-[23px] leading-[32px] text-ink mt-4">
+            <p class="text-2xl leading-[32px] text-ink mt-4">
                 В случае, утраты доступу к сайту (забыл пароль, не заходит) — напишите в техподдержку в нашем
                 <a
                     [href]="discordInviteUrl"
@@ -118,7 +118,7 @@
             (click)="isTroubles = !isTroubles"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.connectionTroubles" | translate }}
             </p>
             <tui-icon
@@ -128,7 +128,7 @@
             />
         </div>
         <tui-expand [expanded]="isTroubles">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>Первым делом стоит проверить возможные проблемы:</p>
                 <p class="pl-6">
                     <span class="font-bold">1.</span>
@@ -234,7 +234,7 @@
             (click)="isSeason = !isSeason"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.seasonWipe" | translate }}
             </p>
             <tui-icon
@@ -244,7 +244,7 @@
             />
         </div>
         <tui-expand [expanded]="isSeason">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>Наш сервер живет долгими сезонами, каждый из которых длится по полгода.</p>
                 <p>Приблизительно вайпы происходят 12 июня и 12 декабря соответственно.</p>
             </div>
@@ -257,7 +257,7 @@
             (click)="isHowToStart = !isHowToStart"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.howToStart" | translate }}
             </p>
             <tui-icon
@@ -267,7 +267,7 @@
             />
         </div>
         <tui-expand [expanded]="isHowToStart">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     Для начала стоит освоиться: узнать кто играет на сервере, какие образованы селения, какой у них
@@ -305,7 +305,7 @@
             (click)="isBagsOrViolation = !isBagsOrViolation"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.bugOrViolation" | translate }}
             </p>
             <tui-icon
@@ -315,7 +315,7 @@
             />
         </div>
         <tui-expand [expanded]="isBagsOrViolation">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     В случае невозможности подключиться, крашей, неправильных рецептов, нарушений правил воровства, и
@@ -339,7 +339,7 @@
             (click)="isDeathOrTheft = !isDeathOrTheft"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.deathOrTheft" | translate }}
             </p>
             <tui-icon
@@ -349,7 +349,7 @@
             />
         </div>
         <tui-expand [expanded]="isDeathOrTheft">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     В первую очередь важно проверить не были ли нарушены правила стороной-агрессором. Если вы нашли
@@ -365,7 +365,7 @@
             (click)="isOffer = !isOffer"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.offer" | translate }}
             </p>
             <tui-icon
@@ -375,7 +375,7 @@
             />
         </div>
         <tui-expand [expanded]="isOffer">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     Все предложения принимаются в специальном канале #предложения в
@@ -398,7 +398,7 @@
             (click)="isTeam = !isTeam"
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.team" | translate }}
             </p>
             <tui-icon
@@ -408,7 +408,7 @@
             />
         </div>
         <tui-expand [expanded]="isTeam">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     Мы всегда рады новым лицам! Напишите лидерам проекта в Discord или Telegram. Там же можно узнать о

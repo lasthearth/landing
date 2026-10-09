@@ -7,12 +7,12 @@
             <app-image-loader [src]="data.image" [alt]="data.title" />
         </div>
         <div class="flex flex-col gap-2 justify-center h-24">
-            <h3 class="text-center sm:text-left text-lg md:text-[22px] font-bold text-ink leading-tight">{{ data.title }}</h3>
+            <h3 class="text-center sm:text-left text-lg md:text-2xl font-bold text-ink leading-tight">{{ data.title }}</h3>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-7 w-7 object-contain" />
-                <span class="text-lg sm:text-[20px] font-bold text-ink">{{ activePrice }}</span>
+                <span class="text-lg sm:text-xl font-bold text-ink">{{ activePrice }}</span>
                 @if (data.currency === "rubles") {
-                    <span class="text-[18px] text-ink-2">{{ 'market.purchaseDialog.currencyRub' | translate }}</span>
+                    <span class="text-lg text-ink-2">{{ 'market.purchaseDialog.currencyRub' | translate }}</span>
                 }
             </div>
         </div>
@@ -21,14 +21,14 @@
     <!-- Term selector -->
     @if (data.monthPrice && data.seasonPrice) {
         <div class="flex flex-col gap-3">
-            <label class="text-[18px] font-bold uppercase tracking-wide text-ink-2">
+            <label class="text-lg font-bold uppercase tracking-wide text-ink-2">
                 {{ 'market.purchaseDialog.termLabel' | translate }}
             </label>
             <div class="flex gap-3">
                 <button
                     type="button"
                     (click)="selectedTerm.set('month')"
-                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-2 sm:py-3 text-base sm:text-[18px] font-bold transition-colors duration-200 cursor-pointer"
+                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-2 sm:py-3 text-base sm:text-lg font-bold transition-colors duration-200 cursor-pointer"
                     [class.border-lh-accent]="selectedTerm() === 'month'"
                     [class.bg-lh-accent]="selectedTerm() === 'month'"
                     [class.text-white]="selectedTerm() === 'month'"
@@ -43,7 +43,7 @@
                 <button
                     type="button"
                     (click)="selectedTerm.set('season')"
-                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-2 sm:py-3 text-base sm:text-[18px] font-bold transition-colors duration-200 cursor-pointer"
+                    class="flex-1 flex items-center justify-center gap-2 rounded-xl border-2 py-2 sm:py-3 text-base sm:text-lg font-bold transition-colors duration-200 cursor-pointer"
                     [class.border-lh-accent]="selectedTerm() === 'season'"
                     [class.bg-lh-accent]="selectedTerm() === 'season'"
                     [class.text-white]="selectedTerm() === 'season'"
@@ -102,17 +102,17 @@
     <!-- Payment info -->
     <div class="flex flex-col gap-4 pt-4 border-t border-line">
         <div class="flex items-center justify-between">
-            <span class="text-base sm:text-[18px] font-bold text-ink">
+            <span class="text-base sm:text-lg font-bold text-ink">
                 {{ 'market.purchaseDialog.totalLabel' | translate }}
             </span>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
-                <span class="text-lg sm:text-[20px] font-bold text-ink">{{ activePrice }}</span>
+                <span class="text-lg sm:text-xl font-bold text-ink">{{ activePrice }}</span>
             </div>
         </div>
 
         @if (balance() !== null) {
-            <div class="flex items-center justify-between text-base sm:text-[18px]">
+            <div class="flex items-center justify-between text-base sm:text-lg">
                 <span class="text-ink-2">{{ 'market.purchaseDialog.yourBalance' | translate }}</span>
                 <div class="flex items-center gap-2">
                     <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
@@ -123,13 +123,13 @@
             </div>
         }
 
-        <p class="flex items-center gap-2 text-base sm:text-[18px] text-ink-2">
+        <p class="flex items-center gap-2 text-base sm:text-lg text-ink-2">
             <tui-icon icon="@tui.clock" class="size-5!" />
             {{ 'market.purchaseDialog.delivery' | translate }}
         </p>
 
         @if (missingAmount() > 0) {
-            <p class="text-base sm:text-[18px] font-bold text-lh-danger">
+            <p class="text-base sm:text-lg font-bold text-lh-danger">
                 {{ 'market.purchaseDialog.notEnough' | translate:{ amount: missingAmount() } }}
             </p>
         }
@@ -137,15 +137,15 @@
 
     <!-- Actions -->
     <div class="flex gap-4 pt-2">
-        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-[18px]">
+        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-lg">
             {{ 'market.purchaseDialog.cancel' | translate }}
         </button>
         @if (missingAmount() > 0) {
-            <button tuiButton appearance="primary" (click)="onTopUp()" class="flex-1 text-base sm:text-[18px]">
+            <button tuiButton appearance="primary" (click)="onTopUp()" class="flex-1 text-base sm:text-lg">
                 {{ 'market.purchaseDialog.topUp' | translate }}
             </button>
         } @else {
-            <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-[18px]">
+            <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-lg">
                 {{ 'market.purchaseDialog.buy' | translate }}
             </button>
         }

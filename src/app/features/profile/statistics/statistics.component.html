@@ -4,7 +4,7 @@
 <!-- История покупок текущего пользователя -->
 @if (isVerifiedUser) {
     <div class="flex flex-col gap-3 mb-12">
-        <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'profile.purchases.title' | translate }}</h2>
+        <h2 class="lh-display text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'profile.purchases.title' | translate }}</h2>
 
         @if (purchases; as list) {
             @if (list.length > 0) {
@@ -79,7 +79,7 @@
                 }
             } @else {
                 <p
-                    class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
+                    class="text-2xl text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
                 >
                     {{ 'profile.purchases.empty' | translate }}
                 </p>

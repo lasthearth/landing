@@ -13,7 +13,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isBase = !isBase"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.privacyPolicy.sections.base.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.privacyPolicy.sections.base.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isBase }"
@@ -21,7 +21,7 @@
             />
         </div>
         <tui-expand [expanded]="isBase">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.base.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.base.p2' | translate"></p>
             </div>
@@ -34,7 +34,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isPersonalInformation = !isPersonalInformation"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ 'legal.privacyPolicy.sections.personalInformation.title' | translate }}
             </p>
             <tui-icon
@@ -44,7 +44,7 @@
             />
         </div>
         <tui-expand [expanded]="isPersonalInformation">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.personalInformation.p1' | translate"></p>
                 <p class="pl-8" [innerHTML]="'legal.privacyPolicy.sections.personalInformation.p1Item1' | translate"></p>
                 <p class="pl-8" [innerHTML]="'legal.privacyPolicy.sections.personalInformation.p1Item2' | translate"></p>
@@ -67,7 +67,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isPurposes = !isPurposes"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ 'legal.privacyPolicy.sections.purposes.title' | translate }}
             </p>
             <tui-icon
@@ -77,7 +77,7 @@
             />
         </div>
         <tui-expand [expanded]="isPurposes">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.purposes.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.purposes.p2' | translate"></p>
                 <p class="pl-8" [innerHTML]="'legal.privacyPolicy.sections.purposes.p2Item1' | translate"></p>
@@ -94,7 +94,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isLegalGrounds = !isLegalGrounds"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.privacyPolicy.sections.legalGrounds.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.privacyPolicy.sections.legalGrounds.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isLegalGrounds }"
@@ -102,7 +102,7 @@
             />
         </div>
         <tui-expand [expanded]="isLegalGrounds">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.legalGrounds.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.legalGrounds.p2' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.legalGrounds.p3' | translate"></p>
@@ -116,7 +116,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isProcedure = !isProcedure"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ 'legal.privacyPolicy.sections.procedure.title' | translate }}
             </p>
             <tui-icon
@@ -126,7 +126,7 @@
             />
         </div>
         <tui-expand [expanded]="isProcedure">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.procedure.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.procedure.p2' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.procedure.p3' | translate"></p>
@@ -146,7 +146,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isSecurityMeasures = !isSecurityMeasures"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ 'legal.privacyPolicy.sections.securityMeasures.title' | translate }}
             </p>
             <tui-icon
@@ -156,7 +156,7 @@
             />
         </div>
         <tui-expand [expanded]="isSecurityMeasures">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.securityMeasures.p1' | translate"></p>
             </div>
         </tui-expand>
@@ -168,7 +168,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isFinalProvisions = !isFinalProvisions"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.privacyPolicy.sections.finalProvisions.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.privacyPolicy.sections.finalProvisions.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isFinalProvisions }"
@@ -176,7 +176,7 @@
             />
         </div>
         <tui-expand [expanded]="isFinalProvisions">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.finalProvisions.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.finalProvisions.p2' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.privacyPolicy.sections.finalProvisions.p3' | translate"></p>

@@ -73,7 +73,7 @@
 
 /* Место в рейтинге под плиткой статистики */
 .profile-rank {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--lh-ink-3);
     white-space: nowrap;
@@ -165,7 +165,7 @@
 }
 
 .profile-avatar__label {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     font-weight: 700;
     letter-spacing: 0.01em;
 }

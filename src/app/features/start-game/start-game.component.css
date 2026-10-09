@@ -43,7 +43,7 @@
 
 .start-game__card-title {
     margin: 0;
-    font-size: 1.0625rem;
+    font-size: 1rem;
     font-weight: 800;
 }
 
@@ -59,7 +59,7 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 0.75rem;
-    font-size: 0.9375rem;
+    font-size: 1rem;
 }
 
 .start-game__fact dt {
@@ -105,7 +105,7 @@
     border-radius: 0.5rem;
     color: var(--lh-ink-2);
     font-weight: 700;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     text-decoration: none;
     transition:
         background-color 0.15s ease,

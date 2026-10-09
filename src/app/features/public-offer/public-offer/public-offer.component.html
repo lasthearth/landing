@@ -7,8 +7,8 @@
         </button>
     </app-page-header>
 
-    <p class="text-[23px] leading-[32px] text-ink">{{ 'legal.publicOffer.intro.p1' | translate }}</p>
-    <p class="text-[23px] leading-[32px] text-ink">{{ 'legal.publicOffer.intro.p2' | translate }}</p>
+    <p class="text-2xl leading-[32px] text-ink">{{ 'legal.publicOffer.intro.p1' | translate }}</p>
+    <p class="text-2xl leading-[32px] text-ink">{{ 'legal.publicOffer.intro.p2' | translate }}</p>
 
     <!-- 1. Terms and definitions -->
     <div class="lh-panel">
@@ -16,7 +16,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isTerms = !isTerms"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.terms.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.terms.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTerms }"
@@ -24,7 +24,7 @@
             />
         </div>
         <tui-expand [expanded]="isTerms">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p2' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.terms.p3' | translate"></p>
@@ -42,7 +42,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isGeneralProvisions = !isGeneralProvisions"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.generalProvisions.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.generalProvisions.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isGeneralProvisions }"
@@ -50,7 +50,7 @@
             />
         </div>
         <tui-expand [expanded]="isGeneralProvisions">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p2' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.generalProvisions.p3' | translate"></p>
@@ -67,7 +67,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isRightsAndObligations = !isRightsAndObligations"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.rightsAndObligations.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.rightsAndObligations.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRightsAndObligations }"
@@ -75,7 +75,7 @@
             />
         </div>
         <tui-expand [expanded]="isRightsAndObligations">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorObligationsTitle' | translate"></p>
                 <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorObligationsItem1' | translate"></p>
                 <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.rightsAndObligations.contractorObligationsItem2' | translate"></p>
@@ -99,7 +99,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isResponsibility = !isResponsibility"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.responsibility.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.responsibility.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isResponsibility }"
@@ -107,7 +107,7 @@
             />
         </div>
         <tui-expand [expanded]="isResponsibility">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.responsibility.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.responsibility.p2Title' | translate"></p>
                 <p class="pl-8" [innerHTML]="'legal.publicOffer.sections.responsibility.p2Item1' | translate"></p>
@@ -125,7 +125,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isTermsOfReturn = !isTermsOfReturn"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.termsOfReturn.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.termsOfReturn.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTermsOfReturn }"
@@ -133,7 +133,7 @@
             />
         </div>
         <tui-expand [expanded]="isTermsOfReturn">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.termsOfReturn.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.termsOfReturn.p2' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.termsOfReturn.p3' | translate"></p>
@@ -148,7 +148,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isPersonalData = !isPersonalData"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.personalData.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.personalData.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isPersonalData }"
@@ -156,7 +156,7 @@
             />
         </div>
         <tui-expand [expanded]="isPersonalData">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.personalData.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.personalData.p2' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.personalData.p3' | translate"></p>
@@ -170,7 +170,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isLegislation = !isLegislation"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.legislation.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.legislation.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isLegislation }"
@@ -178,7 +178,7 @@
             />
         </div>
         <tui-expand [expanded]="isLegislation">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.legislation.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.legislation.p2' | translate"></p>
             </div>
@@ -191,7 +191,7 @@
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isRequisites = !isRequisites"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.requisites.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.requisites.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRequisites }"
@@ -199,7 +199,7 @@
             />
         </div>
         <tui-expand [expanded]="isRequisites">
-            <div class="flex flex-col gap-4 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.requisites.p1' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.requisites.p2' | translate"></p>
                 <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.requisites.p3' | translate"></p>

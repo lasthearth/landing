@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-10 max-w-5xl mx-auto w-full">
     <!-- Сезон -->
     <div class="flex flex-col gap-6">
-        <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.currentSeason' | translate }}</h2>
+        <h2 class="lh-display text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'admin.hungerGames.currentSeason' | translate }}</h2>
 
         @if (isLoading()) {
             <app-admin-season-skeleton />
@@ -10,18 +10,18 @@
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lh-panel"
             >
                 <div class="flex flex-col gap-4">
-                    <span class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink leading-none">{{ 'admin.hungerGames.seasonNumber' | translate:{number: season.number} }}</span>
+                    <span class="text-xl md:text-2xl lg:text-3xl font-bold text-ink leading-none">{{ 'admin.hungerGames.seasonNumber' | translate:{number: season.number} }}</span>
                     <div class="flex flex-col gap-2">
-                        <span class="text-[18px] text-ink-2">
-                            {{ 'admin.hungerGames.startedAt' | translate }} <span class="text-[23px] font-medium text-ink">{{ season.formattedStartedAt }}</span>
+                        <span class="text-lg text-ink-2">
+                            {{ 'admin.hungerGames.startedAt' | translate }} <span class="text-2xl font-medium text-ink">{{ season.formattedStartedAt }}</span>
                         </span>
                         @if (!season.isActive) {
-                            <span class="text-[18px] text-ink-2">
-                                {{ 'admin.hungerGames.endedAt' | translate }} <span class="text-[23px] font-medium text-ink">{{ season.formattedEndedAt }}</span>
+                            <span class="text-lg text-ink-2">
+                                {{ 'admin.hungerGames.endedAt' | translate }} <span class="text-2xl font-medium text-ink">{{ season.formattedEndedAt }}</span>
                             </span>
-                            <span class="text-[23px] font-semibold text-lh-danger">{{ 'admin.hungerGames.seasonCompleted' | translate }}</span>
+                            <span class="text-2xl font-semibold text-lh-danger">{{ 'admin.hungerGames.seasonCompleted' | translate }}</span>
                         } @else {
-                            <span class="text-[23px] font-semibold text-lh-success">{{ 'admin.hungerGames.seasonActive' | translate }}</span>
+                            <span class="text-2xl font-semibold text-lh-success">{{ 'admin.hungerGames.seasonActive' | translate }}</span>
                         }
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                         @if (isSeasonActionLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                         }
-                        <tui-icon icon="@tui.plus" class="!text-[16px]" />
+                        <tui-icon icon="@tui.plus" class="!text-base" />
                         {{ 'admin.hungerGames.createSeason' | translate }}
                     </button>
                     <button
@@ -47,7 +47,7 @@
                         @if (isSeasonActionLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                         }
-                        <tui-icon icon="@tui.rotate-ccw" class="!text-[16px]" />
+                        <tui-icon icon="@tui.rotate-ccw" class="!text-base" />
                         {{ 'admin.hungerGames.endSeason' | translate }}
                     </button>
                 </div>
@@ -60,15 +60,15 @@
                 >
                     <div class="flex items-center gap-2">
                         <tui-icon icon="@tui.gift" class="size-5! text-lh-accent" />
-                        <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.rewardsTitle' | translate }}</p>
+                        <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'admin.hungerGames.rewardsTitle' | translate }}</p>
                     </div>
-                    <p class="text-[18px] leading-[28px] text-ink-2">
+                    <p class="text-lg leading-[28px] text-ink-2">
                         {{ 'admin.hungerGames.rewardsDescription' | translate }}
                     </p>
 
                     @if (seasonRewards(); as rewards) {
                         <div class="flex flex-col gap-3">
-                            <div class="grid grid-cols-[auto_1fr_auto] gap-2 text-[18px] text-ink-2 uppercase font-semibold px-2">
+                            <div class="grid grid-cols-[auto_1fr_auto] gap-2 text-lg text-ink-2 uppercase font-semibold px-2">
                                 <span class="text-center w-16">{{ 'admin.hungerGames.rankColumn' | translate }}</span>
                                 <span>{{ 'admin.hungerGames.shardsColumn' | translate }}</span>
                                 <span class="w-10"></span>
@@ -96,7 +96,7 @@
                                         class="p-2 rounded-lg hover:bg-lh-danger/15 text-lh-danger transition-colors"
                                         [title]="'admin.hungerGames.removeTitle' | translate"
                                     >
-                                        <tui-icon icon="@tui.trash-2" class="!text-[16px]" />
+                                        <tui-icon icon="@tui.trash-2" class="!text-base" />
                                     </button>
                                 </div>
                             }
@@ -104,13 +104,13 @@
                     }
 
                     @if (rewardsValidationError(); as error) {
-                        <p class="text-lh-danger text-[18px] font-medium">{{ error }}</p>
+                        <p class="text-lh-danger text-lg font-medium">{{ error }}</p>
                     }
 
                     <button
                         type="button"
                         (click)="addReward()"
-                        class="self-start py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer flex items-center gap-2 text-[18px]"
+                        class="self-start py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer flex items-center gap-2 text-lg"
                     >
                         <tui-icon icon="@tui.plus" class="!text-base" />
                         {{ 'admin.hungerGames.addReward' | translate }}
@@ -121,7 +121,7 @@
             <div
                 class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lh-panel"
             >
-                <span class="text-[23px] text-ink-2">{{ 'admin.hungerGames.noActiveSeason' | translate }}</span>
+                <span class="text-2xl text-ink-2">{{ 'admin.hungerGames.noActiveSeason' | translate }}</span>
                 <button
                     type="button"
                     [disabled]="isSeasonActionLoading()"
@@ -131,7 +131,7 @@
                     @if (isSeasonActionLoading()) {
                         <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                     }
-                    <tui-icon icon="@tui.plus" class="!text-[16px]" />
+                    <tui-icon icon="@tui.plus" class="!text-base" />
                     {{ 'admin.hungerGames.createSeason' | translate }}
                 </button>
             </div>
@@ -140,12 +140,12 @@
 
     <!-- Запись матча -->
     <div class="flex flex-col gap-6">
-        <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.recordMatch' | translate }}</h2>
+        <h2 class="lh-display text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'admin.hungerGames.recordMatch' | translate }}</h2>
 
         <div class="flex flex-col gap-5 lh-panel">
             <!-- Поиск игрока -->
             <div class="flex flex-col gap-4">
-                <label class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.addParticipant' | translate }}</label>
+                <label class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'admin.hungerGames.addParticipant' | translate }}</label>
                 <lh-input
                     type="input"
                     [formControl]="searchControl"
@@ -170,7 +170,7 @@
                                         objectFit="cover"
                                         [alt]="'admin.common.avatarAlt' | translate"
                                     />
-                                    <span class="text-[23px] font-medium text-ink">{{ user.user_game_name }}</span>
+                                    <span class="text-2xl font-medium text-ink">{{ user.user_game_name }}</span>
                                 </div>
                             }
                         </div>
@@ -182,7 +182,7 @@
             @if (matchPlayers(); as players) {
                 @if (players.length > 0) {
                     <div class="flex flex-col gap-3">
-                        <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-[18px] text-ink-2 uppercase font-semibold px-2">
+                        <div class="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-lg text-ink-2 uppercase font-semibold px-2">
                             <span>{{ 'admin.hungerGames.playerColumn' | translate }}</span>
                             <span class="text-center">{{ 'admin.hungerGames.placeColumn' | translate }}</span>
                             <span class="text-center">{{ 'admin.hungerGames.killsColumn' | translate }}</span>
@@ -193,7 +193,7 @@
                                 class="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center p-2 rounded-lg bg-surface/30 border border-line/50"
                             >
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <span class="text-[18px] font-medium truncate text-ink">{{ player.playerName }}</span>
+                                    <span class="text-lg font-medium truncate text-ink">{{ player.playerName }}</span>
                                 </div>
                                 <div class="w-16 text-center">
                                     <lh-input
@@ -215,7 +215,7 @@
                                     class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
                                     [title]="'admin.hungerGames.removeTitle' | translate"
                                 >
-                                    <tui-icon icon="@tui.trash-2" class="!text-[18px]" />
+                                    <tui-icon icon="@tui.trash-2" class="!text-lg" />
                                 </button>
                             </div>
                         }
@@ -224,7 +224,7 @@
             }
 
             @if (matchValidationError(); as error) {
-                <p class="text-lh-danger text-[18px] font-medium">{{ error }}</p>
+                <p class="text-lh-danger text-lg font-medium">{{ error }}</p>
             }
 
             <button
@@ -244,7 +244,7 @@
     <!-- Лидерборд -->
     <div class="flex flex-col gap-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.hungerGames.leaderboard' | translate }}</h2>
+            <h2 class="lh-display text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'admin.hungerGames.leaderboard' | translate }}</h2>
             <div class="min-w-[220px]">
                 <lh-input
                     type="select"
@@ -263,7 +263,7 @@
             } @else if (archiveLeaderboard(); as list) {
                 @if (list.length > 0) {
                     <div class="overflow-x-auto rounded-2xl border border-line lh-shadow">
-                        <table class="w-full text-left border-collapse text-[18px]">
+                        <table class="w-full text-left border-collapse text-lg">
                             <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                                 <tr>
                                     <th class="p-4">{{ 'admin.hungerGames.numberHeader' | translate }}</th>
@@ -311,7 +311,7 @@
                     </div>
                 } @else {
                     <p
-                        class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
+                        class="text-2xl text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
                     >
                         {{ 'admin.hungerGames.emptyLeaderboard' | translate }}
                     </p>
@@ -324,7 +324,7 @@
             } @else if (currentLeaderboard(); as list) {
                 @if (list.length > 0) {
                     <div class="overflow-x-auto rounded-2xl border border-line lh-shadow">
-                        <table class="w-full text-left border-collapse text-[18px]">
+                        <table class="w-full text-left border-collapse text-lg">
                             <thead class="bg-lh-primary text-parchment font-semibold uppercase">
                                 <tr>
                                     <th class="p-4">{{ 'admin.hungerGames.numberHeader' | translate }}</th>
@@ -364,7 +364,7 @@
                     </div>
                 } @else {
                     <p
-                        class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
+                        class="text-2xl text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
                     >
                         {{ 'admin.hungerGames.emptyLeaderboard' | translate }}
                     </p>

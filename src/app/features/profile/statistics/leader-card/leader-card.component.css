@@ -283,100 +283,100 @@
 
 .nick-text {
     @media (width >= 2050px) {
-        font-size: var(--text-4xl) /* 3rem = 48px */;
-        line-height: var(--tw-leading, var(--text-4xl--line-height) /* 1 */);
+        font-size: var(--text-4xl);
+        line-height: var(--tw-leading, var(--text-4xl--line-height));
     }
 
     @media (width >= 1800px) and (width < 2050px) {
-        font-size: var(--text-3xl) /* 1.875rem = 30px */;
-        line-height: var(--tw-leading, var(--text-3xl--line-height) /* calc(2.25 / 1.875) ≈ 1.2 */);
+        font-size: var(--text-3xl);
+        line-height: var(--tw-leading, var(--text-3xl--line-height));
     }
 
     @media (width >= 1280px) and (width < 1800px) {
-        font-size: var(--text-2xl) /* 1.5rem = 24px */;
-        line-height: var(--tw-leading, var(--text-2xl--line-height) /* calc(2 / 1.5) ≈ 1.333333 */);
+        font-size: var(--text-2xl);
+        line-height: var(--tw-leading, var(--text-2xl--line-height));
     }
 
     @media (width < 1280px) and (width > 900px) {
-        font-size: var(--text-4xl) /* 1.25rem = 20px */;
-        line-height: var(--tw-leading, var(--text-4xl--line-height) /* calc(1.75 / 1.25) ≈ 1.4 */);
+        font-size: var(--text-4xl);
+        line-height: var(--tw-leading, var(--text-4xl--line-height));
     }
 
-    font-size: var(--text-base) /* 1rem = 16px */;
-    line-height: var(--tw-leading, var(--text-base--line-height) /* calc(1.5 / 1) ≈ 1.5 */);
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
 }
 
 .type-text {
     @media (width >= 2050px) {
-        font-size: var(--text-3xl) /* 3rem = 48px */;
-        line-height: var(--tw-leading, var(--text-3xl--line-height) /* 1 */);
+        font-size: var(--text-3xl);
+        line-height: var(--tw-leading, var(--text-3xl--line-height));
     }
 
     @media (width >= 1800px) and (width < 2050px) {
-        font-size: var(--text-2xl) /* 1.875rem = 30px */;
-        line-height: var(--tw-leading, var(--text-2xl--line-height) /* calc(2.25 / 1.875) ≈ 1.2 */);
+        font-size: var(--text-2xl);
+        line-height: var(--tw-leading, var(--text-2xl--line-height));
     }
 
     @media (width >= 1280px) and (width < 1800px) {
-        font-size: var(--text-xl) /* 1.5rem = 24px */;
-        line-height: var(--tw-leading, var(--text-xl--line-height) /* calc(2 / 1.5) ≈ 1.333333 */);
+        font-size: var(--text-xl);
+        line-height: var(--tw-leading, var(--text-xl--line-height));
     }
 
     @media (width < 1280px) and (width > 900px) {
-        font-size: var(--text-3xl) /* 1.25rem = 20px */;
-        line-height: var(--tw-leading, var(--text-3xl--line-height) /* calc(1.75 / 1.25) ≈ 1.4 */);
+        font-size: var(--text-3xl);
+        line-height: var(--tw-leading, var(--text-3xl--line-height));
     }
 
-    font-size: var(--text-base) /* 1rem = 16px */;
-    line-height: var(--tw-leading, var(--text-base--line-height) /* calc(1.5 / 1) ≈ 1.5 */);
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
 }
 
 .count-text {
     @media (width >= 2050px) {
-        font-size: var(--text-5xl) /* 3rem = 48px */;
-        line-height: var(--tw-leading, var(--text-5xl--line-height) /* 1 */);
+        font-size: var(--text-5xl);
+        line-height: var(--tw-leading, var(--text-5xl--line-height));
     }
 
     @media (width >= 1800px) and (width < 2050px) {
-        font-size: var(--text-4xl) /* 1.875rem = 30px */;
-        line-height: var(--tw-leading, var(--text-4xl--line-height) /* calc(2.25 / 1.875) ≈ 1.2 */);
+        font-size: var(--text-4xl);
+        line-height: var(--tw-leading, var(--text-4xl--line-height));
     }
 
     @media (width >= 1280px) and (width < 1800px) {
-        font-size: var(--text-3xl) /* 1.5rem = 24px */;
-        line-height: var(--tw-leading, var(--text-3xl--line-height) /* calc(2 / 1.5) ≈ 1.333333 */);
+        font-size: var(--text-3xl);
+        line-height: var(--tw-leading, var(--text-3xl--line-height));
     }
 
     @media (width < 1280px) and (width > 900px) {
-        font-size: var(--text-5xl) /* 1.25rem = 20px */;
-        line-height: var(--tw-leading, var(--text-5xl--line-height) /* calc(1.75 / 1.25) ≈ 1.4 */);
+        font-size: var(--text-5xl);
+        line-height: var(--tw-leading, var(--text-5xl--line-height));
     }
 
-    font-size: var(--text-base) /* 1rem = 16px */;
-    line-height: var(--tw-leading, var(--text-base--line-height) /* calc(1.5 / 1) ≈ 1.5 */);
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
 }
 
 .rating-text {
     @media (width >= 2050px) {
-        font-size: var(--text-9xl) /* 3rem = 48px */;
-        line-height: var(--tw-leading, var(--text-9xl--line-height) /* 1 */);
+        font-size: var(--text-9xl);
+        line-height: var(--tw-leading, var(--text-9xl--line-height));
     }
 
     @media (width >= 1800px) and (width < 2050px) {
-        font-size: var(--text-7xl) /* 1.875rem = 30px */;
-        line-height: var(--tw-leading, var(--text-7xl--line-height) /* calc(2.25 / 1.875) ≈ 1.2 */);
+        font-size: var(--text-7xl);
+        line-height: var(--tw-leading, var(--text-7xl--line-height));
     }
 
     @media (width >= 1280px) and (width < 1800px) {
-        font-size: var(--text-5xl) /* 1.5rem = 24px */;
-        line-height: var(--tw-leading, var(--text-5xl--line-height) /* calc(2 / 1.5) ≈ 1.333333 */);
+        font-size: var(--text-5xl);
+        line-height: var(--tw-leading, var(--text-5xl--line-height));
     }
 
     @media (width < 1280px) and (width > 900px) {
-        font-size: var(--text-8xl) /* 1.25rem = 20px */;
-        line-height: var(--tw-leading, var(--text-8xl--line-height) /* calc(1.75 / 1.25) ≈ 1.4 */);
+        font-size: var(--text-8xl);
+        line-height: var(--tw-leading, var(--text-8xl--line-height));
     }
 
-    font-size: var(--text-3xl) /* 1rem = 16px */;
-    line-height: var(--tw-leading, var(--text-3xl--line-height) /* calc(1.5 / 1) ≈ 1.5 */);
+    font-size: var(--text-3xl);
+    line-height: var(--tw-leading, var(--text-3xl--line-height));
 }
