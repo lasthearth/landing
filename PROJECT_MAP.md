@@ -23,6 +23,21 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-9 Дизайн-оптимизация (ветка `optimizations`, план `DESIGN_FIX_PLAN`)
+
+- Навигация шапки и профиля — `<a routerLink routerLinkActive>`; ручные поля
+  `select` удалены. Подсветка «Медиа» — computed от URL (`header.component.ts`).
+- Ключи подписей навигации профиля: `profile.nav.*`.
+- `.lh-chips__label` (`styles.css`) — видимая подпись группы чипов-фильтров.
+- `lh-input`: входы `label` (видимая подпись) и `ariaLabel`; `markup-editor`: `ariaLabel`.
+- Карусель главной: 7 с, пауза кнопкой и при наведении/фокусе.
+- `DEFAULT_SETTLEMENT_COVER` (`entities/settlement/config/`) — фолбэк обложки.
+- **Удалено:** радио-виджет (`features/radio-widget/`), фото и блок команды
+  (`public/team/`, `environment.teamPhotos`, `home.team.*`), неиспользуемые
+  `settlement-detailed`, `edit-settlement-form`, `market/ui/privilege-card`,
+  `market/templates/privilege-carousel-template`, `public/images/logo.png`,
+  `rules.i18n.ts.old`. Упоминания ниже — история.
+
 ### 3.-8 Выгрузка правил в Markdown для редактирования
 
 > Рабочий процесс «правки правил вне кода»: весь контент страницы `/rules`

@@ -1,7 +1,13 @@
 <h1 class="sr-only">{{ "home.carousel.slides.lastHearth.header" | translate }} — Last Hearth</h1>
 
 @if (!isAuthed()) {
-    <div class="relative">
+    <div
+        class="relative"
+        (mouseenter)="carouselHovered.set(true)"
+        (mouseleave)="carouselHovered.set(false)"
+        (focusin)="carouselHovered.set(true)"
+        (focusout)="carouselHovered.set(false)"
+    >
         <button
             (click)="navigate(1)"
             class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 -translate-y-1/2 justify-center backdrop-blur-md"
@@ -10,7 +16,7 @@
             <tui-icon icon="@tui.chevron-right" class="text-white" />
         </button>
 
-        <tui-carousel [(index)]="carouselIndex" [duration]="3500" class="h-auto! !rounded-t-xl">
+        <tui-carousel [(index)]="carouselIndex" [duration]="carouselDuration()" class="h-auto! !rounded-t-xl">
             @for (item of images; track $index) {
                 <div *tuiItem class="size-full relative overflow-hidden">
                     <app-image-loader
@@ -40,7 +46,19 @@
             }
         </tui-carousel>
 
-        <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" class="mt-4" />
+        <div class="flex items-center justify-center gap-3 mt-4">
+            <button
+                type="button"
+                class="nav-button size-9! justify-center"
+                [attr.aria-pressed]="carouselPaused()"
+                [attr.aria-label]="(carouselPaused() ? 'home.carousel.play' : 'home.carousel.pause') | translate"
+                [title]="(carouselPaused() ? 'home.carousel.play' : 'home.carousel.pause') | translate"
+                (click)="carouselPaused.set(!carouselPaused())"
+            >
+                <tui-icon [icon]="carouselPaused() ? '@tui.play' : '@tui.pause'" class="size-4!" />
+            </button>
+            <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" />
+        </div>
 
         <button
             (click)="navigate(-1)"
@@ -177,46 +195,6 @@
         }
     </div>
 </section>
-
-<!-- Команда проекта -->
-<!-- <section class="lh-page-container pb-6 flex flex-col gap-4">
-    <div class="flex flex-col gap-1">
-        <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
-            {{ "home.team.title" | translate }}
-        </h2>
-        <p class="text-lg md:text-xl font-medium text-lh-primary">{{ "home.team.subtitle" | translate }}</p>
-    </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lh-stagger-list">
-        @for (member of teamMembers; track member.name) {
-            <div [class]="'team-card group team-card--' + member.role + ' team-pos-' + member.pos">
-                <div class="team-card__photo">
-                    @if (getTeamPhoto(member.name); as photo) {
-                        <app-image-loader
-                            [src]="photo"
-                            [alt]="member.name"
-                            class="block h-full w-full"
-                            [imageClass]="
-                                'h-full w-full object-cover transition-transform duration-500 group-hover:scale-105' +
-                                (member.role === 'founder' ? ' object-top' : '')
-                            "
-                        />
-                    } @else {
-                        <span class="team-card__initial">{{ member.name.charAt(0).toUpperCase() }}</span>
-                    }
-
-                    <div class="team-card__overlay"></div>
-
-                    <span [class]="'team-card__role backdrop-blur-sm ' + getTeamRoleBadgeClass(member.role)">
-                        {{ "home.team.roles." + member.role | translate }}
-                    </span>
-
-                    <span class="team-card__name">{{ member.name }}</span>
-                </div>
-            </div>
-        }
-    </div>
-</section> -->
 
 <!-- Присоединиться к команде -->
 <section class="lh-page-container pt-6 pb-8">

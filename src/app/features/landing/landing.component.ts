@@ -4,7 +4,6 @@ import { filter, map, Observable, startWith } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { RouteKeys } from '@app/routes/enums/route-keys';
 import { ProfileNavigationComponent } from '@app/features/profile/profile-navigation/profile-navigation.component';
-import { RadioWidgetComponent } from '@app/features/radio-widget/ui/radio-widget/radio-widget.component';
 
 /**
  * Компонент лендинга.
@@ -12,7 +11,7 @@ import { RadioWidgetComponent } from '@app/features/radio-widget/ui/radio-widget
 @Component({
     standalone: true,
     selector: 'app-landing',
-    imports: [RouterOutlet, ProfileNavigationComponent, AsyncPipe, RadioWidgetComponent],
+    imports: [RouterOutlet, ProfileNavigationComponent, AsyncPipe],
     templateUrl: './landing.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

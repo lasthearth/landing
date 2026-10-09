@@ -4,6 +4,8 @@ export const HOME_I18N = {
             carousel: {
                 nextAria: 'Следующий слайд',
                 prevAria: 'Предыдущий слайд',
+                pause: 'Остановить показ слайдов',
+                play: 'Продолжить показ слайдов',
                 slides: {
                     lastHearth: {
                         header: 'Последний очаг',
@@ -62,17 +64,6 @@ export const HOME_I18N = {
                 more: 'И ещё {{count}} в календаре',
                 going: 'Идут: {{count}}',
             },
-            team: {
-                title: 'Команда проекта',
-                subtitle: 'Люди, которые хранят огонь Last Hearth: развивают мир, следят за порядком и помогают игрокам.',
-                roles: {
-                    founder: 'Создатель проекта',
-                    coFounder: 'Со-создатель проекта',
-                    techAdmin: 'Технический администратор',
-                    admin: 'Администратор',
-                    moderator: 'Модератор',
-                },
-            },
             recruit: {
                 title: 'Присоединиться к команде',
                 subtitle: 'Проект растёт, и нам нужны люди, готовые помогать его развивать. Выберите направление и напишите нам — ответим всем.',
@@ -115,6 +106,8 @@ export const HOME_I18N = {
             carousel: {
                 nextAria: 'Next slide',
                 prevAria: 'Previous slide',
+                pause: 'Pause slideshow',
+                play: 'Resume slideshow',
                 slides: {
                     lastHearth: {
                         header: 'Last Hearth',
@@ -172,17 +165,6 @@ export const HOME_I18N = {
                 all: 'All events',
                 more: '{{count}} more in the calendar',
                 going: 'Going: {{count}}',
-            },
-            team: {
-                title: 'Project team',
-                subtitle: 'The people who keep the Last Hearth fire burning: they shape the world, keep order and help players.',
-                roles: {
-                    founder: 'Project founder',
-                    coFounder: 'Project co-founder',
-                    techAdmin: 'Technical administrator',
-                    admin: 'Administrator',
-                    moderator: 'Moderator',
-                },
             },
             recruit: {
                 title: 'Join the team',
