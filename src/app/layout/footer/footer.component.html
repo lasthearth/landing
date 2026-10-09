@@ -9,6 +9,10 @@
                 <p>{{ "footer.rights" | translate }}</p>
             </div>
             <div class="flex sm:gap-4 gap-2 flex-col sm:flex-row">
+                <a [routerLink]="['/faq']" class="self-start">{{ "footer.faq" | translate }}</a>
+
+                <span class="text-lh-primary hidden sm:block">•</span>
+
                 <a [routerLink]="['/privacy-policy']" class="self-start">{{ "footer.privacyPolicy" | translate }}</a>
 
                 <span class="text-lh-primary hidden sm:block">•</span>

@@ -3,6 +3,7 @@ export const FOOTER_I18N = {
         footer: {
             logoAlt: 'Логотип Last Hearth',
             rights: 'Все права сохранены. Копирование материалов без разрешения администрации запрещено.',
+            faq: 'Частые вопросы',
             privacyPolicy: 'Политика конфиденциальности',
             publicOffer: 'Публичная оферта',
             version: 'Версия {{version}} от {{date}}',
@@ -12,6 +13,7 @@ export const FOOTER_I18N = {
         footer: {
             logoAlt: 'Last Hearth logo',
             rights: 'All rights reserved. Copying materials without administration permission is prohibited.',
+            faq: 'FAQ',
             privacyPolicy: 'Privacy Policy',
             publicOffer: 'Public Offer',
             version: 'Version {{version}} from {{date}}',

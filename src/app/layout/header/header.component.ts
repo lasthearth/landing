@@ -5,6 +5,8 @@ import { AsyncPipe, NgClass } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { RouterLink, RouterLinkActive, NavigationEnd, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { HEADER_MAIN_LINKS } from './config/header-main-links.constant';
+import { HEADER_COMMUNITY_LINKS } from './config/header-community-links.constant';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { NotificationService } from '@core/services/notification.service';
 import { ServerInformationService } from '@core/services/server-information.service';
@@ -209,14 +211,31 @@ export class HeaderComponent {
     protected readonly showMediaMenu = signal(false);
 
     /**
-     * Признак, что открыт один из разделов Медиа (галерея или видео).
-     * Подсвечивает кнопку «Медиа», пока её подменю закрыто.
+     * Основные разделы меню.
      */
-    protected readonly isMediaActive = computed(() => {
+    protected readonly mainLinks = HEADER_MAIN_LINKS;
+
+    /**
+     * Разделы выпадающего пункта «Сообщество».
+     */
+    protected readonly communityLinks = HEADER_COMMUNITY_LINKS;
+
+    /**
+     * Признак, что открыт один из разделов «Сообщества».
+     * Подсвечивает кнопку «Сообщество», пока её подменю закрыто.
+     */
+    protected readonly isCommunityActive = computed(() => {
         const url = this.currentUrl();
 
-        return url.startsWith('/gallery') || url.startsWith('/videos');
+        return this.communityLinks.some((link) => url.startsWith(link.route));
     });
+
+    /**
+     * Есть ли новое в каком-либо разделе «Сообщества» (точка на кнопке).
+     */
+    protected readonly isCommunityFresh = computed(() =>
+        this.communityLinks.some((link) => !!link.freshSection && this.newContent.isFresh(link.freshSection))
+    );
 
     /**
      * Переключает язык интерфейса и закрывает дропдаун.
