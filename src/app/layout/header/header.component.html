@@ -8,10 +8,10 @@
 <div class="flex flex-col xl:gap-10 gap-8">
     <div class="flex justify-center sm:justify-between px-4 sm:px-0">
         <!-- Логотип -->
-        <div
-            class="hidden mt-8 z-10 sm:flex w-fit h-18 sm:h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)] cursor-pointer"
+        <a
+            class="hidden mt-8 z-10 sm:flex w-fit h-18 sm:h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)] cursor-pointer no-underline!"
             [routerLink]="['/home']"
-            (click)="select = 'home'"
+            [attr.aria-label]="'header.nav.home' | translate"
         >
             <div class="rounded-2xl gap-4 flex items-center p-4 sm:py-3 sm:pl-3 sm:pr-4">
                 <app-image-loader
@@ -26,7 +26,7 @@
                     Last Hearth
                 </p>
             </div>
-        </div>
+        </a>
 
         <!-- Табло информации о сервере -->
         <div class="flex gap-2 sm:gap-4 items-center">
@@ -141,11 +141,8 @@
                             <a
                                 [routerLink]="['/start-game']"
                                 (click)="showMobileMenu.set(false)"
-                                [ngClass]="{
-                                    'bg-lh-accent text-white': select === 'startGame',
-                                    'text-lh-primary hover:bg-surface-3': select !== 'startGame',
-                                }"
-                                class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                                routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                             >
                                 <tui-icon icon="@tui.gamepad-2" class="size-4!" />
                                 {{ "header.nav.startGame" | translate }}
@@ -154,11 +151,8 @@
                         <a
                             [routerLink]="['/rules']"
                             (click)="showMobileMenu.set(false)"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': select === 'rules',
-                                'text-lh-primary hover:bg-surface-3': select !== 'rules',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                            routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.file-text" class="size-4!" />
                             {{ "header.nav.rules" | translate }}
@@ -166,11 +160,8 @@
                         <a
                             [routerLink]="['/faq']"
                             (click)="showMobileMenu.set(false)"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': select === 'faq',
-                                'text-lh-primary hover:bg-surface-3': select !== 'faq',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                            routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.info" class="size-4!" />
                             {{ "header.nav.faq" | translate }}
@@ -178,11 +169,8 @@
                         <a
                             [routerLink]="['/settlements']"
                             (click)="showMobileMenu.set(false)"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': select === 'settlements',
-                                'text-lh-primary hover:bg-surface-3': select !== 'settlements',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                            routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.tent" class="size-4!" />
                             {{ "header.nav.settlements" | translate }}
@@ -190,11 +178,8 @@
                         <a
                             [routerLink]="['/market']"
                             (click)="showMobileMenu.set(false)"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': select === 'market',
-                                'text-lh-primary hover:bg-surface-3': select !== 'market',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                            routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.store" class="size-4!" />
                             {{ "header.nav.market" | translate }}
@@ -205,8 +190,8 @@
                             type="button"
                             (click)="toggleMobileMediaMenu()"
                             [ngClass]="{
-                                'bg-lh-accent text-white': isMediaActive,
-                                'text-lh-primary hover:bg-surface-3': !isMediaActive,
+                                'bg-lh-accent text-white': isMediaActive(),
+                                'text-lh-primary hover:bg-surface-3': !isMediaActive(),
                             }"
                             class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center justify-between"
                         >
@@ -231,11 +216,8 @@
                                 <a
                                     [routerLink]="['/gallery']"
                                     (click)="showMobileMenu.set(false)"
-                                    [ngClass]="{
-                                        'bg-lh-accent text-white': select === 'gallery',
-                                        'text-lh-primary hover:bg-surface-3': select !== 'gallery',
-                                    }"
-                                    class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                                    routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                                 >
                                     <tui-icon icon="@tui.image" class="size-4!" />
                                     {{ "header.nav.gallery" | translate }}
@@ -248,11 +230,8 @@
                                 <a
                                     [routerLink]="['/videos']"
                                     (click)="showMobileMenu.set(false)"
-                                    [ngClass]="{
-                                        'bg-lh-accent text-white': select === 'videos',
-                                        'text-lh-primary hover:bg-surface-3': select !== 'videos',
-                                    }"
-                                    class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                                    routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                                 >
                                     <tui-icon icon="@tui.video" class="size-4!" />
                                     {{ "header.nav.videos" | translate }}
@@ -263,11 +242,8 @@
                         <a
                             [routerLink]="['/diplomacy']"
                             (click)="showMobileMenu.set(false)"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': select === 'diplomacy',
-                                'text-lh-primary hover:bg-surface-3': select !== 'diplomacy',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                            routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.scroll-text" class="size-4!" />
                             {{ "header.nav.diplomacy" | translate }}
@@ -280,11 +256,8 @@
                         <a
                             [routerLink]="['/events']"
                             (click)="showMobileMenu.set(false)"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': select === 'events',
-                                'text-lh-primary hover:bg-surface-3': select !== 'events',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                            routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.calendar-days" class="size-4!" />
                             {{ "header.nav.events" | translate }}
@@ -292,11 +265,8 @@
                         <a
                             [routerLink]="['/lfg']"
                             (click)="showMobileMenu.set(false)"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': select === 'lfg',
-                                'text-lh-primary hover:bg-surface-3': select !== 'lfg',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                            routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.users" class="size-4!" />
                             {{ "header.nav.lfgFull" | translate }}
@@ -415,7 +385,7 @@
                     <button
                         type="button"
                         (click)="toggleMediaMenu()"
-                        [ngClass]="{ 'nav-button--active': isMediaActive || showMediaMenu() }"
+                        [ngClass]="{ 'nav-button--active': isMediaActive() || showMediaMenu() }"
                         class="nav-button relative md:w-auto px-1.5"
                         [attr.aria-label]="'header.nav.media' | translate"
                         [attr.aria-expanded]="showMediaMenu()"
@@ -439,11 +409,8 @@
                             <a
                                 [routerLink]="['/gallery']"
                                 (click)="showMediaMenu.set(false)"
-                                [ngClass]="{
-                                    'bg-lh-accent text-white': select === 'gallery',
-                                    'text-lh-primary hover:bg-surface-3': select !== 'gallery',
-                                }"
-                                class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                                routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                             >
                                 <tui-icon icon="@tui.image" class="size-4!" />
                                 {{ "header.nav.gallery" | translate }}
@@ -456,11 +423,8 @@
                             <a
                                 [routerLink]="['/videos']"
                                 (click)="showMediaMenu.set(false)"
-                                [ngClass]="{
-                                    'bg-lh-accent text-white': select === 'videos',
-                                    'text-lh-primary hover:bg-surface-3': select !== 'videos',
-                                }"
-                                class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                                routerLinkActive="bg-lh-accent text-white!"
+                                class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
                             >
                                 <tui-icon icon="@tui.video" class="size-4!" />
                                 {{ "header.nav.videos" | translate }}
@@ -526,24 +490,30 @@
                 <app-notification-bell />
             }
 
-            <button
-                (click)="isAuth ? '' : signIn()"
-                [routerLink]="isAuth ? ['/profile'] : ''"
-                [ngClass]="{
-                    'nav-button--active': select === 'profile',
-                    '!rounded-lg': !isAuth,
-                    '!rounded-r-none': isAuth,
-                }"
-                class="relative nav-button p-2.5"
-                [attr.aria-label]="isAuth ? ('header.nav.profile' | translate) : ('header.nav.signIn' | translate)"
-            >
-                <tui-icon [icon]="isAuth ? '@tui.user' : '@tui.log-in'" />
-                @if (
-                    invitations?.length || ((settlementVerifications?.length || userVerifications?.length) && isAdmin())
-                ) {
-                    <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
-                }
-            </button>
+            @if (isAuth) {
+                <a
+                    [routerLink]="['/profile']"
+                    routerLinkActive="nav-button--active"
+                    class="relative nav-button p-2.5 !rounded-r-none"
+                    [attr.aria-label]="'header.nav.profile' | translate"
+                >
+                    <tui-icon icon="@tui.user" />
+                    @if (
+                        invitations?.length || ((settlementVerifications?.length || userVerifications?.length) && isAdmin())
+                    ) {
+                        <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
+                    }
+                </a>
+            } @else {
+                <button
+                    type="button"
+                    (click)="signIn()"
+                    class="relative nav-button p-2.5 !rounded-lg"
+                    [attr.aria-label]="'header.nav.signIn' | translate"
+                >
+                    <tui-icon icon="@tui.log-in" />
+                </button>
+            }
             @if (isAuth) {
                 <button
                     (click)="signOut()"

@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { RouterLink, RouterLinkActive, ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink, RouterLinkActive, NavigationEnd, Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { RouteKeys } from '@app/routes/enums/route-keys';
 import { NotificationService } from '@core/services/notification.service';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { UserService } from '@entities/user';
@@ -101,19 +100,21 @@ export class HeaderComponent {
     );
 
     /**
-     * Объект с информацией о текущем роуте.
-     */
-    private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-
-    /**
      * Сервис навигации.
      */
     private readonly router: Router = inject(Router);
 
     /**
-     * Ссылка уничтожения на компонент.
+     * Текущий адрес страницы после редиректов.
+     * Обновляется на каждом завершении навигации.
      */
-    private readonly destroyRef: DestroyRef = inject(DestroyRef);
+    private readonly currentUrl = toSignal(
+        this.router.events.pipe(
+            filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+            map((event) => event.urlAfterRedirects)
+        ),
+        { initialValue: this.router.url }
+    );
 
     /**
      * Сервис уведомлений.
@@ -159,95 +160,10 @@ export class HeaderComponent {
     protected readonly settlementVerifications$ = this.notificationService.settlementVerifications$;
 
     /**
-     * Активная страница.
-     */
-    protected select: string = 'home';
-
-    /**
-     * Объект слеженИя за изменениями.
-     */
-    private readonly cdr = inject(ChangeDetectorRef);
-
-    /**
      * Инициализирует компонент класса {@link LandingComponent}
      */
     public constructor() {
         this.newContent.start();
-
-        const updateSelect = () => {
-            let route = this.activatedRoute;
-
-            while (route.firstChild) {
-                route = route.firstChild;
-            }
-
-            const routeKey = route.snapshot.data['route_keys'];
-
-            if (routeKey) {
-                switch (routeKey) {
-                    case RouteKeys.home:
-                        this.select = 'home';
-                        break;
-                    case RouteKeys.rules:
-                        this.select = 'rules';
-                        break;
-                    case RouteKeys.profile:
-                    case RouteKeys.howPlay:
-                    case RouteKeys.stats:
-                    case RouteKeys.admin:
-                    case RouteKeys.settlement:
-                        this.select = 'profile';
-                        break;
-                    case RouteKeys.startGame:
-                        this.select = 'startGame';
-                        break;
-                    case RouteKeys.privacyPolicy:
-                        this.select = 'privacyPolicy';
-                        break;
-                    case RouteKeys.publicOffer:
-                        this.select = 'publicOffer';
-                        break;
-                    case RouteKeys.market:
-                        this.select = 'market';
-                        break;
-                    case RouteKeys.faq:
-                        this.select = 'faq';
-                        break;
-                    case RouteKeys.settlements:
-                        this.select = 'settlements';
-                        break;
-                    case RouteKeys.gallery:
-                        this.select = 'gallery';
-                        break;
-                    case RouteKeys.videos:
-                        this.select = 'videos';
-                        break;
-                    case RouteKeys.diplomacy:
-                        this.select = 'diplomacy';
-                        break;
-                    case RouteKeys.events:
-                        this.select = 'events';
-                        break;
-                    case RouteKeys.lfg:
-                        this.select = 'lfg';
-                        break;
-                    case RouteKeys.news:
-                        this.select = 'home';
-                        break;
-                }
-
-                this.cdr.markForCheck();
-            }
-        };
-
-        updateSelect();
-
-        this.router.events
-            .pipe(
-                filter((event) => event instanceof NavigationEnd),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(() => updateSelect());
     }
 
     /**
@@ -293,11 +209,14 @@ export class HeaderComponent {
     protected readonly showMediaMenu = signal(false);
 
     /**
-     * Возвращает признак, активен ли один из разделов Медиа.
+     * Признак, что открыт один из разделов Медиа (галерея или видео).
+     * Подсвечивает кнопку «Медиа», пока её подменю закрыто.
      */
-    protected get isMediaActive(): boolean {
-        return this.select === 'gallery' || this.select === 'videos';
-    }
+    protected readonly isMediaActive = computed(() => {
+        const url = this.currentUrl();
+
+        return url.startsWith('/gallery') || url.startsWith('/videos');
+    });
 
     /**
      * Переключает язык интерфейса и закрывает дропдаун.
