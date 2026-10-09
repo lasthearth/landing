@@ -20,7 +20,7 @@ import { RequestStatusService } from '@core/services/request-status.service';
     selector: 'app-player-invite',
     imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, PlayerAvatarComponent, EmptyStateComponent, TranslatePipe],
     templateUrl: './player-invite.component.html',
-    styleUrl: './player-invite.component.css',
+    styleUrl: './player-invite.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerInviteComponent {

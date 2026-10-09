@@ -13,7 +13,7 @@ import { environment } from '@core/config/environments/environment';
     selector: 'app-faq',
     imports: [PageHeaderComponent, TuiExpand, TuiIcon, CommonModule, TranslatePipe],
     templateUrl: './faq.component.html',
-    styleUrl: './faq.component.css',
+    styleUrl: './faq.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FaqComponent implements OnDestroy {

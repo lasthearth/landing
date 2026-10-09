@@ -97,7 +97,7 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
         RelativeTimeComponent,
     ],
     templateUrl: './settlement.component.html',
-    styleUrl: './settlement.component.css',
+    styleUrl: './settlement.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementComponent {

@@ -12,7 +12,7 @@ import { TranslatePipe } from '@core/i18n';
     selector: 'app-footer',
     imports: [RouterLink, ImageLoaderComponent, TranslatePipe],
     templateUrl: `./footer.component.html`,
-    styleUrl: './footer.component.css',
+    styleUrl: './footer.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {

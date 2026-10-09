@@ -41,7 +41,7 @@ const STEP = 24;
     standalone: true,
     imports: [PageHeaderComponent, TuiIcon, TranslatePipe, GalleryImageComponent, RelativeTimeComponent, ImageViewerComponent],
     templateUrl: './gallery.component.html',
-    styleUrl: './gallery.component.css',
+    styleUrl: './gallery.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryComponent {

@@ -18,7 +18,7 @@ import { Subject, tap } from 'rxjs';
     selector: 'app-change-username',
     templateUrl: './change-username.component.html',
     imports: [LHInputComponent, ReactiveFormsModule, FormsModule, TuiError, TuiFieldErrorPipe, AsyncPipe, TranslatePipe],
-    styleUrl: './change-username.component.css',
+    styleUrl: './change-username.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChangeUsernameComponent {

@@ -35,7 +35,7 @@ import { OnboardingService } from '@features/onboarding';
         SiteAnnouncementComponent,
     ],
     templateUrl: './layout.component.html',
-    styleUrl: './layout.component.css',
+    styleUrl: './layout.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent {

@@ -67,7 +67,7 @@ function sortMessagesByTimeDesc(messages: GameChatMessage[]): GameChatMessage[] 
     standalone: true,
     imports: [PageHeaderComponent, TuiIcon, TranslatePipe, DiplomacyCardComponent, EmptyStateComponent, ErrorStateComponent],
     templateUrl: './diplomacy-page.component.html',
-    styleUrl: './diplomacy-page.component.css',
+    styleUrl: './diplomacy-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DiplomacyPageComponent {

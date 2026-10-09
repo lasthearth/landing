@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
     standalone: true,
     selector: 'app-how-play',
     templateUrl: './how-play.component.html',
-    styleUrl: './how-play.component.css',
+    styleUrl: './how-play.component.less',
     imports: [RouterLink, TuiIcon, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

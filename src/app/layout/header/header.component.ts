@@ -41,7 +41,7 @@ import { NotificationBellComponent } from '@features/notifications';
         PlayerAvatarComponent,
     ],
     templateUrl: './header.component.html',
-    styleUrl: './header.component.css',
+    styleUrl: './header.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {

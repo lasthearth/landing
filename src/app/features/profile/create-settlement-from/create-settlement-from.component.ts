@@ -28,7 +28,7 @@ import { GuildFormComponent } from './settlements-types-forms/guild-form/guild-f
         TranslatePipe,
     ],
     templateUrl: './create-settlement-from.component.html',
-    styleUrl: './create-settlement-from.component.css',
+    styleUrl: './create-settlement-from.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateSettlementFormComponent {

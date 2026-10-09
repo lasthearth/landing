@@ -91,7 +91,7 @@ import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComp
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
-    styleUrl: './profile.component.css',
+    styleUrl: './profile.component.less',
 })
 export class ProfileComponent {
     protected readonly userService = inject(UserService);

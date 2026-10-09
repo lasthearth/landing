@@ -20,7 +20,7 @@ import { environment } from '@core/config/environments/environment';
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
     imports: [TuiIcon, TuiSwipe, TranslatePipe],
-    styleUrl: './welcome.component.css',
+    styleUrl: './welcome.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WelcomeComponent implements AfterViewInit {

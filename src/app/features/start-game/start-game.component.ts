@@ -26,7 +26,7 @@ const DISCORD_INVITE = environment.discordInviteUrl;
     selector: 'app-start-game',
     imports: [PageHeaderComponent, RouterLink, TuiIcon, TranslatePipe, NewcomerPathComponent],
     templateUrl: './start-game.component.html',
-    styleUrl: './start-game.component.css',
+    styleUrl: './start-game.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StartGameComponent {

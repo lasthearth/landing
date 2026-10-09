@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
     selector: 'app-leader-card',
     imports: [RouterLink, PlayerAvatarComponent, TranslatePipe],
     templateUrl: './leader-card.component.html',
-    styleUrl: './leader-card.component.css',
+    styleUrl: './leader-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LeaderCardComponent {

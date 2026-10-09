@@ -37,7 +37,7 @@ export type LHInputType = 'input' | 'select' | 'textarea' | 'inputNumber';
     selector: 'lh-input',
     imports: [CommonModule, TuiIcon],
     templateUrl: './lh-input.component.html',
-    styleUrl: './lh-input.component.css',
+    styleUrl: './lh-input.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         {

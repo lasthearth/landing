@@ -80,7 +80,7 @@ const SCENE_HEIGHT = 1080;
     standalone: true,
     selector: 'app-background-scene',
     templateUrl: './background-scene.component.html',
-    styleUrl: './background-scene.component.css',
+    styleUrl: './background-scene.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackgroundSceneComponent {
