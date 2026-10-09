@@ -1,6 +1,6 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { UserService } from '@entities/user';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -13,7 +13,7 @@ import { NotificationService } from '@core/services/notification.service';
 @Component({
     selector: 'app-profile-navigation',
     templateUrl: './profile-navigation.component.html',
-    imports: [CommonModule, RouterLink, TuiIcon, AsyncPipe, TuiPulse, TranslatePipe],
+    imports: [CommonModule, RouterLink, RouterLinkActive, TuiIcon, AsyncPipe, TuiPulse, TranslatePipe],
 })
 export class ProfileNavigationComponent {
     protected readonly userService = inject(UserService);

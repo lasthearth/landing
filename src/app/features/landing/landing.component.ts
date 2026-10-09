@@ -45,7 +45,7 @@ export class LandingComponent {
     );
 
     /**
-     * Доступ к枚举у RouteKeys для шаблона.
+     * Доступ к enum RouteKeys для шаблона.
      */
     protected readonly RouteKeys = RouteKeys;
 

@@ -1,6 +1,14 @@
 export const PROFILE_I18N = {
     ru: {
         profile: {
+            nav: {
+                howPlay: 'Как играть',
+                stats: 'Статистика',
+                settlement: 'Моё поселение',
+                style: 'Оформление профиля',
+                referral: 'Пригласить друга',
+                admin: 'Администрирование'
+            },
             avatar: {
                 alt: 'Аватар пользователя {{name}}',
                 defaultAlt: 'Аватар по умолчанию',
@@ -68,7 +76,7 @@ export const PROFILE_I18N = {
                 },
                 approved: {
                     text: 'Анкета одобрена! Войдите заново, чтобы профиль обновился и открылся доступ.',
-                    action: 'Войти заново',
+                    action: 'Войти занovo',
                 },
             },
             hero: {
@@ -226,6 +234,14 @@ export const PROFILE_I18N = {
     },
     en: {
         profile: {
+            nav: {
+                howPlay: 'How to play',
+                stats: 'Statistics',
+                settlement: 'My settlement',
+                style: 'Profile style',
+                referral: 'Invite a friend',
+                admin: 'Administration'
+            },
             avatar: {
                 alt: 'Avatar of {{name}}',
                 defaultAlt: 'Default avatar',
