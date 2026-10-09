@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 import { BANNER_EFFECTS } from '../../lib/player-style.constant';
 import { BannerEffectId, ProfileBanner } from '../../model/player-style';
 
@@ -282,6 +283,7 @@ function random(seed: number): Random {
     `,
     styleUrl: './profile-banner.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [PauseOffscreenDirective],
 })
 export class ProfileBannerComponent {
     public readonly banner = input.required<ProfileBanner>();

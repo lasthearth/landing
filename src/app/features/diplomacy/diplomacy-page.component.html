@@ -60,7 +60,7 @@
             }
 
             @if (rest().length > 0) {
-                <div class="diplomacy-page__grid lh-stagger-list">
+                <div class="diplomacy-page__grid">
                     @for (statement of rest(); track statement.id || statement.timestamp) {
                         <app-diplomacy-card
                             [statement]="statement"

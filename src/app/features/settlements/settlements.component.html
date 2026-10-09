@@ -109,7 +109,7 @@
             [description]="'settlements.list.notFound.description' | translate"
         />
     } @else {
-        <div class="settlements-grid lh-stagger-list">
+        <div class="settlements-grid">
             @for (item of filteredSettlements(); track item.id) {
                 <app-settlement-card
                     [data]="item"

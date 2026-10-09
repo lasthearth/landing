@@ -31,7 +31,7 @@
                                 [src]="item.imageUrl"
                                 [alt]="item.name"
                                 class="w-full h-full"
-                                imageClass="transition-all duration-200 hover:opacity-85"
+                                imageClass="transition duration-200 hover:opacity-85"
                             />
                         </div>
                     } @else {
@@ -80,7 +80,7 @@
                 <!-- Buy button -->
                 <button
                     (click)="openPurchaseDialog(item)"
-                    class="w-full text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-brand-lit-2 hover:from-brand-lit-2 hover:to-lh-accent rounded-xl py-2 lg:py-2.5 text-sm lg:text-base shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
+                    class="w-full text-white uppercase transition duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-brand-lit-2 hover:from-brand-lit-2 hover:to-lh-accent rounded-xl py-2 lg:py-2.5 text-sm lg:text-base shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
                 >
                     {{ 'market.common.buyButton' | translate }}
                 </button>

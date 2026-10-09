@@ -18,7 +18,7 @@
             @for (kit of kits; track kit.id) {
                 <button
                     (click)="selectKit(kit)"
-                    class="shrink-0 w-auto lg:w-full text-left text-lh-primary px-3 py-2 lg:px-4 lg:py-3 rounded-xl font-bold text-base lg:text-2xl leading-tight transition-all duration-300 border border-lh-primary-2/10 hover:translate-x-1 cursor-pointer relative overflow-hidden"
+                    class="shrink-0 w-auto lg:w-full text-left text-lh-primary px-3 py-2 lg:px-4 lg:py-3 rounded-xl font-bold text-base lg:text-2xl leading-tight transition duration-300 border border-lh-primary-2/10 hover:translate-x-1 cursor-pointer relative overflow-hidden"
                     [class.bg-gradient-to-r]="kit === selectedPrivilege"
                     [class.from-night-grad-1]="kit === selectedPrivilege"
                     [class.via-night-grad-2]="kit === selectedPrivilege"
@@ -172,7 +172,7 @@
             <!-- Buy button -->
             <button
                 (click)="openPurchaseDialog()"
-                class="shimmer-btn self-stretch text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-brand-deep to-brand-lit hover:from-brand-deep hover:to-brand-lit rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-lg lg:text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
+                class="shimmer-btn self-stretch text-white uppercase transition duration-300 font-bold cursor-pointer bg-gradient-to-r from-brand-deep to-brand-lit hover:from-brand-deep hover:to-brand-lit rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-lg lg:text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
             >
                 <tui-icon icon="@tui.shopping-cart" class="size-6!" />
                 <span>{{ 'market.common.buyFor' | translate }}</span>

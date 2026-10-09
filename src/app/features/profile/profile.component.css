@@ -45,10 +45,6 @@
     background: color-mix(in srgb, var(--lh-brand) 16%, transparent);
 }
 
-.profile-status--pending .profile-status__dot {
-    animation: profile-status-pulse 1.6s ease-in-out infinite;
-}
-
 .profile-status--rejected {
     color: var(--lh-danger-ink);
     background: color-mix(in srgb, var(--lh-danger-ink) 12%, transparent);
@@ -57,12 +53,6 @@
 .profile-status--approved {
     color: var(--lh-success, #2e7d32);
     background: color-mix(in srgb, var(--lh-success, #2e7d32) 14%, transparent);
-}
-
-@keyframes profile-status-pulse {
-    50% {
-        opacity: 0.35;
-    }
 }
 
 /* Значки и ссылка на публичный профиль */

@@ -11,7 +11,7 @@
         decoding="async"
         (load)="loaded.set(true)"
         (error)="loaded.set(true)"
-        class="w-full h-full transition-opacity duration-500"
+        class="w-full h-full transition-opacity duration-200"
         [ngClass]="imageClass()"
         [class.object-cover]="objectFit() === 'cover'"
         [class.object-contain]="objectFit() === 'contain'"

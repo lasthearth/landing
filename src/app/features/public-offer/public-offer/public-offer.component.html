@@ -13,14 +13,14 @@
     <!-- 1. Terms and definitions -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isTerms = !isTerms"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.terms.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTerms }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isTerms">
@@ -39,14 +39,14 @@
     <!-- 2. General provisions -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isGeneralProvisions = !isGeneralProvisions"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.generalProvisions.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isGeneralProvisions }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isGeneralProvisions">
@@ -64,14 +64,14 @@
     <!-- 3. Rights and obligations of the parties -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isRightsAndObligations = !isRightsAndObligations"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.rightsAndObligations.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRightsAndObligations }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isRightsAndObligations">
@@ -96,14 +96,14 @@
     <!-- 4. Liability of the parties -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isResponsibility = !isResponsibility"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.responsibility.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isResponsibility }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isResponsibility">
@@ -122,14 +122,14 @@
     <!-- 5. Refund terms -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isTermsOfReturn = !isTermsOfReturn"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.termsOfReturn.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTermsOfReturn }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isTermsOfReturn">
@@ -145,14 +145,14 @@
     <!-- 6. Personal data -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isPersonalData = !isPersonalData"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.personalData.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isPersonalData }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isPersonalData">
@@ -167,14 +167,14 @@
     <!-- 7. Applicable law and dispute resolution -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isLegislation = !isLegislation"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.legislation.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isLegislation }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isLegislation">
@@ -188,14 +188,14 @@
     <!-- 8. Contractor details -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isRequisites = !isRequisites"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.publicOffer.sections.requisites.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isRequisites }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isRequisites">
@@ -212,7 +212,7 @@
     @if (showScrollTop) {
         <button
             (click)="scrollToTop()"
-            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-surface-4 lh-shadow"
+            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition duration-300 hover:bg-surface-4 lh-shadow"
             [title]="'legal.publicOffer.scrollTop' | translate"
         >
             <tui-icon icon="@tui.chevron-up" class="size-6!" />

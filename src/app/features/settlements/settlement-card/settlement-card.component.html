@@ -113,7 +113,7 @@
                             type="button"
                             (click)="openSetTagsDialog()"
                             [attr.aria-label]="'settlements.tags.add' | translate"
-                            class="bg-lh-primary-2/10 hover:bg-lh-primary-2/30 cursor-pointer transition-all duration-300 active:scale-[95%] flex justify-center items-center px-1 text-lh-primary rounded-full"
+                            class="bg-lh-primary-2/10 hover:bg-lh-primary-2/30 cursor-pointer transition duration-300 active:scale-[95%] flex justify-center items-center px-1 text-lh-primary rounded-full"
                         >
                             <tui-icon icon="@tui.circle-plus" class="size-4!" />
                         </button>
@@ -161,7 +161,7 @@
 
                     <a
                         [routerLink]="['/settlements', data().id]"
-                        class="group text-ink-2 border-wood/50 hover:border-wood transition-all ml-auto duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1 no-underline"
+                        class="group text-ink-2 border-wood/50 hover:border-wood transition ml-auto duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1 no-underline"
                     >
                         {{ 'settlements.card.more' | translate }}
                         <tui-icon

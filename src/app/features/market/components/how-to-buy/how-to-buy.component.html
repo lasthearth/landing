@@ -57,7 +57,7 @@
                     <button
                         type="button"
                         (click)="setRubles(amount)"
-                        class="px-3 py-1.5 rounded-lg border text-sm font-semibold transition-all duration-200 cursor-pointer"
+                        class="px-3 py-1.5 rounded-lg border text-sm font-semibold transition duration-200 cursor-pointer"
                         [class.bg-lh-accent]="rubles() === amount"
                         [class.text-white]="rubles() === amount"
                         [class.border-lh-accent]="rubles() === amount"
@@ -131,7 +131,7 @@
                         <button
                             type="button"
                             (click)="copyPhone()"
-                            class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-sber text-white text-base font-semibold hover:brightness-105 transition-all cursor-pointer"
+                            class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-sber text-white text-base font-semibold hover:brightness-105 transition cursor-pointer"
                         >
                             @if (phoneCopied()) {
                                 <tui-icon icon="@tui.check" class="size-4!" />
@@ -151,7 +151,7 @@
                 <button
                     type="button"
                     (click)="copySbpDetails()"
-                    class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl border-2 border-sber text-sber font-bold text-base hover:bg-[rgba(33,160,56,0.1)] transition-all cursor-pointer"
+                    class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl border-2 border-sber text-sber font-bold text-base hover:bg-[rgba(33,160,56,0.1)] transition cursor-pointer"
                 >
                     <tui-icon icon="@tui.copy" class="size-5!" />
                     {{ "market.howToBuy.sbp.copyAll" | translate }}

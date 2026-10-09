@@ -81,7 +81,6 @@
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
         inset 0 0 0 1px rgba(240, 230, 210, 0.28);
-    animation: welcome-hint-bounce 2.4s var(--lh-ease-smooth) infinite;
     transition:
         box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart),
         color var(--lh-dur-mid) var(--lh-ease-out-quart);
@@ -93,17 +92,6 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.14),
         inset 0 0 0 1px rgba(255, 170, 92, 0.7),
         0 12px 32px -10px rgba(255, 121, 32, 0.4);
-}
-
-@keyframes welcome-hint-bounce {
-    0%,
-    100% {
-        transform: translate(-50%, 0);
-    }
-
-    50% {
-        transform: translate(-50%, 10px);
-    }
 }
 
 /**

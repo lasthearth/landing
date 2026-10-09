@@ -8,7 +8,6 @@ import { WelcomeComponent } from '@app/features/welcome/welcome.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { GameChatWidgetComponent } from '@features/game-chat/ui/game-chat-widget/game-chat-widget.component';
-import { BackgroundParticlesComponent } from './background-particles/background-particles.component';
 import { BackgroundSceneComponent } from './background-scene/background-scene.component';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
@@ -32,7 +31,6 @@ import { OnboardingService } from '@features/onboarding';
         TranslatePipe,
         WelcomeComponent,
         BackgroundSceneComponent,
-        BackgroundParticlesComponent,
         GameChatWidgetComponent,
         SiteAnnouncementComponent,
     ],

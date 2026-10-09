@@ -85,7 +85,7 @@
                                         <p class="text-lg leading-[27px] font-bold truncate">{{ userName }}</p>
                                         <button
                                             (click)="openDialogChangeUsername()"
-                                            class="shrink-0 border border-lh-accent/50 bg-lh-accent/10 text-lh-accent hover:bg-lh-accent hover:text-white hover:border-lh-accent transition-all duration-200 cursor-pointer rounded-lg p-1.5 shadow-sm"
+                                            class="shrink-0 border border-lh-accent/50 bg-lh-accent/10 text-lh-accent hover:bg-lh-accent hover:text-white hover:border-lh-accent transition duration-200 cursor-pointer rounded-lg p-1.5 shadow-sm"
                                             [title]="'profile.nickname.change' | translate"
                                             [attr.aria-label]="'profile.nickname.changeAria' | translate"
                                         >
@@ -294,7 +294,7 @@
                     <!-- Кнопка пополнения -->
                     <button
                         (click)="howToBuy()"
-                        class="flex items-center justify-center gap-2 transition-all duration-300 text-lh-accent text-lg leading-[27px] font-bold cursor-pointer bg-lh-accent/10 border border-lh-accent rounded-xl py-2 px-4 w-full text-center hover:bg-lh-accent hover:text-white hover:shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
+                        class="flex items-center justify-center gap-2 transition duration-300 text-lh-accent text-lg leading-[27px] font-bold cursor-pointer bg-lh-accent/10 border border-lh-accent rounded-xl py-2 px-4 w-full text-center hover:bg-lh-accent hover:text-white hover:shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
                     >
                         <tui-icon icon="@tui.circle-plus" class="size-5!" />
                         {{ "profile.currency.topUp" | translate }}

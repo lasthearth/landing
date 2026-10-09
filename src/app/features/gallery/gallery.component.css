@@ -35,18 +35,6 @@
 
     &.gallery-item--new {
         border-color: var(--lh-brand);
-        animation: new-item-glow 2s ease-in-out infinite;
-    }
-}
-
-@keyframes new-item-glow {
-    0%,
-    100% {
-        box-shadow: 0 0 8px color-mix(in srgb, var(--lh-brand) 35%, transparent);
-    }
-
-    50% {
-        box-shadow: 0 0 20px color-mix(in srgb, var(--lh-accent-soft) 55%, transparent);
     }
 }
 

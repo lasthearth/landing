@@ -11,7 +11,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isServerConcept = !isServerConcept"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.serverConcept" | translate }}
@@ -19,7 +19,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isServerConcept }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isServerConcept">
@@ -86,7 +86,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isPasswordLost = !isPasswordLost"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.passwordLost" | translate }}
@@ -94,7 +94,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isPasswordLost }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isPasswordLost">
@@ -103,7 +103,7 @@
                 <a
                     [href]="discordInviteUrl"
                     target="_blank"
-                    class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                    class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                 >
                     Discord
                 </a>
@@ -116,7 +116,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isTroubles = !isTroubles"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.connectionTroubles" | translate }}
@@ -124,7 +124,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTroubles }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isTroubles">
@@ -146,7 +146,7 @@
                     <a
                         [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -162,7 +162,7 @@
                     <a
                         href="https://lasthearth.ru/profile/how-play"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         "Играть"
                     </a>
@@ -178,7 +178,7 @@
                     <a
                         [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -190,7 +190,7 @@
                     <a
                         [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -218,7 +218,7 @@
                     <a
                         [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -232,7 +232,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isSeason = !isSeason"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.seasonWipe" | translate }}
@@ -240,7 +240,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isSeason }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isSeason">
@@ -255,7 +255,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isHowToStart = !isHowToStart"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.howToStart" | translate }}
@@ -263,7 +263,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isHowToStart }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isHowToStart">
@@ -289,7 +289,7 @@
                     <a
                         [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -303,7 +303,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isBagsOrViolation = !isBagsOrViolation"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.bugOrViolation" | translate }}
@@ -311,7 +311,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isBagsOrViolation }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isBagsOrViolation">
@@ -323,7 +323,7 @@
                     <a
                         [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -337,7 +337,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isDeathOrTheft = !isDeathOrTheft"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.deathOrTheft" | translate }}
@@ -345,7 +345,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isDeathOrTheft }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isDeathOrTheft">
@@ -363,7 +363,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isOffer = !isOffer"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.offer" | translate }}
@@ -371,7 +371,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isOffer }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isOffer">
@@ -382,7 +382,7 @@
                     <a
                         [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -396,7 +396,7 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isTeam = !isTeam"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
                 {{ "faq.questions.team" | translate }}
@@ -404,7 +404,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTeam }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isTeam">
@@ -421,7 +421,7 @@
     @if (showScrollTop) {
         <button
             (click)="scrollToTop()"
-            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-surface-4 lh-shadow"
+            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition duration-300 hover:bg-surface-4 lh-shadow"
             [title]="'faq.scrollTop' | translate"
         >
             <tui-icon icon="@tui.chevron-up" class="size-6!" />

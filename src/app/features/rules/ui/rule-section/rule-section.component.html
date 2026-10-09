@@ -1,6 +1,6 @@
 <div class="flex flex-col cursor-pointer" [attr.sectionid]="sectionId()" [class.mt-4]="needsMarginTop()">
     <div
-        class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+        class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         (click)="toggle()"
     >
         <div class="flex items-center gap-2 flex-1">
@@ -24,7 +24,7 @@
         <tui-icon
             icon="@tui.chevron-down"
             [ngClass]="{ 'rotate-180!': isExpanded() }"
-            class="text-ink-2 transition-all size-6!"
+            class="text-ink-2 transition size-6!"
         />
     </div>
 

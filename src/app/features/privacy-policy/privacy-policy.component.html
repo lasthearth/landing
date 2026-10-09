@@ -10,14 +10,14 @@
     <!-- 1. General provisions -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isBase = !isBase"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.privacyPolicy.sections.base.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isBase }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isBase">
@@ -31,7 +31,7 @@
     <!-- 2. User personal information -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isPersonalInformation = !isPersonalInformation"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
@@ -40,7 +40,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isPersonalInformation }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isPersonalInformation">
@@ -64,7 +64,7 @@
     <!-- 3. Purposes of collection and processing -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isPurposes = !isPurposes"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
@@ -73,7 +73,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isPurposes }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isPurposes">
@@ -91,14 +91,14 @@
     <!-- 4. Legal grounds -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isLegalGrounds = !isLegalGrounds"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.privacyPolicy.sections.legalGrounds.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isLegalGrounds }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isLegalGrounds">
@@ -113,7 +113,7 @@
     <!-- 5. Procedure for collection, storage and transfer -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isProcedure = !isProcedure"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
@@ -122,7 +122,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isProcedure }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isProcedure">
@@ -143,7 +143,7 @@
     <!-- 6. Security measures -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isSecurityMeasures = !isSecurityMeasures"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
@@ -152,7 +152,7 @@
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isSecurityMeasures }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isSecurityMeasures">
@@ -165,14 +165,14 @@
     <!-- 7. Final provisions -->
     <div class="lh-panel">
         <div
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
             (click)="isFinalProvisions = !isFinalProvisions"
         >
             <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'legal.privacyPolicy.sections.finalProvisions.title' | translate }}</p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isFinalProvisions }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isFinalProvisions">
@@ -187,7 +187,7 @@
     @if (showScrollTop) {
         <button
             (click)="scrollToTop()"
-            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-surface-4 lh-shadow"
+            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition duration-300 hover:bg-surface-4 lh-shadow"
             [title]="'legal.privacyPolicy.scrollTop' | translate"
         >
             <tui-icon icon="@tui.chevron-up" class="size-6!" />
