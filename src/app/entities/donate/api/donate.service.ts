@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, of, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, map, of, shareReplay, startWith, switchMap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { IShopItemDto, ICreateShopItemRequest, IUpdateShopItemRequest } from '../model/shop-item.interface';
@@ -68,6 +68,30 @@ export class DonateService {
         ),
         shareReplay(1)
     );
+
+    /**
+     * Сигнал «баланс изменился» (покупка за осколки вне магазина).
+     */
+    private readonly balanceChanged = new Subject<void>();
+
+    /**
+     * Сообщает, что баланс изменился: шапка и профиль перечитают его.
+     */
+    public notifyBalanceChanged(): void {
+        this.balanceChanged.next();
+    }
+
+    /**
+     * Текущий баланс, перечитываемый при каждом изменении.
+     *
+     * @returns Observable с балансом.
+     */
+    public watchMyBalance$(): Observable<IBalanceResponse> {
+        return this.balanceChanged.pipe(
+            startWith(undefined),
+            switchMap(() => this.getMyBalance$())
+        );
+    }
 
     /**
      * Получает текущий баланс донат-валюты авторизованного игрока.

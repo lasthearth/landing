@@ -10,6 +10,7 @@ import { RouteKeys } from '@app/routes/enums/route-keys';
 import { NotificationService } from '@core/services/notification.service';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { UserService } from '@entities/user';
+import { PlayerAvatarComponent } from '@entities/player-style';
 import { DonateService } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign-out-confirm.component';
@@ -35,6 +36,7 @@ import { NotificationBellComponent } from '@features/notifications';
         ImageLoaderComponent,
         TranslatePipe,
         NotificationBellComponent,
+        PlayerAvatarComponent,
     ],
     templateUrl: './header.component.html',
     styleUrl: './header.component.css',
@@ -136,7 +138,7 @@ export class HeaderComponent {
     protected readonly balance$: Observable<string | null> = this.userService.authState$.pipe(
         filter((isAuth): isAuth is true => isAuth === true),
         switchMap(() =>
-            this.donateService.getMyBalance$().pipe(
+            this.donateService.watchMyBalance$().pipe(
                 map((response) => response.coins),
                 catchError(() => of(null))
             )

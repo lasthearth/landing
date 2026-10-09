@@ -42,4 +42,6 @@ export enum RouteKeys {
     lfg = 20,
 
     join = 21,
+
+    profileStyle = 22,
 }

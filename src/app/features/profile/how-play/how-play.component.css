@@ -1,25 +1,330 @@
-.copy-btn {
+:host {
+    display: block;
+}
+
+.how-play {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.how-play__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.how-play__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--lh-ink);
+}
+
+.how-play__intro {
+    margin: 0;
+    font-size: 1.0625rem;
+    color: var(--lh-ink-3);
+}
+
+/* Шаги: номер в кружке слева, между кружками — линия пути. */
+.how-play__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.how-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 1rem;
+}
+
+.how-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 2.9rem;
+    bottom: -1rem;
+    left: calc(1.375rem - 1px);
+    width: 2px;
+    background: color-mix(in srgb, var(--lh-brand) 35%, transparent);
+}
+
+.how-step__num {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #fff;
+    background-image: linear-gradient(160deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
+    box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.45);
+}
+
+.how-step__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.how-step__title {
+    margin: 0;
+    font-size: 1.375rem;
+    font-weight: 800;
+    color: var(--lh-ink);
+}
+
+.how-step__text {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--lh-ink-2);
+}
+
+.how-step__path {
+    padding: 0.05rem 0.45rem;
+    border-radius: 0.375rem;
+    font-weight: 700;
+    color: var(--lh-ink);
+    background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    white-space: nowrap;
+}
+
+/* Где взять игру */
+.how-step__options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 0.75rem;
+}
+
+.how-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: 0.875rem;
+    color: var(--lh-ink);
+    text-decoration: none;
+    background: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+    border: 1px solid color-mix(in srgb, var(--lh-ink) 12%, transparent);
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.how-option:hover {
+    border-color: color-mix(in srgb, var(--lh-brand) 55%, transparent);
+}
+
+.how-option:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 2px;
+}
+
+.how-option--main {
+    background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+    border-color: color-mix(in srgb, var(--lh-brand) 40%, transparent);
+}
+
+.how-option__icon {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--lh-brand-ink);
+}
+
+.how-option__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.how-option__name {
     display: inline-flex;
     align-items: center;
+    gap: 0.35rem;
+    font-size: 1.0625rem;
+    font-weight: 800;
+}
+
+.how-option__hint {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--lh-ink-3);
+}
+
+/* Адрес и пароль */
+.how-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+}
+
+.how-field {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.75rem;
+}
+
+@media (max-width: 560px) {
+    .how-field {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.35rem;
+    }
+}
+
+.how-field__label {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--lh-ink-3);
+}
+
+.how-field__value {
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
-    padding: 0.25rem 0.625rem;
-    border: 1px dashed var(--color-wood, currentColor);
-    border-radius: 0.5rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0.35rem 0.35rem 0.35rem 0.85rem;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--lh-surface) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--lh-ink) 14%, transparent);
+}
+
+.how-field__code {
+    flex: 1;
+    min-width: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--lh-ink);
+    overflow-wrap: anywhere;
+    user-select: all;
+}
+
+.how-field__copy {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.8rem;
+    border: 0;
+    border-radius: 0.55rem;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #fff;
+    background-image: linear-gradient(160deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
     cursor: pointer;
-    transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        color 0.15s ease;
 }
 
-.copy-btn:hover,
-.copy-btn:focus-visible {
-    background-color: rgb(255 255 255 / 0.5);
+.how-field__copy:hover {
+    filter: brightness(1.08);
 }
 
-/* Состояние "скопировано": сплошная рамка и зелёная иконка-галочка. */
-.copy-btn--done {
-    border-style: solid;
-    border-color: var(--color-lh-success, currentColor);
-    color: var(--color-lh-success, currentColor);
+.how-field__copy:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+    .how-step {
+        grid-template-columns: 2.25rem minmax(0, 1fr);
+        gap: 0.6rem;
+    }
+
+    .how-step:not(:last-child)::before {
+        top: 2.4rem;
+        left: calc(1.125rem - 1px);
+    }
+
+    .how-step__num {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1.0625rem;
+    }
+
+    .how-step__card {
+        padding: 1rem 1rem 1.1rem;
+    }
+
+    .how-step__path {
+        white-space: normal;
+    }
+
+    .how-field__code {
+        font-size: 1rem;
+    }
+
+    .how-field__copy {
+        padding: 0.55rem;
+    }
+
+    /* На телефоне кнопка — только значок, подпись остаётся для экранного диктора */
+    .how-field__copy-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+}
+
+.how-field__copy--done {
+    background: var(--lh-success, #2e7d32);
+}
+
+/* Первые шаги */
+.how-step__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Если не получается */
+.how-help {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--lh-ink) 18%, transparent);
+}
+
+.how-help__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    color: var(--lh-ink);
+}
+
+.how-help__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
+    padding-left: 1.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--lh-ink-2);
+}
+
+.how-help__list a {
+    font-weight: 700;
+    color: var(--lh-brand-ink);
 }

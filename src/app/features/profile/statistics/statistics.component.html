@@ -132,6 +132,7 @@
                 [type]="getTypeLabel()"
                 [count]="getCount(leaderBoard[1])"
                 [userImage]="getUserAvatar(leaderBoard[1]?.user_id)"
+                [userId]="leaderBoard[1]?.user_id"
             />
             <app-leader-card
                 [playerName]="leaderBoard[0]?.name ?? ''"
@@ -140,6 +141,7 @@
                 [count]="getCount(leaderBoard[0])"
                 [type]="getTypeLabel()"
                 [userImage]="getUserAvatar(leaderBoard[0]?.user_id)"
+                [userId]="leaderBoard[0]?.user_id"
             />
             <app-leader-card
                 [playerName]="leaderBoard[2]?.name ?? ''"
@@ -147,6 +149,7 @@
                 [count]="getCount(leaderBoard[2])"
                 [type]="getTypeLabel()"
                 [userImage]="getUserAvatar(leaderBoard[2]?.user_id)"
+                [userId]="leaderBoard[2]?.user_id"
             />
         </div>
     }
@@ -164,11 +167,10 @@
                     </p>
                     <div class="flex w-full items-center justify-between px-16 lg:px-28 z-10">
                         <div class="flex items-center gap-3">
-                            <app-image-loader
+                            <app-player-avatar
+                                [userId]="item.user_id"
                                 [src]="getUserAvatar(item.user_id)"
                                 class="size-10 sm:size-12"
-                                containerClass="rounded-full"
-                                objectFit="cover"
                                 [alt]="'profile.statistics.avatarAlt' | translate"
                             />
                             <a

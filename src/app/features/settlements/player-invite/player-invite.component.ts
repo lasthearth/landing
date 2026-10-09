@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
-import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { PlayerAvatarComponent } from '@entities/player-style';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -18,7 +18,7 @@ import { RequestStatusService } from '@core/services/request-status.service';
 @Component({
     standalone: true,
     selector: 'app-player-invite',
-    imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, ImageLoaderComponent, EmptyStateComponent, TranslatePipe],
+    imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, PlayerAvatarComponent, EmptyStateComponent, TranslatePipe],
     templateUrl: './player-invite.component.html',
     styleUrl: './player-invite.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -30,6 +30,15 @@
             }
         </button>
         <button
+            [routerLink]="['/profile/style']"
+            [ngClass]="{ 'nav-button--active': select === 'style' }"
+            class="nav-button size-11!"
+            [title]="'player.style.title' | translate"
+            [attr.aria-label]="'player.style.title' | translate"
+        >
+            <tui-icon icon="@tui.palette" />
+        </button>
+        <button
             [routerLink]="['/profile/referral']"
             [ngClass]="{ 'nav-button--active': select === 'referral' }"
             class="nav-button size-11!"

@@ -1,11 +1,17 @@
 <ng-template #tooltip>
     <div class="player-tooltip">
+        <div
+            class="player-tooltip__banner"
+            [style.backgroundImage]="'url(' + banner().image + ')'"
+            [style.backgroundPosition]="'center ' + banner().focus"
+            aria-hidden="true"
+        ></div>
         <div class="player-tooltip__head">
-            <app-image-loader
+            <app-player-avatar
                 class="player-tooltip__avatar"
+                [userId]="player().user_id"
                 [src]="tooltipAvatarUrl()"
                 [alt]="player().user_game_name"
-                imageClass="h-full w-full object-cover"
             />
             <div class="player-tooltip__ident">
                 <span class="player-tooltip__name">{{ player().user_game_name }}</span>
@@ -78,11 +84,13 @@
     (tuiHintVisible)="onHintVisible($event)"
 >
     <span class="player-chip__portrait">
-        <app-image-loader
+        <app-player-avatar
             class="player-chip__avatar"
+            [userId]="player().user_id"
             [src]="avatarUrl()"
             [alt]="player().user_game_name"
-            imageClass="h-full w-full object-cover"
+            [animated]="false"
+            [compact]="true"
         />
         <span class="player-chip__dot" [class.player-chip__dot--online]="player().is_online"></span>
     </span>

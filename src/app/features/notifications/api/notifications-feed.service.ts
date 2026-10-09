@@ -135,7 +135,7 @@ export class NotificationsFeedService {
             const broadcast = dto.user_id === BROADCAST_USER_ID;
             const serverRead = dto.state === 'READ' || dto.state === 2;
 
-            const link = broadcast ? this.broadcastLink(dto.title) : null;
+            const link = broadcast ? this.broadcastLink(dto.title) : this.personalLink(dto.title);
 
             return {
                 id: dto.id,
@@ -144,7 +144,8 @@ export class NotificationsFeedService {
                 createdAt: parseDateInput(dto.created_at),
                 broadcast,
                 read: broadcast ? readBroadcasts.has(dto.id) : serverRead || readLocally.has(dto.id),
-                // Уведомление о новости ведёт к ленте новостей, о событии — в календарь.
+                // Уведомление о новости ведёт к ленте новостей, о событии — в календарь,
+                // личное — туда, где можно ответить (событие, объявление, поселение).
                 link,
                 category: !broadcast ? 'personal' : link === '/events' ? 'events' : 'news',
             } satisfies FeedNotification;
@@ -315,6 +316,23 @@ export class NotificationsFeedService {
         }
 
         return /новост|news/i.test(title) ? '/' : null;
+    }
+
+    /**
+     * Куда ведёт личное уведомление: напоминание или перенос события — в календарь,
+     * отклик на объявление — на доску «Ищу компанию», новый житель — в поселение.
+     *
+     * @param title Заголовок уведомления.
+     * @returns Ссылка или `null`.
+     */
+    private personalLink(title: string): string | null {
+        if (/событи/i.test(title)) {
+            return '/events';
+        }
+        if (/отклик|заинтересовал/i.test(title)) {
+            return '/lfg';
+        }
+        return /житель/i.test(title) ? '/profile/settlement' : null;
     }
 
     /**

@@ -12,7 +12,6 @@ import { TuiHint, TuiIcon } from '@taiga-ui/core';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DecimalPipe } from '@angular/common';
-import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { TranslatePipe } from '@core/i18n';
 import { ISettlement, getMemberRoleNames } from '@entities/settlement';
@@ -20,11 +19,13 @@ import { IPlayer } from '../../model/i-player';
 import { IPlayerStats } from '../../model/i-player-stats';
 import { UserService } from '../../api/user.service';
 import { RouterLink } from '@angular/router';
+import { PlayerAvatarComponent, PlayerLookService } from '@entities/player-style';
 
 /**
  * Чип игрока для списков населения поселения.
  *
- * Показывает аватар, статус онлайна и игровое имя. Лидер помечается
+ * Показывает аватар в рамке оформления, статус онлайна и игровое имя;
+ * в тултипе сверху — баннер игрока. Лидер помечается
  * иконкой короны. При наведении разворачивает тултип с расширенной
  * информацией об игроке: статистика подгружается лениво, один раз,
  * а при передаче входа `settlement` — ещё и роли игрока в этом поселении.
@@ -37,7 +38,7 @@ import { RouterLink } from '@angular/router';
     standalone: true,
     templateUrl: './player-chip.component.html',
     styleUrl: './player-chip.component.less',
-    imports: [RouterLink, TuiHint, TuiIcon, DecimalPipe, ImageLoaderComponent, TranslatePipe, RelativeTimeComponent],
+    imports: [RouterLink, TuiHint, TuiIcon, DecimalPipe, PlayerAvatarComponent, TranslatePipe, RelativeTimeComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerChipComponent {
@@ -50,6 +51,11 @@ export class PlayerChipComponent {
      * Ссылка на DestroyRef для завершения подписок при уничтожении.
      */
     private readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Оформление игроков: рамка аватара и баннер.
+     */
+    private readonly looks = inject(PlayerLookService);
 
     /**
      * Данные игрока (имя, аватар, статус онлайна).
@@ -105,6 +111,11 @@ export class PlayerChipComponent {
 
         return avatar?.x48 || avatar?.x96 || avatar?.original || '/default-avatar.webp';
     });
+
+    /**
+     * Баннер игрока — шапка тултипа.
+     */
+    protected readonly banner = computed(() => this.looks.bannerOf(this.player().user_id));
 
     /**
      * URL аватара для тултипа — крупный (original/x96), с запасными вариантами.

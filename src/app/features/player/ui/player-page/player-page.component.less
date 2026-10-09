@@ -30,28 +30,98 @@
     color: var(--lh-ink-2);
 }
 
+// Шапка: картинка баннера целиком слева, её правый край растворяется в панель;
+// аватар стоит на растворённом краю, рядом — имя и значки.
 .player-hero {
     position: relative;
     display: flex;
-    align-items: center;
-    gap: 1.5rem;
+    align-items: stretch;
+    min-height: 17rem;
+    padding: 0;
+    overflow: hidden;
 
     @media (max-width: 640px) {
         flex-direction: column;
+        min-height: 0;
+    }
+}
+
+.player-hero__banner {
+    flex: none;
+    height: 17rem;
+    // Ширина — по пропорциям картинки, но не больше 58% шапки.
+    max-width: 58%;
+    overflow: hidden;
+    cursor: zoom-in;
+    // Правый край и низ растворяются в панель.
+    mask-image:
+        linear-gradient(to right, #000 calc(100% - 8rem), transparent),
+        linear-gradient(to bottom, #000 70%, transparent);
+    mask-composite: intersect;
+
+    @media (max-width: 640px) {
+        // На телефоне — полоса на всю ширину, растворяется книзу.
+        height: 10.5rem;
+        max-width: none;
+        mask-image: linear-gradient(to bottom, #000 58%, rgba(0, 0, 0, 0.55) 80%, transparent);
+        mask-composite: add;
+
+        ::ng-deep .pbanner__img {
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+.player-hero__body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 1.5rem;
+    min-width: 0;
+    // Аватар заходит на уже растворённый край картинки.
+    margin-left: -3rem;
+    padding: 1.5rem 1.5rem 1.5rem 0;
+
+    @media (max-width: 640px) {
+        flex-direction: column;
+        margin: -3.5rem 0 0;
+        padding: 0 1.5rem 1.5rem;
         text-align: center;
     }
 }
 
 .player-hero__avatar {
     flex: none;
-    width: 7.5rem;
-    height: 7.5rem;
-    border-radius: 1.5rem;
-    overflow: clip;
-    box-shadow:
-        0 0 0 3px var(--lh-surface-2),
-        0 0 0 5px color-mix(in srgb, var(--lh-brand) 60%, transparent),
-        0 12px 30px -12px rgba(0, 0, 0, 0.5);
+    width: 8.5rem;
+    height: 8.5rem;
+
+    @media (max-width: 640px) {
+        width: 7rem;
+        height: 7rem;
+    }
+}
+
+.player-hero__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: -0.15rem 0 0;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--lh-ink-2);
+}
+
+.player-hero__title--rare {
+    color: var(--lh-brand-ink);
+}
+
+.player-hero__title--legendary {
+    color: #b8860b;
+    text-shadow: 0 0 12px rgba(255, 196, 60, 0.35);
 }
 
 .player-hero__info {
@@ -130,6 +200,7 @@
     position: absolute;
     top: 1rem;
     right: 1rem;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
 }
 
 .player-stats {

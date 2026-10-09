@@ -90,12 +90,14 @@
                             </div>
                         </div>
                         @if (userService.userImage) {
-                            <img
+                            <app-player-avatar
+                                [userId]="userService.userId"
                                 [src]="userService.userImage"
                                 [alt]="'header.avatarAlt' | translate"
+                                [animated]="false"
                                 (click)="isAuth ? '' : signIn()"
                                 [routerLink]="isAuth ? ['/profile'] : ''"
-                                class="relative ml-2 cursor-pointer rounded-lg z-10 size-12 sm:size-16 shadow-md shadow-lh-primary-2"
+                                class="relative ml-2 cursor-pointer z-10 size-12 sm:size-16"
                             />
                         } @else {
                             <tui-icon

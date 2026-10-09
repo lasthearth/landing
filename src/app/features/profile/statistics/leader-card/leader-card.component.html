@@ -10,11 +10,10 @@
             [class.particles-silver]="ratingPlace() === '2'"
             [class.particles-bronze]="ratingPlace() === '3'"
         ></div>
-        <app-image-loader
+        <app-player-avatar
+            [userId]="userId()"
             [src]="userImage() || '/default-avatar.webp'"
             class="size-12 lg:size-14 xl:size-16 2xl:size-20 z-30"
-            containerClass="rounded-full"
-            objectFit="cover"
             [alt]="'profile.statistics.avatarAlt' | translate"
         />
         <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-parchment-3">

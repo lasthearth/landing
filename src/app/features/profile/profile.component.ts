@@ -40,7 +40,6 @@ import { RequestStatusService } from '@core/services/request-status.service';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
 import { ProfileSkeletonComponent } from '@shared/ui/skeletons';
-import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { DonateService } from '@entities/donate';
 import { ServerInformationService } from '@core/services/server-information.service';
 import {
@@ -60,9 +59,11 @@ import { NewcomerPathComponent } from '@features/onboarding';
 import { PlayerBadgesComponent, PlayerProfile, PlayerProfileService } from '@features/player';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
 import { PendingInviteBannerComponent } from '@features/settlements/join-by-invite';
+import { MyEventsComponent } from '@features/events';
 import { ApplicationCardComponent, ApplicationState } from './ui/application-card/application-card.component';
 import { ProfileWaitingComponent } from './ui/profile-waiting/profile-waiting.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComponent } from '@entities/player-style';
 @Component({
     standalone: true,
     imports: [
@@ -74,7 +75,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         TuiButton,
         DecimalPipe,
         ProfileSkeletonComponent,
-        ImageLoaderComponent,
+        PlayerAvatarComponent,
+        ProfileBannerComponent,
         TranslatePipe,
         SettlementBadgeComponent,
         SettlementDisplayNamePipe,
@@ -85,6 +87,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         PlayerBadgesComponent,
         ShareButtonComponent,
         PendingInviteBannerComponent,
+        MyEventsComponent,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',
@@ -92,6 +95,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class ProfileComponent {
     protected readonly userService = inject(UserService);
+
+    /**
+     * Оформление: баннер и рамка аватара в шапке профиля.
+     */
+    protected readonly looks = inject(PlayerLookService);
+
+    protected readonly bannerById = bannerById;
 
     private readonly donateService = inject(DonateService);
 
@@ -209,7 +219,7 @@ export class ProfileComponent {
             if (!isAuth || !this.isVerifiedUser()) {
                 return of(null);
             }
-            return this.donateService.getMyBalance$().pipe(
+            return this.donateService.watchMyBalance$().pipe(
                 map((response) => response.coins),
                 catchError(() => of(null)),
                 defaultIfEmpty(null)

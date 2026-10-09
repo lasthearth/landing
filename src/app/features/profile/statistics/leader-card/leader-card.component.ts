@@ -1,13 +1,13 @@
 import { NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
-import { ImageLoaderComponent } from '@shared/ui/image-loader';
+import { PlayerAvatarComponent } from '@entities/player-style';
 import { TranslatePipe } from '@core/i18n';
 import { RouterLink } from '@angular/router';
 
 @Component({
     standalone: true,
     selector: 'app-leader-card',
-    imports: [RouterLink, ImageLoaderComponent, TranslatePipe],
+    imports: [RouterLink, PlayerAvatarComponent, TranslatePipe],
     templateUrl: './leader-card.component.html',
     styleUrl: './leader-card.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +24,11 @@ export class LeaderCardComponent {
     public count: InputSignal<number> = input.required<number>();
 
     public userImage: InputSignal<string | undefined> = input<string | undefined>();
+
+    /**
+     * Игрок — для его рамки.
+     */
+    public userId: InputSignal<string | undefined> = input<string | undefined>();
 
     public borderClass(): string {
         const place = this.ratingPlace();

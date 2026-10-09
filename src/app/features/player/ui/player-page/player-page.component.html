@@ -19,45 +19,73 @@
         @case ("ready") {
             @if (profile(); as p) {
                 <header class="player-hero lh-panel">
-                    <app-image-loader
-                        class="player-hero__avatar"
-                        [src]="p.avatarUrl"
-                        [alt]="p.nickname"
-                        imageClass="h-full w-full object-cover"
-                    />
+                    @if (banner(); as b) {
+                        <app-profile-banner
+                            class="player-hero__banner"
+                            [banner]="b"
+                            [natural]="true"
+                            [effect]="style()?.bannerEffect ?? 'none'"
+                            role="button"
+                            tabindex="0"
+                            [attr.aria-label]="
+                                'player.style.viewBanner' | translate: { name: ('player.style.banners.' + b.key | translate) }
+                            "
+                            (click)="openBanner()"
+                            (keydown.enter)="openBanner()"
+                        />
+                    }
 
-                    <div class="player-hero__info">
-                        <h1 class="player-hero__name lh-display">{{ p.nickname }}</h1>
+                    <div class="player-hero__body">
+                        <app-player-frame
+                            class="player-hero__avatar"
+                            [src]="p.avatarUrl"
+                            [alt]="p.nickname"
+                            [frame]="style()?.frameId ?? 'none'"
+                            [effect]="style()?.frameEffect ?? 'none'"
+                        />
 
-                        <p class="player-hero__status" [class.player-hero__status--online]="p.isOnline">
-                            <span class="player-hero__dot" aria-hidden="true"></span>
-                            @if (p.isOnline) {
-                                {{ "player.online" | translate }}
-                            } @else if (p.lastOnline) {
-                                {{ "player.lastOnline" | translate }}
-                                <time [appRelativeTime]="p.lastOnline"></time>
-                            } @else {
-                                {{ "player.offline" | translate }}
+                        <div class="player-hero__info">
+                            <h1 class="player-hero__name lh-display">{{ p.nickname }}</h1>
+                            @if (title(); as t) {
+                                <p
+                                    class="player-hero__title"
+                                    [class]="'player-hero__title player-hero__title--' + t.tier"
+                                >
+                                    <tui-icon [icon]="t.icon" class="size-4!" />
+                                    {{ "player.badges." + t.key + ".title" | translate }}
+                                </p>
                             }
-                        </p>
 
-                        @if (p.settlement; as settlement) {
-                            <a class="player-hero__settlement" [routerLink]="['/settlements', settlement.id]">
-                                <tui-icon
-                                    [icon]="p.settlementRole === 'leader' ? '@tui.crown' : '@tui.house'"
-                                    class="size-4!"
-                                />
-                                {{ "player.settlementRole." + p.settlementRole | translate }}
-                                «{{ settlement | settlementDisplayName }}»
-                            </a>
-                        } @else {
-                            <span class="player-hero__settlement player-hero__settlement--none">
-                                <tui-icon icon="@tui.tent" class="size-4!" />
-                                {{ "player.noSettlement" | translate }}
-                            </span>
-                        }
+                            <p class="player-hero__status" [class.player-hero__status--online]="p.isOnline">
+                                <span class="player-hero__dot" aria-hidden="true"></span>
+                                @if (p.isOnline) {
+                                    {{ "player.online" | translate }}
+                                } @else if (p.lastOnline) {
+                                    {{ "player.lastOnline" | translate }}
+                                    <time [appRelativeTime]="p.lastOnline"></time>
+                                } @else {
+                                    {{ "player.offline" | translate }}
+                                }
+                            </p>
 
-                        <app-player-badges [badges]="p.badges" />
+                            @if (p.settlement; as settlement) {
+                                <a class="player-hero__settlement" [routerLink]="['/settlements', settlement.id]">
+                                    <tui-icon
+                                        [icon]="p.settlementRole === 'leader' ? '@tui.crown' : '@tui.house'"
+                                        class="size-4!"
+                                    />
+                                    {{ "player.settlementRole." + p.settlementRole | translate }}
+                                    «{{ settlement | settlementDisplayName }}»
+                                </a>
+                            } @else {
+                                <span class="player-hero__settlement player-hero__settlement--none">
+                                    <tui-icon icon="@tui.tent" class="size-4!" />
+                                    {{ "player.noSettlement" | translate }}
+                                </span>
+                            }
+
+                            <app-player-badges [badges]="p.badges" />
+                        </div>
                     </div>
 
                     <app-share-button
@@ -147,3 +175,15 @@
         }
     }
 </section>
+
+<ng-template #bannerPreview let-preview>
+    @if (banner(); as b) {
+        <tui-preview>
+            <tui-preview-title>{{ "player.style.banners." + b.key | translate }}</tui-preview-title>
+            <img [src]="b.image" [alt]="'player.style.banners.' + b.key | translate" />
+            <button iconStart="@tui.x" tuiIconButton tuiPreviewAction type="button" (click)="preview.complete()">
+                {{ "player.style.close" | translate }}
+            </button>
+        </tui-preview>
+    }
+</ng-template>

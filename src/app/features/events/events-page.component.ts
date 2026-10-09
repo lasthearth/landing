@@ -5,10 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { CalendarEvent, EventApiService } from '@entities/event';
-import { UserService } from '@entities/user';
+import { IPlayer, UserService } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { TuiIcon } from '@taiga-ui/core';
 import { catchError, filter, of, switchMap } from 'rxjs';
+import { EventAttendanceService } from './api/event-attendance.service';
 import { downloadEventIcs } from './lib/download-event-ics.function';
 import { EventsTab } from './model/events-tab';
 import { EventCardComponent } from './ui/event-card/event-card.component';
@@ -30,6 +31,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
 })
 export class EventsPageComponent {
     private readonly api = inject(EventApiService);
+    protected readonly attendance = inject(EventAttendanceService);
     private readonly userService = inject(UserService);
     private readonly confirm = inject(ConfirmDialogService);
     private readonly status = inject(RequestStatusService);
@@ -71,7 +73,17 @@ export class EventsPageComponent {
     /**
      * Вошёл ли пользователь (роли появляются после входа).
      */
-    private readonly authed = toSignal(this.userService.authState$, { initialValue: false });
+    protected readonly authed = toSignal(this.userService.authState$, { initialValue: false });
+
+    /**
+     * Событие, по которому идёт запрос записи.
+     */
+    protected readonly busyId = signal<string | null>(null);
+
+    /**
+     * Игроки по идентификатору (аватары записавшихся).
+     */
+    protected readonly players = signal<Record<string, IPlayer>>({});
 
     /**
      * Может ли пользователь управлять событиями.
@@ -161,6 +173,40 @@ export class EventsPageComponent {
     }
 
     /**
+     * Записывает на событие или отменяет запись.
+     *
+     * @param event Событие.
+     */
+    protected toggleAttendance(event: CalendarEvent): void {
+        const attending = !this.attendance.isAttending(event.id);
+        this.busyId.set(event.id);
+        this.attendance
+            .set(event, attending)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (result) => {
+                    this.busyId.set(null);
+                    this.patch(event.id, { attendeeCount: result.count, attendeePreview: result.preview });
+                    this.loadPlayers(result.preview);
+                    this.status.showSuccess(
+                        this.i18n.translate(result.attending ? 'events.going.toastOn' : 'events.going.toastOff')
+                    );
+                },
+                error: () => {
+                    this.busyId.set(null);
+                    this.status.showError(this.i18n.translate('events.going.toastError'));
+                },
+            });
+    }
+
+    /**
+     * Вход для гостя.
+     */
+    protected signIn(): void {
+        this.userService.signIn();
+    }
+
+    /**
      * Скачивает событие файлом `.ics`.
      *
      * @param event Событие.
@@ -194,6 +240,7 @@ export class EventsPageComponent {
                 }
 
                 this.lists.update((lists) => ({ ...lists, [tab]: events }));
+                this.loadPlayers(events.flatMap((event) => event.attendeePreview));
 
                 const target = this.targetId();
 
@@ -209,6 +256,44 @@ export class EventsPageComponent {
                     this.selectTab('past');
                 }
             });
+    }
+
+    /**
+     * Меняет поля события в обоих списках.
+     *
+     * @param id Событие.
+     * @param changes Новые значения.
+     */
+    private patch(id: string, changes: Partial<CalendarEvent>): void {
+        const apply = (list: CalendarEvent[] | null): CalendarEvent[] | null =>
+            list?.map((item) => (item.id === id ? { ...item, ...changes } : item)) ?? null;
+        this.lists.update((lists) => ({ upcoming: apply(lists.upcoming), past: apply(lists.past) }));
+    }
+
+    /**
+     * Догружает ники и аватары игроков, которых ещё нет.
+     *
+     * @param ids Идентификаторы.
+     */
+    private loadPlayers(ids: string[]): void {
+        const known = this.players();
+        const missing = [...new Set(ids)].filter((id) => !known[id]);
+        if (!missing.length) {
+            return;
+        }
+
+        this.userService
+            .getPlayersBatch$(missing)
+            .pipe(
+                catchError(() => of([] as IPlayer[])),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((players) =>
+                this.players.update((current) => ({
+                    ...current,
+                    ...Object.fromEntries(players.filter(Boolean).map((player) => [player.user_id, player])),
+                }))
+            );
     }
 
     /**

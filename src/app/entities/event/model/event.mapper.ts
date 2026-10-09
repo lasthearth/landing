@@ -38,5 +38,7 @@ export function mapEventDto(dto: EventDto): CalendarEvent | null {
         location: dto.location ?? '',
         startsAt,
         endsAt: toDate(dto.ends_at),
+        attendeeCount: dto.attendee_count ?? 0,
+        attendeePreview: dto.attendee_preview ?? [],
     };
 }

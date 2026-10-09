@@ -6,13 +6,14 @@ import { UserService } from '@entities/user';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, startWith } from 'rxjs';
 import { RouteKeys } from '@routes/enums/route-keys';
+import { TranslatePipe } from '@core/i18n';
 import { TuiPulse } from '@taiga-ui/kit';
 import { NotificationService } from '@core/services/notification.service';
 
 @Component({
     selector: 'app-profile-navigation',
     templateUrl: './profile-navigation.component.html',
-    imports: [CommonModule, RouterLink, TuiIcon, AsyncPipe, TuiPulse],
+    imports: [CommonModule, RouterLink, TuiIcon, AsyncPipe, TuiPulse, TranslatePipe],
 })
 export class ProfileNavigationComponent implements OnInit {
     protected readonly userService = inject(UserService);
@@ -74,6 +75,9 @@ export class ProfileNavigationComponent implements OnInit {
                             break;
                         case RouteKeys.referral:
                             this.select = 'referral';
+                            break;
+                        case RouteKeys.profileStyle:
+                            this.select = 'style';
                             break;
                     }
                 }

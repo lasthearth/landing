@@ -60,6 +60,7 @@ export const HOME_I18N = {
                 live: 'Идёт сейчас',
                 all: 'Все события',
                 more: 'И ещё {{count}} в календаре',
+                going: 'Идут: {{count}}',
             },
             team: {
                 title: 'Команда проекта',
@@ -170,6 +171,7 @@ export const HOME_I18N = {
                 live: 'Happening now',
                 all: 'All events',
                 more: '{{count}} more in the calendar',
+                going: 'Going: {{count}}',
             },
             team: {
                 title: 'Project team',

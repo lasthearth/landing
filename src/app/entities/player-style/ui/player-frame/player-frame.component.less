@@ -1,0 +1,469 @@
+:host {
+    position: relative;
+    display: block;
+}
+
+// Угол бегущего блика по кольцу рамки.
+@property --pa {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes pfx-spin {
+    to {
+        --pa: 360deg;
+    }
+}
+
+/**
+ * Рамка — тонкое кольцо из «металла», между ним и аватаром — волосок цвета
+ * панели. Толщина в долях размера аватара (cqw), чтобы рамка была одинаково
+ * изящной и в шапке профиля, и в чипе.
+ */
+.pframe {
+    --rw: max(2px, 3.4cqw);
+    --gap: max(1px, 1.3cqw);
+    --radius: 28%;
+
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    container-type: size;
+    isolation: isolate;
+    // Свои отступы в % от ширины хоста: cqw на самом контейнере не работают.
+    padding: var(--pad, max(2px, 3.4%));
+    border-radius: var(--radius);
+    background: var(--ring, transparent);
+    box-shadow:
+        0 6px 16px -10px rgba(0, 0, 0, 0.45),
+        var(--halo, 0 0 #0000);
+}
+
+.pframe__inner {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: clip;
+    border-radius: calc(var(--radius) - 3%);
+    background: var(--lh-surface-2);
+    box-shadow: 0 0 0 var(--gap) var(--lh-surface-2);
+}
+
+// Без рамки: только тонкий контур.
+.pframe--none {
+    --rw: 0px;
+    --pad: 0px;
+
+    .pframe__inner {
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--lh-ink) 14%, transparent);
+    }
+}
+
+.pframe--wood {
+    --ring: linear-gradient(135deg, #b98556, #6e4426 55%, #a0703f);
+}
+
+.pframe--copper {
+    --ring: linear-gradient(135deg, #f8c6a3, #b5602d 50%, #eca275);
+}
+
+.pframe--bronze {
+    --ring: linear-gradient(135deg, #f4dba4, #a9772f 50%, #ddb469);
+}
+
+.pframe--iron {
+    --ring: linear-gradient(135deg, #ffffff, #8d969e 50%, #dce1e5);
+}
+
+.pframe--blood {
+    --ring: linear-gradient(135deg, #ec9393, #8c1212 50%, #c43636);
+    --halo: 0 0 14px -6px rgba(170, 20, 20, 0.6);
+}
+
+// Золото: мягкое свечение и медленный блик по кольцу.
+.pframe--gold {
+    --ring: linear-gradient(135deg, #fff5cc, #d6a32c 45%, #fbe28e 70%, #c58c17);
+    --halo: 0 0 16px -6px rgba(255, 190, 50, 0.75);
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        padding: var(--rw);
+        border-radius: inherit;
+        background: conic-gradient(
+            from var(--pa),
+            transparent 0 72%,
+            rgba(255, 255, 255, 0.9) 82%,
+            transparent 90%
+        );
+        mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        animation: pfx-spin 7s linear infinite;
+        pointer-events: none;
+    }
+}
+
+// Мелкий аватар: рамка в волосок, без зазора и свечения.
+.pframe--compact {
+    --rw: 2px;
+    --pad: 2px;
+    --gap: 0px;
+    --halo: 0 0 #0000;
+
+    box-shadow: none;
+
+    &::after {
+        display: none;
+    }
+}
+
+/* ---------- Анимации рамки ---------- */
+
+.pfx {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.pfx__glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+}
+
+// Цветное кольцо поверх рамки с бегущим по нему светом.
+.pfx__ring {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    padding: max(var(--rw), 2px);
+    border-radius: inherit;
+    mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: pfx-spin 5s linear infinite;
+}
+
+// Жар: тёплое кольцо, дыхание огня и угольки над рамкой.
+.pfx--fire {
+    .pfx__ring {
+        background: conic-gradient(from var(--pa), #ff5a1a, #ffb04a, #ffe8aa, #ffb04a, #ff5a1a);
+    }
+
+    .pfx__glow {
+        animation: pfx-warm 2.6s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes pfx-warm {
+    from {
+        box-shadow: 0 0 7cqw 0 rgba(255, 110, 30, 0.3);
+    }
+    to {
+        box-shadow: 0 -1cqw 12cqw 1cqw rgba(255, 120, 30, 0.55);
+    }
+}
+
+.pfx__ember {
+    position: absolute;
+    top: 3%;
+    z-index: 3;
+    width: max(2px, 2.2cqw);
+    height: max(2px, 2.2cqw);
+    border-radius: 50%;
+    background: #ffd27a;
+    box-shadow: 0 0 1.6cqw #ff8a1f;
+    opacity: 0;
+    animation: pfx-rise 3s ease-out infinite;
+}
+
+@keyframes pfx-rise {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.95;
+    }
+    100% {
+        transform: translate(2.5cqw, -24cqw) scale(0.35);
+        opacity: 0;
+    }
+}
+
+// Ветер: светлые штрихи бегут по кольцу, рядом кружит лёгкий вихрь.
+.pfx--wind {
+    .pfx__ring {
+        background: conic-gradient(
+            from var(--pa),
+            transparent 0 28%,
+            rgba(236, 246, 255, 0.95) 42%,
+            transparent 47% 78%,
+            rgba(236, 246, 255, 0.6) 92%,
+            transparent 96%
+        );
+        animation-duration: 2.4s;
+    }
+}
+
+.pfx__gust {
+    position: absolute;
+    inset: -7cqw;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    border-top-color: rgba(140, 182, 214, 0.75);
+    border-right-color: rgba(140, 182, 214, 0.2);
+    animation: pfx-turn 3.2s linear infinite;
+}
+
+@keyframes pfx-turn {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Туман: дымка дышит вокруг, пласт тумана плывёт по низу аватара.
+.pfx--fog {
+    .pfx__ring {
+        background: conic-gradient(
+            from var(--pa),
+            rgba(255, 255, 255, 0.9),
+            rgba(178, 190, 204, 0.45),
+            rgba(255, 255, 255, 0.9)
+        );
+        animation-duration: 9s;
+    }
+
+    .pfx__glow {
+        animation: pfx-haze 4.5s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes pfx-haze {
+    from {
+        box-shadow: 0 0 6cqw 0 rgba(200, 210, 222, 0.4);
+    }
+    to {
+        box-shadow: 0 0 11cqw 2cqw rgba(200, 210, 222, 0.8);
+    }
+}
+
+.pfx__mist {
+    position: absolute;
+    bottom: -12%;
+    left: -30%;
+    width: 160%;
+    height: 48%;
+    background: radial-gradient(ellipse at center, rgba(242, 246, 250, 0.8), transparent 66%);
+    animation: pfx-drift 7s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes pfx-drift {
+    from {
+        transform: translateX(-12%);
+        opacity: 0.45;
+    }
+    to {
+        transform: translateX(12%);
+        opacity: 0.85;
+    }
+}
+
+// Иней: ледяное кольцо, холодное свечение и искорки по углам.
+.pfx--frost {
+    .pfx__ring {
+        background: conic-gradient(from var(--pa), #ffffff, #a9dcff, #eaf7ff, #7cc4f5, #ffffff);
+        animation-duration: 8s;
+    }
+
+    .pfx__glow {
+        animation: pfx-cold 3.5s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes pfx-cold {
+    from {
+        box-shadow: 0 0 6cqw 0 rgba(110, 185, 255, 0.25);
+    }
+    to {
+        box-shadow: 0 0 10cqw 1cqw rgba(110, 185, 255, 0.5);
+    }
+}
+
+.pfx__sparkle {
+    position: absolute;
+    z-index: 3;
+    width: 8cqw;
+    height: 8cqw;
+    margin: -4cqw 0 0 -4cqw;
+    background: #ffffff;
+    clip-path: polygon(50% 0, 57% 43%, 100% 50%, 57% 57%, 50% 100%, 43% 57%, 0 50%, 43% 43%);
+    filter: drop-shadow(0 0 1cqw #4aa3ff);
+    transform: scale(0);
+    animation: pfx-twinkle 4s ease-in-out infinite;
+}
+
+@keyframes pfx-twinkle {
+    0%,
+    40%,
+    100% {
+        transform: scale(0) rotate(0deg);
+    }
+    15% {
+        transform: scale(1) rotate(45deg);
+    }
+}
+
+// Гроза: холодное кольцо, редкие вспышки и короткая молния у угла.
+.pfx--storm {
+    .pfx__ring {
+        background: conic-gradient(from var(--pa), #5d6dff, #c9d3ff, #7f8cff, #ffffff, #5d6dff);
+        animation-duration: 3s;
+    }
+
+    .pfx__glow {
+        animation: pfx-flash 3.6s linear infinite;
+    }
+}
+
+@keyframes pfx-flash {
+    0%,
+    68%,
+    80%,
+    100% {
+        box-shadow: 0 0 6cqw 0 rgba(110, 130, 255, 0.3);
+    }
+    70%,
+    75% {
+        box-shadow: 0 0 12cqw 2cqw rgba(165, 180, 255, 0.85);
+    }
+    72% {
+        box-shadow: 0 0 6cqw 0 rgba(110, 130, 255, 0.4);
+    }
+}
+
+.pfx__bolt {
+    position: absolute;
+    top: -12cqw;
+    right: -4cqw;
+    z-index: 3;
+    width: 11cqw;
+    height: 22cqw;
+    fill: #f4f6ff;
+    filter: drop-shadow(0 0 1.5cqw #6f86ff);
+    opacity: 0;
+    animation: pfx-bolt 3.6s linear infinite;
+}
+
+@keyframes pfx-bolt {
+    0%,
+    69%,
+    77%,
+    100% {
+        opacity: 0;
+    }
+    70%,
+    75% {
+        opacity: 1;
+    }
+    72% {
+        opacity: 0.2;
+    }
+}
+
+// Комета: яркая голова с длинным тающим хвостом облетает рамку, вокруг —
+// холодное сияние.
+.pfx--comet {
+    .pfx__ring {
+        background: conic-gradient(
+            from var(--pa),
+            transparent 0 55%,
+            rgba(80, 120, 255, 0.35) 70%,
+            rgba(110, 160, 255, 0.95) 92%,
+            #ffffff 98.5%,
+            transparent 99%
+        );
+        filter: drop-shadow(0 0 2cqw #bfe0ff) drop-shadow(0 0 4cqw #5a8dff);
+        animation-duration: 2.8s;
+    }
+
+    .pfx__glow {
+        animation: pfx-comet-glow 2.8s ease-in-out infinite;
+    }
+}
+
+// Светящийся шлейф кометы снаружи кольца.
+.pfx__tail {
+    position: absolute;
+    inset: -3cqw;
+    z-index: 0;
+    padding: 4cqw;
+    border-radius: 31%;
+    background: conic-gradient(
+        from var(--pa),
+        transparent 0 70%,
+        rgba(80, 120, 255, 0.55) 88%,
+        rgba(170, 205, 255, 1) 98.5%,
+        transparent 99%
+    );
+    mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    filter: blur(2px);
+    animation: pfx-spin 2.8s linear infinite;
+}
+
+@keyframes pfx-comet-glow {
+    0%,
+    100% {
+        box-shadow: 0 0 6cqw 0 rgba(110, 160, 255, 0.25);
+    }
+    50% {
+        box-shadow: 0 0 10cqw 1cqw rgba(140, 190, 255, 0.45);
+    }
+}
+
+// Сияние: кольцо переливается всеми цветами северного неба, свечение
+// медленно меняет оттенок.
+.pfx--aurora {
+    .pfx__ring {
+        background: conic-gradient(from var(--pa), #4dffb5, #4dd2ff, #8a7dff, #ff7ae0, #ffd36e, #4dffb5);
+        filter: saturate(1.2);
+        animation-duration: 7s;
+    }
+
+    .pfx__glow {
+        box-shadow:
+            0 0 9cqw 1.5cqw rgba(80, 255, 180, 0.45),
+            0 0 4cqw 0.5cqw rgba(120, 140, 255, 0.4);
+        animation: pfx-aurora-hue 9s linear infinite;
+    }
+}
+
+@keyframes pfx-aurora-hue {
+    to {
+        filter: hue-rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pframe--gold::after,
+    .pfx,
+    .pfx *,
+    .pfx__mist {
+        animation: none !important;
+    }
+}

@@ -1,0 +1,42 @@
+@if (events().length) {
+    <section class="my-events lh-panel" aria-labelledby="my-events-title">
+        <header class="my-events__head">
+            <h2 id="my-events-title" class="my-events__title lh-display">
+                <tui-icon icon="@tui.calendar-check" class="size-5!" />
+                {{ "events.mine.title" | translate }}
+            </h2>
+            <a class="my-events__all" [routerLink]="['/events']">
+                {{ "events.mine.all" | translate }}
+                <tui-icon icon="@tui.arrow-right" class="size-4!" />
+            </a>
+        </header>
+
+        <ul class="my-events__list">
+            @for (event of events(); track event.id) {
+                <li>
+                    <a class="my-events__item" [routerLink]="['/events']" [fragment]="'event-' + event.id">
+                        <span class="my-events__when" [class.my-events__when--live]="live(event)">
+                            {{ when(event) }}
+                        </span>
+                        <span class="my-events__name">{{ event.title }}</span>
+                        <span class="my-events__meta">
+                            {{ date(event) }}
+                            @if (event.location) {
+                                · {{ event.location }}
+                            }
+                            · {{ "events.mine.going" | translate: { count: event.attendeeCount } }}
+                        </span>
+                    </a>
+                </li>
+            }
+        </ul>
+
+        <p class="my-events__hint">
+            <tui-icon icon="@tui.bell-ring" class="size-4!" />
+            {{ "events.mine.reminder" | translate }}
+            @if (more()) {
+                · {{ "events.mine.more" | translate: { count: more() } }}
+            }
+        </p>
+    </section>
+}

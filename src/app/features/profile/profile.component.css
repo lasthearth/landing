@@ -76,6 +76,7 @@
 
 .profile-public__actions {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
 }
@@ -86,4 +87,120 @@
     font-weight: 600;
     color: var(--lh-ink-3);
     white-space: nowrap;
+}
+
+/* Шапка профиля: баннер игрока мягко проступает за аватаром и растворяется в панели. */
+.profile-cover {
+    position: relative;
+    isolation: isolate;
+    padding: 1rem;
+    overflow: hidden;
+    border-radius: 1.25rem;
+}
+
+.profile-cover__banner {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    mask-image:
+        linear-gradient(90deg, #000 0, #000 8rem, transparent 19rem),
+        linear-gradient(to bottom, #000 0, #000 50%, transparent 100%);
+    mask-composite: intersect;
+}
+
+@media (max-width: 640px) {
+    .profile-cover__banner {
+        mask-image: linear-gradient(to bottom, #000 0, #000 5rem, transparent 12rem);
+        mask-composite: add;
+    }
+}
+
+.profile-cover .lh-panel {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.profile-avatar {
+    position: relative;
+    align-self: flex-start;
+    width: 8rem;
+    height: 8rem;
+    margin: 0.25rem;
+}
+
+@media (max-width: 640px) {
+    .profile-avatar {
+        align-self: center;
+    }
+}
+
+.profile-avatar__img {
+    width: 100%;
+    height: 100%;
+}
+
+/*
+ * Смена фото — весь аватар. При наведении поверх фото проступает тёмная
+ * вуаль с камерой; на сенсорных экранах вместо неё — маленький значок в углу.
+ */
+.profile-avatar__change {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    padding: 0;
+    border: 0;
+    border-radius: 28%;
+    background: none;
+    cursor: pointer;
+}
+
+.profile-avatar__change:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 3px;
+}
+
+.profile-avatar__veil {
+    position: absolute;
+    inset: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    border-radius: 25%;
+    color: #fff;
+    background: rgba(20, 14, 10, 0.55);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+
+.profile-avatar__label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.profile-avatar__change:hover .profile-avatar__veil,
+.profile-avatar__change:focus-visible .profile-avatar__veil {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .profile-avatar__veil {
+        inset: auto 0.25rem 0.25rem auto;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: rgba(20, 14, 10, 0.6);
+        opacity: 1;
+    }
+
+    .profile-avatar__veil tui-icon {
+        width: 1rem !important;
+        height: 1rem !important;
+    }
+
+    .profile-avatar__label {
+        display: none;
+    }
 }

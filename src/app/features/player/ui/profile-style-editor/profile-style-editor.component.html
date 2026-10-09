@@ -1,0 +1,257 @@
+<section class="style-editor lh-panel" aria-labelledby="style-editor-title">
+    <header class="style-editor__head">
+        <div class="style-editor__heading">
+            <h2 id="style-editor-title" class="style-editor__title lh-display">
+                <tui-icon icon="@tui.palette" class="size-5!" />
+                {{ "player.style.title" | translate }}
+            </h2>
+            <p class="style-editor__subtitle">
+                {{ "player.style.subtitle" | translate: { opened: openedCount(), total: totalCount } }}
+            </p>
+        </div>
+        @switch (saveState()) {
+            @case ("saving") {
+                <span class="style-editor__state" role="status">
+                    <tui-icon icon="@tui.loader" class="size-3.5! animate-spin" />
+                    {{ "player.style.state.saving" | translate }}
+                </span>
+            }
+            @case ("saved") {
+                <span class="style-editor__state style-editor__state--ok" role="status">
+                    <tui-icon icon="@tui.check" class="size-3.5!" />
+                    {{ "player.style.state.saved" | translate }}
+                </span>
+            }
+            @case ("noFunds") {
+                <span class="style-editor__state style-editor__state--error" role="alert">
+                    <tui-icon icon="@tui.wallet" class="size-3.5!" />
+                    {{ "player.style.state.noFunds" | translate }}
+                </span>
+            }
+            @case ("error") {
+                <span class="style-editor__state style-editor__state--error" role="alert">
+                    <tui-icon icon="@tui.triangle-alert" class="size-3.5!" />
+                    {{ "player.style.state.error" | translate }}
+                </span>
+            }
+        }
+    </header>
+
+    <!-- Предпросмотр шапки страницы игрока -->
+    <div class="style-preview" aria-hidden="true">
+        <app-profile-banner class="style-preview__banner" [banner]="banner()" [effect]="style().bannerEffect" />
+        <div class="style-preview__body">
+            <app-player-frame
+                class="style-preview__avatar"
+                [src]="profile().avatarUrl"
+                [frame]="style().frameId"
+                [effect]="style().frameEffect"
+            />
+            <div class="style-preview__info">
+                <span class="style-preview__name lh-display">{{ profile().nickname }}</span>
+                @if (title(); as t) {
+                    <span class="style-preview__title" [class]="'style-preview__title style-preview__title--' + t.tier">
+                        <tui-icon [icon]="t.icon" class="size-3.5!" />
+                        {{ "player.badges." + t.key + ".title" | translate }}
+                    </span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Баннер -->
+    <fieldset class="style-editor__group">
+        <legend class="style-editor__label">
+            {{ "player.style.banner" | translate }}
+            @if (balance() !== null) {
+                <span class="style-editor__balance">
+                    <img src="/splinter-of-spark.webp" alt="" class="style-banner__shard" />
+                    {{ "player.style.buy.balance" | translate: { coins: balance() } }}
+                </span>
+            }
+        </legend>
+        <div class="style-banners">
+            @for (item of banners(); track item.id) {
+                <button
+                    type="button"
+                    class="style-banner"
+                    [class.style-banner--locked]="item.lock && !item.price"
+                    [class.style-banner--forsale]="item.lock && item.price"
+                    [attr.aria-pressed]="style().bannerId === item.id"
+                    [disabled]="!!item.lock && !item.price"
+                    [attr.aria-busy]="buying() === item.id"
+                    (click)="pickBanner(item)"
+                >
+                    <span class="style-banner__image">
+                        <app-profile-banner class="size-full" [banner]="item" [compact]="true" />
+                        @if (item.lock && item.price) {
+                            <span class="style-banner__price">
+                                <img src="/splinter-of-spark.webp" alt="" class="style-banner__shard" />
+                                {{ item.price }}
+                            </span>
+                        } @else if (item.lock) {
+                            <span class="style-banner__lock"><tui-icon icon="@tui.lock" class="size-4!" /></span>
+                        }
+                    </span>
+                    <span class="style-item__name">{{ "player.style.banners." + item.key | translate }}</span>
+                    @if (item.lock && item.price) {
+                        <span class="style-item__hint style-item__hint--buy">
+                            {{ (buying() === item.id ? "player.style.buy.buying" : "player.style.buy.action") | translate }}
+                        </span>
+                    } @else if (item.lock; as lock) {
+                        <span class="style-item__hint">{{ lock.key | translate: lock.params }}</span>
+                    } @else {
+                        <span class="style-item__hint style-item__hint--earned">
+                            {{ item.earned.key | translate: item.earned.params }}
+                        </span>
+                    }
+                </button>
+            }
+        </div>
+    </fieldset>
+
+    <!-- Анимация баннера -->
+    <fieldset class="style-editor__group">
+        <legend class="style-editor__label">{{ "player.style.bannerEffect" | translate }}</legend>
+        <div class="style-banners style-banners--effects">
+            @for (item of bannerEffects(); track item.id) {
+                <button
+                    type="button"
+                    class="style-banner"
+                    [class.style-banner--locked]="item.lock"
+                    [attr.aria-pressed]="style().bannerEffect === item.id"
+                    [disabled]="!!item.lock"
+                    (click)="selectBannerEffect(item.id)"
+                >
+                    <span class="style-banner__image">
+                        <app-profile-banner class="size-full" [banner]="banner()" [effect]="item.id" [compact]="true" />
+                        @if (item.lock) {
+                            <span class="style-banner__lock"><tui-icon icon="@tui.lock" class="size-4!" /></span>
+                        }
+                    </span>
+                    <span class="style-item__name">{{ "player.style.bannerEffects." + item.id | translate }}</span>
+                    @if (item.lock; as lock) {
+                        <span class="style-item__hint">{{ lock.key | translate: lock.params }}</span>
+                    } @else {
+                        <span class="style-item__hint style-item__hint--earned">
+                            {{ item.earned.key | translate: item.earned.params }}
+                        </span>
+                    }
+                </button>
+            }
+        </div>
+    </fieldset>
+
+    <!-- Рамка -->
+    <fieldset class="style-editor__group">
+        <legend class="style-editor__label">{{ "player.style.frame" | translate }}</legend>
+        <div class="style-frames">
+            @for (item of frames(); track item.id) {
+                <button
+                    type="button"
+                    class="style-frame"
+                    [class.style-frame--locked]="item.lock"
+                    [attr.aria-pressed]="style().frameId === item.id"
+                    [disabled]="!!item.lock"
+                    (click)="selectFrame(item.id)"
+                >
+                    <span class="style-frame__preview">
+                        <app-player-frame class="size-full" [src]="profile().avatarUrl" [frame]="item.id" />
+                        @if (item.lock) {
+                            <span class="style-frame__lock"><tui-icon icon="@tui.lock" class="size-4!" /></span>
+                        }
+                    </span>
+                    <span class="style-item__name">{{ "player.style.frames." + item.id | translate }}</span>
+                    @if (item.lock; as lock) {
+                        <span class="style-item__hint">{{ lock.key | translate: lock.params }}</span>
+                    } @else {
+                        <span class="style-item__hint style-item__hint--earned">
+                            {{ item.earned.key | translate: item.earned.params }}
+                        </span>
+                    }
+                </button>
+            }
+        </div>
+    </fieldset>
+
+    <!-- Анимация рамки -->
+    <fieldset class="style-editor__group">
+        <legend class="style-editor__label">{{ "player.style.frameEffect" | translate }}</legend>
+        <div class="style-frames">
+            @for (item of frameEffects(); track item.id) {
+                <button
+                    type="button"
+                    class="style-frame"
+                    [class.style-frame--locked]="item.lock"
+                    [attr.aria-pressed]="style().frameEffect === item.id"
+                    [disabled]="!!item.lock"
+                    (click)="selectFrameEffect(item.id)"
+                >
+                    <span class="style-frame__preview">
+                        <app-player-frame
+                            class="size-full"
+                            [src]="profile().avatarUrl"
+                            [frame]="style().frameId"
+                            [effect]="item.id"
+                        />
+                        @if (item.lock) {
+                            <span class="style-frame__lock"><tui-icon icon="@tui.lock" class="size-4!" /></span>
+                        }
+                    </span>
+                    <span class="style-item__name">{{ "player.style.frameEffects." + item.id | translate }}</span>
+                    @if (item.lock; as lock) {
+                        <span class="style-item__hint">{{ lock.key | translate: lock.params }}</span>
+                    } @else {
+                        <span class="style-item__hint style-item__hint--earned">
+                            {{ item.earned.key | translate: item.earned.params }}
+                        </span>
+                    }
+                </button>
+            }
+        </div>
+    </fieldset>
+
+    <!-- Титул -->
+    <fieldset class="style-editor__group">
+        <legend class="style-editor__label">{{ "player.style.titleLabel" | translate }}</legend>
+        <div class="lh-chips">
+            <button
+                type="button"
+                class="lh-chip"
+                [attr.aria-pressed]="style().titleKey === null"
+                (click)="selectTitle(null)"
+            >
+                {{ "player.style.noTitle" | translate }}
+            </button>
+            @for (badge of profile().badges; track badge.key) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-pressed]="style().titleKey === badge.key"
+                    (click)="selectTitle(badge.key)"
+                >
+                    <tui-icon [icon]="badge.icon" />
+                    {{ "player.badges." + badge.key + ".title" | translate }}
+                </button>
+            }
+        </div>
+        <p class="style-editor__note">{{ "player.style.titleHint" | translate }}</p>
+    </fieldset>
+
+    <footer class="style-editor__footer">
+        <p class="style-editor__note">
+            <tui-icon icon="@tui.info" class="size-4!" />
+            {{ "player.style.liveNote" | translate }}
+        </p>
+        <div class="style-editor__actions">
+            <button type="button" class="lh-cta lh-cta--ghost" (click)="reset()">
+                <tui-icon icon="@tui.rotate-ccw" class="size-4!" />
+                {{ "player.style.reset" | translate }}
+            </button>
+            <a class="lh-cta" [routerLink]="['/player', profile().nickname]">
+                <tui-icon icon="@tui.eye" class="size-4!" />
+                {{ "player.style.open" | translate }}
+            </a>
+        </div>
+    </footer>
+</section>

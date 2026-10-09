@@ -57,6 +57,7 @@ export const routes: Routes = [
                                 import('@core/i18n/translations/features/settlements.i18n').then(
                                     (m) => m.SETTLEMENTS_I18N
                                 ),
+                            () => import('@core/i18n/translations/features/events.i18n').then((m) => m.EVENTS_I18N),
                         ]
                     ),
                 canActivate: [userGuard],
@@ -84,6 +85,14 @@ export const routes: Routes = [
                                 (m) => m.SettlementComponent
                             ),
                         data: { route_keys: RouteKeys.settlement, seo: routeSeoData.profile },
+                    },
+                    {
+                        path: 'style',
+                        loadComponent: () =>
+                            import('../features/player/ui/profile-style-page/profile-style-page.component').then(
+                                (m) => m.ProfileStylePageComponent
+                            ),
+                        data: { route_keys: RouteKeys.profileStyle, seo: routeSeoData.profile },
                     },
                     {
                         path: 'referral',
@@ -217,7 +226,13 @@ export const routes: Routes = [
                 loadComponent: () =>
                     loadPage(
                         () => import('../features/events/events-page.component').then((m) => m.EventsPageComponent),
-                        [() => import('@core/i18n/translations/features/events.i18n').then((m) => m.EVENTS_I18N)]
+                        [
+                            () => import('@core/i18n/translations/features/events.i18n').then((m) => m.EVENTS_I18N),
+                            () =>
+                                import('@core/i18n/translations/features/settlements.i18n').then(
+                                    (m) => m.SETTLEMENTS_I18N
+                                ),
+                        ]
                     ),
                 data: { route_keys: RouteKeys.events, seo: routeSeoData.events },
             },

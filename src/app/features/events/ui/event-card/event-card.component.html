@@ -65,6 +65,78 @@
                 <div class="event-card__text lh-rich-text text-ink" [innerHTML]="descriptionHtml()"></div>
             }
 
+            <section class="event-card__going" [attr.aria-label]="'events.going.label' | translate">
+                <div class="event-card__going-people">
+                    <span class="event-card__going-label">
+                        @if (event().attendeeCount) {
+                            {{
+                                (status() === "ended" ? "events.going.were" : "events.going.count")
+                                    | translate: { count: event().attendeeCount }
+                            }}
+                        } @else if (status() !== "ended") {
+                            {{ "events.going.none" | translate }}
+                        }
+                    </span>
+                    @if (event().attendeeCount && !everyone()) {
+                        <div class="event-card__going-chips">
+                            @for (id of event().attendeePreview; track id) {
+                                <app-player-chip [player]="playerOf(id)" />
+                            }
+                            @if (moreAttendees()) {
+                                <button type="button" class="event-card__more" (click)="toggleEveryone()">
+                                    @if (loadingEveryone()) {
+                                        <tui-icon icon="@tui.loader" class="size-3.5! animate-spin" />
+                                    }
+                                    {{ "events.going.more" | translate: { count: moreAttendees() } }}
+                                </button>
+                            }
+                        </div>
+                    }
+                    @if (everyone(); as all) {
+                        <div class="event-card__going-chips">
+                            @for (player of all; track player.user_id) {
+                                <app-player-chip [player]="player" />
+                            }
+                            <button type="button" class="event-card__more" (click)="toggleEveryone()">
+                                {{ "events.going.collapse" | translate }}
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                @if (status() !== "ended") {
+                    @if (!authed()) {
+                        <button type="button" class="lh-cta event-card__going-btn" (click)="signIn.emit()">
+                            <tui-icon icon="@tui.log-in" class="size-4!" />
+                            {{ "events.going.signIn" | translate }}
+                        </button>
+                    } @else if (attending()) {
+                        <button
+                            type="button"
+                            class="lh-cta lh-cta--ghost event-card__going-btn event-card__going-btn--on"
+                            [disabled]="busy()"
+                            [attr.aria-pressed]="true"
+                            [title]="'events.going.cancelTitle' | translate"
+                            (click)="toggleAttendance.emit()"
+                        >
+                            <tui-icon icon="@tui.check" class="size-4!" />
+                            {{ "events.going.youGo" | translate }}
+                        </button>
+                    } @else {
+                        <button
+                            type="button"
+                            class="lh-cta event-card__going-btn"
+                            [disabled]="busy()"
+                            [attr.aria-pressed]="false"
+                            (click)="toggleAttendance.emit()"
+                        >
+                            <tui-icon icon="@tui.hand" class="size-4!" />
+                            {{ "events.going.go" | translate }}
+                        </button>
+                    }
+                }
+            </section>
+
             <footer class="event-card__footer">
                 <app-reactions kind="event" [contentId]="event().id" tone="surface" />
 

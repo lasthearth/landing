@@ -256,3 +256,76 @@
         animation: none;
     }
 }
+
+.event-card__going {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: 0.875rem;
+    background: color-mix(in srgb, var(--lh-brand) 7%, transparent);
+    border: 1px solid color-mix(in srgb, var(--lh-brand) 18%, transparent);
+}
+
+.event-card__going-people {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 0;
+}
+
+.event-card__going-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--lh-ink-2);
+}
+
+.event-card__going-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.event-card__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.7rem;
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    color: var(--lh-ink);
+    background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    cursor: pointer;
+
+    &:hover {
+        background: color-mix(in srgb, var(--lh-ink) 14%, transparent);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 1px;
+    }
+}
+
+.event-card__going-btn {
+    flex: none;
+    padding: 0.6rem 1.15rem;
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: default;
+        transform: none;
+    }
+}
+
+.event-card__going-btn--on {
+    color: var(--lh-success, #2e7d32);
+    border-color: color-mix(in srgb, var(--lh-success, #2e7d32) 45%, transparent);
+    background: color-mix(in srgb, var(--lh-success, #2e7d32) 10%, transparent);
+}

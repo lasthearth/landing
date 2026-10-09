@@ -26,12 +26,12 @@
             @for (item of players?.users; track $index) {
                 <div class="w-full justify-between flex items-center py-3 border-b border-lh-primary-2/10 last:border-b-0">
                     <div class="flex gap-3 items-center w-full">
-                        <app-image-loader
+                        <app-player-avatar
+                            [userId]="item?.user_id"
                             [src]="resolveAvatarUrl(item?.avatar)"
                             [alt]="'settlements.invite.avatarAlt' | translate"
-                            objectFit="cover"
-                            containerClass="rounded-full"
-                            class="w-10 h-10"
+                            [animated]="false"
+                            class="w-10 h-10 shrink-0"
                         />
                         <span class="text-lg text-ink font-semibold">{{ item.user_game_name }}</span>
                     </div>

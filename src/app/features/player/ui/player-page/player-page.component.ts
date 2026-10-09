@@ -1,18 +1,20 @@
 import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, PLATFORM_ID, TemplateRef, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { SeoService } from '@core/services/seo.service';
 import { SettlementDisplayNamePipe } from '@entities/settlement';
-import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
-import { TuiIcon } from '@taiga-ui/core';
+import { TuiButton, TuiDialogContext, TuiIcon } from '@taiga-ui/core';
+import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
 import { PlayerProfileService } from '../../api/player-profile.service';
 import { PlayerProfile } from '../../model/player-profile';
 import { PlayerBadgesComponent } from '../player-badges/player-badges.component';
+import { bannerById, PlayerFrameComponent, ProfileBannerComponent } from '@entities/player-style';
+import { ProfileStyleService } from '../../api/profile-style.service';
 
 /**
  * Адрес сайта для канонических ссылок.
@@ -41,19 +43,29 @@ type PlayerPageState =
         RouterLink,
         TuiIcon,
         TranslatePipe,
-        ImageLoaderComponent,
         RelativeTimeComponent,
         ShareButtonComponent,
         SettlementDisplayNamePipe,
         PlayerBadgesComponent,
+        PlayerFrameComponent,
+        ProfileBannerComponent,
+        TuiPreview,
+        TuiButton,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerPageComponent {
     private readonly profiles = inject(PlayerProfileService);
+    private readonly styles = inject(ProfileStyleService);
     private readonly seo = inject(SeoService);
     private readonly i18n = inject(I18nService);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+    private readonly previews = inject(TuiPreviewDialogService);
+
+    /**
+     * Шаблон просмотра баннера целиком.
+     */
+    private readonly bannerPreview = viewChild<TemplateRef<TuiDialogContext>>('bannerPreview');
 
     /**
      * Состояние страницы.
@@ -84,6 +96,40 @@ export class PlayerPageComponent {
         const state = this.state();
         return state.status === 'ready' ? state.profile : null;
     });
+
+    /**
+     * Оформление игрока: своё выбранное или по умолчанию.
+     */
+    protected readonly style = computed(() => {
+        const profile = this.profile();
+        return profile ? this.styles.styleOf(profile) : null;
+    });
+
+    /**
+     * Баннер шапки.
+     */
+    protected readonly banner = computed(() => {
+        const id = this.style()?.bannerId;
+        return id ? bannerById(id) : null;
+    });
+
+    /**
+     * Титул под ником — значок, выбранный игроком.
+     */
+    protected readonly title = computed(() => {
+        const key = this.style()?.titleKey;
+        return this.profile()?.badges.find((badge) => badge.key === key) ?? null;
+    });
+
+    /**
+     * Открывает баннер целиком в окне просмотра.
+     */
+    protected openBanner(): void {
+        const template = this.bannerPreview();
+        if (template) {
+            this.previews.open(template).subscribe();
+        }
+    }
 
     public constructor() {
         // SEO обновляем при каждом новом состоянии.

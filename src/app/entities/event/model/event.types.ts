@@ -57,6 +57,16 @@ export interface EventDto {
      * Когда изменено.
      */
     updated_at: string | null;
+
+    /**
+     * Сколько игроков записалось («Пойду»); ноль API не присылает.
+     */
+    attendee_count?: number;
+
+    /**
+     * Первые записавшиеся (до пяти) — для аватаров на карточке.
+     */
+    attendee_preview?: string[];
 }
 
 /**
@@ -142,4 +152,49 @@ export interface CalendarEvent {
      * Окончание или `null`.
      */
     endsAt: Date | null;
+
+    /**
+     * Сколько игроков записалось.
+     */
+    attendeeCount: number;
+
+    /**
+     * Первые записавшиеся (до пяти), в порядке записи.
+     */
+    attendeePreview: string[];
+}
+
+/**
+ * Итог записи на событие или отказа от неё.
+ */
+export interface EventAttendance {
+    /**
+     * Записан ли игрок после запроса.
+     */
+    attending: boolean;
+
+    /**
+     * Сколько всего записалось.
+     */
+    count: number;
+
+    /**
+     * Первые записавшиеся.
+     */
+    preview: string[];
+}
+
+/**
+ * Все записавшиеся на событие.
+ */
+export interface EventAttendees {
+    /**
+     * Идентификаторы игроков в порядке записи.
+     */
+    userIds: string[];
+
+    /**
+     * Сколько всего.
+     */
+    total: number;
 }

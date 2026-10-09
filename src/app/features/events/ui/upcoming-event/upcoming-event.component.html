@@ -25,6 +25,13 @@
                         <span class="upcoming-event__dot" aria-hidden="true">·</span>
                         <span>{{ item.location }}</span>
                     }
+                    @if (item.attendeeCount) {
+                        <span class="upcoming-event__dot" aria-hidden="true">·</span>
+                        <span class="upcoming-event__going">
+                            <tui-icon icon="@tui.users" class="size-3.5!" />
+                            {{ "home.events.going" | translate: { count: item.attendeeCount } }}
+                        </span>
+                    }
                 </span>
             </span>
 
