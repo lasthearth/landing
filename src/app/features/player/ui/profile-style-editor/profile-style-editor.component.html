@@ -120,7 +120,7 @@
                     class="style-banner"
                     [class.style-banner--locked]="item.lock"
                     [attr.aria-pressed]="style().bannerEffect === item.id"
-                    [disabled]="!!item.lock"
+                    [disabled]="!!item.lock || banner().id === 'none'"
                     (click)="selectBannerEffect(item.id)"
                 >
                     <span class="style-banner__image">
@@ -130,7 +130,9 @@
                         }
                     </span>
                     <span class="style-item__name">{{ "player.style.bannerEffects." + item.id | translate }}</span>
-                    @if (item.lock; as lock) {
+                    @if (banner().id === 'none') {
+                        <span class="style-item__hint">{{ "player.style.bannerEffects.needBanner" | translate }}</span>
+                    } @else if (item.lock; as lock) {
                         <span class="style-item__hint">{{ lock.key | translate: lock.params }}</span>
                     } @else {
                         <span class="style-item__hint style-item__hint--earned">

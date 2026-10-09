@@ -220,10 +220,11 @@ function random(seed: number): Random {
             class="pbanner"
             [class]="'pbanner' + (tint() ? ' pbanner--' + tint() : '')"
             [class.pbanner--natural]="natural()"
-            [style.backgroundImage]="natural() ? null : 'url(' + banner().image + ')'"
+            [class.pbanner--empty]="!banner().image"
+            [style.backgroundImage]="natural() || !banner().image ? null : 'url(' + banner().image + ')'"
             [style.backgroundPosition]="'center ' + banner().focus"
         >
-            @if (natural()) {
+            @if (natural() && banner().image) {
                 <img
                     class="pbanner__img"
                     [src]="banner().image"

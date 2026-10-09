@@ -106,11 +106,11 @@ export class PlayerPageComponent {
     });
 
     /**
-     * Баннер шапки.
+     * Баннер шапки; `null` — игрок выбрал «без баннера», шапка без картинки.
      */
     protected readonly banner = computed(() => {
         const id = this.style()?.bannerId;
-        return id ? bannerById(id) : null;
+        return id && id !== 'none' ? bannerById(id) : null;
     });
 
     /**

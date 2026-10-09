@@ -6,6 +6,19 @@ import { BannerEffect, FrameEffect, ProfileBanner, ProfileFrame } from '../model
 export const BANNER_SHARD_PRICE = 3000;
 
 /**
+ * Отсутствие баннера: шапка профиля и тултип без картинки.
+ * Не входит в `PROFILE_BANNERS`, чтобы вид по умолчанию и подсказки
+ * оставались про реальные баннеры.
+ */
+export const BANNER_NONE: ProfileBanner = {
+    id: 'none',
+    key: 'none',
+    image: '',
+    focus: '50%',
+    requirement: { kind: 'free' },
+};
+
+/**
  * Баннеры: сразу открыт только один, большинство — за достижения в игре и на
  * сайте, три — за осколки. Тот же список и те же условия — на сервере
  * (vsservice, internal/appearance/internal/model/catalog.go и appearance.proto).

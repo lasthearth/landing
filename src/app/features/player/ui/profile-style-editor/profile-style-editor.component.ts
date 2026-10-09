@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@core/i18n';
 import {
     BANNER_EFFECTS,
+    BANNER_NONE,
     BannerEffectId,
     FRAME_EFFECTS,
     FrameEffectId,
@@ -78,15 +79,17 @@ export class ProfileStyleEditorComponent {
     protected readonly style = computed(() => this.styles.styleOf(this.profile()));
 
     /**
-     * Баннеры с признаком «закрыт» и подсказкой.
+     * Баннеры с признаком «закрыт» и подсказкой. Первой — «Без баннера»:
+     * не из каталога, всегда открыта.
      */
-    protected readonly banners = computed(() =>
-        PROFILE_BANNERS.map((banner) => ({
+    protected readonly banners = computed(() => [
+        { ...BANNER_NONE, lock: null, earned: styleEarned(BANNER_NONE.requirement), price: null },
+        ...PROFILE_BANNERS.map((banner) => ({
             ...banner,
             ...this.status(banner.requirement, banner.id),
             price: banner.requirement.kind === 'purchase' ? banner.requirement.price : null,
-        }))
-    );
+        })),
+    ]);
 
     /**
      * Рамки с признаком «закрыта» и подсказкой.
@@ -110,11 +113,16 @@ export class ProfileStyleEditorComponent {
     );
 
     /**
-     * Выбранный баннер.
+     * Выбранный баннер; «без баннера» — пустая плитка.
      */
-    protected readonly banner = computed(
-        () => PROFILE_BANNERS.find((banner) => banner.id === this.style().bannerId) ?? PROFILE_BANNERS[0]
-    );
+    protected readonly banner = computed(() => {
+        const id = this.style().bannerId;
+        if (id === BANNER_NONE.id) {
+            return BANNER_NONE;
+        }
+
+        return PROFILE_BANNERS.find((banner) => banner.id === id) ?? PROFILE_BANNERS[0];
+    });
 
     /**
      * Выбранный титул.
@@ -134,7 +142,7 @@ export class ProfileStyleEditorComponent {
     );
 
     protected readonly totalCount =
-        PROFILE_BANNERS.length + BANNER_EFFECTS.length + PROFILE_FRAMES.length + FRAME_EFFECTS.length;
+        PROFILE_BANNERS.length + BANNER_EFFECTS.length + PROFILE_FRAMES.length + FRAME_EFFECTS.length + 1;
 
     /**
      * Состояние сохранения: показывается в шапке редактора.
@@ -160,8 +168,19 @@ export class ProfileStyleEditorComponent {
             .subscribe((coins) => this.balance.set(Number.isFinite(coins) ? coins : null));
     }
 
+    /**
+     * Выбирает баннер. «Без баннера» сбрасывает и анимацию — эффекту нечего
+     * ложиться на пустую шапку.
+     *
+     * @param id Идентификатор баннера.
+     */
     protected selectBanner(id: string): void {
-        this.persist(this.styles.update(this.profile(), { bannerId: id }));
+        this.persist(
+            this.styles.update(
+                this.profile(),
+                id === BANNER_NONE.id ? { bannerId: id, bannerEffect: 'none' } : { bannerId: id }
+            )
+        );
     }
 
     /**

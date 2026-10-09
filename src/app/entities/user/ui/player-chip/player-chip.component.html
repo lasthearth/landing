@@ -1,11 +1,13 @@
 <ng-template #tooltip>
     <div class="player-tooltip">
-        <div
-            class="player-tooltip__banner"
-            [style.backgroundImage]="'url(' + banner().image + ')'"
-            [style.backgroundPosition]="'center ' + banner().focus"
-            aria-hidden="true"
-        ></div>
+        @if (banner().image) {
+            <div
+                class="player-tooltip__banner"
+                [style.backgroundImage]="'url(' + banner().image + ')'"
+                [style.backgroundPosition]="'center ' + banner().focus"
+                aria-hidden="true"
+            ></div>
+        }
         <div class="player-tooltip__head">
             <app-player-avatar
                 class="player-tooltip__avatar"

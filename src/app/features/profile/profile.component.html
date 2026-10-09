@@ -19,12 +19,14 @@
             <!-- Колонка 1: Профиль. Баннер игрока мягко проступает за аватаром -->
             @let look = looks.lookOf(userService.userId);
             <div class="profile-cover flex gap-5 max-[640px]:flex-col">
-                <app-profile-banner
-                    class="profile-cover__banner"
-                    [banner]="bannerById(look.bannerId)"
-                    [effect]="look.bannerEffect"
-                    aria-hidden="true"
-                />
+                @if (look.bannerId !== 'none') {
+                    <app-profile-banner
+                        class="profile-cover__banner"
+                        [banner]="bannerById(look.bannerId)"
+                        [effect]="look.bannerEffect"
+                        aria-hidden="true"
+                    />
+                }
                 <!-- Аватар в рамке: нажатие меняет фото -->
                 <div class="profile-avatar shrink-0">
                     <app-player-avatar
