@@ -875,6 +875,37 @@ tui-pulse.offline {
         box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--lh-brand) 60%, transparent);
     }
 
+    /**
+     * Вкладки (role=tablist) выглядят как сегментированный переключатель,
+     * а не как фильтры-чипы: одна «дорожка» с выделенным активным сегментом.
+     * Так вкладку не спутать с фильтром или сортировкой на той же странице.
+     */
+    .lh-chips[role='tablist'] {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+        gap: 0.25rem;
+        padding: 0.25rem;
+        border: 1px solid var(--color-line);
+        border-radius: 0.875rem;
+        background-color: var(--color-surface-3);
+    }
+
+    .lh-chips[role='tablist'] .lh-chip {
+        border-color: transparent;
+        border-radius: 0.625rem;
+        background-color: transparent;
+        color: var(--color-ink-2);
+    }
+
+    .lh-chips[role='tablist'] .lh-chip[aria-selected='true'],
+    .lh-chips[role='tablist'] .lh-chip[aria-selected='true']:hover:not(:disabled) {
+        color: var(--lh-brand-ink);
+        background-image: none;
+        background-color: var(--color-surface-2);
+        box-shadow: var(--lh-shadow-soft);
+    }
+
     .lh-chip__count {
         font-size: 0.8125rem;
         font-variant-numeric: tabular-nums;
