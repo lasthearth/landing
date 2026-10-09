@@ -1,12 +1,18 @@
 <main class="xl:overflow-x-clip">
     @let currentRouteKey = currentRouteKey$ | async;
-    @let isProfilePage = currentRouteKey === 3 || currentRouteKey === 4 || currentRouteKey === 5 || currentRouteKey === 7 || currentRouteKey === 13;
 
     <div class="flex justify-center items-start xl:w-full">
         <div class="main-panel xl:w-[60%] mb-10 size-full !rounded-2xl relative">
             <router-outlet />
 
-            @if (isProfilePage) {
+            @if (currentRouteKey !== null && [
+                    RouteKeys.admin,
+                    RouteKeys.stats,
+                    RouteKeys.howPlay,
+                    RouteKeys.settlement,
+                    RouteKeys.referral,
+                    RouteKeys.profileStyle
+                ].includes(currentRouteKey)) {
                 <div
                     class="bg-lh-primary-2 flex justify-center p-3 z-20 w-full xl:w-fit fixed xl:absolute bottom-0 xl:bottom-auto xl:bg-transparent xl:block xl:right-0 xl:top-6 xl:translate-x-full xl:ml-10"
                 >

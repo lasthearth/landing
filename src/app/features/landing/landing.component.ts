@@ -43,4 +43,25 @@ export class LandingComponent {
             return route.snapshot.data['route_keys'];
         })
     );
+
+    /**
+     * Доступ к枚举у RouteKeys для шаблона.
+     */
+    protected readonly RouteKeys = RouteKeys;
+
+    /**
+     * Проверяет, является ли данный ключ маршрута страницей профиля.
+     * @param routeKey Ключ маршрута для проверки
+     * @returns true если маршрут относится к профилю, иначе false
+     */
+    protected isProfilePage(routeKey: RouteKeys): boolean {
+        return [
+            RouteKeys.admin,
+            RouteKeys.stats,
+            RouteKeys.howPlay,
+            RouteKeys.settlement,
+            RouteKeys.referral,
+            RouteKeys.profileStyle
+        ].includes(routeKey);
+    }
 }

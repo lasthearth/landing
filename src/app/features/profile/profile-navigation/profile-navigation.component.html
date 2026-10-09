@@ -4,59 +4,71 @@
 @let isAuth = userService.authState$ | async;
 
 <div class="flex xl:flex-col gap-2 z-300!">
-    <button
+    <a
         [routerLink]="['/profile/how-play']"
-        [ngClass]="{ 'nav-button--active': select === 'how-play' }"
+        routerLinkActive="nav-button--active"
         class="nav-button size-11!"
+        [title]="'player.howToPlay.title' | translate"
+        [attr.aria-label]="'player.howToPlay.title' | translate"
     >
         <tui-icon icon="@tui.gamepad" />
-    </button>
-    <button
+    </a>
+    <a
         [routerLink]="['/profile/stats']"
-        [ngClass]="{ 'nav-button--active': select === 'stats' }"
+        routerLinkActive="nav-button--active"
         class="nav-button size-11!"
+        [title]="'player.statistics.title' | translate"
+        [attr.aria-label]="'player.statistics.title' | translate"
     >
         <tui-icon icon="@tui.chart-no-axes-combined" />
-    </button>
+    </a>
     @if (isAuth) {
-        <button
+        <a
             [routerLink]="['/profile/settlement']"
-            [ngClass]="{ 'nav-button--active': select === 'settlement' }"
+            routerLinkActive="nav-button--active"
             class="relative nav-button size-11!"
+            [title]="'player.settlement.label' | translate"
+            [attr.aria-label]="'player.settlement.label' | translate"
         >
             <tui-icon icon="@tui.castle" />
             @if (invitations?.length) {
                 <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
             }
-        </button>
-        <button
+        </a>
+        <a
             [routerLink]="['/profile/style']"
-            [ngClass]="{ 'nav-button--active': select === 'style' }"
+            routerLinkActive="nav-button--active"
             class="nav-button size-11!"
             [title]="'player.style.title' | translate"
             [attr.aria-label]="'player.style.title' | translate"
         >
             <tui-icon icon="@tui.palette" />
-        </button>
-        <button
+        </a>
+        <a
             [routerLink]="['/profile/referral']"
-            [ngClass]="{ 'nav-button--active': select === 'referral' }"
+            routerLinkActive="nav-button--active"
             class="nav-button size-11!"
+            [title]="'player.referral.title' | translate"
+            [attr.aria-label]="'player.referral.title' | translate"
         >
             <tui-icon icon="@tui.user-plus" />
-        </button>
+        </a>
     }
-    <button
-        [routerLink]="isAuth && isAdmin() ? ['/profile/admin'] : ''"
-        [class.!hidden]="!isAdmin()"
-        [ngClass]="{ 'nav-button--active': select === 'admin' }"
-        class="relative nav-button size-11!"
-    >
-        <tui-icon icon="@tui.shield" />
-        <tui-pulse
-            *ngIf="userVerifications?.length || settlementVerifications?.length"
-            tuiHintAppearance="floating"
-            class="!absolute !top-0.5 !right-0.5 !scale-110"
-        />
-    </button>
+    @if (isAuth && isAdmin()) {
+        <a
+            [routerLink]="['/profile/admin']"
+            routerLinkActive="nav-button--active"
+            class="relative nav-button size-11!"
+            [title]="'player.role.admin' | translate"
+            [attr.aria-label]="'player.role.admin' | translate"
+        >
+            <tui-icon icon="@tui.shield" />
+            @if (userVerifications?.length || settlementVerifications?.length) {
+                <tui-pulse
+                    tuiHintAppearance="floating"
+                    class="!absolute !top-0.5 !right-0.5 !scale-110"
+                />
+            }
+        </a>
+    }
 </div>
