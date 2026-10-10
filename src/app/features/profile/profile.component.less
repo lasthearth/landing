@@ -113,6 +113,10 @@
 /* Ник игрока — заголовок страницы профиля */
 .profile-name {
     margin: 0;
+    /* Ник может лежать поверх края баннера — светлый ореол держит контраст */
+    text-shadow:
+        0 0 6px var(--lh-surface-2),
+        0 0 14px var(--lh-surface-2);
     font-size: 1.75rem;
     line-height: 1.2;
     font-weight: 800;
@@ -211,7 +215,7 @@
     inset: 0;
     z-index: -1;
     mask-image:
-        linear-gradient(90deg, #000 0, #000 6rem, transparent 12rem),
+        linear-gradient(90deg, #000 0, #000 11rem, transparent 22rem),
         linear-gradient(to bottom, #000 0, #000 50%, transparent 100%);
     mask-composite: intersect;
 }
@@ -234,6 +238,14 @@
     width: 8rem;
     height: 8rem;
     margin: 0.25rem;
+}
+
+/* С sm аватар стоит на баннере по центру карточки и чуть отступает от края */
+@media (min-width: 641px) {
+    .profile-avatar {
+        align-self: center;
+        margin-left: 1rem;
+    }
 }
 
 @media (max-width: 640px) {

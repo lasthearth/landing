@@ -25,7 +25,7 @@
         -->
         <section class="flex flex-col gap-3">
             @let look = looks.lookOf(userService.userId);
-            <div class="profile-cover flex gap-5 flex-col sm:flex-row">
+            <div class="profile-cover flex gap-5 sm:gap-8 flex-col sm:flex-row">
                 @if (look.bannerId !== 'none') {
                     <app-profile-banner
                         class="profile-cover__banner"
@@ -92,7 +92,7 @@
 
                     <!-- Селение -->
                     @if (settlement) {
-                        <div class="flex gap-1 flex-col lh-panel rounded-xl px-4 py-3 w-full">
+                        <div class="flex gap-1 flex-col lh-panel rounded-xl px-4 py-3 w-full max-w-xl">
                             <p class="text-lg leading-[27px] text-ink-3 mb-1">
                                 {{ "profile.settlement.label" | translate }}
                             </p>
@@ -128,7 +128,7 @@
                         </div>
                     } @else if (verified) {
                         <!-- Не тупик: сразу ссылка на поиск поселения -->
-                        <div class="lh-panel rounded-xl px-4 py-2.5 w-full flex items-center justify-between gap-3">
+                        <div class="lh-panel rounded-xl px-4 py-2.5 w-full max-w-xl flex items-center justify-between gap-3">
                             <span class="text-lg leading-[27px] text-ink-2">
                                 {{ "profile.settlement.noSettlement" | translate }}
                             </span>
