@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, computed, inject, signal } from '@angular/core';
 import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { AsyncPipe, NgClass } from '@angular/common';
@@ -180,6 +180,55 @@ export class HeaderComponent {
      */
     protected signOut(): void {
         this.dialogs.open(new PolymorpheusComponent(SignOutConfirmComponent), { size: 'auto' }).subscribe();
+    }
+
+    /**
+     * Хост-элемент шапки — чтобы отличать клик внутри меню от клика мимо.
+     */
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /**
+     * Признак, что открыто хотя бы одно выпадающее меню шапки.
+     */
+    private get anyMenuOpen(): boolean {
+        return this.showMediaMenu() || this.showLangMenu() || this.showMobileMenu();
+    }
+
+    /**
+     * Закрывает все выпадающие меню шапки.
+     */
+    private closeMenus(): void {
+        this.showMediaMenu.set(false);
+        this.showLangMenu.set(false);
+        this.showMobileMenu.set(false);
+        this.showMobileMediaMenu.set(false);
+    }
+
+    /**
+     * Клик мимо шапки закрывает открытые меню.
+     *
+     * @param event Событие клика по документу.
+     */
+    @HostListener('document:click', ['$event'])
+    protected onDocumentClick(event: MouseEvent): void {
+        if (this.anyMenuOpen && !this.host.nativeElement.contains(event.target as Node)) {
+            this.closeMenus();
+        }
+    }
+
+    /**
+     * Escape закрывает открытые меню и возвращает фокус на кнопку, которая их открыла.
+     */
+    @HostListener('document:keydown.escape')
+    protected onEscape(): void {
+        if (!this.anyMenuOpen) {
+            return;
+        }
+
+        const trigger = this.host.nativeElement.querySelector<HTMLElement>('[aria-expanded="true"]');
+
+        this.closeMenus();
+        trigger?.focus();
     }
 
     protected toggleMediaMenu(): void {

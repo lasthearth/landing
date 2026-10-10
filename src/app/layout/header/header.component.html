@@ -294,6 +294,7 @@
                     [ngClass]="{ 'nav-button--active': showLangMenu() }"
                     class="nav-button !px-2.5 gap-1.5"
                     [attr.aria-label]="'header.language.select' | translate"
+                    [attr.aria-expanded]="showLangMenu()"
                 >
                     <tui-icon icon="@tui.globe" class="size-4!" />
                     <span class="text-sm font-bold hidden md:inline">{{ language() === "ru" ? "RU" : "EN" }}</span>
