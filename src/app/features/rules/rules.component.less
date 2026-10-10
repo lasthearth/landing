@@ -38,3 +38,38 @@ p {
         transform: none;
     }
 }
+
+/**
+ * Оглавление + текст правил. На узком экране оглавление — строка чипов над
+ * разделами, от 1024px — липкая колонка слева.
+ */
+.rules-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+}
+
+.rules-layout__main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+/* Отступ сверху при переходе из оглавления, чтобы заголовок не прилипал к краю */
+.rules-layout__section {
+    scroll-margin-top: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .rules-layout {
+        grid-template-columns: 15rem minmax(0, 1fr);
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .rules-layout__toc {
+        position: sticky;
+        top: 1.5rem;
+    }
+}

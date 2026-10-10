@@ -1,0 +1,17 @@
+<nav class="rules-toc" [attr.aria-label]="'rules.toc.title' | translate">
+    <p class="rules-toc__title">{{ "rules.toc.title" | translate }}</p>
+    <ol class="rules-toc__list">
+        @for (item of items(); track item.sectionId) {
+            <li>
+                <a
+                    class="rules-toc__link"
+                    [href]="'#rules-' + item.sectionId"
+                    [class.rules-toc__link--active]="activeId() === item.sectionId"
+                    [attr.aria-current]="activeId() === item.sectionId ? 'location' : null"
+                    (click)="select($event, item.sectionId)"
+                    >{{ item.titleKey | translate }}</a
+                >
+            </li>
+        }
+    </ol>
+</nav>

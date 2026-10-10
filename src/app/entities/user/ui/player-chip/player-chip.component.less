@@ -14,7 +14,9 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.25rem 0.75rem 0.25rem 0.25rem;
-    border-radius: 999px;
+    /* Радиус = скругление аватара (28% от 1.75rem ≈ 0.5rem) + отступ 0.25rem:
+       контур чипа повторяет форму квадратного аватара, а не «квадрат в круге». */
+    border-radius: 0.75rem;
     background: color-mix(in srgb, var(--lh-surface-3) 60%, transparent);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-border) 55%, transparent);
     color: var(--lh-ink);

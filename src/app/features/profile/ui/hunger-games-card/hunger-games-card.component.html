@@ -4,9 +4,9 @@
         <tui-icon icon="@tui.flame" class="size-6! text-lh-accent" />
         {{ "profile.hungerGames.title" | translate }}
     </h2>
-    <div class="lh-panel rounded-xl px-4 py-4 flex flex-col items-center gap-2 text-center">
+    <div class="lh-panel rounded-xl px-4 py-4 flex flex-col gap-3">
         @if (season(); as season) {
-            <div class="flex items-center justify-center gap-2 mb-1">
+            <div class="flex items-center justify-between gap-2">
                 <button
                     type="button"
                     [disabled]="!canPrev()"
@@ -21,15 +21,11 @@
                         {{ "profile.hungerGames.season" | translate: { number: season.number } }}
                     </p>
                     @if (season.ended_at) {
-                        <span
-                            class="text-base px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold"
-                        >
+                        <span class="text-base px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold">
                             {{ "profile.hungerGames.completed" | translate }}
                         </span>
                     } @else {
-                        <span
-                            class="text-base px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold"
-                        >
+                        <span class="text-base px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold">
                             {{ "profile.hungerGames.active" | translate }}
                         </span>
                     }
@@ -45,51 +41,46 @@
                 </button>
             </div>
             @if (!hasActiveSeason()) {
-                <p class="text-base leading-4 text-lh-danger/80 font-medium">
+                <p class="text-base text-lh-danger/80 font-medium m-0">
                     {{ "profile.hungerGames.noCurrentSeason" | translate }}
                 </p>
             }
             @if (stats(); as hgStats) {
-                <div class="flex flex-col gap-0.5">
-                    <div class="flex items-center justify-center gap-1.5 text-base leading-5">
-                        <span>
-                            <span class="text-ink-3">{{ "profile.hungerGames.elo" | translate }}</span>
-                            <span class="font-bold">{{ hgStats.elo }}</span>
-                        </span>
-                        <span class="text-lh-primary-2/40">|</span>
-                        <span>
-                            <span class="text-ink-3">{{ "profile.hungerGames.wins" | translate }}</span>
-                            <span class="font-bold">{{ hgStats.wins }}</span>
-                        </span>
-                        <span class="text-lh-primary-2/40">|</span>
-                        <span>
-                            <span class="text-ink-3">{{ "profile.hungerGames.kills" | translate }}</span>
-                            <span class="font-bold">{{ hgStats.kills }}</span>
-                        </span>
+                <!-- Три показателя плитками на всю ширину карточки -->
+                <dl class="grid grid-cols-3 gap-2 w-full m-0">
+                    <div class="flex flex-col gap-0.5 rounded-lg bg-surface-3/50 px-3 py-2">
+                        <dt class="text-sm text-ink-3">{{ "profile.hungerGames.elo" | translate }}</dt>
+                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.elo }}</dd>
                     </div>
-                    @if (hgStats.rank > 0) {
-                        <div
-                            class="flex items-center justify-center gap-1.5 text-base leading-5 text-ink-3"
-                        >
+                    <div class="flex flex-col gap-0.5 rounded-lg bg-surface-3/50 px-3 py-2">
+                        <dt class="text-sm text-ink-3">{{ "profile.hungerGames.wins" | translate }}</dt>
+                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.wins }}</dd>
+                    </div>
+                    <div class="flex flex-col gap-0.5 rounded-lg bg-surface-3/50 px-3 py-2">
+                        <dt class="text-sm text-ink-3">{{ "profile.hungerGames.kills" | translate }}</dt>
+                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.kills }}</dd>
+                    </div>
+                </dl>
+                @if (hgStats.rank > 0) {
+                    <p class="flex flex-wrap items-center gap-x-1.5 text-base text-ink-3 m-0">
+                        <span>
+                            {{ "profile.hungerGames.rank" | translate }}
+                            <span class="font-bold text-lh-primary">{{ hgStats.rank }}</span>
+                        </span>
+                        @if (hgStats.reward_coins) {
+                            <span class="text-lh-primary-2/40">•</span>
                             <span>
-                                {{ "profile.hungerGames.rank" | translate }}
-                                <span class="font-bold text-lh-primary">{{ hgStats.rank }}</span>
+                                {{ "profile.hungerGames.reward" | translate }}
+                                <span class="font-bold text-lh-accent">{{ hgStats.reward_coins }}</span>
                             </span>
-                            @if (hgStats.reward_coins) {
-                                <span class="text-lh-primary-2/40">•</span>
-                                <span>
-                                    {{ "profile.hungerGames.reward" | translate }}
-                                    <span class="font-bold text-lh-accent">{{ hgStats.reward_coins }}</span>
-                                </span>
-                            }
-                        </div>
-                    }
-                </div>
+                        }
+                    </p>
+                }
             } @else {
-                <p class="text-base leading-5 text-ink-3">{{ "profile.hungerGames.noData" | translate }}</p>
+                <p class="text-base text-ink-3 m-0">{{ "profile.hungerGames.noData" | translate }}</p>
             }
         } @else {
-            <p class="text-base leading-5 text-ink-3">
+            <p class="text-base text-ink-3 m-0">
                 {{ "profile.hungerGames.noCurrentSeason" | translate }}
             </p>
         }

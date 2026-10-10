@@ -26,7 +26,7 @@
         <section class="flex flex-col gap-3">
             @let look = looks.lookOf(userService.userId);
             <div class="profile-cover flex gap-5 sm:gap-8 flex-col sm:flex-row">
-                @if (look.bannerId !== 'none') {
+                @if (look.bannerId !== "none") {
                     <app-profile-banner
                         class="profile-cover__banner"
                         [banner]="bannerById(look.bannerId)"
@@ -72,40 +72,65 @@
                             </span>
                         </div>
                     } @else {
-                        <!-- Ник и роль: главное о игроке одной строкой -->
-                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <h1 class="profile-name">{{ userName || userData.name }}</h1>
-                            @if (userName) {
-                                <button
-                                    type="button"
-                                    (click)="openDialogChangeUsername()"
-                                    class="profile-name__edit"
-                                    [title]="'profile.nickname.change' | translate"
-                                    [attr.aria-label]="'profile.nickname.changeAria' | translate"
-                                >
-                                    <tui-icon icon="@tui.pencil" class="size-4!" />
-                                </button>
+                        <!--
+                            Ник и роль слева, действия с профилем — у правого края той же строки:
+                            раньше справа от ника оставалась пустота, а кнопки висели внизу отдельно.
+                        -->
+                        <div class="profile-cover__top">
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
+                                <h1 class="profile-name">{{ userName || userData.name }}</h1>
+                                @if (userName) {
+                                    <button
+                                        type="button"
+                                        (click)="openDialogChangeUsername()"
+                                        class="profile-name__edit"
+                                        [title]="'profile.nickname.change' | translate"
+                                        [attr.aria-label]="'profile.nickname.changeAria' | translate"
+                                    >
+                                        <tui-icon icon="@tui.pencil" class="size-4!" />
+                                    </button>
+                                }
+                                <span class="profile-role">{{ getRoleName() | translate }}</span>
+                            </div>
+                            @if (self) {
+                                <div class="profile-public__actions">
+                                    <a class="lh-chip min-w-0" [routerLink]="['/player', self.nickname]">
+                                        <tui-icon icon="@tui.user-round" />
+                                        <span class="truncate">{{ "player.publicProfile" | translate }}</span>
+                                    </a>
+                                    <a class="lh-chip min-w-0" [routerLink]="['/profile/style']">
+                                        <tui-icon icon="@tui.palette" />
+                                        <span class="truncate">{{ "player.style.short" | translate }}</span>
+                                    </a>
+                                    <app-share-button
+                                        [url]="'/player/' + self.nickname"
+                                        [title]="self.nickname"
+                                        [iconOnly]="true"
+                                    />
+                                </div>
                             }
-                            <span class="profile-role">{{ getRoleName() | translate }}</span>
                         </div>
                     }
 
                     <!-- Селение -->
                     @if (settlement) {
-                        <div class="flex gap-1 flex-col lh-panel rounded-xl px-4 py-3 w-full max-w-xl">
-                            <p class="text-lg leading-[27px] text-ink-3 mb-1">
-                                {{ "profile.settlement.label" | translate }}
-                            </p>
-                            <span class="font-bold truncate text-lg leading-[27px]">
-                                {{
-                                    (isSettlementOwner(settlement)
-                                        ? "profile.settlement.role.leader"
-                                        : "profile.settlement.role.resident"
-                                    ) | translate
-                                }}
-                                «{{ settlement | settlementDisplayName }}»
-                            </span>
-                            <div class="flex items-start gap-2 flex-wrap">
+                        <!-- Плашка поселения во всю ширину: название слева, значки справа -->
+                        <div class="profile-settlement lh-panel rounded-xl px-4 py-3">
+                            <div class="flex flex-col min-w-0">
+                                <p class="text-base text-ink-3 m-0">
+                                    {{ "profile.settlement.label" | translate }}
+                                </p>
+                                <span class="font-bold truncate text-lg leading-[27px]">
+                                    {{
+                                        (isSettlementOwner(settlement)
+                                            ? "profile.settlement.role.leader"
+                                            : "profile.settlement.role.resident"
+                                        ) | translate
+                                    }}
+                                    «{{ settlement | settlementDisplayName }}»
+                                </span>
+                            </div>
+                            <div class="profile-settlement__badges">
                                 <app-settlement-badge [tone]="getSettlementTypeTone(settlement)" [uppercase]="true">
                                     {{ getSettlementTypeLabel(settlement) }}
                                 </app-settlement-badge>
@@ -128,7 +153,7 @@
                         </div>
                     } @else if (verified) {
                         <!-- Не тупик: сразу ссылка на поиск поселения -->
-                        <div class="lh-panel rounded-xl px-4 py-2.5 w-full max-w-xl flex items-center justify-between gap-3">
+                        <div class="lh-panel rounded-xl px-4 py-2.5 w-full flex items-center justify-between gap-3">
                             <span class="text-lg leading-[27px] text-ink-2">
                                 {{ "profile.settlement.noSettlement" | translate }}
                             </span>
@@ -139,26 +164,9 @@
                         </div>
                     }
 
-                    <!-- Значки и публичный профиль -->
+                    <!-- Значки игрока -->
                     @if (self) {
-                        <div class="profile-public">
-                            <app-player-badges [badges]="self.badges" />
-                            <div class="profile-public__actions">
-                                <a class="lh-chip min-w-0" [routerLink]="['/player', self.nickname]">
-                                    <tui-icon icon="@tui.user-round" />
-                                    <span class="truncate">{{ "player.publicProfile" | translate }}</span>
-                                </a>
-                                <a class="lh-chip min-w-0" [routerLink]="['/profile/style']">
-                                    <tui-icon icon="@tui.palette" />
-                                    <span class="truncate">{{ "player.style.short" | translate }}</span>
-                                </a>
-                                <app-share-button
-                                    [url]="'/player/' + self.nickname"
-                                    [title]="self.nickname"
-                                    [iconOnly]="true"
-                                />
-                            </div>
-                        </div>
+                        <app-player-badges class="profile-public" [badges]="self.badges" />
                     }
                 </div>
             </div>

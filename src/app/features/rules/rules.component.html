@@ -14,65 +14,81 @@
 
     <app-rules-search [container]="rulesRoot" />
 
-    <!-- Терминология -->
-    <div class="lh-panel faq-scroll">
-        <app-rule-section
-            sectionId="terminology"
-            title="rules.sections.terminology"
-            icon="@tui.scroll-text"
-            (scrollTo)="scrollToElement($event)"
-        >
-            <app-terminology (scrollTo)="scrollToElement($event)" />
-        </app-rule-section>
-    </div>
+    <div class="rules-layout">
+        <app-rules-toc class="rules-layout__toc" [items]="tocSections" (navigate)="goToSection($event)" />
 
-    <div class="lh-panel faq-scroll">
-        <app-rule-section sectionId="base" title="rules.sections.base" (scrollTo)="scrollToElement($event)">
-            <app-base (scrollTo)="scrollToElement($event)" />
-        </app-rule-section>
-    </div>
+        <div class="rules-layout__main">
+            <!-- Терминология -->
+            <div id="rules-terminology" class="lh-panel faq-scroll rules-layout__section">
+                <app-rule-section
+                    sectionId="terminology"
+                    title="rules.sections.terminology"
+                    icon="@tui.scroll-text"
+                    (scrollTo)="scrollToElement($event)"
+                >
+                    <app-terminology (scrollTo)="scrollToElement($event)" />
+                </app-rule-section>
+            </div>
 
-    <!-- 2. О селениях -->
-    <div class="lh-panel faq-scroll">
-        <app-rule-section
-            sectionId="settlements"
-            title="rules.sections.settlements"
-            (scrollTo)="scrollToElement($event)"
-        >
-            <app-about-settlements (scrollTo)="scrollToElement($event)" />
-        </app-rule-section>
-    </div>
+            <div id="rules-base" class="lh-panel faq-scroll rules-layout__section">
+                <app-rule-section sectionId="base" title="rules.sections.base" (scrollTo)="scrollToElement($event)">
+                    <app-base (scrollTo)="scrollToElement($event)" />
+                </app-rule-section>
+            </div>
 
-    <!-- 3. Действия игроков -->
-    <div class="lh-panel faq-scroll">
-        <app-rule-section sectionId="actions" title="rules.sections.actions" appScrollAnchor="P3" (scrollTo)="scrollToElement($event)">
-            <app-players-actions (scrollTo)="scrollToElement($event)" />
-        </app-rule-section>
-    </div>
+            <!-- 2. О селениях -->
+            <div id="rules-settlements" class="lh-panel faq-scroll rules-layout__section">
+                <app-rule-section
+                    sectionId="settlements"
+                    title="rules.sections.settlements"
+                    (scrollTo)="scrollToElement($event)"
+                >
+                    <app-about-settlements (scrollTo)="scrollToElement($event)" />
+                </app-rule-section>
+            </div>
 
-    <!-- 4. Колонизация -->
-    <div class="lh-panel faq-scroll">
-        <app-rule-section
-            sectionId="colonization"
-            title="rules.sections.colonization"
-            (scrollTo)="scrollToElement($event)"
-        >
-            <app-colonization (scrollTo)="scrollToElement($event)" />
-        </app-rule-section>
-    </div>
+            <!-- 3. Действия игроков -->
+            <div id="rules-actions" class="lh-panel faq-scroll rules-layout__section">
+                <app-rule-section
+                    sectionId="actions"
+                    title="rules.sections.actions"
+                    appScrollAnchor="P3"
+                    (scrollTo)="scrollToElement($event)"
+                >
+                    <app-players-actions (scrollTo)="scrollToElement($event)" />
+                </app-rule-section>
+            </div>
 
-    <!-- 5. Военные действия -->
-    <div class="lh-panel faq-scroll">
-        <app-rule-section sectionId="military" title="rules.sections.military" appScrollAnchor="P5" (scrollTo)="scrollToElement($event)">
-            <app-military-actions (scrollTo)="scrollToElement($event)" />
-        </app-rule-section>
-    </div>
+            <!-- 4. Колонизация -->
+            <div id="rules-colonization" class="lh-panel faq-scroll rules-layout__section">
+                <app-rule-section
+                    sectionId="colonization"
+                    title="rules.sections.colonization"
+                    (scrollTo)="scrollToElement($event)"
+                >
+                    <app-colonization (scrollTo)="scrollToElement($event)" />
+                </app-rule-section>
+            </div>
 
-    <!-- 6. Права и обязанности администрации -->
-    <div class="lh-panel faq-scroll">
-        <app-rule-section sectionId="admin" title="rules.sections.admin" (scrollTo)="scrollToElement($event)">
-            <app-admin-rights (scrollTo)="scrollToElement($event)" />
-        </app-rule-section>
+            <!-- 5. Военные действия -->
+            <div id="rules-military" class="lh-panel faq-scroll rules-layout__section">
+                <app-rule-section
+                    sectionId="military"
+                    title="rules.sections.military"
+                    appScrollAnchor="P5"
+                    (scrollTo)="scrollToElement($event)"
+                >
+                    <app-military-actions (scrollTo)="scrollToElement($event)" />
+                </app-rule-section>
+            </div>
+
+            <!-- 6. Права и обязанности администрации -->
+            <div id="rules-admin" class="lh-panel faq-scroll rules-layout__section">
+                <app-rule-section sectionId="admin" title="rules.sections.admin" (scrollTo)="scrollToElement($event)">
+                    <app-admin-rights (scrollTo)="scrollToElement($event)" />
+                </app-rule-section>
+            </div>
+        </div>
     </div>
 
     @if (showScrollTop) {

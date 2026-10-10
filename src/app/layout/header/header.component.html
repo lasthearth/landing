@@ -229,8 +229,9 @@
                         <a
                             [routerLink]="link.route"
                             routerLinkActive="nav-button--active"
-                            class="nav-button relative md:w-auto px-3"
+                            class="nav-button relative md:w-auto px-3 gap-1.5"
                         >
+                            <tui-icon [icon]="link.icon" class="size-4!" />
                             <span>{{ link.labelKey | translate }}</span>
                         </a>
                     }
@@ -242,7 +243,7 @@
                         type="button"
                         (click)="toggleMediaMenu()"
                         [ngClass]="{ 'nav-button--active': isCommunityActive() || showMediaMenu() }"
-                        class="nav-button relative md:w-auto px-3"
+                        class="nav-button relative md:w-auto px-3 gap-1.5"
                         [attr.aria-expanded]="showMediaMenu()"
                     >
                         @if (isCommunityFresh()) {
@@ -250,6 +251,7 @@
                                 <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
                             </span>
                         }
+                        <tui-icon icon="@tui.users-round" class="size-4!" />
                         <span>{{ "header.nav.community" | translate }}</span>
                         <tui-icon
                             icon="@tui.chevron-down"
