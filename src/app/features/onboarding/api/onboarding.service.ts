@@ -25,10 +25,6 @@ const INSTALLED_KEY = 'lh_onboarding_installed';
  */
 const CONNECTED_KEY = 'lh_onboarding_connected';
 
-/**
- * Ключ localStorage: игрок скрыл путь новичка в профиле.
- */
-const HIDDEN_KEY = 'lh_onboarding_hidden';
 
 /**
  * Ссылки-приглашения в Discord.
@@ -87,10 +83,6 @@ export class OnboardingService {
      */
     public readonly connected = signal(this.read(CONNECTED_KEY));
 
-    /**
-     * Игрок скрыл путь новичка в профиле.
-     */
-    public readonly hidden = signal(this.read(HIDDEN_KEY));
 
     /**
      * Отслеживание уже запущено.
@@ -143,12 +135,6 @@ export class OnboardingService {
         this.set(CONNECTED_KEY, this.connected);
     }
 
-    /**
-     * Скрывает путь новичка в профиле.
-     */
-    public hide(): void {
-        this.set(HIDDEN_KEY, this.hidden);
-    }
 
     /**
      * Читает флаг из localStorage.

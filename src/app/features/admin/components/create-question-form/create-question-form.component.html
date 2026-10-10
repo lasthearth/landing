@@ -1,13 +1,13 @@
 <div class="lh-panel">
-    <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'admin.questions.createTitle' | translate }}</p>
+    <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'admin.questions.createTitle' | translate }}</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit.next()" class="flex flex-col gap-4 mt-6">
-        <lh-input formControlName="question" [placeholder]="'admin.questions.createPlaceholder' | translate" />
+        <lh-input formControlName="question" [ariaLabel]="'admin.questions.createTitle' | translate" [placeholder]="'admin.questions.createPlaceholder' | translate" />
         <tui-error formControlName="question" [error]="[] | tuiFieldError | async" />
 
         <button
             [disabled]="!form.valid"
             type="submit"
-            class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-ink cursor-pointer transition-all duration-200 bg-surface-3 border border-line hover:bg-surface-4 self-start disabled:opacity-50 disabled:cursor-not-allowed"
+            class="rounded-xl px-5 py-2.5 text-lg font-bold text-ink cursor-pointer transition duration-200 bg-surface-3 border border-line hover:bg-surface-4 self-start disabled:opacity-50 disabled:cursor-not-allowed"
         >
             {{ 'admin.questions.createButton' | translate }}
         </button>

@@ -4,7 +4,7 @@
 @let settlementsRequest = settlements === null || settlements?.length === 0;
 @let hasPendingPurchases = pendingPurchases().length > 0;
 
-<div class="w-full flex flex-col gap-3 lg:gap-6">
+<div class="lh-page-container w-full flex flex-col gap-3 lg:gap-6">
     <app-page-header [level]="2" [title]="'admin.title' | translate" />
     <!--
         Разделы набраны кнопками `.nav-button` с переносом строк, а не `tui-tabs`:

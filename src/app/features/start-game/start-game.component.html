@@ -1,10 +1,7 @@
-<div class="start-game">
+<div class="start-game lh-page-container">
     <app-page-header [title]="'startGame.title' | translate" [subtitle]="'startGame.subtitle' | translate" />
 
     <div class="start-game__layout">
-        <!-- Путь новичка: что уже сделано и что дальше -->
-        <app-newcomer-path variant="page" />
-
         <aside class="start-game__aside">
             <section class="start-game__card" aria-labelledby="start-game-server">
                 <h2 id="start-game-server" class="start-game__card-title">
@@ -67,5 +64,8 @@
                 </ul>
             </section>
         </aside>
+
+        <!-- Путь новичка: что уже сделано и что дальше -->
+        <app-newcomer-path />
     </div>
 </div>

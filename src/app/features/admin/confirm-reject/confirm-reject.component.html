@@ -15,7 +15,7 @@
                 <button
                     type="button"
                     (click)="selectReason(reason)"
-                    class="text-base cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 text-ink-2 rounded-lg py-1.5 px-3 hover:bg-lh-accent/10 hover:border-lh-accent/30 hover:text-lh-accent transition-all"
+                    class="text-base cursor-pointer bg-lh-primary-2/10 border border-lh-primary-2/20 text-ink-2 rounded-lg py-1.5 px-3 hover:bg-lh-accent/10 hover:border-lh-accent/30 hover:text-lh-accent transition"
                 >
                     {{ reason | translate }}
                 </button>
@@ -25,6 +25,7 @@
 
     <lh-input
         type="textarea"
+        [label]="'admin.verification.rejectLabel' | translate"
         [placeholder]="'admin.verification.rejectPlaceholder' | translate"
         [formControl]="form.controls.reason"
     />

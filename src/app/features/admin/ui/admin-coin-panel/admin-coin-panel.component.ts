@@ -17,7 +17,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
-import { I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { ISelectedPlayer } from '../../model/selected-player.model';
 
 /**
@@ -29,7 +29,7 @@ import { ISelectedPlayer } from '../../model/selected-player.model';
 @Component({
     selector: 'app-admin-coin-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, AsyncPipe, TuiIcon, TuiLoader, LHInputComponent, ImageLoaderComponent, EmptyStateComponent, TranslatePipe, RelativeTimeComponent],
+    imports: [AmountPipe, ReactiveFormsModule, AsyncPipe, TuiIcon, TuiLoader, LHInputComponent, ImageLoaderComponent, EmptyStateComponent, TranslatePipe, RelativeTimeComponent],
     templateUrl: './admin-coin-panel.component.html',
     styleUrl: './admin-coin-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

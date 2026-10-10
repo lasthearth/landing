@@ -1,4 +1,4 @@
-<div class="text-lh-primary flex flex-col gap-6 p-6 relative">
+<div class="text-lh-primary lh-page-container flex flex-col gap-6 relative">
     <div id="faq-scroll-sentinel" class="absolute top-0 left-0 w-px h-px pointer-events-none"></div>
 
     <app-page-header [title]="'faq.title' | translate">
@@ -11,19 +11,19 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isServerConcept = !isServerConcept"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.serverConcept" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isServerConcept }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isServerConcept">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <b>Last Hearth</b>
                     — это уникальный ролевой политико-экономический проект с глубокой системой PvP-взаимодействий,
@@ -86,24 +86,24 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isPasswordLost = !isPasswordLost"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.passwordLost" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isPasswordLost }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isPasswordLost">
-            <p class="text-[23px] leading-[32px] text-ink mt-4">
+            <p class="text-2xl leading-[32px] text-ink mt-4">
                 В случае, утраты доступу к сайту (забыл пароль, не заходит) — напишите в техподдержку в нашем
                 <a
-                    href="https://discord.com/invite/FZb7SGrSFy"
+                    [href]="discordInviteUrl"
                     target="_blank"
-                    class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                    class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                 >
                     Discord
                 </a>
@@ -116,19 +116,19 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isTroubles = !isTroubles"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.connectionTroubles" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTroubles }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isTroubles">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>Первым делом стоит проверить возможные проблемы:</p>
                 <p class="pl-6">
                     <span class="font-bold">1.</span>
@@ -144,9 +144,9 @@
                     статус вашей анкеты можно узнать на сайте в личном кабинете (статус в профиле) или у администраторов
                     в
                     <a
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -162,7 +162,7 @@
                     <a
                         href="https://lasthearth.ru/profile/how-play"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         "Играть"
                     </a>
@@ -176,9 +176,9 @@
                     <span class="font-bold">•</span>
                     если не удается получить доступ к сайту ModDB - гайд на починку есть в канале #гайды в
                     <a
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -188,9 +188,9 @@
                     <span class="font-bold">•</span>
                     если не удается загрузить какой-то определенный мод - можно написать об этом в
                     <a
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -216,9 +216,9 @@
                 <p>
                     Проблема до сих пор сохраняется? Напишите тикет для техподдержки с описанием проблемы в
                     <a
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -232,19 +232,19 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isSeason = !isSeason"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.seasonWipe" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isSeason }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isSeason">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>Наш сервер живет долгими сезонами, каждый из которых длится по полгода.</p>
                 <p>Приблизительно вайпы происходят 12 июня и 12 декабря соответственно.</p>
             </div>
@@ -255,19 +255,19 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isHowToStart = !isHowToStart"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.howToStart" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isHowToStart }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isHowToStart">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     Для начала стоит освоиться: узнать кто играет на сервере, какие образованы селения, какой у них
@@ -287,9 +287,9 @@
                     <span class="font-bold">•</span>
                     Советуем новичкам для начала найти союзников в
                     <a
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -303,27 +303,27 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isBagsOrViolation = !isBagsOrViolation"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.bugOrViolation" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isBagsOrViolation }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isBagsOrViolation">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     В случае невозможности подключиться, крашей, неправильных рецептов, нарушений правил воровства, и
                     т.п. необходимо написать тикет через канал #тех-поддержка в
                     <a
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -337,19 +337,19 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isDeathOrTheft = !isDeathOrTheft"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.deathOrTheft" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isDeathOrTheft }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isDeathOrTheft">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     В первую очередь важно проверить не были ли нарушены правила стороной-агрессором. Если вы нашли
@@ -363,26 +363,26 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isOffer = !isOffer"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.offer" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isOffer }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isOffer">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     Все предложения принимаются в специальном канале #предложения в
                     <a
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="discordInviteUrl"
                         target="_blank"
-                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition-all duration-100"
+                        class="text-ink-2 font-bold border-dashed border-b border-wood hover:text-ink transition duration-100"
                     >
                         Discord
                     </a>
@@ -396,19 +396,19 @@
     <div class="lh-panel faq-scroll">
         <div
             (click)="isTeam = !isTeam"
-            class="flex w-full justify-between gap-3 cursor-pointer transition-all duration-300 hover:opacity-80 items-center"
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
         >
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">
                 {{ "faq.questions.team" | translate }}
             </p>
             <tui-icon
                 icon="@tui.chevron-down"
                 [ngClass]="{ 'rotate-180!': isTeam }"
-                class="text-ink-2 transition-all size-6!"
+                class="text-ink-2 transition size-6!"
             />
         </div>
         <tui-expand [expanded]="isTeam">
-            <div class="flex flex-col gap-6 text-[23px] leading-[32px] text-ink mt-4">
+            <div class="flex flex-col gap-6 text-2xl leading-[32px] text-ink mt-4">
                 <p>
                     <span class="font-bold">•</span>
                     Мы всегда рады новым лицам! Напишите лидерам проекта в Discord или Telegram. Там же можно узнать о
@@ -421,7 +421,7 @@
     @if (showScrollTop) {
         <button
             (click)="scrollToTop()"
-            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-surface-4 lh-shadow"
+            class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-surface-3 border border-line text-ink flex items-center justify-center cursor-pointer transition duration-300 hover:bg-surface-4 lh-shadow"
             [title]="'faq.scrollTop' | translate"
         >
             <tui-icon icon="@tui.chevron-up" class="size-6!" />

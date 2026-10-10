@@ -16,7 +16,7 @@ export type {
     StyleRequirement,
     StyleStats,
 } from './model/player-style';
-export { BANNER_EFFECTS, FRAME_EFFECTS, PROFILE_BANNERS, PROFILE_FRAMES } from './lib/player-style.constant';
+export { BANNER_EFFECTS, BANNER_NONE, FRAME_EFFECTS, PROFILE_BANNERS, PROFILE_FRAMES } from './lib/player-style.constant';
 export { bannerById, defaultPlayerLook, styleCheckable, styleEarned, styleLock } from './lib/style-lock.function';
 export { PlayerLookService } from './api/player-look.service';
 export { BANNER_SHARD_PRICE } from './lib/player-style.constant';

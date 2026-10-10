@@ -5,7 +5,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { DonateService, IPurchase } from '@entities/donate';
 import { UserService } from '@entities/user';
 import { I18nService } from '@core/i18n';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 
@@ -28,7 +28,7 @@ const PRIVILEGE_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
 @Component({
     selector: 'app-all-purchases-panel',
     standalone: true,
-    imports: [TuiIcon, EmptyStateComponent, ErrorStateComponent, TranslatePipe, RelativeTimeComponent],
+    imports: [AmountPipe, TuiIcon, EmptyStateComponent, ErrorStateComponent, TranslatePipe, RelativeTimeComponent],
     templateUrl: './all-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

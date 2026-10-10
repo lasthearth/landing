@@ -15,6 +15,14 @@ import { GlobalExpandService } from './services/global-expand.service';
 import { ScrollAnchorDirective } from './directives/scroll-anchor.directive';
 import { RulesSearchComponent } from './ui/rules-search/rules-search.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RulesTocComponent } from './ui/rules-toc/rules-toc.component';
+import { RULES_TOC_SECTIONS } from './config/rules-toc-sections.constant';
+import { SectionStateService } from './services/section-state.service';
+
+/**
+ * Сколько ждать раскрытия раздела перед прокруткой к нему (мс).
+ */
+const SECTION_EXPAND_DELAY = 400;
 
 /**
  * Компонент правил сервера.
@@ -36,6 +44,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
         AdminRightsComponent,
         ScrollAnchorDirective,
         RulesSearchComponent,
+        RulesTocComponent,
     ],
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.less', './styles/rules.less'],
@@ -51,6 +60,16 @@ export class RulesComponent implements OnDestroy {
      * Сервис глобального управления раскрытием всех секций.
      */
     protected readonly globalExpandService = inject(GlobalExpandService);
+
+    /**
+     * Состояние раскрытия разделов.
+     */
+    private readonly sectionStateService = inject(SectionStateService);
+
+    /**
+     * Пункты оглавления.
+     */
+    protected readonly tocSections = RULES_TOC_SECTIONS;
 
     /**
      * Сервис обнаружения изменений.
@@ -106,6 +125,23 @@ export class RulesComponent implements OnDestroy {
      */
     protected toggleAll(): void {
         this.globalExpandService.toggle();
+    }
+
+    /**
+     * Переход из оглавления: раскрывает раздел и прокручивает к его началу.
+     *
+     * @param sectionId Идентификатор раздела.
+     */
+    protected goToSection(sectionId: string): void {
+        const wasOpen = this.sectionStateService.isSectionOpen(sectionId);
+        this.sectionStateService.expandSection(sectionId);
+
+        // Свёрнутый раздел сначала раскрывается: пока он короткий, страница может
+        // не докрутиться до его начала (особенно у последних разделов).
+        setTimeout(
+            () => document.getElementById(`rules-${sectionId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+            wasOpen ? 0 : SECTION_EXPAND_DELAY
+        );
     }
 
     /**

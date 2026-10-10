@@ -1,100 +1,118 @@
 @let leaderBoard = (leaderBoard$ | async)?.entries;
 @let purchases = purchases$ | async;
 
-<!-- История покупок текущего пользователя -->
+<!--
+    История покупок и «Голодные игры» — две одинаковые карточки рядом: заголовок
+    с иконкой внутри карточки, справа — управление (все покупки / выбор сезона),
+    одинаковые отступы, пустые состояния и высота.
+-->
 @if (isVerifiedUser) {
-    <div class="flex flex-col gap-3 mb-12">
-        <h2 class="lh-display text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'profile.purchases.title' | translate }}</h2>
-
-        @if (purchases; as list) {
-            @if (list.length > 0) {
-                <ng-template #purchaseItem let-purchase>
-                    @let meta = getPurchaseStatusMeta(purchase);
-
-                    <div
-                        class="flex items-center justify-between gap-4 lh-panel rounded-xl px-4 py-3"
-                    >
-                        <div class="flex flex-col gap-1 min-w-0">
-                            <span class="text-lg font-bold text-lh-primary truncate">
-                                {{ purchase.itemName || "—" }}
-                            </span>
-                            <time class="text-base text-ink-3" [appRelativeTime]="purchase.createdAt" [fallback]="purchase.formattedDate"></time>
-                        </div>
-
-                        <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
-                            <span class="inline-flex items-center gap-1 text-lg font-bold text-lh-primary">
-                                {{ purchase.pricePaid }}
-                                <img
-                                    src="/splinter-of-spark.webp"
-                                    [alt]="'profile.currency.shardAlt' | translate"
-                                    class="h-5 w-5 object-contain"
-                                />
-                            </span>
-
-                            <span
-                                [class]="
-                                    'inline-flex items-center gap-1.5 text-base font-medium ' +
-                                    meta.textClass
-                                "
-                            >
-                                <span [class]="'w-2.5 h-2.5 rounded-full ' + meta.dotClass"></span>
-                                {{ meta.label | translate }}
-                            </span>
-                        </div>
-                    </div>
-                </ng-template>
-
-                <div class="flex flex-col gap-2">
-                    <ng-container *ngTemplateOutlet="purchaseItem; context: { $implicit: list[0] }" />
-
-                    @if (list.length > purchasesCollapsedCount) {
-                        <div
-                            class="purchases-list"
-                            [class.purchases-list--expanded]="isPurchasesExpanded()"
-                        >
-                            <div class="purchases-list__inner">
-                                @for (purchase of list.slice(purchasesCollapsedCount); track purchase.id) {
-                                    <ng-container
-                                        *ngTemplateOutlet="purchaseItem; context: { $implicit: purchase }"
-                                    />
-                                }
-                            </div>
-                        </div>
-                    }
-                </div>
-
-                @if (list.length > purchasesCollapsedCount) {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-stretch mb-8">
+        <section class="lh-panel rounded-2xl p-4 sm:p-5 flex flex-col gap-3 h-full">
+            <header class="flex items-center justify-between gap-3 min-h-9">
+                <h2 class="m-0 flex items-center gap-2 text-lg sm:text-xl font-bold text-ink">
+                    <tui-icon icon="@tui.receipt" class="size-5! text-lh-accent" />
+                    {{ "profile.purchases.title" | translate }}
+                </h2>
+                @if (purchases && purchases.length > purchasesCollapsedCount) {
                     <button
                         type="button"
+                        class="lh-chip shrink-0"
+                        [attr.aria-expanded]="isPurchasesExpanded()"
                         (click)="isPurchasesExpanded.set(!isPurchasesExpanded())"
-                        class="self-center flex items-center gap-2 text-lg font-semibold text-lh-accent hover:text-brand-hover transition-colors cursor-pointer"
                     >
-                        {{ isPurchasesExpanded() ? ('profile.purchases.collapse' | translate) : ('profile.purchases.expand' | translate) }}
+                        {{
+                            isPurchasesExpanded()
+                                ? ("profile.purchases.collapse" | translate)
+                                : ("profile.purchases.expand" | translate)
+                        }}
+                        <span class="text-ink-3">{{ purchases.length }}</span>
                         <tui-icon
-                            [icon]="isPurchasesExpanded() ? '@tui.chevron-up' : '@tui.chevron-down'"
-                            class="size-5! purchases-toggle-icon"
+                            icon="@tui.chevron-down"
+                            class="purchases-toggle-icon"
                             [class.purchases-toggle-icon--expanded]="isPurchasesExpanded()"
                         />
                     </button>
                 }
-            } @else {
-                <p
-                    class="text-[23px] text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
-                >
-                    {{ 'profile.purchases.empty' | translate }}
-                </p>
+            </header>
+
+            @if (purchases; as list) {
+                @if (list.length > 0) {
+                    <ng-template #purchaseItem let-purchase let-first="first">
+                        @let meta = getPurchaseStatusMeta(purchase);
+
+                        <div
+                            class="flex items-center justify-between gap-4 py-2.5"
+                            [class.purchase-row--divided]="!first"
+                        >
+                            <div class="flex flex-col gap-0.5 min-w-0">
+                                <span class="text-base sm:text-lg font-bold text-lh-primary truncate">
+                                    {{ purchase.itemName || "—" }}
+                                </span>
+                                <time
+                                    class="text-sm text-ink-3"
+                                    [appRelativeTime]="purchase.createdAt"
+                                    [fallback]="purchase.formattedDate"
+                                ></time>
+                            </div>
+
+                            <div class="flex items-center gap-4 sm:gap-5 flex-shrink-0">
+                                <span
+                                    class="inline-flex items-center gap-1 text-base sm:text-lg font-bold text-lh-primary"
+                                >
+                                    {{ purchase.pricePaid | amount }}
+                                    <img
+                                        src="/splinter-of-spark.webp"
+                                        [alt]="'profile.currency.shardAlt' | translate"
+                                        class="h-5 w-5 object-contain"
+                                    />
+                                </span>
+
+                                <span
+                                    [class]="'inline-flex items-center gap-1.5 text-sm font-medium sm:min-w-28 ' + meta.textClass"
+                                >
+                                    <span [class]="'w-2 h-2 rounded-full ' + meta.dotClass"></span>
+                                    {{ meta.label | translate }}
+                                </span>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <div class="flex flex-col">
+                        <ng-container *ngTemplateOutlet="purchaseItem; context: { $implicit: list[0], first: true }" />
+
+                        @if (list.length > purchasesCollapsedCount) {
+                            <div class="purchases-list" [class.purchases-list--expanded]="isPurchasesExpanded()">
+                                <div class="purchases-list__inner">
+                                    @for (purchase of list.slice(purchasesCollapsedCount); track purchase.id) {
+                                        <ng-container
+                                            *ngTemplateOutlet="
+                                                purchaseItem;
+                                                context: { $implicit: purchase, first: false }
+                                            "
+                                        />
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                } @else {
+                    <p class="m-0 text-base text-ink-3">{{ "profile.purchases.empty" | translate }}</p>
+                }
             }
-        }
+        </section>
+
+        <app-hunger-games-card class="block h-full" />
     </div>
 }
 
-<app-page-header class="block mb-8" [level]="2" [title]="'profile.statistics.title' | translate" />
+<app-page-header class="block mb-4" [level]="2" [title]="'profile.statistics.title' | translate" />
 
 @if (leaderBoard === null) {
     <app-statistics-skeleton />
 }
 @if (leaderBoard) {
-    <div class="lh-chips mt-4 mb-16" role="tablist" [attr.aria-label]="'profile.statistics.title' | translate">
+    <div class="lh-chips mb-6" role="tablist" [attr.aria-label]="'profile.statistics.title' | translate">
         <button
             type="button"
             role="tab"
@@ -102,7 +120,11 @@
             [attr.aria-selected]="activeItemIndex === 0"
             (click)="activeItemIndex = 0; getDeaths()"
         >
-            {{ isMobile ? ('profile.statistics.tabs.deathsShort' | translate) : ('profile.statistics.tabs.deaths' | translate) }}
+            {{
+                isMobile
+                    ? ("profile.statistics.tabs.deathsShort" | translate)
+                    : ("profile.statistics.tabs.deaths" | translate)
+            }}
         </button>
         <button
             type="button"
@@ -111,7 +133,11 @@
             [attr.aria-selected]="activeItemIndex === 1"
             (click)="activeItemIndex = 1; getHoursPlayed()"
         >
-            {{ isMobile ? ('profile.statistics.tabs.hoursShort' | translate) : ('profile.statistics.tabs.hours' | translate) }}
+            {{
+                isMobile
+                    ? ("profile.statistics.tabs.hoursShort" | translate)
+                    : ("profile.statistics.tabs.hours" | translate)
+            }}
         </button>
         <button
             type="button"
@@ -120,12 +146,17 @@
             [attr.aria-selected]="activeItemIndex === 2"
             (click)="activeItemIndex = 2; getKills()"
         >
-            {{ isMobile ? ('profile.statistics.tabs.killsShort' | translate) : ('profile.statistics.tabs.kills' | translate) }}
+            {{
+                isMobile
+                    ? ("profile.statistics.tabs.killsShort" | translate)
+                    : ("profile.statistics.tabs.kills" | translate)
+            }}
         </button>
     </div>
 
     @if (leaderBoard.length >= 3) {
-        <div class="flex gap-8 lg:gap-16 items-center justify-center mb-16">
+        <!-- Пьедестал: 2-е, 1-е, 3-е место; ступени разной высоты, «пол» — нижняя линия -->
+        <div class="podium-row grid grid-cols-3 gap-2 sm:gap-4 items-end w-full max-w-4xl mx-auto mb-8">
             <app-leader-card
                 [playerName]="leaderBoard[1]?.name ?? ''"
                 ratingPlace="2"
@@ -137,7 +168,6 @@
             <app-leader-card
                 [playerName]="leaderBoard[0]?.name ?? ''"
                 ratingPlace="1"
-                [isBigSize]="true"
                 [count]="getCount(leaderBoard[0])"
                 [type]="getTypeLabel()"
                 [userImage]="getUserAvatar(leaderBoard[0]?.user_id)"
@@ -154,43 +184,56 @@
         </div>
     }
 
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-2">
         @for (item of leaderBoard; track $index; let odd = $odd) {
             @if ($index > 2) {
                 <div
-                    class="ember-row h-24 relative transform transition duration-500 hover:scale-[101%] hover:cursor-pointer flex items-center size-full bg-[url('/br.webp')] bg-cover bg-center rounded-2xl object-center shadow-lg shadow-night-deep/40 border border-line-strong/25 overflow-hidden"
+                    class="ember-row h-16 relative flex items-center size-full bg-[url('/br.webp')] bg-cover bg-center rounded-2xl object-center shadow-lg shadow-night-deep/40 border border-line-strong/25 overflow-hidden"
                 >
                     <p
-                        class="absolute left-4 lg:left-12 text-2xl md:text-4xl uppercase font-bold text-parchment-3/15 z-10"
+                        class="absolute left-4 lg:left-8 text-xl md:text-3xl uppercase font-bold text-parchment-3/15 z-10"
                     >
                         {{ $index + 1 }}
                     </p>
-                    <div class="flex w-full items-center justify-between px-16 lg:px-28 z-10">
+                    <div class="flex w-full items-center justify-between pl-14 pr-5 lg:pl-20 lg:pr-8 z-10">
                         <div class="flex items-center gap-3">
                             <app-player-avatar
                                 [userId]="item.user_id"
                                 [src]="getUserAvatar(item.user_id)"
-                                class="size-10 sm:size-12"
+                                class="size-9 sm:size-10"
                                 [alt]="'profile.statistics.avatarAlt' | translate"
                             />
                             <a
-                                class="font-semibold text-parchment-3 text-xl sm:text-2xl hover:underline underline-offset-4"
+                                class="font-semibold text-parchment-3 text-lg sm:text-xl hover:underline underline-offset-4"
                                 [routerLink]="['/player', item.name]"
-                                >{{ item.name }}</a
                             >
+                                {{ item.name }}
+                            </a>
                         </div>
                         <div class="flex flex-col items-end">
                             @if (activeItemIndex === 0) {
-                                <span class="font-extrabold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.deaths }}</span>
-                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.deaths' | translate }}</span>
+                                <span class="font-extrabold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">
+                                    {{ item.deaths | amount }}
+                                </span>
+                                <span class="text-sm text-parchment-3/60">
+                                    {{ "profile.statistics.typeLabels.deaths" | translate }}
+                                </span>
                             }
                             @if (activeItemIndex === 1) {
-                                <span class="font-bold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.hours_played }}</span>
-                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.hours' | translate }}</span>
+                                <span class="font-bold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">
+                                    {{ item.hours_played | amount }}
+                                </span>
+                                <span class="text-sm text-parchment-3/60">
+                                    {{ "profile.statistics.typeLabels.hours" | translate }}
+                                </span>
                             }
                             @if (activeItemIndex === 2) {
-                                <span class="font-bold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.kills }}</span>
-                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.kills' | translate }}</span>
+                                <span class="font-bold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">
+                                    {{ item.kills | amount }}
+                                </span>
+                                <span class="text-sm text-parchment-3/60">
+                                    {{ "profile.statistics.typeLabels.kills" | translate }}
+                                </span>
                             }
                         </div>
                     </div>

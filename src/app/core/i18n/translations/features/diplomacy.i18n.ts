@@ -5,19 +5,20 @@ export const DIPLOMACY_I18N = {
     ru: {
         diplomacy: {
             title: 'Дипломатия',
-            subtitle: 'Заявления глав селений и дипломатические обращения сервера.',
+            subtitle: 'Заявления глав поселений и дипломатические обращения сервера.',
             loading: 'Загружаем заявления...',
-            filter: 'Фильтр по автору',
+            error: 'Не удалось загрузить заявления.',
+            filter: 'Автор',
             all: 'Все',
             showMore: 'Показать ещё',
             card: {
-                leader: 'Глава селения',
+                leader: 'Глава поселения',
                 readMore: 'Читать полностью',
                 collapse: 'Свернуть',
             },
             empty: {
                 title: 'Заявлений пока нет',
-                description: 'Здесь появятся обращения глав селений из Discord-канала дипломатии.',
+                description: 'Здесь появятся обращения глав поселений из Discord-канала дипломатии.',
             },
         },
     },
@@ -26,7 +27,8 @@ export const DIPLOMACY_I18N = {
             title: 'Diplomacy',
             subtitle: 'Statements from settlement leaders and diplomatic appeals.',
             loading: 'Loading statements...',
-            filter: 'Filter by author',
+            error: 'Failed to load statements.',
+            filter: 'Author',
             all: 'All',
             showMore: 'Show more',
             card: {

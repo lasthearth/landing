@@ -54,6 +54,9 @@ export class ThemeService {
 
         if (saved === 'dark' || saved === 'light') {
             this.theme.set(saved);
+        } else if (this.document.defaultView?.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+            // Пользователь ещё не выбирал тему — берём системную (так же делает скрипт в index.html).
+            this.theme.set('dark');
         }
 
         this.apply();

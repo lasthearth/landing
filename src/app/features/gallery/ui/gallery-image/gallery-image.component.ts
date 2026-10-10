@@ -15,7 +15,7 @@ import {
     selector: 'app-gallery-image',
     standalone: true,
     templateUrl: './gallery-image.component.html',
-    styleUrl: './gallery-image.component.css',
+    styleUrl: './gallery-image.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GalleryImageComponent {

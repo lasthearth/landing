@@ -17,7 +17,7 @@ import {
 } from '@entities/hunger-games';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { AdminSeasonSkeletonComponent, AdminTableSkeletonComponent } from '@shared/ui/skeletons';
-import { I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { ISeasonOption } from './model/season-option.model';
 
 
@@ -30,7 +30,7 @@ import { ISeasonOption } from './model/season-option.model';
 @Component({
     selector: 'app-hunger-games-panel',
     standalone: true,
-    imports: [ReactiveFormsModule, FormsModule, TuiIcon, TuiLoader, LHInputComponent, AdminSeasonSkeletonComponent, AdminTableSkeletonComponent, ImageLoaderComponent, TranslatePipe],
+    imports: [AmountPipe, ReactiveFormsModule, FormsModule, TuiIcon, TuiLoader, LHInputComponent, AdminSeasonSkeletonComponent, AdminTableSkeletonComponent, ImageLoaderComponent, TranslatePipe],
     templateUrl: './hunger-games-panel.component.html',
     styleUrl: './hunger-games-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

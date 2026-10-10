@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 import { ImageLoaderComponent } from '@shared/ui/image-loader/image-loader.component';
 import { FrameEffectId, ProfileFrameId } from '../../model/player-style';
 
@@ -88,6 +89,7 @@ const SPARKLES = [
     styleUrl: './player-frame.component.less',
     imports: [ImageLoaderComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [PauseOffscreenDirective],
 })
 export class PlayerFrameComponent {
     public readonly src = input('');

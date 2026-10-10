@@ -50,7 +50,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
         TranslatePipe,
     ],
     templateUrl: './admin.component.html',
-    styleUrl: './admin.component.css',
+    styleUrl: './admin.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminComponent {

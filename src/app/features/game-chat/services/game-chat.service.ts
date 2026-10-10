@@ -1,7 +1,9 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
+    BehaviorSubject,
     catchError,
+    combineLatest,
     distinctUntilChanged,
     EMPTY,
     fromEvent,
@@ -28,6 +30,12 @@ import {
  * Период обновления чата в миллисекундах.
  */
 const POLLING_INTERVAL = 15_000;
+
+/**
+ * Период фонового опроса, когда чат никто не читает (виджет свёрнут,
+ * страница дипломатии закрыта): нужен только для счётчика непрочитанных.
+ */
+const IDLE_POLLING_INTERVAL = 60_000;
 
 /**
  * Время жизни кэша чата в миллисекундах.
@@ -102,6 +110,29 @@ export class GameChatService {
     private readonly activeStreams = new Map<string, Observable<GameChatMessage[]>>();
 
     /**
+     * Сколько экранов сейчас показывают чат пользователю (раскрытый виджет,
+     * страница дипломатии). Пока 0 — опрос идёт раз в минуту, иначе раз в 15 с.
+     */
+    private readonly activeReaders$ = new BehaviorSubject<number>(0);
+
+    /**
+     * Включает частый опрос, пока чат на экране.
+     *
+     * @returns Функция, которую нужно вызвать, когда чат скрыт.
+     */
+    public requestActivePolling(): () => void {
+        this.activeReaders$.next(this.activeReaders$.value + 1);
+        let released = false;
+
+        return () => {
+            if (!released) {
+                released = true;
+                this.activeReaders$.next(Math.max(0, this.activeReaders$.value - 1));
+            }
+        };
+    }
+
+    /**
      * Возвращает поток обновлений Discord-канала.
      *
      * При подписке сразу возвращает кэшированные сообщения (если они есть
@@ -154,11 +185,20 @@ export class GameChatService {
     private visibleTimer$(interval: number): Observable<number> {
         const document = this.document;
 
-        return fromEvent(document, 'visibilitychange').pipe(
+        const visible$ = fromEvent(document, 'visibilitychange').pipe(
             startWith(null),
             map(() => document.visibilityState === 'visible'),
-            distinctUntilChanged(),
-            switchMap((isVisible) => (isVisible ? timer(0, interval) : EMPTY))
+            distinctUntilChanged()
+        );
+        const active$ = this.activeReaders$.pipe(
+            map((count) => count > 0),
+            distinctUntilChanged()
+        );
+
+        return combineLatest([visible$, active$]).pipe(
+            switchMap(([isVisible, isActive]) =>
+                isVisible ? timer(0, isActive ? interval : IDLE_POLLING_INTERVAL) : EMPTY
+            )
         );
     }
 

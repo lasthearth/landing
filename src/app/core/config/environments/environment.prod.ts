@@ -11,21 +11,10 @@ export const environment = {
     westSuzerain: '-',
     gameVersion: '1.22.2',
     siteVersion: '1.5.0',
+    /** Дата выпуска текущей версии сайта (показывается в футере). */
+    siteVersionDate: '21.09.2026',
+    /** Постоянная ссылка-приглашение на Discord-сервер проекта. */
+    discordInviteUrl: 'https://discord.com/invite/FZb7SGrSFy',
     gameServerIp: 'play.lasthearth.ru',
     gameServerPassword: 'djA2n313IN728Olq99SlBr',
-    teamPhotos: {
-        Lisov: '/team/Lisov.webp',
-        Yonhva: '/team/Yonhva.webp',
-        ripls: '/team/Ripls.webp',
-        Sunhell: '/team/Sunhell.webp',
-        Hecker: '/team/Hecker.webp',
-        'Mr.Suslik': '/team/Susl.webp',
-        Myza: '/team/Myza.webp',
-        Errora: '/team/Errora.webp',
-        Anneta: '/team/Anneta.webp',
-        _NickRim_: '/team/Nick.webp',
-        Лягушка: '/team/Lagucha.webp',
-        Glifider: '/team/Glif.webp',
-        Minker: '/team/Minker.webp',
-    } as Record<string, string>,
 };

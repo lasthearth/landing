@@ -31,7 +31,7 @@
         [description]="'admin.purchases.allIssuedDescription' | translate"
     />
 } @else {
-    <div class="flex flex-col gap-4 lh-stagger-list">
+    <div class="flex flex-col gap-4">
         @for (purchase of purchases(); track purchase.id) {
             <div
                 class="bg-surface border-2 border-line/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 lh-card-glow"
@@ -64,9 +64,9 @@
                         <span class="text-base text-ink-3 shrink-0 font-medium">{{ 'admin.purchases.price' | translate }}</span>
                         <span class="text-lg text-ink-2 leading-6 break-words">
                             @if (purchase.discountPercent > 0 && purchase.basePrice) {
-                                <span class="line-through text-ink-3 mr-2">{{ purchase.basePrice }}</span>
+                                <span class="line-through text-ink-3 mr-2">{{ purchase.basePrice | amount }}</span>
                             }
-                            {{ purchase.pricePaid }}
+                            {{ purchase.pricePaid | amount }}
                         </span>
                     </div>
                     @if (purchase.discountPercent > 0) {

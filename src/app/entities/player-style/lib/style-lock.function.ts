@@ -1,5 +1,5 @@
 import { PlayerLook, ProfileBanner, StyleLock, StyleRequirement, StyleStats } from '../model/player-style';
-import { PROFILE_BANNERS, PROFILE_FRAMES } from './player-style.constant';
+import { BANNER_NONE, PROFILE_BANNERS, PROFILE_FRAMES } from './player-style.constant';
 
 /**
  * Место в таблице, начиная с которого открываются награды топа.
@@ -150,11 +150,16 @@ export function defaultPlayerLook(stats: StyleStats | null): PlayerLook {
 }
 
 /**
- * Баннер по идентификатору (неизвестный — первый).
+ * Баннер по идентификатору. `'none'` — осознанный выбор «без баннера»,
+ * неизвестный идентификатор — первый реальный баннер.
  *
  * @param id Идентификатор.
  * @returns Баннер.
  */
 export function bannerById(id: string): ProfileBanner {
+    if (id === BANNER_NONE.id) {
+        return BANNER_NONE;
+    }
+
     return PROFILE_BANNERS.find((banner) => banner.id === id) ?? PROFILE_BANNERS[0];
 }

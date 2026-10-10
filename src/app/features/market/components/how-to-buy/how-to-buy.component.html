@@ -1,5 +1,5 @@
 <div class="lh-dialog-card w-full">
-    <h2 class="lh-dialog-title text-center text-xl sm:text-[22px]">{{ "market.howToBuy.title" | translate }}</h2>
+    <h2 class="lh-dialog-title text-center text-xl sm:text-2xl">{{ "market.howToBuy.title" | translate }}</h2>
 
     <!-- Блок выбора суммы -->
     <div class="flex flex-col gap-4 pb-6 border-b border-line">
@@ -15,7 +15,7 @@
                     class="h-7 sm:h-8 w-auto"
                 />
                 <span class="text-3xl sm:text-4xl font-extrabold text-lh-accent">
-                    {{ shards() | number }}
+                    {{ shards() | amount }}
                 </span>
             </div>
             <span class="text-lh-primary/60 text-base font-medium">{{ "market.howToBuy.shards" | translate }}</span>
@@ -24,8 +24,8 @@
         <!-- Слайдер -->
         <div class="flex flex-col gap-2">
             <div class="flex justify-between text-lh-primary/70 text-base font-medium">
-                <span>{{ minAmount }} ₽</span>
-                <span>{{ maxAmount }} ₽</span>
+                <span>{{ minAmount | amount }} ₽</span>
+                <span>{{ maxAmount | amount }} ₽</span>
             </div>
             <input
                 type="range"
@@ -57,7 +57,7 @@
                     <button
                         type="button"
                         (click)="setRubles(amount)"
-                        class="px-3 py-1.5 rounded-lg border text-sm font-semibold transition-all duration-200 cursor-pointer"
+                        class="px-3 py-1.5 rounded-lg border text-sm font-semibold transition duration-200 cursor-pointer"
                         [class.bg-lh-accent]="rubles() === amount"
                         [class.text-white]="rubles() === amount"
                         [class.border-lh-accent]="rubles() === amount"
@@ -66,7 +66,7 @@
                         [class.border-line]="rubles() !== amount"
                         [class.hover:bg-surface-4]="rubles() !== amount"
                     >
-                        {{ amount | number }} ₽
+                        {{ amount | amount }} ₽
                     </button>
                 }
             </div>
@@ -75,7 +75,7 @@
                 {{ "market.howToBuy.rate" | translate }}:
                 <span class="text-lh-accent font-bold">{{ "market.howToBuy.rateValue" | translate }}</span>
                 <span class="mx-1">•</span>
-                {{ "market.howToBuy.range" | translate: { min: minAmount, max: maxAmount } }}
+                {{ "market.howToBuy.range" | translate: { min: (minAmount | amount), max: (maxAmount | amount) } }}
             </p>
         </div>
     </div>
@@ -116,7 +116,7 @@
                 <div class="flex items-start gap-4 text-base">
                     <tui-icon icon="@tui.badge-alert" class="size-8! text-lh-accent shrink-0 mt-0.5" />
                     <span class="text-lh-primary/80">
-                        {{ "market.howToBuy.sbp.warning" | translate: { amount: rubles(), nickname: username() } }}
+                        {{ "market.howToBuy.sbp.warning" | translate: { amount: (rubles() | amount), nickname: username() } }}
                     </span>
                 </div>
 
@@ -131,7 +131,7 @@
                         <button
                             type="button"
                             (click)="copyPhone()"
-                            class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-sber text-white text-base font-semibold hover:brightness-105 transition-all cursor-pointer"
+                            class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-sber text-white text-base font-semibold hover:brightness-105 transition cursor-pointer"
                         >
                             @if (phoneCopied()) {
                                 <tui-icon icon="@tui.check" class="size-4!" />
@@ -151,7 +151,7 @@
                 <button
                     type="button"
                     (click)="copySbpDetails()"
-                    class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl border-2 border-sber text-sber font-bold text-base hover:bg-[rgba(33,160,56,0.1)] transition-all cursor-pointer"
+                    class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl border-2 border-sber text-sber font-bold text-base hover:bg-[rgba(33,160,56,0.1)] transition cursor-pointer"
                 >
                     <tui-icon icon="@tui.copy" class="size-5!" />
                     {{ "market.howToBuy.sbp.copyAll" | translate }}
@@ -169,7 +169,7 @@
                     <div class="flex items-start gap-2">
                         <tui-icon icon="@tui.check" class="size-5! text-sber shrink-0 mt-0.5" />
                         <span>
-                            {{ "market.howToBuy.sbp.step3" | translate: { amount: rubles(), bank: sbpBank } }}
+                            {{ "market.howToBuy.sbp.step3" | translate: { amount: (rubles() | amount), bank: sbpBank } }}
                         </span>
                     </div>
                     <div class="flex items-start gap-2">
@@ -210,7 +210,7 @@
                     <div class="flex items-start gap-3">
                         <tui-icon icon="@tui.badge-alert" class="size-6! text-lh-accent shrink-0 mt-0.5" />
                         <span class="text-lh-primary/80">
-                            {{ "market.howToBuy.boosty.total" | translate: { total: boostyTotal() } }}
+                            {{ "market.howToBuy.boosty.total" | translate: { total: (boostyTotal() | amount) } }}
                         </span>
                     </div>
                     <div class="flex items-start gap-3">
@@ -227,7 +227,7 @@
                     class="lh-secondary-button !no-underline w-full py-3 px-4 sm:px-6 text-lg sm:text-xl font-bold"
                 >
                     <tui-icon icon="@tui.external-link" class="size-5!" />
-                    {{ "market.howToBuy.boosty.button" | translate: { total: boostyTotal() } }}
+                    {{ "market.howToBuy.boosty.button" | translate: { total: (boostyTotal() | amount) } }}
                 </a>
             </div>
         </div>
@@ -238,7 +238,7 @@
         <p class="text-lh-primary/70">{{ "market.howToBuy.delivery" | translate }}</p>
         <p class="text-lh-primary/70">
             {{ "market.howToBuy.questions" | translate }}
-            <a href="https://discord.com/invite/FZb7SGrSFy" class="text-lh-accent font-bold" target="_blank">Discord</a>
+            <a [href]="discordInviteUrl" class="text-lh-accent font-bold" target="_blank">Discord</a>
         </p>
     </div>
 

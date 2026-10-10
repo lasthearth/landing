@@ -2,7 +2,7 @@
     <!-- Форма создания -->
     <div class="lh-panel">
         <div class="flex flex-wrap items-center justify-between gap-3">
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'news.create.title' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'news.create.title' | translate }}</p>
             @if (draftRestored()) {
                 <div class="create-news__draft" role="status">
                     <tui-icon icon="@tui.file-clock" class="size-4!" />
@@ -16,7 +16,7 @@
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4 mt-6">
             <div class="flex items-end justify-between gap-3">
-                <p class="text-[23px] leading-[32px] font-bold text-ink">{{ 'news.create.newsTitleLabel' | translate }}</p>
+                <p class="text-2xl leading-[32px] font-bold text-ink">{{ 'news.create.newsTitleLabel' | translate }}</p>
                 <span
                     class="create-news__counter tabular-nums"
                     [class.create-news__counter--over]="titleValue().length > titleMaxLength"
@@ -27,7 +27,7 @@
             <lh-input formControlName="title" [placeholder]="'news.create.titlePlaceholder' | translate" />
             <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />
 
-            <p class="text-[23px] leading-[32px] font-bold text-ink">{{ 'news.create.contentLabel' | translate }}</p>
+            <p class="text-2xl leading-[32px] font-bold text-ink">{{ 'news.create.contentLabel' | translate }}</p>
             <app-markup-editor
                 formControlName="content"
                 [uploadImage]="uploadImage"
@@ -35,12 +35,12 @@
             />
             <tui-error formControlName="content" [error]="[] | tuiFieldError | async" />
 
-            <p class="text-[23px] leading-[32px] font-bold text-ink">{{ 'news.create.imageLabel' | translate }}</p>
+            <p class="text-2xl leading-[32px] font-bold text-ink">{{ 'news.create.imageLabel' | translate }}</p>
 
             @if (!form.controls.preview.value) {
                 <label tuiInputFiles>
                     <ng-template tuiInputFilesContent>
-                        <span class="text-ink-2 text-[18px]">{{ 'news.create.addImage' | translate }}</span>
+                        <span class="text-ink-2 text-lg">{{ 'news.create.addImage' | translate }}</span>
                         <input accept="image/*" tuiInputFiles formControlName="preview" />
                     </ng-template>
                 </label>
@@ -117,7 +117,7 @@
                 }
                 <button
                     type="submit"
-                    class="rounded-xl px-5 py-2.5 text-[18px] font-bold text-ink cursor-pointer transition-all duration-200 bg-surface-3 border border-line hover:bg-surface-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="rounded-xl px-5 py-2.5 text-lg font-bold text-ink cursor-pointer transition duration-200 bg-surface-3 border border-line hover:bg-surface-4 disabled:opacity-50 disabled:cursor-not-allowed"
                     [disabled]="submitting()"
                 >
                     {{ (submitting() ? 'news.create.publishing' : 'news.create.createButton') | translate }}
@@ -129,7 +129,7 @@
     <!-- Предпросмотр -->
     <div class="lh-panel">
         <div class="flex flex-wrap items-center justify-between gap-3">
-            <p class="text-xl md:text-2xl lg:text-[32px] font-bold text-ink">{{ 'news.create.previewTitle' | translate }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'news.create.previewTitle' | translate }}</p>
             <div class="lh-chips" role="tablist" [attr.aria-label]="'news.create.previewTitle' | translate">
                 @for (mode of ['featured', 'compact', 'page']; track mode) {
                     <button

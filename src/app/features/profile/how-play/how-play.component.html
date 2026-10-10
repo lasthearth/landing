@@ -69,9 +69,12 @@
                                 (click)="copy('ip', environment.gameServerIp)"
                             >
                                 <tui-icon [icon]="copied() === 'ip' ? '@tui.check' : '@tui.copy'" class="size-4!" />
-                                <span class="how-field__copy-text">{{
-                                    (copied() === "ip" ? "profile.howToPlay.copied" : "profile.howToPlay.copy") | translate
-                                }}</span>
+                                <span class="how-field__copy-text">
+                                    {{
+                                        (copied() === "ip" ? "profile.howToPlay.copied" : "profile.howToPlay.copy")
+                                            | translate
+                                    }}
+                                </span>
                             </button>
                         </dd>
                     </div>
@@ -89,10 +92,14 @@
                                     [icon]="copied() === 'password' ? '@tui.check' : '@tui.copy'"
                                     class="size-4!"
                                 />
-                                <span class="how-field__copy-text">{{
-                                    (copied() === "password" ? "profile.howToPlay.copied" : "profile.howToPlay.copy")
-                                        | translate
-                                }}</span>
+                                <span class="how-field__copy-text">
+                                    {{
+                                        (copied() === "password"
+                                            ? "profile.howToPlay.copied"
+                                            : "profile.howToPlay.copy"
+                                        ) | translate
+                                    }}
+                                </span>
                             </button>
                         </dd>
                     </div>
@@ -100,31 +107,112 @@
             </div>
         </li>
 
-        <!-- 3. Первые шаги -->
+        <!--
+            3. Первые шаги. Здесь же прогресс новичка (правила, поселение, Discord):
+            раньше он жил отдельной карточкой «Ваш путь на сервер» над этим блоком
+            и повторял те же ссылки. Анкета и вход для вошедшего игрока уже пройдены.
+        -->
         <li class="how-step">
             <span class="how-step__num" aria-hidden="true">3</span>
             <div class="how-step__card lh-panel">
-                <h3 class="how-step__title">{{ "profile.howToPlay.step3Title" | translate }}</h3>
+                <div class="how-step__head">
+                    <h3 class="how-step__title">{{ "profile.howToPlay.step3Title" | translate }}</h3>
+                    <span class="how-step__progress">
+                        {{ "shared.onboarding.progress" | translate: { done: doneCount(), total: 3 } }}
+                    </span>
+                </div>
                 <p class="how-step__text">{{ "profile.howToPlay.step3Text" | translate }}</p>
 
-                <div class="how-step__links">
-                    <a class="lh-chip" [routerLink]="['/rules']">
-                        <tui-icon icon="@tui.scroll-text" />
-                        {{ "profile.howToPlay.linkRules" | translate }}
-                    </a>
-                    <a class="lh-chip" [routerLink]="['/lfg']">
-                        <tui-icon icon="@tui.handshake" />
-                        {{ "profile.howToPlay.linkLfg" | translate }}
-                    </a>
-                    <a class="lh-chip" [routerLink]="['/settlements']">
-                        <tui-icon icon="@tui.castle" />
-                        {{ "profile.howToPlay.linkSettlements" | translate }}
-                    </a>
-                    <a class="lh-chip" href="https://discord.gg/FZb7SGrSFy" target="_blank" rel="noopener">
-                        <tui-icon icon="@tui.message-circle" />
-                        {{ "profile.howToPlay.linkDiscord" | translate }}
-                    </a>
-                </div>
+                <ul class="how-step__options how-checklist">
+                    <li>
+                        <a class="how-option" [class.how-option--done]="rulesDone()" [routerLink]="['/rules']">
+                            <tui-icon
+                                [icon]="rulesDone() ? '@tui.circle-check' : '@tui.scroll-text'"
+                                class="how-option__icon"
+                            />
+                            <span class="how-option__body">
+                                <span class="how-option__name">{{ "profile.howToPlay.linkRules" | translate }}</span>
+                                <span class="how-option__hint">
+                                    {{
+                                        (rulesDone() ? "profile.howToPlay.rulesDone" : "profile.howToPlay.rulesHint")
+                                            | translate
+                                    }}
+                                </span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="how-option"
+                            [class.how-option--done]="!!settlementName()"
+                            [routerLink]="['/settlements']"
+                        >
+                            <tui-icon
+                                [icon]="settlementName() ? '@tui.circle-check' : '@tui.castle'"
+                                class="how-option__icon"
+                            />
+                            <span class="how-option__body">
+                                <span class="how-option__name">
+                                    {{ "profile.howToPlay.linkSettlements" | translate }}
+                                    @if (!settlementName()) {
+                                        <span class="how-option__optional">
+                                            {{ "shared.onboarding.optional" | translate }}
+                                        </span>
+                                    }
+                                </span>
+                                <span class="how-option__hint">
+                                    @if (settlementName(); as name) {
+                                        {{ "profile.howToPlay.settlementDone" | translate: { name: name } }}
+                                    } @else {
+                                        {{ "profile.howToPlay.settlementHint" | translate }}
+                                    }
+                                </span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="how-option"
+                            [class.how-option--done]="discordDone()"
+                            [href]="discordInviteUrl"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <tui-icon
+                                [icon]="discordDone() ? '@tui.circle-check' : '@tui.message-circle'"
+                                class="how-option__icon"
+                            />
+                            <span class="how-option__body">
+                                <span class="how-option__name">
+                                    {{ "profile.howToPlay.linkDiscord" | translate }}
+                                    <tui-icon icon="@tui.external-link" class="size-3.5!" />
+                                    @if (!discordDone()) {
+                                        <span class="how-option__optional">
+                                            {{ "shared.onboarding.optional" | translate }}
+                                        </span>
+                                    }
+                                </span>
+                                <span class="how-option__hint">
+                                    {{
+                                        (discordDone()
+                                            ? "profile.howToPlay.discordDone"
+                                            : "profile.howToPlay.discordHint"
+                                        ) | translate
+                                    }}
+                                </span>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="how-option" [routerLink]="['/lfg']">
+                            <tui-icon icon="@tui.handshake" class="how-option__icon" />
+                            <span class="how-option__body">
+                                <span class="how-option__name">{{ "profile.howToPlay.linkLfg" | translate }}</span>
+                                <span class="how-option__hint">{{ "profile.howToPlay.lfgHint" | translate }}</span>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </li>
     </ol>
@@ -140,7 +228,8 @@
             <li>{{ "profile.howToPlay.help2" | translate }}</li>
             <li>
                 {{ "profile.howToPlay.help3" | translate }}
-                <a href="https://discord.gg/FZb7SGrSFy" target="_blank" rel="noopener">Discord</a>.
+                <a [href]="discordInviteUrl" target="_blank" rel="noopener">Discord</a>
+                .
             </li>
         </ul>
     </aside>

@@ -7,7 +7,7 @@
 
         <!--
             Предотвращает промаргивание темы при перезагрузке.
-            Выставляет data-theme до загрузки Angular, считывая сохранённое значение.
+            Выставляет data-theme до загрузки Angular: сохранённый выбор, иначе системная тема.
         -->
         <script>
             (function () {
@@ -16,11 +16,40 @@
                     if (theme) {
                         theme = JSON.parse(theme);
                     }
+                    // Без сохранённого выбора тема следует системной настройке.
+                    if (theme !== 'dark' && theme !== 'light') {
+                        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    }
                     if (theme === 'dark') {
                         document.documentElement.setAttribute('data-theme', 'dark');
                     }
                 } catch (e) {
                     // localStorage недоступен или значение повреждено — оставляем светлую тему
+                }
+            })();
+        </script>
+
+        <!--
+            Есть ли сохранённая сессия входа (angular-auth-oidc-client хранит её в localStorage
+            под ключом конфигурации, с полем authzData). Пререндер главной — гостевой,
+            а признак входа приходит только после проверки токена и загрузки профиля:
+            без этого флага вошедший игрок секунду видел гостевую карусель.
+        -->
+        <script>
+            (function () {
+                try {
+                    for (var i = 0; i < localStorage.length; i++) {
+                        var raw = localStorage.getItem(localStorage.key(i));
+                        if (raw && raw.indexOf('authzData') !== -1) {
+                            var data = JSON.parse(raw);
+                            if (data && data.authzData) {
+                                document.documentElement.classList.add('lh-has-session');
+                                break;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    // localStorage недоступен — считаем гостем
                 }
             })();
         </script>
@@ -36,7 +65,7 @@
         />
         <meta name="theme-color" content="#332c26" />
         <link rel="icon" type="image/x-icon" href="logo.ico" />
-        <link rel="apple-touch-icon" href="logo.ico" />
+        <link rel="apple-touch-icon" href="apple-touch-icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="preconnect" href="https://api.lasthearth.ru" />
@@ -53,7 +82,7 @@
                 "name": "Last Hearth",
                 "alternateName": "Last Hearth — ролевой сервер Vintage Story",
                 "url": "https://lasthearth.ru",
-                "logo": "https://lasthearth.ru/logo.ico",
+                "logo": "https://lasthearth.ru/apple-touch-icon.png",
                 "description": "Ролевой политико-экономический сервер Vintage Story с поселениями, осадами, дипломатией и PvP.",
                 "sameAs": [
                     "https://discord.com/invite/FZb7SGrSFy",

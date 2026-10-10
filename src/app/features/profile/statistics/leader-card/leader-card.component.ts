@@ -1,28 +1,44 @@
-import { NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
-import { PlayerAvatarComponent } from '@entities/player-style';
-import { TranslatePipe } from '@core/i18n';
+import { ChangeDetectionStrategy, Component, computed, input, InputSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { PlayerAvatarComponent } from '@entities/player-style';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 
+/**
+ * Колонка пьедестала рейтинга (топ-3): игрок на ступени со своим местом.
+ * Цвет кольца и ступени — по медали (золото, серебро, бронза).
+ */
 @Component({
     standalone: true,
     selector: 'app-leader-card',
-    imports: [RouterLink, PlayerAvatarComponent, TranslatePipe],
+    imports: [AmountPipe, RouterLink, PlayerAvatarComponent, TranslatePipe],
     templateUrl: './leader-card.component.html',
-    styleUrl: './leader-card.component.css',
+    styleUrl: './leader-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LeaderCardComponent {
-    public isBigSize: InputSignal<boolean> = input<boolean>(false);
-
+    /**
+     * Ник игрока (ссылка на его страницу).
+     */
     public playerName: InputSignal<string> = input.required<string>();
 
+    /**
+     * Место в рейтинге: «1», «2» или «3».
+     */
     public ratingPlace: InputSignal<string> = input.required<string>();
 
+    /**
+     * Подпись показателя («смертей», «часов», «убийств»).
+     */
     public type: InputSignal<string> = input.required<string>();
 
+    /**
+     * Значение показателя.
+     */
     public count: InputSignal<number> = input.required<number>();
 
+    /**
+     * Адрес аватара игрока.
+     */
     public userImage: InputSignal<string | undefined> = input<string | undefined>();
 
     /**
@@ -30,21 +46,11 @@ export class LeaderCardComponent {
      */
     public userId: InputSignal<string | undefined> = input<string | undefined>();
 
-    public borderClass(): string {
+    /**
+     * Медаль по месту: задаёт цвет кольца, ступени и её высоту.
+     */
+    protected readonly medal = computed(() => {
         const place = this.ratingPlace();
-
-        if (place === '1') {
-            return 'card-frame--gold';
-        }
-
-        if (place === '2') {
-            return 'card-frame--silver';
-        }
-
-        if (place === '3') {
-            return 'card-frame--bronze';
-        }
-
-        return 'card-frame--default';
-    }
+        return place === '1' ? 'gold' : place === '2' ? 'silver' : place === '3' ? 'bronze' : 'default';
+    });
 }

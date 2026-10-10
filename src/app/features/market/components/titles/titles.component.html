@@ -18,7 +18,7 @@
             @for (title of titles; track title.id) {
                 <button
                     (click)="selectPrivilege(title)"
-                    class="shrink-0 w-auto lg:w-full text-left px-3 py-2 lg:px-4 lg:py-3 rounded-xl font-bold text-base lg:text-2xl leading-tight transition-all duration-300 border border-lh-primary-2/10 hover:translate-x-1 cursor-pointer relative overflow-hidden"
+                    class="shrink-0 w-auto lg:w-full text-left px-3 py-2 lg:px-4 lg:py-3 rounded-xl font-bold text-base lg:text-2xl leading-tight transition duration-300 border border-lh-primary-2/10 hover:translate-x-1 cursor-pointer relative overflow-hidden"
                     [class.bg-gradient-to-r]="title === selectedPrivilege"
                     [class.from-night-grad-1]="title === selectedPrivilege"
                     [class.via-night-grad-2]="title === selectedPrivilege"
@@ -89,17 +89,17 @@
                         @if (selectedPrivilege!.monthPriceOriginal) {
                             <div class="flex flex-col items-end">
                                 <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'month'" [class.text-ink-3]="selectedTerm() !== 'month'">
-                                    <span class="strong-strike font-medium text-base lg:text-lg leading-none">{{ selectedPrivilege!.monthPriceOriginal }}</span>
+                                    <span class="strong-strike font-medium text-base lg:text-lg leading-none">{{ selectedPrivilege!.monthPriceOriginal | amount }}</span>
                                     <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-4 w-4 lg:h-5 lg:w-5 object-contain opacity-70 leading-none -ml-0.5" />
                                 </div>
                                 <div class="flex items-center gap-1 leading-none">
-                                    <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.monthPrice }}</span>
+                                    <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.monthPrice | amount }}</span>
                                     <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
                                 </div>
                             </div>
                         } @else {
                             <div class="flex items-center gap-1 leading-none">
-                                <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.monthPrice }}</span>
+                                <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.monthPrice | amount }}</span>
                                 <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
                             </div>
                         }
@@ -138,17 +138,17 @@
                             @if (selectedPrivilege!.seasonPriceOriginal) {
                                 <div class="flex flex-col items-end">
                                     <div class="flex items-center gap-0.5 leading-none" [class.text-white/70]="selectedTerm() === 'season'" [class.text-ink-3]="selectedTerm() !== 'season'">
-                                        <span class="strong-strike font-medium text-base lg:text-lg leading-none">{{ selectedPrivilege!.seasonPriceOriginal }}</span>
+                                        <span class="strong-strike font-medium text-base lg:text-lg leading-none">{{ selectedPrivilege!.seasonPriceOriginal | amount }}</span>
                                         <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-4 w-4 lg:h-5 lg:w-5 object-contain opacity-70 leading-none -ml-0.5" />
                                     </div>
                                     <div class="flex items-center gap-1 leading-none">
-                                        <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.seasonPrice }}</span>
+                                        <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.seasonPrice | amount }}</span>
                                         <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
                                     </div>
                                 </div>
                             } @else {
                                 <div class="flex items-center gap-1 leading-none">
-                                    <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.seasonPrice }}</span>
+                                    <span class="text-xl lg:text-3xl font-extrabold leading-none">{{ selectedPrivilege!.seasonPrice | amount }}</span>
                                     <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 lg:h-8 lg:w-8 object-contain leading-none -ml-0.5" />
                                 </div>
                             }
@@ -200,11 +200,11 @@
             <!-- Buy button -->
             <button
                 (click)="openPurchaseDialog()"
-                class="shimmer-btn self-stretch text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-brand-deep to-brand-lit hover:from-brand-deep hover:to-brand-lit rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-lg lg:text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
+                class="shimmer-btn self-stretch text-white uppercase transition duration-300 font-bold cursor-pointer bg-gradient-to-r from-brand-deep to-brand-lit hover:from-brand-deep hover:to-brand-lit rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-lg lg:text-xl shadow-[0_4px_16px_rgba(195,90,23,0.35)] hover:shadow-[0_6px_24px_rgba(195,90,23,0.45)] flex items-center justify-center gap-3 mt-2"
             >
                 <tui-icon icon="@tui.shopping-cart" class="size-6!" />
                 <span>{{ 'market.common.buyFor' | translate }}</span>
-                <span class="font-extrabold">{{ activePrice() }}</span>
+                <span class="font-extrabold">{{ activePrice() | amount }}</span>
                 <img
                     src="/splinter-of-spark.webp"
                     [alt]="'market.common.shardAlt' | translate"

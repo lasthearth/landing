@@ -1,0 +1,139 @@
+/**
+ * Колонка пьедестала (топ-3 рейтинга).
+ * Цвет медали задаётся переменными модификатора: --metal (основной тон)
+ * и --metal-light (блик). Фон и текст — токены темы, поэтому карточка
+ * одинаково читается в светлой и тёмной теме.
+ */
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.podium {
+    --metal: #b8a07a;
+    --metal-light: #e9dcc0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+}
+
+.podium--gold {
+    --metal: #d4a017;
+    --metal-light: #ffe58a;
+}
+
+.podium--silver {
+    --metal: #9ea3ab;
+    --metal-light: #eef1f5;
+}
+
+.podium--bronze {
+    --metal: #b0662c;
+    --metal-light: #f2c59b;
+}
+
+.podium__player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+}
+
+/* Кольцо цвета медали вокруг аватара */
+.podium__ring {
+    margin-bottom: 0.375rem;
+    padding: 4px;
+    border-radius: 30%;
+    background: linear-gradient(135deg, var(--metal-light), var(--metal) 55%, var(--metal-light));
+    box-shadow: 0 6px 22px color-mix(in srgb, var(--metal) 35%, transparent);
+}
+
+.podium__avatar {
+    display: block;
+    width: clamp(3.5rem, 7vw, 5.5rem);
+    height: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.podium--gold .podium__avatar {
+    width: clamp(4.25rem, 8.5vw, 6.75rem);
+    height: clamp(4.25rem, 8.5vw, 6.75rem);
+}
+
+.podium__name {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--lh-ink);
+    font-size: clamp(0.9375rem, 1.6vw, 1.25rem);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.podium__name:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.podium__result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.podium__value {
+    color: var(--lh-ink);
+    font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.podium__label {
+    color: var(--lh-ink-3);
+    font-size: clamp(0.8125rem, 1.2vw, 1rem);
+    font-weight: 600;
+    text-transform: lowercase;
+}
+
+/* Ступень пьедестала: высота задаёт место, сверху — номер цветом медали */
+.podium__step {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: clamp(4.5rem, 9vw, 7rem);
+    padding-top: clamp(0.5rem, 1.2vw, 1rem);
+    border: 1px solid color-mix(in srgb, var(--metal) 45%, transparent);
+    border-bottom: 0;
+    border-radius: 1rem 1rem 0 0;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--metal) 26%, var(--lh-surface-2)) 0%,
+        var(--lh-surface-2) 100%
+    );
+}
+
+.podium--gold .podium__step {
+    height: clamp(6rem, 12vw, 9.5rem);
+}
+
+.podium--bronze .podium__step {
+    height: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.podium__place {
+    /* От основного тона к затемнённому: светлый блик сливался со ступенью в светлой теме */
+    background: linear-gradient(180deg, var(--metal), color-mix(in srgb, var(--metal) 72%, #000));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1;
+}

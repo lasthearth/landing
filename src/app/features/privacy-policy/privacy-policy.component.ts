@@ -14,7 +14,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
     selector: 'app-privacy-policy',
     imports: [PageHeaderComponent, TuiIcon, CommonModule, TuiExpand, TranslatePipe],
     templateUrl: './privacy-policy.component.html',
-    styleUrl: './privacy-policy.component.css',
+    styleUrl: './privacy-policy.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PrivacyPolicyComponent implements OnDestroy {

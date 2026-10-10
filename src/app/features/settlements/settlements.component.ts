@@ -68,7 +68,7 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
         TuiIcon,
     ],
     templateUrl: './settlements.component.html',
-    styleUrl: './settlements.component.css',
+    styleUrl: './settlements.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementsComponent {

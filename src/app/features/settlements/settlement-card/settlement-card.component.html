@@ -12,6 +12,9 @@
             @if (isPinned(data())) {
                 <div
                     class="absolute top-3 right-3 z-10 bg-lh-accent text-white rounded-lg px-2 py-1 shadow-md flex items-center gap-1"
+                    role="img"
+                    [attr.aria-label]="'settlements.card.pinned' | translate"
+                    [title]="'settlements.card.pinned' | translate"
                 >
                     <tui-icon icon="@tui.pin" class="size-4!" />
                 </div>
@@ -26,60 +29,40 @@
 
         <!-- Контент -->
         <div class="xl:w-3/5 w-full p-5 flex flex-col gap-3 justify-between overflow-hidden">
+            <!--
+                Карточка списка показывает только то, по чему выбирают селение:
+                тип, дипломатию и живость (кто сейчас в сети). Теги, сюзеренство,
+                контакты и полный состав — на странице поселения.
+            -->
             <div class="flex flex-col gap-2.5">
-                <div class="flex flex-col gap-1.5">
-                    <!--
-                        Заголовок и шкала уровня в одной строке: уровень — свойство
-                        селения, а не отдельная метрика, поэтому он читается рядом
-                        с названием, а не в ряду бейджей.
-                    -->
-                    <div class="flex items-baseline gap-3">
-                        <h2 class="text-xl/7 md:text-2xl/8 uppercase font-bold text-ink min-w-0 break-words">
-                            <a [routerLink]="['/settlements', data().id]" class="settlement-card__title-link">
-                                {{ data() | settlementDisplayName }}
-                            </a>
-                        </h2>
-                        @if (tier() > 0) {
-                            <span
-                                class="settlement-card__tier"
-                                role="img"
-                                [attr.aria-label]="'settlements.card.tier' | translate:{tier: tier()}"
-                            >
-                                <span class="settlement-card__tier-pips">
-                                    @for (pip of tierScale; track $index) {
-                                        <span
-                                            class="settlement-card__tier-pip"
-                                            [class.settlement-card__tier-pip--filled]="pip <= tier()"
-                                        ></span>
-                                    }
-                                </span>
-                                <span class="settlement-card__tier-label">{{ tier() }}/5</span>
+                <!-- Название и шкала уровня -->
+                <div class="flex items-baseline gap-3">
+                    <h2 class="text-xl/7 md:text-2xl/8 uppercase font-bold text-ink min-w-0 break-words">
+                        <a [routerLink]="['/settlements', data().id]" class="settlement-card__title-link">
+                            {{ data() | settlementDisplayName }}
+                        </a>
+                    </h2>
+                    @if (tier() > 0) {
+                        <span
+                            class="settlement-card__tier"
+                            role="img"
+                            [attr.aria-label]="'settlements.card.tier' | translate:{tier: tier()}"
+                        >
+                            <span class="settlement-card__tier-pips">
+                                @for (pip of tierScale; track $index) {
+                                    <span
+                                        class="settlement-card__tier-pip"
+                                        [class.settlement-card__tier-pip--filled]="pip <= tier()"
+                                    ></span>
+                                }
                             </span>
-                        }
-                    </div>
-
-                    <!--
-                        Счётчики населения и онлайна.
-                        Вынесены из общего ряда бейджей: там они конкурировали
-                        по весу с типом селения и дипломатией, хотя это не
-                        классификация, а метрика.
-                    -->
-                    <div class="settlement-card__meta flex items-center gap-3 text-base text-ink-3 font-semibold">
-                        <span class="inline-flex items-center gap-1.5">
-                            <tui-icon icon="@tui.users" class="size-4!" />
-                            {{ data().members.length }} {{ 'settlements.card.residentsShort' | translate }}
+                            <span class="settlement-card__tier-label">{{ tier() }}/5</span>
                         </span>
-                        <span class="inline-flex items-center gap-1.5" [class.text-peace]="onlineCount() > 0">
-                            <span
-                                class="settlement-card__meta-dot"
-                                [class.settlement-card__meta-dot--online]="onlineCount() > 0"
-                            ></span>
-                            {{ onlineCount() }} {{ 'settlements.card.onlineShort' | translate }}
-                        </span>
-                    </div>
+                    }
                 </div>
 
-                <div class="flex gap-1.5 flex-wrap">
+                <!-- Ключевые бейджи: тип и дипломатический курс -->
+                <div class="flex gap-1.5 flex-wrap items-center">
                     <app-settlement-badge
                         [tone]="isPinned(data()) ? 'gold' : getSettlementTypeTone(data())"
                         [icon]="getSettlementTypeIcon(data())"
@@ -90,75 +73,60 @@
                     <app-settlement-badge [tone]="getDiplomacyTone(data().diplomacy)" [uppercase]="true">
                         {{ getDiplomacyLabel(data()) }}
                     </app-settlement-badge>
-                    @if (isEastSuzerain(data())) {
-                        <app-settlement-badge tone="accent" [uppercase]="true">
-                            {{ 'settlements.card.suzerainShort' | translate }}: {{ environment.eastSuzerain }}
-                        </app-settlement-badge>
-                    }
-                    @if (isWestSuzerain(data())) {
-                        <app-settlement-badge tone="accent" [uppercase]="true">
-                            {{ 'settlements.card.suzerainLabel' | translate }} {{ environment.westSuzerain }}
-                        </app-settlement-badge>
-                    }
-                    @for (tag of data().tags; track tag.id) {
-                        @if (getTag(tag.id); as tagData) {
-                            <app-settlement-tag [tag]="tagData" />
-                        }
-                    }
                     @if (isAdmin()) {
                         <button
                             type="button"
                             (click)="openSetTagsDialog()"
                             [attr.aria-label]="'settlements.tags.add' | translate"
-                            class="bg-lh-primary-2/10 hover:bg-lh-primary-2/30 cursor-pointer transition-all duration-300 active:scale-[95%] flex justify-center items-center px-1 text-lh-primary rounded-full"
+                            [title]="'settlements.tags.add' | translate"
+                            class="bg-lh-primary-2/10 hover:bg-lh-primary-2/30 cursor-pointer transition duration-300 active:scale-[95%] flex justify-center items-center px-1 text-lh-primary rounded-full"
                         >
                             <tui-icon icon="@tui.circle-plus" class="size-4!" />
                         </button>
                     }
                 </div>
 
-                <p class="text-lg text-ink-2 leading-6 line-clamp-3" >{{ data().description | markup: 'plain' }}</p>
+                <!-- Кто в сети: число онлайн акцентом, всего жителей — приглушённо -->
+                <div class="settlement-card__meta flex items-center gap-2 text-base font-semibold">
+                    <span
+                        class="settlement-card__meta-dot"
+                        [class.settlement-card__meta-dot--online]="onlineCount() > 0"
+                        aria-hidden="true"
+                    ></span>
+                    <span [class.text-peace]="onlineCount() > 0" [class.text-ink-3]="onlineCount() === 0">
+                        {{ 'settlements.card.onlineNow' | translate: { count: onlineCount() } }}
+                    </span>
+                    <span class="text-ink-3">· {{ 'settlements.card.residentsTotal' | translate: { count: data().members.length } }}</span>
+                </div>
 
-                <!--
-                    Контакты поселения. Иконка стоит на базовой линии текста,
-                    поэтому при обрезке до двух строк не остаётся одна висячая
-                    иконка, как было бы у абсолютного позиционирования.
-                    Вывод только интерполяцией (XSS: сервер не экранирует).
-                -->
-                @if (data().contact_info) {
-                    <p class="settlement-card__contacts" [title]="data().contact_info">
-                        <tui-icon icon="@tui.contact-round" class="settlement-card__contacts-icon" />
-                        <span class="line-clamp-2">{{ data().contact_info }}</span>
-                    </p>
-                }
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <hr class="h-px bg-surface-4/30 w-full rounded-full border-0" />
+                <!-- Глава всегда первым (отвечает на заявки), затем до трёх жителей в сети -->
                 <div class="flex flex-wrap gap-1.5 items-center">
                     @for (leaderPlayer of leaders(); track leaderPlayer.user_id) {
                         <app-player-chip [player]="leaderPlayer" [isLeader]="true" [settlement]="data()" />
                     }
-
-                    @for (item of visibleUsers(); track item.user_id) {
+                    @for (item of visibleOnlineUsers(); track item.user_id) {
                         <app-player-chip [player]="item" [settlement]="data()" />
                     }
-
-                    @if (hiddenCount() > 0) {
+                    @if (hiddenOnlineCount() > 0) {
                         <span
-                            class="inline-flex items-center px-3 py-1 rounded-full bg-surface-3/60 text-ink-3 font-semibold text-sm shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--lh-border)_55%,transparent)]"
+                            class="inline-flex items-center px-3 py-1 rounded-full bg-surface-3/60 text-ink-3 font-semibold text-sm"
                         >
-                            +{{ hiddenCount() }}
+                            +{{ hiddenOnlineCount() }}
                         </span>
                     }
                 </div>
 
-                <div class="flex flex-wrap items-center justify-between gap-3 mt-1">
+                <p class="text-lg text-ink-2 leading-6 line-clamp-2">{{ data().description | markup: 'plain' }}</p>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <hr class="h-px bg-surface-4/30 w-full rounded-full border-0" />
+                <div class="flex flex-wrap items-center justify-between gap-3">
                     <app-join-request-button [settlementId]="data().id" />
 
                     <a
                         [routerLink]="['/settlements', data().id]"
-                        class="group text-ink-2 border-wood/50 hover:border-wood transition-all ml-auto duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1 no-underline"
+                        class="group text-ink-2 border-wood/50 hover:border-wood transition ml-auto duration-300 tracking-wider border-b border-dashed font-bold cursor-pointer hover:text-ink bg-transparent py-0.5 text-base inline-flex items-center gap-1 no-underline"
                     >
                         {{ 'settlements.card.more' | translate }}
                         <tui-icon

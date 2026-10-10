@@ -3,6 +3,7 @@ import { RouteKeys } from './enums/route-keys';
 import { routeSeoData } from './seo-data';
 import { adminGuard } from '../core/guards/admin.guard';
 import { userGuard } from '../core/guards/user.guard';
+import { guestGuard } from '../core/guards/guest.guard';
 import { loadPage } from '@core/i18n';
 
 /**
@@ -19,13 +20,11 @@ export const routes: Routes = [
         loadComponent: () => import('../features/landing/landing.component').then((m) => m.LandingComponent),
         children: [
             {
+                // Канонический адрес главной — /home; корень перенаправляет туда,
+                // чтобы у поисковиков не было двух одинаковых страниц.
                 path: '',
-                loadComponent: () =>
-                    loadPage(
-                        () => import('../features/home/home.component').then((m) => m.HomeComponent),
-                        [() => import('@core/i18n/translations/features/home.i18n').then((m) => m.HOME_I18N)]
-                    ),
-                data: { route_keys: RouteKeys.home, seo: routeSeoData.home },
+                redirectTo: 'home',
+                pathMatch: 'full',
             },
             {
                 path: 'home',
@@ -58,6 +57,9 @@ export const routes: Routes = [
                                     (m) => m.SETTLEMENTS_I18N
                                 ),
                             () => import('@core/i18n/translations/features/events.i18n').then((m) => m.EVENTS_I18N),
+                            // Диалог «Пополнить осколки» (HowToBuyComponent) — из магазина, открывается
+                            // и в профиле, и в админке; без словаря магазина он показывал ключи.
+                            () => import('@core/i18n/translations/features/market.i18n').then((m) => m.MARKET_I18N),
                         ]
                     ),
                 canActivate: [userGuard],
@@ -127,6 +129,7 @@ export const routes: Routes = [
                 path: 'start-game',
                 loadComponent: () =>
                     import('../features/start-game/start-game.component').then((m) => m.StartGameComponent),
+                canActivate: [guestGuard],
                 data: { route_keys: RouteKeys.startGame, seo: routeSeoData.startGame },
             },
             {

@@ -64,6 +64,7 @@ export const PLAYER_I18N = {
                 viewBanner: 'Открыть баннер «{{name}}»',
                 close: 'Закрыть',
                 banners: {
+                    none: 'Без баннера',
                     procession: 'Шествие',
                     jesters: 'Шуты',
                     wrestlers: 'Борцы',
@@ -88,6 +89,7 @@ export const PLAYER_I18N = {
                 },
                 bannerEffects: {
                     none: 'Без анимации',
+                    needBanner: 'Сначала выберите баннер',
                     dust: 'Пыль в лучах',
                     clouds: 'Облака',
                     leaves: 'Листопад',
@@ -235,6 +237,7 @@ export const PLAYER_I18N = {
                 viewBanner: 'Open the banner "{{name}}"',
                 close: 'Close',
                 banners: {
+                    none: 'No banner',
                     procession: 'Procession',
                     jesters: 'Jesters',
                     wrestlers: 'Wrestlers',
@@ -259,6 +262,7 @@ export const PLAYER_I18N = {
                 },
                 bannerEffects: {
                     none: 'No animation',
+                    needBanner: 'Pick a banner first',
                     dust: 'Dust in sunbeams',
                     clouds: 'Clouds',
                     leaves: 'Falling leaves',

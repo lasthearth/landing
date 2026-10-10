@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Injector, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { isPlatformBrowser, AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { UserService } from '@entities/user';
@@ -8,14 +8,12 @@ import { WelcomeComponent } from '@app/features/welcome/welcome.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { GameChatWidgetComponent } from '@features/game-chat/ui/game-chat-widget/game-chat-widget.component';
-import { BackgroundParticlesComponent } from './background-particles/background-particles.component';
 import { BackgroundSceneComponent } from './background-scene/background-scene.component';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { WELCOME_SEEN_STORAGE_KEY } from './welcome-seen-storage-key.constant';
 import { SiteAnnouncementComponent } from '@features/announcement';
 import { TranslatePipe } from '@core/i18n';
-import { OnboardingService } from '@features/onboarding';
 
 
 /**
@@ -32,12 +30,11 @@ import { OnboardingService } from '@features/onboarding';
         TranslatePipe,
         WelcomeComponent,
         BackgroundSceneComponent,
-        BackgroundParticlesComponent,
         GameChatWidgetComponent,
         SiteAnnouncementComponent,
     ],
     templateUrl: './layout.component.html',
-    styleUrl: './layout.component.css',
+    styleUrl: './layout.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent {
@@ -100,7 +97,12 @@ export class LayoutComponent {
 
     constructor() {
         // Путь новичка: отмечает «открыл правила» и «заходил в Discord» на любой странице.
-        inject(OnboardingService).start();
+        // Модуль подгружается динамически после первой отрисовки: статический импорт
+        // тянул в стартовый бандл весь слайс onboarding вместе с компонентом пути (~25 КБ).
+        const injector = inject(Injector);
+        afterNextRender(() => {
+            void import('@features/onboarding').then(({ OnboardingService }) => injector.get(OnboardingService).start());
+        });
 
         this.showWelcome$.pipe(takeUntilDestroyed()).subscribe((showWelcome) => {
             this.updateScrollLock(showWelcome && !this.isSetScrollClass);

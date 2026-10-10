@@ -1,0 +1,79 @@
+/**
+ * Сетка карточек селений.
+ *
+ * CSS Grid вместо flex-wrap с процентной шириной: там 48%+48% плюс gap
+ * переполняли строку, а justify-center разбрасывал остаток асимметрично —
+ * желоба между колонками и до краёв получались разной ширины.
+ *
+ * Одна колонка до 1280px и на «среднем» диапазоне 1281–1694px (там панель
+ * узкая, две колонки дают слишком тесные карточки), две колонки на остальных.
+ */
+.settlements-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (width > 1024px) and (width <= 1280px) {
+    .settlements-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (width >= 1695px) {
+    .settlements-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Поиск и фильтры */
+.settlements-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.settlements-search {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    max-width: 32rem;
+    padding: 0 1rem;
+    height: 3rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.875rem;
+    background: var(--color-surface);
+    color: var(--color-ink-2);
+}
+
+.settlements-search:focus-within {
+    border-color: var(--lh-brand);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-brand) 20%, transparent);
+}
+
+.settlements-search__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--color-ink);
+    font-size: 1rem;
+}
+
+.settlements-filters__summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1rem;
+    color: var(--color-ink-2);
+}
+
+.settlements-filters__reset {
+    font-weight: 700;
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+}

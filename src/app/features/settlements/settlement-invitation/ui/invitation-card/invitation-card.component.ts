@@ -13,6 +13,7 @@ import {
 import { catchError, of, tap } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import {
+    DEFAULT_SETTLEMENT_COVER,
     getDiplomacyTone,
     getSettlementDisplayName,
     getSettlementTypeByKey,
@@ -97,7 +98,7 @@ export class InvitationCardComponent {
      * Ссылка на изображение селения с заглушкой.
      */
     protected readonly imageUrl: Signal<string> = computed(
-        () => this.settlement()?.attachments?.[0]?.url || '/images/screenshots/screen_1.png'
+        () => this.settlement()?.attachments?.[0]?.url || DEFAULT_SETTLEMENT_COVER
     );
 
     constructor() {

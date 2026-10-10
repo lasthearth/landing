@@ -85,7 +85,7 @@ function isScrolledToBottom(container: HTMLElement): boolean {
     standalone: true,
     imports: [NgClass, TuiIcon, TranslatePipe],
     templateUrl: './game-chat-widget.component.html',
-    styleUrl: './game-chat-widget.component.css',
+    styleUrl: './game-chat-widget.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GameChatWidgetComponent implements OnInit {
@@ -265,6 +265,19 @@ export class GameChatWidgetComponent implements OnInit {
         if (isPlatformBrowser(this.platformId)) {
             this.audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
         }
+
+        // Пока виджет раскрыт — частый опрос; свёрнутый виджет опрашивает раз в минуту
+        // (только для счётчика непрочитанных).
+        let releaseActivePolling: (() => void) | null = null;
+        effect(() => {
+            if (this.isExpanded()) {
+                releaseActivePolling ??= this.chatService.requestActivePolling();
+            } else {
+                releaseActivePolling?.();
+                releaseActivePolling = null;
+            }
+        });
+        this.destroyRef.onDestroy(() => releaseActivePolling?.());
 
         // effect() требует контекст инъекции, поэтому создаётся здесь, а не в ngOnInit.
         effect(() => {

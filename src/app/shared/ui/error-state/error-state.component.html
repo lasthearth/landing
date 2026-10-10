@@ -1,12 +1,12 @@
-<div class="flex flex-col items-center justify-center gap-5 py-14 px-4 text-center">
+<div class="flex flex-col items-center justify-center gap-5 py-10 px-4 text-center">
     <div
-        class="flex items-center justify-center size-20 rounded-2xl bg-lh-danger/10 border border-lh-danger/20 text-lh-danger"
+        class="flex items-center justify-center size-16 rounded-2xl bg-lh-danger/10 border border-lh-danger/20 text-lh-danger"
     >
-        <tui-icon icon="@tui.circle-alert" class="size-10!" />
+        <tui-icon icon="@tui.circle-alert" class="size-8!" />
     </div>
     <div class="flex flex-col gap-2">
-        <p class="text-2xl md:text-3xl font-bold text-lh-primary">{{ title() | translate }}</p>
-        <p class="text-xl md:text-2xl text-lh-primary/60 max-w-lg leading-relaxed">{{ description() | translate }}</p>
+        <p class="text-xl md:text-2xl font-bold text-lh-primary">{{ title() | translate }}</p>
+        <p class="text-base md:text-lg text-ink-2 max-w-lg leading-relaxed">{{ description() | translate }}</p>
     </div>
     <button
         tuiButton

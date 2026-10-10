@@ -9,7 +9,7 @@ import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 
 /**
@@ -20,7 +20,7 @@ import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/
  */
 @Component({
     selector: 'app-special',
-    imports: [
+    imports: [AmountPipe, 
         TuiIcon,
         TuiButton,
         TuiPreview,

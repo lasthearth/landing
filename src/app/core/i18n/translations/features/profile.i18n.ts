@@ -1,6 +1,14 @@
 export const PROFILE_I18N = {
     ru: {
         profile: {
+            nav: {
+                howPlay: 'Как играть',
+                stats: 'Статистика',
+                settlement: 'Моё поселение',
+                style: 'Оформление профиля',
+                referral: 'Пригласить друга',
+                admin: 'Администрирование'
+            },
             avatar: {
                 alt: 'Аватар пользователя {{name}}',
                 defaultAlt: 'Аватар по умолчанию',
@@ -21,6 +29,7 @@ export const PROFILE_I18N = {
             settlement: {
                 label: 'Поселение',
                 noSettlement: 'Нет поселения',
+                find: 'Найти',
                 role: {
                     leader: 'Глава',
                     resident: 'Житель',
@@ -70,6 +79,10 @@ export const PROFILE_I18N = {
                     text: 'Анкета одобрена! Войдите заново, чтобы профиль обновился и открылся доступ.',
                     action: 'Войти заново',
                 },
+            },
+            header: {
+                expand: 'Показать всё',
+                collapse: 'Свернуть',
             },
             hero: {
                 account: 'Аккаунт сайта',
@@ -196,6 +209,13 @@ export const PROFILE_I18N = {
                 linkLfg: 'Найти напарника',
                 linkSettlements: 'Выбрать поселение',
                 linkDiscord: 'Discord',
+                rulesHint: 'Начните с них: по правилам проверяют анкеты и решают споры.',
+                rulesDone: 'Прочитаны — к ним всегда можно вернуться.',
+                settlementHint: 'Вместе выживать проще: вступите в поселение или основайте своё.',
+                settlementDone: 'Вы в поселении «{{name}}».',
+                discordHint: 'Новости, события и помощь от игроков и администрации.',
+                discordDone: 'Вы уже заходили — там новости и события.',
+                lfgHint: 'Объявления игроков, которые ищут компанию.',
                 helpTitle: 'Что-то не получается?',
                 help1: 'Сервер не находится или пишет про версию — проверьте, что у вас игра версии {{version}}.',
                 help2: 'Не подходит пароль — скопируйте его кнопкой выше, чтобы не было лишних пробелов.',
@@ -226,6 +246,14 @@ export const PROFILE_I18N = {
     },
     en: {
         profile: {
+            nav: {
+                howPlay: 'How to play',
+                stats: 'Statistics',
+                settlement: 'My settlement',
+                style: 'Profile style',
+                referral: 'Invite a friend',
+                admin: 'Administration'
+            },
             avatar: {
                 alt: 'Avatar of {{name}}',
                 defaultAlt: 'Default avatar',
@@ -246,6 +274,7 @@ export const PROFILE_I18N = {
             settlement: {
                 label: 'Settlement',
                 noSettlement: 'No settlement',
+                find: 'Find one',
                 role: {
                     leader: 'Leader',
                     resident: 'Resident',
@@ -295,6 +324,10 @@ export const PROFILE_I18N = {
                     text: 'Your application is approved! Sign in again to refresh your profile and unlock access.',
                     action: 'Sign in again',
                 },
+            },
+            header: {
+                expand: 'Show all',
+                collapse: 'Collapse',
             },
             hero: {
                 account: 'Site account',
@@ -421,6 +454,13 @@ export const PROFILE_I18N = {
                 linkLfg: 'Find a teammate',
                 linkSettlements: 'Choose a settlement',
                 linkDiscord: 'Discord',
+                rulesHint: 'Start here: applications are checked and disputes settled by the rules.',
+                rulesDone: 'Read — you can always come back to them.',
+                settlementHint: 'Surviving together is easier: join a settlement or found your own.',
+                settlementDone: 'You are in the «{{name}}» settlement.',
+                discordHint: 'News, events and help from players and the administration.',
+                discordDone: 'You have already joined — news and events are there.',
+                lfgHint: 'Posts from players looking for company.',
                 helpTitle: 'Something does not work?',
                 help1: 'The server is not found or complains about the version — make sure your game is version {{version}}.',
                 help2: 'The password does not fit — copy it with the button above so there are no extra spaces.',

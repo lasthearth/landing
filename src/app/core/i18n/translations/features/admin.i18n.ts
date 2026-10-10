@@ -4,7 +4,7 @@ export const ADMIN_I18N = {
             title: 'Кабинет администратора',
             tabs: {
                 playerForms: 'Анкеты игроков',
-                settlementForms: 'Анкеты селений',
+                settlementForms: 'Анкеты поселений',
                 questions: 'Вопросы',
                 createNews: 'Создать новость',
                 coins: 'Монеты',
@@ -36,10 +36,10 @@ export const ADMIN_I18N = {
                 reject: 'Отклонить',
             },
             settlementForms: {
-                emptyTitle: 'Анкеты селений отсутствуют',
+                emptyTitle: 'Анкеты поселений отсутствуют',
                 emptyDescription: 'Новые заявки на верификацию поселений появятся здесь.',
                 nameLabel: 'Наименование',
-                typeLabel: 'Тип селения',
+                typeLabel: 'Тип поселения',
                 descriptionLabel: 'Описание',
                 coordinatesLabel: 'Координаты',
                 diplomacyLabel: 'Дипломатический курс',
@@ -74,6 +74,7 @@ export const ADMIN_I18N = {
                 amountTitle: 'Сумма операции',
                 amountPlaceholder: 'Введите сумму...',
                 commentPlaceholder: 'Комментарий (необязательно)...',
+                commentLabel: 'Комментарий',
                 add: 'Начислить',
                 deduct: 'Списать',
                 historyTitle: 'История операций',
@@ -282,6 +283,7 @@ export const ADMIN_I18N = {
                 rejectTitle: 'Причина отклонения',
                 quickChoice: 'Быстрый выбор:',
                 rejectPlaceholder: 'Опишите причину отклонения...',
+                rejectLabel: 'Причина отказа',
                 reject: 'Отклонить',
                 rejectSuccess: 'Анкета отклонена!',
                 quickReasons: {
@@ -369,6 +371,7 @@ export const ADMIN_I18N = {
                 amountTitle: 'Operation amount',
                 amountPlaceholder: 'Enter amount...',
                 commentPlaceholder: 'Comment (optional)...',
+                commentLabel: 'Comment',
                 add: 'Add',
                 deduct: 'Deduct',
                 historyTitle: 'Transaction history',
@@ -577,6 +580,7 @@ export const ADMIN_I18N = {
                 rejectTitle: 'Rejection reason',
                 quickChoice: 'Quick choice:',
                 rejectPlaceholder: 'Describe the rejection reason...',
+                rejectLabel: 'Rejection reason',
                 reject: 'Reject',
                 rejectSuccess: 'Application rejected!',
                 quickReasons: {

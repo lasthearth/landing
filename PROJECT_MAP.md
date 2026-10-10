@@ -23,6 +23,44 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-9 Дизайн-оптимизация (ветка `optimizations`, план `DESIGN_FIX_PLAN`)
+
+- Навигация шапки и профиля — `<a routerLink routerLinkActive>`; ручные поля
+  `select` удалены. Подсветка «Медиа» — computed от URL (`header.component.ts`).
+- Ключи подписей навигации профиля: `profile.nav.*`.
+- `.lh-chips__label` (`styles.css`) — видимая подпись группы чипов-фильтров.
+- `lh-input`: входы `label` (видимая подпись) и `ariaLabel`; `markup-editor`: `ariaLabel`.
+- Карусель главной: 7 с, пауза кнопкой и при наведении/фокусе.
+- `DEFAULT_SETTLEMENT_COVER` (`entities/settlement/config/`) — фолбэк обложки.
+- **Удалено:** радио-виджет (`features/radio-widget/`), фото и блок команды
+  (`public/team/`, `environment.teamPhotos`, `home.team.*`), неиспользуемые
+  `settlement-detailed`, `edit-settlement-form`, `market/ui/privilege-card`,
+  `market/templates/privilege-carousel-template`, `public/images/logo.png`,
+  `rules.i18n.ts.old`. Упоминания ниже — история.
+- Меню шапки собирается из `layout/header/config/header-{main,community}-links.constant.ts`
+  (модель `layout/header/model/header-nav-link.interface.ts`): 5 разделов + «Сообщество ▾».
+  FAQ — в футере. Колонка контента `xl:w-[min(72rem,85%)]`.
+- Токены в `styles.css`: `--lh-space-*`, `--lh-section-gap`, `--lh-radius-*`, `--lh-z-*`.
+  Отступы в LESS — на сетке 2px; font-size — на ступенях.
+- Вкладки (`.lh-chips[role=tablist]`) — сегментированный переключатель; вкладка
+  маркета в `?tab=`. Подписи фильтров — `.lh-chips__label`.
+- Анимации: бесконечные убраны (фон, скидки, статусы, leader-card); косметика игрока
+  ставится на паузу вне экрана — `PauseOffscreenDirective` (`@shared/lib/directives`).
+  Компонент частиц `layout/background-particles/` удалён.
+- Состояния ошибки/пустоты в дипломатии, событиях, LFG — `app-error-state` / `app-empty-state`.
+- Карточка поселения: тип, дипломатия, «В сети: N · жителей: M», глава + до 3 онлайн.
+- `environment`: `discordInviteUrl`, `siteVersionDate`. Главная — канон `/home`.
+- Все компонентные стили — `.less` (бывшие `.component.css` переименованы).
+- Производительность: гидратация пререндера (`provideClientHydration(withEventReplay())`),
+  `withInMemoryScrolling` (сброс прокрутки), карусель рендерит картинку только у текущего
+  и соседних слайдов (`HomeComponent.isSlideNear`), путь новичка грузится динамически
+  из layout, стили `@taiga-ui/addon-mobile` убраны, `NewsApiService.getList` кэширует
+  ответ на 60 с, чат Discord опрашивается раз в минуту, пока его никто не читает
+  (`GameChatService.requestActivePolling`).
+- UX: меню шапки закрываются по Escape и клику мимо; заголовок раздела правил — кнопка;
+  тема по `prefers-color-scheme`, если пользователь не выбирал; `.lh-cta--on-dark` —
+  вторичная кнопка на тёмном фото.
+
 ### 3.-8 Выгрузка правил в Markdown для редактирования
 
 > Рабочий процесс «правки правил вне кода»: весь контент страницы `/rules`
@@ -312,6 +350,8 @@ POST/PUT/DELETE (фидбек через `RequestStatusService`).
   - `is-owner.function.ts` — `isOwner(settlement, userId)`.
   - `member-has-permission.function.ts` — `memberHasPermission(settlement, userId, permission)` (owner = все права; при `roles_enabled=false` только owner).
 - API (`entities/settlement/api/settlement.service.ts`): `createJoinRequest$`, `cancelJoinRequest$`, `getMyJoinRequests$`, `getJoinRequests$`, `approveJoinRequest$`, `rejectJoinRequest$`, `createRole$`, `updateRole$`, `deleteRole$`, `assignMemberRole$`, `removeMemberRole$`, `transferOwnership$`, `leaveSettlement$`, `updateContactInfo$`, `adminAddOwner$`, `adminRemoveOwner$`, `adminSetRolesEnabled$`, `adminDeleteSettlement$`.
+- Конфиг (`entities/settlement/config/`):
+  - `default-settlement-cover.constant.ts` — `DEFAULT_SETTLEMENT_COVER = '/landing-carousel/1.webp'`.
 - UI-потребители переведены с `.leader` на owner-модель: `settlements.component`, `settlement-card`, `settlement-detailed`, `features/settlements/settlement`, `features/profile`.
   - Кнопки гейтятся: инвайты по `canInvite` (`PERMISSION_INVITE_MEMBER`/owner), уровень/редактирование/картинка — по `isOwner`, выход — не-owner.
   - Бейджи ролей члена — `getMemberRoleNames`, скрыты при `roles_enabled=false`.
@@ -456,6 +496,37 @@ POST/PUT/DELETE (фидбек через `RequestStatusService`).
   блок и его участие в `isLoading$` удалены, `profile.component.css` очищен.
 - Словарь не двигался: ключи `profile.purchases.*` остаются в `profile.i18n.ts`,
   который грузится на роуте профиля (статистика — его дочерний роут).
+
+### 3.6.4 Оглавление правил и компоновка страниц
+
+- Правила (`/rules`): оглавление `features/rules/ui/rules-toc/` (список разделов
+  `features/rules/config/rules-toc-sections.constant.ts`, модель
+  `features/rules/model/rules-toc-item.interface.ts`). От 1024px — липкая колонка
+  слева, на узком экране — строка чипов. Клик раскрывает раздел и прокручивает к
+  блоку `#rules-<sectionId>` (`RulesComponent.goToSection`). Новый раздел правил
+  добавлять и в шаблон, и в константу оглавления.
+- «Начать игру»: карточки «Сервер» и «Если что-то не так» — ряд над путём
+  новичка, путь на всю ширину (раньше справка была узкой колонкой с пустотой под ней).
+- Статистика: «История покупок» и «Голодные игры» в одной сетке (3fr / 2fr).
+- Шапка профиля: баннер на всю карточку, читаемость — подложка `.profile-cover::after`;
+  действия с профилем в строке с ником, плашка поселения горизонтальная во всю ширину.
+- Главное меню на десктопе снова с иконками.
+- `/start-game` только для гостей: `core/guards/guest.guard.ts` отправляет вошедшего
+  в `/profile/how-play`. Пункт меню «Начать игру» помечен `lh-guest-only`, чтобы не
+  мелькать у вошедшего до проверки входа; флаг `lh-has-session` снимает шапка
+  (раньше — только главная, и на других страницах гость с протухшей сессией терял пункт).
+- Профиль: карточка «Ваш путь на сервер» убрана — для вошедшего она повторяла вкладку
+  «Как начать играть». Прогресс (правила, поселение, Discord; «Готово N из 3») теперь
+  в третьем шаге `features/profile/how-play`. Анкета и вход у вошедшего игрока всегда
+  пройдены, поэтому не показываются. `app-newcomer-path` остался только на «Начать игру»:
+  вариант для профиля, входы `details`/`settlementName`, кнопка «Скрыть» и
+  `OnboardingService.hidden/hide()` удалены.
+- Шапка профиля сворачивается на всех вкладках, кроме «Как начать играть»
+  (`ProfileComponent.compactHeader`): остаются аватар, ник и действия, а поселение,
+  значки, показатели и «Мои события» — по кнопке «Показать всё». При смене вкладки
+  шапка снова сворачивается.
+- Числа на сайте — пайп `amount` (`core/i18n/amount.pipe.ts`): разряды по языку сайта.
+- Чип игрока (`entities/user/ui/player-chip`): радиус 0.75rem под форму аватара.
 
 ### 3.7 Discord-прокси на бэкенде (vsservice)
 

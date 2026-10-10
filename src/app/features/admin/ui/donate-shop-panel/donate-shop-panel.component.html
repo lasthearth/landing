@@ -4,7 +4,7 @@
         <button
             type="button"
             (click)="activeTabIndex.set(0)"
-            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
+            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition duration-200"
             [class.border-brand]="activeTabIndex() === 0"
             [class.bg-gradient-to-r]="activeTabIndex() === 0"
             [class.from-brand]="activeTabIndex() === 0"
@@ -20,7 +20,7 @@
         <button
             type="button"
             (click)="startCreate()"
-            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition-all duration-200"
+            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition duration-200"
             [class.border-brand]="activeTabIndex() === 1"
             [class.bg-gradient-to-r]="activeTabIndex() === 1"
             [class.from-brand]="activeTabIndex() === 1"
@@ -72,7 +72,7 @@
                                 <div class="flex items-center justify-center gap-2">
                                     @if (item.effectivePrice && item.effectivePrice !== item.price) {
                                         <span class="text-base text-lh-primary/50 line-through flex items-center gap-1">
-                                            {{ item.price }}
+                                            {{ item.price | amount }}
                                             <img
                                                 src="/splinter-of-spark.webp"
                                                 [alt]="'admin.common.shardAlt' | translate"
@@ -80,7 +80,7 @@
                                             />
                                         </span>
                                         <span class="text-xl font-extrabold text-lh-accent flex items-center gap-1">
-                                            {{ item.effectivePrice }}
+                                            {{ item.effectivePrice | amount }}
                                             <img
                                                 src="/splinter-of-spark.webp"
                                                 [alt]="'admin.common.shardAlt' | translate"
@@ -89,7 +89,7 @@
                                         </span>
                                     } @else {
                                         <span class="text-xl font-extrabold text-lh-primary flex items-center gap-1">
-                                            {{ item.price }}
+                                            {{ item.price | amount }}
                                             <img
                                                 src="/splinter-of-spark.webp"
                                                 [alt]="'admin.common.shardAlt' | translate"
@@ -200,7 +200,7 @@
                             @if (!form.controls.image.value) {
                                 <label tuiInputFiles>
                                     <ng-template tuiInputFilesContent>
-                                        <span class="text-ink-2 text-[18px]">{{ 'admin.shop.addImage' | translate }}</span>
+                                        <span class="text-ink-2 text-lg">{{ 'admin.shop.addImage' | translate }}</span>
                                         <input accept="image/*" tuiInputFiles [formControl]="form.controls.image" />
                                     </ng-template>
                                 </label>
@@ -438,14 +438,14 @@
                     <button
                         type="button"
                         (click)="backToList()"
-                        class="px-6 py-3.5 rounded-xl border border-lh-primary-2 text-lh-primary font-bold uppercase text-lg hover:bg-lh-primary-2/10 transition-all"
+                        class="px-6 py-3.5 rounded-xl border border-lh-primary-2 text-lh-primary font-bold uppercase text-lg hover:bg-lh-primary-2/10 transition"
                     >
                         {{ 'admin.common.cancel' | translate }}
                     </button>
                     <button
                         type="submit"
                         [disabled]="form.invalid || isLoading()"
-                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-brand-hover text-white font-bold uppercase text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
+                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-brand-hover text-white font-bold uppercase text-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
                     >
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -490,16 +490,16 @@
                     <div class="flex items-center justify-center gap-2">
                         @if (previewItem().hasDiscount && previewItem().discountPercent) {
                             <span class="text-lg text-lh-primary/50 line-through flex items-center gap-1">
-                                {{ previewItem().price }}
+                                {{ previewItem().price | amount }}
                                 <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-4 w-4 object-contain" />
                             </span>
                             <span class="text-2xl font-extrabold text-lh-accent flex items-center gap-1">
-                                {{ previewEffectivePrice() }}
+                                {{ previewEffectivePrice() | amount }}
                                 <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                             </span>
                         } @else {
                             <span class="text-2xl font-extrabold text-lh-primary flex items-center gap-1">
-                                {{ previewItem().price }}
+                                {{ previewItem().price | amount }}
                                 <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                             </span>
                         }
@@ -520,7 +520,7 @@
 
                     <button
                         type="button"
-                        class="w-full text-white uppercase transition-all duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-brand-lit-2 hover:from-brand-lit-2 hover:to-lh-accent rounded-xl py-3 text-lg shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
+                        class="w-full text-white uppercase transition duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-brand-lit-2 hover:from-brand-lit-2 hover:to-lh-accent rounded-xl py-3 text-lg shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
                     >
                         {{ 'admin.shop.buy' | translate }}
                     </button>
@@ -549,7 +549,7 @@
                                 @for (entry of previewItem().entries; track $index) {
                                     <div
                                         [title]="entry.name"
-                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_2px_4px_rgba(0,0,0,0.15)] transition-all duration-150 hover:scale-110 hover:rotate-2 hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.25)] hover:border-lh-accent group/item"
+                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_2px_4px_rgba(0,0,0,0.15)] transition duration-150 hover:scale-110 hover:rotate-2 hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.25)] hover:border-lh-accent group/item"
                                     >
                                         @if (entry.imageUrl) {
                                             <app-image-loader

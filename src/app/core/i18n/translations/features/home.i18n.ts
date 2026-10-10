@@ -1,9 +1,21 @@
 export const HOME_I18N = {
     ru: {
         home: {
+            server: {
+                label: 'Подключение к серверу',
+                address: 'Адрес сервера',
+                version: 'Версия игры',
+                copy: 'Копировать',
+                copied: 'Скопировано',
+                howTo: 'Как подключиться',
+            },
             carousel: {
                 nextAria: 'Следующий слайд',
                 prevAria: 'Предыдущий слайд',
+                pause: 'Остановить показ слайдов',
+                ctaStart: 'Начать играть',
+                ctaDiscord: 'Наш Discord',
+                play: 'Продолжить показ слайдов',
                 slides: {
                     lastHearth: {
                         header: 'Последний очаг',
@@ -39,15 +51,6 @@ export const HOME_I18N = {
                     },
                 },
             },
-            quickActions: {
-                start: 'Как начать',
-                whereIp: 'Где IP?',
-                settlements: 'Поселения',
-                gallery: 'Галерея',
-                videos: 'Видео',
-                discord: 'Discord',
-                donate: 'Поддержать',
-            },
             news: {
                 title: 'Новости',
                 empty: 'Новостей пока нет...',
@@ -61,17 +64,6 @@ export const HOME_I18N = {
                 all: 'Все события',
                 more: 'И ещё {{count}} в календаре',
                 going: 'Идут: {{count}}',
-            },
-            team: {
-                title: 'Команда проекта',
-                subtitle: 'Люди, которые хранят огонь Last Hearth: развивают мир, следят за порядком и помогают игрокам.',
-                roles: {
-                    founder: 'Создатель проекта',
-                    coFounder: 'Со-создатель проекта',
-                    techAdmin: 'Технический администратор',
-                    admin: 'Администратор',
-                    moderator: 'Модератор',
-                },
             },
             recruit: {
                 title: 'Присоединиться к команде',
@@ -94,6 +86,7 @@ export const HOME_I18N = {
                         description: 'Ищете способы рассказать о проекте новым игрокам и помогаете ему расти.',
                     },
                 },
+                rolesLabel: 'Кого мы ищем',
                 contactTitle: 'Связаться с нами:',
                 discord: 'Discord',
                 telegram: 'Telegram',
@@ -112,9 +105,21 @@ export const HOME_I18N = {
     },
     en: {
         home: {
+            server: {
+                label: 'Server connection',
+                address: 'Server address',
+                version: 'Game version',
+                copy: 'Copy',
+                copied: 'Copied',
+                howTo: 'How to connect',
+            },
             carousel: {
                 nextAria: 'Next slide',
                 prevAria: 'Previous slide',
+                pause: 'Pause slideshow',
+                ctaStart: 'Start playing',
+                ctaDiscord: 'Our Discord',
+                play: 'Resume slideshow',
                 slides: {
                     lastHearth: {
                         header: 'Last Hearth',
@@ -150,15 +155,6 @@ export const HOME_I18N = {
                     },
                 },
             },
-            quickActions: {
-                start: 'How to start',
-                whereIp: 'Where is IP?',
-                settlements: 'Settlements',
-                gallery: 'Gallery',
-                videos: 'Videos',
-                discord: 'Discord',
-                donate: 'Support',
-            },
             news: {
                 empty: 'No news yet...',
                 title: 'News',
@@ -172,17 +168,6 @@ export const HOME_I18N = {
                 all: 'All events',
                 more: '{{count}} more in the calendar',
                 going: 'Going: {{count}}',
-            },
-            team: {
-                title: 'Project team',
-                subtitle: 'The people who keep the Last Hearth fire burning: they shape the world, keep order and help players.',
-                roles: {
-                    founder: 'Project founder',
-                    coFounder: 'Project co-founder',
-                    techAdmin: 'Technical administrator',
-                    admin: 'Administrator',
-                    moderator: 'Moderator',
-                },
             },
             recruit: {
                 title: 'Join the team',
@@ -205,6 +190,7 @@ export const HOME_I18N = {
                         description: 'Find ways to tell new players about the project and help it grow.',
                     },
                 },
+                rolesLabel: 'Who we are looking for',
                 contactTitle: 'Get in touch:',
                 discord: 'Discord',
                 telegram: 'Telegram',

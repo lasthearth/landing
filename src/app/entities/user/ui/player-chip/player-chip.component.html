@@ -1,11 +1,13 @@
 <ng-template #tooltip>
     <div class="player-tooltip">
-        <div
-            class="player-tooltip__banner"
-            [style.backgroundImage]="'url(' + banner().image + ')'"
-            [style.backgroundPosition]="'center ' + banner().focus"
-            aria-hidden="true"
-        ></div>
+        @if (banner().image) {
+            <div
+                class="player-tooltip__banner"
+                [style.backgroundImage]="'url(' + banner().image + ')'"
+                [style.backgroundPosition]="'center ' + banner().focus"
+                aria-hidden="true"
+            ></div>
+        }
         <div class="player-tooltip__head">
             <app-player-avatar
                 class="player-tooltip__avatar"
@@ -45,7 +47,7 @@
             <dl class="player-tooltip__stats">
                 <div class="player-tooltip__stat">
                     <dt>{{ 'settlements.player.stats.hours' | translate }}</dt>
-                    <dd>{{ s.hours_played | number: '1.0-0' }}</dd>
+                    <dd>{{ s.hours_played | amount }}</dd>
                 </div>
                 <div class="player-tooltip__stat">
                     <dt>{{ 'settlements.player.stats.kills' | translate }}</dt>

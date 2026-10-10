@@ -60,12 +60,14 @@
         <p class="text-lg font-semibold text-lh-primary">{{ 'settlements.tags.createTitle' | translate }}</p>
         <lh-input
             type="input"
+            [label]="'settlements.tags.nameLabel' | translate"
             [placeholder]="'settlements.tags.namePlaceholder' | translate"
             [formControl]="newTagForm.controls.name"
         />
         <lh-input
             type="textarea"
             [rows]="2"
+            [label]="'settlements.tags.descriptionLabel' | translate"
             [placeholder]="'settlements.tags.descriptionPlaceholder' | translate"
             [formControl]="newTagForm.controls.description"
         />

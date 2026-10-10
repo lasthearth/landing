@@ -1,4 +1,4 @@
-<section class="events-page">
+<section class="events-page lh-page-container">
     <app-page-header [title]="'events.title' | translate" [subtitle]="'events.subtitle' | translate">
         @if (canManage() && editing() === null) {
             <button type="button" class="lh-cta events-page__create" (click)="create()">
@@ -43,25 +43,18 @@
 
     <div role="tabpanel">
         @if (error()) {
-            <div class="events-page__state events-page__state--error" role="alert">
-                <tui-icon icon="@tui.triangle-alert" class="size-8" />
-                <span>{{ "events.error" | translate }}</span>
-            </div>
+            <app-error-state description="events.error" (retry)="retry()" />
         } @else if (events() === null) {
             <div class="events-page__state" role="status">
                 <tui-icon icon="@tui.loader" class="size-8 animate-spin" />
                 <span>{{ "events.loading" | translate }}</span>
             </div>
         } @else if (events()!.length === 0) {
-            <div class="events-page__state">
-                <tui-icon icon="@tui.calendar" class="size-14 opacity-60" />
-                <p class="events-page__empty-title">
-                    {{ (tab() === "upcoming" ? "events.empty.upcoming" : "events.empty.past") | translate }}
-                </p>
-                @if (tab() === "upcoming") {
-                    <p class="events-page__empty-text">{{ "events.empty.upcomingHint" | translate }}</p>
-                }
-            </div>
+            <app-empty-state
+                icon="@tui.calendar"
+                [title]="tab() === 'upcoming' ? 'events.empty.upcoming' : 'events.empty.past'"
+                [description]="tab() === 'upcoming' ? 'events.empty.upcomingHint' : ''"
+            />
         } @else {
             <div class="events-page__list">
                 @for (event of events(); track event.id) {

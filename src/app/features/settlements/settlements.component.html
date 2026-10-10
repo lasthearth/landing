@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-6 p-6">
+<div class="lh-page-container flex flex-col gap-6">
     <div class="flex flex-col gap-4">
         <app-page-header [title]="'settlements.list.title' | translate">
             <button type="button" class="lh-cta" (click)="openFinder()">
@@ -8,7 +8,8 @@
         </app-page-header>
 
         <!-- Сортировка: повторный клик по активному ключу меняет направление -->
-        <nav class="lh-chips" [attr.aria-label]="'settlements.list.sort.label' | translate">
+        <div class="lh-chips" role="group" aria-labelledby="settlements-sort-label">
+            <span id="settlements-sort-label" class="lh-chips__label">{{ 'settlements.list.sort.label' | translate }}</span>
             @for (key of sortKeys; track key) {
                 <button
                     type="button"
@@ -22,7 +23,7 @@
                     }
                 </button>
             }
-        </nav>
+        </div>
 
         <!-- Поиск и фильтры: состояние хранится в адресе, ссылкой на подборку можно поделиться -->
         <div class="settlements-filters">
@@ -39,7 +40,8 @@
             </label>
 
             @if (typeOptions().length > 1) {
-                <div class="lh-chips" role="group" [attr.aria-label]="'settlements.list.filterType' | translate">
+                <div class="lh-chips" role="group" aria-labelledby="settlements-type-label">
+                    <span id="settlements-type-label" class="lh-chips__label">{{ 'settlements.list.filterType' | translate }}</span>
                     @for (option of typeOptions(); track option.value) {
                         <button
                             type="button"
@@ -55,7 +57,8 @@
             }
 
             @if (courseOptions().length > 1) {
-                <div class="lh-chips" role="group" [attr.aria-label]="'settlements.list.filterCourse' | translate">
+                <div class="lh-chips" role="group" aria-labelledby="settlements-course-label">
+                    <span id="settlements-course-label" class="lh-chips__label">{{ 'settlements.list.filterCourse' | translate }}</span>
                     @for (option of courseOptions(); track option.value) {
                         <button
                             type="button"
@@ -106,7 +109,7 @@
             [description]="'settlements.list.notFound.description' | translate"
         />
     } @else {
-        <div class="settlements-grid lh-stagger-list">
+        <div class="settlements-grid">
             @for (item of filteredSettlements(); track item.id) {
                 <app-settlement-card
                     [data]="item"

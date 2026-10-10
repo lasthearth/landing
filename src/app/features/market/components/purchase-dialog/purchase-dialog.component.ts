@@ -7,7 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { DonateService } from '@entities/donate';
 import { RequestStatusService } from '@core/services/request-status.service';
-import { I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
 import { HowToBuyComponent } from '../how-to-buy/how-to-buy.component';
 
@@ -80,7 +80,7 @@ export interface PurchaseDialogData {
 @Component({
     selector: 'app-purchase-dialog',
     standalone: true,
-    imports: [TuiButton, TuiIcon, ImageLoaderComponent, AbilityTagComponent, KitItemComponent, TranslatePipe],
+    imports: [AmountPipe, TuiButton, TuiIcon, ImageLoaderComponent, AbilityTagComponent, KitItemComponent, TranslatePipe],
     templateUrl: './purchase-dialog.component.html',
     styleUrl: './purchase-dialog.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

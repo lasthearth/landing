@@ -1,12 +1,22 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    HostListener,
+    PLATFORM_ID,
+    computed,
+    inject,
+    signal,
+} from '@angular/core';
 import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, DOCUMENT, NgClass, isPlatformBrowser } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { RouterLink, ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink, RouterLinkActive, NavigationEnd, Router } from '@angular/router';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { HEADER_MAIN_LINKS } from './config/header-main-links.constant';
+import { HEADER_COMMUNITY_LINKS } from './config/header-community-links.constant';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { RouteKeys } from '@app/routes/enums/route-keys';
 import { NotificationService } from '@core/services/notification.service';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { UserService } from '@entities/user';
@@ -14,7 +24,7 @@ import { PlayerAvatarComponent } from '@entities/player-style';
 import { DonateService } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign-out-confirm.component';
-import { I18nService, Language, TranslatePipe } from '@core/i18n';
+import { I18nService, Language, TranslatePipe, AmountPipe } from '@core/i18n';
 import { ThemeService } from '@core/services/theme.service';
 import { formatServerTime } from './lib/format-server-time.function';
 import { NewContentService } from '@features/new-content';
@@ -26,12 +36,13 @@ import { NotificationBellComponent } from '@features/notifications';
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [
+    imports: [AmountPipe, 
         TuiProgress,
         AsyncPipe,
         TuiIcon,
         NgClass,
         RouterLink,
+        RouterLinkActive,
         TuiPulse,
         ImageLoaderComponent,
         TranslatePipe,
@@ -39,7 +50,7 @@ import { NotificationBellComponent } from '@features/notifications';
         PlayerAvatarComponent,
     ],
     templateUrl: './header.component.html',
-    styleUrl: './header.component.css',
+    styleUrl: './header.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
@@ -100,19 +111,21 @@ export class HeaderComponent {
     );
 
     /**
-     * Объект с информацией о текущем роуте.
-     */
-    private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-
-    /**
      * Сервис навигации.
      */
     private readonly router: Router = inject(Router);
 
     /**
-     * Ссылка уничтожения на компонент.
+     * Текущий адрес страницы после редиректов.
+     * Обновляется на каждом завершении навигации.
      */
-    private readonly destroyRef: DestroyRef = inject(DestroyRef);
+    private readonly currentUrl = toSignal(
+        this.router.events.pipe(
+            filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+            map((event) => event.urlAfterRedirects)
+        ),
+        { initialValue: this.router.url }
+    );
 
     /**
      * Сервис уведомлений.
@@ -158,95 +171,22 @@ export class HeaderComponent {
     protected readonly settlementVerifications$ = this.notificationService.settlementVerifications$;
 
     /**
-     * Активная страница.
-     */
-    protected select: string = 'home';
-
-    /**
-     * Объект слеженИя за изменениями.
-     */
-    private readonly cdr = inject(ChangeDetectorRef);
-
-    /**
-     * Инициализирует компонент класса {@link LandingComponent}
+     * Запускает отслеживание нового контента. Если сохранённая сессия оказалась
+     * недействительной (проверка входа завершилась гостем), возвращает гостевые
+     * блоки, которые скрипт в index.html спрятал заранее (`lh-has-session`).
+     * Шапка есть на каждой странице, поэтому флаг снимается везде, а не только на главной.
      */
     public constructor() {
         this.newContent.start();
 
-        const updateSelect = () => {
-            let route = this.activatedRoute;
-
-            while (route.firstChild) {
-                route = route.firstChild;
-            }
-
-            const routeKey = route.snapshot.data['route_keys'];
-
-            if (routeKey) {
-                switch (routeKey) {
-                    case RouteKeys.home:
-                        this.select = 'home';
-                        break;
-                    case RouteKeys.rules:
-                        this.select = 'rules';
-                        break;
-                    case RouteKeys.profile:
-                    case RouteKeys.howPlay:
-                    case RouteKeys.stats:
-                    case RouteKeys.admin:
-                    case RouteKeys.settlement:
-                        this.select = 'profile';
-                        break;
-                    case RouteKeys.startGame:
-                        this.select = 'startGame';
-                        break;
-                    case RouteKeys.privacyPolicy:
-                        this.select = 'privacyPolicy';
-                        break;
-                    case RouteKeys.publicOffer:
-                        this.select = 'publicOffer';
-                        break;
-                    case RouteKeys.market:
-                        this.select = 'market';
-                        break;
-                    case RouteKeys.faq:
-                        this.select = 'faq';
-                        break;
-                    case RouteKeys.settlements:
-                        this.select = 'settlements';
-                        break;
-                    case RouteKeys.gallery:
-                        this.select = 'gallery';
-                        break;
-                    case RouteKeys.videos:
-                        this.select = 'videos';
-                        break;
-                    case RouteKeys.diplomacy:
-                        this.select = 'diplomacy';
-                        break;
-                    case RouteKeys.events:
-                        this.select = 'events';
-                        break;
-                    case RouteKeys.lfg:
-                        this.select = 'lfg';
-                        break;
-                    case RouteKeys.news:
-                        this.select = 'home';
-                        break;
+        if (isPlatformBrowser(inject(PLATFORM_ID))) {
+            const root = inject(DOCUMENT).documentElement;
+            this.userService.authSettled$.pipe(takeUntilDestroyed()).subscribe((isAuth) => {
+                if (!isAuth) {
+                    root.classList.remove('lh-has-session');
                 }
-
-                this.cdr.markForCheck();
-            }
-        };
-
-        updateSelect();
-
-        this.router.events
-            .pipe(
-                filter((event) => event instanceof NavigationEnd),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe(() => updateSelect());
+            });
+        }
     }
 
     /**
@@ -261,6 +201,55 @@ export class HeaderComponent {
      */
     protected signOut(): void {
         this.dialogs.open(new PolymorpheusComponent(SignOutConfirmComponent), { size: 'auto' }).subscribe();
+    }
+
+    /**
+     * Хост-элемент шапки — чтобы отличать клик внутри меню от клика мимо.
+     */
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /**
+     * Признак, что открыто хотя бы одно выпадающее меню шапки.
+     */
+    private get anyMenuOpen(): boolean {
+        return this.showMediaMenu() || this.showLangMenu() || this.showMobileMenu();
+    }
+
+    /**
+     * Закрывает все выпадающие меню шапки.
+     */
+    private closeMenus(): void {
+        this.showMediaMenu.set(false);
+        this.showLangMenu.set(false);
+        this.showMobileMenu.set(false);
+        this.showMobileMediaMenu.set(false);
+    }
+
+    /**
+     * Клик мимо шапки закрывает открытые меню.
+     *
+     * @param event Событие клика по документу.
+     */
+    @HostListener('document:click', ['$event'])
+    protected onDocumentClick(event: MouseEvent): void {
+        if (this.anyMenuOpen && !this.host.nativeElement.contains(event.target as Node)) {
+            this.closeMenus();
+        }
+    }
+
+    /**
+     * Escape закрывает открытые меню и возвращает фокус на кнопку, которая их открыла.
+     */
+    @HostListener('document:keydown.escape')
+    protected onEscape(): void {
+        if (!this.anyMenuOpen) {
+            return;
+        }
+
+        const trigger = this.host.nativeElement.querySelector<HTMLElement>('[aria-expanded="true"]');
+
+        this.closeMenus();
+        trigger?.focus();
     }
 
     protected toggleMediaMenu(): void {
@@ -292,11 +281,31 @@ export class HeaderComponent {
     protected readonly showMediaMenu = signal(false);
 
     /**
-     * Возвращает признак, активен ли один из разделов Медиа.
+     * Основные разделы меню.
      */
-    protected get isMediaActive(): boolean {
-        return this.select === 'gallery' || this.select === 'videos';
-    }
+    protected readonly mainLinks = HEADER_MAIN_LINKS;
+
+    /**
+     * Разделы выпадающего пункта «Сообщество».
+     */
+    protected readonly communityLinks = HEADER_COMMUNITY_LINKS;
+
+    /**
+     * Признак, что открыт один из разделов «Сообщества».
+     * Подсвечивает кнопку «Сообщество», пока её подменю закрыто.
+     */
+    protected readonly isCommunityActive = computed(() => {
+        const url = this.currentUrl();
+
+        return this.communityLinks.some((link) => url.startsWith(link.route));
+    });
+
+    /**
+     * Есть ли новое в каком-либо разделе «Сообщества» (точка на кнопке).
+     */
+    protected readonly isCommunityFresh = computed(() =>
+        this.communityLinks.some((link) => !!link.freshSection && this.newContent.isFresh(link.freshSection))
+    );
 
     /**
      * Переключает язык интерфейса и закрывает дропдаун.

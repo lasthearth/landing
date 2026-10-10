@@ -8,12 +8,14 @@ import {
     signal,
     Signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { catchError, finalize, Observable, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+    DEFAULT_SETTLEMENT_COVER,
     getDiplomacyTone,
     getMemberRoleNames,
     getOwnerIds,
@@ -79,7 +81,8 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [MarkupPipe, 
+    imports: [MarkupPipe,
+        RouterLink,
         TuiIcon,
         TuiLoader,
         SettlementBadgeComponent,
@@ -96,7 +99,7 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
         RelativeTimeComponent,
     ],
     templateUrl: './settlement.component.html',
-    styleUrl: './settlement.component.css',
+    styleUrl: './settlement.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementComponent {
@@ -227,7 +230,7 @@ export class SettlementComponent {
      * У части селений массив вложений пуст, и шаблон падал на чтении `.url`.
      */
     protected readonly imageUrl: Signal<string> = computed(
-        () => this.settlement()?.attachments?.[0]?.url || '/images/screenshots/screen_1.png'
+        () => this.settlement()?.attachments?.[0]?.url || DEFAULT_SETTLEMENT_COVER
     );
 
     /**

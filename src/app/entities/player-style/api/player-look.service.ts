@@ -5,7 +5,7 @@ import { isOwner, ISettlement, SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user/api/user.service';
 import { ILeaderBoard } from '@entities/user/model/i-leader-board';
 import { catchError, combineLatest, map, Observable, of, tap } from 'rxjs';
-import { BANNER_EFFECTS, FRAME_EFFECTS, PROFILE_BANNERS, PROFILE_FRAMES } from '../lib/player-style.constant';
+import { BANNER_EFFECTS, BANNER_NONE, FRAME_EFFECTS, PROFILE_BANNERS, PROFILE_FRAMES } from '../lib/player-style.constant';
 import { bannerById, defaultPlayerLook, styleCheckable, styleLock } from '../lib/style-lock.function';
 import { AppearanceDto, StandingDto } from '../model/appearance.dto';
 import {
@@ -111,7 +111,8 @@ export class PlayerLookService {
         };
 
         return {
-            bannerId: open(saved.look.bannerId, PROFILE_BANNERS, fallback.bannerId),
+            // «Без баннера» — не из каталога: условий нет, выбор сохраняем как есть.
+            bannerId: saved.look.bannerId === BANNER_NONE.id ? BANNER_NONE.id : open(saved.look.bannerId, PROFILE_BANNERS, fallback.bannerId),
             bannerEffect: open<BannerEffectId>(saved.look.bannerEffect, BANNER_EFFECTS, 'none'),
             frameId: open<ProfileFrameId>(saved.look.frameId, PROFILE_FRAMES, fallback.frameId),
             frameEffect: open<FrameEffectId>(saved.look.frameEffect, FRAME_EFFECTS, 'none'),

@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, PLATFORM_ID, TemplateRef, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { SeoService } from '@core/services/seo.service';
 import { SettlementDisplayNamePipe } from '@entities/settlement';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
@@ -39,7 +39,7 @@ type PlayerPageState =
     selector: 'app-player-page',
     templateUrl: './player-page.component.html',
     styleUrl: './player-page.component.less',
-    imports: [
+    imports: [AmountPipe, 
         RouterLink,
         TuiIcon,
         TranslatePipe,
@@ -106,11 +106,11 @@ export class PlayerPageComponent {
     });
 
     /**
-     * Баннер шапки.
+     * Баннер шапки; `null` — игрок выбрал «без баннера», шапка без картинки.
      */
     protected readonly banner = computed(() => {
         const id = this.style()?.bannerId;
-        return id ? bannerById(id) : null;
+        return id && id !== 'none' ? bannerById(id) : null;
     });
 
     /**

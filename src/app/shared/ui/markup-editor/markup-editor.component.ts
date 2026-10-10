@@ -97,6 +97,12 @@ export class MarkupEditorComponent implements ControlValueAccessor {
     public readonly placeholder = input<string>('');
 
     /**
+     * Доступное имя поля для скринридеров.
+     * Если не задано — используется placeholder, чтобы поле не было безымянным.
+     */
+    public readonly ariaLabel = input<string>('');
+
+    /**
      * Загрузчик картинок: получает файл, возвращает публичный URL.
      * Без него кнопки «Картинка» нет.
      */

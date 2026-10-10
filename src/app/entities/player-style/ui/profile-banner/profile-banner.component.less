@@ -19,6 +19,14 @@
     background: none;
 }
 
+// «Без баннера»: пустая плитка с приглушённым фоном и пунктирной рамкой —
+// пустой выбор читается как осознанный, а не как недогрузившаяся картинка.
+.pbanner--empty {
+    background-color: var(--lh-surface-3);
+    outline: 2px dashed var(--lh-line);
+    outline-offset: -6px;
+}
+
 .pbanner__img {
     display: block;
     width: auto;

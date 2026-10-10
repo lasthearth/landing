@@ -1,7 +1,7 @@
 <div class="flex w-full p-6 pb-20 xl:pb-3 justify-between">
     <div class="flex gap-10 items-center">
         <div class="md:flex font-semibold items-center shrink-0 hidden">
-            <app-image-loader src="/logo.ico" [alt]="'footer.logoAlt' | translate" class="size-16" />
+            <app-image-loader src="/images/logo.webp" [alt]="'footer.logoAlt' | translate" class="size-16" />
         </div>
         <div class="flex flex-col justify-between">
             <div>
@@ -9,6 +9,10 @@
                 <p>{{ "footer.rights" | translate }}</p>
             </div>
             <div class="flex sm:gap-4 gap-2 flex-col sm:flex-row">
+                <a [routerLink]="['/faq']" class="self-start">{{ "footer.faq" | translate }}</a>
+
+                <span class="text-lh-primary hidden sm:block">•</span>
+
                 <a [routerLink]="['/privacy-policy']" class="self-start">{{ "footer.privacyPolicy" | translate }}</a>
 
                 <span class="text-lh-primary hidden sm:block">•</span>
@@ -17,8 +21,8 @@
 
                 <span class="text-lh-primary hidden sm:block">•</span>
 
-                <a href="https://docs.lasthearth.ru/" target="_blank" class="self-start">
-                    {{ "footer.version" | translate: { version: environment.siteVersion, date: "21.09.2026" } }}
+                <a href="https://docs.lasthearth.ru/" target="_blank" rel="noopener noreferrer" class="self-start">
+                    {{ "footer.version" | translate: { version: environment.siteVersion, date: environment.siteVersionDate } }}
                 </a>
             </div>
         </div>
@@ -35,7 +39,8 @@
                         href="https://boosty.to/lisov"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="Boosty"
+                        [attr.aria-label]="'footer.social.boosty' | translate"
+                        [title]="'footer.social.boosty' | translate"
                     >
                         <img src="/images/Boosty.svg" alt="" />
                     </a>
@@ -49,7 +54,8 @@
                         href="https://www.donationalerts.com/r/lisovn"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="DonationAlerts"
+                        [attr.aria-label]="'footer.social.donationAlerts' | translate"
+                        [title]="'footer.social.donationAlerts' | translate"
                     >
                         <img src="/images/DA.svg" alt="" />
                     </a>
@@ -61,10 +67,11 @@
                 >
                     <a
                         class="z-10 nav-button"
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="environment.discordInviteUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="Discord"
+                        [attr.aria-label]="'footer.social.discord' | translate"
+                        [title]="'footer.social.discord' | translate"
                     >
                         <img src="/images/discord.svg" alt="" class="size-6" />
                     </a>
@@ -77,7 +84,8 @@
                         href="https://www.youtube.com/@LISOVCORP"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="YouTube"
+                        [attr.aria-label]="'footer.social.youtube' | translate"
+                        [title]="'footer.social.youtube' | translate"
                     >
                         <img src="/images/youtube.svg" alt="" class="size-6" />
                     </a>

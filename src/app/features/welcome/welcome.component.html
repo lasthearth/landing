@@ -72,17 +72,17 @@
             <div
                 class="welcome-stagger mt-8 lg:mt-12 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center items-center"
             >
-                <button type="button" (click)="scroll()" class="lh-cta text-lg md:text-xl uppercase tracking-wide">
+                <button type="button" (click)="startPlaying()" class="lh-cta text-lg md:text-xl uppercase tracking-wide">
                     {{ 'welcome.startPlaying' | translate }}
                     <span class="lh-cta__icon">
                         <tui-icon icon="@tui.arrow-right" class="size-4!" />
                     </span>
                 </button>
                 <a
-                    href="https://discord.com/invite/FZb7SGrSFy"
+                    [href]="discordInviteUrl"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="lh-cta welcome-cta-ghost text-lg md:text-xl uppercase tracking-wide no-underline!"
+                    class="lh-cta lh-cta--on-dark text-lg md:text-xl uppercase tracking-wide no-underline!"
                 >
                     {{ 'welcome.joinDiscord' | translate }}
                     <span class="lh-cta__icon">

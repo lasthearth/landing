@@ -1,8 +1,9 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { buildAngularAuthConfig } from '@logto/js';
 import { AbstractSecurityStorage, DefaultLocalStorageService, LogLevel, provideAuth } from 'angular-auth-oidc-client';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideEventPlugins } from '@taiga-ui/event-plugins';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from '../interceptors/auth.interceptor';
@@ -83,9 +84,17 @@ export const appConfig: ApplicationConfig = {
         // `TUI_REMOVED_ELEMENT`, поэтому движок всё равно оказывается
         // в начальном графе.
         provideAnimations(),
+        // Пререндеренная разметка переиспользуется, а не строится заново:
+        // без гидратации страница «схлопывалась» и раскрывалась (CLS ~0.7).
+        provideClientHydration(withEventReplay()),
         provideEventPlugins(),
         provideZoneChangeDetection({ eventCoalescing: true }),
-        provideRouter(routes),
+        provideRouter(
+            routes,
+            // При переходе страница открывается сверху, «Назад» возвращает прежнюю позицию,
+            // ссылки с #якорем прокручивают к элементу.
+            withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })
+        ),
         provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
         provideAuth({
             config: getConfig(),

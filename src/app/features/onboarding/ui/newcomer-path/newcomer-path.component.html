@@ -1,346 +1,322 @@
-@if (visible()) {
-    <section
-        class="newcomer-path"
-        [class.newcomer-path--profile]="variant() === 'profile'"
-        aria-labelledby="newcomer-path-title"
-    >
-        <header class="newcomer-path__header">
-            <div class="newcomer-path__heading">
-                <h2 id="newcomer-path-title" class="newcomer-path__title">
-                    {{ (complete() ? "shared.onboarding.titleDone" : "shared.onboarding.title") | translate }}
-                </h2>
-                <span class="newcomer-path__progress-label">
-                    {{ "shared.onboarding.progress" | translate: { done: doneCount(), total: steps().length } }}
-                </span>
-            </div>
-
-            @if (variant() === "profile") {
-                <button type="button" class="newcomer-path__hide" (click)="onboarding.hide()">
-                    {{ "shared.onboarding.hide" | translate }}
-                </button>
-            }
-        </header>
-
-        <div
-            class="newcomer-path__bar"
-            role="progressbar"
-            [attr.aria-valuenow]="doneCount()"
-            aria-valuemin="0"
-            [attr.aria-valuemax]="steps().length"
-            [attr.aria-label]="'shared.onboarding.title' | translate"
-        >
-            <span class="newcomer-path__bar-fill" [style.width.%]="(doneCount() / steps().length) * 100"></span>
+<section class="newcomer-path" aria-labelledby="newcomer-path-title">
+    <header class="newcomer-path__header">
+        <div class="newcomer-path__heading">
+            <h2 id="newcomer-path-title" class="newcomer-path__title">
+                {{ (complete() ? "shared.onboarding.titleDone" : "shared.onboarding.title") | translate }}
+            </h2>
+            <span class="newcomer-path__progress-label">
+                {{ "shared.onboarding.progress" | translate: { done: doneCount(), total: steps().length } }}
+            </span>
         </div>
+    </header>
 
-        <ol class="newcomer-path__steps">
-            @for (step of steps(); track step.key; let index = $index) {
-                @let open = expanded() === step.key;
-                <li
-                    class="newcomer-path__step"
-                    [class]="'newcomer-path__step--' + step.state"
-                    [class.newcomer-path__step--open]="open"
+    <div
+        class="newcomer-path__bar"
+        role="progressbar"
+        [attr.aria-valuenow]="doneCount()"
+        aria-valuemin="0"
+        [attr.aria-valuemax]="steps().length"
+        [attr.aria-label]="'shared.onboarding.title' | translate"
+    >
+        <span class="newcomer-path__bar-fill" [style.width.%]="(doneCount() / steps().length) * 100"></span>
+    </div>
+
+    <ol class="newcomer-path__steps">
+        @for (step of steps(); track step.key; let index = $index) {
+            @let open = expanded() === step.key;
+            <li
+                class="newcomer-path__step"
+                [class]="'newcomer-path__step--' + step.state"
+                [class.newcomer-path__step--open]="open"
+            >
+                <button
+                    type="button"
+                    class="newcomer-path__head"
+                    [attr.aria-expanded]="open"
+                    [attr.aria-controls]="'newcomer-step-' + step.key"
+                    (click)="toggle(step.key)"
                 >
-                    <button
-                        type="button"
-                        class="newcomer-path__head"
-                        [attr.aria-expanded]="open"
-                        [attr.aria-controls]="'newcomer-step-' + step.key"
-                        (click)="toggle(step.key)"
-                    >
-                        <span class="newcomer-path__marker" aria-hidden="true">
-                            @switch (step.state) {
-                                @case ("done") {
-                                    <tui-icon icon="@tui.check" class="size-4!" />
-                                }
-                                @case ("waiting") {
-                                    <tui-icon icon="@tui.hourglass" class="size-4!" />
-                                }
-                                @case ("rejected") {
-                                    <tui-icon icon="@tui.x" class="size-4!" />
-                                }
-                                @default {
-                                    {{ index + 1 }}
-                                }
+                    <span class="newcomer-path__marker" aria-hidden="true">
+                        @switch (step.state) {
+                            @case ("done") {
+                                <tui-icon icon="@tui.check" class="size-4!" />
                             }
-                        </span>
-
-                        <span class="newcomer-path__step-title">
-                            {{ "shared.onboarding.steps." + step.key + ".title" | translate }}
-                            @if (step.optional) {
-                                <span class="newcomer-path__optional">
-                                    {{ "shared.onboarding.optional" | translate }}
-                                </span>
+                            @case ("waiting") {
+                                <tui-icon icon="@tui.hourglass" class="size-4!" />
                             }
-                        </span>
+                            @case ("rejected") {
+                                <tui-icon icon="@tui.x" class="size-4!" />
+                            }
+                            @default {
+                                {{ index + 1 }}
+                            }
+                        }
+                    </span>
 
+                    <span class="newcomer-path__step-title">
+                        {{ "shared.onboarding.steps." + step.key + ".title" | translate }}
+                        @if (step.optional) {
+                            <span class="newcomer-path__optional">
+                                {{ "shared.onboarding.optional" | translate }}
+                            </span>
+                        }
+                    </span>
+
+                    <!-- Бейдж только у значимых состояний: «впереди» на каждой строке был шумом -->
+                    @if (step.state !== "todo") {
                         <span class="newcomer-path__state">
                             {{ "shared.onboarding.state." + step.state | translate }}
                         </span>
-                        <tui-icon icon="@tui.chevron-down" class="newcomer-path__chevron size-4!" />
-                    </button>
+                    }
+                    <tui-icon icon="@tui.chevron-down" class="newcomer-path__chevron size-4!" />
+                </button>
 
-                    @if (open) {
-                        <div class="newcomer-path__body" [id]="'newcomer-step-' + step.key">
-                            @switch (step.key) {
-                                @case ("install") {
+                @if (open) {
+                    <div class="newcomer-path__body" [id]="'newcomer-step-' + step.key">
+                        @switch (step.key) {
+                            @case ("install") {
+                                <p class="newcomer-path__text">
+                                    {{
+                                        "shared.onboarding.steps.install." + (step.state === "done" ? "done" : "todo")
+                                            | translate: { version: gameVersion }
+                                    }}
+                                </p>
+                                <div class="newcomer-path__actions">
+                                    <a
+                                        class="newcomer-path__action newcomer-path__action--primary"
+                                        [href]="officialStore"
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
+                                        {{ "shared.onboarding.steps.install.store" | translate }}
+                                        <tui-icon icon="@tui.external-link" class="size-3.5!" />
+                                    </a>
+                                    <a
+                                        class="newcomer-path__action"
+                                        [href]="freeVersion"
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
+                                        {{ "shared.onboarding.steps.install.free" | translate }}
+                                        <tui-icon icon="@tui.external-link" class="size-3.5!" />
+                                    </a>
+                                    @if (step.state !== "done") {
+                                        <button
+                                            type="button"
+                                            class="newcomer-path__link"
+                                            (click)="onboarding.markInstalled()"
+                                        >
+                                            <tui-icon icon="@tui.check" class="size-3.5!" />
+                                            {{ "shared.onboarding.steps.install.installed" | translate }}
+                                        </button>
+                                    }
+                                </div>
+                            }
+
+                            @case ("account") {
+                                <p class="newcomer-path__text">
+                                    {{
+                                        "shared.onboarding.steps.account." + (step.state === "done" ? "done" : "todo")
+                                            | translate
+                                    }}
+                                </p>
+                                @if (step.state !== "done") {
+                                    <div class="newcomer-path__actions">
+                                        <button
+                                            type="button"
+                                            class="newcomer-path__action newcomer-path__action--primary"
+                                            (click)="signIn()"
+                                        >
+                                            {{ "shared.onboarding.steps.account.action" | translate }}
+                                        </button>
+                                    </div>
+                                }
+                            }
+
+                            @case ("rules") {
+                                <p class="newcomer-path__text">
+                                    {{
+                                        "shared.onboarding.steps.rules." + (step.state === "done" ? "done" : "todo")
+                                            | translate
+                                    }}
+                                </p>
+                                <div class="newcomer-path__actions">
+                                    <a
+                                        class="newcomer-path__action"
+                                        [class.newcomer-path__action--primary]="step.state !== 'done'"
+                                        [routerLink]="['/rules']"
+                                    >
+                                        {{ "shared.onboarding.steps.rules.action" | translate }}
+                                    </a>
+                                </div>
+                            }
+
+                            @case ("application") {
+                                <p class="newcomer-path__text">
+                                    @if (step.state === "rejected" && applicationDetails()?.rejection_reason) {
+                                        {{
+                                            "shared.onboarding.steps.application.rejectedReason"
+                                                | translate: { reason: applicationDetails()?.rejection_reason }
+                                        }}
+                                    } @else {
+                                        {{
+                                            "shared.onboarding.steps.application." +
+                                                (step.state === "current" ? "todo" : step.state) | translate
+                                        }}
+                                    }
+                                </p>
+                                @if (step.state === "current" || step.state === "todo" || step.state === "rejected") {
+                                    <div class="newcomer-path__actions">
+                                        @if (!isAuth()) {
+                                            <span class="newcomer-path__hint">
+                                                {{ "shared.onboarding.steps.application.needAccount" | translate }}
+                                            </span>
+                                        } @else {
+                                            <a
+                                                class="newcomer-path__action newcomer-path__action--primary"
+                                                [routerLink]="['/profile']"
+                                            >
+                                                {{ "shared.onboarding.steps.application.action" | translate }}
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                                @if (!isAuth()) {
+                                    <form class="newcomer-path__check" (submit)="checkNickname($event)">
+                                        <label class="newcomer-path__check-label" for="newcomer-nickname">
+                                            {{ "shared.onboarding.check.label" | translate }}
+                                        </label>
+                                        <div class="newcomer-path__check-row">
+                                            <input
+                                                id="newcomer-nickname"
+                                                class="newcomer-path__input"
+                                                autocomplete="off"
+                                                maxlength="64"
+                                                [placeholder]="'shared.onboarding.check.placeholder' | translate"
+                                                [value]="nickname()"
+                                                (input)="onNicknameInput($event)"
+                                            />
+                                            <button
+                                                type="submit"
+                                                class="newcomer-path__action"
+                                                [disabled]="checking() || !nickname().trim()"
+                                            >
+                                                {{ "shared.onboarding.check.button" | translate }}
+                                            </button>
+                                        </div>
+                                        @if (nicknameStatus(); as status) {
+                                            <p class="newcomer-path__check-result" role="status">
+                                                {{ "shared.onboarding.check.result." + status | translate }}
+                                            </p>
+                                        }
+                                    </form>
+                                }
+                            }
+
+                            @case ("connect") {
+                                @if (verified()) {
                                     <p class="newcomer-path__text">
                                         {{
-                                            "shared.onboarding.steps.install." +
-                                                (step.state === "done" ? "done" : "todo")
-                                                | translate: { version: gameVersion }
+                                            "shared.onboarding.steps.connect." +
+                                                (step.state === "done" ? "done" : "todo") | translate
                                         }}
                                     </p>
-                                    <div class="newcomer-path__actions">
-                                        <a
-                                            class="newcomer-path__action newcomer-path__action--primary"
-                                            [href]="officialStore"
-                                            target="_blank"
-                                            rel="noopener"
-                                        >
-                                            {{ "shared.onboarding.steps.install.store" | translate }}
-                                            <tui-icon icon="@tui.external-link" class="size-3.5!" />
-                                        </a>
-                                        <a
-                                            class="newcomer-path__action"
-                                            [href]="freeVersion"
-                                            target="_blank"
-                                            rel="noopener"
-                                        >
-                                            {{ "shared.onboarding.steps.install.free" | translate }}
-                                            <tui-icon icon="@tui.external-link" class="size-3.5!" />
-                                        </a>
-                                        @if (step.state !== "done") {
+                                    <div class="newcomer-path__copies">
+                                        <button type="button" class="newcomer-path__copy" (click)="copy('ip')">
+                                            <span class="newcomer-path__copy-label">
+                                                {{ "shared.onboarding.steps.connect.ip" | translate }}
+                                            </span>
+                                            <span class="newcomer-path__copy-value">{{ serverIp }}</span>
+                                            <tui-icon
+                                                [icon]="copied() === 'ip' ? '@tui.check' : '@tui.copy'"
+                                                class="size-4!"
+                                            />
+                                            <span class="sr-only">
+                                                {{ "shared.onboarding.steps.connect.copy" | translate }}
+                                            </span>
+                                        </button>
+                                        <button type="button" class="newcomer-path__copy" (click)="copy('password')">
+                                            <span class="newcomer-path__copy-label">
+                                                {{ "shared.onboarding.steps.connect.password" | translate }}
+                                            </span>
+                                            <span class="newcomer-path__copy-value">{{ serverPassword }}</span>
+                                            <tui-icon
+                                                [icon]="copied() === 'password' ? '@tui.check' : '@tui.copy'"
+                                                class="size-4!"
+                                            />
+                                            <span class="sr-only">
+                                                {{ "shared.onboarding.steps.connect.copy" | translate }}
+                                            </span>
+                                        </button>
+                                    </div>
+                                    @if (copied()) {
+                                        <p class="newcomer-path__hint" role="status">
+                                            {{ "shared.onboarding.steps.connect.copied" | translate }}
+                                        </p>
+                                    }
+                                    @if (step.state !== "done") {
+                                        <div class="newcomer-path__actions">
                                             <button
                                                 type="button"
                                                 class="newcomer-path__link"
-                                                (click)="onboarding.markInstalled()"
+                                                (click)="onboarding.markConnected()"
                                             >
                                                 <tui-icon icon="@tui.check" class="size-3.5!" />
-                                                {{ "shared.onboarding.steps.install.installed" | translate }}
+                                                {{ "shared.onboarding.steps.connect.playing" | translate }}
                                             </button>
-                                        }
-                                    </div>
+                                        </div>
+                                    }
+                                } @else {
+                                    <p class="newcomer-path__text newcomer-path__text--locked">
+                                        <tui-icon icon="@tui.lock" class="size-4!" />
+                                        {{ "shared.onboarding.steps.connect.locked" | translate }}
+                                    </p>
                                 }
+                            }
 
-                                @case ("account") {
-                                    <p class="newcomer-path__text">
+                            @case ("settlement") {
+                                <p class="newcomer-path__text">
+                                    @if (step.state === "done") {
                                         {{
-                                            "shared.onboarding.steps.account." +
-                                                (step.state === "done" ? "done" : "todo") | translate
+                                            "shared.onboarding.steps.settlement.done"
+                                                | translate: { name: settlement() }
                                         }}
-                                    </p>
-                                    @if (step.state !== "done") {
-                                        <div class="newcomer-path__actions">
-                                            <button
-                                                type="button"
-                                                class="newcomer-path__action newcomer-path__action--primary"
-                                                (click)="signIn()"
-                                            >
-                                                {{ "shared.onboarding.steps.account.action" | translate }}
-                                            </button>
-                                        </div>
-                                    }
-                                }
-
-                                @case ("rules") {
-                                    <p class="newcomer-path__text">
-                                        {{
-                                            "shared.onboarding.steps.rules." + (step.state === "done" ? "done" : "todo")
-                                                | translate
-                                        }}
-                                    </p>
-                                    <div class="newcomer-path__actions">
-                                        <a
-                                            class="newcomer-path__action"
-                                            [class.newcomer-path__action--primary]="step.state !== 'done'"
-                                            [routerLink]="['/rules']"
-                                        >
-                                            {{ "shared.onboarding.steps.rules.action" | translate }}
-                                        </a>
-                                    </div>
-                                }
-
-                                @case ("application") {
-                                    <p class="newcomer-path__text">
-                                        @if (step.state === "rejected" && applicationDetails()?.rejection_reason) {
-                                            {{
-                                                "shared.onboarding.steps.application.rejectedReason"
-                                                    | translate: { reason: applicationDetails()?.rejection_reason }
-                                            }}
-                                        } @else {
-                                            {{
-                                                "shared.onboarding.steps.application." +
-                                                    (step.state === "current" ? "todo" : step.state) | translate
-                                            }}
-                                        }
-                                    </p>
-                                    @if (
-                                        step.state === "current" || step.state === "todo" || step.state === "rejected"
-                                    ) {
-                                        <div class="newcomer-path__actions">
-                                            @if (!isAuth()) {
-                                                <span class="newcomer-path__hint">
-                                                    {{ "shared.onboarding.steps.application.needAccount" | translate }}
-                                                </span>
-                                            } @else if (variant() === "profile") {
-                                                <button
-                                                    type="button"
-                                                    class="newcomer-path__action newcomer-path__action--primary"
-                                                    (click)="fillApplication.emit()"
-                                                >
-                                                    {{ "shared.onboarding.steps.application.action" | translate }}
-                                                </button>
-                                            } @else {
-                                                <a
-                                                    class="newcomer-path__action newcomer-path__action--primary"
-                                                    [routerLink]="['/profile']"
-                                                >
-                                                    {{ "shared.onboarding.steps.application.action" | translate }}
-                                                </a>
-                                            }
-                                        </div>
-                                    }
-                                    @if (!isAuth() && variant() === "page") {
-                                        <form class="newcomer-path__check" (submit)="checkNickname($event)">
-                                            <label class="newcomer-path__check-label" for="newcomer-nickname">
-                                                {{ "shared.onboarding.check.label" | translate }}
-                                            </label>
-                                            <div class="newcomer-path__check-row">
-                                                <input
-                                                    id="newcomer-nickname"
-                                                    class="newcomer-path__input"
-                                                    autocomplete="off"
-                                                    maxlength="64"
-                                                    [placeholder]="'shared.onboarding.check.placeholder' | translate"
-                                                    [value]="nickname()"
-                                                    (input)="onNicknameInput($event)"
-                                                />
-                                                <button
-                                                    type="submit"
-                                                    class="newcomer-path__action"
-                                                    [disabled]="checking() || !nickname().trim()"
-                                                >
-                                                    {{ "shared.onboarding.check.button" | translate }}
-                                                </button>
-                                            </div>
-                                            @if (nicknameStatus(); as status) {
-                                                <p class="newcomer-path__check-result" role="status">
-                                                    {{ "shared.onboarding.check.result." + status | translate }}
-                                                </p>
-                                            }
-                                        </form>
-                                    }
-                                }
-
-                                @case ("connect") {
-                                    @if (verified()) {
-                                        <p class="newcomer-path__text">
-                                            {{
-                                                "shared.onboarding.steps.connect." +
-                                                    (step.state === "done" ? "done" : "todo") | translate
-                                            }}
-                                        </p>
-                                        <div class="newcomer-path__copies">
-                                            <button type="button" class="newcomer-path__copy" (click)="copy('ip')">
-                                                <span class="newcomer-path__copy-label">
-                                                    {{ "shared.onboarding.steps.connect.ip" | translate }}
-                                                </span>
-                                                <span class="newcomer-path__copy-value">{{ serverIp }}</span>
-                                                <tui-icon
-                                                    [icon]="copied() === 'ip' ? '@tui.check' : '@tui.copy'"
-                                                    class="size-4!"
-                                                />
-                                                <span class="sr-only">
-                                                    {{ "shared.onboarding.steps.connect.copy" | translate }}
-                                                </span>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="newcomer-path__copy"
-                                                (click)="copy('password')"
-                                            >
-                                                <span class="newcomer-path__copy-label">
-                                                    {{ "shared.onboarding.steps.connect.password" | translate }}
-                                                </span>
-                                                <span class="newcomer-path__copy-value">{{ serverPassword }}</span>
-                                                <tui-icon
-                                                    [icon]="copied() === 'password' ? '@tui.check' : '@tui.copy'"
-                                                    class="size-4!"
-                                                />
-                                                <span class="sr-only">
-                                                    {{ "shared.onboarding.steps.connect.copy" | translate }}
-                                                </span>
-                                            </button>
-                                        </div>
-                                        @if (copied()) {
-                                            <p class="newcomer-path__hint" role="status">
-                                                {{ "shared.onboarding.steps.connect.copied" | translate }}
-                                            </p>
-                                        }
-                                        @if (step.state !== "done") {
-                                            <div class="newcomer-path__actions">
-                                                <button
-                                                    type="button"
-                                                    class="newcomer-path__link"
-                                                    (click)="onboarding.markConnected()"
-                                                >
-                                                    <tui-icon icon="@tui.check" class="size-3.5!" />
-                                                    {{ "shared.onboarding.steps.connect.playing" | translate }}
-                                                </button>
-                                            </div>
-                                        }
                                     } @else {
-                                        <p class="newcomer-path__text newcomer-path__text--locked">
-                                            <tui-icon icon="@tui.lock" class="size-4!" />
-                                            {{ "shared.onboarding.steps.connect.locked" | translate }}
-                                        </p>
+                                        {{ "shared.onboarding.steps.settlement.todo" | translate }}
                                     }
-                                }
-
-                                @case ("settlement") {
-                                    <p class="newcomer-path__text">
-                                        @if (step.state === "done") {
-                                            {{
-                                                "shared.onboarding.steps.settlement.done"
-                                                    | translate: { name: settlement() }
-                                            }}
-                                        } @else {
-                                            {{ "shared.onboarding.steps.settlement.todo" | translate }}
-                                        }
-                                    </p>
-                                    @if (step.state !== "done") {
-                                        <div class="newcomer-path__actions">
-                                            <a class="newcomer-path__action" [routerLink]="['/settlements']">
-                                                {{ "shared.onboarding.steps.settlement.action" | translate }}
-                                            </a>
-                                        </div>
-                                    }
-                                }
-
-                                @case ("discord") {
-                                    <p class="newcomer-path__text">
-                                        {{
-                                            "shared.onboarding.steps.discord." +
-                                                (step.state === "done" ? "done" : "todo") | translate
-                                        }}
-                                    </p>
+                                </p>
+                                @if (step.state !== "done") {
                                     <div class="newcomer-path__actions">
-                                        <a
-                                            class="newcomer-path__action"
-                                            [href]="discordInvite"
-                                            target="_blank"
-                                            rel="noopener"
-                                        >
-                                            {{ "shared.onboarding.steps.discord.action" | translate }}
-                                            <tui-icon icon="@tui.external-link" class="size-3.5!" />
+                                        <a class="newcomer-path__action" [routerLink]="['/settlements']">
+                                            {{ "shared.onboarding.steps.settlement.action" | translate }}
                                         </a>
                                     </div>
                                 }
                             }
-                        </div>
-                    }
-                </li>
-            }
-        </ol>
-    </section>
-}
+
+                            @case ("discord") {
+                                <p class="newcomer-path__text">
+                                    {{
+                                        "shared.onboarding.steps.discord." + (step.state === "done" ? "done" : "todo")
+                                            | translate
+                                    }}
+                                </p>
+                                <div class="newcomer-path__actions">
+                                    <a
+                                        class="newcomer-path__action"
+                                        [href]="discordInvite"
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
+                                        {{ "shared.onboarding.steps.discord.action" | translate }}
+                                        <tui-icon icon="@tui.external-link" class="size-3.5!" />
+                                    </a>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            </li>
+        }
+    </ol>
+</section>

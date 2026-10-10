@@ -13,7 +13,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
 /**
  * Приглашение в Discord сервера.
  */
-const DISCORD_INVITE = 'https://discord.com/invite/FZb7SGrSFy';
+const DISCORD_INVITE = environment.discordInviteUrl;
 
 /**
  * Страница «Начать игру»: путь новичка с отметками и справка о сервере сбоку.
@@ -26,7 +26,7 @@ const DISCORD_INVITE = 'https://discord.com/invite/FZb7SGrSFy';
     selector: 'app-start-game',
     imports: [PageHeaderComponent, RouterLink, TuiIcon, TranslatePipe, NewcomerPathComponent],
     templateUrl: './start-game.component.html',
-    styleUrl: './start-game.component.css',
+    styleUrl: './start-game.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StartGameComponent {

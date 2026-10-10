@@ -1,0 +1,51 @@
+/**
+ * Появление выпадающих меню хедера.
+ * Меню «вылетает» сверху по smooth-кривой; пункты внутри не анимируются
+ * отдельно — каскад на 8 пунктах читался дольше самого открытия меню.
+ */
+.dropdown-enter {
+    animation: dropdown-enter var(--lh-dur-fast) var(--lh-ease-smooth);
+    transform-origin: top center;
+}
+
+@keyframes dropdown-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dropdown-enter {
+        animation: none;
+    }
+}
+
+/**
+ * Точка «есть новое с прошлого визита» на пункте меню.
+ */
+.nav-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--lh-brand);
+    box-shadow: 0 0 0 2px var(--color-lh-primary-2, #2b2d31);
+    pointer-events: none;
+}
+
+.nav-dot--inline {
+    position: static;
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    margin-left: auto;
+    box-shadow: none;
+}

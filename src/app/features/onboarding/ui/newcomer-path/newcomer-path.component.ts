@@ -5,8 +5,6 @@ import {
     DestroyRef,
     effect,
     inject,
-    input,
-    output,
     signal,
 } from '@angular/core';
 import { HttpContext } from '@angular/common/http';
@@ -27,7 +25,7 @@ import { OnboardingStepKey } from '../../model/onboarding-step-key';
 /**
  * Приглашение в Discord сервера.
  */
-const DISCORD_INVITE = 'https://discord.com/invite/FZb7SGrSFy';
+const DISCORD_INVITE = environment.discordInviteUrl;
 
 /**
  * Где купить игру.
@@ -65,8 +63,8 @@ interface ApplicationDetails {
  * Шаги отмечаются сами (вход на сайт, статус анкеты, открытые правила, скопированный адрес)
  * или кнопкой («Игра уже установлена»). Текущий шаг раскрыт, остальные можно раскрыть кликом.
  *
- * На странице «Начать игру» данные загружает сам; в профиле получает их от родителя,
- * чтобы не повторять запросы, и прячется, когда всё сделано или игрок его скрыл.
+ * Живёт на гостевой странице «Начать игру» и сам загружает анкету и поселение.
+ * В профиле его нет: вошедшему игроку прогресс показывает вкладка «Как начать играть».
  */
 @Component({
     selector: 'app-newcomer-path',
@@ -77,26 +75,6 @@ interface ApplicationDetails {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewcomerPathComponent {
-    /**
-     * Где показан путь: на странице «Начать игру» или в профиле.
-     */
-    public readonly variant = input<'page' | 'profile'>('page');
-
-    /**
-     * Детали анкеты от родителя. `undefined` — загрузить самому, `null` — анкеты нет.
-     */
-    public readonly details = input<ApplicationDetails | null | undefined>(undefined);
-
-    /**
-     * Название поселения игрока от родителя. `undefined` — загрузить самому, `null` — не в поселении.
-     */
-    public readonly settlementName = input<string | null | undefined>(undefined);
-
-    /**
-     * Игрок нажал «Заполнить анкету» в профиле.
-     */
-    public readonly fillApplication = output<void>();
-
     /**
      * Сервис пользователя.
      */
@@ -168,14 +146,14 @@ export class NewcomerPathComponent {
     protected readonly isAuth = toSignal(this.userService.authState$, { initialValue: false });
 
     /**
-     * Загруженные самим компонентом детали анкеты.
+     * Детали анкеты (`null` — анкеты нет или ещё не загружена).
      */
-    private readonly loadedDetails = signal<ApplicationDetails | null>(null);
+    protected readonly applicationDetails = signal<ApplicationDetails | null>(null);
 
     /**
-     * Загруженное самим компонентом название поселения.
+     * Название поселения игрока (`null` — не в поселении или ещё не загружено).
      */
-    private readonly loadedSettlement = signal<string | null>(null);
+    protected readonly settlement = signal<string | null>(null);
 
     /**
      * Ник для проверки статуса анкеты без входа.
@@ -191,22 +169,6 @@ export class NewcomerPathComponent {
      * Идёт проверка по нику.
      */
     protected readonly checking = signal(false);
-
-    /**
-     * Детали анкеты: от родителя или загруженные.
-     */
-    protected readonly applicationDetails = computed(() => {
-        const given = this.details();
-        return given === undefined ? this.loadedDetails() : given;
-    });
-
-    /**
-     * Поселение игрока: от родителя или загруженное.
-     */
-    protected readonly settlement = computed(() => {
-        const given = this.settlementName();
-        return given === undefined ? this.loadedSettlement() : given;
-    });
 
     /**
      * Игрок прошёл верификацию (роль игрока или админа, либо анкета одобрена).
@@ -236,22 +198,13 @@ export class NewcomerPathComponent {
                 verified ? 'done' : status === 'pending' ? 'waiting' : status === 'rejected' ? 'rejected' : 'todo',
                 false,
             ],
-            // В профиле адрес и пароль и так на вкладке «Как играть» — шаг не напоминает о себе.
-            [
-                'connect',
-                verified && (this.onboarding.connected() || this.variant() === 'profile') ? 'done' : 'todo',
-                false,
-            ],
+            ['connect', verified && this.onboarding.connected() ? 'done' : 'todo', false],
             ['settlement', this.settlement() ? 'done' : 'todo', true],
             ['discord', this.onboarding.discordOpened() ? 'done' : 'todo', true],
         ];
 
-        // В профиле игрок уже вошёл, а игру поставил до анкеты — путь начинается с правил и анкеты.
-        const relevant =
-            this.variant() === 'profile' ? raw.filter(([key]) => key !== 'install' && key !== 'account') : raw;
-
         let currentMarked = false;
-        return relevant.map(([key, state, optional]) => {
+        return raw.map(([key, state, optional]) => {
             if (state === 'todo' && !currentMarked) {
                 currentMarked = true;
                 return { key, state: 'current', optional };
@@ -289,32 +242,23 @@ export class NewcomerPathComponent {
      */
     protected readonly complete = computed(() => this.steps().every((step) => step.optional || step.state === 'done'));
 
-    /**
-     * Показывать ли путь (в профиле прячется, когда всё сделано или скрыт игроком).
-     */
-    protected readonly visible = computed(
-        () => this.variant() === 'page' || (!this.complete() && !this.onboarding.hidden())
-    );
-
     constructor() {
         effect(() => {
             if (!this.isAuth()) {
                 return;
             }
 
-            if (this.details() === undefined) {
-                this.verificationService
-                    .getDetails()
-                    .pipe(
-                        catchError(() => of(null)),
-                        takeUntilDestroyed(this.destroyRef)
-                    )
-                    .subscribe((details) => this.loadedDetails.set(details));
-            }
+            this.verificationService
+                .getDetails()
+                .pipe(
+                    catchError(() => of(null)),
+                    takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((details) => this.applicationDetails.set(details));
         });
 
         effect(() => {
-            if (!this.verified() || this.settlementName() !== undefined || !this.userService.userId) {
+            if (!this.verified() || !this.userService.userId) {
                 return;
             }
 
@@ -324,7 +268,7 @@ export class NewcomerPathComponent {
                     catchError(() => of(null)),
                     takeUntilDestroyed(this.destroyRef)
                 )
-                .subscribe((settlement) => this.loadedSettlement.set(settlement?.name ?? null));
+                .subscribe((settlement) => this.settlement.set(settlement?.name ?? null));
         });
     }
 

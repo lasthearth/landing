@@ -165,6 +165,46 @@
     --lh-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
     --lh-ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
 
+    /**
+     * Шкала отступов — совпадает со шкалой Tailwind (шаг 0.25rem = 4px),
+     * поэтому в шаблонах используются обычные p-4 / gap-6, а в LESS — эти токены.
+     * Значения вне шкалы (0.35rem, 0.45rem, 1.1rem…) не использовать.
+     */
+    --lh-space-0_5: 0.125rem;
+    --lh-space-1: 0.25rem;
+    --lh-space-1_5: 0.375rem;
+    --lh-space-2: 0.5rem;
+    --lh-space-3: 0.75rem;
+    --lh-space-4: 1rem;
+    --lh-space-5: 1.25rem;
+    --lh-space-6: 1.5rem;
+    --lh-space-8: 2rem;
+    --lh-space-10: 2.5rem;
+    --lh-space-12: 3rem;
+    --lh-space-16: 4rem;
+
+    /** Расстояние между секциями страницы (корень страницы — flex-колонка). */
+    --lh-section-gap: var(--lh-space-6);
+
+    /** Радиусы: мелкие элементы / карточки и поля / панели / пилюли. */
+    --lh-radius-sm: 0.5rem;
+    --lh-radius-md: 0.75rem;
+    --lh-radius-lg: 1rem;
+    --lh-radius-xl: 1.5rem;
+    --lh-radius-full: 999px;
+
+    /**
+     * Слои z-index. Новые значения брать отсюда, а не придумывать:
+     * raised — поверх соседей, sticky — липкие шапки, floating — плавающие
+     * виджеты, dropdown — меню, overlay — полноэкранные заставки, modal — диалоги.
+     */
+    --lh-z-raised: 10;
+    --lh-z-sticky: 20;
+    --lh-z-floating: 90;
+    --lh-z-dropdown: 100;
+    --lh-z-overlay: 200;
+    --lh-z-modal: 1000;
+
     /** Шкала длительностей: отклик / переход / появление. */
     --lh-dur-fast: 200ms;
     --lh-dur-mid: 450ms;
@@ -294,6 +334,10 @@
     --color-lh-base-02: var(--lh-base-02);
     --color-lh-base-03: var(--lh-base-03);
 
+    --color-surface-card: #332c261a;
+    --color-surface-card-hover: #332c2626;
+    --color-subtle: #332c2633;
+
     /* Purple */
     --color-lh-tag-purple: var(--lh-tag-purple);
     --color-lh-tag-purple-bg: var(--lh-tag-purple-bg);
@@ -354,10 +398,6 @@ html body {
     text-wrap: balance;
 }
 
-/**
- * Отключает анимации для пользователей, предпочитающих уменьшенное движение.
- * Улучшает доступность для людей с вестибулярными нарушениями.
- */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -423,23 +463,6 @@ tui-dialog {
     -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 16px 16px;
-}
-
-.spark-glow {
-    animation: spark-flicker 3s ease-in-out infinite;
-}
-
-@keyframes spark-flicker {
-    0%,
-    100% {
-        filter: drop-shadow(0 0 2px #ffaa00) drop-shadow(0 0 4px #ff6600);
-        opacity: 1;
-    }
-
-    50% {
-        filter: drop-shadow(0 0 1px #ff8800) drop-shadow(0 0 2px #ff4400);
-        opacity: 0.92;
-    }
 }
 
 tui-pulse {
@@ -626,7 +649,7 @@ tui-pulse.offline {
         display: flex;
         align-items: center;
         justify-items: center;
-        gap: 4px;
+        gap: 0.25rem;
         height: 44px;
         padding: calc(var(--spacing) * 2.5);
         border-radius: var(--radius-lg);
@@ -805,6 +828,24 @@ tui-pulse.offline {
     }
 
     /**
+     * Вторичная CTA поверх тёмного фото или видео (карусель, заставка):
+     * светлая обводка без заливки.
+     */
+    .lh-cta--on-dark {
+        color: var(--lh-parchment-2);
+        background-image: none;
+        background-color: rgba(240, 230, 210, 0.06);
+        box-shadow: inset 0 0 0 2px rgba(240, 230, 210, 0.4);
+    }
+
+    .lh-cta--on-dark:hover {
+        color: #fff;
+        box-shadow:
+            inset 0 0 0 2px rgba(255, 170, 92, 0.75),
+            0 14px 32px -12px rgba(255, 121, 32, 0.35);
+    }
+
+    /**
      * Переключатели: вкладки, фильтры, сортировка — везде один вид.
      *
      * Пилюля на поверхности темы, активная — брендовый градиент.
@@ -815,21 +856,36 @@ tui-pulse.offline {
     .lh-chips {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         gap: 0.5rem;
+    }
+
+    /**
+     * Видимая подпись группы чипов («Тип», «Сортировка»).
+     * Стоит первым элементом ряда и связывается с группой через aria-labelledby,
+     * чтобы назначение ряда было понятно без наведения и без скринридера.
+     */
+    .lh-chips__label {
+        margin-right: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--lh-ink-3);
     }
 
     .lh-chip {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.45rem;
+        gap: 0.5rem;
         height: 2.25rem;
-        padding: 0 0.95rem;
+        padding: 0 1rem;
         border: 1px solid var(--color-line);
         border-radius: 999px;
         background-color: var(--color-surface);
         color: var(--color-ink);
-        font-size: 0.9375rem;
+        font-size: 1rem;
         font-weight: 700;
         line-height: 1;
         white-space: nowrap;
@@ -877,8 +933,39 @@ tui-pulse.offline {
         box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--lh-brand) 60%, transparent);
     }
 
+    /**
+     * Вкладки (role=tablist) выглядят как сегментированный переключатель,
+     * а не как фильтры-чипы: одна «дорожка» с выделенным активным сегментом.
+     * Так вкладку не спутать с фильтром или сортировкой на той же странице.
+     */
+    .lh-chips[role='tablist'] {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+        gap: 0.25rem;
+        padding: 0.25rem;
+        border: 1px solid var(--color-line);
+        border-radius: 0.875rem;
+        background-color: var(--color-surface-3);
+    }
+
+    .lh-chips[role='tablist'] .lh-chip {
+        border-color: transparent;
+        border-radius: 0.625rem;
+        background-color: transparent;
+        color: var(--color-ink-2);
+    }
+
+    .lh-chips[role='tablist'] .lh-chip[aria-selected='true'],
+    .lh-chips[role='tablist'] .lh-chip[aria-selected='true']:hover:not(:disabled) {
+        color: var(--lh-brand-ink);
+        background-image: none;
+        background-color: var(--color-surface-2);
+        box-shadow: var(--lh-shadow-soft);
+    }
+
     .lh-chip__count {
-        font-size: 0.8125rem;
+        font-size: 0.875rem;
         font-variant-numeric: tabular-nums;
         opacity: 0.7;
     }
@@ -963,7 +1050,7 @@ button:disabled,
  * Описательный текст в диалоге.
  */
 .lh-dialog-text {
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.5;
     color: #5c554a;
 }
@@ -984,7 +1071,7 @@ button:disabled,
     flex: 1 1 0%;
     border-radius: 0.75rem;
     padding: 0.75rem 1.5rem;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 700;
     cursor: pointer;
     transition:
@@ -1162,39 +1249,31 @@ button:disabled,
 }
 
 /**
- * Мягкое пульсирование для акцентных индикаторов.
+ * Гостевые блоки (карусель на главной) скрыты с первого кадра, если в браузере
+ * есть сохранённая сессия — класс ставит скрипт в index.html. Когда проверка
+ * входа завершится гостем, HomeComponent класс снимает.
+ * !important обоснован: блоку нужно перебить утилиты display (sm:flex и т.п.) внутри.
  */
-.lh-pulse-soft {
-    animation: lh-pulse-soft 2s ease-in-out infinite;
-}
-
-@keyframes lh-pulse-soft {
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.75;
-        transform: scale(1.05);
-    }
+html.lh-has-session .lh-guest-only {
+    display: none !important;
 }
 
 /**
- * Пульсирующее свечение для рекомендуемых элементов.
+ * Пауза анимаций вне экрана (см. PauseOffscreenDirective).
+ * !important обоснован: правило должно перебить animation-play-state,
+ * заданный в компонентных стилях эффектов косметики.
  */
-.lh-pulse-glow {
-    animation: lh-pulse-glow 2s ease-in-out infinite;
+.lh-offscreen,
+.lh-offscreen * {
+    animation-play-state: paused !important;
 }
 
-@keyframes lh-pulse-glow {
-    0%,
-    100% {
-        box-shadow: 0 0 0 0 rgba(255, 121, 32, 0.35);
-    }
-    50% {
-        box-shadow: 0 0 12px 2px rgba(255, 121, 32, 0.2);
-    }
+/**
+ * Статичное тёплое свечение иконки осколка (валюта).
+ * Раньше мерцало бесконечной анимацией; свечение оставлено, движение убрано.
+ */
+.spark-glow {
+    filter: drop-shadow(0 0 2px #ffaa00) drop-shadow(0 0 4px #ff6600);
 }
 
 /**
@@ -1695,4 +1774,23 @@ html[data-theme='dark'] {
 .lh-rich-text--preview figure,
 .lh-rich-text--preview hr {
     display: none;
+}
+
+/**
+ * Контейнер страницы и секций: поля 16px, с md — 24px.
+ * В @layer components, чтобы утилиты Tailwind (pt-*, pb-*) могли его уточнять:
+ * вне слоя он перебивал их, и pb-0 / pt-6 на секциях главной не работали.
+ */
+@layer components {
+    .lh-page-container {
+        width: 100%;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .lh-page-container {
+            padding: 1.5rem;
+        }
+    }
 }

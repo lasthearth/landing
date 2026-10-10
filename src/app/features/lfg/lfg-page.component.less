@@ -1,8 +1,7 @@
 .lfg-page {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: var(--lh-section-gap);
 }
 
 .lfg-page__create {
@@ -11,7 +10,7 @@
 
 .lfg-page__count {
     min-width: 1.25rem;
-    padding: 0 0.35rem;
+    padding: 0 0.375rem;
     border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 800;
@@ -39,22 +38,6 @@
     border-radius: 1rem;
     background: color-mix(in srgb, var(--lh-ink) 4%, transparent);
     border: 1px dashed color-mix(in srgb, var(--lh-ink) 15%, transparent);
-}
-
-.lfg-page__state--error {
-    color: var(--lh-danger-ink);
-    background: color-mix(in srgb, var(--lh-danger-ink) 6%, transparent);
-    border-style: solid;
-}
-
-.lfg-page__empty-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-}
-
-.lfg-page__empty-text {
-    max-width: 28rem;
-    color: var(--lh-ink-2);
 }
 
 .lfg-page__tabs {
@@ -108,17 +91,17 @@
 .lfg-page__tab-text {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.125rem;
     min-width: 0;
 }
 
 .lfg-page__tab-title {
-    font-size: 1.0625rem;
+    font-size: 1rem;
     font-weight: 800;
 }
 
 .lfg-page__tab-hint {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: var(--lh-ink-3);
 }
 
@@ -128,9 +111,3 @@
     gap: 0.625rem;
 }
 
-.lfg-page__filter-label {
-    align-self: center;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--lh-ink-3);
-}

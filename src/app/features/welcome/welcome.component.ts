@@ -7,9 +7,11 @@ import {
     inject,
     output,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiSwipe, TuiSwipeEvent } from '@taiga-ui/cdk';
 import { TranslatePipe } from '@core/i18n';
+import { environment } from '@core/config/environments/environment';
 
 /**
  * Приветственный экран: фоновое видео и первичные действия.
@@ -18,10 +20,15 @@ import { TranslatePipe } from '@core/i18n';
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
     imports: [TuiIcon, TuiSwipe, TranslatePipe],
-    styleUrl: './welcome.component.css',
+    styleUrl: './welcome.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WelcomeComponent implements AfterViewInit {
+    /**
+     * Ссылка-приглашение на Discord-сервер проекта.
+     */
+    protected readonly discordInviteUrl: string = environment.discordInviteUrl;
+
     /**
      * Корневой элемент компонента.
      * Видео ищется в нём по месту вызова, а не хранится в `ViewChild`:
@@ -30,6 +37,11 @@ export class WelcomeComponent implements AfterViewInit {
      * media was removed from the document`.
      */
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /**
+     * Сервис навигации — для перехода на «Как начать» из заставки.
+     */
+    private readonly router = inject(Router);
 
     /**
      * Запрос на переход к основному содержимому сайта.
@@ -130,6 +142,15 @@ export class WelcomeComponent implements AfterViewInit {
      */
     public scroll(): void {
         this.onScroll.emit();
+    }
+
+    /**
+     * Обработчик кнопки «Начать играть»: убирает заставку
+     * (с сохранением флага «уже видел») и открывает страницу «Как начать».
+     */
+    protected startPlaying(): void {
+        this.onScroll.emit();
+        void this.router.navigate(['/start-game']);
     }
 
     @HostListener('window:wheel', ['$event'])

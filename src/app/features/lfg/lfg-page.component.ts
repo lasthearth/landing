@@ -18,6 +18,8 @@ import {
 import { IPlayer, UserService } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 import { TuiIcon } from '@taiga-ui/core';
 import { catchError, EMPTY, filter, fromEvent, map, of, startWith, switchMap, timer } from 'rxjs';
 import { LfgPostCardComponent, LfgViewer } from './ui/lfg-post-card/lfg-post-card.component';
@@ -48,6 +50,8 @@ const TAB_PARAM = 'tab';
     styleUrl: './lfg-page.component.less',
     imports: [
         PageHeaderComponent,
+        EmptyStateComponent,
+        ErrorStateComponent,
         TuiIcon,
         TranslatePipe,
         LfgPostCardComponent,

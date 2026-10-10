@@ -1,36 +1,12 @@
 /**
- * Shimmer-эффект для кнопки покупки.
- * Создаёт переливающуюся бликовую полосу, привлекающую внимание.
+ * Контейнер кнопки покупки (позиционирование псевдоэлементов).
+ * Бликовая анимация удалена: бесконечное движение отвлекало от цены.
  */
 .shimmer-btn {
     position: relative;
     overflow: hidden;
 }
 
-.shimmer-btn::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.25),
-        transparent
-    );
-    animation: shimmer 2.5s infinite;
-}
-
-@keyframes shimmer {
-    0% {
-        left: -100%;
-    }
-    100% {
-        left: 200%;
-    }
-}
 
 /**
  * Жирное зачёркивание для старой цены.
@@ -50,16 +26,7 @@
  * Анимируется только transform — не вызывает пересчёт layout и мерцания.
  */
 .discount-badge {
-    animation: discount-pulse 1.2s ease-in-out infinite;
+    transform: rotate(-3deg);
     transform-origin: center center;
 }
 
-@keyframes discount-pulse {
-    0%,
-    100% {
-        transform: scale(1) rotate(-3deg) translateY(0);
-    }
-    50% {
-        transform: scale(1.15) rotate(-3deg) translateY(-3px);
-    }
-}

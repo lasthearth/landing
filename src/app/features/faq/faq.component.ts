@@ -4,6 +4,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
 import { TranslatePipe } from '@core/i18n';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { environment } from '@core/config/environments/environment';
 
 /**
  * Компонент "FAQ".
@@ -12,10 +13,15 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
     selector: 'app-faq',
     imports: [PageHeaderComponent, TuiExpand, TuiIcon, CommonModule, TranslatePipe],
     templateUrl: './faq.component.html',
-    styleUrl: './faq.component.css',
+    styleUrl: './faq.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FaqComponent implements OnDestroy {
+    /**
+     * Ссылка-приглашение на Discord-сервер проекта.
+     */
+    protected readonly discordInviteUrl: string = environment.discordInviteUrl;
+
     /**
      * Признак того, что секция "Концепция сервер" открыта или скрыта.
      */

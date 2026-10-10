@@ -35,3 +35,4 @@ export { getSettlementDisplayName } from './lib/get-settlement-display-name.func
 export { buildGuildName } from './lib/build-guild-name.function';
 export { SettlementDisplayNamePipe } from './lib/settlement-display-name.pipe';
 export { SettlementBadgeComponent } from './ui/settlement-badge/settlement-badge.component';
+export { DEFAULT_SETTLEMENT_COVER } from './config/default-settlement-cover.constant';

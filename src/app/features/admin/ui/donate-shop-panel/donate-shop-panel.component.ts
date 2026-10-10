@@ -21,7 +21,7 @@ import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
 import { TuiFile, TuiFiles, TuiFilesComponent } from '@taiga-ui/kit';
-import { I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { finalize, map, Observable, startWith, Subject, Subscription, switchMap, tap, timer } from 'rxjs';
 
 /**
@@ -33,7 +33,7 @@ import { finalize, map, Observable, startWith, Subject, Subscription, switchMap,
 @Component({
     selector: 'app-donate-shop-panel',
     standalone: true,
-    imports: [
+    imports: [AmountPipe, 
         ReactiveFormsModule,
         FormsModule,
         AsyncPipe,

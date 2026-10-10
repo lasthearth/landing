@@ -1,0 +1,439 @@
+:host {
+    display: block;
+}
+
+/* Шапка профиля без верификации */
+.profile-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.375rem;
+}
+
+.profile-hero__name {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--lh-ink);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--lh-ink-2);
+    background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+}
+
+.profile-status__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.profile-status--pending {
+    color: var(--lh-brand-ink);
+    background: color-mix(in srgb, var(--lh-brand) 16%, transparent);
+}
+
+.profile-status--rejected {
+    color: var(--lh-danger-ink);
+    background: color-mix(in srgb, var(--lh-danger-ink) 12%, transparent);
+}
+
+.profile-status--approved {
+    color: var(--lh-success, #2e7d32);
+    background: color-mix(in srgb, var(--lh-success, #2e7d32) 14%, transparent);
+}
+
+/* Значки и ссылка на публичный профиль */
+/* Значки игрока под плашкой поселения */
+.profile-public {
+    display: block;
+}
+
+/* Строка «ник + роль» слева и действия с профилем справа */
+.profile-cover__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+}
+
+/* Плашка поселения: название слева, значки справа; на узком экране — столбиком */
+.profile-settlement {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.profile-settlement__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .profile-settlement {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .profile-settlement__badges {
+        justify-content: flex-end;
+    }
+}
+
+/* Кнопки профиля — одной строкой: «Поделиться» раньше переносилась отдельно. */
+.profile-public__actions {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+/* На телефоне ширины не хватает — переносим, а не обрезаем подписи. */
+@media (max-width: 640px) {
+    .profile-public__actions {
+        flex-wrap: wrap;
+    }
+}
+
+/* Пустые блоки (скрытый путь новичка, нет событий) не занимают шаг колонки. */
+.profile-page > :empty {
+    display: none;
+}
+
+/* Место в рейтинге под плиткой статистики */
+.profile-rank {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--lh-ink-3);
+    white-space: nowrap;
+}
+
+/* Шапка профиля: баннер игрока мягко проступает за аватаром и растворяется в панели. */
+/*
+ * Карточка игрока: своя подложка и рамка, чтобы шапка читалась одним блоком.
+ * Баннер игрока проступает только за аватаром (см. маску ниже) и не ложится
+ * под текст — раньше плашка «Нет поселения» тонула в рисунке баннера.
+ */
+.profile-cover {
+    position: relative;
+    isolation: isolate;
+    padding: 1.25rem;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    background: var(--lh-surface-2);
+    border: 1px solid var(--lh-border);
+    box-shadow: var(--lh-shadow-soft);
+}
+
+/* Ник игрока — заголовок страницы профиля */
+.profile-name {
+    margin: 0;
+    /* Ник может лежать поверх края баннера — светлый ореол держит контраст */
+    text-shadow:
+        0 0 6px var(--lh-surface-2),
+        0 0 14px var(--lh-surface-2);
+    font-size: 1.75rem;
+    line-height: 1.2;
+    font-weight: 800;
+    color: var(--lh-ink);
+    overflow-wrap: anywhere;
+}
+
+.profile-name__edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--lh-brand) 45%, transparent);
+    background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+    color: var(--lh-brand-ink);
+    cursor: pointer;
+    transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart), color var(--lh-dur-fast) var(--lh-ease-out-quart);
+
+    &:hover {
+        background: var(--lh-brand);
+        color: #fff;
+    }
+}
+
+/* Роль — небольшой бейдж рядом с ником */
+.profile-role {
+    padding: 0.125rem 0.625rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--lh-ink-2);
+    background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+}
+
+/* Плитки показателей: одинаковая высота и раскладка */
+.profile-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* По верху: иконка, подпись и число в соседних плитках стоят на одной линии */
+    justify-content: flex-start;
+    gap: 0.25rem;
+    min-height: 7rem;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    text-align: center;
+    background: var(--lh-surface-2);
+    border: 1px solid var(--lh-border);
+}
+
+.profile-metric--balance {
+    background: linear-gradient(160deg, color-mix(in srgb, var(--lh-brand) 10%, var(--lh-surface-2)), var(--lh-surface-2));
+    border-color: color-mix(in srgb, var(--lh-brand) 35%, var(--lh-border));
+}
+
+.profile-metric__label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--lh-ink-3);
+}
+
+.profile-metric__value {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: 800;
+    color: var(--lh-ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.profile-metric__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.125rem;
+    padding: 0.125rem 0.625rem;
+    border-radius: 999px;
+    border: 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--lh-brand-ink);
+    background: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+    cursor: pointer;
+
+    &:hover {
+        color: #fff;
+        background: var(--lh-brand);
+    }
+}
+
+/*
+ * Баннер на всю карточку. Читаемость текста держит не обрезка баннера,
+ * а полупрозрачная подложка (::after) — она плотнеет там, где лежат ник,
+ * плашка поселения и кнопки, и остаётся прозрачной под аватаром.
+ */
+.profile-cover__banner {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+}
+
+/* Идёт в DOM после баннера, поэтому при равном z-index рисуется поверх него */
+.profile-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 9rem,
+        color-mix(in srgb, var(--lh-surface-2) 80%, transparent) 18rem,
+        color-mix(in srgb, var(--lh-surface-2) 86%, transparent) 100%
+    );
+}
+
+/* На телефоне аватар над текстом — подложка сверху вниз */
+@media (max-width: 640px) {
+    .profile-cover::after {
+        background: linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent 6rem,
+            color-mix(in srgb, var(--lh-surface-2) 82%, transparent) 11rem,
+            color-mix(in srgb, var(--lh-surface-2) 88%, transparent) 100%
+        );
+    }
+}
+
+.profile-cover .lh-panel {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.profile-avatar {
+    position: relative;
+    align-self: flex-start;
+    width: 8rem;
+    height: 8rem;
+    margin: 0.25rem;
+}
+
+/* С sm аватар стоит на баннере по центру карточки и чуть отступает от края */
+@media (min-width: 641px) {
+    .profile-avatar {
+        align-self: center;
+        margin-left: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .profile-avatar {
+        align-self: center;
+    }
+}
+
+/*
+ * Свёрнутая шапка на вкладках «Статистика», «Поселение» и др.:
+ * аватар меньше и отступы плотнее, чтобы содержимое вкладки было сразу под ней.
+ */
+.profile-cover--compact {
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0.875rem 1.25rem;
+    align-items: center;
+}
+
+.profile-cover--compact .profile-avatar {
+    width: 4rem;
+    height: 4rem;
+    margin: 0;
+    align-self: center;
+}
+
+/* Кнопка «Показать всё / Свернуть» — в строке с ником, после действий */
+.profile-cover__toggle {
+    flex-shrink: 0;
+}
+
+.profile-avatar__img {
+    width: 100%;
+    height: 100%;
+}
+
+/*
+ * Смена фото — весь аватар. При наведении поверх фото проступает тёмная
+ * вуаль с камерой; на сенсорных экранах вместо неё — маленький значок в углу.
+ */
+.profile-avatar__change {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    padding: 0;
+    border: 0;
+    border-radius: 28%;
+    background: none;
+    cursor: pointer;
+}
+
+.profile-avatar__change:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 3px;
+}
+
+.profile-avatar__veil {
+    position: absolute;
+    inset: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    border-radius: 25%;
+    color: #fff;
+    background: rgba(20, 14, 10, 0.55);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+
+.profile-avatar__label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.profile-avatar__change:hover .profile-avatar__veil,
+.profile-avatar__change:focus-visible .profile-avatar__veil {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .profile-avatar__veil {
+        inset: auto 0.25rem 0.25rem auto;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: rgba(20, 14, 10, 0.6);
+        opacity: 1;
+    }
+
+    .profile-avatar__veil tui-icon {
+        width: 1rem !important;
+        height: 1rem !important;
+    }
+
+    .profile-avatar__label {
+        display: none;
+    }
+}
+
+/*
+ * Подложка свёрнутой шапки — горизонтальная и на телефоне: ник стоит сразу
+ * за маленьким аватаром, поэтому плотнеет раньше, чем у развёрнутой.
+ * Правило в конце файла, чтобы перекрыть мобильную подложку выше.
+ */
+.profile-cover--compact::after {
+    background: linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 4.5rem,
+        color-mix(in srgb, var(--lh-surface-2) 82%, transparent) 8rem,
+        color-mix(in srgb, var(--lh-surface-2) 88%, transparent) 100%
+    );
+}
+
+/* На телефоне свёрнутая шапка — одна строка: аватар, ник и «Показать всё»;
+   кнопки профиля появляются в развёрнутой шапке. */
+@media (max-width: 640px) {
+    .profile-cover--compact {
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+
+    .profile-cover--compact .profile-avatar {
+        width: 3.25rem;
+        height: 3.25rem;
+    }
+
+    .profile-cover--compact .profile-public__actions {
+        display: none;
+    }
+}
+

@@ -1,7 +1,13 @@
 <h1 class="sr-only">{{ "home.carousel.slides.lastHearth.header" | translate }} — Last Hearth</h1>
 
 @if (!isAuthed()) {
-    <div class="relative">
+    <div
+        class="relative lh-guest-only"
+        (mouseenter)="carouselHovered.set(true)"
+        (mouseleave)="carouselHovered.set(false)"
+        (focusin)="carouselHovered.set(true)"
+        (focusout)="carouselHovered.set(false)"
+    >
         <button
             (click)="navigate(1)"
             class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 -translate-y-1/2 justify-center backdrop-blur-md"
@@ -10,16 +16,21 @@
             <tui-icon icon="@tui.chevron-right" class="text-white" />
         </button>
 
-        <tui-carousel [(index)]="carouselIndex" [duration]="3500" class="h-auto! !rounded-t-xl">
+        <tui-carousel [(index)]="carouselIndex" [duration]="carouselDuration()" class="h-auto! !rounded-t-xl">
             @for (item of images; track $index) {
                 <div *tuiItem class="size-full relative overflow-hidden">
-                    <app-image-loader
-                        [src]="item.image"
-                        [alt]="item.header | translate"
-                        [eager]="$first"
-                        class="h-full w-full md:h-[600px]"
-                        [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
-                    />
+                    <!-- Высота зарезервирована (16:9 / 600px), чтобы контент ниже не прыгал при загрузке -->
+                    @if (isSlideNear($index)) {
+                        <app-image-loader
+                            [src]="item.image"
+                            [alt]="item.header | translate"
+                            [eager]="$first"
+                            class="block w-full aspect-video md:aspect-auto md:h-[600px]"
+                            [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
+                        />
+                    } @else {
+                        <div class="w-full aspect-video md:aspect-auto md:h-[600px] bg-night" aria-hidden="true"></div>
+                    }
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-black/40 pointer-events-none"
                     ></div>
@@ -35,12 +46,55 @@
                             [innerHTML]="item.body | translate"
                             class="text-lg md:text-2xl lg:text-4xl font-medium !text-shadow-lg"
                         ></p>
+                        <!-- Следующий шаг для гостя: прямо на главном экране, а не в отдельном ряду -->
+                        <div class="hidden sm:flex flex-wrap justify-center gap-3 mt-6">
+                            <a routerLink="/start-game" class="lh-cta text-lg uppercase tracking-wide no-underline!">
+                                {{ "home.carousel.ctaStart" | translate }}
+                                <span class="lh-cta__icon"><tui-icon icon="@tui.arrow-right" class="size-4!" /></span>
+                            </a>
+                            <a
+                                [href]="discordInviteUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="lh-cta lh-cta--on-dark text-lg uppercase tracking-wide no-underline!"
+                            >
+                                {{ "home.carousel.ctaDiscord" | translate }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             }
         </tui-carousel>
 
-        <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" class="mt-4" />
+        <div class="flex items-center justify-center gap-3 mt-4">
+            <button
+                type="button"
+                class="nav-button size-9! justify-center"
+                [attr.aria-pressed]="carouselPaused()"
+                [attr.aria-label]="(carouselPaused() ? 'home.carousel.play' : 'home.carousel.pause') | translate"
+                [title]="(carouselPaused() ? 'home.carousel.play' : 'home.carousel.pause') | translate"
+                (click)="carouselPaused.set(!carouselPaused())"
+            >
+                <tui-icon [icon]="carouselPaused() ? '@tui.play' : '@tui.pause'" class="size-4!" />
+            </button>
+            <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" />
+        </div>
+
+        <!-- На телефоне слайд слишком низкий для кнопок — они под каруселью -->
+        <div class="sm:hidden lh-page-container pt-4 pb-0 flex flex-col gap-2">
+            <a routerLink="/start-game" class="lh-cta justify-center uppercase tracking-wide no-underline!">
+                {{ "home.carousel.ctaStart" | translate }}
+                <span class="lh-cta__icon"><tui-icon icon="@tui.arrow-right" class="size-4!" /></span>
+            </a>
+            <a
+                [href]="discordInviteUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="lh-cta lh-cta--ghost justify-center uppercase tracking-wide no-underline!"
+            >
+                {{ "home.carousel.ctaDiscord" | translate }}
+            </a>
+        </div>
 
         <button
             (click)="navigate(-1)"
@@ -52,38 +106,51 @@
     </div>
 }
 
-<!-- Быстрые действия -->
-<div class="px-4 md:px-10 pt-6 md:pt-8 pb-3">
-    <div class="quick-actions">
-        @for (action of quickActions(); track action.label) {
-            @if (action.external) {
-                <a [href]="action.route" target="_blank" rel="noopener noreferrer" class="quick-actions__item">
-                    <span class="quick-actions__icon">
-                        <tui-icon [icon]="action.icon" />
-                    </span>
-                    <span class="quick-actions__label">
-                        {{ action.label | translate }}
-                    </span>
+<!--
+    Полоса подключения для вошедшего игрока: то, за чем он приходит на главную,
+    — адрес сервера (с копированием), версия игры, инструкция и Discord.
+    Раньше здесь были две отдельные плитки «Где IP?» и «Discord» с пустым местом справа.
+-->
+@if (isAuthed()) {
+    <section class="lh-page-container pb-0" [attr.aria-label]="'home.server.label' | translate">
+        <div class="server-strip">
+            <div class="server-strip__field">
+                <span class="server-strip__label">{{ "home.server.address" | translate }}</span>
+                <span class="flex flex-wrap items-center gap-2 min-w-0">
+                    <code class="server-strip__ip">{{ serverIp }}</code>
+                    <button
+                        type="button"
+                        class="server-strip__copy"
+                        [class.server-strip__copy--done]="ipCopied()"
+                        (click)="copyServerIp()"
+                    >
+                        <tui-icon [icon]="ipCopied() ? '@tui.check' : '@tui.copy'" class="size-4!" />
+                        {{ (ipCopied() ? "home.server.copied" : "home.server.copy") | translate }}
+                    </button>
+                </span>
+            </div>
+            <div class="server-strip__field">
+                <span class="server-strip__label">{{ "home.server.version" | translate }}</span>
+                <span class="server-strip__value">{{ gameVersion }}</span>
+            </div>
+            <div class="server-strip__actions">
+                <a routerLink="/profile/how-play" class="lh-cta lh-cta--ghost no-underline!">
+                    {{ "home.server.howTo" | translate }}
                 </a>
-            } @else {
-                <a [routerLink]="action.route" class="quick-actions__item">
-                    <span class="quick-actions__icon">
-                        <tui-icon [icon]="action.icon" />
-                    </span>
-                    <span class="quick-actions__label">
-                        {{ action.label | translate }}
-                    </span>
+                <a [href]="discordInviteUrl" target="_blank" rel="noopener noreferrer" class="lh-cta no-underline!">
+                    <tui-icon icon="@tui.message-circle" class="size-4!" />
+                    Discord
                 </a>
-            }
-        }
-    </div>
-</div>
+            </div>
+        </div>
+    </section>
+}
 
 <!-- Ближайшее событие календаря (без событий не выводится) -->
 <app-upcoming-event />
 
 @if (loading()) {
-    <section class="px-4 md:px-10 pb-3 flex flex-col gap-5">
+    <section class="lh-page-container pt-8 pb-0 flex flex-col gap-5">
         <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
             {{ "home.news.title" | translate }}
         </h2>
@@ -94,7 +161,7 @@
         </div>
     </section>
 } @else if (featuredNews(); as featured) {
-    <section id="news" class="home-news px-4 md:px-10 pb-3 flex flex-col gap-5" aria-labelledby="home-news-title">
+    <section id="news" class="home-news lh-page-container pt-8 pb-0 flex flex-col gap-5" aria-labelledby="home-news-title">
         <h2 id="home-news-title" class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
             {{ "home.news.title" | translate }}
         </h2>
@@ -154,7 +221,7 @@
 }
 
 <!-- Пульс сервера -->
-<section class="px-4 md:px-10 pb-6 flex flex-col gap-3">
+<section class="lh-page-container pt-8 pb-0 flex flex-col gap-3">
     <h2 appReveal class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
         {{ "home.pulse.title" | translate }}
     </h2>
@@ -178,53 +245,13 @@
     </div>
 </section>
 
-<!-- Команда проекта -->
-<!-- <section class="px-4 md:px-10 pb-6 flex flex-col gap-4">
-    <div class="flex flex-col gap-1">
-        <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
-            {{ "home.team.title" | translate }}
-        </h2>
-        <p class="text-lg md:text-xl font-medium text-lh-primary">{{ "home.team.subtitle" | translate }}</p>
-    </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lh-stagger-list">
-        @for (member of teamMembers; track member.name) {
-            <div [class]="'team-card group team-card--' + member.role + ' team-pos-' + member.pos">
-                <div class="team-card__photo">
-                    @if (getTeamPhoto(member.name); as photo) {
-                        <app-image-loader
-                            [src]="photo"
-                            [alt]="member.name"
-                            class="block h-full w-full"
-                            [imageClass]="
-                                'h-full w-full object-cover transition-transform duration-500 group-hover:scale-105' +
-                                (member.role === 'founder' ? ' object-top' : '')
-                            "
-                        />
-                    } @else {
-                        <span class="team-card__initial">{{ member.name.charAt(0).toUpperCase() }}</span>
-                    }
-
-                    <div class="team-card__overlay"></div>
-
-                    <span [class]="'team-card__role backdrop-blur-sm ' + getTeamRoleBadgeClass(member.role)">
-                        {{ "home.team.roles." + member.role | translate }}
-                    </span>
-
-                    <span class="team-card__name">{{ member.name }}</span>
-                </div>
-            </div>
-        }
-    </div>
-</section> -->
-
 <!-- Присоединиться к команде -->
-<section class="px-4 md:px-10 pt-6 pb-8">
+<section class="lh-page-container pt-8 pb-0">
     <div
         class="recruit-panel flex flex-col lg:flex-row gap-0 rounded-2xl shadow-[inset_0_0_48px_rgba(255,255,255,0.04),inset_0_1px_0_rgba(255,255,255,0.08)] overflow-hidden"
     >
         <!-- Текст и роли -->
-        <div class="flex flex-col gap-6 p-6 lg:p-8 lg:w-3/5">
+        <div class="flex flex-col gap-5 p-6 lg:p-8 lg:w-3/5">
             <div class="flex flex-col gap-2 pl-4 border-l-4 border-danger-strong/60">
                 <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
                     {{ "home.recruit.title" | translate }}
@@ -234,35 +261,30 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!--
+                Роли — компактными метками: раньше было 4 карточки с описаниями,
+                и на телефоне блок занимал больше экрана, чем новости.
+                Описание роли — в подсказке при наведении.
+            -->
+            <ul class="flex flex-wrap gap-2" [attr.aria-label]="'home.recruit.rolesLabel' | translate">
                 @for (role of recruitRoles; track role.key) {
-                    <div
-                        class="flex items-start gap-3 rounded-xl bg-surface-2 border border-line/60 p-4 shadow-[0_2px_8px_rgba(45,32,26,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(45,32,26,0.12)]"
+                    <li
+                        class="lh-chip cursor-default"
+                        [title]="'home.recruit.roles.' + role.key + '.description' | translate"
                     >
-                        <span
-                            class="flex shrink-0 items-center justify-center size-11 rounded-lg bg-gradient-to-br from-brand to-lh-accent-2 text-parchment-2 shadow-[0_3px_10px_rgba(195,90,23,0.35)]"
-                        >
-                            <tui-icon [icon]="role.icon" class="size-5!" />
-                        </span>
-                        <div class="flex flex-col gap-0.5">
-                            <span class="text-lg font-bold text-ink">
-                                {{ "home.recruit.roles." + role.key + ".title" | translate }}
-                            </span>
-                            <span class="text-lg leading-6 text-ink-2">
-                                {{ "home.recruit.roles." + role.key + ".description" | translate }}
-                            </span>
-                        </div>
-                    </div>
+                        <tui-icon [icon]="role.icon" />
+                        {{ "home.recruit.roles." + role.key + ".title" | translate }}
+                    </li>
                 }
-            </div>
+            </ul>
 
-            <div class="flex flex-col gap-3 mt-auto pt-2">
+            <div class="flex flex-col gap-3 mt-auto">
                 <span class="text-base font-bold uppercase tracking-wide text-ink-2">
                     {{ "home.recruit.contactTitle" | translate }}
                 </span>
                 <div class="flex flex-wrap gap-3">
                     <a
-                        href="https://discord.com/invite/FZb7SGrSFy"
+                        [href]="discordInviteUrl"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="lh-cta text-lg no-underline!"
@@ -287,8 +309,8 @@
             </div>
         </div>
 
-        <!-- Изображение -->
-        <div class="lg:w-2/5 min-h-64 lg:min-h-0 relative">
+        <!-- Изображение: только на широких экранах, на телефоне оно было пустой плашкой -->
+        <div class="hidden lg:block lg:w-2/5 relative">
             <app-image-loader
                 src="/castle-recruit.webp"
                 [alt]="'home.recruit.title' | translate"
@@ -307,7 +329,7 @@
 
 <!-- Лента последних скриншотов -->
 @if (galleryStrip().length > 0) {
-    <section class="px-4 md:px-10 pb-8 flex flex-col gap-4">
+    <section class="lh-page-container pt-8 pb-0 flex flex-col gap-4">
         <div class="flex items-center justify-between gap-4">
             <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
                 {{ "home.galleryStrip.title" | translate }}
@@ -325,7 +347,7 @@
             @for (image of galleryStrip(); track image.id) {
                 <a
                     [routerLink]="['/gallery']"
-                    class="group relative block rounded-2xl overflow-hidden border-2 border-parchment/20 bg-night hover:border-brand transition-all duration-300 cursor-pointer aspect-square"
+                    class="group relative block rounded-2xl overflow-hidden border-2 border-parchment/20 bg-night hover:border-brand transition duration-300 cursor-pointer aspect-square"
                     [attr.aria-label]="image.alt"
                 >
                     <app-image-loader

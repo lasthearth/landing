@@ -14,7 +14,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
     standalone: true,
     imports: [PageHeaderComponent, TuiIcon, CommonModule, TuiExpand, TranslatePipe],
     templateUrl: './public-offer.component.html',
-    styleUrl: './public-offer.component.css',
+    styleUrl: './public-offer.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PublicOfferComponent implements OnDestroy {

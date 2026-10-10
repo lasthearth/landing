@@ -22,11 +22,6 @@ import { PulseStat } from './model/pulse-stat.interface';
 import { UpcomingEventComponent } from '@features/events';
 
 /**
- * Роль участника команды проекта.
- */
-type TeamRole = 'founder' | 'coFounder' | 'techAdmin' | 'admin' | 'moderator';
-
-/**
  * Компонент главной страницы.
  */
 @Component({
@@ -38,6 +33,11 @@ type TeamRole = 'founder' | 'coFounder' | 'techAdmin' | 'admin' | 'moderator';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+    /**
+     * Ссылка-приглашение на Discord-сервер проекта.
+     */
+    protected readonly discordInviteUrl: string = environment.discordInviteUrl;
+
     /**
      * API-сервис для работы с новостями.
      */
@@ -94,6 +94,21 @@ export class HomeComponent {
      * Номер элемента карусели.
      */
     protected carouselIndex: number = 0;
+
+    /**
+     * Пауза карусели, включённая пользователем кнопкой.
+     */
+    protected readonly carouselPaused = signal(false);
+
+    /**
+     * Курсор или фокус клавиатуры внутри карусели — автопрокрутка на это время останавливается.
+     */
+    protected readonly carouselHovered = signal(false);
+
+    /**
+     * Интервал автопрокрутки карусели в мс. 0 у Taiga отключает автопрокрутку.
+     */
+    protected readonly carouselDuration = computed(() => (this.carouselPaused() || this.carouselHovered() ? 0 : 7000));
 
     /**
      * Сколько новостей показано сразу: главная и две под ней.
@@ -170,91 +185,48 @@ export class HomeComponent {
     ];
 
     /**
-     * Быстрые действия на главной странице.
-     * Помогают новому игроку сразу найти путь в мир.
-     *
-     * Первое действие зависит от авторизации: гостю предлагается
-     * инструкция «Как начать», а авторизованному — короткий путь
-     * к IP сервера, который лежит в профиле (`/profile/how-play`).
+     * Адрес игрового сервера — в полосе подключения для вошедшего игрока.
      */
-    protected readonly quickActions = computed(() => {
-        const startAction = this.isAuthed()
-            ? {
-                  icon: '@tui.globe',
-                  label: 'home.quickActions.whereIp',
-                  route: '/profile/how-play',
-                  external: false,
-              }
-            : {
-                  icon: '@tui.play',
-                  label: 'home.quickActions.start',
-                  route: '/start-game',
-                  external: false,
-              };
-
-        return [
-            startAction,
-            {
-                icon: '@tui.map',
-                label: 'home.quickActions.settlements',
-                route: '/settlements',
-                external: false,
-            },
-            {
-                icon: '@tui.image',
-                label: 'home.quickActions.gallery',
-                route: '/gallery',
-                external: false,
-            },
-            {
-                icon: '@tui.message-circle',
-                label: 'home.quickActions.discord',
-                route: 'https://discord.com/invite/FZb7SGrSFy',
-                external: true,
-            },
-            {
-                icon: '@tui.heart',
-                label: 'home.quickActions.donate',
-                route: '/market',
-                external: false,
-            },
-        ];
-    });
+    protected readonly serverIp: string = environment.gameServerIp;
 
     /**
-     * Команда проекта.
-     *
-     * Роль задаётся ключом из `home.team.roles` и определяет
-     * цветовое оформление карточки участника.
-     *
-     * Фото участников задаются в `environment.teamPhotos` по имени —
-     * достаточно вставить ссылку на изображение.
-     * Без фото отображается инициал на фирменном фоне.
+     * Версия игры, которую требует сервер.
      */
-    protected readonly teamMembers: { name: string; role: TeamRole; pos: number }[] = [
-        { name: 'Lisov', role: 'founder', pos: 1 },
-        { name: 'Yonhva', role: 'coFounder', pos: 2 },
-        { name: 'ripls', role: 'techAdmin', pos: 4 },
-        { name: 'Sunhell', role: 'techAdmin', pos: 5 },
-        { name: 'Hecker', role: 'admin', pos: 6 },
-        { name: 'Mr.Suslik', role: 'admin', pos: 7 },
-        { name: 'Myza', role: 'admin', pos: 3 },
-        { name: 'Errora', role: 'admin', pos: 8 },
-        { name: 'Anneta', role: 'admin', pos: 9 },
-        { name: '_NickRim_', role: 'admin', pos: 10 },
-        { name: 'Лягушка', role: 'moderator', pos: 11 },
-        { name: 'Glifider', role: 'moderator', pos: 12 },
-        { name: 'Minker', role: 'moderator', pos: 13 },
-    ];
+    protected readonly gameVersion: string = environment.gameVersion;
 
     /**
-     * Возвращает URL фото участника команды из `environment.teamPhotos`.
-     *
-     * @param name Имя участника.
-     * @returns URL фото или `undefined`, если фото не задано.
+     * Адрес только что скопирован (кнопка показывает «Скопировано» 2 секунды).
      */
-    protected getTeamPhoto(name: string): string | undefined {
-        return environment.teamPhotos[name] || undefined;
+    protected readonly ipCopied = signal(false);
+
+    /**
+     * Копирует адрес сервера в буфер обмена.
+     */
+    protected copyServerIp(): void {
+        void navigator.clipboard?.writeText(this.serverIp).then(() => {
+            this.ipCopied.set(true);
+            setTimeout(() => this.ipCopied.set(false), 2000);
+        });
+    }
+
+    /**
+     * Сколько слайдов карусели держать загруженными по обе стороны от текущего.
+     * Остальные не рендерят картинку: `loading="lazy"` внутри горизонтальной
+     * прокрутки не срабатывает, и раньше страница тянула все 8 слайдов по 1920px.
+     */
+    private static readonly CAROUSEL_PRELOAD = 1;
+
+    /**
+     * Нужно ли рендерить картинку слайда: текущий и соседние (с учётом зацикливания).
+     *
+     * @param index Индекс слайда.
+     * @returns true, если слайд текущий или соседний.
+     */
+    protected isSlideNear(index: number): boolean {
+        const total = this.images.length;
+        const distance = Math.abs(index - this.carouselIndex);
+
+        return Math.min(distance, total - distance) <= HomeComponent.CAROUSEL_PRELOAD;
     }
 
     /**
@@ -318,27 +290,6 @@ export class HomeComponent {
         ),
         { initialValue: [] }
     );
-
-    /**
-     * Возвращает CSS-классы бейджа роли участника команды.
-     *
-     * @param role Роль участника.
-     * @returns Строка CSS-классов бейджа.
-     */
-    protected getTeamRoleBadgeClass(role: TeamRole): string {
-        switch (role) {
-            case 'founder':
-                return 'bg-gold/90 text-ink';
-            case 'coFounder':
-                return 'bg-lh-accent/90 text-white';
-            case 'techAdmin':
-                return 'bg-lh-leader/90 text-parchment-2';
-            case 'moderator':
-                return 'bg-peace/90 text-white';
-            default:
-                return 'bg-lh-danger/90 text-white';
-        }
-    }
 
     /**
      * Поток новостей из API.

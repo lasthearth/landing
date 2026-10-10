@@ -6,6 +6,9 @@ export const RULES_I18N = {
         rules: {
             title: 'Правила сервера',
             expandAll: 'Раскрыть всё',
+            toc: {
+                title: 'Содержание',
+            },
             collapseAll: 'Скрыть всё',
             scrollTop: 'Наверх',
             copyLink: 'Скопировать ссылку на пункт',
@@ -1165,6 +1168,9 @@ export const RULES_I18N = {
         rules: {
             title: 'Server Rules',
             expandAll: 'Expand all',
+            toc: {
+                title: 'Contents',
+            },
             collapseAll: 'Collapse all',
             scrollTop: 'Back to top',
             copyLink: 'Copy link to this rule',
