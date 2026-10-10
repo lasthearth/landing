@@ -828,6 +828,24 @@ tui-pulse.offline {
     }
 
     /**
+     * Вторичная CTA поверх тёмного фото или видео (карусель, заставка):
+     * светлая обводка без заливки.
+     */
+    .lh-cta--on-dark {
+        color: var(--lh-parchment-2);
+        background-image: none;
+        background-color: rgba(240, 230, 210, 0.06);
+        box-shadow: inset 0 0 0 2px rgba(240, 230, 210, 0.4);
+    }
+
+    .lh-cta--on-dark:hover {
+        color: #fff;
+        box-shadow:
+            inset 0 0 0 2px rgba(255, 170, 92, 0.75),
+            0 14px 32px -12px rgba(255, 121, 32, 0.35);
+    }
+
+    /**
      * Переключатели: вкладки, фильтры, сортировка — везде один вид.
      *
      * Пилюля на поверхности темы, активная — брендовый градиент.

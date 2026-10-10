@@ -5,6 +5,8 @@ export const HOME_I18N = {
                 nextAria: 'Следующий слайд',
                 prevAria: 'Предыдущий слайд',
                 pause: 'Остановить показ слайдов',
+                ctaStart: 'Начать играть',
+                ctaDiscord: 'Наш Discord',
                 play: 'Продолжить показ слайдов',
                 slides: {
                     lastHearth: {
@@ -107,6 +109,8 @@ export const HOME_I18N = {
                 nextAria: 'Next slide',
                 prevAria: 'Previous slide',
                 pause: 'Pause slideshow',
+                ctaStart: 'Start playing',
+                ctaDiscord: 'Our Discord',
                 play: 'Resume slideshow',
                 slides: {
                     lastHearth: {

@@ -19,13 +19,18 @@
         <tui-carousel [(index)]="carouselIndex" [duration]="carouselDuration()" class="h-auto! !rounded-t-xl">
             @for (item of images; track $index) {
                 <div *tuiItem class="size-full relative overflow-hidden">
-                    <app-image-loader
-                        [src]="item.image"
-                        [alt]="item.header | translate"
-                        [eager]="$first"
-                        class="h-full w-full md:h-[600px]"
-                        [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
-                    />
+                    <!-- Высота зарезервирована (16:9 / 600px), чтобы контент ниже не прыгал при загрузке -->
+                    @if (isSlideNear($index)) {
+                        <app-image-loader
+                            [src]="item.image"
+                            [alt]="item.header | translate"
+                            [eager]="$first"
+                            class="block w-full aspect-video md:aspect-auto md:h-[600px]"
+                            [imageClass]="(item.isLight ? 'brightness-75! ' : '') + 'object-center'"
+                        />
+                    } @else {
+                        <div class="w-full aspect-video md:aspect-auto md:h-[600px] bg-night" aria-hidden="true"></div>
+                    }
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-black/40 pointer-events-none"
                     ></div>
@@ -41,6 +46,21 @@
                             [innerHTML]="item.body | translate"
                             class="text-lg md:text-2xl lg:text-4xl font-medium !text-shadow-lg"
                         ></p>
+                        <!-- Следующий шаг для гостя: прямо на главном экране, а не в отдельном ряду -->
+                        <div class="hidden sm:flex flex-wrap justify-center gap-3 mt-6">
+                            <a routerLink="/start-game" class="lh-cta text-lg uppercase tracking-wide no-underline!">
+                                {{ "home.carousel.ctaStart" | translate }}
+                                <span class="lh-cta__icon"><tui-icon icon="@tui.arrow-right" class="size-4!" /></span>
+                            </a>
+                            <a
+                                [href]="discordInviteUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="lh-cta lh-cta--on-dark text-lg uppercase tracking-wide no-underline!"
+                            >
+                                {{ "home.carousel.ctaDiscord" | translate }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             }
@@ -60,6 +80,22 @@
             <tui-pagination size="s" [length]="images.length" [(index)]="carouselIndex" />
         </div>
 
+        <!-- На телефоне слайд слишком низкий для кнопок — они под каруселью -->
+        <div class="sm:hidden lh-page-container pb-0 flex flex-col gap-2">
+            <a routerLink="/start-game" class="lh-cta justify-center uppercase tracking-wide no-underline!">
+                {{ "home.carousel.ctaStart" | translate }}
+                <span class="lh-cta__icon"><tui-icon icon="@tui.arrow-right" class="size-4!" /></span>
+            </a>
+            <a
+                [href]="discordInviteUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="lh-cta lh-cta--ghost justify-center uppercase tracking-wide no-underline!"
+            >
+                {{ "home.carousel.ctaDiscord" | translate }}
+            </a>
+        </div>
+
         <button
             (click)="navigate(-1)"
             class="absolute nav-button hidden md:block size-12 z-40 left-8 top-1/2 -translate-y-1/2 justify-center backdrop-blur-md"
@@ -70,32 +106,34 @@
     </div>
 }
 
-<!-- Быстрые действия -->
-<div class="lh-page-container pt-6 md:pt-8 pb-3">
-    <div class="quick-actions">
-        @for (action of quickActions(); track action.label) {
-            @if (action.external) {
-                <a [href]="action.route" target="_blank" rel="noopener noreferrer" class="quick-actions__item">
-                    <span class="quick-actions__icon">
-                        <tui-icon [icon]="action.icon" />
-                    </span>
-                    <span class="quick-actions__label">
-                        {{ action.label | translate }}
-                    </span>
-                </a>
-            } @else {
-                <a [routerLink]="action.route" class="quick-actions__item">
-                    <span class="quick-actions__icon">
-                        <tui-icon [icon]="action.icon" />
-                    </span>
-                    <span class="quick-actions__label">
-                        {{ action.label | translate }}
-                    </span>
-                </a>
+@if (quickActions().length) {
+    <!-- Быстрые действия -->
+    <div class="lh-page-container pt-6 md:pt-8 pb-3">
+        <div class="quick-actions">
+            @for (action of quickActions(); track action.label) {
+                @if (action.external) {
+                    <a [href]="action.route" target="_blank" rel="noopener noreferrer" class="quick-actions__item">
+                        <span class="quick-actions__icon">
+                            <tui-icon [icon]="action.icon" />
+                        </span>
+                        <span class="quick-actions__label">
+                            {{ action.label | translate }}
+                        </span>
+                    </a>
+                } @else {
+                    <a [routerLink]="action.route" class="quick-actions__item">
+                        <span class="quick-actions__icon">
+                            <tui-icon [icon]="action.icon" />
+                        </span>
+                        <span class="quick-actions__label">
+                            {{ action.label | translate }}
+                        </span>
+                    </a>
+                }
             }
-        }
+        </div>
     </div>
-</div>
+}
 
 <!-- Ближайшее событие календаря (без событий не выводится) -->
 <app-upcoming-event />

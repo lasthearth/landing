@@ -185,56 +185,51 @@ export class HomeComponent {
     ];
 
     /**
-     * Быстрые действия на главной странице.
-     * Помогают новому игроку сразу найти путь в мир.
+     * Быстрые действия на главной странице — только то, чего нет в меню.
      *
-     * Первое действие зависит от авторизации: гостю предлагается
-     * инструкция «Как начать», а авторизованному — короткий путь
-     * к IP сервера, который лежит в профиле (`/profile/how-play`).
+     * Гость их не видит: «Начать играть» и Discord стоят прямо на карусели.
+     * Авторизованному игроку — короткий путь к IP сервера (он в профиле,
+     * `/profile/how-play`) и приглашение в Discord. Поселения, галерея
+     * и магазин убраны: они уже есть в главном меню.
      */
-    protected readonly quickActions = computed(() => {
-        const startAction = this.isAuthed()
-            ? {
-                  icon: '@tui.globe',
-                  label: 'home.quickActions.whereIp',
-                  route: '/profile/how-play',
-                  external: false,
-              }
-            : {
-                  icon: '@tui.play',
-                  label: 'home.quickActions.start',
-                  route: '/start-game',
-                  external: false,
-              };
+    protected readonly quickActions = computed(() =>
+        this.isAuthed()
+            ? [
+                  {
+                      icon: '@tui.globe',
+                      label: 'home.quickActions.whereIp',
+                      route: '/profile/how-play',
+                      external: false,
+                  },
+                  {
+                      icon: '@tui.message-circle',
+                      label: 'home.quickActions.discord',
+                      route: environment.discordInviteUrl,
+                      external: true,
+                  },
+              ]
+            : []
+    );
 
-        return [
-            startAction,
-            {
-                icon: '@tui.map',
-                label: 'home.quickActions.settlements',
-                route: '/settlements',
-                external: false,
-            },
-            {
-                icon: '@tui.image',
-                label: 'home.quickActions.gallery',
-                route: '/gallery',
-                external: false,
-            },
-            {
-                icon: '@tui.message-circle',
-                label: 'home.quickActions.discord',
-                route: environment.discordInviteUrl,
-                external: true,
-            },
-            {
-                icon: '@tui.heart',
-                label: 'home.quickActions.donate',
-                route: '/market',
-                external: false,
-            },
-        ];
-    });
+    /**
+     * Сколько слайдов карусели держать загруженными по обе стороны от текущего.
+     * Остальные не рендерят картинку: `loading="lazy"` внутри горизонтальной
+     * прокрутки не срабатывает, и раньше страница тянула все 8 слайдов по 1920px.
+     */
+    private static readonly CAROUSEL_PRELOAD = 1;
+
+    /**
+     * Нужно ли рендерить картинку слайда: текущий и соседние (с учётом зацикливания).
+     *
+     * @param index Индекс слайда.
+     * @returns true, если слайд текущий или соседний.
+     */
+    protected isSlideNear(index: number): boolean {
+        const total = this.images.length;
+        const distance = Math.abs(index - this.carouselIndex);
+
+        return Math.min(distance, total - distance) <= HomeComponent.CAROUSEL_PRELOAD;
+    }
 
     /**
      * Направления, по которым команда ищет людей.
