@@ -51,6 +51,15 @@ src/app/
 - Карточка поселения: тип, дипломатия, «В сети: N · жителей: M», глава + до 3 онлайн.
 - `environment`: `discordInviteUrl`, `siteVersionDate`. Главная — канон `/home`.
 - Все компонентные стили — `.less` (бывшие `.component.css` переименованы).
+- Производительность: гидратация пререндера (`provideClientHydration(withEventReplay())`),
+  `withInMemoryScrolling` (сброс прокрутки), карусель рендерит картинку только у текущего
+  и соседних слайдов (`HomeComponent.isSlideNear`), путь новичка грузится динамически
+  из layout, стили `@taiga-ui/addon-mobile` убраны, `NewsApiService.getList` кэширует
+  ответ на 60 с, чат Discord опрашивается раз в минуту, пока его никто не читает
+  (`GameChatService.requestActivePolling`).
+- UX: меню шапки закрываются по Escape и клику мимо; заголовок раздела правил — кнопка;
+  тема по `prefers-color-scheme`, если пользователь не выбирал; `.lh-cta--on-dark` —
+  вторичная кнопка на тёмном фото.
 
 ### 3.-8 Выгрузка правил в Markdown для редактирования
 
