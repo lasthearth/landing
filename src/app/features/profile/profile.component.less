@@ -310,6 +310,29 @@
     }
 }
 
+/*
+ * Свёрнутая шапка на вкладках «Статистика», «Поселение» и др.:
+ * аватар меньше и отступы плотнее, чтобы содержимое вкладки было сразу под ней.
+ */
+.profile-cover--compact {
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0.875rem 1.25rem;
+    align-items: center;
+}
+
+.profile-cover--compact .profile-avatar {
+    width: 4rem;
+    height: 4rem;
+    margin: 0;
+    align-self: center;
+}
+
+/* Кнопка «Показать всё / Свернуть» — в строке с ником, после действий */
+.profile-cover__toggle {
+    flex-shrink: 0;
+}
+
 .profile-avatar__img {
     width: 100%;
     height: 100%;
@@ -380,3 +403,37 @@
         display: none;
     }
 }
+
+/*
+ * Подложка свёрнутой шапки — горизонтальная и на телефоне: ник стоит сразу
+ * за маленьким аватаром, поэтому плотнеет раньше, чем у развёрнутой.
+ * Правило в конце файла, чтобы перекрыть мобильную подложку выше.
+ */
+.profile-cover--compact::after {
+    background: linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 4.5rem,
+        color-mix(in srgb, var(--lh-surface-2) 82%, transparent) 8rem,
+        color-mix(in srgb, var(--lh-surface-2) 88%, transparent) 100%
+    );
+}
+
+/* На телефоне свёрнутая шапка — одна строка: аватар, ник и «Показать всё»;
+   кнопки профиля появляются в развёрнутой шапке. */
+@media (max-width: 640px) {
+    .profile-cover--compact {
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+
+    .profile-cover--compact .profile-avatar {
+        width: 3.25rem;
+        height: 3.25rem;
+    }
+
+    .profile-cover--compact .profile-public__actions {
+        display: none;
+    }
+}
+

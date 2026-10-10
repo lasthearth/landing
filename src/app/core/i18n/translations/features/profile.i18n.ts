@@ -80,6 +80,10 @@ export const PROFILE_I18N = {
                     action: 'Войти заново',
                 },
             },
+            header: {
+                expand: 'Показать всё',
+                collapse: 'Свернуть',
+            },
             hero: {
                 account: 'Аккаунт сайта',
                 status: {
@@ -320,6 +324,10 @@ export const PROFILE_I18N = {
                     text: 'Your application is approved! Sign in again to refresh your profile and unlock access.',
                     action: 'Sign in again',
                 },
+            },
+            header: {
+                expand: 'Show all',
+                collapse: 'Collapse',
             },
             hero: {
                 account: 'Site account',

@@ -15,12 +15,13 @@ import { HttpContext } from '@angular/common/http';
 import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { VerificationService, VerificationSubmission } from '@features/verification';
 import { PlayerVerificationFormComponent } from './player-verification-form/player-verification-form.component';
 import {
     catchError,
     combineLatest,
+    filter,
     defaultIfEmpty,
     map,
     merge,
@@ -58,7 +59,7 @@ import { PendingInviteBannerComponent } from '@features/settlements/join-by-invi
 import { MyEventsComponent } from '@features/events';
 import { ApplicationCardComponent, ApplicationState } from './ui/application-card/application-card.component';
 import { ProfileWaitingComponent } from './ui/profile-waiting/profile-waiting.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComponent } from '@entities/player-style';
 @Component({
     standalone: true,
@@ -322,10 +323,51 @@ export class ProfileComponent {
     /**
      * Загружает список сезонов «Голодных игр» и выбирает активный.
      */
+    /**
+     * Роутер — чтобы знать, какая вкладка профиля открыта.
+     */
+    private readonly router = inject(Router);
+
+    /**
+     * Адрес текущей страницы (обновляется после каждого перехода).
+     */
+    private readonly currentUrl = toSignal(
+        this.router.events.pipe(
+            filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+            map((event) => event.urlAfterRedirects)
+        ),
+        { initialValue: this.router.url }
+    );
+
+    /**
+     * Открыта главная вкладка профиля («Как начать играть»).
+     */
+    protected readonly isOverviewTab = computed(() => /^\/profile(\/how-play)?\/?([?#]|$)/.test(this.currentUrl()));
+
+    /**
+     * Игрок развернул шапку на другой вкладке кнопкой «Показать всё».
+     */
+    protected readonly headerExpanded = signal(false);
+
+    /**
+     * Свёрнутая шапка: на вкладках «Статистика», «Поселение», «Оформление» и др.
+     * остаются аватар, ник и действия, а баннерные плашки, показатели и события
+     * прячутся — раньше они занимали полэкрана до содержимого вкладки.
+     */
+    protected readonly compactHeader = computed(() => !this.isOverviewTab() && !this.headerExpanded());
+
     constructor() {
         this.verificationService.submitted$
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.submission.set(this.verificationService.lastSubmission()));
+
+        // Переход на другую вкладку снова сворачивает шапку.
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => this.headerExpanded.set(false));
     }
 
     protected getRoleName() {

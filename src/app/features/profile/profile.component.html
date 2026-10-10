@@ -25,7 +25,10 @@
         -->
         <section class="flex flex-col gap-3">
             @let look = looks.lookOf(userService.userId);
-            <div class="profile-cover flex gap-5 sm:gap-8 flex-col sm:flex-row">
+            <div
+                class="profile-cover flex gap-5 sm:gap-8 flex-col sm:flex-row"
+                [class.profile-cover--compact]="compactHeader()"
+            >
                 @if (look.bannerId !== "none") {
                     <app-profile-banner
                         class="profile-cover__banner"
@@ -109,11 +112,28 @@
                                     />
                                 </div>
                             }
+                            @if (!isOverviewTab()) {
+                                <!-- На вкладках шапка свёрнута; кнопка показывает поселение, значки и показатели -->
+                                <button
+                                    type="button"
+                                    class="lh-chip profile-cover__toggle"
+                                    [attr.aria-expanded]="!compactHeader()"
+                                    (click)="headerExpanded.set(!headerExpanded())"
+                                >
+                                    <tui-icon [icon]="compactHeader() ? '@tui.chevron-down' : '@tui.chevron-up'" />
+                                    {{
+                                        (compactHeader() ? "profile.header.expand" : "profile.header.collapse")
+                                            | translate
+                                    }}
+                                </button>
+                            }
                         </div>
                     }
 
                     <!-- Селение -->
-                    @if (settlement) {
+                    @if (compactHeader()) {
+                        <!-- Свёрнутая шапка: поселение и значки скрыты -->
+                    } @else if (settlement) {
                         <!-- Плашка поселения во всю ширину: название слева, значки справа -->
                         <div class="profile-settlement lh-panel rounded-xl px-4 py-3">
                             <div class="flex flex-col min-w-0">
@@ -165,14 +185,14 @@
                     }
 
                     <!-- Значки игрока -->
-                    @if (self) {
+                    @if (self && !compactHeader()) {
                         <app-player-badges class="profile-public" [badges]="self.badges" />
                     }
                 </div>
             </div>
 
             <!-- Показатели: баланс и игровая статистика — плитки одной высоты -->
-            @if (verified) {
+            @if (verified && !compactHeader()) {
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     <div class="profile-metric profile-metric--balance">
                         <img
@@ -234,8 +254,10 @@
                 Путь новичка здесь больше не показываем: для вошедшего игрока он повторял
                 вкладку «Как начать играть» — его прогресс теперь в её третьем шаге.
             -->
-            <!-- События, на которые игрок записан -->
-            <app-my-events />
+            <!-- События, на которые игрок записан (на вкладках — вместе с развёрнутой шапкой) -->
+            @if (!compactHeader()) {
+                <app-my-events />
+            }
         } @else {
             <!-- Анкета: ход проверки и что делать дальше -->
             <app-application-card
