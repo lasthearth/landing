@@ -52,7 +52,6 @@ import {
     SettlementBadgeTone,
     SettlementDisplayNamePipe,
 } from '@entities/settlement';
-import { NewcomerPathComponent } from '@features/onboarding';
 import { PlayerBadgesComponent, PlayerProfile, PlayerProfileService } from '@features/player';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
 import { PendingInviteBannerComponent } from '@features/settlements/join-by-invite';
@@ -77,7 +76,7 @@ import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComp
         TranslatePipe,
         SettlementBadgeComponent,
         SettlementDisplayNamePipe,
-        NewcomerPathComponent,
+
         RouterLink,
         ApplicationCardComponent,
         ProfileWaitingComponent,
@@ -105,7 +104,6 @@ export class ProfileComponent {
     private readonly serverInfoService = inject(ServerInformationService);
 
     protected readonly settlementService = inject(SettlementService);
-
 
     protected readonly userData: IUser = this.userService.getUserData();
 
@@ -284,8 +282,6 @@ export class ProfileComponent {
         startWith(true)
     );
 
-
-
     /**
      * Описание изображения открытого в предпросмотре.
      */
@@ -331,7 +327,6 @@ export class ProfileComponent {
         this.verificationService.submitted$
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.submission.set(this.verificationService.lastSubmission()));
-
     }
 
     protected getRoleName() {

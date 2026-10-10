@@ -230,14 +230,10 @@
         }
 
         @if (verified) {
-            <!-- Путь новичка: прячется, когда всё сделано или игрок его скрыл -->
-            <app-newcomer-path
-                variant="profile"
-                [details]="details"
-                [settlementName]="settlement?.name ?? null"
-                (fillApplication)="verification()"
-            />
-
+            <!--
+                Путь новичка здесь больше не показываем: для вошедшего игрока он повторял
+                вкладку «Как начать играть» — его прогресс теперь в её третьем шаге.
+            -->
             <!-- События, на которые игрок записан -->
             <app-my-events />
         } @else {
