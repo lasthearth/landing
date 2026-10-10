@@ -240,7 +240,7 @@
         class="recruit-panel flex flex-col lg:flex-row gap-0 rounded-2xl shadow-[inset_0_0_48px_rgba(255,255,255,0.04),inset_0_1px_0_rgba(255,255,255,0.08)] overflow-hidden"
     >
         <!-- Текст и роли -->
-        <div class="flex flex-col gap-6 p-6 lg:p-8 lg:w-3/5">
+        <div class="flex flex-col gap-5 p-6 lg:p-8 lg:w-3/5">
             <div class="flex flex-col gap-2 pl-4 border-l-4 border-danger-strong/60">
                 <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
                     {{ "home.recruit.title" | translate }}
@@ -250,29 +250,24 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!--
+                Роли — компактными метками: раньше было 4 карточки с описаниями,
+                и на телефоне блок занимал больше экрана, чем новости.
+                Описание роли — в подсказке при наведении.
+            -->
+            <ul class="flex flex-wrap gap-2" [attr.aria-label]="'home.recruit.rolesLabel' | translate">
                 @for (role of recruitRoles; track role.key) {
-                    <div
-                        class="flex items-start gap-3 rounded-xl bg-surface-2 border border-line/60 p-4 shadow-[0_2px_8px_rgba(45,32,26,0.08)]"
+                    <li
+                        class="lh-chip cursor-default"
+                        [title]="'home.recruit.roles.' + role.key + '.description' | translate"
                     >
-                        <span
-                            class="flex shrink-0 items-center justify-center size-11 rounded-lg bg-gradient-to-br from-brand to-lh-accent-2 text-parchment-2 shadow-[0_3px_10px_rgba(195,90,23,0.35)]"
-                        >
-                            <tui-icon [icon]="role.icon" class="size-5!" />
-                        </span>
-                        <div class="flex flex-col gap-0.5">
-                            <span class="text-lg font-bold text-ink">
-                                {{ "home.recruit.roles." + role.key + ".title" | translate }}
-                            </span>
-                            <span class="text-lg leading-6 text-ink-2">
-                                {{ "home.recruit.roles." + role.key + ".description" | translate }}
-                            </span>
-                        </div>
-                    </div>
+                        <tui-icon [icon]="role.icon" />
+                        {{ "home.recruit.roles." + role.key + ".title" | translate }}
+                    </li>
                 }
-            </div>
+            </ul>
 
-            <div class="flex flex-col gap-3 mt-auto pt-2">
+            <div class="flex flex-col gap-3 mt-auto">
                 <span class="text-base font-bold uppercase tracking-wide text-ink-2">
                     {{ "home.recruit.contactTitle" | translate }}
                 </span>
@@ -303,8 +298,8 @@
             </div>
         </div>
 
-        <!-- Изображение -->
-        <div class="lg:w-2/5 min-h-64 lg:min-h-0 relative">
+        <!-- Изображение: только на широких экранах, на телефоне оно было пустой плашкой -->
+        <div class="hidden lg:block lg:w-2/5 relative">
             <app-image-loader
                 src="/castle-recruit.webp"
                 [alt]="'home.recruit.title' | translate"

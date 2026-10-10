@@ -73,9 +73,12 @@
                             }
                         </span>
 
-                        <span class="newcomer-path__state">
-                            {{ "shared.onboarding.state." + step.state | translate }}
-                        </span>
+                        <!-- Бейдж только у значимых состояний: «впереди» на каждой строке был шумом -->
+                        @if (step.state !== "todo") {
+                            <span class="newcomer-path__state">
+                                {{ "shared.onboarding.state." + step.state | translate }}
+                            </span>
+                        }
                         <tui-icon icon="@tui.chevron-down" class="newcomer-path__chevron size-4!" />
                     </button>
 

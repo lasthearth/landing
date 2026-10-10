@@ -1,6 +1,7 @@
 export const SHARED_I18N = {
     ru: {
         shared: {
+            unread: 'Ещё не открывали',
             relativeTime: {
                 justNow: 'только что',
                 minuteAgo: 'минуту назад',
@@ -238,7 +239,7 @@ export const SHARED_I18N = {
         },
         startGame: {
             title: 'Начать игру',
-            subtitle: 'Пять шагов до первого входа на сервер. Отмечаем пройденное сами — возвращайтесь, когда удобно.',
+            subtitle: 'Путь от установки игры до первого входа на сервер. Отмечаем пройденное сами — возвращайтесь, когда удобно.',
             server: {
                 title: 'Сервер',
                 online: 'Сейчас играют',
@@ -265,6 +266,7 @@ export const SHARED_I18N = {
     },
     en: {
         shared: {
+            unread: 'Not opened yet',
             relativeTime: {
                 justNow: 'just now',
                 minuteAgo: 'a minute ago',
@@ -502,7 +504,7 @@ export const SHARED_I18N = {
         },
         startGame: {
             title: 'Start game',
-            subtitle: 'Five steps to your first login. Progress is tracked for you — come back any time.',
+            subtitle: 'From installing the game to your first login. Progress is tracked for you — come back any time.',
             server: {
                 title: 'Server',
                 online: 'Playing now',

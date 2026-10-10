@@ -1,10 +1,13 @@
 <div class="flex flex-col cursor-pointer" [attr.sectionid]="sectionId()" [class.mt-4]="needsMarginTop()">
-    <div
-        class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
+    <!-- Кнопка, а не div с (click): раздел должен открываться и с клавиатуры -->
+    <button
+        type="button"
+        class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center text-left bg-transparent border-0 p-0"
+        [attr.aria-expanded]="isExpanded()"
         (click)="toggle()"
     >
-        <div class="flex items-center gap-2 flex-1">
-            <p class="rule-section-title relative text-ink cursor-pointer font-bold" [class]="titleClass() + ' ' + indentClass()">
+        <span class="flex items-center gap-2 flex-1">
+            <span class="rule-section-title relative text-ink cursor-pointer font-bold" [class]="titleClass() + ' ' + indentClass()">
                 @if (icon()) {
                     <tui-icon
                         [icon]="icon() ?? ''"
@@ -14,19 +17,22 @@
                 }
                 {{ title() | translate }}
                 @if (!isWatched()) {
-                    <tui-pulse
-                        class="!absolute top-1/2 -translate-y-1/2"
-                        [ngClass]="{ 'ml-4': level() > 0, 'ml-6': level() === 0 }"
-                    />
+                    <!-- Статичная метка «ещё не открывали» (была пульсирующей точкой без пояснения) -->
+                    <span
+                        class="inline-block size-2 rounded-full bg-lh-accent align-middle ml-3"
+                        role="img"
+                        [attr.aria-label]="'shared.unread' | translate"
+                        [title]="'shared.unread' | translate"
+                    ></span>
                 }
-            </p>
-        </div>
+            </span>
+        </span>
         <tui-icon
             icon="@tui.chevron-down"
             [ngClass]="{ 'rotate-180!': isExpanded() }"
             class="text-ink-2 transition size-6!"
         />
-    </div>
+    </button>
 
     <tui-expand [expanded]="isExpanded()">
         <div [class]="contentClass()" class="mt-4">

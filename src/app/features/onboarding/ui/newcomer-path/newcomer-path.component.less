@@ -156,10 +156,16 @@
     background: color-mix(in srgb, var(--lh-danger-ink) 12%, transparent);
 }
 
+/* Стрелка всегда у правого края: бейдж состояния есть не у каждого шага. */
 .newcomer-path__chevron {
     flex-shrink: 0;
+    margin-left: auto;
     color: var(--lh-ink-3);
     transition: transform 0.2s ease;
+}
+
+.newcomer-path__state + .newcomer-path__chevron {
+    margin-left: 0.5rem;
 }
 
 .newcomer-path__step--open .newcomer-path__chevron {

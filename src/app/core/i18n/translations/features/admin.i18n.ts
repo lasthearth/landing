@@ -4,7 +4,7 @@ export const ADMIN_I18N = {
             title: 'Кабинет администратора',
             tabs: {
                 playerForms: 'Анкеты игроков',
-                settlementForms: 'Анкеты селений',
+                settlementForms: 'Анкеты поселений',
                 questions: 'Вопросы',
                 createNews: 'Создать новость',
                 coins: 'Монеты',
@@ -36,10 +36,10 @@ export const ADMIN_I18N = {
                 reject: 'Отклонить',
             },
             settlementForms: {
-                emptyTitle: 'Анкеты селений отсутствуют',
+                emptyTitle: 'Анкеты поселений отсутствуют',
                 emptyDescription: 'Новые заявки на верификацию поселений появятся здесь.',
                 nameLabel: 'Наименование',
-                typeLabel: 'Тип селения',
+                typeLabel: 'Тип поселения',
                 descriptionLabel: 'Описание',
                 coordinatesLabel: 'Координаты',
                 diplomacyLabel: 'Дипломатический курс',

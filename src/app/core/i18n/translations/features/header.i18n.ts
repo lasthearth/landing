@@ -9,7 +9,7 @@ export const HEADER_I18N = {
                 startGame: 'НАЧАТЬ ИГРУ',
                 rules: 'ПРАВИЛА',
                 faq: 'FAQ',
-                settlements: 'СЕЛЕНИЯ',
+                settlements: 'ПОСЕЛЕНИЯ',
                 market: 'МАГАЗИН',
                 community: 'СООБЩЕСТВО',
                 diplomacyItem: 'Дипломатия',
