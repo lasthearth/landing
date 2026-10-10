@@ -6,10 +6,10 @@
 @let settlementVerifications = settlementVerifications$ | async;
 
 <div class="flex flex-col xl:gap-10 gap-8">
-    <div class="flex justify-center sm:justify-between px-4 sm:px-0">
+    <div class="flex justify-between items-start px-4 sm:px-0">
         <!-- Логотип -->
         <a
-            class="hidden mt-8 z-10 sm:flex w-fit h-18 sm:h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)] cursor-pointer no-underline!"
+            class="flex mt-8 z-10 w-fit h-18 sm:h-20 items-center justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)] cursor-pointer no-underline!"
             [routerLink]="['/home']"
             [attr.aria-label]="'header.nav.home' | translate"
         >
@@ -28,47 +28,44 @@
             </div>
         </a>
 
-        <!-- Табло информации о сервере -->
+        <!-- Табло информации о сервере: без ответа сервера не показывается, чтобы не рисовать «–/–» -->
         <div class="flex gap-2 sm:gap-4 items-center">
-            <div
-                class="mt-8 z-10 pt-1.5 sm:pt-3 flex h-20 flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
-            >
-                <div class="flex flex-col gap-1">
-                    <div class="flex w-full px-4 gap-4 justify-center items-center">
-                        <div class="flex gap-0.5 items-center">
-                            @if (online?.online) {
-                                <p class="text-3xl sm:text-5xl text-white">{{ online?.online }}</p>
-                            } @else {
-                                <p class="text-3xl sm:text-5xl text-white dash-animated">-</p>
-                            }
+            @if (online) {
+                <div
+                    class="mt-8 z-10 pt-1.5 sm:pt-3 flex h-20 flex-col gap-1 sm:gap-3 w-fit items-end justify-start rounded-xl backdrop-blur-md bg-lh-primary-2/50 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                >
+                    <div class="flex flex-col gap-1">
+                        <div class="flex w-full px-4 gap-4 justify-center items-center">
+                            <div class="flex gap-0.5 items-center">
+                                <!-- Без условия на truthy: 0 игроков — это число, а не «нет данных» -->
+                                <p class="text-3xl sm:text-5xl text-white">{{ online.online }}</p>
 
-                            <p class="text-base sm:text-base text-white opacity-70">/</p>
+                                <p class="text-base sm:text-base text-white opacity-70">/</p>
 
-                            @if (online?.max_online) {
-                                <p class="text-base sm:text-base text-white opacity-70">{{ online?.max_online }}</p>
-                            } @else {
-                                <p class="text-base sm:text-base text-white opacity-70 dash-animated">-</p>
-                            }
+                                <p class="text-base sm:text-base text-white opacity-70">{{ online.max_online }}</p>
+                            </div>
+                            <div class="text-white">
+                                <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">
+                                    {{ "header.players" | translate }}
+                                </p>
+
+                                @if (time) {
+                                    <p class="text-base sm:text-xl opacity-65 self-start leading-6">{{ time }}</p>
+                                }
+                            </div>
                         </div>
-                        <div class="text-white">
-                            <p class="hidden md:block text-base sm:text-2xl/7.5 opacity-90 leading-6">
-                                {{ "header.players" | translate }}
-                            </p>
-
-                            <p class="text-base sm:text-xl opacity-65 self-start leading-6">{{ time ? time : "-" }}</p>
+                        <div class="w-full flex px-3.5">
+                            <progress
+                                [max]="online.max_online || 1"
+                                size="s"
+                                tuiProgressBar
+                                [value]="online.online"
+                                class="progress"
+                            ></progress>
                         </div>
-                    </div>
-                    <div class="w-full flex px-3.5">
-                        <progress
-                            [max]="online?.max_online ? online?.max_online : 0"
-                            size="s"
-                            tuiProgressBar
-                            [value]="online?.online ? online?.online : 0"
-                            class="progress"
-                        ></progress>
                     </div>
                 </div>
-            </div>
+            }
 
             <!-- Табло информации о пользователе -->
             @if (isAuth) {
@@ -134,7 +131,9 @@
                 >
                     <tui-icon icon="@tui.align-justify" />
                     @if (isCommunityFresh()) {
-                        <span class="nav-dot"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                        <span class="nav-dot">
+                            <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                        </span>
                     }
                 </button>
 
@@ -171,7 +170,9 @@
                                 <tui-icon icon="@tui.users-round" class="size-4!" />
                                 {{ "header.nav.community" | translate }}
                                 @if (isCommunityFresh()) {
-                                    <span class="nav-dot nav-dot--inline"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                                    <span class="nav-dot nav-dot--inline">
+                                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                    </span>
                                 }
                             </span>
                             <tui-icon
@@ -193,7 +194,9 @@
                                         <tui-icon [icon]="link.icon" class="size-4!" />
                                         {{ link.labelKey | translate }}
                                         @if (link.freshSection && newContent.isFresh(link.freshSection)) {
-                                            <span class="nav-dot nav-dot--inline"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                                            <span class="nav-dot nav-dot--inline">
+                                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                            </span>
                                         }
                                     </a>
                                 }
@@ -212,8 +215,10 @@
                 [title]="'header.nav.home' | translate"
             >
                 <tui-icon icon="@tui.house" />
-                @if (newContent.isFresh('news')) {
-                    <span class="nav-dot"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                @if (newContent.isFresh("news")) {
+                    <span class="nav-dot">
+                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                    </span>
                 }
             </a>
 
@@ -244,7 +249,9 @@
                         [attr.aria-expanded]="showMediaMenu()"
                     >
                         @if (isCommunityFresh()) {
-                            <span class="nav-dot"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                            <span class="nav-dot">
+                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                            </span>
                         }
                         <span>{{ "header.nav.community" | translate }}</span>
                         <tui-icon
@@ -268,7 +275,9 @@
                                     <tui-icon [icon]="link.icon" class="size-4!" />
                                     {{ link.labelKey | translate }}
                                     @if (link.freshSection && newContent.isFresh(link.freshSection)) {
-                                        <span class="nav-dot nav-dot--inline"><span class="sr-only">{{ "header.nav.hasNew" | translate }}</span></span>
+                                        <span class="nav-dot nav-dot--inline">
+                                            <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                        </span>
                                     }
                                 </a>
                             }
@@ -343,7 +352,8 @@
                 >
                     <tui-icon icon="@tui.user" />
                     @if (
-                        invitations?.length || ((settlementVerifications?.length || userVerifications?.length) && isAdmin())
+                        invitations?.length ||
+                        ((settlementVerifications?.length || userVerifications?.length) && isAdmin())
                     ) {
                         <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
                     }
