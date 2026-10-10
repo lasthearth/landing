@@ -57,6 +57,9 @@ export const routes: Routes = [
                                     (m) => m.SETTLEMENTS_I18N
                                 ),
                             () => import('@core/i18n/translations/features/events.i18n').then((m) => m.EVENTS_I18N),
+                            // Диалог «Пополнить осколки» (HowToBuyComponent) — из магазина, открывается
+                            // и в профиле, и в админке; без словаря магазина он показывал ключи.
+                            () => import('@core/i18n/translations/features/market.i18n').then((m) => m.MARKET_I18N),
                         ]
                     ),
                 canActivate: [userGuard],
