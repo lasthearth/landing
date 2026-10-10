@@ -155,8 +155,8 @@
     </div>
 
     @if (leaderBoard.length >= 3) {
-        <!-- Пьедестал: три равные ячейки, центральная карточка выше -->
-        <div class="grid grid-cols-3 gap-3 sm:gap-5 items-end w-full mb-8">
+        <!-- Пьедестал: 2-е, 1-е, 3-е место; ступени разной высоты, «пол» — нижняя линия -->
+        <div class="podium-row grid grid-cols-3 gap-2 sm:gap-4 items-end w-full max-w-4xl mx-auto mb-8">
             <app-leader-card
                 [playerName]="leaderBoard[1]?.name ?? ''"
                 ratingPlace="2"
@@ -168,7 +168,6 @@
             <app-leader-card
                 [playerName]="leaderBoard[0]?.name ?? ''"
                 ratingPlace="1"
-                [isBigSize]="true"
                 [count]="getCount(leaderBoard[0])"
                 [type]="getTypeLabel()"
                 [userImage]="getUserAvatar(leaderBoard[0]?.user_id)"

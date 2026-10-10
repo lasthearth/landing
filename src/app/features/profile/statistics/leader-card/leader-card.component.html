@@ -1,31 +1,26 @@
-<div class="main relative flex justify-center items-center" [class.main--big]="isBigSize()">
-    <div
-        class="ember-card flex px-3 sm:px-5 bg-[url('/br.webp')] bg-cover bg-center size-full flex-col gap-2 lg:gap-4 rounded-3xl justify-center items-center shadow-lg shadow-night-deep/60 border border-line-strong/30 card-tilt"
-    >
-        <app-player-avatar
-            [userId]="userId()"
-            [src]="userImage() || '/default-avatar.webp'"
-            class="size-14 lg:size-20 z-30"
-            [alt]="'profile.statistics.avatarAlt' | translate"
-        />
-        <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-parchment-3">
-            <a class="hover:underline underline-offset-4" [routerLink]="['/player', playerName()]">{{ playerName() }}</a>
-        </p>
-        <p
-            [class.gold-text]="ratingPlace() === '1'"
-            [class.silver-text]="ratingPlace() === '2'"
-            [class.bronze-text]="ratingPlace() === '3'"
-            class="rating-text text-shadow-2xl font-extrabold z-30 rank-text"
-        >
-            {{ ratingPlace() }}
-        </p>
-        <div class="flex flex-col gap-1 justify-center items-center">
-            <p class="count-text text-shadow-2xl text-shadow-2xl font-semibold z-30 text-parchment-3">
-                {{ count() | amount }}
-            </p>
-            <p class="type-text opacity-50 lowercase text-shadow-2xl font-semibold z-30 text-parchment-3">
-                {{ type() }}
-            </p>
+<!--
+    Колонка пьедестала: игрок (аватар в кольце цвета медали, ник, результат) стоит
+    на ступени с номером места. Ступени разной высоты — 1-я выше всех — поэтому
+    тройка читается как пьедестал, а не как три пустые карточки.
+-->
+<article class="podium" [class]="'podium--' + medal()">
+    <div class="podium__player">
+        <div class="podium__ring">
+            <app-player-avatar
+                class="podium__avatar"
+                [userId]="userId()"
+                [src]="userImage() || '/default-avatar.webp'"
+                [alt]="'profile.statistics.avatarAlt' | translate"
+            />
         </div>
+        <a class="podium__name" [routerLink]="['/player', playerName()]" [title]="playerName()">{{ playerName() }}</a>
+        <p class="podium__result">
+            <span class="podium__value">{{ count() | amount }}</span>
+            <span class="podium__label">{{ type() }}</span>
+        </p>
     </div>
-</div>
+
+    <div class="podium__step" aria-hidden="true">
+        <span class="podium__place">{{ ratingPlace() }}</span>
+    </div>
+</article>
