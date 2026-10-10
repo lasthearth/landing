@@ -1,33 +1,65 @@
 @let leaderBoard = (leaderBoard$ | async)?.entries;
 @let purchases = purchases$ | async;
 
-<!-- История покупок и «Голодные игры» — рядом, чтобы не тянуть узкое содержимое на всю ширину -->
+<!--
+    История покупок и «Голодные игры» — две одинаковые карточки рядом: заголовок
+    с иконкой внутри карточки, справа — управление (все покупки / выбор сезона),
+    одинаковые отступы, пустые состояния и высота.
+-->
 @if (isVerifiedUser) {
-    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-6 lg:gap-8 items-start mb-8">
-        <div class="flex flex-col gap-3">
-            <h2 class="lh-display text-xl md:text-2xl lg:text-3xl font-bold text-ink">
-                {{ "profile.purchases.title" | translate }}
-            </h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-stretch mb-8">
+        <section class="lh-panel rounded-2xl p-4 sm:p-5 flex flex-col gap-3 h-full">
+            <header class="flex items-center justify-between gap-3 min-h-9">
+                <h2 class="m-0 flex items-center gap-2 text-lg sm:text-xl font-bold text-ink">
+                    <tui-icon icon="@tui.receipt" class="size-5! text-lh-accent" />
+                    {{ "profile.purchases.title" | translate }}
+                </h2>
+                @if (purchases && purchases.length > purchasesCollapsedCount) {
+                    <button
+                        type="button"
+                        class="lh-chip shrink-0"
+                        [attr.aria-expanded]="isPurchasesExpanded()"
+                        (click)="isPurchasesExpanded.set(!isPurchasesExpanded())"
+                    >
+                        {{
+                            isPurchasesExpanded()
+                                ? ("profile.purchases.collapse" | translate)
+                                : ("profile.purchases.expand" | translate)
+                        }}
+                        <span class="text-ink-3">{{ purchases.length }}</span>
+                        <tui-icon
+                            icon="@tui.chevron-down"
+                            class="purchases-toggle-icon"
+                            [class.purchases-toggle-icon--expanded]="isPurchasesExpanded()"
+                        />
+                    </button>
+                }
+            </header>
 
             @if (purchases; as list) {
                 @if (list.length > 0) {
-                    <ng-template #purchaseItem let-purchase>
+                    <ng-template #purchaseItem let-purchase let-first="first">
                         @let meta = getPurchaseStatusMeta(purchase);
 
-                        <div class="flex items-center justify-between gap-4 lh-panel rounded-xl px-4 py-3">
-                            <div class="flex flex-col gap-1 min-w-0">
-                                <span class="text-lg font-bold text-lh-primary truncate">
+                        <div
+                            class="flex items-center justify-between gap-4 py-2.5"
+                            [class.purchase-row--divided]="!first"
+                        >
+                            <div class="flex flex-col gap-0.5 min-w-0">
+                                <span class="text-base sm:text-lg font-bold text-lh-primary truncate">
                                     {{ purchase.itemName || "—" }}
                                 </span>
                                 <time
-                                    class="text-base text-ink-3"
+                                    class="text-sm text-ink-3"
                                     [appRelativeTime]="purchase.createdAt"
                                     [fallback]="purchase.formattedDate"
                                 ></time>
                             </div>
 
-                            <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
-                                <span class="inline-flex items-center gap-1 text-lg font-bold text-lh-primary">
+                            <div class="flex items-center gap-4 sm:gap-5 flex-shrink-0">
+                                <span
+                                    class="inline-flex items-center gap-1 text-base sm:text-lg font-bold text-lh-primary"
+                                >
                                     {{ purchase.pricePaid | amount }}
                                     <img
                                         src="/splinter-of-spark.webp"
@@ -37,60 +69,40 @@
                                 </span>
 
                                 <span
-                                    [class]="'inline-flex items-center gap-1.5 text-base font-medium ' + meta.textClass"
+                                    [class]="'inline-flex items-center gap-1.5 text-sm font-medium sm:min-w-28 ' + meta.textClass"
                                 >
-                                    <span [class]="'w-2.5 h-2.5 rounded-full ' + meta.dotClass"></span>
+                                    <span [class]="'w-2 h-2 rounded-full ' + meta.dotClass"></span>
                                     {{ meta.label | translate }}
                                 </span>
                             </div>
                         </div>
                     </ng-template>
 
-                    <div class="flex flex-col gap-2">
-                        <ng-container *ngTemplateOutlet="purchaseItem; context: { $implicit: list[0] }" />
+                    <div class="flex flex-col">
+                        <ng-container *ngTemplateOutlet="purchaseItem; context: { $implicit: list[0], first: true }" />
 
                         @if (list.length > purchasesCollapsedCount) {
                             <div class="purchases-list" [class.purchases-list--expanded]="isPurchasesExpanded()">
                                 <div class="purchases-list__inner">
                                     @for (purchase of list.slice(purchasesCollapsedCount); track purchase.id) {
                                         <ng-container
-                                            *ngTemplateOutlet="purchaseItem; context: { $implicit: purchase }"
+                                            *ngTemplateOutlet="
+                                                purchaseItem;
+                                                context: { $implicit: purchase, first: false }
+                                            "
                                         />
                                     }
                                 </div>
                             </div>
                         }
                     </div>
-
-                    @if (list.length > purchasesCollapsedCount) {
-                        <button
-                            type="button"
-                            (click)="isPurchasesExpanded.set(!isPurchasesExpanded())"
-                            class="self-center flex items-center gap-2 text-lg font-semibold text-lh-accent hover:text-brand-hover transition-colors cursor-pointer"
-                        >
-                            {{
-                                isPurchasesExpanded()
-                                    ? ("profile.purchases.collapse" | translate)
-                                    : ("profile.purchases.expand" | translate)
-                            }}
-                            <tui-icon
-                                [icon]="isPurchasesExpanded() ? '@tui.chevron-up' : '@tui.chevron-down'"
-                                class="size-5! purchases-toggle-icon"
-                                [class.purchases-toggle-icon--expanded]="isPurchasesExpanded()"
-                            />
-                        </button>
-                    }
                 } @else {
-                    <p
-                        class="text-lg text-ink-2 text-center py-6 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
-                    >
-                        {{ "profile.purchases.empty" | translate }}
-                    </p>
+                    <p class="m-0 text-base text-ink-3">{{ "profile.purchases.empty" | translate }}</p>
                 }
             }
-        </div>
+        </section>
 
-        <app-hunger-games-card class="block" />
+        <app-hunger-games-card class="block h-full" />
     </div>
 }
 
