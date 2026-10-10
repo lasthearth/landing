@@ -64,11 +64,18 @@
     gap: 0.75rem;
 }
 
+/* Кнопки профиля — одной строкой: «Поделиться» раньше переносилась отдельно. */
 .profile-public__actions {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
+}
+
+/* Пустые блоки (скрытый путь новичка, нет событий) не занимают шаг колонки. */
+.profile-page > :empty {
+    display: none;
 }
 
 /* Место в рейтинге под плиткой статистики */

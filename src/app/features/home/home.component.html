@@ -2,7 +2,7 @@
 
 @if (!isAuthed()) {
     <div
-        class="relative"
+        class="relative lh-guest-only"
         (mouseenter)="carouselHovered.set(true)"
         (mouseleave)="carouselHovered.set(false)"
         (focusin)="carouselHovered.set(true)"
@@ -106,33 +106,44 @@
     </div>
 }
 
-@if (quickActions().length) {
-    <!-- Быстрые действия -->
-    <div class="lh-page-container pt-6 md:pt-8 pb-3">
-        <div class="quick-actions">
-            @for (action of quickActions(); track action.label) {
-                @if (action.external) {
-                    <a [href]="action.route" target="_blank" rel="noopener noreferrer" class="quick-actions__item">
-                        <span class="quick-actions__icon">
-                            <tui-icon [icon]="action.icon" />
-                        </span>
-                        <span class="quick-actions__label">
-                            {{ action.label | translate }}
-                        </span>
-                    </a>
-                } @else {
-                    <a [routerLink]="action.route" class="quick-actions__item">
-                        <span class="quick-actions__icon">
-                            <tui-icon [icon]="action.icon" />
-                        </span>
-                        <span class="quick-actions__label">
-                            {{ action.label | translate }}
-                        </span>
-                    </a>
-                }
-            }
+<!--
+    Полоса подключения для вошедшего игрока: то, за чем он приходит на главную,
+    — адрес сервера (с копированием), версия игры, инструкция и Discord.
+    Раньше здесь были две отдельные плитки «Где IP?» и «Discord» с пустым местом справа.
+-->
+@if (isAuthed()) {
+    <section class="lh-page-container pt-6 md:pt-8 pb-0" [attr.aria-label]="'home.server.label' | translate">
+        <div class="server-strip">
+            <div class="server-strip__field">
+                <span class="server-strip__label">{{ "home.server.address" | translate }}</span>
+                <span class="flex flex-wrap items-center gap-2 min-w-0">
+                    <code class="server-strip__ip">{{ serverIp }}</code>
+                    <button
+                        type="button"
+                        class="server-strip__copy"
+                        [class.server-strip__copy--done]="ipCopied()"
+                        (click)="copyServerIp()"
+                    >
+                        <tui-icon [icon]="ipCopied() ? '@tui.check' : '@tui.copy'" class="size-4!" />
+                        {{ (ipCopied() ? "home.server.copied" : "home.server.copy") | translate }}
+                    </button>
+                </span>
+            </div>
+            <div class="server-strip__field">
+                <span class="server-strip__label">{{ "home.server.version" | translate }}</span>
+                <span class="server-strip__value">{{ gameVersion }}</span>
+            </div>
+            <div class="server-strip__actions">
+                <a routerLink="/profile/how-play" class="lh-cta lh-cta--ghost no-underline!">
+                    {{ "home.server.howTo" | translate }}
+                </a>
+                <a [href]="discordInviteUrl" target="_blank" rel="noopener noreferrer" class="lh-cta no-underline!">
+                    <tui-icon icon="@tui.message-circle" class="size-4!" />
+                    Discord
+                </a>
+            </div>
         </div>
-    </div>
+    </section>
 }
 
 <!-- Ближайшее событие календаря (без событий не выводится) -->

@@ -13,7 +13,12 @@
 @if (isLoading) {
     <app-profile-skeleton />
 } @else {
-    <div class="lh-page-container text-lh-primary flex flex-col gap-4">
+    <!--
+        Одна колонка с единым шагом между блоками (gap-6). У дочерних блоков нет своих
+        mt-*: раньше пустые «путь новичка» / «мои события» плюс mt-4 и mt-12 давали
+        ~180px пустоты перед IP и паролем. Пустые блоки скрывает .profile-page > :empty.
+    -->
+    <div class="profile-page lh-page-container text-lh-primary flex flex-col gap-6">
         <!-- Шапка профиля -->
         <div class="grid gap-4 grid-cols-1 xl:grid-cols-[1fr_auto_auto]">
             <!-- Колонка 1: Профиль. Баннер игрока мягко проступает за аватаром -->
@@ -136,12 +141,17 @@
                             </div>
                         </div>
                     } @else if (verified) {
+                        <!-- Не тупик: сразу ссылка на поиск поселения -->
                         <div
-                            class="bg-surface-card rounded-xl px-4 py-3 text-center border border-subtle w-full"
+                            class="bg-surface-card rounded-xl px-4 py-3 border border-subtle w-full flex items-center justify-between gap-3"
                         >
                             <span class="text-lg leading-[27px] text-ink-3">
                                 {{ "profile.settlement.noSettlement" | translate }}
                             </span>
+                            <a [routerLink]="['/settlements']" class="lh-chip shrink-0 no-underline!">
+                                <tui-icon icon="@tui.search" />
+                                {{ "profile.settlement.find" | translate }}
+                            </a>
                         </div>
                     }
 
@@ -150,13 +160,13 @@
                         <div class="profile-public">
                             <app-player-badges [badges]="self.badges" />
                             <div class="profile-public__actions">
-                                <a class="lh-chip" [routerLink]="['/player', self.nickname]">
+                                <a class="lh-chip min-w-0" [routerLink]="['/player', self.nickname]">
                                     <tui-icon icon="@tui.user-round" />
-                                    {{ "player.publicProfile" | translate }}
+                                    <span class="truncate">{{ "player.publicProfile" | translate }}</span>
                                 </a>
-                                <a class="lh-chip" [routerLink]="['/profile/style']">
+                                <a class="lh-chip min-w-0" [routerLink]="['/profile/style']">
                                     <tui-icon icon="@tui.palette" />
-                                    {{ "player.style.short" | translate }}
+                                    <span class="truncate">{{ "player.style.short" | translate }}</span>
                                 </a>
                                 <app-share-button
                                     [url]="'/player/' + self.nickname"
@@ -172,7 +182,7 @@
             <!-- Колонка 2: Голодные игры — только после верификации, как и баланс -->
             @if (getRoleName() !== "profile.role.unverified") {
                 <div
-                    class="bg-surface-card shrink-0 rounded-xl px-4 py-3 border border-subtle text-center flex flex-col justify-between"
+                    class="bg-surface-card shrink-0 rounded-xl px-4 py-3 border border-subtle text-center flex flex-col justify-center gap-2"
                 >
                     <div class="flex items-center justify-center gap-2 mb-1">
                         <tui-icon icon="@tui.flame" class="size-5! text-lh-accent" />
@@ -348,13 +358,12 @@
 
         <!-- Приглашение в поселение, открытое по ссылке -->
         @if (!settlement) {
-            <app-pending-invite-banner class="mt-4" [verified]="verified" />
+            <app-pending-invite-banner [verified]="verified" />
         }
 
         @if (verified) {
             <!-- Путь новичка: прячется, когда всё сделано или игрок его скрыл -->
             <app-newcomer-path
-                class="mt-4"
                 variant="profile"
                 [details]="details"
                 [settlementName]="settlement?.name ?? null"
@@ -362,11 +371,10 @@
             />
 
             <!-- События, на которые игрок записан -->
-            <app-my-events class="mt-4" />
+            <app-my-events />
         } @else {
             <!-- Анкета: ход проверки и что делать дальше -->
             <app-application-card
-                class="mt-4"
                 [status]="details?.status"
                 [rejectionReason]="details?.rejection_reason"
                 [submission]="submission()"
@@ -377,11 +385,11 @@
         }
 
         @if (verified || appState === "approved") {
-            <div class="mt-12">
+            <div>
                 <router-outlet />
             </div>
         } @else {
-            <app-profile-waiting class="mt-8" />
+            <app-profile-waiting />
         }
     </div>
 }

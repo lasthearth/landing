@@ -29,6 +29,7 @@ export const PROFILE_I18N = {
             settlement: {
                 label: 'Поселение',
                 noSettlement: 'Нет поселения',
+                find: 'Найти',
                 role: {
                     leader: 'Глава',
                     resident: 'Житель',
@@ -262,6 +263,7 @@ export const PROFILE_I18N = {
             settlement: {
                 label: 'Settlement',
                 noSettlement: 'No settlement',
+                find: 'Find one',
                 role: {
                     leader: 'Leader',
                     resident: 'Resident',

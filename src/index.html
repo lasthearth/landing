@@ -29,6 +29,31 @@
             })();
         </script>
 
+        <!--
+            Есть ли сохранённая сессия входа (angular-auth-oidc-client хранит её в localStorage
+            под ключом конфигурации, с полем authzData). Пререндер главной — гостевой,
+            а признак входа приходит только после проверки токена и загрузки профиля:
+            без этого флага вошедший игрок секунду видел гостевую карусель.
+        -->
+        <script>
+            (function () {
+                try {
+                    for (var i = 0; i < localStorage.length; i++) {
+                        var raw = localStorage.getItem(localStorage.key(i));
+                        if (raw && raw.indexOf('authzData') !== -1) {
+                            var data = JSON.parse(raw);
+                            if (data && data.authzData) {
+                                document.documentElement.classList.add('lh-has-session');
+                                break;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    // localStorage недоступен — считаем гостем
+                }
+            })();
+        </script>
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
             name="description"

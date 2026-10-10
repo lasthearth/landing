@@ -1,6 +1,14 @@
 export const HOME_I18N = {
     ru: {
         home: {
+            server: {
+                label: 'Подключение к серверу',
+                address: 'Адрес сервера',
+                version: 'Версия игры',
+                copy: 'Копировать',
+                copied: 'Скопировано',
+                howTo: 'Как подключиться',
+            },
             carousel: {
                 nextAria: 'Следующий слайд',
                 prevAria: 'Предыдущий слайд',
@@ -42,15 +50,6 @@ export const HOME_I18N = {
                         body: 'Продуманная система правил и логов защищает игроков от токсичности',
                     },
                 },
-            },
-            quickActions: {
-                start: 'Как начать',
-                whereIp: 'Где IP?',
-                settlements: 'Поселения',
-                gallery: 'Галерея',
-                videos: 'Видео',
-                discord: 'Discord',
-                donate: 'Поддержать',
             },
             news: {
                 title: 'Новости',
@@ -106,6 +105,14 @@ export const HOME_I18N = {
     },
     en: {
         home: {
+            server: {
+                label: 'Server connection',
+                address: 'Server address',
+                version: 'Game version',
+                copy: 'Copy',
+                copied: 'Copied',
+                howTo: 'How to connect',
+            },
             carousel: {
                 nextAria: 'Next slide',
                 prevAria: 'Previous slide',
@@ -147,15 +154,6 @@ export const HOME_I18N = {
                         body: 'A thoughtful rule system and logs protect players from toxicity',
                     },
                 },
-            },
-            quickActions: {
-                start: 'How to start',
-                whereIp: 'Where is IP?',
-                settlements: 'Settlements',
-                gallery: 'Gallery',
-                videos: 'Videos',
-                discord: 'Discord',
-                donate: 'Support',
             },
             news: {
                 empty: 'No news yet...',

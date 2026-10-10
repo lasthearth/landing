@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
@@ -185,31 +185,29 @@ export class HomeComponent {
     ];
 
     /**
-     * Быстрые действия на главной странице — только то, чего нет в меню.
-     *
-     * Гость их не видит: «Начать играть» и Discord стоят прямо на карусели.
-     * Авторизованному игроку — короткий путь к IP сервера (он в профиле,
-     * `/profile/how-play`) и приглашение в Discord. Поселения, галерея
-     * и магазин убраны: они уже есть в главном меню.
+     * Адрес игрового сервера — в полосе подключения для вошедшего игрока.
      */
-    protected readonly quickActions = computed(() =>
-        this.isAuthed()
-            ? [
-                  {
-                      icon: '@tui.globe',
-                      label: 'home.quickActions.whereIp',
-                      route: '/profile/how-play',
-                      external: false,
-                  },
-                  {
-                      icon: '@tui.message-circle',
-                      label: 'home.quickActions.discord',
-                      route: environment.discordInviteUrl,
-                      external: true,
-                  },
-              ]
-            : []
-    );
+    protected readonly serverIp: string = environment.gameServerIp;
+
+    /**
+     * Версия игры, которую требует сервер.
+     */
+    protected readonly gameVersion: string = environment.gameVersion;
+
+    /**
+     * Адрес только что скопирован (кнопка показывает «Скопировано» 2 секунды).
+     */
+    protected readonly ipCopied = signal(false);
+
+    /**
+     * Копирует адрес сервера в буфер обмена.
+     */
+    protected copyServerIp(): void {
+        void navigator.clipboard?.writeText(this.serverIp).then(() => {
+            this.ipCopied.set(true);
+            setTimeout(() => this.ipCopied.set(false), 2000);
+        });
+    }
 
     /**
      * Сколько слайдов карусели держать загруженными по обе стороны от текущего.
@@ -352,6 +350,25 @@ export class HomeComponent {
      * Признак выполнения в браузере.
      */
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+    /**
+     * Документ — для снятия класса-флага сессии с <html>.
+     */
+    private readonly document = inject(DOCUMENT);
+
+    /**
+     * Если сохранённая сессия оказалась недействительной (проверка входа завершилась гостем),
+     * возвращает гостевые блоки, которые скрипт в index.html спрятал заранее (`lh-has-session`).
+     */
+    public constructor() {
+        if (this.isBrowser) {
+            this.userService.authSettled$.pipe(takeUntilDestroyed()).subscribe((isAuth) => {
+                if (!isAuth) {
+                    this.document.documentElement.classList.remove('lh-has-session');
+                }
+            });
+        }
+    }
 
     /**
      * Прокручивает к блоку новостей, когда они загрузились и в адресе есть `#news`.

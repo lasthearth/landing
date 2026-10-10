@@ -3,7 +3,7 @@
 
 <!-- История покупок текущего пользователя -->
 @if (isVerifiedUser) {
-    <div class="flex flex-col gap-3 mb-12">
+    <div class="flex flex-col gap-3 mb-8">
         <h2 class="lh-display text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'profile.purchases.title' | translate }}</h2>
 
         @if (purchases; as list) {
@@ -79,7 +79,7 @@
                 }
             } @else {
                 <p
-                    class="text-2xl text-ink-2 text-center py-8 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
+                    class="text-lg text-ink-2 text-center py-6 bg-lh-primary-2/10 rounded-2xl border border-dashed border-line"
                 >
                     {{ 'profile.purchases.empty' | translate }}
                 </p>
@@ -88,13 +88,13 @@
     </div>
 }
 
-<app-page-header class="block mb-8" [level]="2" [title]="'profile.statistics.title' | translate" />
+<app-page-header class="block mb-4" [level]="2" [title]="'profile.statistics.title' | translate" />
 
 @if (leaderBoard === null) {
     <app-statistics-skeleton />
 }
 @if (leaderBoard) {
-    <div class="lh-chips mt-4 mb-16" role="tablist" [attr.aria-label]="'profile.statistics.title' | translate">
+    <div class="lh-chips mb-6" role="tablist" [attr.aria-label]="'profile.statistics.title' | translate">
         <button
             type="button"
             role="tab"
@@ -125,7 +125,7 @@
     </div>
 
     @if (leaderBoard.length >= 3) {
-        <div class="flex gap-8 lg:gap-16 items-center justify-center mb-16">
+        <div class="flex gap-4 lg:gap-8 items-center justify-center mb-8">
             <app-leader-card
                 [playerName]="leaderBoard[1]?.name ?? ''"
                 ratingPlace="2"
@@ -154,43 +154,43 @@
         </div>
     }
 
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-2">
         @for (item of leaderBoard; track $index; let odd = $odd) {
             @if ($index > 2) {
                 <div
-                    class="ember-row h-24 relative flex items-center size-full bg-[url('/br.webp')] bg-cover bg-center rounded-2xl object-center shadow-lg shadow-night-deep/40 border border-line-strong/25 overflow-hidden"
+                    class="ember-row h-16 relative flex items-center size-full bg-[url('/br.webp')] bg-cover bg-center rounded-2xl object-center shadow-lg shadow-night-deep/40 border border-line-strong/25 overflow-hidden"
                 >
                     <p
-                        class="absolute left-4 lg:left-12 text-2xl md:text-4xl uppercase font-bold text-parchment-3/15 z-10"
+                        class="absolute left-4 lg:left-8 text-xl md:text-3xl uppercase font-bold text-parchment-3/15 z-10"
                     >
                         {{ $index + 1 }}
                     </p>
-                    <div class="flex w-full items-center justify-between px-16 lg:px-28 z-10">
+                    <div class="flex w-full items-center justify-between pl-14 pr-5 lg:pl-20 lg:pr-8 z-10">
                         <div class="flex items-center gap-3">
                             <app-player-avatar
                                 [userId]="item.user_id"
                                 [src]="getUserAvatar(item.user_id)"
-                                class="size-10 sm:size-12"
+                                class="size-9 sm:size-10"
                                 [alt]="'profile.statistics.avatarAlt' | translate"
                             />
                             <a
-                                class="font-semibold text-parchment-3 text-xl sm:text-2xl hover:underline underline-offset-4"
+                                class="font-semibold text-parchment-3 text-lg sm:text-xl hover:underline underline-offset-4"
                                 [routerLink]="['/player', item.name]"
                                 >{{ item.name }}</a
                             >
                         </div>
                         <div class="flex flex-col items-end">
                             @if (activeItemIndex === 0) {
-                                <span class="font-extrabold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.deaths }}</span>
-                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.deaths' | translate }}</span>
+                                <span class="font-extrabold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">{{ item.deaths }}</span>
+                                <span class="text-sm text-parchment-3/60">{{ 'profile.statistics.typeLabels.deaths' | translate }}</span>
                             }
                             @if (activeItemIndex === 1) {
-                                <span class="font-bold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.hours_played }}</span>
-                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.hours' | translate }}</span>
+                                <span class="font-bold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">{{ item.hours_played }}</span>
+                                <span class="text-sm text-parchment-3/60">{{ 'profile.statistics.typeLabels.hours' | translate }}</span>
                             }
                             @if (activeItemIndex === 2) {
-                                <span class="font-bold text-3xl sm:text-4xl text-lh-accent text-shadow-lg">{{ item.kills }}</span>
-                                <span class="text-base sm:text-base text-parchment-3/50">{{ 'profile.statistics.typeLabels.kills' | translate }}</span>
+                                <span class="font-bold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">{{ item.kills }}</span>
+                                <span class="text-sm text-parchment-3/60">{{ 'profile.statistics.typeLabels.kills' | translate }}</span>
                             }
                         </div>
                     </div>
