@@ -172,6 +172,9 @@ export class DiplomacyPageComponent {
             return;
         }
 
+        // Страница дипломатии показывает канал на экране — опрашиваем часто.
+        this.destroyRef.onDestroy(this.chatService.requestActivePolling());
+
         const fragment = this.route.snapshot.fragment;
         this.targetId.set(fragment?.startsWith('statement-') ? fragment.slice('statement-'.length) : null);
 

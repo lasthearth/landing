@@ -266,6 +266,19 @@ export class GameChatWidgetComponent implements OnInit {
             this.audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
         }
 
+        // Пока виджет раскрыт — частый опрос; свёрнутый виджет опрашивает раз в минуту
+        // (только для счётчика непрочитанных).
+        let releaseActivePolling: (() => void) | null = null;
+        effect(() => {
+            if (this.isExpanded()) {
+                releaseActivePolling ??= this.chatService.requestActivePolling();
+            } else {
+                releaseActivePolling?.();
+                releaseActivePolling = null;
+            }
+        });
+        this.destroyRef.onDestroy(() => releaseActivePolling?.());
+
         // effect() требует контекст инъекции, поэтому создаётся здесь, а не в ngOnInit.
         effect(() => {
             const expanded = this.isExpanded();

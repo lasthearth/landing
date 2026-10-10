@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpContext } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, shareReplay, tap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { CreateNewsRequest, NewsDto, NewsViewResponse } from '../model/news.types';
@@ -26,6 +26,23 @@ export class NewsApiService {
     private readonly baseUrl = environment.apiUrl;
 
     /**
+     * Сколько живёт общий кэш списка новостей.
+     * Список запрашивают главная, баннер объявлений, страница новости и анкета —
+     * без кэша на одной загрузке страницы уходило несколько одинаковых запросов по 50 записей.
+     */
+    private static readonly LIST_CACHE_MS = 60_000;
+
+    /**
+     * Общий поток списка новостей (последний ответ раздаётся всем подписчикам).
+     */
+    private listCache: Observable<NewsDto[]> | null = null;
+
+    /**
+     * Время запуска запроса, лежащего в кэше.
+     */
+    private listCachedAt = 0;
+
+    /**
      * Получает список всех новостей.
      *
      * Вспомогательный запрос: при ошибке алерт не показывается
@@ -34,13 +51,24 @@ export class NewsApiService {
      * @returns Observable с массивом DTO новостей.
      */
     getList(): Observable<NewsDto[]> {
-        return this.http
-            .get<{ news: NewsDto[] }>(`${this.baseUrl}/news`, {
-                // По умолчанию API отдаёт 15 записей; 50 — максимум по контракту.
-                params: { page_size: 50 },
-                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
-            })
-            .pipe(map((response) => response.news));
+        const now = Date.now();
+
+        if (!this.listCache || now - this.listCachedAt > NewsApiService.LIST_CACHE_MS) {
+            this.listCachedAt = now;
+            this.listCache = this.http
+                .get<{ news: NewsDto[] }>(`${this.baseUrl}/news`, {
+                    // По умолчанию API отдаёт 15 записей; 50 — максимум по контракту.
+                    params: { page_size: 50 },
+                    context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+                })
+                .pipe(
+                    map((response) => response.news),
+                    tap({ error: () => (this.listCache = null) }),
+                    shareReplay({ bufferSize: 1, refCount: false })
+                );
+        }
+
+        return this.listCache;
     }
 
     /**
@@ -80,7 +108,7 @@ export class NewsApiService {
      * @returns Observable с созданной новостью.
      */
     create(request: CreateNewsRequest): Observable<NewsDto> {
-        return this.http.post<NewsDto>(`${this.baseUrl}/news`, request);
+        return this.http.post<NewsDto>(`${this.baseUrl}/news`, request).pipe(tap(() => (this.listCache = null)));
     }
 
     /**
@@ -90,7 +118,7 @@ export class NewsApiService {
      * @returns Observable с пустым результатом.
      */
     delete(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/news/${id}`);
+        return this.http.delete<void>(`${this.baseUrl}/news/${id}`).pipe(tap(() => (this.listCache = null)));
     }
 
     /**
