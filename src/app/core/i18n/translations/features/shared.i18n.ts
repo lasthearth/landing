@@ -15,7 +15,6 @@ export const SHARED_I18N = {
                 title: 'Ваш путь на сервер',
                 titleDone: 'Всё готово — до встречи в игре',
                 progress: 'Готово {{done}} из {{total}}',
-                hide: 'Скрыть',
                 optional: 'по желанию',
                 state: {
                     done: 'сделано',
@@ -280,7 +279,6 @@ export const SHARED_I18N = {
                 title: 'Your way onto the server',
                 titleDone: 'All set — see you in game',
                 progress: '{{done}} of {{total}} done',
-                hide: 'Hide',
                 optional: 'optional',
                 state: {
                     done: 'done',
