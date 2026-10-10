@@ -230,6 +230,7 @@
                             [routerLink]="link.route"
                             routerLinkActive="nav-button--active"
                             class="nav-button relative md:w-auto px-3 gap-1.5"
+                            [class.lh-guest-only]="link.guestOnly"
                         >
                             <tui-icon [icon]="link.icon" class="size-4!" />
                             <span>{{ link.labelKey | translate }}</span>

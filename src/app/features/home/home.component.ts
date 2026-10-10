@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TuiCarousel, TuiPagination } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
@@ -350,25 +350,6 @@ export class HomeComponent {
      * Признак выполнения в браузере.
      */
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-
-    /**
-     * Документ — для снятия класса-флага сессии с <html>.
-     */
-    private readonly document = inject(DOCUMENT);
-
-    /**
-     * Если сохранённая сессия оказалась недействительной (проверка входа завершилась гостем),
-     * возвращает гостевые блоки, которые скрипт в index.html спрятал заранее (`lh-has-session`).
-     */
-    public constructor() {
-        if (this.isBrowser) {
-            this.userService.authSettled$.pipe(takeUntilDestroyed()).subscribe((isAuth) => {
-                if (!isAuth) {
-                    this.document.documentElement.classList.remove('lh-has-session');
-                }
-            });
-        }
-    }
 
     /**
      * Прокручивает к блоку новостей, когда они загрузились и в адресе есть `#news`.

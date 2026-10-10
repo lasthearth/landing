@@ -3,6 +3,7 @@ import { RouteKeys } from './enums/route-keys';
 import { routeSeoData } from './seo-data';
 import { adminGuard } from '../core/guards/admin.guard';
 import { userGuard } from '../core/guards/user.guard';
+import { guestGuard } from '../core/guards/guest.guard';
 import { loadPage } from '@core/i18n';
 
 /**
@@ -125,6 +126,7 @@ export const routes: Routes = [
                 path: 'start-game',
                 loadComponent: () =>
                     import('../features/start-game/start-game.component').then((m) => m.StartGameComponent),
+                canActivate: [guestGuard],
                 data: { route_keys: RouteKeys.startGame, seo: routeSeoData.startGame },
             },
             {

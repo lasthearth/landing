@@ -1,10 +1,19 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, computed, inject, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    HostListener,
+    PLATFORM_ID,
+    computed,
+    inject,
+    signal,
+} from '@angular/core';
 import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, DOCUMENT, NgClass, isPlatformBrowser } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { RouterLink, RouterLinkActive, NavigationEnd, Router } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { HEADER_MAIN_LINKS } from './config/header-main-links.constant';
 import { HEADER_COMMUNITY_LINKS } from './config/header-community-links.constant';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
@@ -162,10 +171,22 @@ export class HeaderComponent {
     protected readonly settlementVerifications$ = this.notificationService.settlementVerifications$;
 
     /**
-     * Инициализирует компонент класса {@link LandingComponent}
+     * Запускает отслеживание нового контента. Если сохранённая сессия оказалась
+     * недействительной (проверка входа завершилась гостем), возвращает гостевые
+     * блоки, которые скрипт в index.html спрятал заранее (`lh-has-session`).
+     * Шапка есть на каждой странице, поэтому флаг снимается везде, а не только на главной.
      */
     public constructor() {
         this.newContent.start();
+
+        if (isPlatformBrowser(inject(PLATFORM_ID))) {
+            const root = inject(DOCUMENT).documentElement;
+            this.userService.authSettled$.pipe(takeUntilDestroyed()).subscribe((isAuth) => {
+                if (!isAuth) {
+                    root.classList.remove('lh-has-session');
+                }
+            });
+        }
     }
 
     /**
