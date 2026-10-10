@@ -87,7 +87,7 @@
                         @if (item.lock && item.price) {
                             <span class="style-banner__price">
                                 <img src="/splinter-of-spark.webp" alt="" class="style-banner__shard" />
-                                {{ item.price }}
+                                {{ item.price | amount }}
                             </span>
                         } @else if (item.lock) {
                             <span class="style-banner__lock"><tui-icon icon="@tui.lock" class="size-4!" /></span>

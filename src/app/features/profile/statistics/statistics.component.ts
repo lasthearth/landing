@@ -13,7 +13,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { LeaderCardComponent } from './leader-card/leader-card.component';
 import { StatisticsSkeletonComponent } from '@shared/ui/skeletons';
 import { TUI_IS_MOBILE } from '@taiga-ui/cdk';
-import { I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { DonateService, IPurchase } from '@entities/donate';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { RouterLink } from '@angular/router';
@@ -27,7 +27,7 @@ export type TypeLabel = string;
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [HungerGamesCardComponent, 
+    imports: [AmountPipe, HungerGamesCardComponent, 
         RouterLink,
         PageHeaderComponent,
         TuiTable,

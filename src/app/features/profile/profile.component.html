@@ -181,7 +181,7 @@
                             class="size-5 object-contain spark-glow"
                         />
                         <span class="profile-metric__label">{{ "profile.currency.shards" | translate }}</span>
-                        <span class="profile-metric__value">{{ balance ?? "—" }}</span>
+                        <span class="profile-metric__value">{{ (balance | amount) || "—" }}</span>
                         <button type="button" class="profile-metric__action" (click)="howToBuy()">
                             <tui-icon icon="@tui.circle-plus" class="size-4!" />
                             {{ "profile.currency.topUp" | translate }}
@@ -192,14 +192,14 @@
                         <span class="profile-metric__label">
                             {{ "profile.stats.deaths" | translate }}
                         </span>
-                        <span class="profile-metric__value">{{ stats?.deaths ?? "—" }}</span>
+                        <span class="profile-metric__value">{{ (stats?.deaths | amount) || "—" }}</span>
                     </div>
                     <div class="profile-metric">
                         <tui-icon icon="@tui.swords" class="size-5! text-parchment-dim" />
                         <span class="profile-metric__label">
                             {{ "profile.stats.kills" | translate }}
                         </span>
-                        <span class="profile-metric__value">{{ stats?.kills ?? "—" }}</span>
+                        <span class="profile-metric__value">{{ (stats?.kills | amount) || "—" }}</span>
                         @if (self?.killsRank; as rank) {
                             <span class="profile-rank">
                                 {{ "player.stats.rank" | translate: { rank: rank, total: self?.totalPlayers } }}
@@ -212,7 +212,7 @@
                             {{ "profile.stats.hours" | translate }}
                         </span>
                         <span class="profile-metric__value">
-                            {{ stats ? (stats.hours_played | number: "1.0-1") : "—" }}
+                            {{ stats ? (stats.hours_played | amount: 1) : "—" }}
                         </span>
                         @if (self?.hoursRank; as rank) {
                             <span class="profile-rank">

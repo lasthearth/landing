@@ -4,7 +4,7 @@ import { catchError, defaultIfEmpty, of, switchMap, take } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
 import { UserService } from '@entities/user';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 
 /**
  * Карточка «Голодных игр» в разделе «Статистика» профиля:
@@ -14,7 +14,7 @@ import { TranslatePipe } from '@core/i18n';
 @Component({
     selector: 'app-hunger-games-card',
     templateUrl: './hunger-games-card.component.html',
-    imports: [TuiIcon, TranslatePipe],
+    imports: [AmountPipe, TuiIcon, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HungerGamesCardComponent {

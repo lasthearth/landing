@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { DonateService } from '@entities/donate';
 import { UserService } from '@entities/user/api/user.service';
 import { TitlesComponent } from './components/titles/titles.component';
@@ -18,7 +18,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
  */
 @Component({
     selector: 'app-market',
-    imports: [PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe],
+    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -28,7 +28,7 @@
 
                             <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
                                 <span class="inline-flex items-center gap-1 text-lg font-bold text-lh-primary">
-                                    {{ purchase.pricePaid }}
+                                    {{ purchase.pricePaid | amount }}
                                     <img
                                         src="/splinter-of-spark.webp"
                                         [alt]="'profile.currency.shardAlt' | translate"
@@ -202,7 +202,7 @@
                         <div class="flex flex-col items-end">
                             @if (activeItemIndex === 0) {
                                 <span class="font-extrabold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">
-                                    {{ item.deaths }}
+                                    {{ item.deaths | amount }}
                                 </span>
                                 <span class="text-sm text-parchment-3/60">
                                     {{ "profile.statistics.typeLabels.deaths" | translate }}
@@ -210,7 +210,7 @@
                             }
                             @if (activeItemIndex === 1) {
                                 <span class="font-bold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">
-                                    {{ item.hours_played }}
+                                    {{ item.hours_played | amount }}
                                 </span>
                                 <span class="text-sm text-parchment-3/60">
                                     {{ "profile.statistics.typeLabels.hours" | translate }}
@@ -218,7 +218,7 @@
                             }
                             @if (activeItemIndex === 2) {
                                 <span class="font-bold text-2xl sm:text-3xl text-lh-accent text-shadow-lg">
-                                    {{ item.kills }}
+                                    {{ item.kills | amount }}
                                 </span>
                                 <span class="text-sm text-parchment-3/60">
                                     {{ "profile.statistics.typeLabels.kills" | translate }}

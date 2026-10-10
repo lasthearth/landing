@@ -24,7 +24,7 @@ import { PlayerAvatarComponent } from '@entities/player-style';
 import { DonateService } from '@entities/donate';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign-out-confirm.component';
-import { I18nService, Language, TranslatePipe } from '@core/i18n';
+import { I18nService, Language, TranslatePipe, AmountPipe } from '@core/i18n';
 import { ThemeService } from '@core/services/theme.service';
 import { formatServerTime } from './lib/format-server-time.function';
 import { NewContentService } from '@features/new-content';
@@ -36,7 +36,7 @@ import { NotificationBellComponent } from '@features/notifications';
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [
+    imports: [AmountPipe, 
         TuiProgress,
         AsyncPipe,
         TuiIcon,

@@ -11,9 +11,8 @@ import {
 import { TuiHint, TuiIcon } from '@taiga-ui/core';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DecimalPipe } from '@angular/common';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { ISettlement, getMemberRoleNames } from '@entities/settlement';
 import { IPlayer } from '../../model/i-player';
 import { IPlayerStats } from '../../model/i-player-stats';
@@ -38,7 +37,7 @@ import { PlayerAvatarComponent, PlayerLookService } from '@entities/player-style
     standalone: true,
     templateUrl: './player-chip.component.html',
     styleUrl: './player-chip.component.less',
-    imports: [RouterLink, TuiHint, TuiIcon, DecimalPipe, PlayerAvatarComponent, TranslatePipe, RelativeTimeComponent],
+    imports: [AmountPipe, RouterLink, TuiHint, TuiIcon, PlayerAvatarComponent, TranslatePipe, RelativeTimeComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerChipComponent {

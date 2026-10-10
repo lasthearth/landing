@@ -83,7 +83,7 @@
                                     alt="Осколок Искры"
                                     class="h-6 w-6 sm:h-8 sm:w-8 object-contain spark-glow"
                                 />
-                                <span class="text-lg sm:text-2xl font-bold">{{ (balance$ | async) ?? "—" }}</span>
+                                <span class="text-lg sm:text-2xl font-bold">{{ ((balance$ | async) | amount) || "—" }}</span>
                             </div>
                         </div>
                         @if (userService.userImage) {

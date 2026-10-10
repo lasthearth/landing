@@ -1,0 +1,14 @@
+{
+  "routes": {
+    "/": {},
+    "/404": {},
+    "/faq": {},
+    "/home": {},
+    "/market": {},
+    "/privacy-policy": {},
+    "/public-offer": {},
+    "/rules": {},
+    "/settlements": {},
+    "/start-game": {}
+  }
+}

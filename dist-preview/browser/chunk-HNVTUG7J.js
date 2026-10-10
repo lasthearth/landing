@@ -1,0 +1,1 @@
+function t(r){if(!r)return"/default-avatar.webp";if(typeof r=="string")return r;if(typeof r=="object"&&r!==null&&"original"in r){let n=r.original;if(typeof n=="string")return n}return"/default-avatar.webp"}export{t as a};

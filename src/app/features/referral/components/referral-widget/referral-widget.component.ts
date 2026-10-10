@@ -6,7 +6,7 @@ import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { catchError, combineLatest, map, Observable, of, shareReplay, startWith, switchMap } from 'rxjs';
 import { ReferralService } from '@entities/referral';
 import { UserService } from '@entities/user';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 
 /**
  * View-model виджета реферальной программы.
@@ -37,7 +37,7 @@ interface IReferralWidgetViewModel {
 @Component({
     selector: 'app-referral-widget',
     standalone: true,
-    imports: [CommonModule, AsyncPipe, TuiIcon, TuiButton, TranslatePipe, EmptyStateComponent],
+    imports: [AmountPipe, CommonModule, AsyncPipe, TuiIcon, TuiButton, TranslatePipe, EmptyStateComponent],
     templateUrl: './referral-widget.component.html',
     styleUrl: './referral-widget.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

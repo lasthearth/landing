@@ -50,15 +50,15 @@
                 <dl class="grid grid-cols-3 gap-2 w-full m-0">
                     <div class="flex flex-col gap-0.5 rounded-lg bg-surface-3/50 px-3 py-2">
                         <dt class="text-sm text-ink-3">{{ "profile.hungerGames.elo" | translate }}</dt>
-                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.elo }}</dd>
+                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.elo | amount }}</dd>
                     </div>
                     <div class="flex flex-col gap-0.5 rounded-lg bg-surface-3/50 px-3 py-2">
                         <dt class="text-sm text-ink-3">{{ "profile.hungerGames.wins" | translate }}</dt>
-                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.wins }}</dd>
+                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.wins | amount }}</dd>
                     </div>
                     <div class="flex flex-col gap-0.5 rounded-lg bg-surface-3/50 px-3 py-2">
                         <dt class="text-sm text-ink-3">{{ "profile.hungerGames.kills" | translate }}</dt>
-                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.kills }}</dd>
+                        <dd class="m-0 text-xl font-bold tabular-nums">{{ hgStats.kills | amount }}</dd>
                     </div>
                 </dl>
                 @if (hgStats.rank > 0) {
@@ -71,7 +71,7 @@
                             <span class="text-lh-primary-2/40">•</span>
                             <span>
                                 {{ "profile.hungerGames.reward" | translate }}
-                                <span class="font-bold text-lh-accent">{{ hgStats.reward_coins }}</span>
+                                <span class="font-bold text-lh-accent">{{ hgStats.reward_coins | amount }}</span>
                             </span>
                         }
                     </p>

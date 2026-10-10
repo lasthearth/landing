@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 import {
     BANNER_EFFECTS,
     BANNER_NONE,
@@ -37,7 +37,7 @@ import { PlayerProfile } from '../../model/player-profile';
     selector: 'app-profile-style-editor',
     templateUrl: './profile-style-editor.component.html',
     styleUrl: './profile-style-editor.component.less',
-    imports: [RouterLink, TuiIcon, TranslatePipe, PlayerFrameComponent, ProfileBannerComponent],
+    imports: [AmountPipe, RouterLink, TuiIcon, TranslatePipe, PlayerFrameComponent, ProfileBannerComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileStyleEditorComponent {

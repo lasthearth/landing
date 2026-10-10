@@ -294,12 +294,12 @@
                                             {{ entry.rank ?? idx + 1 }}
                                         </td>
                                         <td class="p-4 text-lh-primary font-medium">{{ entry.playerName }}</td>
-                                        <td class="p-4 text-lh-accent text-center font-bold">{{ entry.elo }}</td>
+                                        <td class="p-4 text-lh-accent text-center font-bold">{{ entry.elo | amount }}</td>
                                         <td class="p-4 text-lh-primary text-center">{{ entry.wins }}</td>
-                                        <td class="p-4 text-lh-primary text-center">{{ entry.kills }}</td>
+                                        <td class="p-4 text-lh-primary text-center">{{ entry.kills | amount }}</td>
                                         <td class="p-4 text-lh-accent text-center font-bold">
                                             @if (entry.rewardCoins) {
-                                                {{ entry.rewardCoins }}
+                                                {{ entry.rewardCoins | amount }}
                                             } @else {
                                                 —
                                             }
@@ -354,9 +354,9 @@
                                             {{ entry.rank ?? idx + 1 }}
                                         </td>
                                         <td class="p-4 text-lh-primary font-medium">{{ entry.playerName }}</td>
-                                        <td class="p-4 text-lh-accent text-center font-bold">{{ entry.elo }}</td>
+                                        <td class="p-4 text-lh-accent text-center font-bold">{{ entry.elo | amount }}</td>
                                         <td class="p-4 text-lh-primary text-center">{{ entry.wins }}</td>
-                                        <td class="p-4 text-lh-primary text-center">{{ entry.kills }}</td>
+                                        <td class="p-4 text-lh-primary text-center">{{ entry.kills | amount }}</td>
                                     </tr>
                                 }
                             </tbody>

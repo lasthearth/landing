@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
-import { AsyncPipe, DecimalPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { HttpContext } from '@angular/common/http';
 import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
@@ -33,7 +33,7 @@ import {
     tap,
 } from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
-import { I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ChangeUsernameComponent } from './change-username/change-username.component';
@@ -62,14 +62,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComponent } from '@entities/player-style';
 @Component({
     standalone: true,
-    imports: [
+    imports: [AmountPipe, 
         TuiIcon,
         RouterOutlet,
         AsyncPipe,
         PolymorpheusOutlet,
         TuiPreview,
         TuiButton,
-        DecimalPipe,
         ProfileSkeletonComponent,
         PlayerAvatarComponent,
         ProfileBannerComponent,

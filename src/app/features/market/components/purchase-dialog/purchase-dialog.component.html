@@ -10,7 +10,7 @@
             <h3 class="text-center sm:text-left text-lg md:text-2xl font-bold text-ink leading-tight">{{ data.title }}</h3>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-7 w-7 object-contain" />
-                <span class="text-lg sm:text-xl font-bold text-ink">{{ activePrice }}</span>
+                <span class="text-lg sm:text-xl font-bold text-ink">{{ activePrice | amount }}</span>
                 @if (data.currency === "rubles") {
                     <span class="text-lg text-ink-2">{{ 'market.purchaseDialog.currencyRub' | translate }}</span>
                 }
@@ -107,7 +107,7 @@
             </span>
             <div class="flex items-center gap-2">
                 <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
-                <span class="text-lg sm:text-xl font-bold text-ink">{{ activePrice }}</span>
+                <span class="text-lg sm:text-xl font-bold text-ink">{{ activePrice | amount }}</span>
             </div>
         </div>
 
@@ -117,7 +117,7 @@
                 <div class="flex items-center gap-2">
                     <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
                     <span class="font-bold" [class.text-lh-danger]="missingAmount() > 0" [class.text-ink]="missingAmount() === 0">
-                        {{ balance() }}
+                        {{ balance() | amount }}
                     </span>
                 </div>
             </div>
@@ -130,7 +130,7 @@
 
         @if (missingAmount() > 0) {
             <p class="text-base sm:text-lg font-bold text-lh-danger">
-                {{ 'market.purchaseDialog.notEnough' | translate:{ amount: missingAmount() } }}
+                {{ 'market.purchaseDialog.notEnough' | translate:{ amount: (missingAmount() | amount) } }}
             </p>
         }
     </div>

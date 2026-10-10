@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -7,7 +6,7 @@ import { catchError, filter, of, switchMap } from 'rxjs';
 
 import { TuiSlider } from '@taiga-ui/kit/components/slider';
 import { TuiIcon } from '@taiga-ui/core';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { UserService } from '@entities/user/api/user.service';
 import { IPlayer } from '@entities/user/model/i-player';
@@ -23,7 +22,7 @@ import { environment } from '@core/config/environments/environment';
 @Component({
     selector: 'app-how-to-buy',
     standalone: true,
-    imports: [FormsModule, DecimalPipe, TuiSlider, TuiIcon, LHInputComponent, TranslatePipe],
+    imports: [AmountPipe, FormsModule, TuiSlider, TuiIcon, LHInputComponent, TranslatePipe],
     templateUrl: './how-to-buy.component.html',
     styleUrl: './how-to-buy.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

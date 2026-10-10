@@ -1,13 +1,13 @@
 import { NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
 import { PlayerAvatarComponent } from '@entities/player-style';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { RouterLink } from '@angular/router';
 
 @Component({
     standalone: true,
     selector: 'app-leader-card',
-    imports: [RouterLink, PlayerAvatarComponent, TranslatePipe],
+    imports: [AmountPipe, RouterLink, PlayerAvatarComponent, TranslatePipe],
     templateUrl: './leader-card.component.html',
     styleUrl: './leader-card.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

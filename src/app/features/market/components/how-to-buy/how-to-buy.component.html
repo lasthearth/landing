@@ -15,7 +15,7 @@
                     class="h-7 sm:h-8 w-auto"
                 />
                 <span class="text-3xl sm:text-4xl font-extrabold text-lh-accent">
-                    {{ shards() | number }}
+                    {{ shards() | amount }}
                 </span>
             </div>
             <span class="text-lh-primary/60 text-base font-medium">{{ "market.howToBuy.shards" | translate }}</span>
@@ -24,8 +24,8 @@
         <!-- Слайдер -->
         <div class="flex flex-col gap-2">
             <div class="flex justify-between text-lh-primary/70 text-base font-medium">
-                <span>{{ minAmount }} ₽</span>
-                <span>{{ maxAmount }} ₽</span>
+                <span>{{ minAmount | amount }} ₽</span>
+                <span>{{ maxAmount | amount }} ₽</span>
             </div>
             <input
                 type="range"
@@ -66,7 +66,7 @@
                         [class.border-line]="rubles() !== amount"
                         [class.hover:bg-surface-4]="rubles() !== amount"
                     >
-                        {{ amount | number }} ₽
+                        {{ amount | amount }} ₽
                     </button>
                 }
             </div>
@@ -75,7 +75,7 @@
                 {{ "market.howToBuy.rate" | translate }}:
                 <span class="text-lh-accent font-bold">{{ "market.howToBuy.rateValue" | translate }}</span>
                 <span class="mx-1">•</span>
-                {{ "market.howToBuy.range" | translate: { min: minAmount, max: maxAmount } }}
+                {{ "market.howToBuy.range" | translate: { min: (minAmount | amount), max: (maxAmount | amount) } }}
             </p>
         </div>
     </div>
@@ -116,7 +116,7 @@
                 <div class="flex items-start gap-4 text-base">
                     <tui-icon icon="@tui.badge-alert" class="size-8! text-lh-accent shrink-0 mt-0.5" />
                     <span class="text-lh-primary/80">
-                        {{ "market.howToBuy.sbp.warning" | translate: { amount: rubles(), nickname: username() } }}
+                        {{ "market.howToBuy.sbp.warning" | translate: { amount: (rubles() | amount), nickname: username() } }}
                     </span>
                 </div>
 
@@ -169,7 +169,7 @@
                     <div class="flex items-start gap-2">
                         <tui-icon icon="@tui.check" class="size-5! text-sber shrink-0 mt-0.5" />
                         <span>
-                            {{ "market.howToBuy.sbp.step3" | translate: { amount: rubles(), bank: sbpBank } }}
+                            {{ "market.howToBuy.sbp.step3" | translate: { amount: (rubles() | amount), bank: sbpBank } }}
                         </span>
                     </div>
                     <div class="flex items-start gap-2">
@@ -210,7 +210,7 @@
                     <div class="flex items-start gap-3">
                         <tui-icon icon="@tui.badge-alert" class="size-6! text-lh-accent shrink-0 mt-0.5" />
                         <span class="text-lh-primary/80">
-                            {{ "market.howToBuy.boosty.total" | translate: { total: boostyTotal() } }}
+                            {{ "market.howToBuy.boosty.total" | translate: { total: (boostyTotal() | amount) } }}
                         </span>
                     </div>
                     <div class="flex items-start gap-3">
@@ -227,7 +227,7 @@
                     class="lh-secondary-button !no-underline w-full py-3 px-4 sm:px-6 text-lg sm:text-xl font-bold"
                 >
                     <tui-icon icon="@tui.external-link" class="size-5!" />
-                    {{ "market.howToBuy.boosty.button" | translate: { total: boostyTotal() } }}
+                    {{ "market.howToBuy.boosty.button" | translate: { total: (boostyTotal() | amount) } }}
                 </a>
             </div>
         </div>

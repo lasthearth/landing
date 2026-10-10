@@ -4,7 +4,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { catchError, of } from 'rxjs';
 import { DonateService, IShopItem } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
-import { TranslatePipe } from '@core/i18n';
+import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
@@ -22,7 +22,7 @@ import { getRarityByPrice } from '../../lib/get-rarity-by-price.function';
  */
 @Component({
     selector: 'app-kits',
-    imports: [KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
+    imports: [AmountPipe, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
     templateUrl: './kits.component.html',
     styleUrl: './kits.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

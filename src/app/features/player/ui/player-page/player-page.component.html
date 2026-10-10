@@ -99,7 +99,7 @@
                 <section class="player-stats" [attr.aria-label]="'player.stats.title' | translate">
                     <div class="player-stat">
                         <tui-icon icon="@tui.clock" class="player-stat__icon" />
-                        <span class="player-stat__value">{{ p.hours.toFixed(0) }}</span>
+                        <span class="player-stat__value">{{ p.hours | amount }}</span>
                         <span class="player-stat__label">{{ "player.stats.hours" | translate }}</span>
                         <span class="player-stat__rank">
                             {{ "player.stats.rank" | translate: { rank: p.hoursRank, total: p.totalPlayers } }}
@@ -107,7 +107,7 @@
                     </div>
                     <div class="player-stat">
                         <tui-icon icon="@tui.swords" class="player-stat__icon" />
-                        <span class="player-stat__value">{{ p.kills }}</span>
+                        <span class="player-stat__value">{{ p.kills | amount }}</span>
                         <span class="player-stat__label">{{ "player.stats.kills" | translate }}</span>
                         <span class="player-stat__rank">
                             {{ "player.stats.rank" | translate: { rank: p.killsRank, total: p.totalPlayers } }}
@@ -115,7 +115,7 @@
                     </div>
                     <div class="player-stat">
                         <tui-icon icon="@tui.skull" class="player-stat__icon" />
-                        <span class="player-stat__value">{{ p.deaths }}</span>
+                        <span class="player-stat__value">{{ p.deaths | amount }}</span>
                         <span class="player-stat__label">{{ "player.stats.deaths" | translate }}</span>
                         @if (p.hours > 0) {
                             <span class="player-stat__rank">
@@ -141,15 +141,15 @@
                         <dl class="player-hg__facts">
                             <div>
                                 <dt>{{ "player.hungerGames.elo" | translate }}</dt>
-                                <dd>{{ hg.elo }}</dd>
+                                <dd>{{ hg.elo | amount }}</dd>
                             </div>
                             <div>
                                 <dt>{{ "player.hungerGames.wins" | translate }}</dt>
-                                <dd>{{ hg.wins }}</dd>
+                                <dd>{{ hg.wins | amount }}</dd>
                             </div>
                             <div>
                                 <dt>{{ "player.hungerGames.kills" | translate }}</dt>
-                                <dd>{{ hg.kills }}</dd>
+                                <dd>{{ hg.kills | amount }}</dd>
                             </div>
                             @if (hg.rank > 0) {
                                 <div>

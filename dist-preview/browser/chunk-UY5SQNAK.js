@@ -1,0 +1,1 @@
+import{Kb as i}from"./chunk-JLADMSJV.js";var c=(()=>{let e=class e{};e.\u0275fac=function(r){return new(r||e)},e.\u0275dir=i({type:e,selectors:[["","tuiItem",""]]});let t=e;return t})();export{c as a};
