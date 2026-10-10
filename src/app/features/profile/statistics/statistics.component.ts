@@ -1,5 +1,6 @@
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { HungerGamesCardComponent } from '../ui/hunger-games-card/hunger-games-card.component';
 import { BehaviorSubject, catchError, defaultIfEmpty, Observable, of, switchMap, tap } from 'rxjs';
 import { LeaderBoardType } from '@entities/user';
 import { ILeaderBoard } from '@entities/user';
@@ -26,7 +27,7 @@ export type TypeLabel = string;
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [
+    imports: [HungerGamesCardComponent, 
         RouterLink,
         PageHeaderComponent,
         TuiTable,

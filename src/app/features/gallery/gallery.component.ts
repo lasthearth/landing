@@ -17,6 +17,7 @@ import { ImageViewerComponent, ImageViewerItem } from '@shared/ui/image-viewer';
 import { DiscordGalleryImage, DiscordGalleryService } from '@shared/lib/discord-gallery/discord-gallery.service';
 import { GalleryImageComponent } from './ui/gallery-image/gallery-image.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
 
 /**
  * Сколько скриншотов показывать сразу (без «свежего кадра»).
@@ -39,7 +40,7 @@ const STEP = 24;
 @Component({
     selector: 'app-gallery',
     standalone: true,
-    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, GalleryImageComponent, RelativeTimeComponent, ImageViewerComponent],
+    imports: [PageHeaderComponent, EmptyStateComponent, TuiIcon, TranslatePipe, GalleryImageComponent, RelativeTimeComponent, ImageViewerComponent],
     templateUrl: './gallery.component.html',
     styleUrl: './gallery.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

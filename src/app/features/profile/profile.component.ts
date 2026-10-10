@@ -8,7 +8,6 @@ import {
     TemplateRef,
     ViewChild,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
 import { AsyncPipe, DecimalPipe, NgIf } from '@angular/common';
@@ -31,7 +30,6 @@ import {
     startWith,
     Subject,
     switchMap,
-    take,
     tap,
 } from 'rxjs';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
@@ -54,7 +52,6 @@ import {
     SettlementBadgeTone,
     SettlementDisplayNamePipe,
 } from '@entities/settlement';
-import { HungerGamesService, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
 import { NewcomerPathComponent } from '@features/onboarding';
 import { PlayerBadgesComponent, PlayerProfile, PlayerProfileService } from '@features/player';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
@@ -109,7 +106,6 @@ export class ProfileComponent {
 
     protected readonly settlementService = inject(SettlementService);
 
-    private readonly hungerGamesService = inject(HungerGamesService);
 
     protected readonly userData: IUser = this.userService.getUserData();
 
@@ -275,58 +271,6 @@ export class ProfileComponent {
     );
 
     /**
-     * Список всех сезонов голодных игр.
-     */
-    protected readonly hgSeasonsList = signal<ISeasonInfo[]>([]);
-
-    /**
-     * Индекс выбранного сезона в списке.
-     */
-    protected readonly selectedHgIndex = signal<number>(0);
-
-    /**
-     * Выбранный сезон голодных игр.
-     */
-    protected readonly hungerGamesSeason = computed(() => {
-        const list = this.hgSeasonsList();
-        const idx = this.selectedHgIndex();
-        return list[idx] ?? null;
-    });
-
-    /**
-     * Можно ли перейти к предыдущему сезону.
-     */
-    protected readonly canPrevHgSeason$ = toObservable(this.selectedHgIndex).pipe(map((idx) => idx > 0));
-
-    /**
-     * Можно ли перейти к следующему сезону.
-     */
-    protected readonly canNextHgSeason$ = combineLatest([
-        toObservable(this.hgSeasonsList),
-        toObservable(this.selectedHgIndex),
-    ]).pipe(map(([list, idx]) => idx < list.length - 1));
-
-    /**
-     * Есть ли активный (не завершённый) сезон в списке.
-     */
-    protected readonly hasActiveSeason = computed(() => this.hgSeasonsList().some((s) => !s.ended_at));
-
-    /**
-     * Статистика игрока в выбранном сезоне голодных игр.
-     */
-    protected readonly hungerGamesStats$ = toObservable(this.hungerGamesSeason).pipe(
-        switchMap((season) => {
-            if (!season || !this.userService.userId || !this.isVerifiedUser()) {
-                return of(null);
-            }
-            return this.hungerGamesService.getPlayerSeasonStats$(season.id, this.userService.userId).pipe(
-                catchError(() => of(null)),
-                defaultIfEmpty(null)
-            );
-        })
-    );
-
-    /**
      * Признак первоначальной загрузки данных профиля.
      */
     protected readonly isLoading$ = combineLatest([
@@ -334,29 +278,13 @@ export class ProfileComponent {
         this.balance$,
         this.playerStats$,
         this.settlement$,
-        this.hungerGamesStats$,
         this.details$,
     ]).pipe(
         map(() => false),
         startWith(true)
     );
 
-    /**
-     * Переключает на предыдущий сезон.
-     */
-    protected prevHgSeason(): void {
-        this.selectedHgIndex.update((i) => Math.max(0, i - 1));
-    }
 
-    /**
-     * Переключает на следующий сезон.
-     */
-    protected nextHgSeason(): void {
-        this.selectedHgIndex.update((i) => {
-            const max = this.hgSeasonsList().length - 1;
-            return Math.min(max, i + 1);
-        });
-    }
 
     /**
      * Описание изображения открытого в предпросмотре.
@@ -404,15 +332,6 @@ export class ProfileComponent {
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.submission.set(this.verificationService.lastSubmission()));
 
-        this.hungerGamesService
-            .getSeasons$()
-            .pipe(take(1))
-            .subscribe((seasons) => {
-                const sorted = [...seasons].sort((a, b) => a.number - b.number);
-                this.hgSeasonsList.set(sorted);
-                const activeIdx = sorted.findIndex((s) => !s.ended_at);
-                this.selectedHgIndex.set(activeIdx >= 0 ? activeIdx : sorted.length - 1);
-            });
     }
 
     protected getRoleName() {

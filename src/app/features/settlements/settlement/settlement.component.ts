@@ -8,6 +8,7 @@ import {
     signal,
     Signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
@@ -80,7 +81,8 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
 @Component({
     standalone: true,
     selector: 'app-settlement',
-    imports: [MarkupPipe, 
+    imports: [MarkupPipe,
+        RouterLink,
         TuiIcon,
         TuiLoader,
         SettlementBadgeComponent,

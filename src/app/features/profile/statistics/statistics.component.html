@@ -88,6 +88,10 @@
     </div>
 }
 
+@if (isVerifiedUser) {
+    <app-hunger-games-card class="block mb-8" />
+}
+
 <app-page-header class="block mb-4" [level]="2" [title]="'profile.statistics.title' | translate" />
 
 @if (leaderBoard === null) {
@@ -125,7 +129,8 @@
     </div>
 
     @if (leaderBoard.length >= 3) {
-        <div class="flex gap-4 lg:gap-8 items-center justify-center mb-8">
+        <!-- Пьедестал: три равные ячейки, центральная карточка выше -->
+        <div class="grid grid-cols-3 gap-3 sm:gap-4 items-end max-w-3xl w-full mx-auto mb-8">
             <app-leader-card
                 [playerName]="leaderBoard[1]?.name ?? ''"
                 ratingPlace="2"

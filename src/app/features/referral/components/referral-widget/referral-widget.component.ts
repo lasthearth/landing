@@ -1,5 +1,6 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { catchError, combineLatest, map, Observable, of, shareReplay, startWith, switchMap } from 'rxjs';
@@ -36,7 +37,7 @@ interface IReferralWidgetViewModel {
 @Component({
     selector: 'app-referral-widget',
     standalone: true,
-    imports: [CommonModule, AsyncPipe, TuiIcon, TuiButton, TranslatePipe],
+    imports: [CommonModule, AsyncPipe, TuiIcon, TuiButton, TranslatePipe, EmptyStateComponent],
     templateUrl: './referral-widget.component.html',
     styleUrl: './referral-widget.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

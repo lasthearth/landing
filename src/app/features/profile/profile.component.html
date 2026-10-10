@@ -4,7 +4,6 @@
 @let settlement = settlement$ | async;
 @let details = details$ | async;
 @let settlementOnline = settlementMembersOnline$ | async;
-@let hgStats = hungerGamesStats$ | async;
 @let isLoading = isLoading$ | async;
 @let self = selfProfile$ | async;
 @let verified = getRoleName() !== "profile.role.unverified";
@@ -14,14 +13,17 @@
     <app-profile-skeleton />
 } @else {
     <!--
-        Одна колонка с единым шагом между блоками (gap-6). У дочерних блоков нет своих
+        Одна колонка с единым шагом между блоками (gap-8). У дочерних блоков нет своих
         mt-*: раньше пустые «путь новичка» / «мои события» плюс mt-4 и mt-12 давали
         ~180px пустоты перед IP и паролем. Пустые блоки скрывает .profile-page > :empty.
     -->
-    <div class="profile-page lh-page-container text-lh-primary flex flex-col gap-6">
-        <!-- Шапка профиля -->
-        <div class="grid gap-4 grid-cols-1 xl:grid-cols-[1fr_auto_auto]">
-            <!-- Колонка 1: Профиль. Баннер игрока мягко проступает за аватаром -->
+    <div class="profile-page lh-page-container text-lh-primary flex flex-col gap-8">
+        <!--
+            Шапка профиля в две строки: карточка игрока (аватар, ник, роль, поселение,
+            действия) и ряд одинаковых плиток показателей. «Голодные игры» переехали
+            в «Статистику» — в шапке они растягивали колонку и ломали выравнивание.
+        -->
+        <section class="flex flex-col gap-3">
             @let look = looks.lookOf(userService.userId);
             <div class="profile-cover flex gap-5 flex-col sm:flex-row">
                 @if (look.bannerId !== 'none') {
@@ -58,8 +60,7 @@
                     </button>
                 </div>
 
-                <!-- Инфо -->
-                <div class="flex flex-col justify-between gap-3 min-w-0 flex-1">
+                <div class="flex flex-col gap-3 min-w-0 flex-1 justify-center">
                     @if (!verified) {
                         <!-- Шапка без верификации: имя аккаунта и статус анкеты -->
                         <div class="profile-hero lh-panel rounded-xl px-4 py-3">
@@ -71,42 +72,27 @@
                             </span>
                         </div>
                     } @else {
-                        <div class="flex items-stretch gap-3 flex-col sm:flex-row">
-                            <!-- Роль -->
-                            <div class="flex-1 flex flex-col justify-center lh-panel rounded-xl px-3 py-2">
-                                <p class="text-lg leading-[27px] text-ink-3 mb-1">
-                                    {{ "profile.role.label" | translate }}
-                                </p>
-                                <p class="text-lg leading-[27px] font-bold">{{ getRoleName() | translate }}</p>
-                            </div>
-
-                            <!-- Ник -->
-                            @if (userName && getRoleName() !== "profile.role.unverified") {
-                                <div class="flex-1 flex flex-col justify-center lh-panel rounded-xl px-3 py-2">
-                                    <p class="text-lg leading-[27px] text-ink-3 mb-1">
-                                        {{ "profile.nickname.label" | translate }}
-                                    </p>
-                                    <div class="flex items-center justify-between gap-2">
-                                        <p class="text-lg leading-[27px] font-bold truncate">{{ userName }}</p>
-                                        <button
-                                            (click)="openDialogChangeUsername()"
-                                            class="shrink-0 border border-lh-accent/50 bg-lh-accent/10 text-lh-accent hover:bg-lh-accent hover:text-white hover:border-lh-accent transition duration-200 cursor-pointer rounded-lg p-1.5 shadow-sm"
-                                            [title]="'profile.nickname.change' | translate"
-                                            [attr.aria-label]="'profile.nickname.changeAria' | translate"
-                                        >
-                                            <tui-icon icon="@tui.pencil" class="size-5!" />
-                                        </button>
-                                    </div>
-                                </div>
+                        <!-- Ник и роль: главное о игроке одной строкой -->
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <h1 class="profile-name">{{ userName || userData.name }}</h1>
+                            @if (userName) {
+                                <button
+                                    type="button"
+                                    (click)="openDialogChangeUsername()"
+                                    class="profile-name__edit"
+                                    [title]="'profile.nickname.change' | translate"
+                                    [attr.aria-label]="'profile.nickname.changeAria' | translate"
+                                >
+                                    <tui-icon icon="@tui.pencil" class="size-4!" />
+                                </button>
                             }
+                            <span class="profile-role">{{ getRoleName() | translate }}</span>
                         </div>
                     }
 
                     <!-- Селение -->
                     @if (settlement) {
-                        <div
-                            class="flex-1 shrink-1 flex gap-1 flex-col justify-start lh-panel rounded-xl px-4 py-3 w-full"
-                        >
+                        <div class="flex gap-1 flex-col lh-panel rounded-xl px-4 py-3 w-full">
                             <p class="text-lg leading-[27px] text-ink-3 mb-1">
                                 {{ "profile.settlement.label" | translate }}
                             </p>
@@ -142,10 +128,8 @@
                         </div>
                     } @else if (verified) {
                         <!-- Не тупик: сразу ссылка на поиск поселения -->
-                        <div
-                            class="bg-surface-card rounded-xl px-4 py-3 border border-subtle w-full flex items-center justify-between gap-3"
-                        >
-                            <span class="text-lg leading-[27px] text-ink-3">
+                        <div class="lh-panel rounded-xl px-4 py-2.5 w-full flex items-center justify-between gap-3">
+                            <span class="text-lg leading-[27px] text-ink-2">
                                 {{ "profile.settlement.noSettlement" | translate }}
                             </span>
                             <a [routerLink]="['/settlements']" class="lh-chip shrink-0 no-underline!">
@@ -179,182 +163,58 @@
                 </div>
             </div>
 
-            <!-- Колонка 2: Голодные игры — только после верификации, как и баланс -->
-            @if (getRoleName() !== "profile.role.unverified") {
-                <div
-                    class="bg-surface-card shrink-0 rounded-xl px-4 py-3 border border-subtle text-center flex flex-col justify-center gap-2"
-                >
-                    <div class="flex items-center justify-center gap-2 mb-1">
-                        <tui-icon icon="@tui.flame" class="size-5! text-lh-accent" />
-                        <p class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">
-                            {{ "profile.hungerGames.title" | translate }}
-                        </p>
+            <!-- Показатели: баланс и игровая статистика — плитки одной высоты -->
+            @if (verified) {
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="profile-metric profile-metric--balance">
+                        <img
+                            src="/splinter-of-spark.webp"
+                            [alt]="'profile.currency.shardAlt' | translate"
+                            class="size-5 object-contain spark-glow"
+                        />
+                        <span class="profile-metric__label">{{ "profile.currency.shards" | translate }}</span>
+                        <span class="profile-metric__value">{{ balance ?? "—" }}</span>
+                        <button type="button" class="profile-metric__action" (click)="howToBuy()">
+                            <tui-icon icon="@tui.circle-plus" class="size-4!" />
+                            {{ "profile.currency.topUp" | translate }}
+                        </button>
                     </div>
-                    @if (hungerGamesSeason(); as season) {
-                        <div class="flex items-center justify-center gap-2 mb-1">
-                            <button
-                                type="button"
-                                [disabled]="!(canPrevHgSeason$ | async)"
-                                (click)="prevHgSeason()"
-                                class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                                [attr.aria-label]="'profile.hungerGames.prevAria' | translate"
-                            >
-                                <tui-icon icon="@tui.chevron-left" class="size-4!" />
-                            </button>
-                            <div class="flex items-center gap-1.5">
-                                <p class="text-lg leading-[27px] font-bold">
-                                    {{ "profile.hungerGames.season" | translate: { number: season.number } }}
-                                </p>
-                                @if (season.ended_at) {
-                                    <span
-                                        class="text-base px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold"
-                                    >
-                                        {{ "profile.hungerGames.completed" | translate }}
-                                    </span>
-                                } @else {
-                                    <span
-                                        class="text-base px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold"
-                                    >
-                                        {{ "profile.hungerGames.active" | translate }}
-                                    </span>
-                                }
-                            </div>
-                            <button
-                                type="button"
-                                [disabled]="!(canNextHgSeason$ | async)"
-                                (click)="nextHgSeason()"
-                                class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                                [attr.aria-label]="'profile.hungerGames.nextAria' | translate"
-                            >
-                                <tui-icon icon="@tui.chevron-right" class="size-4!" />
-                            </button>
-                        </div>
-                        @if (!hasActiveSeason()) {
-                            <p class="text-base leading-4 text-lh-danger/80 font-medium">
-                                {{ "profile.hungerGames.noCurrentSeason" | translate }}
-                            </p>
-                        }
-                        @if (hgStats) {
-                            <div class="flex flex-col gap-0.5">
-                                <div class="flex items-center justify-center gap-1.5 text-base leading-5">
-                                    <span>
-                                        <span class="text-ink-3">{{ "profile.hungerGames.elo" | translate }}</span>
-                                        <span class="font-bold">{{ hgStats.elo }}</span>
-                                    </span>
-                                    <span class="text-lh-primary-2/40">|</span>
-                                    <span>
-                                        <span class="text-ink-3">{{ "profile.hungerGames.wins" | translate }}</span>
-                                        <span class="font-bold">{{ hgStats.wins }}</span>
-                                    </span>
-                                    <span class="text-lh-primary-2/40">|</span>
-                                    <span>
-                                        <span class="text-ink-3">{{ "profile.hungerGames.kills" | translate }}</span>
-                                        <span class="font-bold">{{ hgStats.kills }}</span>
-                                    </span>
-                                </div>
-                                @if (hgStats.rank > 0) {
-                                    <div
-                                        class="flex items-center justify-center gap-1.5 text-base leading-5 text-ink-3"
-                                    >
-                                        <span>
-                                            {{ "profile.hungerGames.rank" | translate }}
-                                            <span class="font-bold text-lh-primary">{{ hgStats.rank }}</span>
-                                        </span>
-                                        @if (hgStats.reward_coins) {
-                                            <span class="text-lh-primary-2/40">•</span>
-                                            <span>
-                                                {{ "profile.hungerGames.reward" | translate }}
-                                                <span class="font-bold text-lh-accent">{{ hgStats.reward_coins }}</span>
-                                            </span>
-                                        }
-                                    </div>
-                                }
-                            </div>
-                        } @else {
-                            <p class="text-base leading-5 text-ink-3">{{ "profile.hungerGames.noData" | translate }}</p>
-                        }
-                    } @else {
-                        <p class="text-base leading-5 text-ink-3">
-                            {{ "profile.hungerGames.noCurrentSeason" | translate }}
-                        </p>
-                    }
-                </div>
-            }
-
-            <!-- Колонка 3: Валюта и статистика -->
-            @if (getRoleName() !== "profile.role.unverified") {
-                <div class="flex gap-2 flex-col">
-                    <!-- Баланс -->
-                    <div
-                        class="flex items-center justify-between gap-3 rounded-xl px-4 py-2 bg-gradient-to-r from-lh-accent/10 to-transparent border border-lh-accent/30 shadow-[0_2px_12px_rgba(255,121,32,0.12)]"
-                    >
-                        <div class="flex items-center gap-2">
-                            <img
-                                src="/splinter-of-spark.webp"
-                                [alt]="'profile.currency.shardAlt' | translate"
-                                class="h-10 w-10 object-contain spark-glow"
-                            />
-                            <span class="text-lg leading-[27px] font-bold">{{ balance ?? "—" }}</span>
-                        </div>
-                        <span class="text-lg leading-[27px] text-ink-3 font-semibold">
-                            {{ "profile.currency.shards" | translate }}
+                    <div class="profile-metric">
+                        <tui-icon icon="@tui.skull" class="size-5! text-danger-soft" />
+                        <span class="profile-metric__label">
+                            {{ "profile.stats.deaths" | translate }}
                         </span>
+                        <span class="profile-metric__value">{{ stats?.deaths ?? "—" }}</span>
                     </div>
-
-                    <!-- Кнопка пополнения -->
-                    <button
-                        (click)="howToBuy()"
-                        class="flex items-center justify-center gap-2 transition duration-300 text-lh-accent text-lg leading-[27px] font-bold cursor-pointer bg-lh-accent/10 border border-lh-accent rounded-xl py-2 px-4 w-full text-center hover:bg-lh-accent hover:text-white hover:shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
-                    >
-                        <tui-icon icon="@tui.circle-plus" class="size-5!" />
-                        {{ "profile.currency.topUp" | translate }}
-                    </button>
-
-                    <!-- Статистика -->
-                    <div class="flex gap-3 w-full">
-                        <div
-                            class="flex-1 min-w-24 flex flex-col items-center bg-surface-card rounded-xl px-3 py-2 gap-0.5 border border-subtle"
-                        >
-                            <tui-icon icon="@tui.skull" class="size-6! text-danger-soft mb-1" />
-                            <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">
-                                {{ "profile.stats.deaths" | translate }}
+                    <div class="profile-metric">
+                        <tui-icon icon="@tui.swords" class="size-5! text-parchment-dim" />
+                        <span class="profile-metric__label">
+                            {{ "profile.stats.kills" | translate }}
+                        </span>
+                        <span class="profile-metric__value">{{ stats?.kills ?? "—" }}</span>
+                        @if (self?.killsRank; as rank) {
+                            <span class="profile-rank">
+                                {{ "player.stats.rank" | translate: { rank: rank, total: self?.totalPlayers } }}
                             </span>
-                            <span class="text-lg leading-[27px] font-bold">{{ stats?.deaths ?? "—" }}</span>
-                        </div>
-                        <div
-                            class="flex-1 min-w-24 flex flex-col items-center bg-surface-card rounded-xl px-3 py-2 gap-0.5 border border-subtle"
-                        >
-                            <tui-icon icon="@tui.swords" class="size-6! text-parchment-dim mb-1" />
-                            <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">
-                                {{ "profile.stats.kills" | translate }}
+                        }
+                    </div>
+                    <div class="profile-metric">
+                        <tui-icon icon="@tui.clock" class="size-5! text-leader-soft" />
+                        <span class="profile-metric__label">
+                            {{ "profile.stats.hours" | translate }}
+                        </span>
+                        <span class="profile-metric__value">
+                            {{ stats ? (stats.hours_played | number: "1.0-1") : "—" }}
+                        </span>
+                        @if (self?.hoursRank; as rank) {
+                            <span class="profile-rank">
+                                {{ "player.stats.rank" | translate: { rank: rank, total: self?.totalPlayers } }}
                             </span>
-                            <span class="text-lg leading-[27px] font-bold">{{ stats?.kills ?? "—" }}</span>
-                            @if (self?.killsRank; as rank) {
-                                <span class="profile-rank">
-                                    {{ "player.stats.rank" | translate: { rank: rank, total: self?.totalPlayers } }}
-                                </span>
-                            }
-                        </div>
-                        <div
-                            class="flex-1 min-w-24 flex flex-col items-center bg-surface-card rounded-xl px-3 py-2 gap-0.5 border border-subtle"
-                        >
-                            <tui-icon icon="@tui.clock" class="size-6! text-leader-soft mb-1" />
-                            <span class="text-lg leading-[27px] text-ink-3 uppercase font-semibold">
-                                {{ "profile.stats.hours" | translate }}
-                            </span>
-                            <span class="text-lg leading-[27px] font-bold">
-                                {{ stats ? (stats.hours_played | number: "1.0-1") : "—" }}
-                            </span>
-                            @if (self?.hoursRank; as rank) {
-                                <span class="profile-rank">
-                                    {{ "player.stats.rank" | translate: { rank: rank, total: self?.totalPlayers } }}
-                                </span>
-                            }
-                        </div>
+                        }
                     </div>
                 </div>
             }
-        </div>
+        </section>
 
         <!-- Приглашение в поселение, открытое по ссылке -->
         @if (!settlement) {

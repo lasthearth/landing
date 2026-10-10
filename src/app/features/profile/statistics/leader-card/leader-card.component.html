@@ -1,8 +1,6 @@
-<div class="main relative flex justify-center items-center">
+<div class="main relative flex justify-center items-center" [class.main--big]="isBigSize()">
     <div
-        [class.!min-w-[130%]]="isBigSize()"
-        [class.!h-[110%]]="isBigSize()"
-        class="ember-card flex px-6 bg-[url('/br.webp')] bg-cover bg-center size-full flex-col gap-2 lg:gap-6 rounded-4xl justify-center items-center shadow-lg shadow-night-deep/60 border border-line-strong/30 card-tilt"
+        class="ember-card flex px-3 sm:px-5 bg-[url('/br.webp')] bg-cover bg-center size-full flex-col gap-2 lg:gap-4 rounded-3xl justify-center items-center shadow-lg shadow-night-deep/60 border border-line-strong/30 card-tilt"
     >
         <div
             class="absolute inset-0 z-20 pointer-events-none particles"
@@ -13,7 +11,7 @@
         <app-player-avatar
             [userId]="userId()"
             [src]="userImage() || '/default-avatar.webp'"
-            class="size-12 lg:size-14 xl:size-16 2xl:size-20 z-30"
+            class="size-12 lg:size-16 z-30"
             [alt]="'profile.statistics.avatarAlt' | translate"
         />
         <p class="text-center nick-text text-shadow-2xl font-semibold z-30 text-parchment-3">

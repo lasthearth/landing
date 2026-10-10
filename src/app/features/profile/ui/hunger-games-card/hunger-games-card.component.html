@@ -1,0 +1,97 @@
+<!-- Голодные игры: сезон и результаты игрока. Перенесено из шапки профиля в «Статистику». -->
+<section class="flex flex-col gap-3">
+    <h2 class="lh-display text-xl md:text-2xl lg:text-3xl font-bold text-ink flex items-center gap-2">
+        <tui-icon icon="@tui.flame" class="size-6! text-lh-accent" />
+        {{ "profile.hungerGames.title" | translate }}
+    </h2>
+    <div class="lh-panel rounded-xl px-4 py-4 flex flex-col items-center gap-2 text-center">
+        @if (season(); as season) {
+            <div class="flex items-center justify-center gap-2 mb-1">
+                <button
+                    type="button"
+                    [disabled]="!canPrev()"
+                    (click)="prev()"
+                    class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                    [attr.aria-label]="'profile.hungerGames.prevAria' | translate"
+                >
+                    <tui-icon icon="@tui.chevron-left" class="size-4!" />
+                </button>
+                <div class="flex items-center gap-1.5">
+                    <p class="text-lg leading-[27px] font-bold">
+                        {{ "profile.hungerGames.season" | translate: { number: season.number } }}
+                    </p>
+                    @if (season.ended_at) {
+                        <span
+                            class="text-base px-1 py-0.5 rounded bg-lh-danger/20 text-lh-danger font-semibold"
+                        >
+                            {{ "profile.hungerGames.completed" | translate }}
+                        </span>
+                    } @else {
+                        <span
+                            class="text-base px-1 py-0.5 rounded bg-lh-success/20 text-lh-success font-semibold"
+                        >
+                            {{ "profile.hungerGames.active" | translate }}
+                        </span>
+                    }
+                </div>
+                <button
+                    type="button"
+                    [disabled]="!canNext()"
+                    (click)="next()"
+                    class="p-1 rounded hover:bg-lh-primary-2/20 text-lh-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                    [attr.aria-label]="'profile.hungerGames.nextAria' | translate"
+                >
+                    <tui-icon icon="@tui.chevron-right" class="size-4!" />
+                </button>
+            </div>
+            @if (!hasActiveSeason()) {
+                <p class="text-base leading-4 text-lh-danger/80 font-medium">
+                    {{ "profile.hungerGames.noCurrentSeason" | translate }}
+                </p>
+            }
+            @if (stats(); as hgStats) {
+                <div class="flex flex-col gap-0.5">
+                    <div class="flex items-center justify-center gap-1.5 text-base leading-5">
+                        <span>
+                            <span class="text-ink-3">{{ "profile.hungerGames.elo" | translate }}</span>
+                            <span class="font-bold">{{ hgStats.elo }}</span>
+                        </span>
+                        <span class="text-lh-primary-2/40">|</span>
+                        <span>
+                            <span class="text-ink-3">{{ "profile.hungerGames.wins" | translate }}</span>
+                            <span class="font-bold">{{ hgStats.wins }}</span>
+                        </span>
+                        <span class="text-lh-primary-2/40">|</span>
+                        <span>
+                            <span class="text-ink-3">{{ "profile.hungerGames.kills" | translate }}</span>
+                            <span class="font-bold">{{ hgStats.kills }}</span>
+                        </span>
+                    </div>
+                    @if (hgStats.rank > 0) {
+                        <div
+                            class="flex items-center justify-center gap-1.5 text-base leading-5 text-ink-3"
+                        >
+                            <span>
+                                {{ "profile.hungerGames.rank" | translate }}
+                                <span class="font-bold text-lh-primary">{{ hgStats.rank }}</span>
+                            </span>
+                            @if (hgStats.reward_coins) {
+                                <span class="text-lh-primary-2/40">•</span>
+                                <span>
+                                    {{ "profile.hungerGames.reward" | translate }}
+                                    <span class="font-bold text-lh-accent">{{ hgStats.reward_coins }}</span>
+                                </span>
+                            }
+                        </div>
+                    }
+                </div>
+            } @else {
+                <p class="text-base leading-5 text-ink-3">{{ "profile.hungerGames.noData" | translate }}</p>
+            }
+        } @else {
+            <p class="text-base leading-5 text-ink-3">
+                {{ "profile.hungerGames.noCurrentSeason" | translate }}
+            </p>
+        }
+    </div>
+</section>

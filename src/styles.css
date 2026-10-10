@@ -1776,14 +1776,21 @@ html[data-theme='dark'] {
     display: none;
 }
 
-.lh-page-container {
-    width: 100%;
-    margin: 0 auto;
-    padding: 1rem;
-}
-
-@media (min-width: 768px) {
+/**
+ * Контейнер страницы и секций: поля 16px, с md — 24px.
+ * В @layer components, чтобы утилиты Tailwind (pt-*, pb-*) могли его уточнять:
+ * вне слоя он перебивал их, и pb-0 / pt-6 на секциях главной не работали.
+ */
+@layer components {
     .lh-page-container {
-        padding: 1.5rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .lh-page-container {
+            padding: 1.5rem;
+        }
     }
 }
