@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Injector, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { isPlatformBrowser, AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { UserService } from '@entities/user';
@@ -14,7 +14,6 @@ import { LocalStorageService } from '@core/services/local-storage.service';
 import { WELCOME_SEEN_STORAGE_KEY } from './welcome-seen-storage-key.constant';
 import { SiteAnnouncementComponent } from '@features/announcement';
 import { TranslatePipe } from '@core/i18n';
-import { OnboardingService } from '@features/onboarding';
 
 
 /**
@@ -98,7 +97,12 @@ export class LayoutComponent {
 
     constructor() {
         // Путь новичка: отмечает «открыл правила» и «заходил в Discord» на любой странице.
-        inject(OnboardingService).start();
+        // Модуль подгружается динамически после первой отрисовки: статический импорт
+        // тянул в стартовый бандл весь слайс onboarding вместе с компонентом пути (~25 КБ).
+        const injector = inject(Injector);
+        afterNextRender(() => {
+            void import('@features/onboarding').then(({ OnboardingService }) => injector.get(OnboardingService).start());
+        });
 
         this.showWelcome$.pipe(takeUntilDestroyed()).subscribe((showWelcome) => {
             this.updateScrollLock(showWelcome && !this.isSetScrollClass);

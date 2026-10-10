@@ -2,7 +2,7 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { buildAngularAuthConfig } from '@logto/js';
 import { AbstractSecurityStorage, DefaultLocalStorageService, LogLevel, provideAuth } from 'angular-auth-oidc-client';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideEventPlugins } from '@taiga-ui/event-plugins';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -83,7 +83,7 @@ export const appConfig: ApplicationConfig = {
         // статически импортирует `@angular/animations/browser` в
         // `TUI_REMOVED_ELEMENT`, поэтому движок всё равно оказывается
         // в начальном графе.
-        provideAnimationsAsync(),
+        provideAnimations(),
         // Пререндеренная разметка переиспользуется, а не строится заново:
         // без гидратации страница «схлопывалась» и раскрывалась (CLS ~0.7).
         provideClientHydration(withEventReplay()),
