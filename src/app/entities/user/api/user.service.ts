@@ -1,7 +1,7 @@
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-import { EventTypes, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
+import { EventTypes, LoginResponse, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { jwtDecode } from 'jwt-decode';
 import {
     BehaviorSubject,
@@ -20,12 +20,14 @@ import {
     switchMap,
     take,
     tap,
+    timeout,
 } from 'rxjs';
 import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { convertTuiFileLikeToBase64 } from '@shared/lib/convert-file-to-base64.function';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
+import { SESSION_RESTORE_TIMEOUT_MS } from '../config/session-restore-timeout.constant';
 import { IJwtTokenLh } from '../model/i-jwt-token-lh';
 import { IUser } from '../model/i-user';
 import { IPlayer } from '../model/i-player';
@@ -185,8 +187,8 @@ export class UserService {
     /**
      * Инициализирует поток проверки авторизации.
      *
-     * При срабатывании триггера выполняет {@link OidcSecurityService.checkAuth}
-     * (обрабатывает OIDC-callback с `?code=`) либо принудительное обновление сессии.
+     * При срабатывании триггера выполняет проверку сохранённой сессии
+     * (см. {@link checkStoredSession$}) либо принудительное обновление сессии.
      * Состояние авторизации сюда не пишется — его источником является
      * {@link authState$}, подписанный на состояние библиотеки.
      */
@@ -196,7 +198,7 @@ export class UserService {
                 switchMap((forceRefresh) => {
                     const authRequest$ = forceRefresh
                         ? this.oidcSecurityService.forceRefreshSession()
-                        : this.oidcSecurityService.checkAuth();
+                        : this.checkStoredSession$();
 
                     return authRequest$.pipe(
                         tap((authResult) => {
@@ -215,6 +217,40 @@ export class UserService {
                 })
             )
             .subscribe();
+    }
+
+    /**
+     * Проверяет сохранённую сессию при загрузке страницы.
+     *
+     * {@link OidcSecurityService.checkAuth} только читает токены из хранилища и
+     * не продлевает их: Logto выдаёт access- и id-токен на час, поэтому при
+     * возврате на сайт позже этого срока `checkAuth` возвращает
+     * `isAuthenticated: false`, хотя действующий refresh-токен лежит в том же
+     * хранилище. Игрок видел кнопку «Войти» и входил заново.
+     *
+     * Если refresh-токен сохранён, проверка идёт через
+     * {@link OidcSecurityService.checkAuthIncludingServer}: она обрабатывает
+     * OIDC-callback, при протухших токенах обновляет их по refresh-токену и
+     * запускает периодическую проверку, которая дальше продлевает сессию сама.
+     * Гостя это не касается: без refresh-токена вызывается обычный `checkAuth`,
+     * поэтому нет лишнего запроса и ошибки в консоли.
+     *
+     * Обновление — это запросы к Logto, поэтому на них стоит таймаут
+     * {@link SESSION_RESTORE_TIMEOUT_MS}: без него стражи маршрутов ждали бы
+     * вечно при зависшем соединении.
+     *
+     * @returns Observable с результатом проверки авторизации.
+     */
+    private checkStoredSession$(): Observable<LoginResponse> {
+        return this.oidcSecurityService.getRefreshToken().pipe(
+            take(1),
+            switchMap((refreshToken) =>
+                refreshToken
+                    ? this.oidcSecurityService.checkAuthIncludingServer()
+                    : this.oidcSecurityService.checkAuth()
+            ),
+            timeout(SESSION_RESTORE_TIMEOUT_MS)
+        );
     }
 
     /**

@@ -43,6 +43,18 @@ describe('UserService', () => {
 
     let authenticated$: BehaviorSubject<AuthenticatedResult>;
     let checkAuth$: Subject<LoginResponse>;
+    let checkAuthIncludingServer$: Subject<LoginResponse>;
+
+    /**
+     * Refresh-токен, который «лежит» в хранилище библиотеки.
+     * Пустая строка — гость, непустая — вернувшийся игрок с протухшими токенами.
+     */
+    let storedRefreshToken: string;
+
+    /**
+     * Счётчик обращений к `checkAuthIncludingServer`.
+     */
+    let includingServerCalls: number;
 
     beforeEach(() => {
         authenticated$ = new BehaviorSubject<AuthenticatedResult>({
@@ -50,6 +62,9 @@ describe('UserService', () => {
             allConfigsAuthenticated: [],
         });
         checkAuth$ = new Subject<LoginResponse>();
+        checkAuthIncludingServer$ = new Subject<LoginResponse>();
+        storedRefreshToken = '';
+        includingServerCalls = 0;
 
         const oidc = {
             get isAuthenticated$() {
@@ -58,6 +73,12 @@ describe('UserService', () => {
             getIdToken: () => of(idToken),
             getAccessToken: () => of('access-token'),
             checkAuth: () => checkAuth$,
+            getRefreshToken: () => of(storedRefreshToken),
+            checkAuthIncludingServer: () => {
+                includingServerCalls++;
+
+                return checkAuthIncludingServer$;
+            },
             forceRefreshSession: () => of(loginResponse(false)),
         };
 
@@ -104,5 +125,38 @@ describe('UserService', () => {
         checkAuth$.complete();
 
         expect(seen).toEqual([true]);
+    });
+
+    it('восстанавливает сессию по сохранённому refresh-токену', () => {
+        storedRefreshToken = 'refresh-token';
+
+        const service = TestBed.inject(UserService);
+        const seen: boolean[] = [];
+
+        service.authSettled$.subscribe((isAuth) => seen.push(isAuth));
+
+        // Библиотека уже выставила состояние, но проверка сессии не завершилась.
+        authenticated$.next({ isAuthenticated: true, allConfigsAuthenticated: [] });
+        expect(seen).toEqual([]);
+        expect(includingServerCalls).toBe(1);
+
+        checkAuthIncludingServer$.next(loginResponse(true));
+        checkAuthIncludingServer$.complete();
+
+        expect(seen).toEqual([true]);
+        expect(service.userId).toBe('user-1');
+    });
+
+    it('проверяет гостя без обращения к серверу за обновлением', () => {
+        const service = TestBed.inject(UserService);
+        const seen: boolean[] = [];
+
+        service.authSettled$.subscribe((isAuth) => seen.push(isAuth));
+
+        checkAuth$.next(loginResponse(false));
+        checkAuth$.complete();
+
+        expect(includingServerCalls).toBe(0);
+        expect(seen).toEqual([false]);
     });
 });
