@@ -1,0 +1,16 @@
+# Все текстовые файлы хранятся и выдаются с LF: prettier (.prettierrc endOfLine=lf)
+# и шаг «Формат агентских документов» в npm run verify ожидают LF на любой ОС.
+* text=auto eol=lf
+
+# Двоичные файлы не нормализуются.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.mp3 binary
+*.mp4 binary
+*.webm binary
