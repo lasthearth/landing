@@ -1,0 +1,51 @@
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <div class="wiki-article__actions">
+        <a class="lh-chip cursor-default" href="/wiki">
+            <tui-icon icon="@tui.arrow-left" />
+            {{ "wiki.public.backToList" | translate }}
+        </a>
+
+        @if (article(); as current) {
+            <a
+                class="lh-cta wiki-article__edit"
+                [class.wiki-article__edit--busy]="opening()"
+                [attr.href]="isEditor ? '/wiki/edit/' + current.id : '/wiki/edit/' + current.id + '?suggest=1'"
+                (click)="opening.set(true)"
+            >
+                @if (opening()) {
+                    <tui-icon icon="@tui.loader-circle" class="wiki-article__spin" />
+                    {{ "common.loading" | translate }}
+                } @else {
+                    <tui-icon [icon]="isEditor ? '@tui.pencil' : '@tui.send'" />
+                    {{ (isEditor ? "wiki.public.edit" : "wiki.public.suggest") | translate }}
+                }
+            </a>
+        }
+    </div>
+
+    @if (draft(); as draft) {
+        @if (render(); as render) {
+            <app-wiki-article-view
+                [draft]="draft"
+                [html]="render.html"
+                [headings]="render.headings"
+                [images]="render.images"
+                [words]="render.words"
+                [updatedAt]="article()!.updatedAt"
+                [authorName]="article()!.authorName"
+                [resolveTitle]="resolveTitle"
+            />
+        }
+    } @else {
+        <app-empty-state
+            icon="@tui.file-question"
+            [title]="'wiki.public.notFound' | translate"
+            [description]="'wiki.public.notFoundHint' | translate"
+        />
+
+        <a class="lh-cta wiki-article__back" href="/wiki">
+            <tui-icon icon="@tui.arrow-left" />
+            {{ "wiki.public.backToList" | translate }}
+        </a>
+    }
+</div>

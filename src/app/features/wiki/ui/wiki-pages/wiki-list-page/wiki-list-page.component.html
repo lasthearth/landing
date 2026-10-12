@@ -1,0 +1,166 @@
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <app-page-header
+        [level]="1"
+        [title]="'wiki.public.title' | translate"
+        [subtitle]="'wiki.public.subtitle' | translate"
+    >
+        <!-- Одна кнопка на все случаи: редактор пишет статью сразу, игрок
+             отправляет её на проверку, гость сначала входит. Вид и размеры —
+             как у «Создать событие», чтобы шапки страниц не расходились. -->
+        <a
+            class="lh-cta wiki-list__create"
+            [routerLink]="isAuthenticated() ? '/wiki/edit/new' : '/home'"
+            [queryParams]="isAuthenticated() && !isAdmin() ? { suggest: 1 } : {}"
+        >
+            <tui-icon icon="@tui.plus" class="size-4!" />
+            {{
+                (isAdmin()
+                    ? "wiki.admin.new"
+                    : isAuthenticated()
+                      ? "wiki.public.suggestNew"
+                      : "wiki.public.suggestLogin"
+                ) | translate
+            }}
+        </a>
+    </app-page-header>
+
+    @if (hasAny()) {
+        <!-- Сортировка -->
+        <div class="lh-chips" role="group" aria-labelledby="wiki-sort-label">
+            <span id="wiki-sort-label" class="lh-chips__label">{{ "wiki.public.sort.label" | translate }}</span>
+            @for (key of sortKeys; track key) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-current]="sort() === key ? 'true' : null"
+                    (click)="setSort(key)"
+                >
+                    {{ "wiki.public.sort." + key | translate }}
+                </button>
+            }
+        </div>
+
+        <!-- Поиск и фильтры: состояние хранится в адресе, ссылкой можно поделиться -->
+        <div class="wiki-list__tools">
+            <label class="wiki-list__search">
+                <tui-icon icon="@tui.search" />
+                <input
+                    type="search"
+                    class="wiki-list__input"
+                    [value]="search()"
+                    [attr.placeholder]="'wiki.public.search' | translate"
+                    [attr.aria-label]="'wiki.public.search' | translate"
+                    (input)="onQueryInput($event)"
+                />
+            </label>
+
+            @if (sectionOptions().length > 1) {
+                <div class="lh-chips" role="group" aria-labelledby="wiki-section-label">
+                    <span id="wiki-section-label" class="lh-chips__label">
+                        {{ "wiki.public.sections" | translate }}
+                    </span>
+                    @for (option of sectionOptions(); track option.value) {
+                        <button
+                            type="button"
+                            class="lh-chip"
+                            [attr.aria-pressed]="section() === option.value"
+                            (click)="toggleSection(option.value)"
+                        >
+                            {{ sectionLabel(option.value) }}
+                            <span class="lh-chip__count">{{ option.count }}</span>
+                        </button>
+                    }
+                </div>
+            }
+
+            @if (tagOptions().length) {
+                <div class="lh-chips" role="group" aria-labelledby="wiki-tag-label">
+                    <span id="wiki-tag-label" class="lh-chips__label">{{ "wiki.public.tags" | translate }}</span>
+                    @for (option of tagOptions(); track option.value) {
+                        <button
+                            type="button"
+                            class="lh-chip"
+                            [attr.aria-pressed]="tag() === option.value"
+                            (click)="toggleTag(option.value)"
+                        >
+                            #{{ option.value }}
+                            <span class="lh-chip__count">{{ option.count }}</span>
+                        </button>
+                    }
+                </div>
+            }
+
+            @if (hasFilters()) {
+                <p class="wiki-list__summary">
+                    {{ "wiki.public.found" | translate: { count: found() } }}
+                    <button type="button" class="wiki-list__reset" (click)="resetFilters()">
+                        {{ "wiki.public.clear" | translate }}
+                    </button>
+                </p>
+            }
+        </div>
+
+        @if (cards().length) {
+            <section class="wiki-list__grid" [attr.aria-label]="'wiki.public.articles' | translate">
+                @for (card of cards(); track card.article.id) {
+                    <a class="wiki-card lh-panel" [attr.href]="articleLink(card.article)">
+                        @if (card.coverImage) {
+                            <span
+                                class="wiki-card__cover"
+                                [style.background-image]="card.coverImage"
+                                [style.background-position]="'center ' + card.article.cover!.focus + '%'"
+                            ></span>
+                        }
+                        <span class="wiki-card__body">
+                            <span class="wiki-card__top">
+                                <span class="lh-chip cursor-default">{{ sectionLabel(card.article.sectionId) }}</span>
+                                @if (card.article.status === "draft") {
+                                    <span class="wiki-card__draft">{{ "wiki.status.draft" | translate }}</span>
+                                }
+                            </span>
+                            <b class="wiki-card__title">
+                                {{ card.article.title || ("wiki.view.untitled" | translate) }}
+                            </b>
+                            @if (card.lead) {
+                                <span class="wiki-card__lead">{{ card.lead }}</span>
+                            }
+                            <span class="wiki-card__meta">
+                                <tui-icon icon="@tui.clock" />
+                                {{ minutesLabel(card.minutes) }}
+                                <span class="wiki-card__dot">·</span>
+                                {{ updatedLabel(card.article.updatedAt) }}
+                                @if (authorLabel(card.article)) {
+                                    <span class="wiki-card__dot">·</span>
+                                    {{ authorLabel(card.article) }}
+                                }
+                            </span>
+                        </span>
+                    </a>
+                }
+            </section>
+
+            @if (hasMore()) {
+                <button type="button" class="lh-cta wiki-list__more" (click)="showMore()">
+                    {{ "wiki.public.showMore" | translate: { count: found() - cards().length } }}
+                </button>
+            }
+        } @else {
+            <div class="wiki-list__empty">
+                <app-empty-state
+                    icon="@tui.search-x"
+                    [title]="'wiki.public.nothingFound' | translate"
+                    [description]="'wiki.public.nothingFoundHint' | translate"
+                />
+                <button type="button" class="lh-cta" (click)="resetFilters()">
+                    {{ "wiki.public.clear" | translate }}
+                </button>
+            </div>
+        }
+    } @else {
+        <app-empty-state
+            icon="@tui.book-open"
+            [title]="'wiki.public.empty' | translate"
+            [description]="'wiki.public.emptyHint' | translate"
+        />
+    }
+</div>

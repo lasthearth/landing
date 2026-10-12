@@ -1,6 +1,7 @@
 /home
 /rules
 /faq
+/wiki
 /market
 /settlements
 /start-game

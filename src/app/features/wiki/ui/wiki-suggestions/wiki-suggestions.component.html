@@ -1,0 +1,208 @@
+<div class="wiki-review">
+    <div class="lh-chips" role="group" [attr.aria-label]="'wiki.admin.review.title' | translate">
+        <span class="lh-chips__label">{{ "wiki.admin.review.title" | translate }}</span>
+        @for (item of filters; track item) {
+            <button type="button" class="lh-chip" [attr.aria-pressed]="filter() === item" (click)="filter.set(item)">
+                {{ filterLabel(item) }}
+                <span class="lh-chip__count">{{ counts()[item] }}</span>
+            </button>
+        }
+    </div>
+
+    @if (error(); as message) {
+        <p class="wiki-review__error">{{ message | translate }}</p>
+    }
+
+    @if (loading()) {
+        <p class="wiki-review__muted">{{ "common.loading" | translate }}</p>
+    } @else if (visible().length) {
+        <ul class="wiki-review__list">
+            @for (item of visible(); track item.id) {
+                <li class="wiki-review__item lh-panel">
+                    <div class="wiki-review__head">
+                        <span
+                            class="lh-chip cursor-default"
+                            [class.wiki-review__chip--pending]="item.status === 'pending'"
+                        >
+                            {{ statusLabel(item.status) }}
+                        </span>
+                        <span class="wiki-review__kind">{{ kindLabel(item.kind) }}</span>
+                        @if (opened() === item.id && target(item); as article) {
+                            <span class="wiki-review__kind">
+                                {{ "wiki.admin.review.target" | translate: { title: article.title } }}
+                            </span>
+                        }
+                        <span class="wiki-review__date">{{ dateLabel(item.createdAt) }}</span>
+                    </div>
+
+                    <b class="wiki-review__title">{{ item.proposal?.title || item.slug }}</b>
+
+                    @if (item.proposal?.lead) {
+                        <p class="wiki-review__lead">{{ item.proposal?.lead }}</p>
+                    }
+
+                    @if (authorLabel(item)) {
+                        <p class="wiki-review__meta">
+                            {{ "wiki.admin.review.author" | translate: { name: authorLabel(item) } }}
+                        </p>
+                    }
+
+                    @if (item.note) {
+                        <p class="wiki-review__note">{{ item.note }}</p>
+                    }
+
+                    @if (item.status === "rejected" && item.rejectReason) {
+                        <p class="wiki-review__meta">{{ item.rejectReason }}</p>
+                    }
+
+                    <!-- Открыть значит посмотреть статью и сравнить с тем, что есть -->
+                    <button type="button" class="wiki-review__toggle lh-chip" (click)="toggle(item)">
+                        <tui-icon [icon]="opened() === item.id ? '@tui.chevron-up' : '@tui.chevron-down'" />
+                        {{ (opened() === item.id ? "wiki.admin.review.close" : "wiki.admin.review.open") | translate }}
+                    </button>
+
+                    @if (opened() === item.id) {
+                        <section class="wiki-review__view">
+                            @if (item.kind === "new") {
+                                <!-- Новую статью сравнивать не с чем: показываем её целиком -->
+                                <h4 class="wiki-review__section">
+                                    {{ "wiki.admin.review.proposed" | translate }}
+                                </h4>
+                                @if (proposedDraft(); as draft) {
+                                    @if (proposedRender(); as render) {
+                                        <div class="wiki-review__paper">
+                                            <app-wiki-article-view
+                                                [draft]="draft"
+                                                [html]="render.html"
+                                                [headings]="render.headings"
+                                                [images]="render.images"
+                                                [words]="render.words"
+                                                [authorName]="item.authorName"
+                                            />
+                                        </div>
+                                    }
+                                }
+                            } @else {
+                                <!-- Правку показываем только изменениями: что было и что стало -->
+                                <h4 class="wiki-review__section">{{ "wiki.admin.review.wasNow" | translate }}</h4>
+
+                                @if (fieldChanges().length) {
+                                    <dl class="wiki-review__fields">
+                                        @for (change of fieldChanges(); track change.key) {
+                                            <div
+                                                class="wiki-review__field-row"
+                                                [class.wiki-review__field-row--long]="change.multiline"
+                                            >
+                                                <dt>{{ fieldLabel(change.key) }}</dt>
+                                                <dd>
+                                                    <span class="wiki-review__was">
+                                                        {{ fieldValue(change.key, change.before) }}
+                                                    </span>
+                                                    <span class="wiki-review__arrow">→</span>
+                                                    <span class="wiki-review__now">
+                                                        {{ fieldValue(change.key, change.after) }}
+                                                    </span>
+                                                </dd>
+                                            </div>
+                                        }
+                                    </dl>
+                                } @else {
+                                    <p class="wiki-review__meta">{{ "wiki.admin.review.unchanged" | translate }}</p>
+                                }
+
+                                <h4 class="wiki-review__section">
+                                    {{ "wiki.admin.review.changes" | translate }}
+                                    <span class="wiki-review__stats">
+                                        {{ "wiki.admin.review.added" | translate: { count: diffStats().added } }}
+                                        ·
+                                        {{ "wiki.admin.review.removed" | translate: { count: diffStats().removed } }}
+                                    </span>
+                                </h4>
+
+                                @if (diff().length) {
+                                    <div class="wiki-review__diff">
+                                        @for (line of diff(); track line.number) {
+                                            <div
+                                                class="wiki-review__line"
+                                                [class.wiki-review__line--add]="line.kind === 'add'"
+                                                [class.wiki-review__line--del]="line.kind === 'del'"
+                                            >
+                                                <span class="wiki-review__sign">
+                                                    {{ line.kind === "add" ? "+" : line.kind === "del" ? "−" : " " }}
+                                                </span>
+                                                <span class="wiki-review__text">{{ line.text || " " }}</span>
+                                            </div>
+                                        }
+                                    </div>
+                                } @else if (!fieldChanges().length) {
+                                    <p class="wiki-review__meta">{{ "wiki.admin.review.noChanges" | translate }}</p>
+                                }
+                            }
+                        </section>
+                    }
+
+                    @if (item.status === "pending") {
+                        <div class="wiki-review__actions">
+                            <button
+                                type="button"
+                                class="lh-cta wiki-review__cta"
+                                [disabled]="busy() === item.id"
+                                (click)="approve(item)"
+                            >
+                                <tui-icon icon="@tui.check" class="size-4!" />
+                                {{ "wiki.admin.review.approve" | translate }}
+                            </button>
+                            <button
+                                type="button"
+                                class="lh-cta lh-cta--ghost wiki-review__cta"
+                                [disabled]="busy() === item.id"
+                                (click)="openReject(item)"
+                            >
+                                <tui-icon icon="@tui.x" class="size-4!" />
+                                {{ "wiki.admin.review.reject" | translate }}
+                            </button>
+                        </div>
+                    }
+
+                    @if (rejecting() === item.id) {
+                        <div class="wiki-review__reject">
+                            <label class="wiki-review__field">
+                                <span>{{ "wiki.admin.review.rejectLabel" | translate }}</span>
+                                <input
+                                    type="text"
+                                    class="wiki-review__input"
+                                    [value]="reason()"
+                                    [attr.placeholder]="'wiki.admin.review.rejectPlaceholder' | translate"
+                                    (input)="reason.set($any($event.target).value)"
+                                />
+                            </label>
+                            <div class="wiki-review__actions">
+                                <button
+                                    type="button"
+                                    class="lh-cta wiki-review__cta"
+                                    [disabled]="busy() === item.id"
+                                    (click)="confirmReject()"
+                                >
+                                    {{ "wiki.admin.review.rejectTitle" | translate }}
+                                </button>
+                                <button
+                                    type="button"
+                                    class="lh-cta lh-cta--ghost wiki-review__cta"
+                                    (click)="closeReject()"
+                                >
+                                    {{ "wiki.public.clear" | translate }}
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </li>
+            }
+        </ul>
+    } @else {
+        <app-empty-state
+            icon="@tui.inbox"
+            [title]="'wiki.admin.review.empty' | translate"
+            [description]="'wiki.admin.review.emptyHint' | translate"
+        />
+    }
+</div>

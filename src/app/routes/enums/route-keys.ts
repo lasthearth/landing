@@ -44,4 +44,8 @@ export enum RouteKeys {
     join = 21,
 
     profileStyle = 22,
+
+    wikiEditor = 23,
+
+    wiki = 24,
 }

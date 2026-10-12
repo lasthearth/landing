@@ -4,6 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LayoutComponent } from './layout/layout.component';
+import { RouteProgressComponent } from '@shared/ui/route-progress';
 import { SeoService } from '@core/services/seo.service';
 import { ISeoData } from '@core/types/i-seo-data';
 import { ReferralApplierService } from '@features/referral';
@@ -15,7 +16,7 @@ import { PendingInviteService } from '@features/settlements/join-by-invite';
 @Component({
     standalone: true,
     selector: 'app-root',
-    imports: [LayoutComponent, TuiRoot],
+    imports: [LayoutComponent, TuiRoot, RouteProgressComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
 })
@@ -47,8 +48,7 @@ export class AppComponent {
         title: 'Last Hearth — ролевой сервер Vintage Story',
         description:
             'Last Hearth — уникальный ролевой политико-экономический сервер Vintage Story. Развивайте поселения, ведите войны, заключайте союзы и участвуйте в жизни Империи.',
-        keywords:
-            'Vintage Story сервер, Last Hearth, ролевой сервер VS, Vintage Story PvP, Vintage Story RP',
+        keywords: 'Vintage Story сервер, Last Hearth, ролевой сервер VS, Vintage Story PvP, Vintage Story RP',
         url: 'https://lasthearth.ru/home',
         type: 'website',
         locale: 'ru_RU',

@@ -57,6 +57,8 @@ function getConfig() {
             'news:create',
             'news:delete',
             'offline_access',
+            'wiki:write',
+            'wiki:review',
         ],
         resource: 'https://api.lasthearth.ru',
     });

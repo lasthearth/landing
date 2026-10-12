@@ -1,0 +1,239 @@
+.wiki-review {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.wiki-review__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.wiki-review__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.9rem 1rem;
+}
+
+.wiki-review__head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.wiki-review__kind,
+.wiki-review__date,
+.wiki-review__meta,
+.wiki-review__muted {
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.wiki-review__title {
+    font-size: 1rem;
+    color: var(--lh-ink);
+}
+
+.wiki-review__lead,
+.wiki-review__note {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--lh-ink-2);
+}
+
+.wiki-review__note {
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--lh-surface-3) 55%, transparent);
+}
+
+.wiki-review__error {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--lh-danger-ink);
+}
+
+.wiki-review__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.wiki-review__reject {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+}
+
+.wiki-review__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--lh-ink-2);
+}
+
+.wiki-review__input {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--lh-border);
+    border-radius: 0.6rem;
+    background: var(--lh-surface-2);
+    font-size: 0.875rem;
+    color: var(--lh-ink);
+
+    &:focus-visible {
+        border-color: var(--lh-brand);
+    }
+}
+
+.wiki-review__toggle {
+    align-self: flex-start;
+    cursor: pointer;
+}
+
+.wiki-review__view {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.wiki-review__section {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--lh-ink-3);
+}
+
+.wiki-review__stats {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+// Предложенная статья: своя рамка, чтобы отличалась от карточки очереди.
+.wiki-review__paper {
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--lh-border);
+    border-radius: 0.875rem;
+    background: var(--lh-surface-2);
+}
+
+.wiki-review__diff {
+    max-height: 26rem;
+    overflow: auto;
+    border: 1px solid var(--lh-border);
+    border-radius: 0.75rem;
+    background: var(--lh-surface-2);
+    font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.wiki-review__line {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 0.6rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.wiki-review__line--add {
+    background: color-mix(in srgb, var(--lh-peace) 22%, transparent);
+}
+
+.wiki-review__line--del {
+    background: color-mix(in srgb, var(--lh-danger-soft) 40%, transparent);
+}
+
+.wiki-review__sign {
+    flex: none;
+    width: 0.75rem;
+    color: var(--lh-ink-3);
+    user-select: none;
+}
+
+.wiki-review__text {
+    flex: 1;
+    min-width: 0;
+}
+
+.wiki-review__cta {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.875rem;
+}
+
+// Таблица «было → стало» по полям статьи.
+.wiki-review__fields {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    border: 1px solid var(--lh-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.wiki-review__field-row {
+    display: grid;
+    grid-template-columns: minmax(6rem, 9rem) 1fr;
+    gap: 0.75rem;
+    padding: 0.5rem 0.7rem;
+    background: var(--lh-surface-2);
+
+    &:nth-child(even) {
+        background: color-mix(in srgb, var(--lh-surface-3) 45%, transparent);
+    }
+
+    dt {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: var(--lh-ink-3);
+    }
+
+    dd {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.4rem;
+        margin: 0;
+        min-width: 0;
+        font-size: 0.875rem;
+        color: var(--lh-ink);
+    }
+}
+
+// Длинный текст читается построчно, а не одной строкой с «→».
+.wiki-review__field-row--long dd {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.wiki-review__was {
+    color: var(--lh-ink-3);
+    text-decoration: line-through;
+    word-break: break-word;
+}
+
+.wiki-review__now {
+    color: var(--lh-ink);
+    word-break: break-word;
+}
+
+.wiki-review__arrow {
+    color: var(--lh-ink-3);
+}

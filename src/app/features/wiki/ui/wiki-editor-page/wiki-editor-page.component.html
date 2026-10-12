@@ -1,0 +1,1024 @@
+<div class="we" [class.we--side-closed]="!sideOpen()" [attr.data-mode]="mode()">
+    <!-- ———————— Верхняя панель ———————— -->
+    <header class="we__bar">
+        <a
+            class="we__back"
+            routerLink="/profile/admin"
+            [attr.title]="'wiki.editor.back' | translate"
+            (click)="leave(); $event.preventDefault()"
+        >
+            <tui-icon icon="@tui.arrow-left" />
+            <span class="we__back-text">{{ "wiki.editor.back" | translate }}</span>
+        </a>
+
+        <button
+            type="button"
+            class="we__icon-btn"
+            [class.we__icon-btn--on]="sideOpen()"
+            [attr.title]="'wiki.editor.sidebar' | translate"
+            [attr.aria-pressed]="sideOpen()"
+            (click)="sideOpen.set(!sideOpen())"
+        >
+            <tui-icon [icon]="sideOpen() ? '@tui.panel-left-close' : '@tui.panel-left'" />
+        </button>
+
+        <div class="we__state">
+            <span class="we__status" [attr.data-status]="status()">
+                {{ "wiki.status." + status() | translate }}
+            </span>
+            <span class="we__saved" role="status">
+                @if (deleteError()) {
+                    <span class="we__saved--error">{{ "wiki.admin.deleteFailed" | translate }}</span>
+                } @else if (saveError()) {
+                    <span class="we__saved--error">{{ "wiki.editor.saveError" | translate }}</span>
+                } @else if (dirty()) {
+                    <span class="we__dot"></span>
+                    @if (autosavedAt(); as at) {
+                        {{ "wiki.editor.autosaved" | translate: { time: formatTime(at) } }}
+                    } @else {
+                        {{ "wiki.editor.unsaved" | translate }}
+                    }
+                } @else if (savedAt(); as at) {
+                    <tui-icon icon="@tui.check" />
+                    {{ "wiki.editor.savedAt" | translate: { time: formatTime(at) } }}
+                } @else if (updatedAt(); as at) {
+                    {{ "wiki.editor.updatedAt" | translate: { time: formatTime(at, true) } }}
+                } @else {
+                    {{ "wiki.editor.newArticle" | translate }}
+                }
+            </span>
+        </div>
+
+        <div class="we__spacer"></div>
+
+        <div class="we__modes" role="tablist" [attr.aria-label]="'wiki.editor.view' | translate">
+            <button type="button" role="tab" [attr.aria-selected]="mode() === 'write'" (click)="setMode('write')">
+                <tui-icon icon="@tui.pencil" />
+                <span>{{ "wiki.editor.modes.write" | translate }}</span>
+            </button>
+            <button
+                type="button"
+                role="tab"
+                class="we__mode-split"
+                [attr.aria-selected]="mode() === 'split'"
+                (click)="setMode('split')"
+            >
+                <tui-icon icon="@tui.columns-2" />
+                <span>{{ "wiki.editor.modes.split" | translate }}</span>
+            </button>
+            <button type="button" role="tab" [attr.aria-selected]="mode() === 'preview'" (click)="setMode('preview')">
+                <tui-icon icon="@tui.eye" />
+                <span>{{ "wiki.editor.modes.preview" | translate }}</span>
+            </button>
+        </div>
+
+        <button
+            type="button"
+            class="we__icon-btn we__hide-sm"
+            [attr.title]="'wiki.editor.fullscreen' | translate"
+            (click)="toggleFullscreen()"
+        >
+            <tui-icon icon="@tui.maximize" />
+        </button>
+
+        <button
+            type="button"
+            class="we__icon-btn we__hide-sm"
+            [attr.title]="'wiki.editor.history' | translate"
+            [disabled]="!articleId()"
+            (click)="openHistory()"
+        >
+            <tui-icon icon="@tui.history" />
+        </button>
+
+        <div class="we__more">
+            <button
+                type="button"
+                class="we__icon-btn"
+                [class.we__icon-btn--on]="moreOpen()"
+                [attr.title]="'wiki.editor.more' | translate"
+                aria-haspopup="menu"
+                [attr.aria-expanded]="moreOpen()"
+                (click)="moreOpen.set(!moreOpen())"
+            >
+                <tui-icon icon="@tui.ellipsis-vertical" />
+            </button>
+            @if (moreOpen()) {
+                <div class="we__menu" role="menu">
+                    <button type="button" role="menuitem" (click)="moreOpen.set(false); templatesOpen.set(true)">
+                        <tui-icon icon="@tui.layout-template" />
+                        {{ "wiki.editor.menu.templates" | translate }}
+                    </button>
+                    <button
+                        type="button"
+                        role="menuitem"
+                        class="we__show-sm"
+                        [disabled]="!articleId()"
+                        (click)="moreOpen.set(false); openHistory()"
+                    >
+                        <tui-icon icon="@tui.history" />
+                        {{ "wiki.editor.history" | translate }}
+                    </button>
+                    <button type="button" role="menuitem" (click)="applyTypograph()">
+                        <tui-icon icon="@tui.wand-sparkles" />
+                        {{ "wiki.editor.menu.typograph" | translate }}
+                    </button>
+                    <hr />
+                    <button type="button" role="menuitem" (click)="importMarkdown()">
+                        <tui-icon icon="@tui.file-up" />
+                        {{ "wiki.editor.menu.import" | translate }}
+                    </button>
+                    <button type="button" role="menuitem" (click)="exportMarkdown()">
+                        <tui-icon icon="@tui.file-down" />
+                        {{ "wiki.editor.menu.export" | translate }}
+                    </button>
+                    <!-- Дублирование, снятие с публикации и удаление — прямые операции
+                         записи: сервер их игроку не разрешит, поэтому и не показываем. -->
+                    @if (isEditor && !suggestMode) {
+                        <button type="button" role="menuitem" [disabled]="!articleId()" (click)="duplicate()">
+                            <tui-icon icon="@tui.copy" />
+                            {{ "wiki.editor.menu.duplicate" | translate }}
+                        </button>
+                        @if (status() === "published") {
+                            <button type="button" role="menuitem" (click)="unpublish()">
+                                <tui-icon icon="@tui.eye-off" />
+                                {{ "wiki.editor.menu.unpublish" | translate }}
+                            </button>
+                        }
+                        <hr />
+                        <button type="button" role="menuitem" class="we__menu-danger" (click)="remove()">
+                            <tui-icon icon="@tui.trash-2" />
+                            {{ "wiki.editor.menu.delete" | translate }}
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+
+        @if (!suggestMode) {
+            <button type="button" class="we__btn" [disabled]="!dirty() && !!articleId()" (click)="save()">
+                <tui-icon icon="@tui.save" />
+                <span class="we__hide-sm">{{ "wiki.editor.save" | translate }}</span>
+            </button>
+        }
+
+        @if (isEditor && !suggestMode) {
+            <button
+                type="button"
+                class="we__btn we__btn--primary"
+                [class.we__btn--shake]="publishShake()"
+                [class.we__btn--blocked]="errors().length > 0"
+                [attr.title]="
+                    errors().length ? ('wiki.editor.publishBlocked' | translate: { count: errors().length }) : null
+                "
+                (click)="save('published')"
+            >
+                <tui-icon icon="@tui.send" />
+                <span class="we__hide-sm">
+                    {{ (status() === "published" ? "wiki.editor.update" : "wiki.editor.publish") | translate }}
+                </span>
+                @if (errors().length) {
+                    <span class="we__badge">{{ errors().length }}</span>
+                }
+            </button>
+        }
+
+        @if (!isEditor || suggestMode) {
+            <button
+                type="button"
+                class="we__btn we__btn--primary"
+                [class.we__btn--shake]="publishShake()"
+                [class.we__btn--blocked]="errors().length > 0"
+                [attr.title]="
+                    errors().length ? ('wiki.editor.publishBlocked' | translate: { count: errors().length }) : null
+                "
+                (click)="submitForReview()"
+            >
+                <tui-icon icon="@tui.send" />
+                <span class="we__hide-sm">{{ "wiki.public.suggestSubmit" | translate }}</span>
+                @if (errors().length) {
+                    <span class="we__badge">{{ errors().length }}</span>
+                }
+            </button>
+        }
+    </header>
+
+    @if (suggestSent()) {
+        <div class="we__notice">
+            <tui-icon icon="@tui.check" />
+            {{ "wiki.public.suggestSent" | translate }}
+        </div>
+    }
+
+    @if (restore(); as autosave) {
+        <div class="we__notice" role="alert">
+            <tui-icon icon="@tui.life-buoy" />
+            <span>{{ "wiki.editor.restoreText" | translate: { time: formatTime(autosave.savedAt, true) } }}</span>
+            <button type="button" class="we__btn we__btn--primary we__btn--sm" (click)="restoreAutosave()">
+                {{ "wiki.editor.restore" | translate }}
+            </button>
+            <button type="button" class="we__btn we__btn--sm" (click)="dropAutosave()">
+                {{ "wiki.editor.discard" | translate }}
+            </button>
+        </div>
+    }
+
+    @if (loadingArticle()) {
+        <div class="we__loading" role="status" aria-live="polite">
+            <tui-icon icon="@tui.loader-circle" class="we__loading-icon" />
+            <span>{{ "common.loading" | translate }}</span>
+        </div>
+    }
+
+    <div class="we__main">
+        <!-- ———————— Боковая панель ———————— -->
+        @if (sideOpen()) {
+            <aside class="we__side">
+                <nav class="we__tabs" role="tablist">
+                    <button
+                        type="button"
+                        role="tab"
+                        [attr.aria-selected]="tab() === 'props'"
+                        (click)="tab.set('props')"
+                    >
+                        <tui-icon icon="@tui.sliders-horizontal" />
+                        <span>{{ "wiki.tabs.props" | translate }}</span>
+                    </button>
+                    <button type="button" role="tab" [attr.aria-selected]="tab() === 'toc'" (click)="tab.set('toc')">
+                        <tui-icon icon="@tui.list-tree" />
+                        <span>{{ "wiki.tabs.toc" | translate }}</span>
+                    </button>
+                    <button
+                        type="button"
+                        role="tab"
+                        [attr.aria-selected]="tab() === 'check'"
+                        (click)="tab.set('check')"
+                    >
+                        <tui-icon icon="@tui.shield-check" />
+                        <span>{{ "wiki.tabs.check" | translate }}</span>
+                        @if (errors().length) {
+                            <span class="we__count we__count--error">{{ errors().length }}</span>
+                        } @else if (warnings().length) {
+                            <span class="we__count we__count--warning">{{ warnings().length }}</span>
+                        }
+                    </button>
+                    <button
+                        type="button"
+                        role="tab"
+                        [attr.aria-selected]="tab() === 'images'"
+                        (click)="tab.set('images')"
+                    >
+                        <tui-icon icon="@tui.images" />
+                        <span>{{ "wiki.tabs.images" | translate }}</span>
+                    </button>
+                    <button type="button" role="tab" [attr.aria-selected]="tab() === 'help'" (click)="tab.set('help')">
+                        <tui-icon icon="@tui.circle-help" />
+                        <span>{{ "wiki.tabs.help" | translate }}</span>
+                    </button>
+                </nav>
+
+                <div class="we__side-body">
+                    @switch (tab()) {
+                        <!-- Свойства -->
+                        @case ("props") {
+                            <div
+                                class="we-field"
+                                id="wf-sectionId"
+                                [class.we-field--bad]="fieldIssue().has('sectionId')"
+                            >
+                                <span class="we-field__label">{{ "wiki.props.section" | translate }}</span>
+                                <div class="we__sections">
+                                    @for (section of sections; track section.id) {
+                                        <button
+                                            type="button"
+                                            class="we__section"
+                                            [attr.aria-pressed]="sectionId() === section.id"
+                                            (click)="sectionId.set(section.id)"
+                                        >
+                                            <tui-icon [icon]="section.icon" />
+                                            {{ sectionLabel(section.id) }}
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="we-field" id="wf-slug" [class.we-field--bad]="fieldIssue().has('slug')">
+                                <label class="we-field__label" for="wiki-slug">
+                                    {{ "wiki.props.slug" | translate }}
+                                    <span class="we-field__aside">
+                                        {{
+                                            (slugLocked() ? "wiki.props.slugManual" : "wiki.props.slugAuto") | translate
+                                        }}
+                                    </span>
+                                </label>
+                                <div class="we-input-group">
+                                    <span class="we-input-group__prefix">/wiki/</span>
+                                    <input
+                                        id="wiki-slug"
+                                        class="we-input"
+                                        spellcheck="false"
+                                        [ngModel]="slug()"
+                                        (ngModelChange)="setSlug($event)"
+                                    />
+                                    <button
+                                        type="button"
+                                        class="we-input-group__btn"
+                                        [attr.title]="
+                                            (slugLocked() ? 'wiki.props.slugUnlock' : 'wiki.props.slugLock') | translate
+                                        "
+                                        (click)="toggleSlugLock()"
+                                    >
+                                        <tui-icon [icon]="slugLocked() ? '@tui.lock' : '@tui.lock-open'" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="we-input-group__btn"
+                                        [attr.title]="'wiki.props.copyLink' | translate"
+                                        [disabled]="!slugValid()"
+                                        (click)="copyLink()"
+                                    >
+                                        <tui-icon [icon]="copied() ? '@tui.check' : '@tui.link'" />
+                                    </button>
+                                </div>
+                                @if (fieldIssue().get("slug"); as issue) {
+                                    <span class="we-field__error">{{ issueText(issue) }}</span>
+                                }
+                            </div>
+
+                            <div class="we-field" id="wf-lead" [class.we-field--bad]="fieldIssue().has('lead')">
+                                <label class="we-field__label" for="wiki-lead">
+                                    {{ "wiki.props.lead" | translate }}
+                                    <span
+                                        class="we-field__aside"
+                                        [class.we-field__aside--bad]="leadLength() > limits.lead"
+                                    >
+                                        {{ leadLength() }} / {{ limits.lead }}
+                                    </span>
+                                </label>
+                                <textarea
+                                    id="wiki-lead"
+                                    class="we-input we-input--area"
+                                    rows="4"
+                                    [placeholder]="'wiki.props.leadPlaceholder' | translate"
+                                    [ngModel]="lead()"
+                                    (ngModelChange)="lead.set($event)"
+                                ></textarea>
+                                <span class="we-field__hint">{{ "wiki.props.leadHint" | translate }}</span>
+                            </div>
+
+                            <div class="we-field" id="wf-cover">
+                                <span class="we-field__label">{{ "wiki.props.cover" | translate }}</span>
+                                @if (cover(); as current) {
+                                    <div
+                                        class="we__cover"
+                                        [style.background-image]="coverImage()"
+                                        [style.background-position]="'center ' + current.focus + '%'"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="we__cover-remove"
+                                            [attr.title]="'wiki.props.coverRemove' | translate"
+                                            (click)="cover.set(null)"
+                                        >
+                                            <tui-icon icon="@tui.x" />
+                                        </button>
+                                    </div>
+                                    <label class="we__range">
+                                        <span>{{ "wiki.props.coverFocus" | translate }}</span>
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="100"
+                                            [ngModel]="current.focus"
+                                            (ngModelChange)="setCoverFocus($event)"
+                                        />
+                                        <span class="we__range-value">{{ current.focus }}%</span>
+                                    </label>
+                                }
+                                <div class="we__row">
+                                    <button
+                                        type="button"
+                                        class="we__btn we__btn--sm"
+                                        [disabled]="coverUploading()"
+                                        (click)="pickCoverFile()"
+                                    >
+                                        <tui-icon [icon]="coverUploading() ? '@tui.loader' : '@tui.upload'" />
+                                        {{
+                                            (cover() ? "wiki.props.coverReplace" : "wiki.props.coverUpload") | translate
+                                        }}
+                                    </button>
+                                    @if (render().images.length) {
+                                        <button type="button" class="we__btn we__btn--sm" (click)="tab.set('images')">
+                                            <tui-icon icon="@tui.images" />
+                                            {{ "wiki.props.coverFromText" | translate }}
+                                        </button>
+                                    }
+                                </div>
+                                <div class="we-input-group">
+                                    <input
+                                        #coverUrl
+                                        class="we-input"
+                                        [placeholder]="'wiki.props.coverUrl' | translate"
+                                        [ngModel]="coverUrlInput()"
+                                        (ngModelChange)="coverUrlInput.set($event)"
+                                        (keydown.enter)="setCoverUrl(coverUrl)"
+                                    />
+                                    <button
+                                        type="button"
+                                        class="we-input-group__btn"
+                                        [disabled]="!coverUrlInput()"
+                                        (click)="setCoverUrl(coverUrl)"
+                                    >
+                                        <tui-icon icon="@tui.corner-down-left" />
+                                    </button>
+                                </div>
+                                <input #coverFile type="file" accept="image/*" hidden (change)="onCoverFile($event)" />
+                            </div>
+
+                            <div class="we-field" id="wf-tags">
+                                <label class="we-field__label" for="wiki-tags">
+                                    {{ "wiki.props.tags" | translate }}
+                                    <span class="we-field__aside">{{ tags().length }} / 8</span>
+                                </label>
+                                <div class="we__tags">
+                                    @for (tag of tags(); track tag) {
+                                        <span class="we__tag">
+                                            #{{ tag }}
+                                            <button
+                                                type="button"
+                                                [attr.aria-label]="'wiki.props.tagRemove' | translate"
+                                                (click)="removeTag(tag)"
+                                            >
+                                                <tui-icon icon="@tui.x" />
+                                            </button>
+                                        </span>
+                                    }
+                                    <input
+                                        id="wiki-tags"
+                                        class="we__tag-input"
+                                        list="wiki-known-tags"
+                                        [placeholder]="'wiki.props.tagsPlaceholder' | translate"
+                                        [disabled]="tags().length >= 8"
+                                        [ngModel]="tagInput()"
+                                        (ngModelChange)="tagInput.set($event)"
+                                        (keydown)="onTagKeydown($event)"
+                                        (blur)="addTag()"
+                                    />
+                                    <datalist id="wiki-known-tags">
+                                        @for (tag of knownTags(); track tag) {
+                                            <option [value]="tag"></option>
+                                        }
+                                    </datalist>
+                                </div>
+                            </div>
+
+                            <div class="we-field">
+                                <label class="we-field__label" for="wiki-version">
+                                    {{ "wiki.props.version" | translate }}
+                                </label>
+                                <input
+                                    id="wiki-version"
+                                    class="we-input"
+                                    list="wiki-versions"
+                                    [placeholder]="'wiki.props.versionPlaceholder' | translate"
+                                    [ngModel]="gameVersion()"
+                                    (ngModelChange)="gameVersion.set($event)"
+                                />
+                                <datalist id="wiki-versions">
+                                    <option value="1.21"></option>
+                                    <option value="1.20"></option>
+                                </datalist>
+                            </div>
+
+                            <div
+                                class="we-field"
+                                id="wf-quickAnswer"
+                                [class.we-field--bad]="fieldIssue().has('quickAnswer')"
+                            >
+                                <label class="we-switch">
+                                    <input
+                                        type="checkbox"
+                                        class="lh-checkbox"
+                                        [checked]="quickOn()"
+                                        (change)="toggleQuick()"
+                                    />
+                                    <span>
+                                        <b>{{ "wiki.props.quick" | translate }}</b>
+                                        <small>{{ "wiki.props.quickHint" | translate }}</small>
+                                    </span>
+                                </label>
+                                @if (quickOn()) {
+                                    <input
+                                        class="we-input"
+                                        [placeholder]="'wiki.props.quickQuestion' | translate"
+                                        [maxlength]="limits.quickQuestion"
+                                        [ngModel]="quickQuestion()"
+                                        (ngModelChange)="quickQuestion.set($event)"
+                                    />
+                                    <textarea
+                                        class="we-input we-input--area"
+                                        rows="3"
+                                        [placeholder]="'wiki.props.quickAnswer' | translate"
+                                        [ngModel]="quickAnswer()"
+                                        (ngModelChange)="quickAnswer.set($event)"
+                                    ></textarea>
+                                    <span
+                                        class="we-field__hint"
+                                        [class.we-field__aside--bad]="quickAnswer().length > limits.quickAnswer"
+                                    >
+                                        {{ quickAnswer().length }} / {{ limits.quickAnswer }}
+                                    </span>
+                                }
+                            </div>
+
+                            <div class="we-field" id="wf-related" [class.we-field--bad]="fieldIssue().has('related')">
+                                <span class="we-field__label">{{ "wiki.props.related" | translate }}</span>
+                                @for (slug of related(); track slug; let index = $index; let last = $last) {
+                                    <div class="we__related" [class.we__related--missing]="!relatedTitle(slug)">
+                                        <tui-icon icon="@tui.book-open" />
+                                        <span class="we__related-title">{{ relatedTitle(slug) ?? slug }}</span>
+                                        <button type="button" [disabled]="index === 0" (click)="moveRelated(index, -1)">
+                                            <tui-icon icon="@tui.chevron-up" />
+                                        </button>
+                                        <button type="button" [disabled]="last" (click)="moveRelated(index, 1)">
+                                            <tui-icon icon="@tui.chevron-down" />
+                                        </button>
+                                        <button type="button" (click)="removeRelated(slug)">
+                                            <tui-icon icon="@tui.x" />
+                                        </button>
+                                    </div>
+                                }
+                                @if (relatedSuggestions().length) {
+                                    <div class="we__suggest-row">
+                                        <span>{{ "wiki.props.relatedFromText" | translate }}</span>
+                                        @for (slug of relatedSuggestions(); track slug) {
+                                            <button type="button" class="we__chip" (click)="addRelated(slug)">
+                                                <tui-icon icon="@tui.plus" />
+                                                {{ relatedTitle(slug) }}
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                                <div class="we__combo">
+                                    <input
+                                        class="we-input"
+                                        [placeholder]="'wiki.props.relatedSearch' | translate"
+                                        [ngModel]="relatedQuery()"
+                                        (ngModelChange)="relatedQuery.set($event)"
+                                    />
+                                    @if (relatedQuery().trim()) {
+                                        <div class="we__combo-list">
+                                            @for (option of relatedOptions(); track option.slug) {
+                                                <button type="button" (click)="addRelated(option.slug)">
+                                                    <b>{{ option.title }}</b>
+                                                    <small>/wiki/{{ option.slug }}</small>
+                                                </button>
+                                            } @empty {
+                                                <span class="we__combo-empty">
+                                                    {{ "wiki.props.relatedNone" | translate }}
+                                                </span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                @if (backlinks().length) {
+                                    <div class="we__backlinks">
+                                        <span>
+                                            {{ "wiki.props.backlinks" | translate: { count: backlinks().length } }}
+                                        </span>
+                                        @for (article of backlinks(); track article.id) {
+                                            <a
+                                                class="we__chip"
+                                                [routerLink]="['/wiki/edit', article.id]"
+                                                target="_blank"
+                                            >
+                                                {{ article.title }}
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="we-field">
+                                <label class="we-field__label" for="wiki-note">
+                                    {{ "wiki.props.note" | translate }}
+                                </label>
+                                <input
+                                    id="wiki-note"
+                                    class="we-input"
+                                    [placeholder]="'wiki.props.notePlaceholder' | translate"
+                                    [ngModel]="note()"
+                                    (ngModelChange)="note.set($event)"
+                                    (keydown.enter)="save()"
+                                />
+                            </div>
+                        }
+
+                        <!-- Оглавление -->
+                        @case ("toc") {
+                            @if (outline().length) {
+                                <ol class="we__outline">
+                                    @for (heading of outline(); track heading.id + heading.line) {
+                                        <li [class.we__outline-sub]="heading.level === 3">
+                                            <button
+                                                type="button"
+                                                class="we__outline-link"
+                                                (click)="goToLine(heading.line); scrollPreviewToAnchor(heading.id)"
+                                            >
+                                                <span class="we__outline-text">{{ heading.text }}</span>
+                                                <small>
+                                                    {{ "wiki.toc.words" | translate: { count: heading.words } }}
+                                                </small>
+                                            </button>
+                                            @if (heading.level === 2 && h2Count() > 1) {
+                                                <span class="we__outline-move">
+                                                    <button
+                                                        type="button"
+                                                        [attr.title]="'wiki.toc.up' | translate"
+                                                        [disabled]="heading.h2Index === 0"
+                                                        (click)="moveSection(heading.h2Index, -1)"
+                                                    >
+                                                        <tui-icon icon="@tui.chevron-up" />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        [attr.title]="'wiki.toc.down' | translate"
+                                                        [disabled]="heading.h2Index === h2Count() - 1"
+                                                        (click)="moveSection(heading.h2Index, 1)"
+                                                    >
+                                                        <tui-icon icon="@tui.chevron-down" />
+                                                    </button>
+                                                </span>
+                                            }
+                                        </li>
+                                    }
+                                </ol>
+                                <p class="we__muted">{{ "wiki.toc.hint" | translate }}</p>
+                            } @else {
+                                <div class="we__empty">
+                                    <tui-icon icon="@tui.list-tree" />
+                                    <p>{{ "wiki.toc.empty" | translate }}</p>
+                                    <button type="button" class="we__btn we__btn--sm" (click)="runCommand('h2')">
+                                        <tui-icon icon="@tui.heading-2" />
+                                        {{ "wiki.cmd.h2" | translate }}
+                                    </button>
+                                </div>
+                            }
+                        }
+
+                        <!-- Проверка -->
+                        @case ("check") {
+                            <div class="we__verdict" [attr.data-ok]="!errors().length">
+                                <tui-icon [icon]="errors().length ? '@tui.octagon-x' : '@tui.circle-check'" />
+                                <div>
+                                    <b>
+                                        {{
+                                            (errors().length ? "wiki.check.blocked" : "wiki.check.ready")
+                                                | translate: { count: errors().length }
+                                        }}
+                                    </b>
+                                    <small>
+                                        {{
+                                            "wiki.check.summary"
+                                                | translate: { warnings: warnings().length, tips: tips().length }
+                                        }}
+                                    </small>
+                                </div>
+                            </div>
+                            <ul class="we__issues">
+                                @for (issue of issues(); track $index) {
+                                    <li>
+                                        <button
+                                            type="button"
+                                            class="we__issue"
+                                            [attr.data-level]="issue.level"
+                                            (click)="openIssue(issue)"
+                                        >
+                                            <tui-icon
+                                                [icon]="
+                                                    issue.level === 'error'
+                                                        ? '@tui.circle-x'
+                                                        : issue.level === 'warning'
+                                                          ? '@tui.triangle-alert'
+                                                          : '@tui.lightbulb'
+                                                "
+                                            />
+                                            <span class="we__issue-text">{{ issueText(issue) }}</span>
+                                            @if (issue.line !== undefined) {
+                                                <span class="we__issue-line">
+                                                    {{ "wiki.check.line" | translate: { line: issue.line + 1 } }}
+                                                </span>
+                                            }
+                                        </button>
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                        <!-- Картинки -->
+                        @case ("images") {
+                            <button
+                                type="button"
+                                class="we__btn we__btn--sm we__btn--block"
+                                (click)="runCommand('image')"
+                            >
+                                <tui-icon icon="@tui.image-plus" />
+                                {{ "wiki.images.add" | translate }}
+                            </button>
+                            @if (render().images.length) {
+                                <div class="we__images">
+                                    @for (image of render().images; track $index) {
+                                        <div class="we__image" [class.we__image--bad]="!image.caption">
+                                            <button
+                                                type="button"
+                                                class="we__image-thumb"
+                                                (click)="goToLine(image.line)"
+                                            >
+                                                <img [src]="image.url" [alt]="image.caption" loading="lazy" />
+                                            </button>
+                                            <div class="we__image-meta">
+                                                <span class="we__image-caption">
+                                                    {{ image.caption || ("wiki.images.noCaption" | translate) }}
+                                                </span>
+                                                <span class="we__image-actions">
+                                                    <small>
+                                                        {{ "wiki.check.line" | translate: { line: image.line + 1 } }}
+                                                    </small>
+                                                    <button type="button" (click)="useAsCover(image.url)">
+                                                        {{ "wiki.images.asCover" | translate }}
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            } @else {
+                                <div class="we__empty">
+                                    <tui-icon icon="@tui.image" />
+                                    <p>{{ "wiki.images.empty" | translate }}</p>
+                                </div>
+                            }
+                        }
+
+                        <!-- Справка -->
+                        @case ("help") {
+                            <p class="we__muted">{{ "wiki.help.intro" | translate }}</p>
+                            <ul class="we__cheats">
+                                @for (row of cheatsheet; track row.key) {
+                                    <li>
+                                        <code>{{ row.code }}</code>
+                                        <span>{{ "wiki.help.rows." + row.key | translate }}</span>
+                                        @if (row.command) {
+                                            <button
+                                                type="button"
+                                                [attr.title]="'wiki.help.insert' | translate"
+                                                (click)="runCommand(row.command)"
+                                            >
+                                                <tui-icon icon="@tui.plus" />
+                                            </button>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                            <h3 class="we__side-title">{{ "wiki.help.hotkeys" | translate }}</h3>
+                            <dl class="we__hotkeys">
+                                @for (row of hotkeys; track row[0]) {
+                                    <dt>
+                                        <kbd>{{ row[0] }}</kbd>
+                                    </dt>
+                                    <dd>{{ "wiki.help.keys." + row[1] | translate }}</dd>
+                                }
+                            </dl>
+                        }
+                    }
+                </div>
+            </aside>
+        }
+
+        <!-- ———————— Текст ———————— -->
+        <section class="we__editor" [hidden]="mode() === 'preview'">
+            <div class="we__title-wrap" [class.we-field--bad]="fieldIssue().has('title')">
+                <input
+                    id="wiki-title"
+                    class="we__title lh-display"
+                    [placeholder]="'wiki.editor.titlePlaceholder' | translate"
+                    [ngModel]="title()"
+                    (ngModelChange)="setTitle($event)"
+                    (keydown.enter)="$event.preventDefault()"
+                />
+                <span class="we__title-count" [class.we-field__aside--bad]="title().length > limits.title">
+                    {{ title().length }} / {{ limits.title }}
+                </span>
+            </div>
+            <app-wiki-markup-input
+                class="we__input"
+                [value]="body()"
+                (valueChange)="body.set($event)"
+                [uploadImage]="uploadImage"
+                [articles]="linkTargets()"
+                [headings]="render().headings"
+                [marks]="marks()"
+                [words]="render().words"
+                [placeholder]="'wiki.editor.bodyPlaceholder' | translate"
+                (save)="save()"
+                (topLine)="onTopLine($event)"
+                (caretLine)="onCaretLine($event)"
+            />
+        </section>
+
+        <!-- ———————— Просмотр ———————— -->
+        <section class="we__preview" [hidden]="mode() === 'write'">
+            <div class="we__preview-bar">
+                <span class="we__preview-label">
+                    <tui-icon icon="@tui.eye" />
+                    {{ "wiki.editor.previewLabel" | translate }}
+                </span>
+                <div class="we__spacer"></div>
+                @if (mode() === "split") {
+                    <button
+                        type="button"
+                        class="we__icon-btn we__icon-btn--sm"
+                        [class.we__icon-btn--on]="syncScroll()"
+                        [attr.title]="'wiki.editor.syncScroll' | translate"
+                        [attr.aria-pressed]="syncScroll()"
+                        (click)="syncScroll.set(!syncScroll())"
+                    >
+                        <tui-icon icon="@tui.arrow-down-up" />
+                    </button>
+                }
+                <button
+                    type="button"
+                    class="we__icon-btn we__icon-btn--sm"
+                    [class.we__icon-btn--on]="!mobilePreview()"
+                    [attr.title]="'wiki.editor.desktop' | translate"
+                    (click)="mobilePreview.set(false)"
+                >
+                    <tui-icon icon="@tui.monitor" />
+                </button>
+                <button
+                    type="button"
+                    class="we__icon-btn we__icon-btn--sm"
+                    [class.we__icon-btn--on]="mobilePreview()"
+                    [attr.title]="'wiki.editor.mobile' | translate"
+                    (click)="mobilePreview.set(true)"
+                >
+                    <tui-icon icon="@tui.smartphone" />
+                </button>
+            </div>
+            <div #previewScroll class="we__preview-scroll">
+                <div class="we__paper" [class.we__paper--mobile]="mobilePreview()">
+                    <app-wiki-article-view
+                        [draft]="previewDraft()"
+                        [html]="render().html"
+                        [headings]="render().headings"
+                        [images]="render().images"
+                        [words]="render().words"
+                        [updatedAt]="updatedAt()"
+                        [resolveTitle]="resolveTitle()"
+                        [preview]="true"
+                        (lineClick)="goToLine($event)"
+                    />
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ———————— Заготовки ———————— -->
+    @if (templatesOpen()) {
+        <div class="we__overlay" (click)="templatesOpen.set(false)">
+            <div class="we__dialog we__dialog--wide" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+                <div class="we__dialog-head">
+                    <h2 class="lh-display">{{ "wiki.templates.title" | translate }}</h2>
+                    <button
+                        type="button"
+                        class="we__icon-btn"
+                        [attr.aria-label]="'wiki.view.close' | translate"
+                        (click)="templatesOpen.set(false)"
+                    >
+                        <tui-icon icon="@tui.x" />
+                    </button>
+                </div>
+                <p class="we__muted">{{ "wiki.templates.intro" | translate }}</p>
+                <div class="we__templates">
+                    @for (template of templates; track template.id) {
+                        <button type="button" class="we__template" (click)="applyTemplate(template)">
+                            <span class="we__template-icon"><tui-icon [icon]="template.icon" /></span>
+                            <b>{{ "wiki.templates." + template.id + ".name" | translate }}</b>
+                            <small>{{ "wiki.templates." + template.id + ".hint" | translate }}</small>
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- ———————— История ———————— -->
+    @if (historyOpen()) {
+        <div class="we__overlay" (click)="historyOpen.set(false)">
+            <div class="we__drawer" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+                <div class="we__dialog-head">
+                    <h2 class="lh-display">{{ "wiki.history.title" | translate }}</h2>
+                    <button
+                        type="button"
+                        class="we__icon-btn"
+                        [attr.aria-label]="'wiki.view.close' | translate"
+                        (click)="historyOpen.set(false)"
+                    >
+                        <tui-icon icon="@tui.x" />
+                    </button>
+                </div>
+                <div class="we__history">
+                    <ul class="we__revisions">
+                        @for (revision of history(); track revision.savedAt; let first = $first) {
+                            <li>
+                                <button
+                                    type="button"
+                                    class="we__revision"
+                                    [attr.aria-pressed]="historyPick() === revision"
+                                    (click)="historyPick.set(revision)"
+                                >
+                                    <b>
+                                        {{ formatTime(revision.savedAt, true) }}
+                                        @if (first) {
+                                            <span class="we__pill">{{ "wiki.history.latest" | translate }}</span>
+                                        }
+                                    </b>
+                                    <small>
+                                        {{ revision.authorName }} ·
+                                        {{ "wiki.status." + revision.article.status | translate }} ·
+                                        {{ "wiki.input.words" | translate: { count: revisionWords(revision) } }}
+                                    </small>
+                                    @if (revision.note) {
+                                        <span class="we__revision-note">{{ revision.note }}</span>
+                                    }
+                                </button>
+                            </li>
+                        } @empty {
+                            <li class="we__muted">{{ "wiki.history.empty" | translate }}</li>
+                        }
+                    </ul>
+                    @if (historyPick(); as pick) {
+                        <div class="we__diff">
+                            <div class="we__diff-head">
+                                <span>{{ "wiki.history.compare" | translate }}</span>
+                                <span class="we__diff-stat we__diff-stat--add">+{{ historyDiffStats().added }}</span>
+                                <span class="we__diff-stat we__diff-stat--del">−{{ historyDiffStats().removed }}</span>
+                                <div class="we__spacer"></div>
+                                <button
+                                    type="button"
+                                    class="we__btn we__btn--sm we__btn--primary"
+                                    (click)="restoreRevision(pick)"
+                                >
+                                    <tui-icon icon="@tui.rotate-ccw" />
+                                    {{ "wiki.history.restore" | translate }}
+                                </button>
+                            </div>
+                            @if (pick.article.title !== title()) {
+                                <div class="we__diff-title">
+                                    <s>{{ pick.article.title }}</s>
+                                    →
+                                    <b>{{ title() }}</b>
+                                </div>
+                            }
+                            <pre
+                                class="we__diff-body"
+                            >@for (line of historyDiff(); track $index) {<span [attr.data-kind]="line.kind">{{ line.text || ' ' }}</span>}</pre>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- ———————— Подтверждение ———————— -->
+    @if (confirmState(); as state) {
+        <div class="we__overlay we__overlay--top" (click)="answer(false)">
+            <div class="we__dialog" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+                <h2 class="we__confirm-title">{{ state.title }}</h2>
+                <p class="we__muted">{{ state.text }}</p>
+                <div class="we__confirm-actions">
+                    <button type="button" class="we__btn" (click)="answer(false)">
+                        {{ "wiki.confirm.cancel" | translate }}
+                    </button>
+                    <button
+                        type="button"
+                        class="we__btn"
+                        [class.we__btn--primary]="!state.danger"
+                        [class.we__btn--danger]="state.danger"
+                        (click)="answer(true)"
+                    >
+                        {{ state.action }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <input
+        #importInput
+        type="file"
+        accept=".md,.markdown,.txt,text/markdown,text/plain"
+        hidden
+        (change)="onImportFile($event)"
+    />
+</div>

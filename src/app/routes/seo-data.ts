@@ -37,6 +37,8 @@ export const routeSeoData: {
     player: ISeoData;
     lfg: ISeoData;
     join: ISeoData;
+    wiki: ISeoData;
+    wikiArticle: ISeoData;
 } = {
     home: {
         title: 'Last Hearth — ролевой сервер Vintage Story',
@@ -243,6 +245,30 @@ export const routeSeoData: {
         siteName,
         image: ogImage,
         imageAlt: 'Ищу компанию — Last Hearth',
+    },
+    wiki: {
+        title: 'Вики — Last Hearth',
+        description:
+            'Справочник по миру Last Hearth: механики, начало игры, поселения, войны, экономика и помощь новичку.',
+        keywords:
+            'вики Last Hearth, гайды Vintage Story, механики сервера, начало игры, поселения, войны, экономика',
+        url: `${siteUrl}/wiki`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Вики сервера Last Hearth',
+    },
+    wikiArticle: {
+        title: 'Статья вики — Last Hearth',
+        description: 'Статья вики сервера Last Hearth: механики, поселения, войны и экономика.',
+        keywords: 'вики Last Hearth, статья, гайд Vintage Story',
+        url: `${siteUrl}/wiki`,
+        type: 'article',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Статья вики Last Hearth',
     },
     join: {
         title: 'Приглашение в поселение — Last Hearth',
