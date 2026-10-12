@@ -23,6 +23,7 @@ import { TuiPulse } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { WikiAdminPanelComponent } from '@features/wiki';
 
 /**
  * Компонент страницы администратора.
@@ -48,6 +49,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
         EmptyStateComponent,
         AdminListSkeletonComponent,
         TranslatePipe,
+        WikiAdminPanelComponent,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.less',

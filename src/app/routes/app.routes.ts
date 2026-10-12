@@ -5,6 +5,7 @@ import { adminGuard } from '../core/guards/admin.guard';
 import { userGuard } from '../core/guards/user.guard';
 import { guestGuard } from '../core/guards/guest.guard';
 import { loadPage } from '@core/i18n';
+import { wikiEditorLeaveGuard } from '../features/wiki/lib/wiki-editor-leave.guard';
 
 /**
  * Роуты приложения.
@@ -16,6 +17,24 @@ import { loadPage } from '@core/i18n';
  */
 export const routes: Routes = [
     {
+        // Редактор статьи вики — полноэкранный, вне общей разметки страниц.
+        path: 'wiki/edit/:id',
+        loadComponent: () =>
+            loadPage(
+                () =>
+                    import('../features/wiki/ui/wiki-editor-page/wiki-editor-page.component').then(
+                        (m) => m.WikiEditorPageComponent
+                    ),
+                [() => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N)]
+            ),
+        // Редактор открыт любому авторизованному: игрок приходит сюда, чтобы
+        // предложить статью или правку и отправить её на проверку.
+        // Что ему разрешено записать, решает сервер по scope.
+        canActivate: [userGuard],
+        canDeactivate: [wikiEditorLeaveGuard],
+        data: { route_keys: RouteKeys.wikiEditor, seo: routeSeoData.profile },
+    },
+    {
         path: '',
         loadComponent: () => import('../features/landing/landing.component').then((m) => m.LandingComponent),
         children: [
@@ -25,6 +44,25 @@ export const routes: Routes = [
                 path: '',
                 redirectTo: 'home',
                 pathMatch: 'full',
+            },
+            {
+                // Вики: список статей и статья. Пока без сервера — см. WikiStoreService.
+                path: 'wiki',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/wiki').then((m) => m.WikiListPageComponent),
+                        [() => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.wiki, seo: routeSeoData.wiki },
+            },
+            {
+                path: 'wiki/:slug',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/wiki').then((m) => m.WikiArticlePageComponent),
+                        [() => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.wiki, seo: routeSeoData.wikiArticle },
             },
             {
                 path: 'home',
@@ -118,6 +156,7 @@ export const routes: Routes = [
                                 [
                                     () =>
                                         import('@core/i18n/translations/features/admin.i18n').then((m) => m.ADMIN_I18N),
+                                    () => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N),
                                 ]
                             ),
                         canActivate: [adminGuard],
@@ -178,7 +217,8 @@ export const routes: Routes = [
                 path: 'settlements',
                 loadComponent: () =>
                     loadPage(
-                        () => import('../features/settlements/settlements.component').then((m) => m.SettlementsComponent),
+                        () =>
+                            import('../features/settlements/settlements.component').then((m) => m.SettlementsComponent),
                         [
                             () =>
                                 import('@core/i18n/translations/features/settlements.i18n').then(
@@ -217,10 +257,7 @@ export const routes: Routes = [
                             import('../features/diplomacy/diplomacy-page.component').then(
                                 (m) => m.DiplomacyPageComponent
                             ),
-                        [
-                            () =>
-                                import('@core/i18n/translations/features/diplomacy.i18n').then((m) => m.DIPLOMACY_I18N),
-                        ]
+                        [() => import('@core/i18n/translations/features/diplomacy.i18n').then((m) => m.DIPLOMACY_I18N)]
                     ),
                 data: { route_keys: RouteKeys.diplomacy, seo: routeSeoData.diplomacy },
             },

@@ -13,6 +13,7 @@ export const ADMIN_I18N = {
                 hungerGames: 'Голодные игры',
                 purchasesHistory: 'История покупок',
                 settlements: 'Поселения',
+                wiki: 'Вики',
             },
             common: {
                 avatarAlt: 'Аватар',
@@ -307,6 +308,7 @@ export const ADMIN_I18N = {
                 hungerGames: 'Hunger Games',
                 purchasesHistory: 'Purchase history',
                 settlements: 'Settlements',
+                wiki: 'Wiki',
             },
             common: {
                 avatarAlt: 'Avatar',

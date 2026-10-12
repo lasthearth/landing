@@ -1,0 +1,40 @@
+.wiki-article__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    // Без этого ряда статья липнет к кнопкам.
+    margin-bottom: 0.5rem;
+}
+
+.wiki-article__edit {
+    padding: 0.625rem 1.1rem;
+
+    // На время открытия редактора кнопка не выглядит нажимаемой повторно.
+    &--busy {
+        pointer-events: none;
+        opacity: 0.75;
+    }
+}
+
+.wiki-article__spin {
+    animation: wiki-spin 1s linear infinite;
+}
+
+@keyframes wiki-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wiki-article__spin {
+        animation: none;
+    }
+}
+
+.wiki-article__back {
+    align-self: flex-start;
+    text-decoration: none;
+}
