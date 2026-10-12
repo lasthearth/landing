@@ -963,7 +963,8 @@ interface CreateUploadUrlsRequest {
         | 'UPLOAD_PURPOSE_UNSPECIFIED'
         | 'UPLOAD_PURPOSE_DONATE_SHOP'
         | 'UPLOAD_PURPOSE_SETTLEMENT'
-        | 'UPLOAD_PURPOSE_NEWS';
+        | 'UPLOAD_PURPOSE_NEWS'
+        | 'UPLOAD_PURPOSE_WIKI';
     count: number; // [1, 20]
     content_type?: string; // например "image/webp"; пусто → image/* + .webp
 }

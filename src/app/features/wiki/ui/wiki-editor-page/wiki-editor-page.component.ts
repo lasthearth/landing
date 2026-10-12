@@ -478,7 +478,7 @@ export class WikiEditorPageComponent {
      */
     protected readonly uploadImage = async (file: File): Promise<string> => {
         const compressed = await compressImage(file, { maxWidth: 2000, maxHeight: 2000, quality: 0.9 });
-        return this.media.uploadFile(compressed, 'UPLOAD_PURPOSE_NEWS');
+        return this.media.uploadFile(compressed, 'UPLOAD_PURPOSE_WIKI');
     };
 
     private renderTimer: ReturnType<typeof setTimeout> | null = null;
