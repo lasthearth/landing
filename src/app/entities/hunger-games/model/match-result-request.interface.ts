@@ -62,12 +62,3 @@ export interface IMatchResultRequestDto {
     players: IMatchPlayerDto[];
 }
 
-/**
- * UI-модель запроса на запись результата матча.
- */
-export interface IMatchResultRequest {
-    /**
-     * Список участников матча с результатами.
-     */
-    players: IMatchPlayer[];
-}

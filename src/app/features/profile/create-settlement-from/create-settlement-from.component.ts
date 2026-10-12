@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { TuiFiles } from '@taiga-ui/kit';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { SettlementsTypes } from '@entities/settlement';
 import { TranslatePipe } from '@core/i18n';
@@ -18,7 +17,6 @@ import { GuildFormComponent } from './settlements-types-forms/guild-form/guild-f
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        TuiFiles,
         CampFormComponent,
         VillageFormComponent,
         RegionFormComponent,

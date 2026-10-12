@@ -1,0 +1,309 @@
+<div class="wi" [class.wi--mono]="mono()">
+    <div class="wi__toolbar" role="toolbar" [attr.aria-label]="'wiki.input.toolbar' | translate">
+        @for (group of toolbar; track $index) {
+            <div class="wi__group">
+                @if (isGroup(group)) {
+                    @for (id of group; track id) {
+                        @if (id === 'table') {
+                            <div class="wi__menu-wrap">
+                                <button
+                                    type="button"
+                                    class="wi__btn"
+                                    [class.wi__btn--open]="menu() === 'table'"
+                                    [attr.title]="title(id)"
+                                    [attr.aria-label]="label(id)"
+                                    aria-haspopup="true"
+                                    [attr.aria-expanded]="menu() === 'table'"
+                                    (mousedown)="$event.preventDefault()"
+                                    (click)="toggleMenu('table')"
+                                >
+                                    <tui-icon [icon]="commands[id].icon" />
+                                </button>
+                                @if (menu() === 'table') {
+                                    <div class="wi__menu wi__menu--grid" role="dialog">
+                                        <div class="wi__grid" (mouseleave)="tableHover.set([0, 0])">
+                                            @for (row of tableGrid; track row) {
+                                                @for (col of tableGrid; track col) {
+                                                    <button
+                                                        type="button"
+                                                        class="wi__cell"
+                                                        [class.wi__cell--on]="col <= tableHover()[0] && row <= tableHover()[1]"
+                                                        [attr.aria-label]="col + ' × ' + row"
+                                                        (mousedown)="$event.preventDefault()"
+                                                        (mouseenter)="tableHover.set([col, row])"
+                                                        (focus)="tableHover.set([col, row])"
+                                                        (click)="insertTable(col, Math.max(1, row - 1))"
+                                                    ></button>
+                                                }
+                                            }
+                                        </div>
+                                        <div class="wi__grid-label">
+                                            @if (tableHover()[0]) {
+                                                {{ tableHover()[0] }} × {{ tableHover()[1] }}
+                                            } @else {
+                                                {{ 'wiki.input.tableSize' | translate }}
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        } @else {
+                            <button
+                                type="button"
+                                class="wi__btn"
+                                [attr.title]="title(id)"
+                                [attr.aria-label]="label(id)"
+                                [disabled]="(id === 'image' || id === 'gallery') && uploading() > 0"
+                                (mousedown)="$event.preventDefault()"
+                                (click)="run(id)"
+                            >
+                                <tui-icon [icon]="commands[id].icon" />
+                            </button>
+                        }
+                    }
+                } @else {
+                    <div class="wi__menu-wrap">
+                        <button
+                            type="button"
+                            class="wi__btn wi__btn--wide"
+                            [class.wi__btn--open]="menu() === 'callouts'"
+                            [attr.title]="'wiki.input.callouts' | translate"
+                            aria-haspopup="menu"
+                            [attr.aria-expanded]="menu() === 'callouts'"
+                            (mousedown)="$event.preventDefault()"
+                            (click)="toggleMenu('callouts')"
+                        >
+                            <tui-icon icon="@tui.message-square-warning" />
+                            <tui-icon icon="@tui.chevron-down" class="wi__chevron" />
+                        </button>
+                        @if (menu() === 'callouts') {
+                            <div class="wi__menu" role="menu">
+                                @for (id of callouts; track id) {
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="wi__menu-item"
+                                        [attr.data-kind]="id"
+                                        (mousedown)="$event.preventDefault()"
+                                        (click)="run(id)"
+                                    >
+                                        <tui-icon [icon]="commands[id].icon" />
+                                        <span>
+                                            <b>{{ label(id) }}</b>
+                                            <small>{{ 'wiki.cmdHint.' + id | translate }}</small>
+                                        </span>
+                                    </button>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="wi__spacer"></div>
+
+        @if (uploading() > 0) {
+            <span class="wi__status-chip" role="status">
+                <span class="wi__spinner"></span>
+                {{ 'wiki.input.uploading' | translate: { count: uploading() } }}
+            </span>
+        }
+
+        <button
+            type="button"
+            class="wi__btn"
+            [class.wi__btn--open]="findOpen()"
+            [attr.title]="title('find')"
+            [attr.aria-label]="label('find')"
+            (mousedown)="$event.preventDefault()"
+            (click)="findOpen() ? closeFind() : run('find')"
+        >
+            <tui-icon icon="@tui.search" />
+        </button>
+    </div>
+
+    @if (findOpen()) {
+        <div class="wi__find" role="search">
+            <div class="wi__find-row">
+                <tui-icon icon="@tui.search" class="wi__find-icon" />
+                <input
+                    #findInput
+                    class="wi__find-input"
+                    [placeholder]="'wiki.input.find' | translate"
+                    [ngModel]="findText()"
+                    (ngModelChange)="findText.set($event); findIndex.set(-1)"
+                    (keydown)="onFindKeydown($event)"
+                />
+                <span class="wi__find-count">
+                    @if (findText()) {
+                        @if (matches().length) {
+                            {{ findIndex() >= 0 ? findIndex() + 1 : '–' }} / {{ matches().length }}
+                        } @else {
+                            {{ 'wiki.input.noMatches' | translate }}
+                        }
+                    }
+                </span>
+                <button
+                    type="button"
+                    class="wi__btn wi__btn--sm"
+                    [class.wi__btn--open]="matchCase()"
+                    [attr.title]="'wiki.input.matchCase' | translate"
+                    (click)="matchCase.set(!matchCase()); findIndex.set(-1)"
+                >
+                    Aa
+                </button>
+                <button type="button" class="wi__btn wi__btn--sm" [attr.title]="'wiki.input.prev' | translate" (click)="findStep(-1)">
+                    <tui-icon icon="@tui.chevron-up" />
+                </button>
+                <button type="button" class="wi__btn wi__btn--sm" [attr.title]="'wiki.input.next' | translate" (click)="findStep(1)">
+                    <tui-icon icon="@tui.chevron-down" />
+                </button>
+                <button
+                    type="button"
+                    class="wi__btn wi__btn--sm"
+                    [class.wi__btn--open]="replaceOpen()"
+                    [attr.title]="'wiki.input.replace' | translate"
+                    (click)="replaceOpen.set(!replaceOpen())"
+                >
+                    <tui-icon icon="@tui.replace" />
+                </button>
+                <button type="button" class="wi__btn wi__btn--sm" [attr.title]="'wiki.input.close' | translate" (click)="closeFind()">
+                    <tui-icon icon="@tui.x" />
+                </button>
+            </div>
+            @if (replaceOpen()) {
+                <div class="wi__find-row">
+                    <tui-icon icon="@tui.replace" class="wi__find-icon" />
+                    <input
+                        class="wi__find-input"
+                        [placeholder]="'wiki.input.replaceWith' | translate"
+                        [ngModel]="replaceText()"
+                        (ngModelChange)="replaceText.set($event)"
+                        (keydown.enter)="$event.preventDefault(); replaceOne()"
+                        (keydown.escape)="closeFind()"
+                    />
+                    <button type="button" class="wi__text-btn" [disabled]="!matches().length" (click)="replaceOne()">
+                        {{ 'wiki.input.replace' | translate }}
+                    </button>
+                    <button type="button" class="wi__text-btn" [disabled]="!matches().length" (click)="replaceAll()">
+                        {{ 'wiki.input.replaceAll' | translate }}
+                    </button>
+                </div>
+            }
+        </div>
+    }
+
+    <div
+        class="wi__body"
+        (dragover)="onDragOver($event)"
+        (dragleave)="dragging.set(false)"
+        (drop)="onDrop($event)"
+    >
+        <div class="wi__gutter" aria-hidden="true">
+            @for (row of gutterRows(); track row.line) {
+                <span
+                    class="wi__ln"
+                    [class.wi__ln--current]="row.current"
+                    [attr.data-mark]="row.mark"
+                    [style.top.px]="row.top"
+                    >{{ row.line + 1 }}</span
+                >
+            }
+        </div>
+
+        <div class="wi__field">
+            <textarea
+                #area
+                class="wi__area"
+                spellcheck="true"
+                [attr.aria-label]="'wiki.input.label' | translate"
+                [placeholder]="placeholder()"
+                (input)="onInput()"
+                (keydown)="onKeydown($event)"
+                (keyup)="onSelect()"
+                (click)="onSelect(); menu.set(null)"
+                (select)="onSelect()"
+                (scroll)="onScroll()"
+                (paste)="onPaste($event)"
+                (focus)="focused.set(true)"
+                (blur)="onBlur()"
+            ></textarea>
+
+            @if (flash(); as line) {
+                <div
+                    class="wi__flash"
+                    [style.top.px]="line.top - scrollTop()"
+                    [style.height.px]="line.height"
+                ></div>
+            }
+
+            @if (suggest(); as state) {
+                @if (suggestItems().length) {
+                    <div
+                        class="wi__suggest"
+                        role="listbox"
+                        [style.top.px]="state.top"
+                        [style.bottom.px]="state.bottom"
+                        [style.max-height.px]="state.maxHeight"
+                        [style.left.px]="state.left"
+                    >
+                        <div class="wi__suggest-head">
+                            {{ (state.kind === 'slash' ? 'wiki.input.slashTitle' : 'wiki.input.linkTitle') | translate }}
+                        </div>
+                        @for (item of suggestItems(); track item.key; let index = $index) {
+                            <button
+                                type="button"
+                                role="option"
+                                class="wi__suggest-item"
+                                [class.wi__suggest-item--active]="index === suggestIndex()"
+                                [attr.aria-selected]="index === suggestIndex()"
+                                (mousedown)="pickSuggest(item, $event)"
+                                (mouseenter)="suggestIndex.set(index)"
+                            >
+                                <span class="wi__suggest-icon"><tui-icon [icon]="item.icon" /></span>
+                                <span class="wi__suggest-text">
+                                    <b>{{ item.label }}</b>
+                                    <small>{{ item.hint }}</small>
+                                </span>
+                            </button>
+                        }
+                        <div class="wi__suggest-foot">↑↓ · Enter · Esc</div>
+                    </div>
+                }
+            }
+
+            @if (dragging()) {
+                <div class="wi__drop">
+                    <tui-icon icon="@tui.image-plus" />
+                    {{ 'wiki.input.drop' | translate }}
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="wi__statusbar">
+        <span>{{ 'wiki.input.position' | translate: { line: caret().line, column: caret().column } }}</span>
+        @if (caret().selected) {
+            <span>{{ 'wiki.input.selected' | translate: { count: caret().selected } }}</span>
+        }
+        <span>{{ 'wiki.input.words' | translate: { count: words() } }}</span>
+        <span>{{ 'wiki.input.chars' | translate: { count: chars() } }}</span>
+        <span>{{ 'wiki.input.minutes' | translate: { count: minutes() } }}</span>
+        @if (uploadError(); as error) {
+            <span class="wi__error" role="alert">
+                {{ error | translate }}
+                <button type="button" class="wi__error-close" (click)="uploadError.set(null)">
+                    <tui-icon icon="@tui.x" />
+                </button>
+            </span>
+        }
+        <span class="wi__spacer"></span>
+        <span class="wi__hint">{{ 'wiki.input.hint' | translate }}</span>
+        <button type="button" class="wi__text-btn wi__text-btn--sm" [attr.aria-pressed]="mono()" (click)="mono.set(!mono())">
+            {{ 'wiki.input.mono' | translate }}
+        </button>
+    </div>
+
+    <input #fileInput type="file" accept="image/*" hidden (change)="onFiles($event)" />
+</div>

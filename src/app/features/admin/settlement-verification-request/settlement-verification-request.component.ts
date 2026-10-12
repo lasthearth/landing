@@ -9,7 +9,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { Component } from '@angular/core';
-import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { IRequestSettlement, isGuildName, getSettlementDisplayName, SettlementDisplayNamePipe } from '@entities/settlement';
@@ -28,7 +28,7 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
 @Component({
     standalone: true,
     selector: 'app-settlement-verification-request',
-    imports: [MarkupPipe, PolymorpheusOutlet, TuiButton, TuiPreview, TuiIcon, ImageLoaderComponent, TranslatePipe, WaitingBadgeComponent],
+    imports: [MarkupPipe, PolymorpheusOutlet, TuiPreview, TuiIcon, ImageLoaderComponent, TranslatePipe, WaitingBadgeComponent],
     templateUrl: './settlement-verification-request.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

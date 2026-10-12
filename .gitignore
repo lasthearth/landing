@@ -47,3 +47,8 @@ Thumbs.db
 # Agent tooling artifacts
 .openchamber/
 .playwright-mcp/
+.codegraph/
+.npm-cache/
+
+# Генерируемые артефакты агентских прогонов
+RULES_EDIT.md

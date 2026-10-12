@@ -1,59 +1,36 @@
-# LastHearthLanding
+# Last Hearth Landing
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.3.
+Фронтенд лендинга и игровых страниц Last Hearth: Angular 20 (standalone, signals), LESS + Tailwind CSS v4,
+Taiga UI 4, OIDC (Logto), SSR + пререндер.
 
-## Development server
-
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Быстрый старт
 
 ```bash
-ng generate component component-name
+npm install
+npm start          # http://127.0.0.1:4200
+npm run build      # прод-сборка с пререндером
+npm run verify     # обязательная проверка перед коммитом
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Документация
 
-```bash
-ng generate --help
-```
+Начните с `AGENTS.md` — это одновременно инструкция для агентов и карта документации:
 
-## Building
+| Документ                | О чём                                                     |
+| ----------------------- | --------------------------------------------------------- |
+| `AGENTS.md`             | правила проекта и куда идти за деталями                   |
+| `docs/project-map.md`   | навигация: роуты, слайсы, словари, команды (генерируется) |
+| `docs/ARCHITECTURE.md`  | слои FSD, правила кода, как добавить страницу             |
+| `docs/DESIGN_SYSTEM.md` | токены цвета, движение, поверхности, доступность          |
+| `docs/I18N.md`          | словари, `loadPage`, точечная правка текста               |
+| `docs/API.md`           | бэкенд-контракт, ошибки, загрузка файлов                  |
+| `docs/SETTLEMENTS.md`   | домен поселений: роли, владение, гейтинг                  |
+| `docs/TRAPS.md`         | короткий список грабель                                   |
+| `docs/TOOLING.md`       | команды и ограничения окружения                           |
+| `docs/history.md`       | летопись решений (читать точечно)                         |
+| `API_CONTRACT.md`       | полный контракт бэкенда                                   |
 
-To build the project run:
+## Соглашения
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Коммиты — `LH | feat: ...`, `fix: ...`, `ux: ...`. Ветка `design/slop-archive` не мержится: из неё
+берут отдельные приёмы. Пререндер-роуты перечислены в `routes.txt`.

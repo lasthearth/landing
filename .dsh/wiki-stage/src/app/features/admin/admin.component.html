@@ -1,0 +1,239 @@
+@let veriverificationRequests = verificationRequests$ | async;
+@let requestExist = veriverificationRequests === null || veriverificationRequests?.length === 0;
+@let settlements = settlementsRequests$ | async;
+@let settlementsRequest = settlements === null || settlements?.length === 0;
+@let hasPendingPurchases = pendingPurchases().length > 0;
+
+<div class="w-full flex flex-col gap-3 lg:gap-6">
+    <app-page-header [level]="2" [title]="'admin.title' | translate" />
+    <!--
+        Разделы набраны кнопками `.nav-button` с переносом строк, а не `tui-tabs`:
+        десять подписей в один ряд ужимались до двух строк и обрезались, а
+        подчёркивание Taiga не переживает перенос. Кнопки — тот же идиом, что в
+        `app-profile-navigation`, и в них уже размечено место под `tui-pulse`.
+
+        Числовые литералы в `(click)` соответствуют `@switch` ниже: порядок кнопок
+        сгруппирован по смыслу, поэтому индексы идут не по возрастанию.
+    -->
+    <nav class="mt-4 flex flex-wrap gap-2" [attr.aria-label]="'admin.title' | translate">
+        <!-- Модерация -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.playerForms' | translate"
+            class="nav-button relative shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 0 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 0"
+            (click)="activeItemIndex = 0"
+        >
+            <tui-icon icon="@tui.user-check" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.playerForms' | translate }}</span>
+            @if (!requestExist) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
+            }
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.settlementForms' | translate"
+            class="nav-button relative shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 1 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 1"
+            (click)="activeItemIndex = 1"
+        >
+            <tui-icon icon="@tui.castle" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.settlementForms' | translate }}</span>
+            @if (!settlementsRequest) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
+            }
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.settlements' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 9 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 9"
+            (click)="activeItemIndex = 9"
+        >
+            <tui-icon icon="@tui.map-pin" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.settlements' | translate }}</span>
+        </button>
+
+        <!-- Экономика -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.coins' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 4 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 4"
+            (click)="activeItemIndex = 4"
+        >
+            <tui-icon icon="@tui.wallet" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.coins' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.purchases' | translate"
+            class="nav-button relative shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 5 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 5"
+            (click)="activeItemIndex = 5"
+        >
+            <tui-icon icon="@tui.package" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.purchases' | translate }}</span>
+            @if (hasPendingPurchases) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
+            }
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.goods' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 6 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 6"
+            (click)="activeItemIndex = 6"
+        >
+            <tui-icon icon="@tui.shopping-cart" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.goods' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.purchasesHistory' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 8 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 8"
+            (click)="activeItemIndex = 8"
+        >
+            <tui-icon icon="@tui.receipt" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.purchasesHistory' | translate }}</span>
+        </button>
+
+        <!-- Контент -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.questions' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 2 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 2"
+            (click)="activeItemIndex = 2"
+        >
+            <tui-icon icon="@tui.circle-help" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.questions' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.createNews' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 3 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 3"
+            (click)="activeItemIndex = 3"
+        >
+            <tui-icon icon="@tui.newspaper" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.createNews' | translate }}</span>
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.wiki' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 10 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 10"
+            (click)="activeItemIndex = 10"
+        >
+            <tui-icon icon="@tui.book-open" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.wiki' | translate }}</span>
+        </button>
+
+        <!-- Игра -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.hungerGames' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 7 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 7"
+            (click)="activeItemIndex = 7"
+        >
+            <tui-icon icon="@tui.flame" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.hungerGames' | translate }}</span>
+        </button>
+    </nav>
+
+    <div id="admin-panel" class="mt-2 flex flex-col gap-4">
+        @switch (activeItemIndex) {
+            @case (0) {
+                @if (veriverificationRequests === null) {
+                    <app-admin-list-skeleton [count]="3" />
+                } @else if (veriverificationRequests.length === 0) {
+                    <app-empty-state
+                        icon="@tui.user-check"
+                        [title]="'admin.playerForms.emptyTitle' | translate"
+                        [description]="'admin.playerForms.emptyDescription' | translate"
+                    />
+                } @else {
+                    @for (item of veriverificationRequests; track $index) {
+                        <app-player-verify-request [data]="item" (requestWasWatched)="dataUpdate()" />
+                    }
+                }
+            }
+            @case (1) {
+                @if (settlements === null) {
+                    <app-admin-list-skeleton [count]="3" />
+                } @else if (settlements.length === 0) {
+                    <app-empty-state
+                        icon="@tui.castle"
+                        [title]="'admin.settlementForms.emptyTitle' | translate"
+                        [description]="'admin.settlementForms.emptyDescription' | translate"
+                    />
+                } @else {
+                    @for (item of settlements; track $index) {
+                        <app-settlement-verification-request [data]="item" (requestWasWatched)="dataUpdate()" />
+                    }
+                }
+            }
+            @case (2) {
+                <div class="flex flex-col gap-6">
+                    <app-create-question-form (created)="questionsUpdate$.next()" />
+                    <app-question-list [refreshTrigger]="questionsUpdate$" />
+                </div>
+            }
+            @case (3) {
+                <app-create-news />
+            }
+            @case (4) {
+                <app-admin-coin-panel />
+            }
+            @case (5) {
+                <app-pending-purchases-panel
+                    [purchases]="pendingPurchases()"
+                    [loading]="pendingPurchasesLoading()"
+                    [error]="pendingPurchasesError()"
+                    (retry)="updatePendingPurchases()"
+                    (listChanged)="updatePendingPurchases()"
+                />
+            }
+            @case (6) {
+                <app-donate-shop-panel />
+            }
+            @case (7) {
+                <app-hunger-games-panel />
+            }
+            @case (8) {
+                <app-all-purchases-panel />
+            }
+            @case (9) {
+                <app-settlement-admin-panel />
+            }
+            @case (10) {
+                <app-wiki-admin-panel />
+            }
+        }
+    </div>
+</div>

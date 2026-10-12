@@ -8,7 +8,16 @@
         "build": "ng build",
         "build-production": "ng build --prod",
         "watch": "ng build --watch --configuration development",
-        "test": "ng test"
+        "test": "ng test",
+        "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
+        "verify": "node scripts/verify.mjs",
+        "verify:full": "node scripts/verify.mjs --full",
+        "arch": "node scripts/check-architecture.mjs",
+        "map": "node scripts/gen-project-map.mjs",
+        "i18n": "node scripts/i18n-tool.mjs",
+        "context:cost": "node scripts/check-context-budget.mjs",
+        "format": "prettier --write AGENTS.md AGENT_RULES_MAP.md README.md docs package.json",
+        "format:check": "prettier --check AGENTS.md AGENT_RULES_MAP.md README.md docs package.json"
     },
     "private": true,
     "dependencies": {
@@ -34,7 +43,6 @@
         "@ng-web-apis/resize-observer": "^4.14.1",
         "@ng-web-apis/screen-orientation": "^4.14.1",
         "@taiga-ui/addon-commerce": "^4.40.0",
-        "@taiga-ui/addon-mobile": "^4.40.0",
         "@taiga-ui/addon-table": "^4.40.0",
         "@taiga-ui/cdk": "^4.40.0",
         "@taiga-ui/core": "^4.40.0",

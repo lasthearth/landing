@@ -2,8 +2,6 @@ export const COMMON_I18N = {
     ru: {
         common: {
             language: 'Язык',
-            russian: 'Русский',
-            english: 'English',
             copy: 'Копировать',
             copied: 'Скопировано',
             close: 'Закрыть',
@@ -21,8 +19,6 @@ export const COMMON_I18N = {
     en: {
         common: {
             language: 'Language',
-            russian: 'Русский',
-            english: 'English',
             copy: 'Copy',
             copied: 'Copied',
             close: 'Close',
