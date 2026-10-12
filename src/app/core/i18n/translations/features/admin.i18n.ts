@@ -164,7 +164,6 @@ export const ADMIN_I18N = {
                     active: 'Активна',
                     completed: 'Завершена',
                     issued: 'Выдана',
-                    pending_issue: 'Ожидает выдачи',
                     refunded: 'Возвращена',
                     expired: 'Истекла',
                 },
@@ -270,8 +269,6 @@ export const ADMIN_I18N = {
                 winsHeader: 'Победы',
                 killsHeader: 'Убийства',
                 rewardHeader: 'Награда',
-                deathsHeader: 'Смерти',
-                hoursHeader: 'Часы',
                 emptyLeaderboard: 'Лидерборд пуст',
             },
             verification: {
@@ -461,7 +458,6 @@ export const ADMIN_I18N = {
                     active: 'Active',
                     completed: 'Completed',
                     issued: 'Issued',
-                    pending_issue: 'Pending issue',
                     refunded: 'Refunded',
                     expired: 'Expired',
                 },
@@ -567,8 +563,6 @@ export const ADMIN_I18N = {
                 winsHeader: 'Wins',
                 killsHeader: 'Kills',
                 rewardHeader: 'Reward',
-                deathsHeader: 'Deaths',
-                hoursHeader: 'Hours',
                 emptyLeaderboard: 'Leaderboard is empty',
             },
             verification: {

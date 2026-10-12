@@ -1,0 +1,168 @@
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { VerificationService } from '@features/verification';
+import { AsyncPipe } from '@angular/common';
+import { catchError, defaultIfEmpty, Observable, of, startWith, Subject, switchMap } from 'rxjs';
+import { IVerifyRequest } from '@features/verification';
+import { SettlementService } from '@entities/settlement';
+import { DonateService, IPendingPurchase } from '@entities/donate';
+import { NotificationService } from '@core/services/notification.service';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { AdminListSkeletonComponent } from '@shared/ui/skeletons';
+import { PlayerVerifyRequestComponent } from './player-verification/player-verify-request.component';
+import { CreateQuestionFormComponent } from './components/create-question-form/create-question-form.component';
+import { QuestionListComponent } from './components/question-list/question-list.component';
+import { SettlementVerificationRequestComponent } from './settlement-verification-request/settlement-verification-request.component';
+import { CreateNewsComponent } from '../news/components/create-news-form/create-news.component';
+import { AdminCoinPanelComponent } from './ui/admin-coin-panel/admin-coin-panel.component';
+import { HungerGamesPanelComponent } from './ui/hunger-games-panel/hunger-games-panel.component';
+import { DonateShopPanelComponent } from './ui/donate-shop-panel/donate-shop-panel.component';
+import { PendingPurchasesPanelComponent } from './ui/pending-purchases-panel/pending-purchases-panel.component';
+import { AllPurchasesPanelComponent } from './ui/all-purchases-panel/all-purchases-panel.component';
+import { SettlementAdminPanelComponent } from './ui/settlement-admin-panel/settlement-admin-panel.component';
+import { TuiPulse } from '@taiga-ui/kit';
+import { TuiIcon } from '@taiga-ui/core';
+import { TranslatePipe } from '@core/i18n';
+import { PageHeaderComponent } from '@shared/ui/page-header';
+import { WikiAdminPanelComponent } from '@features/wiki';
+
+/**
+ * Компонент страницы администратора.
+ */
+@Component({
+    standalone: true,
+    selector: 'app-admin',
+    imports: [PageHeaderComponent, 
+        PlayerVerifyRequestComponent,
+        AsyncPipe,
+        SettlementVerificationRequestComponent,
+        TuiIcon,
+        TuiPulse,
+        CreateQuestionFormComponent,
+        QuestionListComponent,
+        CreateNewsComponent,
+        AdminCoinPanelComponent,
+        HungerGamesPanelComponent,
+        DonateShopPanelComponent,
+        PendingPurchasesPanelComponent,
+        AllPurchasesPanelComponent,
+        SettlementAdminPanelComponent,
+        EmptyStateComponent,
+        AdminListSkeletonComponent,
+        TranslatePipe,
+        WikiAdminPanelComponent,
+    ],
+    templateUrl: './admin.component.html',
+    styleUrl: './admin.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AdminComponent {
+    /**
+     * Сервис информации о сервере.
+     */
+    private readonly verificationService: VerificationService = inject(VerificationService);
+
+    /**
+     * Сервис уведомлений.
+     */
+    private readonly notificationService = inject(NotificationService);
+
+    /**
+     * Сервис донат-магазина.
+     */
+    private readonly donateService: DonateService = inject(DonateService);
+
+    /**
+     * Сервис поселений.
+     */
+    private readonly settlementService: SettlementService = inject(SettlementService);
+
+    /**
+     * {@link Subject} Обновления списка запросов верификаций игроков.
+     */
+    private readonly verificationsUpdate$: Subject<void> = new Subject<void>();
+
+    /**
+     * {@link Subject} Обновления списка запросов верификаций селений.
+     */
+    private readonly settlementVerificationsUpdate$: Subject<void> = new Subject<void>();
+
+    /**
+     * {@link Subject} Обновления списка вопросов.
+     */
+    readonly questionsUpdate$: Subject<void> = new Subject<void>();
+
+    /**
+     * {@link Observable} Списка запросов верификации.
+     */
+    protected readonly verificationRequests$: Observable<IVerifyRequest[]> = this.verificationsUpdate$
+        .pipe(startWith(null))
+        .pipe(switchMap(() => this.verificationService.getVerifyRequests()));
+
+    /**
+     * {@link Observable} Списка запросов верификации.
+     */
+    protected readonly settlementsRequests$ = this.settlementVerificationsUpdate$
+        .pipe(startWith(null))
+        .pipe(switchMap(() => this.settlementService.getSettlementsRequests$()));
+
+    /**
+     * Список ожидающих выдачи покупок.
+     */
+    protected readonly pendingPurchases = signal<IPendingPurchase[]>([]);
+
+    /**
+     * Признак загрузки списка ожидающих покупок.
+     */
+    protected readonly pendingPurchasesLoading = signal<boolean>(false);
+
+    /**
+     * Признак ошибки загрузки списка ожидающих покупок.
+     */
+    protected readonly pendingPurchasesError = signal<boolean>(false);
+
+    /**
+     * Индекс открытой вкладки.
+     */
+    protected activeItemIndex: number = 0;
+
+    constructor() {
+        this.loadPendingPurchases();
+    }
+
+    /**
+     * Обновляет данные анкет и уведомлений.
+     */
+    protected dataUpdate(): void {
+        this.verificationsUpdate$.next();
+        this.settlementVerificationsUpdate$.next();
+        this.notificationService.updateAllNotification$.next();
+    }
+
+    /**
+     * Обновляет список ожидающих выдачи покупок.
+     */
+    protected updatePendingPurchases(): void {
+        this.loadPendingPurchases();
+    }
+
+    /**
+     * Загружает список ожидающих выдачи покупок.
+     */
+    private loadPendingPurchases(): void {
+        this.pendingPurchasesLoading.set(true);
+        this.pendingPurchasesError.set(false);
+        this.donateService
+            .getPendingPurchases$()
+            .pipe(
+                catchError(() => {
+                    this.pendingPurchasesError.set(true);
+                    return of([]);
+                }),
+                defaultIfEmpty([])
+            )
+            .subscribe((list) => {
+                this.pendingPurchases.set(list);
+                this.pendingPurchasesLoading.set(false);
+            });
+    }
+}

@@ -1,0 +1,24 @@
+name: verify
+
+# Проверка агентских документов и границ кода. Полный прогон со сборкой и тестами
+# можно включить, заменив шаг на `npm run verify:full`: на раннерах GitHub есть Chrome.
+on:
+    push:
+        branches: [main]
+    pull_request:
+
+jobs:
+    verify:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+
+            - run: npm ci
+
+            - name: npm run verify
+              run: npm run verify

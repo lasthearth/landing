@@ -12,7 +12,7 @@ import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { HttpContext } from '@angular/common/http';
-import { TuiButton, TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
@@ -63,13 +63,12 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComponent } from '@entities/player-style';
 @Component({
     standalone: true,
-    imports: [AmountPipe, 
+    imports: [AmountPipe,
         TuiIcon,
         RouterOutlet,
         AsyncPipe,
         PolymorpheusOutlet,
         TuiPreview,
-        TuiButton,
         ProfileSkeletonComponent,
         PlayerAvatarComponent,
         ProfileBannerComponent,

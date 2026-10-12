@@ -7,7 +7,7 @@ import { SeoService } from '@core/services/seo.service';
 import { SettlementDisplayNamePipe } from '@entities/settlement';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
-import { TuiButton, TuiDialogContext, TuiIcon } from '@taiga-ui/core';
+import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
 import { PlayerProfileService } from '../../api/player-profile.service';
@@ -39,7 +39,7 @@ type PlayerPageState =
     selector: 'app-player-page',
     templateUrl: './player-page.component.html',
     styleUrl: './player-page.component.less',
-    imports: [AmountPipe, 
+    imports: [AmountPipe,
         RouterLink,
         TuiIcon,
         TranslatePipe,
@@ -50,7 +50,6 @@ type PlayerPageState =
         PlayerFrameComponent,
         ProfileBannerComponent,
         TuiPreview,
-        TuiButton,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

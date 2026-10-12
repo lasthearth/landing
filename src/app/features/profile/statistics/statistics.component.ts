@@ -7,7 +7,6 @@ import { ILeaderBoard } from '@entities/user';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { UserService } from '@entities/user';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { TuiTable } from '@taiga-ui/addon-table';
 
 import { TuiIcon } from '@taiga-ui/core';
 import { LeaderCardComponent } from './leader-card/leader-card.component';
@@ -27,10 +26,9 @@ export type TypeLabel = string;
 @Component({
     standalone: true,
     selector: 'app-statistics',
-    imports: [AmountPipe, HungerGamesCardComponent, 
+    imports: [AmountPipe, HungerGamesCardComponent,
         RouterLink,
         PageHeaderComponent,
-        TuiTable,
         AsyncPipe,
         LeaderCardComponent,
         StatisticsSkeletonComponent,

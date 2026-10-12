@@ -1,0 +1,107 @@
+<section class="wap lh-panel">
+    <div class="wap__head">
+        <div>
+            <h2 class="wap__title lh-display">{{ 'wiki.admin.title' | translate }}</h2>
+            <p class="wap__sub">{{ 'wiki.admin.subtitle' | translate: { count: counts().all } }}</p>
+        </div>
+        <a class="wap__new lh-confirm-button" routerLink="/wiki/edit/new">
+            <tui-icon icon="@tui.plus" />
+            {{ 'wiki.admin.new' | translate }}
+        </a>
+    </div>
+
+    <div class="wap__note">
+        <tui-icon icon="@tui.info" />
+        {{ 'wiki.admin.localNote' | translate }}
+    </div>
+
+    @if (pendingNew()) {
+        <a class="wap__pending" routerLink="/wiki/edit/new">
+            <tui-icon icon="@tui.life-buoy" />
+            {{ 'wiki.admin.pendingNew' | translate }}
+            <tui-icon icon="@tui.arrow-right" />
+        </a>
+    }
+
+    <div class="wap__filters">
+        <label class="wap__search">
+            <tui-icon icon="@tui.search" />
+            <input
+                [placeholder]="'wiki.admin.search' | translate"
+                [ngModel]="query()"
+                (ngModelChange)="query.set($event)"
+            />
+        </label>
+        <div class="lh-chips">
+            <button type="button" class="lh-chip" [attr.aria-pressed]="status() === 'all'" (click)="status.set('all')">
+                {{ 'wiki.admin.all' | translate }} <span class="lh-chip__count">{{ counts().all }}</span>
+            </button>
+            <button type="button" class="lh-chip" [attr.aria-pressed]="status() === 'published'" (click)="status.set('published')">
+                {{ 'wiki.status.published' | translate }} <span class="lh-chip__count">{{ counts().published }}</span>
+            </button>
+            <button type="button" class="lh-chip" [attr.aria-pressed]="status() === 'draft'" (click)="status.set('draft')">
+                {{ 'wiki.status.draft' | translate }} <span class="lh-chip__count">{{ counts().draft }}</span>
+            </button>
+        </div>
+        <div class="lh-chips">
+            <button type="button" class="lh-chip" [attr.aria-pressed]="section() === 'all'" (click)="section.set('all')">
+                {{ 'wiki.admin.allSections' | translate }}
+            </button>
+            @for (item of sections; track item.id) {
+                <button type="button" class="lh-chip" [attr.aria-pressed]="section() === item.id" (click)="section.set(item.id)">
+                    <tui-icon [icon]="item.icon" />
+                    {{ sectionLabel(item.id) }}
+                </button>
+            }
+        </div>
+    </div>
+
+    @if (articles().length) {
+        <ul class="wap__list">
+            @for (article of articles(); track article.id) {
+                <li class="wap__item">
+                    <a class="wap__link" [routerLink]="['/wiki/edit', article.id]">
+                        <span class="wap__thumb" [style.background-image]="cover(article)">
+                            @if (!article.cover) {
+                                <tui-icon [icon]="sectionIcon(article.sectionId)" />
+                            }
+                        </span>
+                        <span class="wap__body">
+                            <b class="wap__name">{{ article.title || ('wiki.view.untitled' | translate) }}</b>
+                            <span class="wap__meta">
+                                <span class="wap__status" [attr.data-status]="article.status">
+                                    {{ 'wiki.status.' + article.status | translate }}
+                                </span>
+                                <span>{{ sectionLabel(article.sectionId) }}</span>
+                                <span>/wiki/{{ article.slug }}</span>
+                                <span>{{ 'wiki.input.words' | translate: { count: words(article) } }}</span>
+                                <span>{{ date(article.updatedAt) }} · {{ article.authorName }}</span>
+                                @if (hasAutosave(article)) {
+                                    <span class="wap__unsaved">{{ 'wiki.admin.unsaved' | translate }}</span>
+                                }
+                            </span>
+                        </span>
+                    </a>
+                    <button
+                        type="button"
+                        class="wap__delete"
+                        [attr.title]="'wiki.editor.menu.delete' | translate"
+                        (click)="remove(article)"
+                    >
+                        <tui-icon icon="@tui.trash-2" />
+                    </button>
+                </li>
+            }
+        </ul>
+    } @else {
+        <div class="wap__empty">
+            <tui-icon icon="@tui.book-open" />
+            <p>{{ (all().length ? 'wiki.admin.nothingFound' : 'wiki.admin.empty') | translate }}</p>
+            @if (!all().length) {
+                <a class="lh-secondary-button wap__empty-btn" routerLink="/wiki/edit/new">
+                    {{ 'wiki.admin.first' | translate }}
+                </a>
+            }
+        </div>
+    }
+</section>

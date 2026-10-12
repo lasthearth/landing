@@ -1,0 +1,160 @@
+<article class="wiki-view">
+    <div class="wiki-view__crumbs">
+        <span>{{ 'wiki.title' | translate }}</span>
+        @if (section(); as current) {
+            <tui-icon icon="@tui.chevron-right" />
+            <span>{{ sectionLabel(current.id) }}</span>
+        }
+    </div>
+
+    @if (draft().cover; as cover) {
+        <div
+            class="wiki-view__cover"
+            role="img"
+            [attr.aria-label]="draft().title"
+            [style.background-image]="coverImage()"
+            [style.background-position]="'center ' + cover.focus + '%'"
+        ></div>
+    }
+
+    <h1 class="wiki-view__title lh-display" [class.wiki-view__title--empty]="!draft().title.trim()">
+        {{ draft().title.trim() || ('wiki.view.untitled' | translate) }}
+    </h1>
+
+    <div class="wiki-view__meta">
+        @if (section(); as current) {
+            <span class="wiki-view__chip wiki-view__chip--brand">
+                <tui-icon [icon]="current.icon" />
+                {{ sectionLabel(current.id) }}
+            </span>
+        }
+        <span class="wiki-view__chip">
+            <tui-icon icon="@tui.clock" />
+            {{ 'wiki.view.minutes' | translate: { count: minutes() } }}
+        </span>
+        @if (updatedLabel()) {
+            <span class="wiki-view__chip">
+                <tui-icon icon="@tui.pencil-line" />
+                {{ 'wiki.view.updated' | translate: { date: updatedLabel() } }}
+            </span>
+        }
+        @if (draft().gameVersion.trim()) {
+            <span class="wiki-view__chip">
+                <tui-icon icon="@tui.gamepad-2" />
+                {{ 'wiki.view.version' | translate: { version: draft().gameVersion.trim() } }}
+            </span>
+        }
+        @for (tag of draft().tags; track tag) {
+            <span class="wiki-view__chip wiki-view__chip--tag">#{{ tag }}</span>
+        }
+    </div>
+
+    @if (draft().lead.trim()) {
+        <p class="wiki-view__lead">{{ draft().lead.trim() }}</p>
+    }
+
+    @if (draft().quickAnswer; as quick) {
+        @if (quick.question.trim() || quick.answer.trim()) {
+            <aside class="wiki-view__quick">
+                <tui-icon icon="@tui.zap" />
+                <div>
+                    <b>{{ quick.question.trim() }}</b>
+                    <span>{{ quick.answer.trim() }}</span>
+                </div>
+            </aside>
+        }
+    }
+
+    @if (headings().length >= 3) {
+        <nav class="wiki-view__toc" [attr.aria-label]="'wiki.view.toc' | translate">
+            <button type="button" class="wiki-view__toc-head" [attr.aria-expanded]="tocOpen()" (click)="tocOpen.set(!tocOpen())">
+                <tui-icon icon="@tui.list-tree" />
+                {{ 'wiki.view.toc' | translate }}
+                <tui-icon [icon]="tocOpen() ? '@tui.chevron-up' : '@tui.chevron-down'" class="wiki-view__toc-chevron" />
+            </button>
+            @if (tocOpen()) {
+                <ol>
+                    @for (heading of headings(); track heading.id) {
+                        <li [class.wiki-view__toc-sub]="heading.level === 3">
+                            <a [attr.href]="'#' + heading.id" (click)="$event.preventDefault(); scrollToAnchor(heading.id)">
+                                {{ heading.text }}
+                            </a>
+                        </li>
+                    }
+                </ol>
+            }
+        </nav>
+    }
+
+    @if (html()) {
+        <div class="wiki-doc lh-rich-text" [innerHTML]="safeHtml()" (click)="onClick($event)" (dblclick)="onDblClick($event)"></div>
+    } @else if (preview()) {
+        <div class="wiki-view__empty">
+            <tui-icon icon="@tui.feather" />
+            {{ 'wiki.view.empty' | translate }}
+        </div>
+    }
+
+    @if (related().length) {
+        <section class="wiki-view__related">
+            <h2 class="wiki-view__related-title">{{ 'wiki.view.related' | translate }}</h2>
+            <div class="wiki-view__cards">
+                @for (item of related(); track item.slug) {
+                    <a
+                        class="wiki-view__card"
+                        [class.wiki-view__card--missing]="!item.title"
+                        [attr.href]="'/wiki/' + item.slug"
+                        (click)="onClick($event)"
+                    >
+                        <b>{{ item.title ?? item.slug }}</b>
+                        <small>/wiki/{{ item.slug }}</small>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+
+    @if (authorName()) {
+        <footer class="wiki-view__footer">
+            <tui-icon icon="@tui.feather" />
+            {{ 'wiki.view.author' | translate: { name: authorName() } }}
+        </footer>
+    }
+</article>
+
+@if (lightbox() !== null && images()[lightbox()!]; as image) {
+    <div class="wiki-lightbox" role="dialog" aria-modal="true" (click)="lightbox.set(null)">
+        <figure class="wiki-lightbox__figure" (click)="$event.stopPropagation()">
+            <img [src]="image.url" [alt]="image.caption" />
+            @if (image.caption || images().length > 1) {
+                <figcaption>
+                    @if (images().length > 1) {
+                        <span class="wiki-lightbox__count">{{ lightbox()! + 1 }} / {{ images().length }}</span>
+                    }
+                    {{ image.caption }}
+                </figcaption>
+            }
+        </figure>
+        @if (images().length > 1) {
+            <button
+                type="button"
+                class="wiki-lightbox__nav wiki-lightbox__nav--prev"
+                [attr.aria-label]="'wiki.view.prev' | translate"
+                (click)="$event.stopPropagation(); step(-1)"
+            >
+                <tui-icon icon="@tui.chevron-left" />
+            </button>
+            <button
+                type="button"
+                class="wiki-lightbox__nav wiki-lightbox__nav--next"
+                [attr.aria-label]="'wiki.view.next' | translate"
+                (click)="$event.stopPropagation(); step(1)"
+            >
+                <tui-icon icon="@tui.chevron-right" />
+            </button>
+        }
+        <button type="button" class="wiki-lightbox__close" [attr.aria-label]="'wiki.view.close' | translate" (click)="lightbox.set(null)">
+            <tui-icon icon="@tui.x" />
+        </button>
+    </div>
+}

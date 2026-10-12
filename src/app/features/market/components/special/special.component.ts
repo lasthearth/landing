@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal, TemplateRef, ViewChild } from '@angular/core';
-import { TuiButton, TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
+import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
@@ -20,9 +20,8 @@ import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/
  */
 @Component({
     selector: 'app-special',
-    imports: [AmountPipe, 
+    imports: [AmountPipe,
         TuiIcon,
-        TuiButton,
         TuiPreview,
         PolymorpheusOutlet,
         MarketGridSkeletonComponent,
