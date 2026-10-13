@@ -54,6 +54,10 @@ export interface WikiSuggestionPayload {
      * Пояснение автора.
      */
     readonly note: string;
+    /**
+     * Версия статьи, от которой писал игрок; `0` — новая статья.
+     */
+    readonly baseVersion: number;
 }
 
 /**
@@ -73,6 +77,14 @@ export interface WikiSuggestion {
     readonly reviewedAt: string;
     readonly appliedArticleId: string;
     readonly proposal: WikiArticle | null;
+    /**
+     * Версия статьи, от которой автор писал правку; `0` — версия неизвестна.
+     */
+    readonly baseVersion: number;
+    /**
+     * Статья, какой её видел автор правки; `null` у старых предложений.
+     */
+    readonly base: WikiArticle | null;
 }
 
 /**
@@ -177,6 +189,8 @@ export class WikiApiService {
      * @param payload Статья, комментарий и версия, на которой основана правка.
      */
     public update(id: string, payload: WikiSavePayload): Observable<WikiArticle> {
+        // expected_version приходит из payload: после конфликта редактора
+        // отправляет версию, которую только что перечитал у сервера.
         return this.http
             .put<WikiArticleDto>(`${this.baseUrl}/wiki/articles/${encodeURIComponent(id)}`, {
                 article: mapDraftToDto(payload.draft, id, payload.status).article,
@@ -219,6 +233,7 @@ export class WikiApiService {
                     article_id: payload.articleId,
                     proposal: payload.proposal,
                     note: payload.note,
+                    base_version: payload.baseVersion,
                 },
             })
             .pipe(map(mapSuggestionFromDto));
@@ -286,10 +301,13 @@ export class WikiApiService {
      * Одобряет предложение.
      *
      * @param id Идентификатор предложения.
+     * @param allowStale Одобрить правку, написанную от старой версии статьи.
      */
-    public approveSuggestion(id: string): Observable<WikiSuggestion> {
+    public approveSuggestion(id: string, allowStale = false): Observable<WikiSuggestion> {
         return this.http
-            .post<WikiSuggestionDto>(`${this.baseUrl}/wiki/suggestions/${encodeURIComponent(id)}/approve`, {})
+            .post<WikiSuggestionDto>(`${this.baseUrl}/wiki/suggestions/${encodeURIComponent(id)}/approve`, {
+                allow_stale: allowStale,
+            })
             .pipe(map(mapSuggestionFromDto));
     }
 
@@ -328,6 +346,9 @@ export function mapSuggestionFromDto(dto: WikiSuggestionDto): WikiSuggestion {
         reviewedAt: dto.reviewed_at ?? '',
         appliedArticleId: dto.applied_article_id ?? '',
         proposal: dto.proposal ? mapArticleFromDto(dto.proposal) : null,
+        // int64 из gateway приходит строкой — как и version статьи.
+        baseVersion: Number(dto.base_version ?? 0),
+        base: dto.base ? mapArticleFromDto(dto.base) : null,
     };
 }
 

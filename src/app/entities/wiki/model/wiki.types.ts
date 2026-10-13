@@ -121,6 +121,14 @@ export interface WikiSuggestionDto {
     created_at?: string;
     reviewed_at?: string;
     applied_article_id?: string;
+    /**
+     * Версия статьи, какой её видел автор правки; int64 приходит строкой.
+     */
+    base_version?: string | number;
+    /**
+     * Статья на момент предложения; старые предложения приходят без неё.
+     */
+    base?: WikiArticleDto | null;
 }
 
 /**

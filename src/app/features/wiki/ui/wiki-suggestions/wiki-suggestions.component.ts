@@ -12,6 +12,9 @@ import { firstValueFrom } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { ConfirmDialogService } from '@shared/ui/confirm-dialog/confirm-dialog.service';
+import { grpcStatusCode } from '@shared/lib/grpc-status-code.function';
+import { GrpcCode } from '@shared/lib/grpc-code.constant';
 import { WikiSuggestion, WikiSuggestionStatus, WikiAuthorNameService, WikiArticle, WikiDraft } from '@entities/wiki';
 import { WikiStoreService } from '../../api/wiki-store.service';
 import { lineDiff, DiffLine } from '../../lib/line-diff.function';
@@ -50,6 +53,7 @@ export class WikiSuggestionsComponent {
     private readonly store = inject(WikiStoreService);
     private readonly i18n = inject(I18nService);
     private readonly authorNames = inject(WikiAuthorNameService);
+    private readonly confirm = inject(ConfirmDialogService);
 
     /**
      * Фильтры очереди.
@@ -90,6 +94,11 @@ export class WikiSuggestionsComponent {
      * Окно отклонения открыто для предложения с этим id.
      */
     protected readonly rejecting = signal<string | null>(null);
+
+    /**
+     * Показать, что статья изменилась после предложения.
+     */
+    protected readonly showSince = signal(false);
 
     /**
      * Причина отказа в окне.
@@ -168,6 +177,61 @@ export class WikiSuggestionsComponent {
     }
 
     /**
+     * Статья, от которой считаются изменения предложения.
+     *
+     * Сервер хранит у правки снимок статьи на момент предложения (`base`).
+     * Без него (старые предложения) сравниваем с текущей статьёй, как раньше:
+     * иначе правки редактора, сделанные после предложения, выглядели бы как
+     * удаления, которые сделал игрок.
+     *
+     * @param suggestion Предложение из списка.
+     */
+    protected base(suggestion: WikiSuggestion): WikiArticle | null {
+        return suggestion.base ?? this.target(suggestion);
+    }
+
+    /**
+     * Правка написана от версии, которая на сервере уже неактуальна.
+     *
+     * @param suggestion Предложение из списка.
+     */
+    protected isStale(suggestion: WikiSuggestion): boolean {
+        const target = this.target(suggestion);
+
+        return (
+            suggestion.kind === 'edit' &&
+            !!suggestion.proposal &&
+            !!target &&
+            (suggestion.baseVersion === 0 || target.version !== suggestion.baseVersion)
+        );
+    }
+
+    /**
+     * Устаревшее предложение без снимка: показать, что изменилось с тех пор, нельзя.
+     *
+     * @param suggestion Предложение из списка.
+     */
+    protected canShowSince(suggestion: WikiSuggestion): boolean {
+        return suggestion.base !== null && !!this.target(suggestion);
+    }
+
+    /**
+     * Второе сравнение: что изменилось в статье после предложения игрока.
+     *
+     * @param suggestion Предложение из списка.
+     */
+    protected sinceDiff(suggestion: WikiSuggestion): readonly ReviewDiffLine[] {
+        const base = suggestion.base;
+        const target = this.target(suggestion);
+
+        if (!base || !target) {
+            return [];
+        }
+
+        return lineDiff(base.body, target.body).map((line, index) => ({ ...line, number: index + 1 }));
+    }
+
+    /**
      * Поля, которые предложение меняет.
      *
      * Текст статьи сюда не входит: он сравнивается построчно ниже, а здесь —
@@ -176,7 +240,7 @@ export class WikiSuggestionsComponent {
     protected readonly fieldChanges = computed<readonly WikiFieldChange[]>(() => {
         const current = this.current();
 
-        return compareWikiArticles(current ? this.target(current) : null, current?.proposal ?? null);
+        return compareWikiArticles(current ? this.base(current) : null, current?.proposal ?? null);
     });
 
     /**
@@ -213,7 +277,9 @@ export class WikiSuggestionsComponent {
             return [];
         }
 
-        const before = this.current()?.articleId ? (this.store.get(this.current()!.articleId)?.body ?? '') : '';
+        // От базы предложения, а не от текущей статьи: правки редактора после
+        // предложения не должны выглядеть как удаления игрока.
+        const before = current.articleId ? (this.base(current)?.body ?? '') : '';
         const lines = lineDiff(before, current.proposal.body);
 
         return lines.map((line, index) => ({ ...line, number: index + 1 }));
@@ -264,6 +330,7 @@ export class WikiSuggestionsComponent {
      */
     protected toggle(suggestion: WikiSuggestion): void {
         this.opened.update((current) => (current === suggestion.id ? null : suggestion.id));
+        this.showSince.set(false);
         this.error.set(null);
     }
 
@@ -327,18 +394,54 @@ export class WikiSuggestionsComponent {
      * @param suggestion Предложение.
      */
     protected async approve(suggestion: WikiSuggestion): Promise<void> {
+        const stale = this.isStale(suggestion);
+
+        // Устаревшую правку сервер без разрешения не применит: спрашиваем.
+        if (stale && !(await this.askStale())) {
+            return;
+        }
+
         this.busy.set(suggestion.id);
         this.error.set(null);
 
         try {
-            await this.store.approveSuggestion(suggestion.id);
+            await this.store.approveSuggestion(suggestion.id, stale);
             this.opened.set(null);
             await this.reload();
-        } catch {
-            this.error.set('wiki.admin.review.approveFailed');
+        } catch (error) {
+            const code = grpcStatusCode(error);
+
+            if (code === GrpcCode.aborted) {
+                // Статью сохранили между загрузкой очереди и нажатием:
+                // предложение не потеряно, но решать нужно по свежему тексту.
+                this.error.set('wiki.review.staleNow');
+
+                if (suggestion.articleId) {
+                    await this.store.refresh(suggestion.articleId);
+                }
+
+                await this.reload();
+            } else if (code === GrpcCode.failedPrecondition) {
+                this.error.set('wiki.review.alreadyReviewed');
+                await this.reload();
+            } else {
+                this.error.set('wiki.admin.review.approveFailed');
+            }
         } finally {
             this.busy.set(null);
         }
+    }
+
+    /**
+     * Спрашивает подтверждение перед одобрением устаревшей правки.
+     */
+    private askStale(): Promise<boolean> {
+        return firstValueFrom(
+            this.confirm.open({
+                title: this.i18n.translate('wiki.review.staleConfirmTitle'),
+                text: this.i18n.translate('wiki.review.staleConfirm'),
+            })
+        );
     }
 
     /**
