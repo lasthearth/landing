@@ -147,6 +147,10 @@
     justify-content: space-between;
     aspect-ratio: 16 / 10;
     overflow: hidden;
+    // Пластина стоит в край карточки, зазор равен нулю, поэтому по формуле
+    // концентричности из DESIGN_SYSTEM §6.3.2 её радиус равен радиусу панели
+    // на углах, выходящих к краю карточки; остальные углы — прямой стык.
+    border-radius: var(--lh-panel-radius) var(--lh-panel-radius) 0 0;
     // Без обложки лист остаётся ночной пластиной: заголовок читается всегда.
     background: linear-gradient(160deg, var(--lh-night-2), var(--lh-night-deep));
 
@@ -282,6 +286,8 @@
         width: 52%;
         min-height: 14rem;
         aspect-ratio: auto;
+        // Разворот: пластина выходит к левому краю карточки, стык справа прямой.
+        border-radius: var(--lh-panel-radius) 0 0 var(--lh-panel-radius);
     }
 
     .wiki-card__hud {
@@ -325,6 +331,8 @@
             width: auto;
             min-height: 0;
             aspect-ratio: 16 / 10;
+            // Сложенный разворот снова выходит к верхнему краю карточки.
+            border-radius: var(--lh-panel-radius) var(--lh-panel-radius) 0 0;
         }
 
         .wiki-card__title {
