@@ -13,6 +13,8 @@ export type WikiCommandId =
     | 'highlight'
     | 'code'
     | 'spoiler'
+    | 'dash'
+    | 'nbsp'
     | 'link'
     | 'wikiLink'
     | 'anchorLink'
@@ -81,6 +83,8 @@ export const WIKI_COMMANDS: Record<WikiCommandId, WikiCommand> = {
     highlight: { id: 'highlight', icon: '@tui.highlighter', hotkey: 'Ctrl+Shift+H' },
     code: { id: 'code', icon: '@tui.code', hotkey: 'Ctrl+E' },
     spoiler: { id: 'spoiler', icon: '@tui.eye-off' },
+    dash: { id: 'dash', icon: '@tui.move-horizontal' },
+    nbsp: { id: 'nbsp', icon: '@tui.space' },
     link: { id: 'link', icon: '@tui.link', hotkey: 'Ctrl+K' },
     wikiLink: {
         id: 'wikiLink',
@@ -150,6 +154,7 @@ export const WIKI_TOOLBAR: readonly (readonly WikiCommandId[] | 'callouts')[] = 
     ['undo', 'redo'],
     ['h2', 'h3'],
     ['bold', 'italic', 'underline', 'strike', 'highlight', 'code', 'spoiler'],
+    ['dash', 'nbsp'],
     ['link', 'wikiLink', 'ruleLink', 'kbd', 'footnote'],
     ['list', 'orderedList', 'checklist', 'quote'],
     'callouts',
