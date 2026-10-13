@@ -135,6 +135,15 @@ export const routes: Routes = [
                         data: { route_keys: RouteKeys.profileStyle, seo: routeSeoData.profile },
                     },
                     {
+                        path: 'wiki',
+                        loadComponent: () =>
+                            loadPage(
+                                () => import('@features/wiki').then((m) => m.MySuggestionsComponent),
+                                [() => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N)]
+                            ),
+                        data: { route_keys: RouteKeys.mySuggestions, seo: routeSeoData.profile },
+                    },
+                    {
                         path: 'referral',
                         loadComponent: () =>
                             loadPage(

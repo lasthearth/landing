@@ -1,0 +1,113 @@
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <app-page-header
+        [level]="1"
+        [title]="'wiki.mine.title' | translate"
+        [subtitle]="'wiki.mine.pending' | translate: { count: pending() }"
+    >
+        <!-- Пятое предложение закрывает лимит: кнопка гаснет и объясняет почему -->
+        <a
+            class="lh-cta wiki-mine__create"
+            [routerLink]="limitReached() ? [] : ['/wiki/edit/new']"
+            [queryParams]="{ suggest: 1 }"
+            [class.wiki-mine__create--off]="limitReached()"
+            [attr.aria-disabled]="limitReached()"
+            [attr.title]="limitReached() ? ('wiki.mine.limitReached' | translate) : null"
+        >
+            <tui-icon icon="@tui.plus" class="size-4!" />
+            {{ "wiki.mine.new" | translate }}
+        </a>
+    </app-page-header>
+
+    @if (limitReached()) {
+        <p class="wiki-mine__limit">{{ "wiki.mine.limitReached" | translate }}</p>
+    }
+
+    @if (failed()) {
+        <app-error-state (retry)="load()" />
+    } @else if (loading()) {
+        <section class="wiki-mine__list" [attr.aria-label]="'common.loading' | translate" role="status">
+            @for (row of skeletonRows; track row) {
+                <div class="wiki-mine__card lh-panel wiki-mine__card--skeleton">
+                    <app-skeleton width="1/2" height="6" />
+                    <app-skeleton width="1/3" height="4" />
+                    <app-skeleton height="4" />
+                </div>
+            }
+        </section>
+    } @else {
+        <div class="lh-chips" role="group" [attr.aria-label]="'wiki.mine.title' | translate">
+            @for (item of filters; track item) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-pressed]="filter() === item"
+                    (click)="filter.set(item)"
+                >
+                    {{ filterLabel(item) }}
+                    <span class="lh-chip__count">{{ counts()[item] }}</span>
+                </button>
+            }
+        </div>
+
+        @if (visible().length) {
+            <section class="wiki-mine__list">
+                @for (item of visible(); track item.id) {
+                    <article class="wiki-mine__card lh-panel">
+                        <div class="wiki-mine__top">
+                            <span class="lh-chip cursor-default" [attr.data-status]="item.status">
+                                {{ statusLabel(item.status) }}
+                            </span>
+                            <span class="wiki-mine__kind">
+                                {{
+                                    (item.kind === "new"
+                                        ? "wiki.mine.kindNew"
+                                        : "wiki.mine.kindEdit"
+                                    ) | translate: { title: item.proposal?.title || item.slug }
+                                }}
+                            </span>
+                            <time class="wiki-mine__date" [appRelativeTime]="item.createdAt"></time>
+                        </div>
+
+                        <b class="wiki-mine__title">{{ item.proposal?.title || item.slug }}</b>
+
+                        @if (item.note) {
+                            <p class="wiki-mine__note">{{ item.note }}</p>
+                        }
+
+                        @if (item.status === "rejected" && item.rejectReason) {
+                            <div class="wiki-mine__reason">
+                                <span class="wiki-mine__reason-label">{{ "wiki.mine.reason" | translate }}</span>
+                                <!-- Причина приходит с сервера: только интерполяция -->
+                                <p>{{ item.rejectReason }}</p>
+                            </div>
+                        }
+
+                        @if (item.reviewedAt) {
+                            <p class="wiki-mine__meta">
+                                <time [appRelativeTime]="item.reviewedAt"></time>
+                            </p>
+                        }
+
+                        @if (item.status === "approved" && articleSlug(item)) {
+                            <a class="lh-chip wiki-mine__link" [routerLink]="['/wiki', articleSlug(item)]">
+                                <tui-icon icon="@tui.book-open" />
+                                {{ "wiki.mine.openArticle" | translate }}
+                            </a>
+                        } @else if (item.status === "pending" && item.kind === "edit" && articleSlug(item)) {
+                            <a class="lh-chip wiki-mine__link" [routerLink]="['/wiki', articleSlug(item)]">
+                                <tui-icon icon="@tui.book-open" />
+                                {{ "wiki.mine.openArticle" | translate }}
+                            </a>
+                        }
+                    </article>
+                }
+            </section>
+        } @else {
+            <app-empty-state
+                icon="@tui.send"
+                [title]="'wiki.mine.empty' | translate"
+                [description]="'wiki.mine.emptyHint' | translate"
+            />
+        }
+    }
+</div>
