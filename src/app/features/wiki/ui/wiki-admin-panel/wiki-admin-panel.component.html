@@ -128,7 +128,12 @@
                                     <span>{{ sectionLabel(article.sectionId) }}</span>
                                     <span>/wiki/{{ article.slug }}</span>
                                     <span>{{ "wiki.input.words" | translate: { count: words(article) } }}</span>
-                                    <span>{{ date(article.updatedAt) }} · {{ article.authorName }}</span>
+                                    <span>
+                                        {{ date(article.updatedAt) }}
+                                        @if (authors(article)) {
+                                            · {{ authors(article) }}
+                                        }
+                                    </span>
                                     @if (hasAutosave(article)) {
                                         <span class="wap__unsaved">{{ "wiki.admin.unsaved" | translate }}</span>
                                     }

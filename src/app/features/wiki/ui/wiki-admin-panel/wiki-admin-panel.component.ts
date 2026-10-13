@@ -1,11 +1,20 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    signal,
+    untracked,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog/confirm-dialog.service';
 import { WikiStoreService } from '../../api/wiki-store.service';
-import { WikiArticle, WikiSectionId, WikiStatus } from '@entities/wiki';
+import { WikiArticle, WikiAuthorNameService, WikiSectionId, WikiStatus } from '@entities/wiki';
 import { WIKI_SECTIONS } from '../../lib/wiki-sections.constant';
 import { WikiSuggestionsComponent } from '../wiki-suggestions/wiki-suggestions.component';
 
@@ -24,6 +33,7 @@ export class WikiAdminPanelComponent {
     private readonly store = inject(WikiStoreService);
     private readonly i18n = inject(I18nService);
     private readonly confirm = inject(ConfirmDialogService);
+    private readonly authorNames = inject(WikiAuthorNameService);
 
     protected readonly sections = WIKI_SECTIONS;
     protected readonly query = signal('');
@@ -76,6 +86,26 @@ export class WikiAdminPanelComponent {
         // Список статей приезжает с сервера вместе с черновиками: сервер знает,
         // что мы редактор.
         afterNextRender(() => void this.store.load());
+
+        // Сервер хранит id автора, а показываем имя.
+        effect(() => {
+            const ids = this.all().flatMap((article) => [article.createdBy, article.authorName]);
+
+            untracked(() => void this.authorNames.resolve(ids));
+        });
+    }
+
+    /**
+     * Подпись автора и последнего редактора, если это другой человек.
+     *
+     * @param article Статья из списка.
+     * @returns Имена через стрелку или пустая строка, пока имена не пришли.
+     */
+    protected authors(article: WikiArticle): string {
+        const author = this.authorNames.label(article.createdBy);
+        const editor = article.authorName !== article.createdBy ? this.authorNames.label(article.authorName) : '';
+
+        return editor ? `${author} → ${editor}` : author;
     }
 
     protected words(article: WikiArticle): number {
