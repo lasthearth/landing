@@ -484,6 +484,19 @@ export class WikiMarkupInputComponent {
                 return this.wrap('`', '`', this.sample('code'));
             case 'spoiler':
                 return this.wrap('||', '||', this.sample('spoiler'));
+            case 'dash': {
+                const { selectionStart: from, selectionEnd: to, value } = area;
+                // Пробел перед тире не нужен: он уже есть в самой вставке.
+                const at = from === to && from > 0 && value[from - 1] === ' ' ? from - 1 : from;
+
+                this.replaceRange(at, to, '\u00A0— ');
+
+                return;
+            }
+            case 'nbsp':
+                this.replaceRange(area.selectionStart, area.selectionEnd, '\u00A0');
+
+                return;
             case 'link':
                 return this.insertLink();
             case 'wikiLink':
