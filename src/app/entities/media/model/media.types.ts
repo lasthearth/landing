@@ -13,7 +13,9 @@ export type UploadPurpose =
     | 'UPLOAD_PURPOSE_UNSPECIFIED'
     | 'UPLOAD_PURPOSE_DONATE_SHOP'
     | 'UPLOAD_PURPOSE_SETTLEMENT'
-    | 'UPLOAD_PURPOSE_NEWS';
+    | 'UPLOAD_PURPOSE_NEWS'
+    /** Картинки вики: прав не требует, в отличие от новостного назначения. */
+    | 'UPLOAD_PURPOSE_WIKI';
 
 /**
  * Запрос на получение presigned-целей для загрузки файлов.

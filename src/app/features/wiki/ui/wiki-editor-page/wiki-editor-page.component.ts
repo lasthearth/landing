@@ -25,6 +25,7 @@ import { compressImage } from '@shared/lib/compress-image.function';
 import { sanitizeUrl } from '@shared/lib/news-markdown';
 import { WikiStoreService } from '../../api/wiki-store.service';
 import {
+    WikiArticle,
     WikiAuthorNameService,
     WikiCover,
     WikiDraft,
@@ -39,6 +40,8 @@ import { isValidSlug, slugify } from '../../lib/slugify.function';
 import { WIKI_SECTIONS } from '../../lib/wiki-sections.constant';
 import { WIKI_TEMPLATES, WikiTemplate } from '../../lib/wiki-templates.constant';
 import { DiffLine, lineDiff } from '../../lib/line-diff.function';
+import { grpcStatusCode } from '@shared/lib/grpc-status-code.function';
+import { GrpcCode } from '@shared/lib/grpc-code.constant';
 import { typograph } from '../../lib/typograph.function';
 import { WikiCommandId } from '../../lib/wiki-commands.constant';
 import { WikiMarkupInputComponent } from '../wiki-markup-input/wiki-markup-input.component';
@@ -231,6 +234,41 @@ export class WikiEditorPageComponent {
     protected readonly savedAt = signal<Date | null>(null);
     protected readonly autosavedAt = signal<Date | null>(null);
     protected readonly saveError = signal(false);
+
+    /**
+     * Адрес занят другой статьёй — показываем прямо под полем адреса.
+     */
+    protected readonly slugTaken = signal(false);
+
+    /**
+     * Предложение не ушло: в сигнале лежит ключ перевода причины.
+     */
+    protected readonly suggestError = signal<string | null>(null);
+
+    /**
+     * Конфликт версий: статью изменили, пока её правили.
+     *
+     * `fresh` — версия с сервера, с которой сравнивают текст редактора.
+     */
+    protected readonly conflict = signal<{ fresh: WikiArticle } | null>(null);
+
+    /**
+     * Сравнение «версия на сервере → ваш текст» в окне конфликта.
+     */
+    protected readonly conflictDiff = computed<DiffLine[]>(() => {
+        const state = this.conflict();
+
+        return state ? lineDiff(state.fresh.body, this.body()) : [];
+    });
+
+    protected readonly conflictStats = computed(() => {
+        const diff = this.conflictDiff();
+
+        return {
+            added: diff.filter((line) => line.kind === 'add').length,
+            removed: diff.filter((line) => line.kind === 'del').length,
+        };
+    });
 
     /**
      * Найденное автосохранение, которое можно восстановить.
@@ -518,7 +556,8 @@ export class WikiEditorPageComponent {
      */
     protected readonly uploadImage = async (file: File): Promise<string> => {
         const compressed = await compressImage(file, { maxWidth: 2000, maxHeight: 2000, quality: 0.9 });
-        return this.media.uploadFile(compressed, 'UPLOAD_PURPOSE_NEWS');
+        // Вики-назначение прав не требует: игрок без news:create прикладывает картинку.
+        return this.media.uploadFile(compressed, 'UPLOAD_PURPOSE_WIKI');
     };
 
     private renderTimer: ReturnType<typeof setTimeout> | null = null;
@@ -744,15 +783,34 @@ export class WikiEditorPageComponent {
             return;
         }
 
+        await this.write(status);
+    }
+
+    /**
+     * Отправляет статью на сервер и разбирает отказ.
+     *
+     * Сервер различает причины отказа, и человеку нужно разное: при конфликте
+     * версий — сравнить свой текст с серверным, при занятом адресе — исправить
+     * адрес, при исчерпанном лимите предложений — дождаться решения.
+     *
+     * @param status Статус после сохранения.
+     * @param expectedVersion Версия, на которой основана правка.
+     */
+    private async write(status: WikiStatus, expectedVersion?: number): Promise<void> {
         const wasNew = !this.articleId();
         const oldKey = this.autosaveKey();
 
         try {
-            const article = await this.store.save(this.articleId(), this.draft(), {
-                status,
-                authorName: this.userService.userName || 'admin',
-                note: this.note().trim(),
-            });
+            const article = await this.store.save(
+                this.articleId(),
+                this.draft(),
+                {
+                    status,
+                    authorName: this.userService.userName || 'admin',
+                    note: this.note().trim(),
+                },
+                expectedVersion
+            );
 
             this.articleId.set(article.id);
             this.status.set(article.status);
@@ -766,6 +824,8 @@ export class WikiEditorPageComponent {
                 noteInput.value = '';
             }
             this.saveError.set(false);
+            this.slugTaken.set(false);
+            this.conflict.set(null);
             this.store.clearAutosave(oldKey);
             this.store.clearAutosave(article.id);
             await this.store.loadHistory(article.id);
@@ -773,9 +833,87 @@ export class WikiEditorPageComponent {
             if (wasNew) {
                 this.location.replaceState(`/wiki/edit/${article.id}`);
             }
-        } catch {
-            this.saveError.set(true);
+        } catch (error) {
+            await this.onSaveFailed(error, status);
         }
+    }
+
+    /**
+     * Разбирает отказ сервера при сохранении.
+     *
+     * @param error Ошибка из HttpClient.
+     * @param status Статус, который пытались сохранить.
+     */
+    private async onSaveFailed(error: unknown, status: WikiStatus): Promise<void> {
+        const code = grpcStatusCode(error);
+
+        if (code === GrpcCode.failedPrecondition && this.articleId()) {
+            // Статью изменил другой редактор: показываем свежую версию и даём выбрать.
+            const fresh = await this.store.refresh(this.articleId()!);
+
+            if (fresh) {
+                this.saveError.set(false);
+                this.conflict.set({ fresh });
+                this.status.set(status);
+
+                return;
+            }
+        }
+
+        if (code === GrpcCode.alreadyExists) {
+            this.saveError.set(false);
+            this.slugTaken.set(true);
+            this.tab.set('props');
+            this.sideOpen.set(true);
+            setTimeout(() => {
+                document.getElementById('wf-slug')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                document.getElementById('wiki-slug')?.focus({ preventScroll: true });
+            });
+
+            return;
+        }
+
+        this.saveError.set(true);
+    }
+
+    /**
+     * Оставить свою версию: сохраняем ещё раз поверх свежей версии сервера.
+     */
+    protected keepMine(): void {
+        const state = this.conflict();
+
+        if (!state) {
+            return;
+        }
+
+        const status = this.status();
+        this.conflict.set(null);
+        // Ожидаемая версия — та, что сервер только что отдал: свой текст
+        // заменяет чужие правки, но уже поверх актуальной версии.
+        void this.write(status, state.fresh.version);
+    }
+
+    /**
+     * Взять версию с сервера: чужое изменение видно, свой текст остаётся
+     * в автосохранении браузера.
+     */
+    protected takeServer(): void {
+        const state = this.conflict();
+
+        if (!state) {
+            return;
+        }
+
+        this.applyDraft(state.fresh);
+        this.status.set(state.fresh.status);
+        this.updatedAt.set(state.fresh.updatedAt);
+        this.savedSnapshot.set(JSON.stringify(this.draft()));
+        this.conflict.set(null);
+        this.saveError.set(false);
+    }
+
+    protected closeConflict(): void {
+        this.conflict.set(null);
     }
 
     /**
@@ -805,14 +943,30 @@ export class WikiEditorPageComponent {
             return;
         }
 
-        this.store.submitSuggestion(this.draft(), this.articleId() ?? '', this.note().trim()).subscribe({
-            next: () => {
-                this.saveError.set(false);
-                this.suggestSent.set(true);
-                this.store.clearAutosave(this.autosaveKey());
-            },
-            error: () => this.saveError.set(true),
-        });
+        // Версия, от которой пишет игрок: сервер сохранит её как base_version,
+        // а редактор увидит, что статью успели изменить до одобрения.
+        this.store
+            .submitSuggestion(this.draft(), this.articleId() ?? '', this.note().trim(), this.store.versionOf(this.articleId()))
+            .subscribe({
+                next: () => {
+                    this.saveError.set(false);
+                    this.suggestError.set(null);
+                    this.suggestSent.set(true);
+                    this.store.clearAutosave(this.autosaveKey());
+                },
+                error: (error: unknown) => {
+                    const code = grpcStatusCode(error);
+
+                    this.saveError.set(false);
+                    this.suggestError.set(
+                        code === GrpcCode.resourceExhausted
+                            ? 'wiki.editor.suggestLimit'
+                            : code === GrpcCode.failedPrecondition
+                              ? 'wiki.editor.suggestOutdated'
+                              : 'wiki.editor.saveError'
+                    );
+                },
+            });
     }
 
     /**
@@ -1457,6 +1611,9 @@ export class WikiEditorPageComponent {
         if (event.key === 'Escape') {
             if (this.confirmState()) {
                 this.answer(false);
+            } else if (this.conflict()) {
+                // Окно конфликта — как остальные: Esc значит «ничего не менять».
+                this.closeConflict();
             } else if (this.historyOpen()) {
                 this.historyOpen.set(false);
             } else if (this.templatesOpen()) {

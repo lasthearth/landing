@@ -87,6 +87,51 @@
                                 <!-- Правку показываем только изменениями: что было и что стало -->
                                 <h4 class="wiki-review__section">{{ "wiki.admin.review.wasNow" | translate }}</h4>
 
+                                @if (isStale(item)) {
+                                    <div class="wiki-review__stale" role="status">
+                                        <tui-icon icon="@tui.triangle-alert" />
+                                        <div class="wiki-review__stale-body">
+                                            <p>
+                                                {{
+                                                    (item.baseVersion
+                                                        ? "wiki.review.stale"
+                                                        : "wiki.review.staleUnknown"
+                                                    ) | translate: { from: item.baseVersion, to: target(item)?.version }
+                                                }}
+                                            </p>
+                                            @if (canShowSince(item)) {
+                                                <button
+                                                    type="button"
+                                                    class="lh-chip wiki-review__stale-toggle"
+                                                    (click)="showSince.set(!showSince())"
+                                                >
+                                                    <tui-icon
+                                                        [icon]="showSince() ? '@tui.chevron-up' : '@tui.chevron-down'"
+                                                    />
+                                                    {{ "wiki.review.showSince" | translate }}
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    @if (showSince() && canShowSince(item)) {
+                                        <div class="wiki-review__diff">
+                                            @for (line of sinceDiff(item); track line.number) {
+                                                <div
+                                                    class="wiki-review__line"
+                                                    [class.wiki-review__line--add]="line.kind === 'add'"
+                                                    [class.wiki-review__line--del]="line.kind === 'del'"
+                                                >
+                                                    <span class="wiki-review__sign">
+                                                        {{ line.kind === "add" ? "+" : line.kind === "del" ? "−" : " " }}
+                                                    </span>
+                                                    <span class="wiki-review__text">{{ line.text || " " }}</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                }
+
                                 @if (fieldChanges().length) {
                                     <dl class="wiki-review__fields">
                                         @for (change of fieldChanges(); track change.key) {

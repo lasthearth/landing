@@ -31,6 +31,8 @@
                     <span class="we__saved--error">{{ "wiki.admin.deleteFailed" | translate }}</span>
                 } @else if (saveError()) {
                     <span class="we__saved--error">{{ "wiki.editor.saveError" | translate }}</span>
+                } @else if (suggestError(); as error) {
+                    <span class="we__saved--error">{{ error | translate }}</span>
                 } @else if (dirty()) {
                     <span class="we__dot"></span>
                     @if (autosavedAt(); as at) {
@@ -302,7 +304,11 @@
                                 </div>
                             </div>
 
-                            <div class="we-field" id="wf-slug" [class.we-field--bad]="fieldIssue().has('slug')">
+                            <div
+                                class="we-field"
+                                id="wf-slug"
+                                [class.we-field--bad]="fieldIssue().has('slug') || slugTaken()"
+                            >
                                 <label class="we-field__label" for="wiki-slug">
                                     {{ "wiki.props.slug" | translate }}
                                     <span class="we-field__aside">
@@ -342,6 +348,11 @@
                                 </div>
                                 @if (fieldIssue().get("slug"); as issue) {
                                     <span class="we-field__error">{{ issueText(issue) }}</span>
+                                }
+                                @if (slugTaken()) {
+                                    <span class="we-field__error">
+                                        {{ "wiki.lint.slugTaken" | translate: { slug: slug() } }}
+                                    </span>
                                 }
                             </div>
 
@@ -1012,6 +1023,39 @@
                             >@for (line of historyDiff(); track $index) {<span [attr.data-kind]="line.kind">{{ line.text || ' ' }}</span>}</pre>
                         </div>
                     }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- ———————— Конфликт версий ———————— -->
+    @if (conflict(); as state) {
+        <div class="we__overlay we__overlay--top" (click)="closeConflict()">
+            <div class="we__dialog we__dialog--wide" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+                <h2 class="we__confirm-title">{{ "wiki.editor.conflict.title" | translate }}</h2>
+                <p class="we__muted">{{ "wiki.editor.conflict.text" | translate }}</p>
+
+                <div class="we__diff">
+                    <div class="we__diff-head">
+                        <span>{{ "wiki.history.compare" | translate }}</span>
+                        <span class="we__diff-stat we__diff-stat--add">+{{ conflictStats().added }}</span>
+                        <span class="we__diff-stat we__diff-stat--del">−{{ conflictStats().removed }}</span>
+                    </div>
+                    <pre
+                        class="we__diff-body"
+                    >@for (line of conflictDiff(); track $index) {<span [attr.data-kind]="line.kind">{{ line.text || ' ' }}</span>}</pre>
+                </div>
+
+                <div class="we__confirm-actions">
+                    <button type="button" class="we__btn" (click)="closeConflict()">
+                        {{ "wiki.view.close" | translate }}
+                    </button>
+                    <button type="button" class="we__btn" (click)="takeServer()">
+                        {{ "wiki.editor.conflict.takeServer" | translate }}
+                    </button>
+                    <button type="button" class="we__btn we__btn--primary" (click)="keepMine()">
+                        {{ "wiki.editor.conflict.keepMine" | translate }}
+                    </button>
                 </div>
             </div>
         </div>

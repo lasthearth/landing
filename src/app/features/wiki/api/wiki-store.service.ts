@@ -291,12 +291,16 @@ export class WikiStoreService {
      * @param id Id статьи (`null` — новая).
      * @param draft Поля статьи.
      * @param meta Статус, автор и комментарий к правке.
+     * @param expectedVersion Версия, на которой основана правка; без неё
+     * берётся версия из снимка. После конфликта редактор передаёт свежую
+     * версию, которую только что перечитал.
      * @returns Сохранённая статья с сервера.
      */
     public async save(
         id: string | null,
         draft: WikiDraft,
-        meta: { status: WikiStatus; authorName: string; note: string }
+        meta: { status: WikiStatus; authorName: string; note: string },
+        expectedVersion?: number
     ): Promise<WikiArticle> {
         const payload: WikiSavePayload = {
             draft,
@@ -304,7 +308,7 @@ export class WikiStoreService {
             note: meta.note,
             // Версия, которую редактор открыл: сервер откажет, если статью
             // успел изменить кто-то другой, вместо тихой перезаписи.
-            expectedVersion: this.versionOf(id),
+            expectedVersion: expectedVersion ?? this.versionOf(id),
         };
 
         const saved = id
@@ -348,8 +352,14 @@ export class WikiStoreService {
      * @param proposal Предложенная статья.
      * @param articleId Адрес правимой статьи; пусто — новая статья.
      * @param note Пояснение автора.
+     * @param baseVersion Версия статьи, от которой писал игрок; `0` — новая статья.
      */
-    public submitSuggestion(proposal: WikiDraft, articleId: string, note: string): Observable<WikiSuggestion> {
+    public submitSuggestion(
+        proposal: WikiDraft,
+        articleId: string,
+        note: string,
+        baseVersion: number
+    ): Observable<WikiSuggestion> {
         return this.api.submitSuggestion({
             proposal: {
                 id: '',
@@ -368,6 +378,7 @@ export class WikiStoreService {
             },
             articleId,
             note,
+            baseVersion,
         });
     }
 
@@ -384,10 +395,11 @@ export class WikiStoreService {
      * Одобряет предложение.
      *
      * @param id Id предложения.
+     * @param allowStale Одобрить правку, написанную от старой версии статьи.
      * @returns Промис с решением сервера.
      */
-    public async approveSuggestion(id: string): Promise<WikiSuggestion> {
-        const decided = await firstValueFrom(this.api.approveSuggestion(id));
+    public async approveSuggestion(id: string, allowStale = false): Promise<WikiSuggestion> {
+        const decided = await firstValueFrom(this.api.approveSuggestion(id, allowStale));
         await this.load();
 
         return decided;
