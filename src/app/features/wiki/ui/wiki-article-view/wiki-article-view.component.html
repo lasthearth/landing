@@ -130,18 +130,24 @@
         </section>
     }
 
-    @if (createdLabel()) {
+    @if (!preview()) {
         <footer class="wiki-view__footer">
-            <span class="wiki-view__footer-row">
-                <tui-icon icon="@tui.feather" class="wiki-view__footer-icon" />
-                {{ "wiki.view.author" | translate: { name: createdLabel() } }}
-            </span>
+            @if (createdLabel()) {
+                <span class="wiki-view__footer-row">
+                    <tui-icon icon="@tui.feather" class="wiki-view__footer-icon" />
+                    {{ "wiki.view.author" | translate: { name: createdLabel() } }}
+                </span>
+            }
             @if (editorLabel()) {
                 <span class="wiki-view__footer-row">
                     <tui-icon icon="@tui.pencil-line" class="wiki-view__footer-icon" />
                     {{ "wiki.view.editedBy" | translate: { name: editorLabel() } }}
                 </span>
             }
+            <span class="wiki-view__footer-row wiki-view__footer-row--license">
+                {{ "wiki.view.license" | translate }}
+                <a [href]="licenseUrl" target="_blank" rel="noopener license">CC BY-SA 4.0</a>
+            </span>
         </footer>
     }
 </article>
