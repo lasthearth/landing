@@ -35,6 +35,11 @@ export class SeoService {
     private canonicalLink: HTMLLinkElement | null = null;
 
     /**
+     * Блоки структурированных данных по идентификатору.
+     */
+    private readonly jsonLd = new Map<string, HTMLScriptElement>();
+
+    /**
      * Инициализирует экземпляр класса {@link SeoService}.
      *
      * @param rendererFactory2 Создает и инициализирует Renderer2.
@@ -133,5 +138,36 @@ export class SeoService {
         if (url) {
             this.renderer.setAttribute(this.canonicalLink, 'href', url);
         }
+    }
+
+    /**
+     * Ставит или убирает блок структурированных данных страницы.
+     *
+     * @param id Идентификатор блока: повторный вызов с тем же id заменяет его.
+     * @param data Объект schema.org или `null`, чтобы убрать блок.
+     */
+    public setJsonLd(id: string, data: object | null): void {
+        const existing = this.jsonLd.get(id);
+
+        if (!data) {
+            if (existing) {
+                this.renderer.removeChild(this.document.head, existing);
+                this.jsonLd.delete(id);
+            }
+
+            return;
+        }
+
+        const script = existing ?? this.renderer.createElement('script');
+
+        if (!existing) {
+            this.renderer.setAttribute(script, 'type', 'application/ld+json');
+            this.renderer.setAttribute(script, 'id', `ld-${id}`);
+            this.renderer.appendChild(this.document.head, script);
+            this.jsonLd.set(id, script);
+        }
+
+        // Текст статьи не должен уметь закрыть тег: `<` уезжает в экранированном виде.
+        this.renderer.setProperty(script, 'textContent', JSON.stringify(data).replace(/</g, '\\u003c'));
     }
 }

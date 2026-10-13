@@ -6,6 +6,8 @@ export type WikiCommandId =
     | 'redo'
     | 'h2'
     | 'h3'
+    | 'h4'
+    | 'h5'
     | 'bold'
     | 'italic'
     | 'underline'
@@ -13,8 +15,11 @@ export type WikiCommandId =
     | 'highlight'
     | 'code'
     | 'spoiler'
+    | 'dash'
+    | 'nbsp'
     | 'link'
     | 'wikiLink'
+    | 'playerLink'
     | 'anchorLink'
     | 'ruleLink'
     | 'kbd'
@@ -74,6 +79,20 @@ export const WIKI_COMMANDS: Record<WikiCommandId, WikiCommand> = {
         keywords: 'заголовок раздел heading h2',
     },
     h3: { id: 'h3', icon: '@tui.heading-3', hotkey: 'Ctrl+Alt+3', slash: true, keywords: 'подзаголовок heading h3' },
+    h4: {
+        id: 'h4',
+        icon: '@tui.heading-4',
+        hotkey: 'Ctrl+Alt+4',
+        slash: true,
+        keywords: 'заголовок heading h4',
+    },
+    h5: {
+        id: 'h5',
+        icon: '@tui.heading-5',
+        hotkey: 'Ctrl+Alt+5',
+        slash: true,
+        keywords: 'заголовок heading h5',
+    },
     bold: { id: 'bold', icon: '@tui.bold', hotkey: 'Ctrl+B' },
     italic: { id: 'italic', icon: '@tui.italic', hotkey: 'Ctrl+I' },
     underline: { id: 'underline', icon: '@tui.underline', hotkey: 'Ctrl+U' },
@@ -81,6 +100,8 @@ export const WIKI_COMMANDS: Record<WikiCommandId, WikiCommand> = {
     highlight: { id: 'highlight', icon: '@tui.highlighter', hotkey: 'Ctrl+Shift+H' },
     code: { id: 'code', icon: '@tui.code', hotkey: 'Ctrl+E' },
     spoiler: { id: 'spoiler', icon: '@tui.eye-off' },
+    dash: { id: 'dash', icon: '@tui.move-horizontal' },
+    nbsp: { id: 'nbsp', icon: '@tui.space' },
     link: { id: 'link', icon: '@tui.link', hotkey: 'Ctrl+K' },
     wikiLink: {
         id: 'wikiLink',
@@ -88,6 +109,12 @@ export const WIKI_COMMANDS: Record<WikiCommandId, WikiCommand> = {
         hotkey: 'Ctrl+Shift+K',
         slash: true,
         keywords: 'статья ссылка вики article wiki link',
+    },
+    playerLink: {
+        id: 'playerLink',
+        icon: '@tui.at-sign',
+        slash: true,
+        keywords: 'игрок ник профиль player nick',
     },
     anchorLink: { id: 'anchorLink', icon: '@tui.hash', slash: true, keywords: 'якорь раздел anchor section' },
     ruleLink: { id: 'ruleLink', icon: '@tui.scale', slash: true, keywords: 'правило пункт rule' },
@@ -148,9 +175,10 @@ export const WIKI_COMMANDS: Record<WikiCommandId, WikiCommand> = {
  */
 export const WIKI_TOOLBAR: readonly (readonly WikiCommandId[] | 'callouts')[] = [
     ['undo', 'redo'],
-    ['h2', 'h3'],
+    ['h2', 'h3', 'h4', 'h5'],
     ['bold', 'italic', 'underline', 'strike', 'highlight', 'code', 'spoiler'],
-    ['link', 'wikiLink', 'ruleLink', 'kbd', 'footnote'],
+    ['dash', 'nbsp'],
+    ['link', 'wikiLink', 'playerLink', 'ruleLink', 'kbd', 'footnote'],
     ['list', 'orderedList', 'checklist', 'quote'],
     'callouts',
     ['details', 'steps', 'compare', 'columns', 'table', 'codeBlock', 'divider'],

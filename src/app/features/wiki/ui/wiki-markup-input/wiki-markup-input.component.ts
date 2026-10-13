@@ -17,8 +17,10 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TuiIcon } from '@taiga-ui/core';
+import { Subscription } from 'rxjs';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { WikiHeading } from '@entities/wiki';
+import { SettlementService } from '@entities/settlement';
 import {
     WIKI_CALLOUTS,
     WIKI_COMMANDS,
@@ -43,7 +45,7 @@ const CONTINUE = /^(\s*)(?:([-*•])\s+(\[[ xX]\]\s+)?|(\d+)([.)])\s+|(>)\s?)(.*
 /**
  * Любой блочный префикс строки.
  */
-const ANY_PREFIX = /^(#{1,4}\s+|\s*[-*•]\s+(\[[ xX]\]\s+)?|\s*\d+[.)]\s+|>\s?)/;
+const ANY_PREFIX = /^(#{1,5}\s+|\s*[-*•]\s+(\[[ xX]\]\s+)?|\s*\d+[.)]\s+|>\s?)/;
 
 /**
  * Статья для подсказки ссылок.
@@ -62,6 +64,14 @@ interface SuggestItem {
     readonly label: string;
     readonly hint: string;
     readonly run: () => void;
+}
+
+/**
+ * Игрок, найденный для ссылки `[[player:…]]`.
+ */
+interface PlayerResult {
+    readonly user_id: string;
+    readonly user_game_name: string;
 }
 
 /**
@@ -111,6 +121,7 @@ interface SuggestState {
 })
 export class WikiMarkupInputComponent {
     private readonly i18n = inject(I18nService);
+    private readonly settlements = inject(SettlementService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -201,6 +212,11 @@ export class WikiMarkupInputComponent {
     protected readonly suggestIndex = signal(0);
 
     /**
+     * Найденные игроки для ссылки `[[player:…]]`.
+     */
+    protected readonly playerResults = signal<readonly PlayerResult[]>([]);
+
+    /**
      * Строка и колонка курсора, длина выделения.
      */
     protected readonly caret = signal({ line: 1, column: 1, selected: 0 });
@@ -282,6 +298,17 @@ export class WikiMarkupInputComponent {
                 }));
         }
 
+        // Игрок: [[player: — ищем по нику, в текст попадает постоянный номер.
+        if (state.query.toLowerCase().startsWith('player:')) {
+            return this.playerResults().map((player) => ({
+                key: player.user_id,
+                icon: '@tui.user',
+                label: player.user_game_name,
+                hint: `/player/${player.user_game_name}`,
+                run: () => this.completeLink(state, `player:${player.user_id}`),
+            }));
+        }
+
         // Ссылки: [[# — разделы этой статьи, иначе — статьи.
         if (state.query.startsWith('#')) {
             const query = state.query.slice(1).toLowerCase();
@@ -290,7 +317,7 @@ export class WikiMarkupInputComponent {
                 .slice(0, 10)
                 .map((heading) => ({
                     key: heading.id,
-                    icon: heading.level === 2 ? '@tui.heading-2' : '@tui.heading-3',
+                    icon: `@tui.heading-${heading.level}`,
                     label: heading.text,
                     hint: `#${heading.id}`,
                     run: () => this.completeLink(state, `#${heading.id}`),
@@ -367,6 +394,13 @@ export class WikiMarkupInputComponent {
 
     private measureTimer: ReturnType<typeof setTimeout> | null = null;
 
+    /**
+     * Задержка поиска игроков и последний запрос: отменяем предыдущий.
+     */
+    private playerTimer: ReturnType<typeof setTimeout> | null = null;
+    private playerSearch: Subscription | null = null;
+    private playerQueryAsked = '';
+
     public constructor() {
         // Значение снаружи (шаблон, восстановление) пишем в поле, не сбивая курсор при вводе.
         effect(() => {
@@ -399,6 +433,12 @@ export class WikiMarkupInputComponent {
                 if (this.measureTimer) {
                     clearTimeout(this.measureTimer);
                 }
+
+                if (this.playerTimer) {
+                    clearTimeout(this.playerTimer);
+                }
+
+                this.playerSearch?.unsubscribe();
             });
         });
     }
@@ -470,6 +510,10 @@ export class WikiMarkupInputComponent {
                 return this.toggleHeading('## ');
             case 'h3':
                 return this.toggleHeading('### ');
+            case 'h4':
+                return this.toggleHeading('#### ');
+            case 'h5':
+                return this.toggleHeading('##### ');
             case 'bold':
                 return this.wrap('**', '**', this.sample('bold'));
             case 'italic':
@@ -484,11 +528,26 @@ export class WikiMarkupInputComponent {
                 return this.wrap('`', '`', this.sample('code'));
             case 'spoiler':
                 return this.wrap('||', '||', this.sample('spoiler'));
+            case 'dash': {
+                const { selectionStart: from, selectionEnd: to, value } = area;
+                // Пробел перед тире не нужен: он уже есть в самой вставке.
+                const at = from === to && from > 0 && value[from - 1] === ' ' ? from - 1 : from;
+
+                this.replaceRange(at, to, '\u00A0— ');
+
+                return;
+            }
+            case 'nbsp':
+                this.replaceRange(area.selectionStart, area.selectionEnd, '\u00A0');
+
+                return;
             case 'link':
                 return this.insertLink();
             case 'wikiLink':
             case 'anchorLink':
                 return this.startLink(id === 'anchorLink' ? '#' : '');
+            case 'playerLink':
+                return this.startLink('player:');
             case 'ruleLink':
                 return this.insertRuleLink();
             case 'kbd':
@@ -917,7 +976,15 @@ export class WikiMarkupInputComponent {
         alt: boolean
     ): WikiCommandId | 'save' | 'replace' | 'duplicate' | null {
         if (alt) {
-            return code === 'Digit2' ? 'h2' : code === 'Digit3' ? 'h3' : null;
+            return code === 'Digit2'
+                ? 'h2'
+                : code === 'Digit3'
+                  ? 'h3'
+                  : code === 'Digit4'
+                    ? 'h4'
+                    : code === 'Digit5'
+                      ? 'h5'
+                      : null;
         }
 
         if (shift) {
@@ -1408,6 +1475,39 @@ export class WikiMarkupInputComponent {
     }
 
     /**
+     * Ищет игроков по нику для ссылки `[[player:…]]`.
+     *
+     * Запрос уходит через 250 мс после последнего ввода, предыдущий отменяется;
+     * ошибка даёт пустой список — подсказка не стоит показа ошибки.
+     *
+     * @param query Часть ника.
+     */
+    private searchPlayers(query: string): void {
+        if (this.playerTimer) {
+            clearTimeout(this.playerTimer);
+            this.playerTimer = null;
+        }
+
+        this.playerSearch?.unsubscribe();
+        this.playerSearch = null;
+
+        const needle = query.trim();
+
+        if (needle.length < 2) {
+            this.playerResults.set([]);
+            return;
+        }
+
+        this.playerTimer = setTimeout(() => {
+            this.playerTimer = null;
+            this.playerSearch = this.settlements.searchUser$(needle).subscribe({
+                next: (response) => this.playerResults.set(response.users as readonly PlayerResult[]),
+                error: () => this.playerResults.set([]),
+            });
+        }, 250);
+    }
+
+    /**
      * Открывает, обновляет или закрывает подсказку по тексту перед курсором.
      *
      * @param force Открыть ссылочную подсказку, даже если запрос пуст.
@@ -1424,7 +1524,7 @@ export class WikiMarkupInputComponent {
         const lineStart = area.value.lastIndexOf('\n', caret - 1) + 1;
         const before = area.value.slice(lineStart, caret);
         const slash = /^\/([\p{L}\d]{0,20})$/u.exec(before);
-        const link = /\[\[(#?[^\]|\n:]{0,40})$/.exec(before);
+        const link = /\[\[(player:[^\]|\n]{0,40}|#?[^\]|\n:]{0,40})$/.exec(before);
         let state: Pick<SuggestState, 'kind' | 'from' | 'query'> | null = null;
 
         if (slash) {
@@ -1436,6 +1536,17 @@ export class WikiMarkupInputComponent {
         if (!state) {
             this.suggest.set(null);
             return;
+        }
+
+        // Поиск игроков дёргаем только на новую часть ника: прокрутка поля
+        // обновляет подсказку, но запрос не перезапускает.
+        if (state.kind === 'link' && state.query.toLowerCase().startsWith('player:')) {
+            const needle = state.query.slice('player:'.length).trim();
+
+            if (needle !== this.playerQueryAsked) {
+                this.playerQueryAsked = needle;
+                this.searchPlayers(needle);
+            }
         }
 
         const previous = this.suggest();

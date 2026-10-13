@@ -14,6 +14,7 @@
         "verify:full": "node scripts/verify.mjs --full",
         "arch": "node scripts/check-architecture.mjs",
         "map": "node scripts/gen-project-map.mjs",
+        "sitemap": "node scripts/gen-sitemap.mjs",
         "i18n": "node scripts/i18n-tool.mjs",
         "context:cost": "node scripts/check-context-budget.mjs",
         "format": "prettier --write AGENTS.md AGENT_RULES_MAP.md README.md docs package.json",

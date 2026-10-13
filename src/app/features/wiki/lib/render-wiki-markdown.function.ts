@@ -14,6 +14,7 @@ export interface WikiRenderLabels {
     readonly copy: string;
     readonly video: string;
     readonly missingArticle: string;
+    readonly player: string;
 }
 
 /**
@@ -25,6 +26,10 @@ export interface WikiRenderOptions {
      * Без функции все ссылки считаются рабочими.
      */
     readonly resolveArticle?: (slug: string) => string | null;
+    /**
+     * Текущий ник по id игрока; null — ещё не известен.
+     */
+    readonly resolvePlayer?: (id: string) => string | null;
     readonly labels?: Partial<WikiRenderLabels>;
 }
 
@@ -39,6 +44,7 @@ const DEFAULT_LABELS: WikiRenderLabels = {
     copy: 'Копировать',
     video: 'Смотреть видео',
     missingArticle: 'Статьи пока нет',
+    player: 'игрок',
 };
 
 /**
@@ -84,7 +90,7 @@ const RE = {
     fence: /^\s*```\s*([\w+#-]{0,20})\s*$/,
     open: /^:::\s*([a-z]+)\s*(.*)$/,
     close: /^:::\s*$/,
-    heading: /^(#{1,4})\s+(.+?)\s*#*\s*$/,
+    heading: /^(#{1,5})\s+(.+?)\s*#*\s*$/,
     hr: /^\s*(-{3,}|\*{3,}|_{3,})\s*$/,
     image: /^\s*!\[([^\]\n]*)\]\(([^)\s]+)\)\s*(?:\{([a-z\s]+)\})?\s*$/,
     embed: /^\s*@(youtube|video)\(([^)\s]*)\)\s*$/,
@@ -104,10 +110,12 @@ interface Ctx {
     readonly lines: readonly string[];
     readonly labels: WikiRenderLabels;
     readonly resolve: ((slug: string) => string | null) | null;
+    readonly resolvePlayer: ((id: string) => string | null) | null;
     readonly headings: WikiHeading[];
     readonly images: WikiImage[];
     readonly articleLinks: { slug: string; line: number }[];
     readonly ruleLinks: Set<string>;
+    readonly playerIds: string[];
     readonly notes: WikiRenderNote[];
     readonly ids: Map<string, number>;
     /**
@@ -124,13 +132,13 @@ interface Ctx {
  * Превращает текст статьи вики в HTML и собирает сведения для редактора.
  *
  * Синтаксис — разметка новостей (см. `renderInlineMarkdown`) плюс:
- * - `## ` / `### ` — разделы с якорями (для оглавления);
+ * - `## ` … `##### ` — заголовки с якорями (для оглавления);
  * - `- [ ]` / `- [x]` — чек-лист, вложенные списки отступом;
  * - `![подпись](url){left|right|wide|small|center}` — картинка;
  * - `:::tip|info|warn|danger Заголовок … :::` — выноска;
  * - `:::details Заголовок`, `:::gallery`, `:::steps`, `:::columns` / `:::compare` (колонки через `+++`);
  * - таблицы `| a | b |`, блоки кода ```` ``` ````, `@youtube(ссылка)`;
- * - `[[адрес]]`, `[[адрес#раздел|текст]]`, `[[#раздел]]`, `[[rule:5.2]]`, `[[kbd:Ctrl+C]]`;
+ * - `[[адрес]]`, `[[адрес#раздел|текст]]`, `[[#раздел]]`, `[[rule:5.2]]`, `[[kbd:Ctrl+C]]`, `[[player:id]]`;
  * - `==выделение==`, сноски `[^1]` с пояснением `[^1]: текст`.
  *
  * Весь пользовательский текст экранируется, ссылки проходят `sanitizeUrl`,
@@ -146,10 +154,12 @@ export function renderWikiMarkdown(source: string, options: WikiRenderOptions = 
         lines,
         labels: { ...DEFAULT_LABELS, ...options.labels },
         resolve: options.resolveArticle ?? null,
+        resolvePlayer: options.resolvePlayer ?? null,
         headings: [],
         images: [],
         articleLinks: [],
         ruleLinks: new Set(),
+        playerIds: [],
         notes: [],
         ids: new Map(),
         footnoteDefs: new Map(),
@@ -173,6 +183,7 @@ export function renderWikiMarkdown(source: string, options: WikiRenderOptions = 
         images: ctx.images,
         articleLinks: ctx.articleLinks,
         ruleLinks: [...ctx.ruleLinks],
+        playerIds: ctx.playerIds,
         words: countWords(source),
         notes: ctx.notes.sort((a, b) => a.line - b.line),
     };
@@ -340,7 +351,7 @@ function renderBlocks(ctx: Ctx, from: number, to: number, top: boolean): string 
         const heading = RE.heading.exec(line);
 
         if (heading) {
-            const level: 2 | 3 = heading[1].length <= 2 ? 2 : 3;
+            const level = Math.max(2, heading[1].length) as WikiHeading['level'];
             const text = heading[2];
             const id = uniqueId(ctx, slugify(plainText(text)) || 'section');
 
@@ -825,6 +836,28 @@ function renderWikiLink(ctx: Ctx, inner: string, line: number): string | null {
         ctx.ruleLinks.add(number);
         const text = label ? renderInlineMarkdown(label) : `§&nbsp;${number}`;
         return `<a class="wiki-rule" href="/rules#P${number.replace(/\./g, '_')}" target="_blank" rel="noopener">${text}</a>`;
+    }
+
+    const player = /^player:\s*(.+)$/i.exec(target);
+
+    if (player) {
+        const id = player[1].trim();
+
+        if (!/^[A-Za-z0-9_-]{4,64}$/.test(id)) {
+            ctx.notes.push({ kind: 'badPlayer', line, detail: id });
+            return null;
+        }
+
+        if (!ctx.playerIds.includes(id)) {
+            ctx.playerIds.push(id);
+        }
+
+        const nick = ctx.resolvePlayer?.(id) ?? null;
+        const text = label ? renderInlineMarkdown(label) : escapeHtml(nick ?? ctx.labels.player);
+
+        return nick
+            ? `<a class="wiki-link wiki-link--player" href="/player/${encodeURIComponent(nick)}">${text}</a>`
+            : `<span class="wiki-link--player">${text}</span>`;
     }
 
     const kbd = /^kbd:\s*(.+)$/i.exec(target);

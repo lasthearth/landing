@@ -20,6 +20,11 @@ import { WikiDraft, WikiHeading, WikiImage } from '@entities/wiki';
 import { WIKI_SECTIONS } from '../../lib/wiki-sections.constant';
 
 /**
+ * Адрес лицензии, под которой публикуются материалы статьи.
+ */
+const LICENSE_URL = 'https://creativecommons.org/licenses/by-sa/4.0/deed.ru';
+
+/**
  * Статья вики в том виде, в каком её увидит читатель.
  *
  * Используется и как просмотр в редакторе (`preview`), и на странице статьи.
@@ -58,7 +63,14 @@ export class WikiArticleViewComponent {
     public readonly images = input<readonly WikiImage[]>([]);
     public readonly words = input(0);
     public readonly updatedAt = input<string | null>(null);
+    /**
+     * Кто правил последним.
+     */
     public readonly authorName = input('');
+    /**
+     * Кто создал статью; не меняется при правках.
+     */
+    public readonly createdBy = input('');
 
     /**
      * Заголовок статьи по адресу — для карточек «См. также».
@@ -69,6 +81,11 @@ export class WikiArticleViewComponent {
      * Просмотр в редакторе: ссылки на статьи не уводят со страницы.
      */
     public readonly preview = input(false);
+
+    /**
+     * Адрес лицензии — для строки в подвале статьи.
+     */
+    protected readonly licenseUrl = LICENSE_URL;
 
     /**
      * Двойной клик по блоку в просмотре — номер строки исходника.
@@ -92,24 +109,34 @@ export class WikiArticleViewComponent {
     protected readonly minutes = computed(() => Math.max(1, Math.round(this.words() / 200)));
 
     /**
+     * Оглавление: подписи абзацев (пятый уровень) в него не попадают.
+     */
+    protected readonly tocHeadings = computed(() => this.headings().filter((heading) => heading.level <= 4));
+
+    /**
      * Подпись автора: игровое имя вместо идентификатора из токена.
      *
      * Сервер хранит subject, поэтому в подписи он появится только до тех пор,
      * пока сервис пользователей не ответит именем.
      */
-    protected readonly authorLabel = computed(() => {
-        const stored = this.authorName();
-        const name = this.authorNames.name(stored);
+    protected readonly createdLabel = computed(() => this.authorNames.name(this.createdBy()) ?? '');
 
-        return name ?? '';
+    /**
+     * Имя последнего редактора — только если правил не автор статьи.
+     */
+    protected readonly editorLabel = computed(() => {
+        const editor = this.authorName();
+        const author = this.createdBy();
+
+        return editor && editor !== author ? (this.authorNames.name(editor) ?? '') : '';
     });
 
     constructor() {
-        // Имя автора запрашиваем по факту показа, а на сервере подписи нет.
+        // Имена запрашиваем по факту показа, а на сервере подписей нет.
         effect(() => {
-            const stored = this.authorName();
+            const stored = [this.createdBy(), this.authorName()];
 
-            untracked(() => void this.authorNames.resolve([stored]));
+            untracked(() => void this.authorNames.resolve(stored));
         });
     }
 

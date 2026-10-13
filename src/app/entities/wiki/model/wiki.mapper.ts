@@ -86,6 +86,7 @@ export function mapArticleFromDto(dto: WikiArticleDto): WikiArticle {
         status: mapStatusFromDto(dto.status),
         createdAt: dto.created_at ?? '',
         updatedAt: dto.updated_at ?? '',
+        createdBy: dto.created_by || dto.author_name || '',
         authorName: dto.author_name ?? '',
         // Версия приходит строкой (int64 в protobuf), а для сверки нужна числом.
         version: Number(dto.version ?? 0),

@@ -371,8 +371,19 @@
     --color-lh-tag-coral-bg: var(--lh-tag-coral-bg);
 }
 
+/**
+ * Тире из системного шрифта: у Advent Pro «—» и «–» стоят почти на уровне
+ * верхней части строчных букв. unicode-range ограничивает подмену двумя символами.
+ */
+@font-face {
+    font-family: 'LH Dash';
+    src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Roboto'), local('Segoe UI'),
+        local('DejaVu Sans');
+    unicode-range: U+2013-2014;
+}
+
 html body {
-    font-family: 'Advent Pro', serif !important;
+    font-family: 'LH Dash', 'Advent Pro', serif !important;
     font-optical-sizing: auto;
 }
 
@@ -447,7 +458,7 @@ html body {
 tui-dialog {
     .t-content {
         @apply text-base!;
-        font-family: 'Advent Pro', serif !important;
+        font-family: 'LH Dash', 'Advent Pro', serif !important;
         font-optical-sizing: auto;
         background-color: #e2d7bb !important;
         background-image: url('/image_1.webp') !important;
@@ -485,7 +496,7 @@ tui-hint:not([data-appearance='lh-player']) {
 }
 
 tui-hint {
-    font-family: 'Advent Pro', serif !important;
+    font-family: 'LH Dash', 'Advent Pro', serif !important;
     font-optical-sizing: auto;
 }
 

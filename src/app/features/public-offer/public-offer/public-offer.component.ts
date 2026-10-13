@@ -54,6 +54,11 @@ export class PublicOfferComponent implements OnDestroy {
     protected isLegislation: boolean = false;
 
     /**
+     * Признак раскрытия секции "Пользовательские материалы".
+     */
+    protected isUserContent: boolean = false;
+
+    /**
      * Признак раскрытия секции "Реквизиты Исполнителя".
      */
     protected isRequisites: boolean = false;
@@ -122,6 +127,7 @@ export class PublicOfferComponent implements OnDestroy {
         this.isTermsOfReturn = state;
         this.isPersonalData = state;
         this.isLegislation = state;
+        this.isUserContent = state;
         this.isRequisites = state;
     }
 

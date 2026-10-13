@@ -1,0 +1,84 @@
+.wiki-mine__limit {
+    margin: 0;
+    padding: 0.6rem 0.9rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--lh-warning-ink);
+    background: color-mix(in srgb, var(--lh-warning-ink) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-warning-ink) 35%, transparent);
+}
+
+// Лимит исчерпан: ссылка выглядит выключенной и не ведёт в редактор.
+.wiki-mine__create--off {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.wiki-mine__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 0.875rem;
+}
+
+.wiki-mine__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.wiki-mine__card--skeleton {
+    pointer-events: none;
+}
+
+.wiki-mine__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.wiki-mine__kind,
+.wiki-mine__date,
+.wiki-mine__meta {
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.wiki-mine__title {
+    font-size: 1.125rem;
+}
+
+.wiki-mine__note {
+    margin: 0;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--lh-surface-3) 55%, transparent);
+}
+
+.wiki-mine__reason {
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--lh-danger-soft) 40%, transparent);
+
+    p {
+        margin: 0.15rem 0 0;
+    }
+}
+
+.wiki-mine__reason-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lh-ink-3);
+}
+
+.wiki-mine__meta,
+.wiki-mine__reason p {
+    margin: 0;
+}
+
+.wiki-mine__link {
+    align-self: flex-start;
+    text-decoration: none;
+}

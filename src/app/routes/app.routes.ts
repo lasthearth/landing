@@ -46,7 +46,7 @@ export const routes: Routes = [
                 pathMatch: 'full',
             },
             {
-                // Вики: список статей и статья. Пока без сервера — см. WikiStoreService.
+                // Вики: список статей. Статьи приезжают с сервера, снимок держит WikiStoreService.
                 path: 'wiki',
                 loadComponent: () =>
                     loadPage(
@@ -133,6 +133,15 @@ export const routes: Routes = [
                                 (m) => m.ProfileStylePageComponent
                             ),
                         data: { route_keys: RouteKeys.profileStyle, seo: routeSeoData.profile },
+                    },
+                    {
+                        path: 'wiki',
+                        loadComponent: () =>
+                            loadPage(
+                                () => import('@features/wiki').then((m) => m.MySuggestionsComponent),
+                                [() => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N)]
+                            ),
+                        data: { route_keys: RouteKeys.mySuggestions, seo: routeSeoData.profile },
                     },
                     {
                         path: 'referral',

@@ -31,6 +31,21 @@
         font-size: 1.22em;
     }
 
+    h4.wiki-h,
+    h5.wiki-h {
+        margin-top: 1.1em;
+        font-family: inherit; // Almendra на мелком кегле читается плохо (DESIGN_SYSTEM)
+    }
+
+    h4.wiki-h {
+        font-size: 1.08em;
+    }
+
+    h5.wiki-h {
+        font-size: 1em;
+        color: var(--lh-ink-2);
+    }
+
     > .wiki-h:first-child {
         margin-top: 0;
     }
@@ -87,6 +102,11 @@
         font-weight: 700;
         color: var(--lh-link);
         border-bottom: 1px dashed currentColor;
+    }
+
+    .wiki-link--player::before {
+        content: '@';
+        opacity: 0.6;
     }
 
     a.wiki-link--missing {

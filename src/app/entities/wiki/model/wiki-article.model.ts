@@ -67,6 +67,13 @@ export interface WikiArticle {
     readonly status: WikiStatus;
     readonly createdAt: string;
     readonly updatedAt: string;
+    /**
+     * Кто создал статью; не меняется при правках.
+     */
+    readonly createdBy: string;
+    /**
+     * Кто правил последним.
+     */
     readonly authorName: string;
     /**
      * Версия из хранилища: правка принимается, только если статью не изменили
@@ -108,7 +115,7 @@ export interface WikiDraft {
 export interface WikiHeading {
     readonly id: string;
     readonly text: string;
-    readonly level: 2 | 3;
+    readonly level: 2 | 3 | 4 | 5;
     /**
      * Строка исходного текста (с нуля) — чтобы перейти к ней в редакторе.
      */
@@ -136,7 +143,8 @@ export interface WikiRenderNote {
         | 'missingFootnote'
         | 'unusedFootnote'
         | 'longParagraph'
-        | 'badRule';
+        | 'badRule'
+        | 'badPlayer';
     readonly line: number;
     readonly detail: string;
 }
@@ -156,6 +164,10 @@ export interface WikiRender {
      * Номера пунктов правил, на которые ссылается текст.
      */
     readonly ruleLinks: readonly string[];
+    /**
+     * Идентификаторы игроков, на которых ссылается текст.
+     */
+    readonly playerIds: readonly string[];
     readonly words: number;
     readonly notes: readonly WikiRenderNote[];
 }

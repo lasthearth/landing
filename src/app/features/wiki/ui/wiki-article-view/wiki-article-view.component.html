@@ -79,8 +79,11 @@
             </button>
             @if (tocOpen()) {
                 <ol>
-                    @for (heading of headings(); track heading.id) {
-                        <li [class.wiki-view__toc-sub]="heading.level === 3">
+                    @for (heading of tocHeadings(); track heading.id) {
+                        <li
+                            [class.wiki-view__toc-sub]="heading.level === 3"
+                            [class.wiki-view__toc-sub2]="heading.level === 4"
+                        >
                             <a
                                 [attr.href]="'#' + heading.id"
                                 (click)="$event.preventDefault(); scrollToAnchor(heading.id)"
@@ -127,10 +130,24 @@
         </section>
     }
 
-    @if (authorLabel()) {
+    @if (!preview()) {
         <footer class="wiki-view__footer">
-            <tui-icon icon="@tui.feather" class="wiki-view__footer-icon" />
-            {{ "wiki.view.author" | translate: { name: authorLabel() } }}
+            @if (createdLabel()) {
+                <span class="wiki-view__footer-row">
+                    <tui-icon icon="@tui.feather" class="wiki-view__footer-icon" />
+                    {{ "wiki.view.author" | translate: { name: createdLabel() } }}
+                </span>
+            }
+            @if (editorLabel()) {
+                <span class="wiki-view__footer-row">
+                    <tui-icon icon="@tui.pencil-line" class="wiki-view__footer-icon" />
+                    {{ "wiki.view.editedBy" | translate: { name: editorLabel() } }}
+                </span>
+            }
+            <span class="wiki-view__footer-row wiki-view__footer-row--license">
+                {{ "wiki.view.license" | translate }}
+                <a [href]="licenseUrl" target="_blank" rel="noopener license">CC BY-SA 4.0</a>
+            </span>
         </footer>
     }
 </article>
