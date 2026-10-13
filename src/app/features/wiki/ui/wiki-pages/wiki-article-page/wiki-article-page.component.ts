@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
     inject,
     PLATFORM_ID,
@@ -10,7 +11,10 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { I18nService } from '@core/i18n';
+import { SeoService } from '@core/services/seo.service';
+import { plainWikiText } from '../../../lib/wiki-plain-text.function';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
@@ -27,6 +31,16 @@ import { WikiArticleViewComponent } from '../../wiki-article-view/wiki-article-v
  * Состояние страницы статьи.
  */
 type WikiPageState = 'loading' | 'ready' | 'not-found';
+
+/**
+ * Адрес сайта для канонических ссылок и превью.
+ */
+const SITE_URL = 'https://lasthearth.ru';
+
+/**
+ * Сколько символов описания страницы отдаём поисковику.
+ */
+const DESCRIPTION_LIMIT = 160;
 
 /**
  * Страница статьи вики.
@@ -50,7 +64,9 @@ export class WikiArticlePageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly user = inject(UserService);
     private readonly authorNames = inject(WikiAuthorNameService);
-    private readonly router = inject(Router);
+    private readonly seo = inject(SeoService);
+    private readonly i18n = inject(I18nService);
+    private readonly destroyRef = inject(DestroyRef);
 
     /**
      * Сайт пререндерится: серверный проход данные не грузит и скелетона не рисует.
@@ -136,6 +152,90 @@ export class WikiArticlePageComponent {
 
             untracked(() => void this.authorNames.resolve(ids));
         });
+
+        // Заголовок вкладки, описание и превью ссылки — свои у каждой статьи.
+        effect(() => this.applySeo());
+
+        // Уходя со страницы, структурированные данные надо снять: иначе они
+        // останутся на следующей странице и расскажут о ней неправду.
+        this.destroyRef.onDestroy(() => {
+            this.seo.setJsonLd('wiki-article', null);
+            this.seo.setJsonLd('wiki-faq', null);
+        });
+    }
+
+    /**
+     * Выставляет SEO-теги и структурированные данные по состоянию страницы.
+     */
+    private applySeo(): void {
+        const state = this.state();
+        const article = this.article();
+
+        if (state !== 'ready' || !article) {
+            this.seo.setJsonLd('wiki-article', null);
+            this.seo.setJsonLd('wiki-faq', null);
+
+            if (state === 'not-found') {
+                this.seo.setSeoTags({
+                    title: `${this.i18n.translate('wiki.public.notFound')} — Last Hearth`,
+                    description: this.i18n.translate('wiki.public.notFoundHint'),
+                    keywords: '',
+                    robots: 'noindex, follow',
+                });
+            }
+
+            return;
+        }
+
+        const url = `${SITE_URL}/wiki/${article.slug}`;
+        const text = plainWikiText(article.body);
+        const description = article.lead.trim() || cut(text, DESCRIPTION_LIMIT);
+        const image = article.cover?.url || `${SITE_URL}/og-image.jpg`;
+
+        this.seo.setSeoTags({
+            title: `${article.title} — ${this.i18n.translate('wiki.seo.suffix')}`,
+            description,
+            keywords: article.tags.join(', '),
+            robots:
+                article.status === 'draft'
+                    ? 'noindex, nofollow'
+                    : 'index, follow, max-image-preview:large',
+            url,
+            type: 'article',
+            locale: 'ru_RU',
+            siteName: 'Last Hearth',
+            image,
+            imageAlt: article.title,
+        });
+
+        this.seo.setJsonLd('wiki-article', {
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: article.title,
+            description,
+            image,
+            dateModified: article.updatedAt,
+            author: { '@type': 'Person', name: this.authorNames.label(article.createdBy) },
+            mainEntityOfPage: url,
+        });
+
+        // Быстрый ответ — готовый вопрос с ответом: поисковик покажет его сам.
+        this.seo.setJsonLd(
+            'wiki-faq',
+            article.quickAnswer
+                ? {
+                      '@context': 'https://schema.org',
+                      '@type': 'FAQPage',
+                      mainEntity: [
+                          {
+                              '@type': 'Question',
+                              name: article.quickAnswer.question,
+                              acceptedAnswer: { '@type': 'Answer', text: article.quickAnswer.answer },
+                          },
+                      ],
+                  }
+                : null
+        );
     }
 
     /**
@@ -181,6 +281,23 @@ export class WikiArticlePageComponent {
     protected resolveTitle(slug: string): string | null {
         return this.store.bySlug(slug)?.title ?? null;
     }
+}
+
+/**
+ * Обрезает описание по границе слова.
+ *
+ * @param text Текст статьи без разметки.
+ * @param limit Предел в символах.
+ */
+function cut(text: string, limit: number): string {
+    if (text.length <= limit) {
+        return text;
+    }
+
+    const sliced = text.slice(0, limit - 1);
+    const lastSpace = sliced.lastIndexOf(' ');
+
+    return `${(lastSpace > limit / 2 ? sliced.slice(0, lastSpace) : sliced).trimEnd()}…`;
 }
 
 /**
