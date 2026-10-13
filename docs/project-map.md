@@ -28,13 +28,13 @@
 
 | Слой      | Файлов | Внутри                                                                                                                                                                                                                                                                                                            |
 | --------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| src/app   | 802    | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                  |
-| core/     | 46     | config, guards, i18n, interceptors, services, types                                                                                                                                                                                                                                                               |
+| src/app   | 806    | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                  |
+| core/     | 47     | config, guards, i18n, interceptors, services, types                                                                                                                                                                                                                                                               |
 | entities/ | 143    | discord, donate, event, hunger-games, lfg, media, news, notification, player-style, reaction, referral, rule-question, settlement, settlement-tag, user, wiki                                                                                                                                                     |
 | features/ | 489    | admin, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, landing, lfg, market, new-content, news, not-found, notifications, onboarding, player, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki |
 | layout/   | 18     | background-scene, footer, header                                                                                                                                                                                                                                                                                  |
-| routes/   | 3      | enums                                                                                                                                                                                                                                                                                                             |
-| shared/   | 99     | lib, styles, ui                                                                                                                                                                                                                                                                                                   |
+| routes/   | 5      | enums                                                                                                                                                                                                                                                                                                             |
+| shared/   | 100    | lib, styles, ui                                                                                                                                                                                                                                                                                                   |
 
 ## 3. Слайсы features / entities
 
@@ -128,7 +128,7 @@
 | Словарь     | KB    | Грузится на                                                                         |
 | ----------- | ----- | ----------------------------------------------------------------------------------- |
 | admin       | 32.4  | /profile/admin                                                                      |
-| common      | 1.0   | —                                                                                   |
+| common      | 1.1   | —                                                                                   |
 | diplomacy   | 1.7   | /diplomacy                                                                          |
 | events      | 8.0   | /profile, /events                                                                   |
 | faq         | 2.3   | /faq                                                                                |
@@ -147,7 +147,7 @@
 | settlements | 59.0  | /profile, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared      | 26.5  | —                                                                                   |
 | videos      | 2.1   | /videos                                                                             |
-| wiki        | 51.8  | wiki/edit/:id, /wiki, /wiki/:slug, /profile/admin                                   |
+| wiki        | 52.9  | wiki/edit/:id, /wiki, /wiki/:slug, /profile/admin                                   |
 
 Общие словари (common, header, footer, shared, news) подключены сразу в
 `src/app/core/i18n/translations/index.ts`. Остальные приезжают вместе с роутом через `loadPage()`.

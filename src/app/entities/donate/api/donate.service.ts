@@ -1,6 +1,20 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, catchError, map, of, shareReplay, startWith, switchMap } from 'rxjs';
+import {
+    BehaviorSubject,
+    EMPTY,
+    Observable,
+    ReplaySubject,
+    Subject,
+    catchError,
+    map,
+    of,
+    share,
+    startWith,
+    switchMap,
+    take,
+    throwError,
+} from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { IShopItemDto, ICreateShopItemRequest, IUpdateShopItemRequest } from '../model/shop-item.interface';
@@ -46,27 +60,52 @@ export class DonateService {
     private readonly baseUrl = environment.apiUrl;
 
     /**
-     * Триггер принудительного обновления кэша списка товаров.
+     * Триггер запроса списка товаров.
+     *
+     * Значение — признак «тихого» режима: в нём `errorInterceptor` не показывает
+     * алерт (см. `SKIP_ERROR_ALERT`). Прогрев кэша работает тихо, обычный запрос
+     * страницы магазина — как раньше.
      */
-    private readonly shopItemsRefresh$ = new BehaviorSubject<void>(undefined);
+    private readonly shopItemsRefresh$ = new BehaviorSubject<boolean>(false);
+
+    /**
+     * Признак того, что список товаров уже запрошен или запрашивается.
+     *
+     * Защищает прогрев кэша от второго запроса, если магазин открыли раньше,
+     * чем браузер освободился.
+     */
+    private shopItemsRequested = false;
 
     /**
      * Кэшированный Observable со списком товаров магазина.
      *
-     * Товары редко меняются, поэтому используется shareReplay(1)
-     * для предотвращения лишних запросов.
+     * Товары редко меняются, поэтому успех запоминается на всю сессию
+     * (`share` с `ReplaySubject(1)`): следующие подписчики запрос не делают.
+     * Ошибка кэш сбрасывает (`resetOnError`), чтобы подписчик получил новый
+     * запрос, а не запомненный сбой.
      * При вызове {@link refreshShopItems$} кэш сбрасывается и выполняется новый запрос.
      */
     private readonly shopItems$ = this.shopItemsRefresh$.pipe(
-        switchMap(() =>
-            this.http
-                .get<{ items: IShopItemDto[] }>(`${this.baseUrl}/donate/shop/items`)
+        switchMap((silent) => {
+            this.shopItemsRequested = true;
+
+            return this.http
+                .get<{ items: IShopItemDto[] }>(`${this.baseUrl}/donate/shop/items`, {
+                    context: new HttpContext().set(SKIP_ERROR_ALERT, silent),
+                })
                 .pipe(
                     map((response) => response.items.map(mapDtoToShopItem)),
-                    catchError(() => of([]))
-                )
-        ),
-        shareReplay(1)
+                    // В тихом режиме сбой не подменяется пустым списком: иначе одна
+                    // ошибка сети навсегда показала бы «товаров нет» на всех страницах.
+                    catchError((error: unknown) => (silent ? throwError(() => error) : of([])))
+                );
+        }),
+        share<IShopItem[]>({
+            connector: () => new ReplaySubject<IShopItem[]>(1),
+            resetOnError: true,
+            resetOnComplete: false,
+            resetOnRefCountZero: false,
+        })
     );
 
     /**
@@ -140,7 +179,7 @@ export class DonateService {
     /**
      * Получает список товаров магазина.
      *
-     * Результат кэшируется через shareReplay(1).
+     * Результат кэшируется на всю сессию: повторная подписка запрос не делает.
      *
      * @returns Observable с массивом товаров.
      */
@@ -149,12 +188,33 @@ export class DonateService {
     }
 
     /**
+     * Прогревает кэш списка товаров одним тихим запросом.
+     *
+     * Назначение — заранее, до открытия страницы магазина, получить данные,
+     * которые пререндер в HTML не кладёт. Отличия от {@link getShopItems$}:
+     * при ошибке алерт не показывается (`SKIP_ERROR_ALERT`) и сбой не остаётся
+     * в кэше. Если товары уже запрошены, нового запроса не делает.
+     *
+     * @returns Observable со списком товаров; при ошибке завершается без значения.
+     */
+    public prefetchShopItems$(): Observable<IShopItem[]> {
+        if (!this.shopItemsRequested) {
+            this.shopItemsRefresh$.next(true);
+        }
+
+        return this.shopItems$.pipe(
+            take(1),
+            catchError(() => EMPTY)
+        );
+    }
+
+    /**
      * Сбрасывает кэш списка товаров и инициирует новый запрос к API.
      *
      * Подписчики, использующие {@link getShopItems$}, автоматически получат актуальный список.
      */
     public refreshShopItems$(): void {
-        this.shopItemsRefresh$.next();
+        this.shopItemsRefresh$.next(false);
     }
 
     /**

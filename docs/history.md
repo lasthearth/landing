@@ -34,6 +34,43 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-18 Преалодинг разделов меню и прогрев кэша магазина
+
+> Клик по пункту меню ничего не показывал, пока браузер скачивал чанк страницы и
+> её словарь: паузу приходилось прикрывать полосой загрузки
+> (`RouteLoadingService`). Магазин добавлял второе ожидание — пререндер кладёт в
+> HTML `/market` только разметку, товаров в `ng-state` нет (1,7 КБ состояния),
+> поэтому сетка рисовала скелетон до ответа `/donate/shop/items`.
+
+- **Преалодинг чанков.** `routes/nav-preloading.strategy.ts` +
+  `withPreloading(NavPreloadingStrategy)` в `core/config/app.config.ts`: роутер
+  сам скачивает страницы из `routes/nav-preload-paths.constant.ts` (home, rules,
+  wiki, settlements, events, market) в окне простоя после первого `NavigationEnd`.
+  Список явный, а не `PreloadAllModules`: полный преалодинг тянул бы ещё админку
+  (208 КБ), профиль и юридические словари (`legal-i18n` 109 КБ) — в сборке 89
+  ленивых чанков. Роуты со стражами и с параметрами (`player/:nick`, `news/:id`)
+  не берутся; на сервере стратегия молчит (`isPlatformBrowser`).
+- **Цена вопроса.** Тяжелее всех `/rules`: `rules-component` 178,7 КБ raw
+  (20,7 КБ передачи) + `rules-i18n` 318,1 КБ (35,8 КБ). Остальные пять разделов —
+  порядка 10–15 КБ передачи каждый, `market-component` 52,8 КБ raw (8,8 КБ).
+- **Прогрев кэша магазина.** `core/services/shop-prefetch.service.ts` стартует из
+  `LayoutComponent` через `afterNextRender` и вызывает
+  `DonateService.prefetchShopItems$()`: тот же общий поток, но с
+  `SKIP_ERROR_ALERT` — иначе алерт «Нет соединения с сервером» всплывал бы на
+  странице, где магазин никто не открывал. Повторный вызов `start()` игнорируется,
+  а флаг `shopItemsRequested` не даёт второму запросу уйти, если магазин уже открыт.
+- **Грабли кэша.** `shareReplay(1)` запоминал и неудачу: `errorInterceptor`
+  подменяет ошибку GET на `EMPTY`, поэтому `catchError(() => of([]))` в сервисе не
+  срабатывал, поток завершался без значения, а `titles`/`kits`/`special` подписаны
+  только на `next` — скелетон оставался навсегда. Кэш собран через
+  `share({ connector: () => new ReplaySubject(1), resetOnError: true, resetOnComplete: false, resetOnRefCountZero: false })`:
+  успех живёт всю сессию, ошибка кэш сбрасывает, и следующий подписчик делает новый
+  запрос. Обычный (не тихий) путь поведения не изменил.
+- **Ожидание простоя.** `shared/lib/when-idle.function.ts` — `requestIdleCallback`
+  с запасным `window.setTimeout` (Safari получил `requestIdleCallback` только в 18).
+- Проверено: `npm run verify` зелёный; `ng build` проходит, 11 пререндер-роутов,
+  начальный бандл 1,37 МБ raw / 287 КБ передачи при бюджете 1,4/1,8 МБ.
+
 ### 3.-17 Загрузка картинок вики с `UPLOAD_PURPOSE_WIKI`
 
 > Обложку и картинки статьи вики нельзя было загрузить: бэкенд отклонял

@@ -11,6 +11,7 @@ import { GameChatWidgetComponent } from '@features/game-chat/ui/game-chat-widget
 import { BackgroundSceneComponent } from './background-scene/background-scene.component';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
+import { ShopPrefetchService } from '@core/services/shop-prefetch.service';
 import { WELCOME_SEEN_STORAGE_KEY } from './welcome-seen-storage-key.constant';
 import { SiteAnnouncementComponent } from '@features/announcement';
 import { TranslatePipe } from '@core/i18n';
@@ -42,6 +43,11 @@ export class LayoutComponent {
      * Сервис localStorage.
      */
     private readonly localStorage = inject(LocalStorageService);
+
+    /**
+     * Сервис прогрева кэша магазина: запрашивает товары в окне простоя браузера.
+     */
+    private readonly shopPrefetch = inject(ShopPrefetchService);
 
     /**
      * Идентификатор платформы.
@@ -103,6 +109,10 @@ export class LayoutComponent {
         afterNextRender(() => {
             void import('@features/onboarding').then(({ OnboardingService }) => injector.get(OnboardingService).start());
         });
+
+        // Магазин: пререндер кладёт в HTML только разметку, а товары приходят запросом
+        // уже в браузере. Прогрев кэша в окне простоя убирает скелетон при открытии /market.
+        afterNextRender(() => this.shopPrefetch.start());
 
         this.showWelcome$.pipe(takeUntilDestroyed()).subscribe((showWelcome) => {
             this.updateScrollLock(showWelcome && !this.isSetScrollClass);

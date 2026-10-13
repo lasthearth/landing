@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { buildAngularAuthConfig } from '@logto/js';
 import { AbstractSecurityStorage, DefaultLocalStorageService, LogLevel, provideAuth } from 'angular-auth-oidc-client';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -11,6 +11,7 @@ import { errorInterceptor } from '../interceptors/error.interceptor';
 import { of } from 'rxjs';
 
 import { routes } from '../../routes/app.routes';
+import { NavPreloadingStrategy } from '../../routes/nav-preloading.strategy';
 import { environment } from './environments/environment';
 import { TUI_COPY_TEXTS, TUI_FILE_TEXTS, TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 
@@ -95,7 +96,9 @@ export const appConfig: ApplicationConfig = {
             routes,
             // При переходе страница открывается сверху, «Назад» возвращает прежнюю позицию,
             // ссылки с #якорем прокручивают к элементу.
-            withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })
+            withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
+            // Чанки разделов меню скачиваются в фоне, чтобы клик не ждал сеть.
+            withPreloading(NavPreloadingStrategy)
         ),
         provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
         provideAuth({
