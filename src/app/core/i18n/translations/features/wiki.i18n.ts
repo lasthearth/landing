@@ -2,7 +2,33 @@ export const WIKI_I18N = {
     ru: {
         wiki: {
             title: 'Вики',
+            review: {
+                stale: 'Статью изменили после того, как игрок написал правку (версия {{from}} → {{to}}). При одобрении текст игрока заменит эти изменения.',
+                staleUnknown: 'Предложение старое: неизвестно, от какой версии статьи оно написано. Сверьте с текущей статьёй перед одобрением.',
+                showSince: 'Показать, что изменилось с тех пор',
+                staleConfirmTitle: 'Одобрить устаревшую правку?',
+                staleConfirm: 'Текст игрока заменит изменения, сделанные в статье после его правки. Одобрить?',
+                staleNow: 'Статью только что изменили. Посмотрите, что поменялось, и одобрите ещё раз.',
+                alreadyReviewed: 'Это предложение уже рассмотрел другой редактор.',
+            },
+            mine: {
+                title: 'Мои предложения',
+                pending: '{{count}} из 5 на проверке',
+                new: 'Предложить статью',
+                limitReached: 'Дождитесь решения по отправленным — на проверке может быть не больше 5',
+                kindNew: 'Новая статья',
+                kindEdit: 'Правка статьи «{{title}}»',
+                reason: 'Причина',
+                openArticle: 'Открыть статью',
+                empty: 'Вы ещё ничего не предлагали',
+                emptyHint: 'Нашли ошибку в статье или знаете, о чём написать? Предложите — редакторы проверят.',
+                open: 'Мои предложения',
+            },
+            seo: {
+                suffix: 'Вики Last Hearth',
+            },
             public: {
+                loading: 'Загружаем статьи',
                 title: 'Вики',
                 subtitle: 'Справочник по миру Last Hearth: механики, поселения, войны и экономика.',
                 search: 'Поиск по статьям',
@@ -225,6 +251,14 @@ export const WIKI_I18N = {
                 close: 'Закрыть',
             },
             editor: {
+                suggestLimit: 'У вас уже 5 предложений на проверке. Дождитесь решения по ним.',
+                suggestOutdated: 'Статью изменили, пока вы писали правку. Обновите страницу — ваш текст сохранён в браузере.',
+                conflict: {
+                    title: 'Статью изменили, пока вы её правили',
+                    text: 'Ниже — чем ваш текст отличается от версии на сервере. Ваш текст сохранён в браузере и не пропадёт.',
+                    keepMine: 'Оставить мою версию',
+                    takeServer: 'Взять версию с сервера',
+                },
                 back: 'К списку',
                 sidebar: 'Боковая панель',
                 saveError: 'Не удалось сохранить',
@@ -457,6 +491,7 @@ export const WIKI_I18N = {
                 noTags: 'Нет тегов — по ним ищут статьи',
             },
             admin: {
+                loadError: 'Не удалось загрузить статьи. Обновите страницу.',
                 title: 'Вики',
                 subtitle: 'Статей: {{count}}',
                 new: 'Новая статья',
@@ -521,7 +556,33 @@ export const WIKI_I18N = {
     en: {
         wiki: {
             title: 'Wiki',
+            review: {
+                stale: 'The article changed after this edit was written (version {{from}} → {{to}}). Approving it will replace those changes with the player’s text.',
+                staleUnknown: 'This is an old proposal: the article version it was written against is unknown. Compare it with the current article before approving.',
+                showSince: 'Show what changed since',
+                staleConfirmTitle: 'Approve an outdated edit?',
+                staleConfirm: 'The player’s text will replace changes made to the article after this edit. Approve?',
+                staleNow: 'The article was just changed. Check what changed and approve again.',
+                alreadyReviewed: 'Another editor has already reviewed this proposal.',
+            },
+            mine: {
+                title: 'My proposals',
+                pending: '{{count}} of 5 waiting for review',
+                new: 'Propose an article',
+                limitReached: 'Wait for a decision — at most 5 proposals can wait for review',
+                kindNew: 'New article',
+                kindEdit: 'Edit to “{{title}}”',
+                reason: 'Reason',
+                openArticle: 'Open the article',
+                empty: 'You haven’t proposed anything yet',
+                emptyHint: 'Found a mistake or know what to write about? Propose it — editors will review.',
+                open: 'My proposals',
+            },
+            seo: {
+                suffix: 'Last Hearth Wiki',
+            },
             public: {
+                loading: 'Loading articles',
                 title: 'Wiki',
                 subtitle: 'A reference to the world of Last Hearth: mechanics, settlements, wars and economy.',
                 search: 'Search articles',
@@ -744,6 +805,14 @@ export const WIKI_I18N = {
                 close: 'Close',
             },
             editor: {
+                suggestLimit: 'You already have 5 proposals waiting for review. Wait for a decision on them.',
+                suggestOutdated: 'The article changed while you were writing. Reload the page — your text is saved in this browser.',
+                conflict: {
+                    title: 'The article changed while you were editing',
+                    text: 'Below is how your text differs from the version on the server. Your text is saved in this browser and will not be lost.',
+                    keepMine: 'Keep my version',
+                    takeServer: 'Use the server version',
+                },
                 back: 'Back to list',
                 sidebar: 'Sidebar',
                 saveError: 'Could not save',
@@ -976,6 +1045,7 @@ export const WIKI_I18N = {
                 noTags: 'No tags — people search by them',
             },
             admin: {
+                loadError: 'Could not load the articles. Reload the page.',
                 title: 'Wiki',
                 subtitle: 'Articles: {{count}}',
                 new: 'New article',

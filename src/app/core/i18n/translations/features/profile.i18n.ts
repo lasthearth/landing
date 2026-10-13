@@ -2,6 +2,7 @@ export const PROFILE_I18N = {
     ru: {
         profile: {
             nav: {
+                wiki: 'Вики',
                 howPlay: 'Как играть',
                 stats: 'Статистика',
                 settlement: 'Моё поселение',
@@ -247,6 +248,7 @@ export const PROFILE_I18N = {
     en: {
         profile: {
             nav: {
+                wiki: 'Wiki',
                 howPlay: 'How to play',
                 stats: 'Statistics',
                 settlement: 'My settlement',
