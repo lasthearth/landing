@@ -19,6 +19,7 @@ export type WikiCommandId =
     | 'nbsp'
     | 'link'
     | 'wikiLink'
+    | 'playerLink'
     | 'anchorLink'
     | 'ruleLink'
     | 'kbd'
@@ -109,6 +110,12 @@ export const WIKI_COMMANDS: Record<WikiCommandId, WikiCommand> = {
         slash: true,
         keywords: 'статья ссылка вики article wiki link',
     },
+    playerLink: {
+        id: 'playerLink',
+        icon: '@tui.at-sign',
+        slash: true,
+        keywords: 'игрок ник профиль player nick',
+    },
     anchorLink: { id: 'anchorLink', icon: '@tui.hash', slash: true, keywords: 'якорь раздел anchor section' },
     ruleLink: { id: 'ruleLink', icon: '@tui.scale', slash: true, keywords: 'правило пункт rule' },
     kbd: { id: 'kbd', icon: '@tui.keyboard', slash: true, keywords: 'клавиша кнопка key keyboard' },
@@ -171,7 +178,7 @@ export const WIKI_TOOLBAR: readonly (readonly WikiCommandId[] | 'callouts')[] = 
     ['h2', 'h3', 'h4', 'h5'],
     ['bold', 'italic', 'underline', 'strike', 'highlight', 'code', 'spoiler'],
     ['dash', 'nbsp'],
-    ['link', 'wikiLink', 'ruleLink', 'kbd', 'footnote'],
+    ['link', 'wikiLink', 'playerLink', 'ruleLink', 'kbd', 'footnote'],
     ['list', 'orderedList', 'checklist', 'quote'],
     'callouts',
     ['details', 'steps', 'compare', 'columns', 'table', 'codeBlock', 'divider'],

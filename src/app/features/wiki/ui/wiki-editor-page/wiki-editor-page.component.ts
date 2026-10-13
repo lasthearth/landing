@@ -23,7 +23,15 @@ import { UserService } from '@entities/user';
 import { compressImage } from '@shared/lib/compress-image.function';
 import { sanitizeUrl } from '@shared/lib/news-markdown';
 import { WikiStoreService } from '../../api/wiki-store.service';
-import { WikiCover, WikiDraft, WikiIssue, WikiRevision, WikiSectionId, WikiStatus } from '@entities/wiki';
+import {
+    WikiAuthorNameService,
+    WikiCover,
+    WikiDraft,
+    WikiIssue,
+    WikiRevision,
+    WikiSectionId,
+    WikiStatus,
+} from '@entities/wiki';
 import { renderWikiMarkdown, WikiRenderLabels } from '../../lib/render-wiki-markdown.function';
 import { lintWikiArticle, WIKI_LIMITS } from '../../lib/lint-wiki-article.function';
 import { isValidSlug, slugify } from '../../lib/slugify.function';
@@ -158,6 +166,7 @@ export class WikiEditorPageComponent {
     private readonly store = inject(WikiStoreService);
     private readonly media = inject(MediaService);
     private readonly userService = inject(UserService);
+    private readonly authorNames = inject(WikiAuthorNameService);
     private readonly i18n = inject(I18nService);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -288,6 +297,7 @@ export class WikiEditorPageComponent {
             copy: t('copy'),
             video: t('video'),
             missingArticle: t('missingArticle'),
+            player: t('player'),
         };
     });
 
@@ -310,7 +320,12 @@ export class WikiEditorPageComponent {
     });
 
     protected readonly render = computed(() =>
-        renderWikiMarkdown(this.bodyForRender(), { resolveArticle: this.resolveTitle(), labels: this.renderLabels() })
+        renderWikiMarkdown(this.bodyForRender(), {
+            resolveArticle: this.resolveTitle(),
+            // Ссылка [[player:id]] показывает текущий ник: id не меняется при смене ника.
+            resolvePlayer: (id) => this.authorNames.name(id),
+            labels: this.renderLabels(),
+        })
     );
 
     protected readonly issues = computed<WikiIssue[]>(() => {
@@ -527,6 +542,13 @@ export class WikiEditorPageComponent {
 
                 this.renderTimer = setTimeout(() => this.bodyForRender.set(text), 150);
             });
+        });
+
+        // Ники для ссылок [[player:id]] догружаем по мере появления в тексте.
+        effect(() => {
+            const ids = this.render().playerIds;
+
+            untracked(() => void this.authorNames.resolve(ids));
         });
 
         // Адрес следует за заголовком, пока его не правили руками.

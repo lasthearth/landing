@@ -1,4 +1,13 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    signal,
+    untracked,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
@@ -7,7 +16,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { WikiStoreService } from '../../../api/wiki-store.service';
 import { renderWikiMarkdown } from '../../../lib/render-wiki-markdown.function';
 import { WIKI_SECTIONS } from '../../../lib/wiki-sections.constant';
-import { WikiArticle, WikiDraft } from '@entities/wiki';
+import { WikiArticle, WikiAuthorNameService, WikiDraft } from '@entities/wiki';
 import { WikiArticleViewComponent } from '../../wiki-article-view/wiki-article-view.component';
 
 /**
@@ -30,6 +39,7 @@ export class WikiArticlePageComponent {
     private readonly store = inject(WikiStoreService);
     private readonly route = inject(ActivatedRoute);
     private readonly user = inject(UserService);
+    private readonly authorNames = inject(WikiAuthorNameService);
 
     private readonly slug = this.route.snapshot.paramMap.get('slug') ?? '';
 
@@ -70,6 +80,8 @@ export class WikiArticlePageComponent {
             ? renderWikiMarkdown(article.body, {
                   // «См. также» и ссылки [[адрес]] подписываем названием статьи из хранилища.
                   resolveArticle: (slug) => this.store.bySlug(slug)?.title ?? null,
+                  // Ссылка [[player:id]] показывает текущий ник: id не меняется при смене ника.
+                  resolvePlayer: (id) => this.authorNames.name(id),
               })
             : null;
     });
@@ -93,6 +105,14 @@ export class WikiArticlePageComponent {
         // обычно приходят уже с готовым снимком — тогда запрос один и тот же,
         // и повторно он не уходит.
         afterNextRender(() => void this.store.load());
+
+        // Ники для ссылок [[player:id]] догружаем по мере появления в тексте;
+        // разбор пересчитается сам, потому что name() читает сигнал.
+        effect(() => {
+            const ids = this.render()?.playerIds ?? [];
+
+            untracked(() => void this.authorNames.resolve(ids));
+        });
     }
 
     protected resolveTitle(slug: string): string | null {

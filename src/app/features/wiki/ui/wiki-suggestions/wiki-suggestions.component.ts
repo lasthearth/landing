@@ -1,4 +1,13 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    signal,
+    untracked,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
@@ -141,7 +150,12 @@ export class WikiSuggestionsComponent {
     protected readonly proposedRender = computed(() => {
         const proposal = this.current()?.proposal;
 
-        return proposal ? renderWikiMarkdown(proposal.body) : null;
+        return proposal
+            ? renderWikiMarkdown(proposal.body, {
+                  // Ссылка [[player:id]] показывает текущий ник: id не меняется при смене ника.
+                  resolvePlayer: (id) => this.authorNames.name(id),
+              })
+            : null;
     });
 
     /**
@@ -215,6 +229,13 @@ export class WikiSuggestionsComponent {
 
     constructor() {
         afterNextRender(() => void this.reload());
+
+        // Ники для ссылок [[player:id]] догружаем по мере появления в тексте.
+        effect(() => {
+            const ids = this.proposedRender()?.playerIds ?? [];
+
+            untracked(() => void this.authorNames.resolve(ids));
+        });
     }
 
     /**
