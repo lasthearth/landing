@@ -20,6 +20,11 @@ import { WikiDraft, WikiHeading, WikiImage } from '@entities/wiki';
 import { WIKI_SECTIONS } from '../../lib/wiki-sections.constant';
 
 /**
+ * Адрес лицензии, под которой публикуются материалы статьи.
+ */
+const LICENSE_URL = 'https://creativecommons.org/licenses/by-sa/4.0/deed.ru';
+
+/**
  * Статья вики в том виде, в каком её увидит читатель.
  *
  * Используется и как просмотр в редакторе (`preview`), и на странице статьи.
@@ -76,6 +81,11 @@ export class WikiArticleViewComponent {
      * Просмотр в редакторе: ссылки на статьи не уводят со страницы.
      */
     public readonly preview = input(false);
+
+    /**
+     * Адрес лицензии — для строки в подвале статьи.
+     */
+    protected readonly licenseUrl = LICENSE_URL;
 
     /**
      * Двойной клик по блоку в просмотре — номер строки исходника.

@@ -185,7 +185,32 @@
         </tui-expand>
     </div>
 
-    <!-- 8. Contractor details -->
+    <!-- 8. User content -->
+    <div class="lh-panel">
+        <div
+            class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"
+            (click)="isUserContent = !isUserContent"
+        >
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'legal.publicOffer.sections.userContent.title' | translate }}</p>
+            <tui-icon
+                icon="@tui.chevron-down"
+                [ngClass]="{ 'rotate-180!': isUserContent }"
+                class="text-ink-2 transition size-6!"
+            />
+        </div>
+        <tui-expand [expanded]="isUserContent">
+            <div class="flex flex-col gap-4 text-2xl leading-[32px] text-ink mt-4">
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.userContent.p1' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.userContent.p2' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.userContent.p3' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.userContent.p4' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.userContent.p5' | translate"></p>
+                <p class="pl-4" [innerHTML]="'legal.publicOffer.sections.userContent.p6' | translate"></p>
+            </div>
+        </tui-expand>
+    </div>
+
+    <!-- 9. Contractor details -->
     <div class="lh-panel">
         <div
             class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center"

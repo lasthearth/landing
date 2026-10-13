@@ -16,6 +16,7 @@ import { isPlatformBrowser, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
+import { LocalStorageService } from '@core/services/local-storage.service';
 import { Role } from '@entities/user';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { MediaService } from '@entities/media';
@@ -73,6 +74,11 @@ const EMPTY: WikiDraft = {
  * Максимум тегов.
  */
 const MAX_TAGS = 8;
+
+/**
+ * Ключ в браузере: автор уже подтвердил согласие с лицензией.
+ */
+const LICENSE_KEY = 'lh.wiki.licenseAccepted';
 
 /**
  * Строка шпаргалки: синтаксис, пояснение и действие для вставки.
@@ -173,6 +179,7 @@ export class WikiEditorPageComponent {
     private readonly location = inject(Location);
     private readonly destroyRef = inject(DestroyRef);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+    private readonly storage = inject(LocalStorageService);
 
     private readonly inputRef = viewChild(WikiMarkupInputComponent);
     private readonly viewRef = viewChild(WikiArticleViewComponent);
@@ -247,6 +254,18 @@ export class WikiEditorPageComponent {
     protected readonly coverUploading = signal(false);
     protected readonly copied = signal(false);
     protected readonly publishShake = signal(false);
+
+    /**
+     * Согласие с лицензией: помним в браузере, на сервере подписи нет.
+     */
+    protected readonly licenseAccepted = signal(
+        this.isBrowser && this.storage.getItem<string>(LICENSE_KEY) === '1'
+    );
+
+    /**
+     * Согласие не отмечено, а предложение пытаются отправить.
+     */
+    protected readonly licenseMissing = signal(false);
 
     /**
      * Своё окно подтверждения (окна Taiga остаются под полноэкранным редактором).
@@ -775,6 +794,17 @@ export class WikiEditorPageComponent {
             return;
         }
 
+        // Без согласия с лицензией текст публиковать нельзя: показываем поле и встряхиваем кнопку.
+        if (!this.licenseAccepted()) {
+            this.licenseMissing.set(true);
+            this.tab.set('props');
+            this.sideOpen.set(true);
+            this.publishShake.set(true);
+            setTimeout(() => this.publishShake.set(false), 500);
+
+            return;
+        }
+
         this.store.submitSuggestion(this.draft(), this.articleId() ?? '', this.note().trim()).subscribe({
             next: () => {
                 this.saveError.set(false);
@@ -857,6 +887,17 @@ export class WikiEditorPageComponent {
             this.copied.set(true);
             setTimeout(() => this.copied.set(false), 1500);
         });
+    }
+
+    /**
+     * Отмечает или снимает согласие с лицензией.
+     *
+     * @param accepted Согласие отмечено.
+     */
+    protected toggleLicense(accepted: boolean): void {
+        this.licenseAccepted.set(accepted);
+        this.licenseMissing.set(false);
+        this.storage.setItem(LICENSE_KEY, accepted ? '1' : '');
     }
 
     protected addTag(raw: string = this.tagInput()): void {

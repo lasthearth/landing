@@ -612,6 +612,30 @@
                                     (keydown.enter)="save()"
                                 />
                             </div>
+
+                            @if (!isEditor || suggestMode) {
+                                <div
+                                    class="we-field"
+                                    id="wf-license"
+                                    [class.we-field--bad]="licenseMissing()"
+                                >
+                                    <label class="we-switch">
+                                        <input
+                                            #licenseInput
+                                            type="checkbox"
+                                            class="lh-checkbox"
+                                            [checked]="licenseAccepted()"
+                                            (change)="toggleLicense(licenseInput.checked)"
+                                        />
+                                        <span>
+                                            <small>{{ "wiki.public.licenseConsent" | translate }}</small>
+                                            <a routerLink="/public-offer" target="_blank">
+                                                {{ "wiki.public.licenseTerms" | translate }}
+                                            </a>
+                                        </span>
+                                    </label>
+                                </div>
+                            }
                         }
 
                         <!-- Оглавление -->

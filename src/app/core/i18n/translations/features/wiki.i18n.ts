@@ -39,6 +39,9 @@ export const WIKI_I18N = {
                 statusRejected: 'Отклонено',
                 rejectReason: 'Причина отказа: {{reason}}',
                 backToList: 'Ко всем статьям',
+                licenseConsent:
+                    'Я автор этого текста и картинок или имею право их публиковать. Согласен на публикацию под лицензией CC BY-SA 4.0.',
+                licenseTerms: 'Условия (оферта, раздел 8)',
                 localNotice:
                     'Читальня пока пуста, потому что сервера у вики ещё нет: статьи лежат в браузере того, кто их написал, и другим они не видны.',
             },
@@ -215,6 +218,7 @@ export const WIKI_I18N = {
                 related: 'См. также',
                 author: 'Автор — {{name}}',
                 editedBy: 'Последняя правка — {{name}}',
+                license: 'Материалы статьи доступны по лицензии',
                 prev: 'Предыдущая',
                 next: 'Следующая',
                 close: 'Закрыть',
@@ -553,6 +557,9 @@ export const WIKI_I18N = {
                 statusRejected: 'Rejected',
                 rejectReason: 'Reason: {{reason}}',
                 backToList: 'All articles',
+                licenseConsent:
+                    'I am the author of this text and images or have the right to publish them. I agree to publish them under CC BY-SA 4.0.',
+                licenseTerms: 'Terms (offer, section 8)',
                 localNotice:
                     'The reading room is empty because the wiki has no server yet: articles live in the browser of whoever wrote them and are invisible to others.',
             },
@@ -729,6 +736,7 @@ export const WIKI_I18N = {
                 related: 'See also',
                 author: 'Author: {{name}}',
                 editedBy: 'Last edited by {{name}}',
+                license: 'Article content is available under',
                 prev: 'Previous',
                 next: 'Next',
                 close: 'Close',
