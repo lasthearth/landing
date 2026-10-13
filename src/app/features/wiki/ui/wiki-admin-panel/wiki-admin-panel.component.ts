@@ -13,6 +13,7 @@ import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog/confirm-dialog.service';
+import { SkeletonComponent } from '@shared/ui/skeletons';
 import { WikiStoreService } from '../../api/wiki-store.service';
 import { WikiArticle, WikiAuthorNameService, WikiSectionId, WikiStatus } from '@entities/wiki';
 import { WIKI_SECTIONS } from '../../lib/wiki-sections.constant';
@@ -24,18 +25,26 @@ import { WikiSuggestionsComponent } from '../wiki-suggestions/wiki-suggestions.c
 @Component({
     standalone: true,
     selector: 'app-wiki-admin-panel',
-    imports: [TuiIcon, TranslatePipe, FormsModule, RouterLink, WikiSuggestionsComponent],
+    imports: [TuiIcon, TranslatePipe, FormsModule, RouterLink, WikiSuggestionsComponent, SkeletonComponent],
     templateUrl: './wiki-admin-panel.component.html',
     styleUrl: './wiki-admin-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WikiAdminPanelComponent {
-    private readonly store = inject(WikiStoreService);
+    /**
+     * Хранилище статей: по его признаку загрузки отличие «ещё не знаем» от «пусто».
+     */
+    protected readonly store = inject(WikiStoreService);
     private readonly i18n = inject(I18nService);
     private readonly confirm = inject(ConfirmDialogService);
     private readonly authorNames = inject(WikiAuthorNameService);
 
     protected readonly sections = WIKI_SECTIONS;
+
+    /**
+     * Ряд заглушек, пока снимок не загрузился.
+     */
+    protected readonly skeletonRows: readonly number[] = [0, 1, 2, 3];
     protected readonly query = signal('');
     /**
      * Что открыто: список статей или очередь предложений.

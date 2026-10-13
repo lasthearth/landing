@@ -1,5 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { HttpContext } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
+import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import {
     WikiApiService,
@@ -21,6 +23,22 @@ import {
  * серверу оно не нужно, пока статью не сохранили.
  */
 const AUTOSAVE_KEY = 'lh_wiki_autosave';
+
+/**
+ * Предохранитель постраничной загрузки.
+ *
+ * 40 страниц по 50 статей — 2000 статей. Если сервер отдаёт курсор дальше,
+ * что-то не так с ним, а не с вики, и загрузку пора остановить.
+ */
+const MAX_PAGES = 40;
+
+/**
+ * Контекст запросов хранилища: свои пустые состояния вместо глобального алерта.
+ *
+ * 404 по адресу без статьи — штатный случай, страница показывает «не найдена»
+ * сама; алерт «Ресурс не найден» поверх неё только мешает.
+ */
+const QUIET = new HttpContext().set(SKIP_ERROR_ALERT, true);
 
 /**
  * Автосохранённый черновик редактора.
@@ -61,6 +79,22 @@ export class WikiStoreService {
     public readonly loading = signal(false);
 
     /**
+     * Снимок статей хоть раз загрузился.
+     *
+     * Пока это `false`, «статей нет» и «ещё не знаем» — разные состояния,
+     * и страницы показывают скелетоны, а не пустое состояние.
+     */
+    public readonly loaded = signal(false);
+
+    /**
+     * Текущая постраничная загрузка снимка.
+     *
+     * Список, статья и админка зовут `load()` независимо; повторный вызов
+     * должен ждать ту же загрузку, а не начинать вторую.
+     */
+    private inflight: Promise<void> | null = null;
+
+    /**
      * Ошибка последней загрузки — показывается в интерфейсе.
      */
     public readonly error = signal<string | null>(null);
@@ -94,26 +128,63 @@ export class WikiStoreService {
      * Загружает все статьи, которые видны текущему пользователю.
      *
      * Гостю сервер отдаёт только опубликованные, редактору — вместе с черновиками.
+     * Список читается целиком, по страницам: сервер отдаёт не больше 50 статей
+     * за раз, а снимок нужен весь — из него подписываются ссылки [[адрес]], «См. также»
+     * и очереди. Повторный вызов, пока идёт предыдущий, ждёт ту же загрузку.
      *
      * @returns Промис завершения загрузки.
      */
-    public async load(): Promise<void> {
+    public load(): Promise<void> {
+        if (this.inflight) {
+            return this.inflight;
+        }
+
         this.loading.set(true);
         this.error.set(null);
 
-        try {
-            const page = await firstValueFrom(this.api.list());
-            const next = new Map<string, WikiArticle>();
+        this.inflight = this.fetchAll().finally(() => {
+            this.inflight = null;
+            this.loading.set(false);
+        });
 
-            for (const article of page.articles) {
-                next.set(article.id, article);
+        return this.inflight;
+    }
+
+    /**
+     * Читает все страницы списка и заменяет снимок одним куском.
+     *
+     * Снимок заменяется только после последней страницы: иначе читатель увидел бы
+     * половину статей. Статьи, которые положил `put()` и которых нет в ответе,
+     * не сохраняются — сервер их удалил или снял с публикации.
+     */
+    private async fetchAll(): Promise<void> {
+        const next = new Map<string, WikiArticle>();
+
+        try {
+            let pageToken = '';
+
+            for (let page = 0; page < MAX_PAGES; page += 1) {
+                const response = await firstValueFrom(this.api.list({ pageToken }));
+
+                for (const article of response.articles) {
+                    next.set(article.id, article);
+                }
+
+                pageToken = response.next;
+
+                if (!pageToken) {
+                    break;
+                }
+            }
+
+            if (pageToken) {
+                console.warn(`WikiStoreService: остановлен на ${MAX_PAGES} страницах, дальше есть ещё`);
             }
 
             this.byId.set(next);
+            this.loaded.set(true);
         } catch {
             this.error.set('wiki.admin.loadError');
-        } finally {
-            this.loading.set(false);
         }
     }
 
@@ -125,7 +196,7 @@ export class WikiStoreService {
      */
     public async loadBySlug(slug: string): Promise<WikiArticle | null> {
         try {
-            const article = await firstValueFrom(this.api.getBySlug(slug));
+            const article = await firstValueFrom(this.api.getBySlug(slug, QUIET));
             this.put(article);
 
             return article;
@@ -151,7 +222,27 @@ export class WikiStoreService {
         }
 
         try {
-            const article = await firstValueFrom(this.api.getById(id));
+            const article = await firstValueFrom(this.api.getById(id, QUIET));
+            this.put(article);
+
+            return article;
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Перечитывает статью с сервера, не глядя на снимок.
+     *
+     * Нужно, когда сервер отказал из-за конфликта версий: в снимке лежит
+     * та версия, на которой редактор основывался, а сравнить нужно со свежей.
+     *
+     * @param id Идентификатор статьи.
+     * @returns Промис со статьёй с сервера или `null`, если её больше нет.
+     */
+    public async refresh(id: string): Promise<WikiArticle | null> {
+        try {
+            const article = await firstValueFrom(this.api.getById(id, QUIET));
             this.put(article);
 
             return article;

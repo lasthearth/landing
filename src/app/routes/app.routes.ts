@@ -46,7 +46,7 @@ export const routes: Routes = [
                 pathMatch: 'full',
             },
             {
-                // Вики: список статей и статья. Пока без сервера — см. WikiStoreService.
+                // Вики: список статей. Статьи приезжают с сервера, снимок держит WikiStoreService.
                 path: 'wiki',
                 loadComponent: () =>
                     loadPage(
