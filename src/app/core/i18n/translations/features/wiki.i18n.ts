@@ -41,6 +41,7 @@ export const WIKI_I18N = {
                 backToList: 'Ко всем статьям',
                 localNotice:
                     'Читальня пока пуста, потому что сервера у вики ещё нет: статьи лежат в браузере того, кто их написал, и другим они не видны.',
+                minutesShort: '{{count}} мин',
             },
             sections: {
                 start: 'Начало игры',
@@ -542,6 +543,7 @@ export const WIKI_I18N = {
                 backToList: 'All articles',
                 localNotice:
                     'The reading room is empty because the wiki has no server yet: articles live in the browser of whoever wrote them and are invisible to others.',
+                minutesShort: '{{count}} min',
             },
             sections: {
                 start: 'Getting started',

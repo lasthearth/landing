@@ -103,38 +103,52 @@
         @if (cards().length) {
             <section class="wiki-list__grid" [attr.aria-label]="'wiki.public.articles' | translate">
                 @for (card of cards(); track card.article.id) {
-                    <a class="wiki-card lh-panel" [attr.href]="articleLink(card.article)">
-                        @if (card.coverImage) {
-                            <span
-                                class="wiki-card__cover"
-                                [style.background-image]="card.coverImage"
-                                [style.background-position]="'center ' + card.article.cover!.focus + '%'"
-                            ></span>
-                        }
-                        <span class="wiki-card__body">
-                            <span class="wiki-card__top">
-                                <span class="lh-chip cursor-default">{{ sectionLabel(card.article.sectionId) }}</span>
+                    <!-- Первый лист порядка — разворотный: занимает ряд целиком. -->
+                    <a
+                        class="wiki-card lh-panel"
+                        [class.wiki-card--lead]="$first"
+                        [attr.href]="articleLink(card.article)"
+                        (pointermove)="onGlowMove($event)"
+                    >
+                        <!-- Пламя очага: тёплое пятно света следует за курсором. -->
+                        <span class="wiki-card__glow" aria-hidden="true"></span>
+                        <div class="wiki-card__media">
+                            @if (card.coverImage) {
+                                <span
+                                    class="wiki-card__cover"
+                                    [style.background-image]="card.coverImage"
+                                    [style.background-position]="'center ' + card.article.cover!.focus + '%'"
+                                ></span>
+                            }
+                            <span class="wiki-card__hud">
+                                <span class="wiki-card__section">{{ sectionLabel(card.article.sectionId) }}</span>
+                                <span class="wiki-card__minutes">{{ minutesShort(card.minutes) }}</span>
+                            </span>
+                            <h2 class="wiki-card__title lh-display">
+                                {{ card.article.title || ("wiki.view.untitled" | translate) }}
+                            </h2>
+                        </div>
+                        <div class="wiki-card__body">
+                            @if (card.lead) {
+                                <p class="wiki-card__lead">{{ card.lead }}</p>
+                            }
+                            @if ($first && card.tags.length) {
+                                <span class="wiki-card__tags">
+                                    @for (tag of card.tags; track tag) {
+                                        <span class="wiki-card__tag">#{{ tag }}</span>
+                                    }
+                                </span>
+                            }
+                            <span class="wiki-card__meta">
                                 @if (card.article.status === "draft") {
                                     <span class="wiki-card__draft">{{ "wiki.status.draft" | translate }}</span>
                                 }
-                            </span>
-                            <b class="wiki-card__title">
-                                {{ card.article.title || ("wiki.view.untitled" | translate) }}
-                            </b>
-                            @if (card.lead) {
-                                <span class="wiki-card__lead">{{ card.lead }}</span>
-                            }
-                            <span class="wiki-card__meta">
-                                <tui-icon icon="@tui.clock" />
-                                {{ minutesLabel(card.minutes) }}
-                                <span class="wiki-card__dot">·</span>
-                                {{ updatedLabel(card.article.updatedAt) }}
+                                <span class="wiki-card__date">{{ updatedLabel(card.article.updatedAt) }}</span>
                                 @if (authorLabel(card.article)) {
-                                    <span class="wiki-card__dot">·</span>
-                                    {{ authorLabel(card.article) }}
+                                    <span class="wiki-card__author">{{ authorLabel(card.article) }}</span>
                                 }
                             </span>
-                        </span>
+                        </div>
                     </a>
                 }
             </section>

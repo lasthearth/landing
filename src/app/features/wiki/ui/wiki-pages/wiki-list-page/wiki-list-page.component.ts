@@ -37,7 +37,16 @@ interface WikiCard {
      * `background-image` обложки; `null` — обложки нет.
      */
     readonly coverImage: string | null;
+    /**
+     * Первые теги статьи: подпись разворотного листа.
+     */
+    readonly tags: readonly string[];
 }
+
+/**
+ * Сколько тегов помещается в подпись разворотного листа.
+ */
+const LEAD_TAG_LIMIT = 3;
 
 /**
  * Порядок статей в списке.
@@ -212,6 +221,7 @@ export class WikiListPageComponent {
                 minutes: Math.max(1, Math.round(countWords(article.body) / 200)),
                 // Адрес в кавычках, чтобы скобки в нём не ломали `url()`.
                 coverImage: article.cover ? `url(${JSON.stringify(article.cover.url)})` : null,
+                tags: article.tags.map((tag) => tag.trim()).filter(Boolean).slice(0, LEAD_TAG_LIMIT),
             }))
     );
 
@@ -372,12 +382,32 @@ export class WikiListPageComponent {
     }
 
     /**
-     * Подпись времени чтения.
+     * Короткая подпись времени чтения для печати на карточке.
      *
      * @param minutes Минуты.
      */
-    protected minutesLabel(minutes: number): string {
-        return this.i18n.translate('wiki.view.minutes', { count: minutes });
+    protected minutesShort(minutes: number): string {
+        return this.i18n.translate('wiki.public.minutesShort', { count: minutes });
+    }
+
+    /**
+     * Ведёт пятно света очага за курсором: пишет координаты в переменные
+     * карточки, диск света едет на них через `transform`.
+     *
+     * @param event Движение указателя по карточке.
+     */
+    protected onGlowMove(event: PointerEvent): void {
+        // Сенсор и уменьшенное движение живут без света: ховера нет,
+        // а декоративное движение запрещено настройкой системы.
+        if (event.pointerType !== 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
+        const card = event.currentTarget as HTMLElement;
+        const box = card.getBoundingClientRect();
+
+        card.style.setProperty('--glow-x', `${Math.round(event.clientX - box.left)}px`);
+        card.style.setProperty('--glow-y', `${Math.round(event.clientY - box.top)}px`);
     }
 
     /**

@@ -47,7 +47,8 @@
 
 .wiki-list__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    // min() не даёт дорожке распухнуть от min-content карточки на узком экране.
+    grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
     gap: 1.25rem;
 }
 
@@ -81,80 +82,254 @@
     gap: 1rem;
 }
 
+/* Читальня у очага: лист с полнокровной обложкой, заголовок стоит на
+   затемнении поверх листа, а тёплое пятно света следует за курсором. */
 .wiki-card {
+    position: relative;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    padding: 0;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
     transition:
-        border-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-out-quart);
+        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
 
     &:hover {
-        border-color: var(--lh-border-strong);
         transform: translateY(-2px);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.16),
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
+            var(--lh-shadow-lift);
+    }
+
+    &:hover .wiki-card__cover {
+        transform: scale(1.04);
+    }
+
+    &:hover .wiki-card__glow {
+        opacity: 1;
+    }
+}
+
+// Пламя очага: диск света едет за курсором с отставанием, поэтому свет
+// «оседает», а не прилипает к указателю. Только transform и opacity.
+.wiki-card__glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 26rem;
+    height: 26rem;
+    margin: -13rem 0 0 -13rem;
+    border-radius: 50%;
+    background: radial-gradient(
+        closest-side,
+        color-mix(in srgb, var(--lh-accent-soft) 45%, transparent),
+        transparent 72%
+    );
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transform: translate3d(var(--glow-x, 50%), var(--glow-y, 50%), 0);
+    transition:
+        opacity var(--lh-dur-mid) var(--lh-ease-out-quart),
+        transform var(--lh-dur-mid) var(--lh-ease-smooth);
+    pointer-events: none;
+}
+
+.wiki-card__media {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    // Без обложки лист остаётся ночной пластиной: заголовок читается всегда.
+    background: linear-gradient(160deg, var(--lh-night-2), var(--lh-night-deep));
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to top,
+            color-mix(in srgb, var(--lh-night-deep) 90%, transparent),
+            color-mix(in srgb, var(--lh-night-deep) 40%, transparent) 30%,
+            transparent 64%
+        );
+        pointer-events: none;
+    }
+
+    // Верхняя полка под бирки: на светлой обложке капитель иначе теряется.
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to bottom,
+            color-mix(in srgb, var(--lh-night-deep) 55%, transparent),
+            transparent 34%
+        );
+        pointer-events: none;
     }
 }
 
 .wiki-card__cover {
-    display: block;
-    aspect-ratio: 16 / 9;
+    position: absolute;
+    inset: 0;
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: var(--lh-surface-3);
+    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+}
+
+.wiki-card__hud {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+    padding: 0.8rem 0.9rem 0;
+    color: var(--lh-parchment-3);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px color-mix(in srgb, var(--lh-night-deep) 70%, transparent);
+}
+
+.wiki-card__minutes {
+    margin-left: auto;
+    white-space: nowrap;
+    opacity: 0.85;
+}
+
+.wiki-card__title {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 0 0.9rem 0.8rem;
+    font-size: 1.5rem;
+    line-height: 1.14;
+    font-weight: 700;
+    color: var(--lh-parchment-3);
+    text-shadow: 0 1px 3px color-mix(in srgb, var(--lh-night-deep) 70%, transparent);
 }
 
 .wiki-card__body {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 1rem 1.1rem 1.15rem;
-}
-
-.wiki-card__top {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.wiki-card__draft {
-    font-size: 0.75rem;
-    color: var(--lh-warning-ink);
-}
-
-.wiki-card__title {
-    font-size: 1.0625rem;
-    line-height: 1.3;
-    color: var(--lh-ink);
+    padding: 0.85rem 0.9rem 0.8rem;
 }
 
 .wiki-card__lead {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    margin: 0;
     font-size: 0.875rem;
-    line-height: 1.5;
+    line-height: 1.55;
     color: var(--lh-ink-2);
 }
 
 .wiki-card__meta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-top: 0.3rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--lh-border) 70%, transparent);
     font-size: 0.75rem;
     color: var(--lh-ink-3);
+}
 
-    // Без размеров иконка рисуется в свой базовый квадрат и выглядит огромной
-    // рядом с мелким текстом: задаём и шрифт, и сам квадрат.
-    tui-icon {
-        flex-shrink: 0;
-        width: 0.875rem;
-        height: 0.875rem;
-        font-size: 0.875rem;
+// Черновик живёт в колофоне: на обложке он теснил бирку раздела и минуты.
+.wiki-card__draft {
+    padding: 0.1rem 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--lh-warning-ink) 45%, transparent);
+    border-radius: 0.35rem;
+    color: var(--lh-warning-ink);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.wiki-card__date {
+    white-space: nowrap;
+}
+
+.wiki-card__author {
+    margin-left: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// Разворотный лист: обложка слева колонкой, текст справа, заголовок крупнее.
+.wiki-card--lead {
+    grid-column: 1 / -1;
+    flex-direction: row;
+
+    .wiki-card__media {
+        width: 52%;
+        min-height: 14rem;
+        aspect-ratio: auto;
+    }
+
+    .wiki-card__hud {
+        padding: 1.1rem 1.4rem 0;
+    }
+
+    .wiki-card__title {
+        padding: 0 1.4rem 1.2rem;
+        font-size: 2.25rem;
+        line-height: 1.08;
+    }
+
+    .wiki-card__body {
+        gap: 0.7rem;
+        padding: 1.3rem 1.4rem 1.2rem;
+    }
+
+    .wiki-card__lead {
+        -webkit-line-clamp: 4;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .wiki-card__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem 0.75rem;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--lh-ink-3);
     }
 }
 
-.wiki-card__dot {
-    color: var(--lh-ink-3);
+@media (max-width: 40rem) {
+    .wiki-card--lead {
+        flex-direction: column;
+
+        .wiki-card__media {
+            width: auto;
+            min-height: 0;
+            aspect-ratio: 16 / 10;
+        }
+
+        .wiki-card__title {
+            font-size: 1.75rem;
+        }
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -164,5 +339,18 @@
         &:hover {
             transform: none;
         }
+
+        &:hover .wiki-card__cover {
+            transform: none;
+        }
+    }
+
+    // Свет очага — движение: без него карта остаётся ровной и читаемой.
+    .wiki-card__glow {
+        display: none;
+    }
+
+    .wiki-card__cover {
+        transition: none;
     }
 }
