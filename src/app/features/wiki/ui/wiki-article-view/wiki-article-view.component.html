@@ -79,8 +79,11 @@
             </button>
             @if (tocOpen()) {
                 <ol>
-                    @for (heading of headings(); track heading.id) {
-                        <li [class.wiki-view__toc-sub]="heading.level === 3">
+                    @for (heading of tocHeadings(); track heading.id) {
+                        <li
+                            [class.wiki-view__toc-sub]="heading.level === 3"
+                            [class.wiki-view__toc-sub2]="heading.level === 4"
+                        >
                             <a
                                 [attr.href]="'#' + heading.id"
                                 (click)="$event.preventDefault(); scrollToAnchor(heading.id)"

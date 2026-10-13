@@ -428,18 +428,24 @@ export class WikiEditorPageComponent {
         const lines = this.bodyForRender().split('\n');
         const headings = this.render().headings;
 
-        return headings.map((heading, index) => {
-            const next = headings.slice(index + 1).find((item) => item.level <= heading.level);
-            const end = next ? next.line : lines.length;
-            const words =
-                lines
-                    .slice(heading.line + 1, end)
-                    .join(' ')
-                    .match(/[\p{L}\p{N}]+/gu)?.length ?? 0;
-            const h2Index =
-                heading.level === 2 ? headings.filter((item, at) => at <= index && item.level === 2).length - 1 : -1;
-            return { ...heading, words, h2Index };
-        });
+        // Пятый уровень — подпись абзаца: в оглавлении ей нечего делать.
+        return headings
+            .map((heading, index) => {
+                const next = headings.slice(index + 1).find((item) => item.level <= heading.level);
+                const end = next ? next.line : lines.length;
+                const words =
+                    lines
+                        .slice(heading.line + 1, end)
+                        .join(' ')
+                        .match(/[\p{L}\p{N}]+/gu)?.length ?? 0;
+                const h2Index =
+                    heading.level === 2
+                        ? headings.filter((item, at) => at <= index && item.level === 2).length - 1
+                        : -1;
+
+                return { ...heading, words, h2Index };
+            })
+            .filter((heading) => heading.level <= 4);
     });
 
     protected readonly h2Count = computed(() => this.render().headings.filter((heading) => heading.level === 2).length);

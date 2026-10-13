@@ -619,7 +619,10 @@
                             @if (outline().length) {
                                 <ol class="we__outline">
                                     @for (heading of outline(); track heading.id + heading.line) {
-                                        <li [class.we__outline-sub]="heading.level === 3">
+                                        <li
+                                            [class.we__outline-sub]="heading.level === 3"
+                                            [class.we__outline-sub2]="heading.level === 4"
+                                        >
                                             <button
                                                 type="button"
                                                 class="we__outline-link"

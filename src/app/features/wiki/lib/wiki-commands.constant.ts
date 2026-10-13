@@ -6,6 +6,8 @@ export type WikiCommandId =
     | 'redo'
     | 'h2'
     | 'h3'
+    | 'h4'
+    | 'h5'
     | 'bold'
     | 'italic'
     | 'underline'
@@ -76,6 +78,20 @@ export const WIKI_COMMANDS: Record<WikiCommandId, WikiCommand> = {
         keywords: 'заголовок раздел heading h2',
     },
     h3: { id: 'h3', icon: '@tui.heading-3', hotkey: 'Ctrl+Alt+3', slash: true, keywords: 'подзаголовок heading h3' },
+    h4: {
+        id: 'h4',
+        icon: '@tui.heading-4',
+        hotkey: 'Ctrl+Alt+4',
+        slash: true,
+        keywords: 'заголовок heading h4',
+    },
+    h5: {
+        id: 'h5',
+        icon: '@tui.heading-5',
+        hotkey: 'Ctrl+Alt+5',
+        slash: true,
+        keywords: 'заголовок heading h5',
+    },
     bold: { id: 'bold', icon: '@tui.bold', hotkey: 'Ctrl+B' },
     italic: { id: 'italic', icon: '@tui.italic', hotkey: 'Ctrl+I' },
     underline: { id: 'underline', icon: '@tui.underline', hotkey: 'Ctrl+U' },
@@ -152,7 +168,7 @@ export const WIKI_COMMANDS: Record<WikiCommandId, WikiCommand> = {
  */
 export const WIKI_TOOLBAR: readonly (readonly WikiCommandId[] | 'callouts')[] = [
     ['undo', 'redo'],
-    ['h2', 'h3'],
+    ['h2', 'h3', 'h4', 'h5'],
     ['bold', 'italic', 'underline', 'strike', 'highlight', 'code', 'spoiler'],
     ['dash', 'nbsp'],
     ['link', 'wikiLink', 'ruleLink', 'kbd', 'footnote'],

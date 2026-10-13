@@ -115,7 +115,7 @@ export interface WikiDraft {
 export interface WikiHeading {
     readonly id: string;
     readonly text: string;
-    readonly level: 2 | 3;
+    readonly level: 2 | 3 | 4 | 5;
     /**
      * Строка исходного текста (с нуля) — чтобы перейти к ней в редакторе.
      */
