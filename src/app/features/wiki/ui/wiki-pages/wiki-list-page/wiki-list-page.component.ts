@@ -267,6 +267,16 @@ export class WikiListPageComponent {
      *
      * @param article Статья.
      */
+    /**
+     * Иконка раздела — для карточки без обложки.
+     *
+     * @param id Раздел статьи.
+     * @returns Имя иконки Taiga.
+     */
+    protected sectionIcon(id: WikiSectionId): string {
+        return WIKI_SECTIONS.find((section) => section.id === id)?.icon ?? '@tui.file-text';
+    }
+
     protected authorLabel(article: WikiArticle): string {
         return this.authorNames.label(article.createdBy);
     }

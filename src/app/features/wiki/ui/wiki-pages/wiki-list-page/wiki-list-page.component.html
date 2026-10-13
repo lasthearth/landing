@@ -110,6 +110,10 @@
                                 [style.background-image]="card.coverImage"
                                 [style.background-position]="'center ' + card.article.cover!.focus + '%'"
                             ></span>
+                        } @else {
+                            <span class="wiki-card__cover wiki-card__cover--empty" aria-hidden="true">
+                                <tui-icon [icon]="sectionIcon(card.article.sectionId)" />
+                            </span>
                         }
                         <span class="wiki-card__body">
                             <span class="wiki-card__top">
