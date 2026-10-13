@@ -99,6 +99,11 @@ export class WikiArticleViewComponent {
     protected readonly minutes = computed(() => Math.max(1, Math.round(this.words() / 200)));
 
     /**
+     * Оглавление: подписи абзацев (пятый уровень) в него не попадают.
+     */
+    protected readonly tocHeadings = computed(() => this.headings().filter((heading) => heading.level <= 4));
+
+    /**
      * Подпись автора: игровое имя вместо идентификатора из токена.
      *
      * Сервер хранит subject, поэтому в подписи он появится только до тех пор,

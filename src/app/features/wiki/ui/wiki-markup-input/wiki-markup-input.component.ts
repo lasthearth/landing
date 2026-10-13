@@ -43,7 +43,7 @@ const CONTINUE = /^(\s*)(?:([-*•])\s+(\[[ xX]\]\s+)?|(\d+)([.)])\s+|(>)\s?)(.*
 /**
  * Любой блочный префикс строки.
  */
-const ANY_PREFIX = /^(#{1,4}\s+|\s*[-*•]\s+(\[[ xX]\]\s+)?|\s*\d+[.)]\s+|>\s?)/;
+const ANY_PREFIX = /^(#{1,5}\s+|\s*[-*•]\s+(\[[ xX]\]\s+)?|\s*\d+[.)]\s+|>\s?)/;
 
 /**
  * Статья для подсказки ссылок.
@@ -290,7 +290,7 @@ export class WikiMarkupInputComponent {
                 .slice(0, 10)
                 .map((heading) => ({
                     key: heading.id,
-                    icon: heading.level === 2 ? '@tui.heading-2' : '@tui.heading-3',
+                    icon: `@tui.heading-${heading.level}`,
                     label: heading.text,
                     hint: `#${heading.id}`,
                     run: () => this.completeLink(state, `#${heading.id}`),
@@ -470,6 +470,10 @@ export class WikiMarkupInputComponent {
                 return this.toggleHeading('## ');
             case 'h3':
                 return this.toggleHeading('### ');
+            case 'h4':
+                return this.toggleHeading('#### ');
+            case 'h5':
+                return this.toggleHeading('##### ');
             case 'bold':
                 return this.wrap('**', '**', this.sample('bold'));
             case 'italic':
@@ -930,7 +934,15 @@ export class WikiMarkupInputComponent {
         alt: boolean
     ): WikiCommandId | 'save' | 'replace' | 'duplicate' | null {
         if (alt) {
-            return code === 'Digit2' ? 'h2' : code === 'Digit3' ? 'h3' : null;
+            return code === 'Digit2'
+                ? 'h2'
+                : code === 'Digit3'
+                  ? 'h3'
+                  : code === 'Digit4'
+                    ? 'h4'
+                    : code === 'Digit5'
+                      ? 'h5'
+                      : null;
         }
 
         if (shift) {

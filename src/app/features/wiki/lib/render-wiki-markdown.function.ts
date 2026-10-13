@@ -84,7 +84,7 @@ const RE = {
     fence: /^\s*```\s*([\w+#-]{0,20})\s*$/,
     open: /^:::\s*([a-z]+)\s*(.*)$/,
     close: /^:::\s*$/,
-    heading: /^(#{1,4})\s+(.+?)\s*#*\s*$/,
+    heading: /^(#{1,5})\s+(.+?)\s*#*\s*$/,
     hr: /^\s*(-{3,}|\*{3,}|_{3,})\s*$/,
     image: /^\s*!\[([^\]\n]*)\]\(([^)\s]+)\)\s*(?:\{([a-z\s]+)\})?\s*$/,
     embed: /^\s*@(youtube|video)\(([^)\s]*)\)\s*$/,
@@ -124,7 +124,7 @@ interface Ctx {
  * Превращает текст статьи вики в HTML и собирает сведения для редактора.
  *
  * Синтаксис — разметка новостей (см. `renderInlineMarkdown`) плюс:
- * - `## ` / `### ` — разделы с якорями (для оглавления);
+ * - `## ` … `##### ` — заголовки с якорями (для оглавления);
  * - `- [ ]` / `- [x]` — чек-лист, вложенные списки отступом;
  * - `![подпись](url){left|right|wide|small|center}` — картинка;
  * - `:::tip|info|warn|danger Заголовок … :::` — выноска;
@@ -340,7 +340,7 @@ function renderBlocks(ctx: Ctx, from: number, to: number, top: boolean): string 
         const heading = RE.heading.exec(line);
 
         if (heading) {
-            const level: 2 | 3 = heading[1].length <= 2 ? 2 : 3;
+            const level = Math.max(2, heading[1].length) as WikiHeading['level'];
             const text = heading[2];
             const id = uniqueId(ctx, slugify(plainText(text)) || 'section');
 

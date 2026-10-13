@@ -105,14 +105,15 @@ export function lintWikiArticle(draft: WikiDraft, render: WikiRender, context: W
     }
 
     const seen = new Map<string, number>();
-    let hadH2 = false;
+    // Первый заголовок сравниваем с уровнем раздела: скачок через уровень — ошибка в структуре.
+    let previousLevel = 2;
 
     for (const heading of render.headings) {
-        if (heading.level === 3 && !hadH2) {
+        if (heading.level > previousLevel + 1) {
             add({ level: 'warning', code: 'headingJump', line: heading.line, params: { text: heading.text } });
         }
 
-        hadH2 ||= heading.level === 2;
+        previousLevel = heading.level;
         const key = heading.text.toLowerCase();
 
         if (seen.has(key)) {
