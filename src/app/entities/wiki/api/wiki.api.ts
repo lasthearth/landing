@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { environment } from '@core/config/environments/environment';
 import { WikiArticle, WikiDraft, WikiStatus } from '../model/wiki-article.model';
 import {
@@ -94,6 +94,11 @@ export class WikiApiService {
     private static readonly MAX_PAGE_SIZE = 50;
 
     /**
+     * Предохранитель постраничной загрузки — как в хранилище вики.
+     */
+    private static readonly MAX_PAGES = 40;
+
+    /**
      * Список статей.
      *
      * @param params Фильтры и пагинация.
@@ -132,10 +137,11 @@ export class WikiApiService {
      * Статья по идентификатору.
      *
      * @param id Идентификатор статьи.
+     * @param context HTTP-контекст запроса (например, `SKIP_ERROR_ALERT`).
      */
-    public getById(id: string): Observable<WikiArticle> {
+    public getById(id: string, context?: HttpContext): Observable<WikiArticle> {
         return this.http
-            .get<WikiArticleDto>(`${this.baseUrl}/wiki/articles/${encodeURIComponent(id)}`)
+            .get<WikiArticleDto>(`${this.baseUrl}/wiki/articles/${encodeURIComponent(id)}`, { context })
             .pipe(map(mapArticleFromDto));
     }
 
@@ -143,10 +149,11 @@ export class WikiApiService {
      * Статья по адресу.
      *
      * @param slug Адрес статьи.
+     * @param context HTTP-контекст запроса (например, `SKIP_ERROR_ALERT`).
      */
-    public getBySlug(slug: string): Observable<WikiArticle> {
+    public getBySlug(slug: string, context?: HttpContext): Observable<WikiArticle> {
         return this.http
-            .get<WikiArticleDto>(`${this.baseUrl}/wiki/articles/by-slug/${encodeURIComponent(slug)}`)
+            .get<WikiArticleDto>(`${this.baseUrl}/wiki/articles/by-slug/${encodeURIComponent(slug)}`, { context })
             .pipe(map(mapArticleFromDto));
     }
 
@@ -220,6 +227,9 @@ export class WikiApiService {
     /**
      * Свои предложения; редактору сервер отдаёт всю очередь.
      *
+     * Очередь читается по страницам, как список статей: редактору она нужна
+     * целиком, а сервер отдаёт не больше 50 предложений за раз.
+     *
      * @param status Фильтр по состоянию проверки.
      */
     public suggestions(status?: WikiSuggestionStatus): Observable<WikiSuggestion[]> {
@@ -229,9 +239,47 @@ export class WikiApiService {
             query['status'] = status;
         }
 
-        return this.http
-            .get<WikiSuggestionListDto>(`${this.baseUrl}/wiki/suggestions`, { params: query })
-            .pipe(map((response) => (response.suggestions ?? []).map(mapSuggestionFromDto)));
+        return this.readSuggestions(query, '', [], 0);
+    }
+
+    /**
+     * Читает одну страницу предложений и, если курсор есть, идёт за следующей.
+     *
+     * @param query Фильтры запроса.
+     * @param pageToken Курсор страницы.
+     * @param acc Уже собранные предложения.
+     * @param page Номер страницы: предохранитель от бесконечного цикла.
+     */
+    private readSuggestions(
+        query: Record<string, string | number>,
+        pageToken: string,
+        acc: readonly WikiSuggestion[],
+        page: number
+    ): Observable<WikiSuggestion[]> {
+        const params: Record<string, string | number> = { ...query };
+
+        if (pageToken) {
+            params['page_token'] = pageToken;
+        }
+
+        return this.http.get<WikiSuggestionListDto>(`${this.baseUrl}/wiki/suggestions`, { params }).pipe(
+            switchMap((response) => {
+                const collected = [...acc, ...(response.suggestions ?? []).map(mapSuggestionFromDto)];
+                const next = response.next_page_token ?? '';
+
+                if (!next) {
+                    return of(collected);
+                }
+
+                if (page + 1 >= WikiApiService.MAX_PAGES) {
+                    console.warn(`WikiApiService: остановлен на ${WikiApiService.MAX_PAGES} страницах предложений`);
+
+                    return of(collected);
+                }
+
+                return this.readSuggestions(query, next, collected, page + 1);
+            })
+        );
     }
 
     /**

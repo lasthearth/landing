@@ -24,7 +24,22 @@
         </a>
     </app-page-header>
 
-    @if (hasAny()) {
+    @if (!store.loaded() && store.loading()) {
+        <!-- Пока снимок едет, «статей пока нет» — неправда: показываем карточки-заглушки -->
+        <section class="wiki-list__grid" [attr.aria-label]="'wiki.public.loading' | translate" role="status">
+            @for (item of skeletonCards; track item) {
+                <div class="wiki-card lh-panel wiki-card--skeleton">
+                    <app-skeleton height="9" rounded="none" />
+                    <span class="wiki-card__body">
+                        <app-skeleton width="1/3" height="5" rounded="full" />
+                        <app-skeleton width="4/5" height="6" />
+                        <app-skeleton height="4" />
+                        <app-skeleton width="2/3" height="4" />
+                    </span>
+                </div>
+            }
+        </section>
+    } @else if (hasAny()) {
         <!-- Сортировка -->
         <div class="lh-chips" role="group" aria-labelledby="wiki-sort-label">
             <span id="wiki-sort-label" class="lh-chips__label">{{ "wiki.public.sort.label" | translate }}</span>
@@ -103,7 +118,7 @@
         @if (cards().length) {
             <section class="wiki-list__grid" [attr.aria-label]="'wiki.public.articles' | translate">
                 @for (card of cards(); track card.article.id) {
-                    <a class="wiki-card lh-panel" [attr.href]="articleLink(card.article)">
+                    <a class="wiki-card lh-panel" [routerLink]="articleLink(card.article)">
                         @if (card.coverImage) {
                             <span
                                 class="wiki-card__cover"

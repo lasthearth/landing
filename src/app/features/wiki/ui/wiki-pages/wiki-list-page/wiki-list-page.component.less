@@ -189,6 +189,18 @@
     color: var(--lh-ink-3);
 }
 
+// Заглушка карточки: та же ширина и высота, что у настоящей, иначе список
+// перестраивался бы, когда приедут статьи.
+.wiki-card--skeleton {
+    pointer-events: none;
+
+    > app-skeleton:first-child {
+        display: block;
+        aspect-ratio: 16 / 9;
+        height: auto;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .wiki-card {
         transition: none;

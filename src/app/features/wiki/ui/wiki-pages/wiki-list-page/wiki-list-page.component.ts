@@ -15,6 +15,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import { Role, UserService } from '@entities/user';
 import { WikiAuthorNameService } from '@entities/wiki';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { SkeletonComponent } from '@shared/ui/skeletons';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { WikiStoreService } from '../../../api/wiki-store.service';
 import { WIKI_SECTIONS } from '../../../lib/wiki-sections.constant';
@@ -70,23 +71,25 @@ const TAG_MIN_COUNT = 2;
 /**
  * Страница вики: статьи, сгруппированные по разделам.
  *
- * Пока у вики нет сервера, список берётся из `localStorage` редактора
- * (`WikiStoreService`). Опубликованные статьи видят все, черновики — только
- * администраторы: на странице нет серверной проверки прав, поэтому чтение
- * локального хранилища ограничено по роли.
+ * Статьи приезжают с сервера в `WikiStoreService` целым снимком: гость видит
+ * опубликованные, редактор — вместе с черновиками. Пока снимок едет, вместо
+ * «статей пока нет» показываются карточки-заглушки.
  *
  * Поиск и фильтры хранятся в адресе страницы, поэтому ссылкой на подборку
  * можно поделиться.
  */
 @Component({
     selector: 'app-wiki-list-page',
-    imports: [PageHeaderComponent, EmptyStateComponent, TuiIcon, TranslatePipe, RouterLink],
+    imports: [PageHeaderComponent, EmptyStateComponent, TuiIcon, TranslatePipe, RouterLink, SkeletonComponent],
     templateUrl: './wiki-list-page.component.html',
     styleUrl: './wiki-list-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WikiListPageComponent {
-    private readonly store = inject(WikiStoreService);
+    /**
+     * Хранилище статей: по его признаку загрузки отличие «ещё не знаем» от «пусто».
+     */
+    protected readonly store = inject(WikiStoreService);
     private readonly user = inject(UserService);
     private readonly authorNames = inject(WikiAuthorNameService);
     private readonly i18n = inject(I18nService);
@@ -224,6 +227,11 @@ export class WikiListPageComponent {
      * Сколько статей прошло фильтры.
      */
     protected readonly found = computed(() => this.filtered().length);
+
+    /**
+     * Ряд заглушек, пока снимок не загрузился: столько же карточек, что и на экране.
+     */
+    protected readonly skeletonCards: readonly number[] = [0, 1, 2, 3, 4, 5];
 
     /**
      * Остались ли статьи за кнопкой «Показать ещё».
@@ -373,12 +381,12 @@ export class WikiListPageComponent {
     }
 
     /**
-     * Адрес статьи.
+     * Команды ссылки на статью — без перезагрузки приложения.
      *
      * @param article Статья.
      */
-    protected articleLink(article: WikiArticle): string {
-        return `/wiki/${article.slug}`;
+    protected articleLink(article: WikiArticle): readonly string[] {
+        return ['/wiki', article.slug];
     }
 
     /**

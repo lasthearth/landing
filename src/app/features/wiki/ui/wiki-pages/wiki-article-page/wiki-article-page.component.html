@@ -1,15 +1,16 @@
 <div class="lh-page-container flex flex-col gap-4 lg:gap-6">
     <div class="wiki-article__actions">
-        <a class="lh-chip cursor-default" href="/wiki">
+        <a class="lh-chip cursor-default" routerLink="/wiki">
             <tui-icon icon="@tui.arrow-left" />
             {{ "wiki.public.backToList" | translate }}
         </a>
 
-        @if (article(); as current) {
+        @if (state() === "ready" && article(); as current) {
             <a
                 class="lh-cta wiki-article__edit"
                 [class.wiki-article__edit--busy]="opening()"
-                [attr.href]="isEditor ? '/wiki/edit/' + current.id : '/wiki/edit/' + current.id + '?suggest=1'"
+                [routerLink]="['/wiki/edit/' + current.id]"
+                [queryParams]="isEditor ? {} : { suggest: '1' }"
                 (click)="opening.set(true)"
             >
                 @if (opening()) {
@@ -23,30 +24,50 @@
         }
     </div>
 
-    @if (draft(); as draft) {
-        @if (render(); as render) {
-            <app-wiki-article-view
-                [draft]="draft"
-                [html]="render.html"
-                [headings]="render.headings"
-                [images]="render.images"
-                [words]="render.words"
-                [updatedAt]="article()!.updatedAt"
-                [authorName]="article()!.authorName"
-                [createdBy]="article()!.createdBy"
-                [resolveTitle]="resolveTitle"
-            />
+    @switch (state()) {
+        @case ("ready") {
+            @if (draft(); as draft) {
+                @if (render(); as render) {
+                    <app-wiki-article-view
+                        [draft]="draft"
+                        [html]="render.html"
+                        [headings]="render.headings"
+                        [images]="render.images"
+                        [words]="render.words"
+                        [updatedAt]="article()!.updatedAt"
+                        [authorName]="article()!.authorName"
+                        [createdBy]="article()!.createdBy"
+                        [resolveTitle]="resolveTitle"
+                    />
+                }
+            }
         }
-    } @else {
-        <app-empty-state
-            icon="@tui.file-question"
-            [title]="'wiki.public.notFound' | translate"
-            [description]="'wiki.public.notFoundHint' | translate"
-        />
+        @case ("not-found") {
+            <app-empty-state
+                icon="@tui.file-question"
+                [title]="'wiki.public.notFound' | translate"
+                [description]="'wiki.public.notFoundHint' | translate"
+            />
 
-        <a class="lh-cta wiki-article__back" href="/wiki">
-            <tui-icon icon="@tui.arrow-left" />
-            {{ "wiki.public.backToList" | translate }}
-        </a>
+            <a class="lh-cta wiki-article__back" routerLink="/wiki">
+                <tui-icon icon="@tui.arrow-left" />
+                {{ "wiki.public.backToList" | translate }}
+            </a>
+        }
+        @default {
+            <div class="wiki-article__skeleton" [attr.aria-label]="'wiki.public.loading' | translate" role="status">
+                <app-skeleton height="11" rounded="2xl" />
+                <app-skeleton width="5/6" height="8" />
+                <app-skeleton width="2/3" height="4" />
+                <div class="wiki-article__skeleton-chips">
+                    <app-skeleton width="16" height="6" rounded="full" />
+                    <app-skeleton width="20" height="6" rounded="full" />
+                    <app-skeleton width="14" height="6" rounded="full" />
+                </div>
+                <app-skeleton height="4" />
+                <app-skeleton height="4" />
+                <app-skeleton width="3/4" height="4" />
+            </div>
+        }
     }
 </div>

@@ -109,7 +109,17 @@
             </div>
         </div>
 
-        @if (articles().length) {
+        @if (!store.loaded() && store.loading()) {
+            <!-- Пока снимок едет, «статей нет» — неправда: показываем заглушки строк -->
+            <ul class="wap__list" [attr.aria-label]="'wiki.public.loading' | translate" role="status">
+                @for (row of skeletonRows; track row) {
+                    <li class="wap__item wap__item--skeleton">
+                        <app-skeleton width="4" height="4" rounded="xl" />
+                        <app-skeleton width="2/3" height="4" />
+                    </li>
+                }
+            </ul>
+        } @else if (articles().length) {
             <ul class="wap__list">
                 @for (article of articles(); track article.id) {
                     <li class="wap__item">
