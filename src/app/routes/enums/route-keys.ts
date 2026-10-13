@@ -48,4 +48,6 @@ export enum RouteKeys {
     wikiEditor = 23,
 
     wiki = 24,
+
+    mySuggestions = 25,
 }

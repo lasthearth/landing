@@ -45,6 +45,15 @@
             <tui-icon icon="@tui.palette" />
         </a>
         <a
+            [routerLink]="['/profile/wiki']"
+            routerLinkActive="nav-button--active"
+            class="nav-button size-11!"
+            [title]="'profile.nav.wiki' | translate"
+            [attr.aria-label]="'profile.nav.wiki' | translate"
+        >
+            <tui-icon icon="@tui.book-open" />
+        </a>
+        <a
             [routerLink]="['/profile/referral']"
             routerLinkActive="nav-button--active"
             class="nav-button size-11!"

@@ -208,7 +208,11 @@
     @if (suggestSent()) {
         <div class="we__notice">
             <tui-icon icon="@tui.check" />
-            {{ "wiki.public.suggestSent" | translate }}
+            <span>{{ "wiki.public.suggestSent" | translate }}</span>
+            <!-- Куда идти смотреть решение: у игрока другого экрана нет -->
+            <a class="we__btn we__btn--sm" routerLink="/profile/wiki">
+                {{ "wiki.mine.open" | translate }}
+            </a>
         </div>
     }
 
