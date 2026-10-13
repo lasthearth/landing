@@ -143,7 +143,8 @@ export interface WikiRenderNote {
         | 'missingFootnote'
         | 'unusedFootnote'
         | 'longParagraph'
-        | 'badRule';
+        | 'badRule'
+        | 'badPlayer';
     readonly line: number;
     readonly detail: string;
 }
@@ -163,6 +164,10 @@ export interface WikiRender {
      * Номера пунктов правил, на которые ссылается текст.
      */
     readonly ruleLinks: readonly string[];
+    /**
+     * Идентификаторы игроков, на которых ссылается текст.
+     */
+    readonly playerIds: readonly string[];
     readonly words: number;
     readonly notes: readonly WikiRenderNote[];
 }
