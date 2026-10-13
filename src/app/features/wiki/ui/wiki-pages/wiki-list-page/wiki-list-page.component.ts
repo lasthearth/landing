@@ -266,7 +266,7 @@ export class WikiListPageComponent {
         // Подписи авторов подтягиваются по мере появления статей: сервер отдаёт
         // идентификатор, а читать идентификатор вместо имени незачем.
         effect(() => {
-            const ids = this.articles().map((article) => article.authorName);
+            const ids = this.articles().map((article) => article.createdBy);
 
             untracked(() => void this.authorNames.resolve(ids));
         });
@@ -278,7 +278,7 @@ export class WikiListPageComponent {
      * @param article Статья.
      */
     protected authorLabel(article: WikiArticle): string {
-        return this.authorNames.label(article.authorName);
+        return this.authorNames.label(article.createdBy);
     }
 
     private matches(article: WikiArticle, query: string): boolean {

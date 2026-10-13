@@ -78,6 +78,7 @@
                                                 [images]="render.images"
                                                 [words]="render.words"
                                                 [authorName]="item.authorName"
+                                                [createdBy]="target(item)?.createdBy || item.authorName"
                                             />
                                         </div>
                                     }

@@ -67,6 +67,13 @@ export interface WikiArticle {
     readonly status: WikiStatus;
     readonly createdAt: string;
     readonly updatedAt: string;
+    /**
+     * Кто создал статью; не меняется при правках.
+     */
+    readonly createdBy: string;
+    /**
+     * Кто правил последним.
+     */
     readonly authorName: string;
     /**
      * Версия из хранилища: правка принимается, только если статью не изменили

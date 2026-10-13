@@ -44,6 +44,7 @@ export interface WikiArticleDto {
     created_at?: string;
     updated_at?: string;
     author_name?: string;
+    created_by?: string;
     version?: string;
 }
 

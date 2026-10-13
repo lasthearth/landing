@@ -58,7 +58,14 @@ export class WikiArticleViewComponent {
     public readonly images = input<readonly WikiImage[]>([]);
     public readonly words = input(0);
     public readonly updatedAt = input<string | null>(null);
+    /**
+     * Кто правил последним.
+     */
     public readonly authorName = input('');
+    /**
+     * Кто создал статью; не меняется при правках.
+     */
+    public readonly createdBy = input('');
 
     /**
      * Заголовок статьи по адресу — для карточек «См. также».
@@ -97,19 +104,24 @@ export class WikiArticleViewComponent {
      * Сервер хранит subject, поэтому в подписи он появится только до тех пор,
      * пока сервис пользователей не ответит именем.
      */
-    protected readonly authorLabel = computed(() => {
-        const stored = this.authorName();
-        const name = this.authorNames.name(stored);
+    protected readonly createdLabel = computed(() => this.authorNames.name(this.createdBy()) ?? '');
 
-        return name ?? '';
+    /**
+     * Имя последнего редактора — только если правил не автор статьи.
+     */
+    protected readonly editorLabel = computed(() => {
+        const editor = this.authorName();
+        const author = this.createdBy();
+
+        return editor && editor !== author ? (this.authorNames.name(editor) ?? '') : '';
     });
 
     constructor() {
-        // Имя автора запрашиваем по факту показа, а на сервере подписи нет.
+        // Имена запрашиваем по факту показа, а на сервере подписей нет.
         effect(() => {
-            const stored = this.authorName();
+            const stored = [this.createdBy(), this.authorName()];
 
-            untracked(() => void this.authorNames.resolve([stored]));
+            untracked(() => void this.authorNames.resolve(stored));
         });
     }
 
