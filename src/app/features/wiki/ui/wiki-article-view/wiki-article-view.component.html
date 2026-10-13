@@ -127,10 +127,18 @@
         </section>
     }
 
-    @if (authorLabel()) {
+    @if (createdLabel()) {
         <footer class="wiki-view__footer">
-            <tui-icon icon="@tui.feather" class="wiki-view__footer-icon" />
-            {{ "wiki.view.author" | translate: { name: authorLabel() } }}
+            <span class="wiki-view__footer-row">
+                <tui-icon icon="@tui.feather" class="wiki-view__footer-icon" />
+                {{ "wiki.view.author" | translate: { name: createdLabel() } }}
+            </span>
+            @if (editorLabel()) {
+                <span class="wiki-view__footer-row">
+                    <tui-icon icon="@tui.pencil-line" class="wiki-view__footer-icon" />
+                    {{ "wiki.view.editedBy" | translate: { name: editorLabel() } }}
+                </span>
+            }
         </footer>
     }
 </article>

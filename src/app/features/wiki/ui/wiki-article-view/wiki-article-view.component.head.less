@@ -237,11 +237,18 @@ app-wiki-article-view {
 
 .wiki-view__footer {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 1px solid var(--wv-line);
     font-size: 0.9375rem;
     color: var(--lh-ink-3);
+}
+
+.wiki-view__footer-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
