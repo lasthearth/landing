@@ -16,20 +16,14 @@
 .players-page__search {
     display: flex;
     flex-direction: column;
-    gap: 0.375rem;
     flex: 1 1 16rem;
     min-width: 12rem;
 }
 
+// Сорта нужен только размер: подпись, триггер и список рисует проектный lh-input.
 .players-page__sort {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-}
-
-.players-page__label {
-    font-size: 0.875rem;
-    color: var(--lh-ink-3);
+    min-width: 12rem;
+    max-width: 16rem;
 }
 
 .players-page__field {
@@ -51,17 +45,6 @@
     color: var(--lh-ink);
     font: inherit;
     outline: none;
-}
-
-.players-page__select {
-    height: 2.75rem;
-    padding: 0 0.75rem;
-    border: 1px solid var(--lh-line);
-    border-radius: 0.75rem;
-    background-color: var(--lh-surface-2);
-    color: var(--lh-ink);
-    font: inherit;
-    cursor: pointer;
 }
 
 .players-page__seen {
