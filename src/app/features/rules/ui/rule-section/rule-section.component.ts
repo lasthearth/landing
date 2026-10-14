@@ -25,6 +25,9 @@ export const SECTION_ID_PROVIDER: Provider = {
     styleUrls: ['../../styles/rules.less'],
     providers: [SECTION_ID_PROVIDER],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    // Вход `title` — ключ перевода. Без этого он остаётся атрибутом на элементе,
+    // и браузер показывает ключ всплывающей подсказкой при наведении.
+    host: { '[attr.title]': 'null' },
 })
 export class RuleSectionComponent extends BaseExpandableSection {
     /**

@@ -14,6 +14,9 @@ import { TranslatePipe } from '@core/i18n';
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './empty-state.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    // Вход `title` — ключ перевода. Без этого он остаётся атрибутом на элементе,
+    // и браузер показывает ключ всплывающей подсказкой при наведении.
+    host: { '[attr.title]': 'null' },
 })
 export class EmptyStateComponent {
     /**

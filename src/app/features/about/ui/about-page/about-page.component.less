@@ -11,10 +11,17 @@
 }
 
 .about__text {
-    max-width: 68ch;
+    // Шрифт сайта узкий: при базовом размере 68 знаков давали колонку
+    // в треть панели и мелкий кегль, текст читался с трудом.
+    max-width: 72ch;
     margin: 0;
-    line-height: 1.7;
+    font-size: 1.1875rem;
+    line-height: 1.6;
     color: var(--lh-ink-2);
+
+    @media (max-width: 640px) {
+        font-size: 1.0625rem;
+    }
 }
 
 .about__levels {

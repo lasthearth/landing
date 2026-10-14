@@ -5,7 +5,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { AmountPipe, I18nService, TranslatePipe } from '@core/i18n';
 import { SeoService } from '@core/services/seo.service';
 import { ServerInformationService } from '@core/services/server-information.service';
-import { SettlementService, SettlementsTypes } from '@entities/settlement';
+import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { BreadcrumbsComponent } from '@shared/ui/breadcrumbs';
 import { PageHeaderComponent } from '@shared/ui/page-header';
@@ -22,10 +22,18 @@ const SITE_URL = 'https://lasthearth.ru';
 const SECTIONS = ['concept', 'settlements', 'diplomacy', 'economy', 'differences', 'start'] as const;
 
 /**
+ * Ступени лена по правилам сервера, от младшей к старшей.
+ *
+ * Названия лежат в словаре страницы (`about.levelList`), а не в словаре
+ * поселений: там типы старой схемы бэкенда, и ключей для них нет.
+ */
+const LEVELS = ['manor', 'camp', 'patrimony', 'barony', 'county', 'margraviate'] as const;
+
+/**
  * Страница «О сервере» `/about`.
  *
- * Разделы идут фиксированным порядком, тексты лежат в словаре: владелец пишет
- * их сам (задача 010), а структура, разметка и разметка пути уже готовы.
+ * Разделы идут фиксированным порядком, тексты лежат в словаре страницы
+ * и написаны по правилам сервера.
  * Внизу — те же числа, что на главной: онлайн, поселения и игроки.
  */
 @Component({
@@ -48,15 +56,9 @@ export class AboutPageComponent {
     protected readonly sections = SECTIONS;
 
     /**
-     * Уровни поселений: имена берём из словаря поселений.
+     * Ступени лена.
      */
-    protected readonly levels: readonly SettlementsTypes[] = [
-        SettlementsTypes.camp,
-        SettlementsTypes.village,
-        SettlementsTypes.township,
-        SettlementsTypes.city,
-        SettlementsTypes.region,
-    ];
+    protected readonly levels = LEVELS;
 
     /**
      * Онлайн сервера.
@@ -97,16 +99,6 @@ export class AboutPageComponent {
 
     public constructor() {
         effect(() => this.applySeo());
-    }
-
-    /**
-     * Имя уровня поселения из словаря поселений.
-     *
-     * @param level Уровень поселения.
-     * @returns Переведённое имя.
-     */
-    protected levelName(level: SettlementsTypes): string {
-        return this.i18n.translate('settlements.types.' + SettlementsTypes[level]);
     }
 
     /**

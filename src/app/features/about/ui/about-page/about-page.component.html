@@ -16,7 +16,7 @@
                         @for (level of levels; track level) {
                             <li class="lh-chip cursor-default">
                                 <tui-icon icon="@tui.castle" class="size-4!" />
-                                {{ levelName(level) }}
+                                {{ "about.levelList." + level | translate }}
                             </li>
                         }
                     </ul>
