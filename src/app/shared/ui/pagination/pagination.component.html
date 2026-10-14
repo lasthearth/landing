@@ -1,0 +1,45 @@
+@if (pages() > 1) {
+    <nav class="pagination" [attr.aria-label]="'pagination.label' | translate">
+        <button
+            type="button"
+            class="pagination__arrow"
+            [disabled]="!hasPrev()"
+            [attr.aria-label]="'pagination.prev' | translate"
+            (click)="go(page() - 1)"
+        >
+            <tui-icon icon="@tui.chevron-left" />
+        </button>
+
+        <ul class="pagination__list">
+            @for (item of items(); track $index) {
+                <li>
+                    @if (item === "gap") {
+                        <span class="pagination__gap" aria-hidden="true">…</span>
+                    } @else {
+                        <button
+                            type="button"
+                            class="pagination__page"
+                            [class.pagination__page--current]="item === page()"
+                            [attr.aria-current]="item === page() ? 'page' : null"
+                            (click)="go(item)"
+                        >
+                            {{ item }}
+                        </button>
+                    }
+                </li>
+            }
+        </ul>
+
+        <span class="pagination__of">{{ "pagination.of" | translate: { page: page(), pages: pages() } }}</span>
+
+        <button
+            type="button"
+            class="pagination__arrow"
+            [disabled]="!hasNext()"
+            [attr.aria-label]="'pagination.next' | translate"
+            (click)="go(page() + 1)"
+        >
+            <tui-icon icon="@tui.chevron-right" />
+        </button>
+    </nav>
+}

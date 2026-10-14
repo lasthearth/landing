@@ -43,6 +43,7 @@ export const routeSeoData: {
     wikiSection: ISeoData;
     mods: ISeoData;
     about: ISeoData;
+    players: ISeoData;
 } = {
     home: {
         title: 'Last Hearth — ролевой сервер Vintage Story',
@@ -223,6 +224,18 @@ export const routeSeoData: {
         image: ogImage,
         imageAlt: 'Игрок Last Hearth',
         robots: 'noindex, follow',
+    },
+    players: {
+        title: 'Игроки — Last Hearth',
+        description:
+            'Все игроки сервера Last Hearth: поиск по нику, кто был в игре недавно, поселения и описания.',
+        keywords: 'игроки Last Hearth, список игроков, поиск по нику, кто в игре, поселения игроков',
+        url: `${siteUrl}/players`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Игроки сервера Last Hearth',
     },
     lfg: {
         title: 'Ищу компанию — Last Hearth',
