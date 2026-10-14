@@ -1,10 +1,35 @@
 import { inject, Injectable } from '@angular/core';
 import { ILeaderBoard, UserService } from '@entities/user';
-import { isOwner, ISettlement, SettlementService } from '@entities/settlement';
+import { buildSettlementMembers, isOwner, ISettlement, SettlementService } from '@entities/settlement';
 import { HungerGamesService, IPlayerSeasonStats, ISeasonInfo } from '@features/hunger-games/api/hunger-games.service';
 import { catchError, combineLatest, map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { computePlayerBadges } from '../lib/compute-player-badges.function';
 import { PlayerHungerGames, PlayerProfile } from '../model/player-profile';
+
+/**
+ * Аватар, статус «в игре» и описание «О себе» из одного запроса игроков.
+ */
+interface PlayerIdentity {
+    /**
+     * Аватар.
+     */
+    avatarUrl: string;
+
+    /**
+     * Сейчас в игре.
+     */
+    isOnline: boolean;
+
+    /**
+     * Описание «О себе».
+     */
+    about: string;
+
+    /**
+     * Когда описание правили последний раз (ISO).
+     */
+    aboutUpdatedAt: string | null;
+}
 
 /**
  * Собирает публичный профиль игрока из открытых данных: таблицы лидеров,
@@ -62,7 +87,7 @@ export class PlayerProfileService {
     private build(
         entry: ILeaderBoard,
         entries: ILeaderBoard[],
-        player: { avatarUrl: string; isOnline: boolean } | null,
+        player: PlayerIdentity | null,
         settlement: ISettlement | null,
         hungerGames: PlayerHungerGames | null
     ): PlayerProfile {
@@ -75,6 +100,8 @@ export class PlayerProfileService {
             userId: entry.user_id,
             avatarUrl: player?.avatarUrl ?? '/default-avatar.webp',
             isOnline: player?.isOnline ?? false,
+            about: player?.about ?? '',
+            aboutUpdatedAt: player?.aboutUpdatedAt ?? null,
             lastOnline: entry.last_online || null,
             hours: entry.hours_played,
             kills: entry.kills,
@@ -99,9 +126,9 @@ export class PlayerProfileService {
     }
 
     /**
-     * Аватар и статус «в игре».
+     * Аватар, статус «в игре» и описание «О себе».
      */
-    private player(userId: string): Observable<{ avatarUrl: string; isOnline: boolean } | null> {
+    private player(userId: string): Observable<PlayerIdentity | null> {
         if (!userId) {
             return of(null);
         }
@@ -116,6 +143,8 @@ export class PlayerProfileService {
                               player.avatar?.x48 ||
                               '/default-avatar.webp',
                           isOnline: !!player.is_online,
+                          about: player.about ?? '',
+                          aboutUpdatedAt: player.about_updated_at ?? null,
                       }
                     : null
             ),
@@ -133,14 +162,7 @@ export class PlayerProfileService {
         );
 
         return this.settlements$.pipe(
-            map(
-                (list) =>
-                    list.find(
-                        (settlement) =>
-                            settlement.leader?.user_id === userId ||
-                            settlement.members?.some((member) => member.user_id === userId)
-                    ) ?? null
-            )
+            map((list) => buildSettlementMembers(list).get(userId)?.settlement ?? null)
         );
     }
 

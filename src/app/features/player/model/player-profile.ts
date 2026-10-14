@@ -106,6 +106,16 @@ export interface PlayerProfile {
     settlementRole: 'leader' | 'resident' | null;
 
     /**
+     * Описание «О себе», написанное игроком; пусто — не писал.
+     */
+    about: string;
+
+    /**
+     * Когда описание правили последний раз (ISO), если оно есть.
+     */
+    aboutUpdatedAt: string | null;
+
+    /**
      * «Голодные игры» за текущий (или последний) сезон.
      */
     hungerGames: PlayerHungerGames | null;
