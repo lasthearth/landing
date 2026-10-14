@@ -5,13 +5,38 @@ import {
     writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import { dirname, resolve } from 'node:path';
+import { existsSync } from 'node:fs';
+import { dirname, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
+import { gzip as gzipCallback } from 'node:zlib';
 
 /**
- * Порт Node-сервера. Наружу смотрит nginx, поэтому порт внутренний.
+ * Сжатие gzip в виде промиса.
+ */
+const gzip = promisify(gzipCallback);
+
+/**
+ * Порт Node-сервера. В контейнере — 8080 (задаёт Dockerfile): сервер один
+ * отдаёт и статику, и страницы, отдельного nginx перед ним нет.
  */
 const PORT = Number(process.env['PORT'] ?? 4000);
+
+/**
+ * Типы файлов, для которых при сборке образа лежит сжатая копия `<файл>.gz`
+ * (scripts/precompress.mjs). Сжатие раньше делал nginx; без него 2 МБ JS
+ * уходили бы в сеть целиком.
+ */
+const GZIP_TYPES: Record<string, string> = {
+    '.js': 'text/javascript; charset=utf-8',
+    '.mjs': 'text/javascript; charset=utf-8',
+    '.css': 'text/css; charset=utf-8',
+    '.svg': 'image/svg+xml',
+    '.json': 'application/json; charset=utf-8',
+    '.webmanifest': 'application/manifest+json; charset=utf-8',
+    '.xml': 'application/xml; charset=utf-8',
+    '.txt': 'text/plain; charset=utf-8',
+};
 
 /**
  * Каталог собранной статики (`browser/`) рядом с серверным бандлом.
@@ -24,8 +49,7 @@ const angularApp = new AngularNodeAppEngine();
 /**
  * Один вид адресов: `/home` → `/`, `/<путь>/` → `/<путь>`.
  *
- * Nginx делает то же самое снаружи; дублирование нужно, чтобы сервер вёл себя
- * так же, когда его запускают напрямую (локальная проверка, отладка).
+ * Сервер в контейнере стоит без nginx, поэтому правила адресов живут здесь.
  */
 app.use((req, res, next) => {
     const [path, query] = req.originalUrl.split('?');
@@ -43,7 +67,51 @@ app.use((req, res, next) => {
         return;
     }
 
+    // Файлы предрендера (`/rules/index.html`) — дубли «чистых» адресов.
+    if (path === '/index.html') {
+        res.redirect(301, `/${suffix}`);
+
+        return;
+    }
+
+    if (/\.html$/i.test(path)) {
+        res.status(404).type('text/plain').send('Not found');
+
+        return;
+    }
+
     next();
+});
+
+/**
+ * Сжатая копия статики, если браузер принимает gzip и копия есть.
+ */
+app.use((req, res, next) => {
+    const type = GZIP_TYPES[extname(req.path).toLowerCase()];
+
+    if ((req.method !== 'GET' && req.method !== 'HEAD') || !type || !/\bgzip\b/.test(req.headers['accept-encoding'] ?? '')) {
+        next();
+
+        return;
+    }
+
+    const file = resolve(browserDistFolder, `.${req.path}`);
+    const gzipped = `${file}.gz`;
+
+    if (!file.startsWith(browserDistFolder + sep) || !existsSync(gzipped)) {
+        next();
+
+        return;
+    }
+
+    res.setHeader('Content-Encoding', 'gzip');
+    res.setHeader('Content-Type', type);
+    res.setHeader('Vary', 'Accept-Encoding');
+    res.setHeader(
+        'Cache-Control',
+        /\.(?:m?js|css)$/.test(file) ? 'public, max-age=31536000, immutable' : 'public, max-age=3600'
+    );
+    res.sendFile(gzipped);
 });
 
 /**
@@ -76,7 +144,34 @@ app.use(
 app.use((req, res, next) => {
     angularApp
         .handle(req)
-        .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
+        .then(async (response) => {
+            if (!response) {
+                next();
+
+                return;
+            }
+
+            const html = /text\/html/.test(response.headers.get('content-type') ?? '');
+            const acceptsGzip = /\bgzip\b/.test(req.headers['accept-encoding'] ?? '');
+
+            if (!html || !acceptsGzip || !response.body || response.headers.has('content-encoding')) {
+                await writeResponseToNodeResponse(response, res);
+
+                return;
+            }
+
+            // HTML страниц — 100–400 КБ, сжатый — в 5–6 раз меньше. Раньше это делал nginx.
+            const body = await gzip(Buffer.from(await response.arrayBuffer()), { level: 6 });
+            const headers = new Headers(response.headers);
+            headers.set('content-encoding', 'gzip');
+            headers.set('vary', 'Accept-Encoding');
+            headers.delete('content-length');
+
+            await writeResponseToNodeResponse(
+                new Response(new Uint8Array(body), { status: response.status, statusText: response.statusText, headers }),
+                res
+            );
+        })
         .catch(next);
 });
 

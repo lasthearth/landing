@@ -1,38 +1,13 @@
 services:
-    # Node-сервер SSR: рендерит по запросу статьи вики, новости, поселения,
-    # страницы игроков и отвечает 404. Наружу не публикуется — только для web.
-    app:
+    # Сайт целиком: Node-сервер SSR на 8080 отдаёт статику и страницы.
+    # Один контейнер и тот же внешний порт 4200, что до перехода на SSR.
+    web:
         build:
             context: .
             target: app
         environment:
             NODE_ENV: production
-            PORT: 4000
-        expose:
-            - "4000"
-        healthcheck:
-            test:
-                [
-                    "CMD",
-                    "node",
-                    "-e",
-                    "fetch('http://127.0.0.1:' + process.env.PORT + '/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
-                ]
-            interval: 10s
-            timeout: 5s
-            retries: 6
-            start_period: 20s
-        restart: unless-stopped
-
-    # nginx: отдаёт статику сборки из browser/ сам, а HTML проксирует на app.
-    # Наружу смотрит только он; внешний порт 4200 сохранён.
-    web:
-        build:
-            context: .
-            target: web
+            PORT: 8080
         ports:
             - "4200:8080"
-        depends_on:
-            app:
-                condition: service_healthy
         restart: unless-stopped
