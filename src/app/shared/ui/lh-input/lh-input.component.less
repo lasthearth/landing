@@ -13,12 +13,17 @@
     color: var(--lh-ink);
 }
 
+/**
+ * Поле контрола. Высота по умолчанию 50px; место, где поле стоит в одном ряду
+ * с более низкими элементами (например, с полем поиска страницы), переопределяет
+ * её через `--lh-input-min-height` на самом компоненте.
+ */
 .flexible-input {
     position: relative;
     width: 100%;
     display: flex;
     align-items: center;
-    min-height: 50px;
+    min-height: var(--lh-input-min-height, 50px);
     border: 1px solid var(--lh-border);
     border-radius: 12px;
     padding: 0.625rem 1rem;
