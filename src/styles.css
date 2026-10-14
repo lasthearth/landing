@@ -1878,3 +1878,34 @@ html[data-theme='dark'] {
         }
     }
 }
+
+/**
+ * Полоса согласия на cookies (features/analytics/ui/consent-banner) у нижнего
+ * края экрана. Пока она видна, на body стоит `lh-has-consent`, а в
+ * `--lh-consent-h` — её высота: страница получает отступ снизу (полоса ничего
+ * не закрывает), плавающие кнопки и нижняя навигация профиля поднимаются над ней.
+ * Вне слоёв — чтобы перебить утилиты Tailwind у панели профиля (`bottom-0`).
+ */
+body.lh-has-consent {
+    padding-bottom: var(--lh-consent-h, 0px);
+}
+
+body.lh-has-consent .lh-scroll-top {
+    bottom: calc(1.75rem + var(--lh-consent-h, 0px));
+}
+
+@media (max-width: 640px) {
+    body.lh-has-consent .lh-scroll-top {
+        bottom: calc(1.25rem + var(--lh-consent-h, 0px));
+    }
+}
+
+@media (max-width: 1279px) {
+    body.lh-has-consent .lh-profile-bar {
+        bottom: var(--lh-consent-h, 0px);
+    }
+
+    body.lh-has-consent.lh-has-bottom-bar .lh-scroll-top {
+        bottom: calc(5.5rem + var(--lh-consent-h, 0px));
+    }
+}

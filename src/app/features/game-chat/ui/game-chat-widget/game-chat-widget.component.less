@@ -286,3 +286,17 @@
         bottom: 5.25rem;
     }
 }
+
+/**
+ * Полоса согласия на cookies у нижнего края: поднимаем чат над ней.
+ * Высоту полосы и класс на body ставит ConsentBannerComponent.
+ */
+:host-context(body.lh-has-consent) .game-chat-widget {
+    bottom: calc(1.5rem + var(--lh-consent-h, 0px));
+}
+
+@media (max-width: 1279px) {
+    :host-context(body.lh-has-consent.lh-has-bottom-bar) .game-chat-widget {
+        bottom: calc(5.25rem + var(--lh-consent-h, 0px));
+    }
+}

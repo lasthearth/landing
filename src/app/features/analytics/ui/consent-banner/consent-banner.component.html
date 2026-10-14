@@ -1,28 +1,26 @@
 @if (visible()) {
-    <aside class="consent-banner" role="region" aria-labelledby="consent-banner-title">
-        <div class="consent-banner__head">
-            <span class="consent-banner__seal" aria-hidden="true">
+    <aside #bar class="consent-bar" role="region" aria-labelledby="consent-bar-title">
+        <div class="consent-bar__inner">
+            <span class="consent-bar__seal" aria-hidden="true">
                 <tui-icon icon="@tui.cookie" />
             </span>
-            <p id="consent-banner-title" class="consent-banner__title">
-                {{ "analytics.consent.title" | translate }}
+
+            <p class="consent-bar__text">
+                <b id="consent-bar-title" class="consent-bar__title">{{ "analytics.consent.title" | translate }}.</b>
+                {{ "analytics.consent.text" | translate }}
+                <a class="consent-bar__link" [routerLink]="['/privacy-policy']">
+                    {{ "analytics.consent.policy" | translate }}
+                </a>
             </p>
-        </div>
 
-        <p class="consent-banner__text">
-            {{ "analytics.consent.text" | translate }}
-            <a class="consent-banner__link" [routerLink]="['/privacy-policy']">
-                {{ "analytics.consent.policy" | translate }}
-            </a>
-        </p>
-
-        <div class="consent-banner__actions">
-            <button type="button" class="lh-cta consent-banner__btn" (click)="allow()">
-                {{ "analytics.consent.allow" | translate }}
-            </button>
-            <button type="button" class="lh-cta lh-cta--ghost consent-banner__btn" (click)="deny()">
-                {{ "analytics.consent.deny" | translate }}
-            </button>
+            <div class="consent-bar__actions">
+                <button type="button" class="lh-cta consent-bar__btn" (click)="allow()">
+                    {{ "analytics.consent.allow" | translate }}
+                </button>
+                <button type="button" class="lh-cta lh-cta--on-dark consent-bar__btn" (click)="deny()">
+                    {{ "analytics.consent.deny" | translate }}
+                </button>
+            </div>
         </div>
     </aside>
 }

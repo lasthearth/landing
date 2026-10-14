@@ -1,46 +1,33 @@
 /**
- * Плашка согласия на аналитические cookies.
+ * Полоса согласия на аналитические cookies — во всю ширину у нижнего края.
  *
- * Нижний левый угол: игровой чат и кнопка «наверх» стоят справа, поэтому
- * слева плашка ни с чем не пересекается. Слой выше плавающих виджетов,
+ * Полоса не перекрывает страницу: пока она видна, компонент ставит на body
+ * класс `lh-has-consent` и переменную `--lh-consent-h` с её высотой. По ним
+ * у страницы появляется отступ снизу, а плавающие виджеты (чат, «наверх»,
+ * нижняя навигация профиля) поднимаются над полосой — см. src/styles.css.
+ *
+ * Фон — ночной, одинаковый в обеих темах: это часть тёмной рамки сайта, как
+ * шапка, а не пергаментная панель контента. Слой выше плавающих виджетов,
  * но ниже приветственного экрана (z-200) — на заставке её не видно.
- *
- * Фон непрозрачный, а не .lh-panel: у панели пергамент полупрозрачный,
- * и поверх тёмной сцены сайта плашка становилась грязно-серой, а текст
- * терял контраст. Цвет текста задаётся явно — плашка вне контентной
- * панели и не наследует её чернила.
  */
 :host {
     position: fixed;
-    left: 1rem;
-    bottom: 1rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 190;
     display: block;
-    width: min(23rem, calc(100vw - 2rem));
     // Плашка смонтирована вне layout, где задан шрифт сайта, — повторяем его.
     font-family: 'LH Dash', 'Advent Pro Variable', serif;
-
-    // На телефоне внизу панель навигации профиля и нижняя полоса сайта.
-    @media (max-width: 640px) {
-        left: 0.75rem;
-        right: 0.75rem;
-        bottom: calc(0.75rem + env(safe-area-inset-bottom));
-        width: auto;
-    }
 }
 
-.consent-banner {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.125rem 1.125rem 1rem;
-    border-radius: 1.25rem;
-    color: var(--lh-ink);
-    background-color: var(--lh-surface-2);
+.consent-bar {
+    color: var(--lh-parchment-2);
+    background-color: color-mix(in srgb, var(--lh-night-2) 97%, transparent);
     box-shadow:
-        inset 0 0 0 1px var(--lh-border),
-        inset 0 3px 0 0 color-mix(in srgb, var(--lh-brand) 70%, transparent),
-        var(--lh-shadow-lift);
+        inset 0 2px 0 0 color-mix(in srgb, var(--lh-brand) 75%, transparent),
+        0 -12px 32px -12px rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
     animation: consent-rise var(--lh-dur-mid) var(--lh-ease-out-quart) both;
 
     @media (prefers-reduced-motion: reduce) {
@@ -48,14 +35,23 @@
     }
 }
 
-.consent-banner__head {
+.consent-bar__inner {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 1rem;
+    max-width: 76rem;
+    margin: 0 auto;
+    padding: 0.875rem 1.5rem calc(0.875rem + env(safe-area-inset-bottom));
+
+    @media (max-width: 720px) {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem calc(0.875rem + env(safe-area-inset-bottom));
+    }
 }
 
-// Сургучная печать вместо голой иконки — в духе пергамента сайта.
-.consent-banner__seal {
+// Сургучная печать вместо голой иконки — в духе сайта.
+.consent-bar__seal {
     display: grid;
     flex: none;
     place-items: center;
@@ -71,55 +67,69 @@
         height: 1.125rem;
         font-size: 1.125rem;
     }
+
+    @media (max-width: 720px) {
+        display: none;
+    }
 }
 
-.consent-banner__title {
-    margin: 0;
-    font-size: 1.1875rem;
-    font-weight: 800;
-    line-height: 1.2;
-    color: var(--lh-ink);
-}
-
-.consent-banner__text {
+.consent-bar__text {
+    flex: 1 1 22rem;
+    min-width: 0;
     margin: 0;
     font-size: 1.0625rem;
     font-weight: 500;
-    line-height: 1.45;
-    color: var(--lh-ink-2);
+    line-height: 1.4;
+    color: color-mix(in srgb, var(--lh-parchment-2) 85%, transparent);
 }
 
-.consent-banner__link {
+.consent-bar__title {
+    font-weight: 800;
+    color: var(--lh-parchment-3);
+}
+
+.consent-bar__link {
     font-weight: 700;
-    color: var(--lh-link);
+    color: var(--lh-accent-soft);
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.18em;
     white-space: nowrap;
 
     &:hover {
-        color: var(--lh-brand-ink);
+        color: #fff;
         text-decoration-thickness: 2px;
     }
 }
 
-.consent-banner__actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.consent-bar__actions {
+    display: flex;
+    flex: none;
     gap: 0.5rem;
+
+    @media (max-width: 720px) {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
 }
 
 // Кнопки одной ширины и высоты: выбор равнозначный, отказ не прячем.
-.consent-banner__btn {
+.consent-bar__btn {
     justify-content: center;
+    min-width: 8.5rem;
     min-height: 2.75rem;
-    padding: 0 1rem;
+    padding: 0 1.25rem;
     font-size: 1rem;
+
+    @media (max-width: 720px) {
+        min-width: 0;
+    }
 }
 
 @keyframes consent-rise {
     from {
         opacity: 0;
-        transform: translateY(0.75rem);
+        transform: translateY(100%);
     }
 }
