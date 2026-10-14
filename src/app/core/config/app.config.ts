@@ -76,6 +76,11 @@ function getConfig() {
     config.silentRenew = true;
     config.useRefreshToken = true;
     config.renewTimeBeforeTokenExpiresInSeconds = 120;
+    // Logto возвращает на зарегистрированный /home/?code=…, а сервер сразу
+    // переводит этот адрес на /?code=… (один канонический адрес главной).
+    // Без этого флага библиотека признаёт колбэком только точный redirectUri
+    // и молча не завершает вход. Других параметров code/state на сайте нет.
+    config.checkRedirectUrlWhenCheckingIfIsCallback = false;
     config.logLevel = environment.production ? LogLevel.Warn : LogLevel.Debug;
 
     return config;

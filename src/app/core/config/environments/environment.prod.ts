@@ -1,7 +1,9 @@
 export const environment = {
     production: true,
-    redirectUri: 'https://lasthearth.ru/',
-    postLogoutRedirectUri: 'https://lasthearth.ru/',
+    // Адрес возврата зарегистрирован в Logto именно таким — менять только вместе
+    // с настройками приложения в Logto. Сервер переводит /home/?code=… на /?code=….
+    redirectUri: 'https://lasthearth.ru/home/',
+    postLogoutRedirectUri: 'https://lasthearth.ru/home/',
     apiUrl: 'https://api.lasthearth.ru/v1',
     logtoEndpoint: 'https://logto.lasthearth.ru',
     discordScreenshotsChannelId: '1389973669576441897',
