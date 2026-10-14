@@ -30,13 +30,13 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 896 | core, entities, features, layout, routes, shared |
+| src/app | 900 | core, entities, features, layout, routes, shared |
 | core/ | 57 | config, guards, i18n, interceptors, services, types |
 | entities/ | 165 | discord, donate, event, hunger-games, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
 | features/ | 529 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki |
 | layout/ | 19 | background-scene, footer, header |
 | routes/ | 5 | enums |
-| shared/ | 116 | lib, styles, ui |
+| shared/ | 120 | lib, styles, ui |
 
 ## 3. Слайсы features / entities
 
@@ -149,7 +149,7 @@
 | faq | 2.3 | /faq |
 | footer | 2.7 | — |
 | gallery | 1.3 | /gallery |
-| header | 2.4 | — |
+| header | 2.5 | — |
 | home | 10.1 | / |
 | legal | 68.7 | /privacy-policy, /public-offer |
 | lfg | 15.4 | /lfg |
@@ -163,9 +163,9 @@
 | referral | 1.5 | /profile/referral |
 | rules | 218.0 | /rules |
 | settlements | 58.0 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
-| shared | 26.2 | — |
+| shared | 26.9 | — |
 | videos | 2.0 | /videos |
-| wiki | 63.3 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |
+| wiki | 63.7 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |
 
 Общие словари (common, header, footer, shared, news) подключены сразу в
 `src/app/core/i18n/translations/index.ts`. Остальные приезжают вместе с роутом через `loadPage()`.

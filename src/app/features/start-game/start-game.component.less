@@ -21,6 +21,12 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
+
+    // Плашка про моды — над карточками во всю ширину: две карточки под ней
+    // остаются парой, без дыры в сетке.
+    app-mods-notice {
+        grid-column: 1 / -1;
+    }
 }
 
 @media (min-width: 768px) {

@@ -10,6 +10,7 @@ import {
 import { HttpContext } from '@angular/common/http';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { ModsNoticeComponent } from '@shared/ui/mods-notice';
 import { catchError, of } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
@@ -70,7 +71,7 @@ interface ApplicationDetails {
 @Component({
     selector: 'app-newcomer-path',
     standalone: true,
-    imports: [RouterLink, TuiIcon, TranslatePipe],
+    imports: [RouterLink, TuiIcon, TranslatePipe, ModsNoticeComponent],
     templateUrl: './newcomer-path.component.html',
     styleUrl: './newcomer-path.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

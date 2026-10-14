@@ -8,6 +8,7 @@ export const HOME_I18N = {
                 copy: 'Копировать',
                 copied: 'Скопировано',
                 howTo: 'Как подключиться',
+                mods: 'Моды',
             },
             carousel: {
                 nextAria: 'Следующий слайд',
@@ -112,6 +113,7 @@ export const HOME_I18N = {
                 copy: 'Copy',
                 copied: 'Copied',
                 howTo: 'How to connect',
+                mods: 'Mods',
             },
             carousel: {
                 nextAria: 'Next slide',
