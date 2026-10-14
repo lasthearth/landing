@@ -40,23 +40,24 @@
             }
         </section>
     } @else if (hasAny()) {
-        <!-- Сортировка -->
-        <div class="lh-chips" role="group" aria-labelledby="wiki-sort-label">
-            <span id="wiki-sort-label" class="lh-chips__label">{{ "wiki.public.sort.label" | translate }}</span>
-            @for (key of sortKeys; track key) {
-                <button
-                    type="button"
-                    class="lh-chip"
-                    [attr.aria-current]="sort() === key ? 'true' : null"
-                    (click)="setSort(key)"
+        <!-- Разделы плитками: ссылки на страницы разделов, робот видит их как разделы вики. -->
+        <nav class="wiki-sections" [attr.aria-label]="'wiki.public.sections' | translate">
+            @for (tile of sectionTiles(); track tile.id) {
+                <a
+                    class="wiki-sections__tile"
+                    [class.wiki-sections__tile--empty]="!tile.count"
+                    [routerLink]="['/wiki/razdel', tile.id]"
                 >
-                    {{ "wiki.public.sort." + key | translate }}
-                </button>
+                    <span class="wiki-sections__bg" [style.background-image]="tile.background" aria-hidden="true"></span>
+                    <tui-icon [icon]="tile.icon" class="wiki-sections__icon" />
+                    <span class="wiki-sections__name">{{ "wiki.sections." + tile.id | translate }}</span>
+                    <span class="wiki-sections__count">{{ articleCount(tile.count) }}</span>
+                </a>
             }
-        </div>
+        </nav>
 
-        <!-- Поиск и фильтры: состояние хранится в адресе, ссылкой можно поделиться -->
-        <div class="wiki-list__tools">
+        <!-- Поиск и порядок одной строкой; состояние хранится в адресе, ссылкой можно поделиться -->
+        <div class="wiki-list__toolbar">
             <label class="wiki-list__search">
                 <tui-icon icon="@tui.search" />
                 <input
@@ -69,62 +70,49 @@
                 />
             </label>
 
-            @if (sectionOptions().length > 1) {
-                <div class="lh-chips" role="group" aria-labelledby="wiki-section-label">
-                    <span id="wiki-section-label" class="lh-chips__label">
-                        {{ "wiki.public.sections" | translate }}
-                    </span>
-                    @for (option of sectionOptions(); track option.value) {
-                        <button
-                            type="button"
-                            class="lh-chip"
-                            [attr.aria-pressed]="section() === option.value"
-                            (click)="toggleSection(option.value)"
-                        >
-                            {{ sectionLabel(option.value) }}
-                            <span class="lh-chip__count">{{ option.count }}</span>
-                        </button>
-                    }
-                </div>
-            }
-
-            @if (tagOptions().length) {
-                <div class="lh-chips" role="group" aria-labelledby="wiki-tag-label">
-                    <span id="wiki-tag-label" class="lh-chips__label">{{ "wiki.public.tags" | translate }}</span>
-                    @for (option of tagOptions(); track option.value) {
-                        <button
-                            type="button"
-                            class="lh-chip"
-                            [attr.aria-pressed]="tag() === option.value"
-                            (click)="toggleTag(option.value)"
-                        >
-                            #{{ option.value }}
-                            <span class="lh-chip__count">{{ option.count }}</span>
-                        </button>
-                    }
-                </div>
-            }
-
-            @if (hasFilters()) {
-                <p class="wiki-list__summary">
-                    {{ "wiki.public.found" | translate: { count: found() } }}
-                    <button type="button" class="wiki-list__reset" (click)="resetFilters()">
-                        {{ "wiki.public.clear" | translate }}
+            <div class="lh-chips wiki-list__sort" role="group" aria-labelledby="wiki-sort-label">
+                <span id="wiki-sort-label" class="lh-chips__label">{{ "wiki.public.sort.label" | translate }}</span>
+                @for (key of sortKeys; track key) {
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-current]="sort() === key ? 'true' : null"
+                        (click)="setSort(key)"
+                    >
+                        {{ "wiki.public.sort." + key | translate }}
                     </button>
-                </p>
-            }
+                }
+            </div>
         </div>
 
-        <!-- Разделы отдельными адресами: это ссылки на страницы, а не фильтр,
-             поэтому робот видит их как разделы вики. -->
-        <nav class="wiki-list__sections" [attr.aria-label]="'wiki.public.sections' | translate">
-            @for (link of sectionLinks; track link.id) {
-                <a class="lh-chip" [routerLink]="['/wiki/razdel', link.id]">
-                    <tui-icon [icon]="link.icon" class="size-4!" />
-                    {{ "wiki.sections." + link.id | translate }}
-                </a>
-            }
-        </nav>
+        @if (tagOptions().length) {
+            <div class="lh-chips" role="group" aria-labelledby="wiki-tag-label">
+                <span id="wiki-tag-label" class="lh-chips__label">{{ "wiki.public.tags" | translate }}</span>
+                @for (option of tagOptions(); track option.value) {
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-pressed]="tag() === option.value"
+                        (click)="toggleTag(option.value)"
+                    >
+                        #{{ option.value }}
+                        <span class="lh-chip__count">{{ option.count }}</span>
+                    </button>
+                }
+            </div>
+        }
+
+        @if (hasFilters()) {
+            <p class="wiki-list__summary">
+                {{ "wiki.public.found" | translate: { count: found() } }}
+                @if (section(); as current) {
+                    · {{ sectionLabel(current) }}
+                }
+                <button type="button" class="wiki-list__reset" (click)="resetFilters()">
+                    {{ "wiki.public.clear" | translate }}
+                </button>
+            </p>
+        }
 
         @if (cards().length) {
             <section class="wiki-list__grid" [attr.aria-label]="'wiki.public.articles' | translate">
@@ -132,20 +120,19 @@
                     <!-- Первый лист порядка — разворотный: занимает ряд целиком. -->
                     <a
                         class="wiki-card lh-panel"
-                        [class.wiki-card--lead]="$first"
+                        [class.wiki-card--lead]="$first && leadSpread()"
                         [routerLink]="articleLink(card.article)"
                         (pointermove)="onGlowMove($event)"
                     >
                         <!-- Пламя очага: тёплое пятно света следует за курсором. -->
                         <span class="wiki-card__glow" aria-hidden="true"></span>
                         <div class="wiki-card__media">
-                            @if (card.coverImage) {
-                                <span
-                                    class="wiki-card__cover"
-                                    [style.background-image]="card.coverImage"
-                                    [style.background-position]="'center ' + card.article.cover!.focus + '%'"
-                                ></span>
-                            }
+                            <span
+                                class="wiki-card__cover"
+                                [class.wiki-card__cover--fallback]="card.fallbackCover"
+                                [style.background-image]="card.coverImage"
+                                [style.background-position]="'center ' + card.coverFocus + '%'"
+                            ></span>
                             <span class="wiki-card__hud">
                                 <span class="wiki-card__section">{{ sectionLabel(card.article.sectionId) }}</span>
                                 <span class="wiki-card__minutes">{{ minutesShort(card.minutes) }}</span>
@@ -158,7 +145,7 @@
                             @if (card.lead) {
                                 <p class="wiki-card__lead">{{ card.lead }}</p>
                             }
-                            @if ($first && card.tags.length) {
+                            @if ($first && leadSpread() && card.tags.length) {
                                 <span class="wiki-card__tags">
                                     @for (tag of card.tags; track tag) {
                                         <span class="wiki-card__tag">#{{ tag }}</span>

@@ -34,9 +34,17 @@ interface WikiCard {
      */
     readonly minutes: number;
     /**
-     * `background-image` обложки; `null` — обложки нет.
+     * `background-image` обложки. Без своей обложки — скриншот раздела.
      */
-    readonly coverImage: string | null;
+    readonly coverImage: string;
+    /**
+     * Обложка взята у раздела, а не у статьи: рисуется приглушённой.
+     */
+    readonly fallbackCover: boolean;
+    /**
+     * Вертикальная точка кадра обложки, проценты.
+     */
+    readonly coverFocus: number;
     /**
      * Первые теги статьи: подпись разворотного листа.
      */
@@ -47,6 +55,11 @@ interface WikiCard {
  * Сколько тегов помещается в подпись разворотного листа.
  */
 const LEAD_TAG_LIMIT = 3;
+
+/**
+ * С какого числа карточек первая раскрывается на всю ширину.
+ */
+const LEAD_SPREAD_MIN = 3;
 
 /**
  * Порядок статей в списке.
@@ -156,22 +169,6 @@ export class WikiListPageComponent {
     protected readonly visible = signal(PAGE_SIZE);
 
     /**
-     * Разделы, в которых есть доступные статьи, со счётчиками.
-     */
-    protected readonly sectionOptions = computed<readonly WikiOption<WikiSectionId>[]>(() => {
-        const counts = new Map<WikiSectionId, number>();
-
-        for (const article of this.articles()) {
-            counts.set(article.sectionId, (counts.get(article.sectionId) ?? 0) + 1);
-        }
-
-        return WIKI_SECTIONS.filter((item) => counts.has(item.id)).map((item) => ({
-            value: item.id,
-            count: counts.get(item.id) ?? 0,
-        }));
-    });
-
-    /**
      * Теги, встречающиеся у нескольких статей, со счётчиками.
      */
     protected readonly tagOptions = computed<readonly WikiOption<string>[]>(() => {
@@ -222,7 +219,9 @@ export class WikiListPageComponent {
                 lead: cut(article.lead.trim(), LEAD_LIMIT),
                 minutes: Math.max(1, Math.round(countWords(article.body) / 200)),
                 // Адрес в кавычках, чтобы скобки в нём не ломали `url()`.
-                coverImage: article.cover ? `url(${JSON.stringify(article.cover.url)})` : null,
+                coverImage: `url(${JSON.stringify(article.cover?.url || this.sectionImage(article.sectionId))})`,
+                fallbackCover: !article.cover?.url,
+                coverFocus: article.cover?.url ? article.cover.focus : 50,
                 tags: article.tags.map((tag) => tag.trim()).filter(Boolean).slice(0, LEAD_TAG_LIMIT),
             }))
     );
@@ -247,6 +246,30 @@ export class WikiListPageComponent {
      * не считает, поэтому у каждого раздела есть своя страница `/wiki/razdel/<id>`.
      */
     protected readonly sectionLinks = WIKI_SECTIONS;
+
+    /**
+     * Разделы плитками: все шесть, со скриншотом и числом статей.
+     * Пустой раздел тоже показан — в него можно предложить статью.
+     */
+    protected readonly sectionTiles = computed(() => {
+        const counts = new Map<WikiSectionId, number>();
+
+        for (const article of this.articles()) {
+            counts.set(article.sectionId, (counts.get(article.sectionId) ?? 0) + 1);
+        }
+
+        return WIKI_SECTIONS.map((item) => ({
+            ...item,
+            count: counts.get(item.id) ?? 0,
+            background: `url(${JSON.stringify(item.image)})`,
+        }));
+    });
+
+    /**
+     * Разворотный лист на всю ширину — только когда под ним есть ряд карточек.
+     * При одной-двух статьях разворот оставлял бы одинокую карточку под собой.
+     */
+    protected readonly leadSpread = computed(() => this.cards().length >= LEAD_SPREAD_MIN);
 
     /**
      * Остались ли статьи за кнопкой «Показать ещё».
@@ -435,6 +458,42 @@ export class WikiListPageComponent {
             month: 'long',
             year: 'numeric',
         }).format(new Date(value));
+    }
+    /**
+     * Скриншот раздела — обложка статьи, у которой нет своей.
+     *
+     * @param id Раздел.
+     * @returns Адрес картинки.
+     */
+    private sectionImage(id: WikiSectionId): string {
+        return WIKI_SECTIONS.find((item) => item.id === id)?.image ?? WIKI_SECTIONS[0].image;
+    }
+
+    /**
+     * «1 статья», «3 статьи», «7 статей» — число статей раздела словами.
+     *
+     * @param count Число статей.
+     * @returns Подпись.
+     */
+    protected articleCount(count: number): string {
+        if (!count) {
+            return this.i18n.translate('wiki.public.countNone');
+        }
+
+        const mod10 = count % 10;
+        const mod100 = count % 100;
+        const form =
+            this.i18n.language() === 'en'
+                ? count === 1
+                    ? 'one'
+                    : 'many'
+                : mod10 === 1 && mod100 !== 11
+                ? 'one'
+                : mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
+                  ? 'few'
+                  : 'many';
+
+        return this.i18n.translate(`wiki.public.count.${form}`, { count });
     }
 }
 

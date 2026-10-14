@@ -43,6 +43,12 @@ export const WIKI_I18N = {
                 },
             },
             public: {
+                count: {
+                    one: '{{count}} статья',
+                    few: '{{count}} статьи',
+                    many: '{{count}} статей',
+                },
+                countNone: 'пока пусто',
                 loading: 'Загружаем статьи',
                 title: 'Вики',
                 subtitle: 'Справочник по миру Last Hearth: механики, поселения, войны и экономика.',
@@ -89,7 +95,7 @@ export const WIKI_I18N = {
             },
             sections: {
                 start: 'Начало игры',
-                settlements: 'Селения',
+                settlements: 'Поселения',
                 war: 'Войны и набеги',
                 economy: 'Экономика',
                 world: 'Мир и механики',
@@ -612,6 +618,12 @@ export const WIKI_I18N = {
                 },
             },
             public: {
+                count: {
+                    one: '{{count}} article',
+                    few: '{{count}} articles',
+                    many: '{{count}} articles',
+                },
+                countNone: 'empty for now',
                 loading: 'Loading articles',
                 title: 'Wiki',
                 subtitle: 'A reference to the world of Last Hearth: mechanics, settlements, wars and economy.',
