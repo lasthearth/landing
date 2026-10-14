@@ -1,0 +1,15 @@
+<aside class="mods-notice" [class.mods-notice--compact]="compact()">
+    <span class="mods-notice__icon" aria-hidden="true">
+        <tui-icon icon="@tui.puzzle" />
+    </span>
+    <span class="mods-notice__text">
+        <b class="mods-notice__title">{{ "shared.modsNotice.title" | translate }}</b>
+        @if (!compact()) {
+            <span class="mods-notice__hint">{{ "shared.modsNotice.hint" | translate }}</span>
+        }
+    </span>
+    <a class="mods-notice__link" routerLink="/mods">
+        {{ "shared.modsNotice.link" | translate }}
+        <tui-icon icon="@tui.arrow-right" class="size-4!" />
+    </a>
+</aside>

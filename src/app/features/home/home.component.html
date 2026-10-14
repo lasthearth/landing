@@ -134,6 +134,10 @@
                 <span class="server-strip__value">{{ gameVersion }}</span>
             </div>
             <div class="server-strip__actions">
+                <a routerLink="/mods" class="lh-cta lh-cta--ghost no-underline!">
+                    <tui-icon icon="@tui.puzzle" class="size-4!" />
+                    {{ "home.server.mods" | translate }}
+                </a>
                 <a routerLink="/profile/how-play" class="lh-cta lh-cta--ghost no-underline!">
                     {{ "home.server.howTo" | translate }}
                 </a>
@@ -146,8 +150,16 @@
     </section>
 }
 
+<!-- Моды: частая причина «не пускает на сервер» — на виду у всех, гостя и игрока -->
+<section class="lh-page-container pb-0">
+    <app-mods-notice />
+</section>
+
 <!-- Ближайшее событие календаря (без событий не выводится) -->
 <app-upcoming-event />
+
+<!-- Объявления «Ищу компанию»: тихой строкой, только когда есть открытые -->
+<app-lfg-ticker />
 
 @if (loading()) {
     <section class="lh-page-container pt-8 pb-0 flex flex-col gap-5">

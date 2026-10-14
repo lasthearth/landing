@@ -100,6 +100,10 @@
                                         {{ "shared.onboarding.steps.install.free" | translate }}
                                         <tui-icon icon="@tui.external-link" class="size-3.5!" />
                                     </a>
+                                    <a class="newcomer-path__action" routerLink="/mods">
+                                        <tui-icon icon="@tui.puzzle" class="size-3.5!" />
+                                        {{ "shared.modsNotice.link" | translate }}
+                                    </a>
                                     @if (step.state !== "done") {
                                         <button
                                             type="button"
@@ -254,6 +258,7 @@
                                             {{ "shared.onboarding.steps.connect.copied" | translate }}
                                         </p>
                                     }
+                                    <app-mods-notice [compact]="true" />
                                     @if (step.state !== "done") {
                                         <div class="newcomer-path__actions">
                                             <button

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID } from '@angula
 import { isPlatformBrowser } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { ModsNoticeComponent } from '@shared/ui/mods-notice';
 import { catchError, of } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
@@ -24,7 +25,7 @@ const DISCORD_INVITE = environment.discordInviteUrl;
 @Component({
     standalone: true,
     selector: 'app-start-game',
-    imports: [PageHeaderComponent, RouterLink, TuiIcon, TranslatePipe, NewcomerPathComponent],
+    imports: [PageHeaderComponent, RouterLink, TuiIcon, TranslatePipe, NewcomerPathComponent, ModsNoticeComponent],
     templateUrl: './start-game.component.html',
     styleUrl: './start-game.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { HttpContext } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { ModsNoticeComponent } from '@shared/ui/mods-notice';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { environment } from '@core/config/environments/environment';
@@ -25,7 +26,7 @@ import { AnalyticsService } from '@core/services/analytics.service';
     selector: 'app-how-play',
     templateUrl: './how-play.component.html',
     styleUrl: './how-play.component.less',
-    imports: [RouterLink, TuiIcon, TranslatePipe],
+    imports: [RouterLink, TuiIcon, TranslatePipe, ModsNoticeComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HowPlayComponent {

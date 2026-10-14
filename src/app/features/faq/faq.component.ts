@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
 import { TranslatePipe } from '@core/i18n';
@@ -11,7 +12,7 @@ import { environment } from '@core/config/environments/environment';
  */
 @Component({
     selector: 'app-faq',
-    imports: [PageHeaderComponent, TuiExpand, TuiIcon, CommonModule, TranslatePipe],
+    imports: [PageHeaderComponent, RouterLink, TuiExpand, TuiIcon, CommonModule, TranslatePipe],
     templateUrl: './faq.component.html',
     styleUrl: './faq.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

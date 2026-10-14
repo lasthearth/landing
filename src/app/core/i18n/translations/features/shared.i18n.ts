@@ -2,6 +2,11 @@ export const SHARED_I18N = {
     ru: {
         shared: {
             unread: 'Ещё не открывали',
+            modsNotice: {
+                title: 'Не пускает на сервер? Проверьте моды',
+                hint: 'Обязательные моды игра скачивает сама при первом входе. Не скачались — возьмите их архивом или по одному.',
+                link: 'Моды сервера',
+            },
             breadcrumbs: {
                 label: 'Путь по сайту',
                 home: 'Главная',
@@ -270,6 +275,11 @@ export const SHARED_I18N = {
     en: {
         shared: {
             unread: 'Not opened yet',
+            modsNotice: {
+                title: 'Can’t join the server? Check the mods',
+                hint: 'The game downloads the required mods itself on first join. If it didn’t, get them as one archive or one by one.',
+                link: 'Server mods',
+            },
             breadcrumbs: {
                 label: 'Breadcrumbs',
                 home: 'Home',

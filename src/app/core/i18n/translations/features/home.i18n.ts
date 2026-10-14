@@ -8,6 +8,7 @@ export const HOME_I18N = {
                 copy: 'Копировать',
                 copied: 'Скопировано',
                 howTo: 'Как подключиться',
+                mods: 'Моды',
             },
             carousel: {
                 nextAria: 'Следующий слайд',
@@ -65,6 +66,14 @@ export const HOME_I18N = {
                 more: 'И ещё {{count}} в календаре',
                 going: 'Идут: {{count}}',
             },
+            lfg: {
+                label: 'Ищут компанию',
+                teammate: 'ищет напарника',
+                today: 'сегодня в {{time}}',
+                tomorrow: 'завтра в {{time}}',
+                more: 'ещё {{count}}',
+                all: 'все объявления',
+            },
             recruit: {
                 title: 'Присоединиться к команде',
                 subtitle: 'Проект растёт, и нам нужны люди, готовые помогать его развивать. Выберите направление и напишите нам — ответим всем.',
@@ -112,6 +121,7 @@ export const HOME_I18N = {
                 copy: 'Copy',
                 copied: 'Copied',
                 howTo: 'How to connect',
+                mods: 'Mods',
             },
             carousel: {
                 nextAria: 'Next slide',
@@ -168,6 +178,14 @@ export const HOME_I18N = {
                 all: 'All events',
                 more: '{{count}} more in the calendar',
                 going: 'Going: {{count}}',
+            },
+            lfg: {
+                label: 'Looking for company',
+                teammate: 'looking for a teammate',
+                today: 'today at {{time}}',
+                tomorrow: 'tomorrow at {{time}}',
+                more: '{{count}} more',
+                all: 'all posts',
             },
             recruit: {
                 title: 'Join the team',

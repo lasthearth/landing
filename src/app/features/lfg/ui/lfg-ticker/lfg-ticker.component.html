@@ -1,0 +1,19 @@
+@if (featured(); as post) {
+    <div class="lfg-ticker">
+        <a class="lfg-ticker__line" routerLink="/lfg">
+            <tui-icon icon="@tui.users" class="lfg-ticker__icon" />
+            <span class="lfg-ticker__label">{{ "home.lfg.label" | translate }}</span>
+            <span class="lfg-ticker__sep" aria-hidden="true">·</span>
+            <span class="lfg-ticker__title">«{{ post.title }}»</span>
+            <span class="lfg-ticker__when">{{ when() }}</span>
+            <span class="lfg-ticker__end">
+                @if (more()) {
+                    {{ "home.lfg.more" | translate: { count: more() } }}
+                } @else {
+                    {{ "home.lfg.all" | translate }}
+                }
+                <tui-icon icon="@tui.arrow-right" class="size-3.5!" />
+            </span>
+        </a>
+    </div>
+}

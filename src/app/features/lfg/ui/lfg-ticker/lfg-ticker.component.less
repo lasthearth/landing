@@ -1,0 +1,108 @@
+/**
+ * Строка «Ищут компанию»: без фона и крупного текста, тонкая рамка — заметна,
+ * но не спорит с новостями и ближайшим событием.
+ */
+:host {
+    display: block;
+}
+
+// Поля как у секций главной (lh-page-container), отступ сверху меньше обычного:
+// строка — продолжение блока над ней, а не новая секция.
+.lfg-ticker {
+    padding: 1rem 1rem 0;
+
+    @media (min-width: 768px) {
+        padding: 1rem 1.5rem 0;
+    }
+}
+
+.lfg-ticker__line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 0.625rem 1rem;
+    border-radius: var(--lh-radius-full);
+    box-shadow: inset 0 0 0 1px var(--lh-border);
+    color: var(--lh-ink-2);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition:
+        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth),
+        color var(--lh-dur-fast) var(--lh-ease-smooth);
+
+    &:hover {
+        box-shadow: inset 0 0 0 1px var(--lh-brand);
+        color: var(--lh-ink);
+    }
+
+    &:hover .lfg-ticker__end {
+        color: var(--lh-brand-ink);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 2px;
+    }
+}
+
+.lfg-ticker__icon {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--lh-ink-3);
+}
+
+.lfg-ticker__label {
+    flex: none;
+    font-weight: 700;
+    color: var(--lh-ink-3);
+}
+
+.lfg-ticker__sep {
+    flex: none;
+    color: var(--lh-ink-3);
+}
+
+.lfg-ticker__title {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 700;
+    color: var(--lh-ink);
+}
+
+.lfg-ticker__when {
+    flex: none;
+    color: var(--lh-ink-3);
+}
+
+.lfg-ticker__end {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+    font-weight: 700;
+    color: var(--lh-ink-3);
+    transition: color var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+// На телефоне — две строки: подпись и время сверху, название ниже, без «ещё N».
+@media (max-width: 640px) {
+    .lfg-ticker__line {
+        flex-wrap: wrap;
+        row-gap: 0.125rem;
+        border-radius: var(--lh-radius-lg);
+    }
+
+    .lfg-ticker__title {
+        order: 5;
+        flex-basis: 100%;
+    }
+
+    .lfg-ticker__end {
+        font-size: 0.875rem;
+    }
+}
