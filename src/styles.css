@@ -677,6 +677,7 @@ tui-pulse.offline {
      * с укороченной длительностью — отклик должен успевать за пальцем.
      */
     .nav-button {
+        font-size: 0.875rem;
         display: flex;
         align-items: center;
         justify-items: center;
@@ -774,6 +775,7 @@ tui-pulse.offline {
         display: inline-flex;
         align-items: center;
         gap: 0.625rem;
+        font-size: 0.9375rem;
         padding: 0.875rem 1.5rem;
         border-radius: var(--radius-xl);
         font-weight: 700;
@@ -1907,5 +1909,36 @@ body.lh-has-consent .lh-scroll-top {
 
     body.lh-has-consent.lh-has-bottom-bar .lh-scroll-top {
         bottom: calc(5.5rem + var(--lh-consent-h, 0px));
+    }
+}
+
+/*
+ * Базовый размер текста. Taiga задаёт tui-root 13px (--tui-font-text-s), и всё,
+ * что не задаёт размер само — кнопки, меню, подвал, абзацы, — наследовало 13px.
+ * Шрифт сайта узкий, на 13px он читается как 11–12px обычного: поднимаем до 15px.
+ * Селектор длиннее таиговского `tui-root`, иначе стили компонента (они
+ * подключаются позже) перебивают.
+ */
+html body tui-root {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+/*
+ * Меню на средних экранах (планшет, маленький ноутбук): девять пунктов при 14px
+ * не помещались в строку, «Сообщество» уезжало вниз. Ниже 768px меню —
+ * гамбургер, это правило его не касается.
+ */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .nav-button {
+        font-size: 0.8125rem;
+        padding-inline: 0.5rem;
+    }
+}
+
+/* Совсем узко (768–1023px): у пунктов с подписью прячем иконку — подпись важнее. */
+@media (min-width: 768px) and (max-width: 1023px) {
+    app-header .nav-button:has(> span:not(:empty)) > tui-icon:first-child {
+        display: none;
     }
 }
