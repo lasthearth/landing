@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { ConsentService } from '@core/services/consent.service';
@@ -15,7 +16,7 @@ import { ConsentService } from '@core/services/consent.service';
 @Component({
     standalone: true,
     selector: 'app-consent-banner',
-    imports: [RouterLink, TranslatePipe],
+    imports: [RouterLink, TranslatePipe, TuiIcon],
     templateUrl: './consent-banner.component.html',
     styleUrl: './consent-banner.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
