@@ -229,7 +229,6 @@ export const routeSeoData: {
         title: 'Игроки — Last Hearth',
         description:
             'Все игроки сервера Last Hearth: поиск по нику, кто был в игре недавно, поселения и описания.',
-        keywords: 'игроки Last Hearth, список игроков, поиск по нику, кто в игре, поселения игроков',
         url: `${siteUrl}/players`,
         type: 'website',
         locale: 'ru_RU',

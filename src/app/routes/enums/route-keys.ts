@@ -51,10 +51,12 @@ export enum RouteKeys {
 
     mySuggestions = 25,
 
+    /** Ключ страницы «Игроки». */
+    players = 26,
+
     /** Ключ страницы «Моды сервера». */
     mods = 27,
 
     /** Ключ страницы «О сервере». */
     about = 28,
-    players = 26,
 }

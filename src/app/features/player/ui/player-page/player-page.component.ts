@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
     inject,
     signal,
@@ -31,6 +32,16 @@ import { ProfileStyleService } from '../../api/profile-style.service';
  * Адрес сайта для канонических ссылок.
  */
 const SITE_URL = 'https://lasthearth.ru';
+
+/**
+ * С какого числа часов профиль без «О себе» идёт в поисковый индекс.
+ */
+const INDEXABLE_HOURS = 10;
+
+/**
+ * Идентификатор блока структурированных данных профиля.
+ */
+const PLAYER_JSON_LD = 'player-profile';
 
 /**
  * Состояние страницы игрока.
@@ -193,6 +204,8 @@ export class PlayerPageComponent {
     public constructor() {
         // SEO обновляем при каждом новом состоянии.
         effect(() => this.applySeo(this.state()));
+        // Разметка профиля не должна переехать на следующую страницу.
+        inject(DestroyRef).onDestroy(() => this.seo.setJsonLd(PLAYER_JSON_LD, null));
     }
 
     /**
@@ -210,15 +223,43 @@ export class PlayerPageComponent {
             });
         } else if (state.status === 'ready') {
             const { profile } = state;
+            const url = `${SITE_URL}/player/${encodeURIComponent(profile.nickname)}`;
+            const about = profile.about.replace(/\s+/g, ' ').trim();
+            const description = about
+                ? about.length > 160
+                    ? `${about.slice(0, 157)}…`
+                    : about
+                : this.i18n.translate('player.seoDescription', {
+                      name: profile.nickname,
+                      hours: Math.round(profile.hours),
+                  });
+
             this.seo.setSeoTags({
                 title: this.i18n.translate('player.seoTitle', { name: profile.nickname }),
-                description: this.i18n.translate('player.seoDescription', {
-                    name: profile.nickname,
-                    hours: Math.round(profile.hours),
-                }),
-                robots: 'noindex, follow',
-                url: `${SITE_URL}/player/${encodeURIComponent(profile.nickname)}`,
+                description,
+                // Пустые профили не засоряют индекс: в поиск идут те, кто
+                // написал «О себе» или наиграл не меньше 10 часов. Тот же порог —
+                // у игроков в sitemap (scripts/gen-sitemap.mjs).
+                robots: about || profile.hours >= INDEXABLE_HOURS ? undefined : 'noindex, follow',
+                url,
+                image: profile.avatarUrl.startsWith('http') ? profile.avatarUrl : undefined,
+                imageAlt: profile.nickname,
             });
+
+            this.seo.setJsonLd(PLAYER_JSON_LD, {
+                '@context': 'https://schema.org',
+                '@type': 'ProfilePage',
+                url,
+                mainEntity: {
+                    '@type': 'Person',
+                    name: profile.nickname,
+                    ...(about ? { description: about } : {}),
+                    ...(profile.avatarUrl.startsWith('http') ? { image: profile.avatarUrl } : {}),
+                },
+            });
+            return;
         }
+
+        this.seo.setJsonLd(PLAYER_JSON_LD, null);
     }
 }
