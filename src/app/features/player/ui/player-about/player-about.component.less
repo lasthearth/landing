@@ -127,6 +127,19 @@
     }
 }
 
+// В панели CTA меньше полноразмерной: крупная кнопка читается как главное действие
+// страницы, а здесь это действие внутри блока (тот же размер — в карточках LFG
+// и в редакторе оформления).
+.player-about .lh-cta {
+    padding: 0.625rem 1.125rem;
+}
+
+.player-about .lh-cta:disabled {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+}
+
 // Свой профиль без описания: пунктирная рамка вместо панели подсказывает, что место пустое.
 .player-about--empty {
     border: 1px dashed color-mix(in srgb, var(--lh-ink) 18%, transparent);
