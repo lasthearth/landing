@@ -29,6 +29,7 @@ import { ThemeService } from '@core/services/theme.service';
 import { formatServerTime } from './lib/format-server-time.function';
 import { NewContentService } from '@features/new-content';
 import { NotificationBellComponent } from '@features/notifications';
+import { AnalyticsService } from '@core/services/analytics.service';
 
 /**
  * Компонент заголовка.
@@ -73,6 +74,11 @@ export class HeaderComponent {
      * Сервис данных о пользователе.
      */
     protected readonly userService: UserService = inject(UserService);
+
+    /**
+     * Сервис аналитики: цель sign_up_click.
+     */
+    private readonly analytics: AnalyticsService = inject(AnalyticsService);
 
     /**
      * Сервис диалогов.
@@ -193,6 +199,7 @@ export class HeaderComponent {
      * Авторизует пользователя.
      */
     protected signIn(): void {
+        this.analytics.goal('sign_up_click');
         this.userService.signIn();
     }
 

@@ -42,6 +42,11 @@ const SITE_URL = 'https://lasthearth.ru';
 const DESCRIPTION_LIMIT = 160;
 
 /**
+ * Предел длины заголовка страницы: длиннее — выдача обрежет его сама.
+ */
+const TITLE_LIMIT = 65;
+
+/**
  * Страница статьи вики.
  *
  * Адрес статьи — `/wiki/<адрес>`. Статьи приезжают с сервера в `WikiStoreService`;
@@ -186,8 +191,13 @@ export class WikiArticlePageComponent {
         const description = article.lead.trim() || cut(text, DESCRIPTION_LIMIT);
         const image = article.cover?.url || `${SITE_URL}/og-image.jpg`;
 
+        // Заголовок в выдаче обрезается: пока влезает — добавляем «(Vintage Story)»,
+        // иначе оставляем короткий вариант «— вики Last Hearth».
+        const suffix = this.i18n.translate('wiki.seo.suffix');
+        const titleWithGame = `${article.title} — ${this.i18n.translate('wiki.seo.suffixGame')}`;
+
         this.seo.setSeoTags({
-            title: `${article.title} — ${this.i18n.translate('wiki.seo.suffix')}`,
+            title: titleWithGame.length <= TITLE_LIMIT ? titleWithGame : `${article.title} — ${suffix}`,
             description,
             robots:
                 article.status === 'draft'

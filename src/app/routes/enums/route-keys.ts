@@ -50,4 +50,10 @@ export enum RouteKeys {
     wiki = 24,
 
     mySuggestions = 25,
+
+    /** Ключ страницы «Моды сервера» (ветка 007 занимает 26 — /players). */
+    mods = 27,
+
+    /** Ключ страницы «О сервере». */
+    about = 28,
 }

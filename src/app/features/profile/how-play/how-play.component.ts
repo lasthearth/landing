@@ -10,6 +10,7 @@ import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { OnboardingService } from '@features/onboarding';
+import { AnalyticsService } from '@core/services/analytics.service';
 
 /**
  * «Как начать играть»: три шага — купить игру нужной версии, добавить сервер
@@ -32,6 +33,11 @@ export class HowPlayComponent {
      * Отметки пройденных шагов новичка (хранятся на устройстве).
      */
     private readonly onboarding = inject(OnboardingService);
+
+    /**
+     * Сервис аналитики: цель server_ip_copy.
+     */
+    private readonly analytics: AnalyticsService = inject(AnalyticsService);
 
     /**
      * Сервис пользователя.
@@ -108,6 +114,7 @@ export class HowPlayComponent {
         });
 
         if (field === 'ip') {
+            this.analytics.goal('server_ip_copy');
             this.onboarding.markConnected();
         }
     }

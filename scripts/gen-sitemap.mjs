@@ -19,6 +19,8 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SERVER_ROUTES_FILE = resolve(root, 'src/app/app.routes.server.ts');
 const OUTPUT_FILE = resolve(root, 'public/sitemap.xml');
+const RSS_FILE = resolve(root, 'public/rss.xml');
+const LLMS_FILE = resolve(root, 'public/llms.txt');
 const INDEXNOW_FILE = resolve(root, 'dist/indexnow-urls.json');
 const SITE_URL = 'https://lasthearth.ru';
 const API_URL = process.env.API_URL ?? 'https://api.lasthearth.ru/v1';
@@ -46,8 +48,16 @@ const PLAYER_MIN_HOURS = 10;
 const STATIC_PAGES = {
     '/': { changefreq: 'daily', priority: '1.0' },
     '/rules': { changefreq: 'weekly', priority: '0.9' },
+    '/about': { changefreq: 'monthly', priority: '0.8' },
+    '/mods': { changefreq: 'weekly', priority: '0.7' },
     '/faq': { changefreq: 'weekly', priority: '0.9' },
     '/wiki': { changefreq: 'daily', priority: '0.9' },
+    '/wiki/razdel/start': { changefreq: 'weekly', priority: '0.7' },
+    '/wiki/razdel/settlements': { changefreq: 'weekly', priority: '0.7' },
+    '/wiki/razdel/war': { changefreq: 'weekly', priority: '0.7' },
+    '/wiki/razdel/economy': { changefreq: 'weekly', priority: '0.7' },
+    '/wiki/razdel/world': { changefreq: 'weekly', priority: '0.7' },
+    '/wiki/razdel/help': { changefreq: 'weekly', priority: '0.7' },
     '/market': { changefreq: 'daily', priority: '0.8' },
     '/settlements': { changefreq: 'daily', priority: '0.7' },
     '/players': { changefreq: 'daily', priority: '0.6' },
@@ -55,6 +65,7 @@ const STATIC_PAGES = {
     '/gallery': { changefreq: 'weekly', priority: '0.6' },
     '/videos': { changefreq: 'weekly', priority: '0.6' },
     '/diplomacy': { changefreq: 'daily', priority: '0.6' },
+    '/news': { changefreq: 'daily', priority: '0.7' },
     '/events': { changefreq: 'weekly', priority: '0.6' },
     '/lfg': { changefreq: 'daily', priority: '0.5' },
     '/privacy-policy': { changefreq: 'yearly', priority: '0.3' },
@@ -136,6 +147,14 @@ async function readPrerenderedRoutes() {
     }
 
     const routes = [...block[1].matchAll(/'([^']+)'/g)].map((match) => `/${match[1]}`);
+
+    // Разделы вики предсобираются по параметру (getPrerenderParams), поэтому
+    // их адреса берём из того же списка, что и серверный роут.
+    const sections = /const WIKI_SECTIONS = \[([^\]]*)\]/.exec(text);
+
+    for (const match of sections?.[1].matchAll(/'([^']+)'/g) ?? []) {
+        routes.push(`/wiki/razdel/${match[1]}`);
+    }
 
     // Корень домена: в списке он записан пустой строкой.
     if (text.includes("path: '', renderMode: RenderMode.Prerender")) {
@@ -242,6 +261,99 @@ async function readPlayers() {
     const entries = Array.isArray(data.entries) ? data.entries : [];
 
     return entries.filter((entry) => Number(entry.hours_played ?? 0) >= PLAYER_MIN_HOURS && entry.name);
+}
+
+/**
+ * Собирает RSS-ленту новостей: 20 последних.
+ *
+ * Ленту забирает Telegram-автопостинг и читалки; на сайте на неё ссылается
+ * `<link rel="alternate">` в index.html.
+ *
+ * @param {Array<object>} news Новости из API (свежие сверху).
+ * @returns {string} Документ RSS 2.0.
+ */
+function buildRss(news) {
+    const items = news
+        .filter((item) => item?.id)
+        .slice(0, 20)
+        .map((item) => {
+            const date = item.created_at ?? item.published_at ?? item.updated_at;
+
+            return [
+                '        <item>',
+                `            <title>${escapeXml(item.title ?? 'Новость')}</title>`,
+                `            <link>${SITE_URL}/news/${item.id}</link>`,
+                `            <guid isPermaLink="true">${SITE_URL}/news/${item.id}</guid>`,
+                date ? `            <pubDate>${new Date(date).toUTCString()}</pubDate>` : '',
+                `            <description>${escapeXml(item.preview ?? '')}</description>`,
+                '        </item>',
+            ]
+                .filter(Boolean)
+                .join('\n');
+        })
+        .join('\n');
+
+    return [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<rss version="2.0">',
+        '    <channel>',
+        '        <title>Last Hearth — новости</title>',
+        `        <link>${SITE_URL}/news</link>`,
+        '        <description>Новости ролевого сервера Last Hearth</description>',
+        '        <language>ru</language>',
+        items,
+        '    </channel>',
+        '</rss>',
+        '',
+    ].join('\n');
+}
+
+/**
+ * Собирает llms.txt — короткое описание сайта для ИИ-поисковиков
+ * (формат llmstxt.org): основное плюс свежие статьи вики.
+ *
+ * @param {Array<{ slug: string, title?: string }>} articles Статьи вики.
+ * @returns {string} Содержимое llms.txt.
+ */
+function buildLlms(articles) {
+    const main = [
+        ['О сервере', '/about', 'концепция, поселения, дипломатия, экономика'],
+        ['Как начать', '/start-game', 'установка игры, подключение, проверка анкеты'],
+        ['Правила', '/rules', 'правила сервера Last Hearth'],
+        ['Вики', '/wiki', 'справочник по механикам игры'],
+        ['FAQ', '/faq', 'частые вопросы'],
+        ['Поселения', '/settlements', 'список поселений сервера'],
+        ['Игроки', '/players', 'список игроков сервера'],
+        ['Моды', '/mods', 'моды сервера с версиями'],
+    ];
+    const sections = [
+        ['Начало игры', '/wiki/razdel/start'],
+        ['Поселения', '/wiki/razdel/settlements'],
+        ['Войны', '/wiki/razdel/war'],
+        ['Экономика', '/wiki/razdel/economy'],
+        ['Мир', '/wiki/razdel/world'],
+        ['Помощь', '/wiki/razdel/help'],
+    ];
+    const lines = [
+        '# Last Hearth',
+        '',
+        'Last Hearth — русскоязычный ролевой сервер Vintage Story: поселения от лагеря до провинции, дипломатия, войны по правилам, экономика, собственные моды, вики и события.',
+        '',
+        '## Основное',
+        '',
+        ...main.map(([name, path, note]) => `- [${name}](${SITE_URL}${path}): ${note}`),
+        '',
+        '## Вики',
+        '',
+        ...sections.map(([name, path]) => `- [Раздел «${name}»](${SITE_URL}${path})`),
+        ...articles
+            .filter((article) => article?.slug)
+            .slice(0, 100)
+            .map((article) => `- [${article.title ?? article.slug}](${SITE_URL}/wiki/${article.slug})`),
+        '',
+    ];
+
+    return lines.join('\n');
 }
 
 /**
@@ -379,6 +491,9 @@ async function main() {
         .filter((entry) => previous.get(entry.loc) !== entry.lastmod)
         .map((entry) => entry.loc)
         .slice(0, 10000);
+
+    await writeFile(RSS_FILE, buildRss(news), 'utf8');
+    await writeFile(LLMS_FILE, buildLlms(articles), 'utf8');
 
     await mkdir(dirname(INDEXNOW_FILE), { recursive: true });
     await writeFile(INDEXNOW_FILE, JSON.stringify(changed, null, 4), 'utf8');

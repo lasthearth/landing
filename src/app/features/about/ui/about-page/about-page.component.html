@@ -1,0 +1,55 @@
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <app-breadcrumbs [items]="crumbs()" />
+
+    <app-page-header [level]="1" [title]="'about.title' | translate" />
+
+    @for (key of sections; track key) {
+        <section class="lh-panel about__section">
+            <h2 class="about__section-title lh-display">{{ "about.sections." + key + ".title" | translate }}</h2>
+            <p class="about__text">{{ "about.sections." + key + ".text" | translate }}</p>
+
+            @if (key === "settlements") {
+                <div class="about__levels">
+                    <p class="about__levels-title">{{ "about.levels" | translate }}</p>
+                    <p class="about__text">{{ "about.levelsHint" | translate }}</p>
+                    <ul class="about__levels-list">
+                        @for (level of levels; track level) {
+                            <li class="lh-chip cursor-default">
+                                <tui-icon icon="@tui.castle" class="size-4!" />
+                                {{ levelName(level) }}
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @if (key === "start") {
+                <a class="lh-cta self-start" routerLink="/start-game">
+                    <tui-icon icon="@tui.play" class="size-4!" />
+                    {{ "about.startLink" | translate }}
+                </a>
+            }
+        </section>
+    }
+
+    <section class="lh-panel about__pulse" [attr.aria-label]="'about.pulse.title' | translate">
+        <h2 class="about__section-title lh-display">{{ "about.pulse.title" | translate }}</h2>
+        <div class="about__pulse-grid">
+            <div class="about__pulse-item">
+                <tui-icon icon="@tui.users" class="size-5!" />
+                <span class="about__pulse-value">{{ online()?.online ?? "—" | amount }}</span>
+                <span class="about__pulse-label">{{ "about.pulse.online" | translate }}</span>
+            </div>
+            <div class="about__pulse-item">
+                <tui-icon icon="@tui.castle" class="size-5!" />
+                <span class="about__pulse-value">{{ settlementsCount() ?? "—" }}</span>
+                <span class="about__pulse-label">{{ "about.pulse.settlements" | translate }}</span>
+            </div>
+            <div class="about__pulse-item">
+                <tui-icon icon="@tui.swords" class="size-5!" />
+                <span class="about__pulse-value">{{ playersCount() ?? "—" }}</span>
+                <span class="about__pulse-label">{{ "about.pulse.players" | translate }}</span>
+            </div>
+        </div>
+    </section>
+</div>

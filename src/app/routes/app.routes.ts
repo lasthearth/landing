@@ -61,6 +61,17 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.wiki, seo: routeSeoData.wiki },
             },
             {
+                // Раздел вики отдельным адресом: фильтр ?section= поисковик
+                // за страницу не считает. Роут стоит до wiki/:slug.
+                path: 'wiki/razdel/:section',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/wiki').then((m) => m.WikiSectionPageComponent),
+                        [() => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.wiki, seo: routeSeoData.wikiSection },
+            },
+            {
                 path: 'wiki/:slug',
                 loadComponent: () =>
                     loadPage(
@@ -182,6 +193,32 @@ export const routes: Routes = [
                     import('../features/start-game/start-game.component').then((m) => m.StartGameComponent),
                 canActivate: [guestGuard],
                 data: { route_keys: RouteKeys.startGame, seo: routeSeoData.startGame },
+            },
+            {
+                // О сервере: тексты разделов пишет владелец (задача 010).
+                path: 'about',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/about').then((m) => m.AboutPageComponent),
+                        [
+                            () => import('@core/i18n/translations/features/about.i18n').then((m) => m.ABOUT_I18N),
+                            () =>
+                                import('@core/i18n/translations/features/settlements.i18n').then(
+                                    (m) => m.SETTLEMENTS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.about, seo: routeSeoData.about },
+            },
+            {
+                // Моды сервера: список ведёт владелец (задача 010), страница — здесь.
+                path: 'mods',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/mods').then((m) => m.ModsPageComponent),
+                        [() => import('@core/i18n/translations/features/mods.i18n').then((m) => m.MODS_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.mods, seo: routeSeoData.mods },
             },
             {
                 path: 'market',
@@ -354,6 +391,17 @@ export const routes: Routes = [
                         ]
                     ),
                 data: { route_keys: RouteKeys.settlements, seo: routeSeoData.settlements },
+            },
+            {
+                // Лента новостей: отдельный адрес, чтобы робот видел все новости,
+                // а не только блок на главной. Роут стоит до news/:id.
+                path: 'news',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/news').then((m) => m.NewsListPageComponent),
+                        [() => import('@core/i18n/translations/features/news.i18n').then((m) => m.NEWS_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.news, seo: routeSeoData.newsList },
             },
             {
                 path: 'news/:id',

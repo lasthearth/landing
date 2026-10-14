@@ -10,6 +10,7 @@ import { UserService, Role } from '@entities/user';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { environment } from '@core/config/environments/environment';
+import { AnalyticsService } from '@core/services/analytics.service';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { SettlementService } from '@entities/settlement';
 import { DiscordGalleryService } from '@shared/lib/discord-gallery/discord-gallery.service';
@@ -72,6 +73,11 @@ export class HomeComponent {
      * Сервис интернационализации.
      */
     private readonly i18n = inject(I18nService);
+
+    /**
+     * Сервис аналитики: цели cta_start_game и server_ip_copy.
+     */
+    private readonly analytics: AnalyticsService = inject(AnalyticsService);
 
     /**
      * Ссылка уничтожения на компонент.
@@ -205,8 +211,16 @@ export class HomeComponent {
     protected copyServerIp(): void {
         void navigator.clipboard?.writeText(this.serverIp).then(() => {
             this.ipCopied.set(true);
+            this.analytics.goal('server_ip_copy');
             setTimeout(() => this.ipCopied.set(false), 2000);
         });
+    }
+
+    /**
+     * Отмечает переход по кнопке «Начать игру» (карусель и её мобильный дубль).
+     */
+    protected startGame(): void {
+        this.analytics.goal('cta_start_game');
     }
 
     /**

@@ -46,6 +46,7 @@ import { typograph } from '../../lib/typograph.function';
 import { WikiCommandId } from '../../lib/wiki-commands.constant';
 import { WikiMarkupInputComponent } from '../wiki-markup-input/wiki-markup-input.component';
 import { WikiArticleViewComponent } from '../wiki-article-view/wiki-article-view.component';
+import { AnalyticsService } from '@core/services/analytics.service';
 
 /**
  * Вкладка боковой панели.
@@ -953,6 +954,7 @@ export class WikiEditorPageComponent {
                     this.suggestError.set(null);
                     this.suggestSent.set(true);
                     this.store.clearAutosave(this.autosaveKey());
+                    this.analytics.goal('wiki_suggest_submit');
                 },
                 error: (error: unknown) => {
                     const code = grpcStatusCode(error);
@@ -973,6 +975,11 @@ export class WikiEditorPageComponent {
      * Отправлено ли предложение — показывает подтверждение автору.
      */
     protected readonly suggestSent = signal(false);
+
+    /**
+     * Сервис аналитики: цель wiki_suggest_submit.
+     */
+    private readonly analytics: AnalyticsService = inject(AnalyticsService);
 
     /**
      * Удаление не удалось — показываем, а не молчим.

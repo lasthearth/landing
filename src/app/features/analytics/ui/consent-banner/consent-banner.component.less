@@ -1,0 +1,43 @@
+/**
+ * Плашка согласия на аналитические cookies.
+ *
+ * Нижний левый угол: игровой чат и кнопка «наверх» стоят справа, поэтому
+ * слева плашка ни с чем не пересекается. Слой выше плавающих виджетов,
+ * но ниже приветственного экрана (z-200) — на заставке её не видно.
+ */
+:host {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 190;
+    display: block;
+    max-width: min(24rem, calc(100vw - 2rem));
+}
+
+.consent-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+}
+
+.consent-banner__title {
+    font-weight: 700;
+}
+
+.consent-banner__text {
+    color: var(--lh-ink-2);
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+.consent-banner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.consent-banner__actions .lh-cta {
+    padding: 0.55rem 1rem;
+    font-size: 0.875rem;
+}

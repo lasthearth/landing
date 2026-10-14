@@ -1,0 +1,39 @@
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <app-breadcrumbs [items]="crumbs()" />
+
+    @if (section(); as place) {
+        <app-page-header [level]="1" [title]="name()" [subtitle]="description()" />
+
+        <section class="wiki-section__articles" [attr.aria-label]="'wiki.section.articles' | translate">
+            @if (articles().length) {
+                <div class="wiki-section__grid">
+                    @for (article of articles(); track article.slug) {
+                        <a class="wiki-section__card lh-panel" [routerLink]="['/wiki', article.slug]">
+                            <span class="wiki-section__card-title lh-display">{{ article.title }}</span>
+                            @if (article.lead) {
+                                <span class="wiki-section__card-lead">{{ article.lead }}</span>
+                            }
+                        </a>
+                    }
+                </div>
+            } @else if (store.loading() && !store.loaded()) {
+                <app-skeleton height="24" />
+            } @else {
+                <app-empty-state [title]="'wiki.section.empty' | translate" />
+            }
+        </section>
+
+        <a class="lh-chip self-start" routerLink="/wiki">
+            <tui-icon icon="@tui.arrow-left" class="size-4!" />
+            {{ "wiki.section.back" | translate }}
+        </a>
+    } @else {
+        <app-empty-state
+            icon="@tui.file-question"
+            [title]="'wiki.public.notFound' | translate"
+            [description]="'wiki.public.notFoundHint' | translate"
+        />
+
+        <a class="lh-chip self-start" routerLink="/wiki">{{ "wiki.section.back" | translate }}</a>
+    }
+</div>

@@ -36,9 +36,13 @@ export const routeSeoData: {
     events: ISeoData;
     player: ISeoData;
     lfg: ISeoData;
+    newsList: ISeoData;
     join: ISeoData;
     wiki: ISeoData;
     wikiArticle: ISeoData;
+    wikiSection: ISeoData;
+    mods: ISeoData;
+    about: ISeoData;
 } = {
     home: {
         title: 'Last Hearth — ролевой сервер Vintage Story',
@@ -165,6 +169,17 @@ export const routeSeoData: {
         image: ogImage,
         imageAlt: 'Видео Last Hearth',
     },
+    newsList: {
+        title: 'Новости — Last Hearth',
+        description:
+            'Все новости ролевого сервера Last Hearth: обновления, события, войны и жизнь поселений Vintage Story.',
+        url: `${siteUrl}/news`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Новости Last Hearth',
+    },
     news: {
         title: 'Новости — Last Hearth',
         description:
@@ -230,6 +245,38 @@ export const routeSeoData: {
         siteName,
         image: ogImage,
         imageAlt: 'Вики сервера Last Hearth',
+    },
+    mods: {
+        title: 'Моды сервера Last Hearth',
+        description:
+            'Список модов сервера Last Hearth с версиями: что нужно установить, чтобы зайти на сервер, и что можно добавить по желанию.',
+        url: `${siteUrl}/mods`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Моды сервера Last Hearth',
+    },
+    about: {
+        title: 'О сервере Last Hearth',
+        description:
+            'Last Hearth — русскоязычный ролевой сервер Vintage Story: поселения от лагеря до провинции, дипломатия и войны по правилам, экономика, собственные моды, вики и события.',
+        url: `${siteUrl}/about`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'О сервере Last Hearth',
+    },
+    wikiSection: {
+        title: 'Раздел вики — Last Hearth',
+        description: 'Раздел вики сервера Last Hearth: статьи по механике, поселениям, войнам и экономике.',
+        url: `${siteUrl}/wiki`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Раздел вики сервера Last Hearth',
     },
     wikiArticle: {
         title: 'Статья вики — Last Hearth',

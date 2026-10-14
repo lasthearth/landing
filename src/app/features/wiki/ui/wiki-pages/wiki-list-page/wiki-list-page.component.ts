@@ -243,6 +243,12 @@ export class WikiListPageComponent {
     protected readonly skeletonCards: readonly number[] = [0, 1, 2, 3, 4, 5];
 
     /**
+     * Разделы отдельными адресами: фильтр `?section=` поисковик за страницу
+     * не считает, поэтому у каждого раздела есть своя страница `/wiki/razdel/<id>`.
+     */
+    protected readonly sectionLinks = WIKI_SECTIONS;
+
+    /**
      * Остались ли статьи за кнопкой «Показать ещё».
      */
     protected readonly hasMore = computed(() => this.found() > this.visible());

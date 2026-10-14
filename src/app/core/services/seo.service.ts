@@ -1,6 +1,7 @@
 import { Injectable, inject, Renderer2, RendererFactory2, DOCUMENT } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { ISeoData } from '@core/types/i-seo-data';
+import { BreadcrumbItem } from '@shared/lib/breadcrumbs';
 
 /**
  * Директива роботам по умолчанию: страница открыта для индексации.
@@ -11,6 +12,11 @@ const DEFAULT_ROBOTS = 'index, follow, max-image-preview:large';
  * Картинка для соцсетей по умолчанию.
  */
 const DEFAULT_OG_IMAGE = 'https://lasthearth.ru/og-image.jpg';
+
+/**
+ * Адрес сайта для абсолютных ссылок в структурированных данных.
+ */
+const SITE_URL = 'https://lasthearth.ru';
 
 /**
  * Сервис по работе с SEO данными приложения.
@@ -155,6 +161,27 @@ export class SeoService {
         }
 
         this.renderer.setAttribute(this.canonicalLink, 'href', url);
+    }
+
+    /**
+     * Ставит разметку BreadcrumbList: тот же путь, что нарисован крошками.
+     *
+     * @param items Пункты пути без главной: её сервис добавляет сам.
+     * @param homeLabel Подпись главной на текущем языке.
+     */
+    public setBreadcrumbs(items: readonly BreadcrumbItem[], homeLabel: string): void {
+        const list: readonly BreadcrumbItem[] = [{ label: homeLabel, link: '/' }, ...items];
+
+        this.setJsonLd('breadcrumbs', {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: list.map((item, position) => ({
+                '@type': 'ListItem',
+                position: position + 1,
+                name: item.label,
+                ...(item.link ? { item: SITE_URL + item.link } : {}),
+            })),
+        });
     }
 
     /**

@@ -7,6 +7,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { RouteProgressComponent } from '@shared/ui/route-progress';
 import { SeoService } from '@core/services/seo.service';
 import { ISeoData } from '@core/types/i-seo-data';
+import { ConsentBannerComponent } from '@features/analytics';
 import { ReferralApplierService } from '@features/referral';
 import { PendingInviteService } from '@features/settlements/join-by-invite';
 
@@ -16,7 +17,7 @@ import { PendingInviteService } from '@features/settlements/join-by-invite';
 @Component({
     standalone: true,
     selector: 'app-root',
-    imports: [LayoutComponent, TuiRoot, RouteProgressComponent],
+    imports: [LayoutComponent, TuiRoot, RouteProgressComponent, ConsentBannerComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
 })

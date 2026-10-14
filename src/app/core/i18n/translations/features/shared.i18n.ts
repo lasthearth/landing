@@ -2,6 +2,10 @@ export const SHARED_I18N = {
     ru: {
         shared: {
             unread: 'Ещё не открывали',
+            breadcrumbs: {
+                label: 'Путь по сайту',
+                home: 'Главная',
+            },
             relativeTime: {
                 justNow: 'только что',
                 minuteAgo: 'минуту назад',
@@ -266,6 +270,10 @@ export const SHARED_I18N = {
     en: {
         shared: {
             unread: 'Not opened yet',
+            breadcrumbs: {
+                label: 'Breadcrumbs',
+                home: 'Home',
+            },
             relativeTime: {
                 justNow: 'just now',
                 minuteAgo: 'a minute ago',

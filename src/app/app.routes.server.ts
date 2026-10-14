@@ -1,12 +1,20 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 
 /**
+ * Разделы вики: у каждого свой адрес `/wiki/razdel/<раздел>`.
+ */
+const WIKI_SECTIONS = ['start', 'settlements', 'war', 'economy', 'world', 'help'];
+
+/**
  * Разделы, которые собираются один раз при сборке: их содержимое меняется
  * не каждый день, а сборка не может ходить в API при каждом запросе.
  */
 const PRERENDERED = [
     'rules',
     'faq',
+    'about',
+    'mods',
+    'news',
     'start-game',
     'market',
     'privacy-policy',
@@ -40,6 +48,13 @@ export const serverRoutes: ServerRoute[] = [
     { path: '', renderMode: RenderMode.Prerender },
     ...PRERENDERED.map((path): ServerRoute => ({ path, renderMode: RenderMode.Prerender })),
     ...CLIENT_ONLY.map((path): ServerRoute => ({ path, renderMode: RenderMode.Client })),
+    // Разделы вики: у роутов есть параметр, поэтому список адресов для предсборки
+    // задаётся явно (getPrerenderParams), иначе Angular не знает, что собирать.
+    {
+        path: 'wiki/razdel/:section',
+        renderMode: RenderMode.Prerender,
+        getPrerenderParams: async () => WIKI_SECTIONS.map((section) => ({ section })),
+    },
     { path: 'wiki/:slug', renderMode: RenderMode.Server },
     { path: 'news/:id', renderMode: RenderMode.Server },
     { path: 'settlements/:id', renderMode: RenderMode.Server },

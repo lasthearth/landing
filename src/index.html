@@ -72,6 +72,12 @@
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title="Last Hearth — новости"
+            href="/rss.xml"
+        />
 
         <link rel="preconnect" href="https://api.lasthearth.ru" crossorigin />
 
@@ -88,69 +94,60 @@
             crossorigin
         />
 
-        <!-- Schema.org Organization -->
+        <!--
+            Schema.org: один граф на весь сайт. SearchAction здесь нет — поиска
+            по сайту не существует, а обещать роботу несуществующее нельзя.
+            Страницы дописывают свои узлы (Article, NewsArticle, BreadcrumbList)
+            через SeoService.setJsonLd.
+        -->
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
-                "@type": "Organization",
-                "name": "Last Hearth",
-                "alternateName": "Last Hearth — ролевой сервер Vintage Story",
-                "url": "https://lasthearth.ru",
-                "logo": "https://lasthearth.ru/apple-touch-icon.png",
-                "description": "Ролевой политико-экономический сервер Vintage Story с поселениями, осадами, дипломатией и PvP.",
-                "sameAs": [
-                    "https://discord.com/invite/FZb7SGrSFy",
-                    "https://www.youtube.com/@LISOVCORP",
-                    "https://boosty.to/lisov"
+                "@graph": [
+                    {
+                        "@type": "Organization",
+                        "@id": "https://lasthearth.ru/#org",
+                        "name": "Last Hearth",
+                        "alternateName": "Последний очаг",
+                        "url": "https://lasthearth.ru/",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "https://lasthearth.ru/icon-512.png",
+                            "width": 512,
+                            "height": 512
+                        },
+                        "sameAs": [
+                            "https://discord.com/invite/FZb7SGrSFy",
+                            "https://www.youtube.com/@LISOVCORP",
+                            "https://boosty.to/lisov",
+                            "https://docs.lasthearth.ru/"
+                        ]
+                    },
+                    {
+                        "@type": "WebSite",
+                        "@id": "https://lasthearth.ru/#website",
+                        "name": "Last Hearth",
+                        "url": "https://lasthearth.ru/",
+                        "inLanguage": "ru",
+                        "publisher": { "@id": "https://lasthearth.ru/#org" }
+                    },
+                    {
+                        "@type": "GameServer",
+                        "@id": "https://lasthearth.ru/#server",
+                        "name": "Last Hearth",
+                        "url": "https://lasthearth.ru/",
+                        "description": "Ролевой политико-экономический сервер Vintage Story с поселениями, осадами, дипломатией и PvP.",
+                        "game": {
+                            "@type": "VideoGame",
+                            "name": "Vintage Story",
+                            "url": "https://www.vintagestory.at/"
+                        },
+                        "provider": { "@id": "https://lasthearth.ru/#org" }
+                    }
                 ]
             }
         </script>
 
-        <!-- Schema.org WebSite -->
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "WebSite",
-                "name": "Last Hearth",
-                "url": "https://lasthearth.ru",
-                "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": "https://lasthearth.ru/faq?q={search_term_string}",
-                    "query-input": "required name=search_term_string"
-                }
-            }
-        </script>
-
-        <!-- Schema.org VideoGame -->
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "VideoGame",
-                "name": "Last Hearth",
-                "description": "Ролевой сервер Vintage Story с глубокой системой PvP, дипломатии и экономики.",
-                "gamePlatform": "Vintage Story",
-                "applicationCategory": "GameServer",
-                "operatingSystem": "Windows, Linux",
-                "genre": ["Survival", "RPG", "PvP", "Multiplayer"],
-                "inLanguage": "ru",
-                "url": "https://lasthearth.ru"
-            }
-        </script>
-
-        <script type="text/javascript">
-            (function (c, l, a, r, i, t, y) {
-                c[a] =
-                    c[a] ||
-                    function () {
-                        (c[a].q = c[a].q || []).push(arguments);
-                    };
-                t = l.createElement(r);
-                t.async = 1;
-                t.src = "https://www.clarity.ms/tag/" + i;
-                y = l.getElementsByTagName(r)[0];
-                y.parentNode.insertBefore(t, y);
-            })(window, document, "clarity", "script", "u3k2hyqs0a");
-        </script>
     </head>
     <body>
         <app-root>

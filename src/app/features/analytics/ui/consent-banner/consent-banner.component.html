@@ -1,0 +1,21 @@
+@if (visible()) {
+    <aside class="consent-banner lh-panel" role="region" aria-labelledby="consent-banner-title">
+        <p id="consent-banner-title" class="consent-banner__title">
+            {{ "analytics.consent.title" | translate }}
+        </p>
+
+        <p class="consent-banner__text">
+            {{ "analytics.consent.text" | translate }}
+            <a [routerLink]="['/privacy-policy']">{{ "analytics.consent.policy" | translate }}</a>
+        </p>
+
+        <div class="consent-banner__actions">
+            <button type="button" class="lh-cta" (click)="allow()">
+                {{ "analytics.consent.allow" | translate }}
+            </button>
+            <button type="button" class="lh-cta lh-cta--ghost" (click)="deny()">
+                {{ "analytics.consent.deny" | translate }}
+            </button>
+        </div>
+    </aside>
+}

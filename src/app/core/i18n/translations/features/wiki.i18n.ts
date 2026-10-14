@@ -26,6 +26,21 @@ export const WIKI_I18N = {
             },
             seo: {
                 suffix: 'Вики Last Hearth',
+                suffixGame: 'вики Last Hearth (Vintage Story)',
+            },
+            section: {
+                title: '{{name}} — вики Last Hearth',
+                articles: 'Статьи раздела',
+                empty: 'В этом разделе пока нет статей',
+                back: 'Все разделы вики',
+                description: {
+                    start: '[ТЕКСТ: как начать играть на сервере — 2–3 предложения]',
+                    settlements: '[ТЕКСТ: поселения и жизнь в них — 2–3 предложения]',
+                    war: '[ТЕКСТ: войны и конфликты — 2–3 предложения]',
+                    economy: '[ТЕКСТ: экономика и торговля — 2–3 предложения]',
+                    world: '[ТЕКСТ: мир и его устройство — 2–3 предложения]',
+                    help: '[ТЕКСТ: помощь новичку — 2–3 предложения]',
+                },
             },
             public: {
                 loading: 'Загружаем статьи',
@@ -580,6 +595,21 @@ export const WIKI_I18N = {
             },
             seo: {
                 suffix: 'Last Hearth Wiki',
+                suffixGame: 'Last Hearth wiki (Vintage Story)',
+            },
+            section: {
+                title: '{{name}} — Last Hearth wiki',
+                articles: 'Articles in this section',
+                empty: 'No articles in this section yet',
+                back: 'All wiki sections',
+                description: {
+                    start: '[ТЕКСТ: how to start playing on the server — 2–3 sentences]',
+                    settlements: '[ТЕКСТ: settlements and life in them — 2–3 sentences]',
+                    war: '[ТЕКСТ: wars and conflicts — 2–3 sentences]',
+                    economy: '[ТЕКСТ: economy and trade — 2–3 sentences]',
+                    world: '[ТЕКСТ: the world and how it works — 2–3 sentences]',
+                    help: '[ТЕКСТ: help for newcomers — 2–3 sentences]',
+                },
             },
             public: {
                 loading: 'Loading articles',

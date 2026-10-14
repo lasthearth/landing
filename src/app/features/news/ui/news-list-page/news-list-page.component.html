@@ -1,0 +1,31 @@
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <app-breadcrumbs [items]="crumbs()" />
+
+    <app-page-header
+        [level]="1"
+        [title]="'news.list.title' | translate"
+        [subtitle]="'news.list.subtitle' | translate"
+    />
+
+    @if (news().length) {
+        <div class="news-list__grid">
+            @for (item of news(); track item.id) {
+                <a class="news-list__card lh-panel" [routerLink]="['/news', item.id]">
+                    <span class="news-list__date">
+                        <time [appRelativeTime]="item.createdAt"></time>
+                    </span>
+                    <span class="news-list__title lh-display">{{ item.title }}</span>
+                    @if (item.preview) {
+                        <span class="news-list__preview">{{ item.preview }}</span>
+                    }
+                </a>
+            }
+        </div>
+    } @else {
+        <app-empty-state
+            icon="@tui.newspaper"
+            [title]="'news.list.empty' | translate"
+            [description]="'news.list.emptyHint' | translate"
+        />
+    }
+</div>

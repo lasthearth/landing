@@ -1,0 +1,194 @@
+/**
+ * Страница «Моды сервера».
+ *
+ * На широком экране — таблица-ведомость (разделители — hairline на токене
+ * `--lh-border`, своих поверхностей у строк нет), на телефоне — карточки
+ * в одну колонку. Обе разметки живут в DOM одновременно: какую показать,
+ * решает медиазапрос, а не JS, иначе серверный рендер отдавал бы пустую страницу.
+ */
+:host {
+    display: block;
+}
+
+/* Кнопка в шапке: как «скопировать адрес» на главной, но на токенах панели. */
+.mods__copy {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lh-space-1_5);
+    flex-shrink: 0;
+    padding: var(--lh-space-2) var(--lh-space-4);
+    border: 1px solid var(--lh-border);
+    border-radius: var(--lh-radius-full);
+    background: var(--lh-surface-2);
+    color: var(--lh-ink);
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        border-color var(--lh-dur-fast) var(--lh-ease-smooth),
+        background-color var(--lh-dur-fast) var(--lh-ease-smooth),
+        color var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.mods__copy:hover {
+    border-color: var(--lh-border-strong);
+    background: var(--lh-surface-3);
+}
+
+.mods__copy--done {
+    border-color: var(--lh-peace);
+    color: var(--lh-peace);
+}
+
+/* Пометка обязательности: одна на таблицу и на карточки. */
+.mods__badge {
+    display: inline-block;
+    padding: var(--lh-space-0_5) var(--lh-space-2);
+    border-radius: var(--lh-radius-sm);
+    background: color-mix(in srgb, var(--lh-brand) 14%, transparent);
+    color: var(--lh-brand-ink);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.mods__badge--optional {
+    background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    color: var(--lh-ink-3);
+}
+
+.mods__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lh-space-1);
+    color: var(--lh-link);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.mods__link:hover {
+    color: var(--lh-link-hover);
+}
+
+/*
+ * Переключение раскладок: до 767px — карточки, с 768px — таблица.
+ * Обе части присутствуют в разметке, поэтому скрытая убирается из потока
+ * целиком (display: none), а не прячется за пределами экрана.
+ */
+.mods__table-wrap {
+    display: none;
+}
+
+.mods__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--lh-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mods-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--lh-space-2);
+    padding: var(--lh-space-5);
+    border: 1px solid var(--lh-border);
+    border-radius: var(--lh-radius-lg);
+    background: var(--lh-surface-2);
+    color: var(--lh-ink);
+}
+
+.mods-card__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--lh-space-2);
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 800;
+}
+
+.mods-card__version {
+    color: var(--lh-ink-3);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.mods-card__description {
+    margin: 0;
+    color: var(--lh-ink-2);
+    line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+    .mods__table-wrap {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .mods__cards {
+        display: none;
+    }
+}
+
+.mods-table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.mods-table th,
+.mods-table td {
+    padding: var(--lh-space-3) var(--lh-space-4);
+    border-bottom: 1px solid var(--lh-border);
+    vertical-align: top;
+}
+
+.mods-table tbody tr:last-child > * {
+    border-bottom: 0;
+}
+
+.mods-table thead th {
+    color: var(--lh-ink-3);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.mods-table__name {
+    color: var(--lh-ink);
+    font-weight: 800;
+}
+
+.mods-table__version {
+    color: var(--lh-ink-2);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.mods-table__description {
+    color: var(--lh-ink-2);
+    line-height: 1.6;
+    min-inline-size: 20rem;
+}
+
+.mods-table__muted {
+    color: var(--lh-ink-3);
+}
+
+/*
+ * Возврат к «нет движения»: смена цвета и границы мгновенная.
+ * Длительность берём из шкалы, поэтому здесь достаточно обнулить переходы.
+ */
+@media (prefers-reduced-motion: reduce) {
+    .mods__copy,
+    .mods__link {
+        transition: none;
+    }
+}

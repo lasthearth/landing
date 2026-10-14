@@ -6,6 +6,7 @@
  * после клика, и ссылок из них поисковик не видит.
  */
 export const FOOTER_NAV_LINKS: readonly { route: string; key: string }[] = [
+    { route: '/about', key: 'footer.nav.about' },
     { route: '/start-game', key: 'footer.nav.startGame' },
     { route: '/rules', key: 'footer.nav.rules' },
     { route: '/wiki', key: 'footer.nav.wiki' },
@@ -17,5 +18,6 @@ export const FOOTER_NAV_LINKS: readonly { route: string; key: string }[] = [
     { route: '/lfg', key: 'footer.nav.lfg' },
     { route: '/gallery', key: 'footer.nav.gallery' },
     { route: '/videos', key: 'footer.nav.videos' },
+    { route: '/mods', key: 'footer.nav.mods' },
     { route: '/market', key: 'footer.nav.market' },
 ];

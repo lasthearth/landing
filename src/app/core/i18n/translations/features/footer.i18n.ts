@@ -11,6 +11,7 @@ export const FOOTER_I18N = {
             },
             nav: {
                 title: 'Разделы сайта',
+                about: 'О сервере',
                 startGame: 'Как начать',
                 rules: 'Правила',
                 wiki: 'Вики',
@@ -22,6 +23,7 @@ export const FOOTER_I18N = {
                 lfg: 'Поиск компании',
                 gallery: 'Галерея',
                 videos: 'Видео',
+                mods: 'Моды',
                 market: 'Магазин',
             },
             faq: 'Частые вопросы',
@@ -42,6 +44,7 @@ export const FOOTER_I18N = {
             },
             nav: {
                 title: 'Site sections',
+                about: 'About the server',
                 startGame: 'Getting started',
                 rules: 'Rules',
                 wiki: 'Wiki',
@@ -53,6 +56,7 @@ export const FOOTER_I18N = {
                 lfg: 'Looking for company',
                 gallery: 'Gallery',
                 videos: 'Videos',
+                mods: 'Mods',
                 market: 'Market',
             },
             faq: 'FAQ',

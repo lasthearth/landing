@@ -1,0 +1,90 @@
+<div class="mods lh-page-container">
+    <app-page-header [title]="'mods.title' | translate" [subtitle]="'mods.subtitle' | translate">
+        @if (mods.length > 0) {
+            <button
+                type="button"
+                class="mods__copy"
+                [class.mods__copy--done]="copied()"
+                [attr.aria-label]="copyLabelKey() | translate"
+                [attr.title]="copyLabelKey() | translate"
+                (click)="copyList()"
+            >
+                <tui-icon [icon]="copied() ? '@tui.check' : '@tui.copy'" class="size-4!" />
+                <span>{{ copyLabelKey() | translate }}</span>
+            </button>
+        }
+    </app-page-header>
+
+    @if (mods.length === 0) {
+        <app-empty-state
+            icon="@tui.package-open"
+            [title]="'mods.title' | translate"
+            [description]="'mods.empty' | translate"
+        />
+    } @else {
+        <!-- Десктоп: таблица. Заголовки колонок повторяют подписи карточек. -->
+        <div class="mods__table-wrap">
+            <table class="mods-table">
+                <caption class="sr-only">{{ "mods.title" | translate }}</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">{{ "mods.name" | translate }}</th>
+                        <th scope="col">{{ "mods.version" | translate }}</th>
+                        <th scope="col">{{ "mods.required" | translate }}</th>
+                        <th scope="col">{{ "mods.description" | translate }}</th>
+                        <th scope="col">{{ "mods.link" | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (mod of mods; track mod.name) {
+                        <tr>
+                            <th scope="row" class="mods-table__name">{{ mod.name }}</th>
+                            <td class="mods-table__version">{{ mod.version }}</td>
+                            <td>
+                                <span class="mods__badge" [class.mods__badge--optional]="!mod.required">
+                                    {{ (mod.required ? "mods.required" : "mods.optional") | translate }}
+                                </span>
+                            </td>
+                            <td class="mods-table__description">{{ mod.description }}</td>
+                            <td>
+                                @if (mod.url) {
+                                    <a class="mods__link" [href]="mod.url" target="_blank" rel="noopener noreferrer">
+                                        {{ "mods.link" | translate }}
+                                        <tui-icon icon="@tui.external-link" class="size-3.5! opacity-60" />
+                                    </a>
+                                } @else {
+                                    <span class="mods-table__muted" aria-hidden="true">—</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Телефон: те же данные карточками в одну колонку. -->
+        <ul class="mods__cards">
+            @for (mod of mods; track mod.name) {
+                <li class="mods-card">
+                    <h2 class="mods-card__name">
+                        {{ mod.name }}
+                        <span class="mods-card__version">{{ mod.version }}</span>
+                    </h2>
+
+                    <span class="mods__badge" [class.mods__badge--optional]="!mod.required">
+                        {{ (mod.required ? "mods.required" : "mods.optional") | translate }}
+                    </span>
+
+                    <p class="mods-card__description">{{ mod.description }}</p>
+
+                    @if (mod.url) {
+                        <a class="mods__link" [href]="mod.url" target="_blank" rel="noopener noreferrer">
+                            {{ "mods.link" | translate }}
+                            <tui-icon icon="@tui.external-link" class="size-3.5! opacity-60" />
+                        </a>
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>
