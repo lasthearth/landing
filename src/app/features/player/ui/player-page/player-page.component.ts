@@ -1,10 +1,21 @@
 import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, PLATFORM_ID, TemplateRef, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    PLATFORM_ID,
+    signal,
+    TemplateRef,
+    viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { SeoService } from '@core/services/seo.service';
 import { SettlementDisplayNamePipe } from '@entities/settlement';
+import { Role, UserService } from '@entities/user';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
 import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
@@ -12,6 +23,7 @@ import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
 import { PlayerProfileService } from '../../api/player-profile.service';
 import { PlayerProfile } from '../../model/player-profile';
+import { PlayerAboutComponent } from '../player-about/player-about.component';
 import { PlayerBadgesComponent } from '../player-badges/player-badges.component';
 import { bannerById, PlayerFrameComponent, ProfileBannerComponent } from '@entities/player-style';
 import { ProfileStyleService } from '../../api/profile-style.service';
@@ -46,6 +58,7 @@ type PlayerPageState =
         RelativeTimeComponent,
         ShareButtonComponent,
         SettlementDisplayNamePipe,
+        PlayerAboutComponent,
         PlayerBadgesComponent,
         PlayerFrameComponent,
         ProfileBannerComponent,
@@ -55,6 +68,7 @@ type PlayerPageState =
 })
 export class PlayerPageComponent {
     private readonly profiles = inject(PlayerProfileService);
+    private readonly users = inject(UserService);
     private readonly styles = inject(ProfileStyleService);
     private readonly seo = inject(SeoService);
     private readonly i18n = inject(I18nService);
@@ -119,6 +133,53 @@ export class PlayerPageComponent {
         const key = this.style()?.titleKey;
         return this.profile()?.badges.find((badge) => badge.key === key) ?? null;
     });
+
+    /**
+     * Состояние входа: `userId` и роли заполняются вместе с ним.
+     */
+    private readonly isAuthenticated = toSignal(this.users.authState$, { initialValue: false });
+
+    /**
+     * Профиль открыт его владельцем.
+     */
+    protected readonly isOwner = computed(() => {
+        this.isAuthenticated();
+
+        return this.users.userId === this.profile()?.userId;
+    });
+
+    /**
+     * У текущего пользователя есть право скрыть чужое описание.
+     */
+    protected readonly canModerate = computed(() => {
+        this.isAuthenticated();
+
+        return this.users.roles.includes(Role.admin);
+    });
+
+    /**
+     * Описание, сохранённое на этой странице без перезагрузки.
+     */
+    private readonly aboutOverride = signal<string | null>(null);
+
+    /**
+     * Профиль с учётом только что сохранённого описания.
+     */
+    protected readonly aboutProfile = computed(() => {
+        const profile = this.profile();
+        const override = this.aboutOverride();
+
+        return !profile || override === null ? profile : { ...profile, about: override };
+    });
+
+    /**
+     * Запоминает новое описание «О себе».
+     *
+     * @param about Текст, который принял сервер.
+     */
+    protected onAboutChanged(about: string): void {
+        this.aboutOverride.set(about);
+    }
 
     /**
      * Открывает баннер целиком в окне просмотра.

@@ -96,6 +96,15 @@
                     />
                 </header>
 
+                @if (aboutProfile(); as shown) {
+                    <app-player-about
+                        [profile]="shown"
+                        [isOwner]="isOwner()"
+                        [canModerate]="canModerate()"
+                        (changed)="onAboutChanged($event)"
+                    />
+                }
+
                 <section class="player-stats" [attr.aria-label]="'player.stats.title' | translate">
                     <div class="player-stat">
                         <tui-icon icon="@tui.clock" class="player-stat__icon" />
