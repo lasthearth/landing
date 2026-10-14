@@ -84,4 +84,10 @@ if (isMainModule(import.meta.url)) {
     app.listen(PORT, () => console.log(`Node Express server listening on http://localhost:${PORT}`));
 }
 
-export default createNodeRequestHandler(app);
+/**
+ * Обработчик запросов для `ng serve` и сборки: dev-сервер Angular ищет
+ * именно именованный экспорт `reqHandler`. Без него он брал встроенный SSR,
+ * правила выше не работали, и переход /home?code=… → / терял параметры
+ * OIDC-колбэка — вход завершался ничем.
+ */
+export const reqHandler = createNodeRequestHandler(app);
