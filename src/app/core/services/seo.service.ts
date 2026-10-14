@@ -3,6 +3,16 @@ import { Title, Meta } from '@angular/platform-browser';
 import { ISeoData } from '@core/types/i-seo-data';
 
 /**
+ * Директива роботам по умолчанию: страница открыта для индексации.
+ */
+const DEFAULT_ROBOTS = 'index, follow, max-image-preview:large';
+
+/**
+ * Картинка для соцсетей по умолчанию.
+ */
+const DEFAULT_OG_IMAGE = 'https://lasthearth.ru/og-image.jpg';
+
+/**
  * Сервис по работе с SEO данными приложения.
  */
 @Injectable({
@@ -51,21 +61,22 @@ export class SeoService {
     /**
      * Устанавливает SEO-метатеги для текущей страницы.
      *
+     * `robots` ставится всегда: страница «не найдено» объявляет `noindex`,
+     * и без сброса этот тег остался бы на следующей открытой странице.
+     * Ключевые слова поисковики не учитывают, поэтому тег только убирается.
+     *
      * @param seoData Данные для SEO.
      */
     public setSeoTags(seoData: ISeoData): void {
         this.title.setTitle(seoData.title);
-
         this.meta.updateTag({ name: 'description', content: seoData.description });
-        this.meta.updateTag({ name: 'keywords', content: seoData.keywords });
-
-        if (seoData.robots) {
-            this.meta.updateTag({ name: 'robots', content: seoData.robots });
-        }
+        this.meta.updateTag({ name: 'robots', content: seoData.robots ?? DEFAULT_ROBOTS });
 
         this.setOpenGraphTags(seoData);
         this.setTwitterCardTags(seoData);
         this.setCanonicalUrl(seoData.url);
+
+        this.meta.removeTag('name="keywords"');
     }
 
     /**
@@ -74,6 +85,8 @@ export class SeoService {
      * @param seoData Данные для SEO.
      */
     private setOpenGraphTags(seoData: ISeoData): void {
+        const image = seoData.image || DEFAULT_OG_IMAGE;
+
         this.meta.updateTag({ property: 'og:title', content: seoData.title });
         this.meta.updateTag({ property: 'og:description', content: seoData.description });
 
@@ -93,15 +106,12 @@ export class SeoService {
             this.meta.updateTag({ property: 'og:locale', content: seoData.locale });
         }
 
-        if (seoData.image) {
-            this.meta.updateTag({ property: 'og:image', content: seoData.image });
-            this.meta.updateTag({ property: 'og:image:width', content: '1200' });
-            this.meta.updateTag({ property: 'og:image:height', content: '630' });
-
-            if (seoData.imageAlt) {
-                this.meta.updateTag({ property: 'og:image:alt', content: seoData.imageAlt });
-            }
-        }
+        // Превью ссылки есть у каждой страницы: без картинки мессенджеры
+        // показывают пустую заглушку.
+        this.meta.updateTag({ property: 'og:image', content: image });
+        this.meta.updateTag({ property: 'og:image:width', content: '1200' });
+        this.meta.updateTag({ property: 'og:image:height', content: '630' });
+        this.meta.updateTag({ property: 'og:image:alt', content: seoData.imageAlt || seoData.title });
     }
 
     /**
@@ -113,31 +123,38 @@ export class SeoService {
         this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
         this.meta.updateTag({ name: 'twitter:title', content: seoData.title });
         this.meta.updateTag({ name: 'twitter:description', content: seoData.description });
+        this.meta.updateTag({ name: 'twitter:image', content: seoData.image || DEFAULT_OG_IMAGE });
 
-        if (seoData.image) {
-            this.meta.updateTag({ name: 'twitter:image', content: seoData.image });
-
-            if (seoData.imageAlt) {
-                this.meta.updateTag({ name: 'twitter:image:alt', content: seoData.imageAlt });
-            }
+        if (seoData.imageAlt) {
+            this.meta.updateTag({ name: 'twitter:image:alt', content: seoData.imageAlt });
         }
     }
 
     /**
-     * Устанавливает или обновляет канонический URL.
+     * Устанавливает, обновляет или убирает канонический URL.
+     *
+     * У страницы без своего адреса (страница «не найдено») канонической ссылки
+     * быть не должно: иначе робот склеит её с той страницей, на которую указывает.
      *
      * @param url Канонический URL.
      */
     private setCanonicalUrl(url?: string): void {
+        if (!url) {
+            if (this.canonicalLink) {
+                this.renderer.removeChild(this.document.head, this.canonicalLink);
+                this.canonicalLink = null;
+            }
+
+            return;
+        }
+
         if (!this.canonicalLink) {
             this.canonicalLink = this.renderer.createElement('link') as HTMLLinkElement;
             this.renderer.setAttribute(this.canonicalLink, 'rel', 'canonical');
             this.renderer.appendChild(this.document.head, this.canonicalLink);
         }
 
-        if (url) {
-            this.renderer.setAttribute(this.canonicalLink, 'href', url);
-        }
+        this.renderer.setAttribute(this.canonicalLink, 'href', url);
     }
 
     /**

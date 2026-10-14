@@ -13,11 +13,6 @@ export interface ISeoData {
     description: string;
 
     /**
-     * Ключевые слова для поисковых систем.
-     */
-    keywords: string;
-
-    /**
      * Инструкции для роботов (опционально).
      */
     robots?: string;

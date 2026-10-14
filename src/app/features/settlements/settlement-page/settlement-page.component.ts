@@ -23,6 +23,7 @@ import {
 import { IPlayer, PlayerChipComponent, UserService } from '@entities/user';
 import { SettlementTagComponent, SettlementTagStore } from '@entities/settlement-tag';
 import { SeoService } from '@core/services/seo.service';
+import { ServerResponseService } from '@core/services/server-response.service';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
@@ -82,6 +83,7 @@ export class SettlementPageComponent {
     private readonly settlementService = inject(SettlementService);
     private readonly userService = inject(UserService);
     private readonly seo = inject(SeoService);
+    private readonly serverResponse = inject(ServerResponseService);
     private readonly i18n = inject(I18nService);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -309,10 +311,10 @@ export class SettlementPageComponent {
      */
     private applySeo(state: SettlementPageState): void {
         if (state.status === 'not-found') {
+            this.serverResponse.setStatus(404);
             this.seo.setSeoTags({
                 title: this.i18n.translate('settlements.page.notFoundTitle') + ' — Last Hearth',
                 description: this.i18n.translate('settlements.page.notFoundText'),
-                keywords: '',
                 robots: 'noindex, follow',
             });
             return;
@@ -333,7 +335,6 @@ export class SettlementPageComponent {
         this.seo.setSeoTags({
             title: `${name} — ${this.typeLabel(settlement)} на сервере Last Hearth`,
             description,
-            keywords: '',
             robots: 'index, follow, max-image-preview:large',
             url: `${SITE_URL}/settlements/${settlement.id}`,
             type: 'website',

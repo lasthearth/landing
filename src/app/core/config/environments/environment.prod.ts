@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
-    redirectUri: 'https://lasthearth.ru/home/',
-    postLogoutRedirectUri: 'https://lasthearth.ru/home/',
+    redirectUri: 'https://lasthearth.ru/',
+    postLogoutRedirectUri: 'https://lasthearth.ru/',
     apiUrl: 'https://api.lasthearth.ru/v1',
     logtoEndpoint: 'https://logto.lasthearth.ru',
     discordScreenshotsChannelId: '1389973669576441897',

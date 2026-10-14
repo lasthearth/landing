@@ -8,6 +8,7 @@ import { mapDtoToNews, News, NewsApiService, NewsDto } from '@entities/news';
 import { UserService } from '@entities/user';
 import { SeoService } from '@core/services/seo.service';
 import { I18nService, TranslatePipe } from '@core/i18n';
+import { ServerResponseService } from '@core/services/server-response.service';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ShareButtonComponent } from '@shared/ui/share-button';
@@ -72,6 +73,7 @@ export class NewsPageComponent {
      * SEO-теги страницы.
      */
     private readonly seo = inject(SeoService);
+    private readonly serverResponse = inject(ServerResponseService);
 
     /**
      * Переводы.
@@ -161,10 +163,10 @@ export class NewsPageComponent {
      */
     private onStateChange(state: NewsPageState): void {
         if (state.status === 'not-found') {
+            this.serverResponse.setStatus(404);
             this.seo.setSeoTags({
                 title: this.i18n.translate('news.page.notFoundTitle') + ' — Last Hearth',
                 description: this.i18n.translate('news.page.notFoundText'),
-                keywords: '',
                 robots: 'noindex, follow',
             });
             return;
@@ -198,7 +200,6 @@ export class NewsPageComponent {
         this.seo.setSeoTags({
             title: `${news.title} — ${this.i18n.translate('news.page.seoSuffix')}`,
             description,
-            keywords: '',
             robots: 'index, follow, max-image-preview:large',
             url: `${SITE_URL}/news/${news.id}`,
             type: 'article',

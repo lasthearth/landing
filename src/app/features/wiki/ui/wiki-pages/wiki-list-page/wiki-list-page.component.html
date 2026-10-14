@@ -9,7 +9,7 @@
              как у «Создать событие», чтобы шапки страниц не расходились. -->
         <a
             class="lh-cta wiki-list__create"
-            [routerLink]="isAuthenticated() ? '/wiki/edit/new' : '/home'"
+            [routerLink]="isAuthenticated() ? '/wiki/edit/new' : '/'"
             [queryParams]="isAuthenticated() && !isAdmin() ? { suggest: 1 } : {}"
         >
             <tui-icon icon="@tui.plus" class="size-4!" />

@@ -25,7 +25,7 @@
 ## Стек
 
 Angular 20 (standalone, signals) · TypeScript 5.9 strict + strictTemplates · LESS + Tailwind CSS v4 ·
-Taiga UI 4 · `@angular/build:application` (Vite) · SSR + пререндер из `routes.txt` · OIDC (Logto) ·
+Taiga UI 4 · `@angular/build:application` (Vite) · SSR + пререндер из `app.routes.server.ts` · OIDC (Logto) ·
 `HttpClient` с fetch + интерцепторами · состояние — сервисы и сигналы, без NgRx.
 
 ## Жёсткие правила
@@ -41,7 +41,7 @@ Taiga UI 4 · `@angular/build:application` (Vite) · SSR + пререндер и
 9. Decimal-поля (`coins`, `price`, `reward_coins`) — строки и в DTO, и в UI.
 10. Бизнес-логика — в сервисах и сторах, не в компонентах.
 11. `any`, `console.log`, хардкод URL; правки `node_modules` и `dist` — не используем.
-12. Тяжёлые виджеты — через `@defer (on idle)`; новый пререндер-роут — в `routes.txt`.
+12. Тяжёлые виджеты — через `@defer (on idle)`; режим рендера роута — в `src/app/app.routes.server.ts`.
 
 ## Проверка
 

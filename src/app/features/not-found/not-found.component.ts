@@ -10,6 +10,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
+import { ServerResponseService } from '@core/services/server-response.service';
 
 /**
  * Страница "Не найдено" (404).
@@ -59,6 +60,9 @@ export class NotFoundComponent {
      */
     constructor() {
         const destroyRef = inject(DestroyRef);
+
+        // Робот должен получить 404, а не «мягкую» 200 с текстом «не найдено».
+        inject(ServerResponseService).setStatus(404);
 
         afterNextRender(() => {
             const element = this.host.nativeElement;

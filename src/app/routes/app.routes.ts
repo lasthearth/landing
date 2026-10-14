@@ -39,11 +39,16 @@ export const routes: Routes = [
         loadComponent: () => import('../features/landing/landing.component').then((m) => m.LandingComponent),
         children: [
             {
-                // Канонический адрес главной — /home; корень перенаправляет туда,
-                // чтобы у поисковиков не было двух одинаковых страниц.
+                // Канонический адрес главной — корень домена: он сильнее в выдаче,
+                // а ссылки на сайт короче. Старый /home перенаправляет сюда.
                 path: '',
-                redirectTo: 'home',
                 pathMatch: 'full',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('../features/home/home.component').then((m) => m.HomeComponent),
+                        [() => import('@core/i18n/translations/features/home.i18n').then((m) => m.HOME_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.home, seo: routeSeoData.home },
             },
             {
                 // Вики: список статей. Статьи приезжают с сервера, снимок держит WikiStoreService.
@@ -65,13 +70,11 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.wiki, seo: routeSeoData.wikiArticle },
             },
             {
+                // Прежний адрес главной: уводим в корень, чтобы у поисковиков
+                // не было двух одинаковых страниц.
                 path: 'home',
-                loadComponent: () =>
-                    loadPage(
-                        () => import('../features/home/home.component').then((m) => m.HomeComponent),
-                        [() => import('@core/i18n/translations/features/home.i18n').then((m) => m.HOME_I18N)]
-                    ),
-                data: { route_keys: RouteKeys.home, seo: routeSeoData.home },
+                redirectTo: '',
+                pathMatch: 'full',
             },
             {
                 path: 'rules',
@@ -360,7 +363,7 @@ export const routes: Routes = [
             },
             {
                 path: 'unauthorized',
-                redirectTo: '/home',
+                redirectTo: '/',
                 pathMatch: 'full',
             },
             {

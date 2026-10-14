@@ -129,13 +129,35 @@ function parseRoutes() {
     return found.filter((route) => route.full !== '');
 }
 
+/**
+ * Читает адреса, которые собираются заранее.
+ *
+ * Режимы рендера задаёт src/app/app.routes.server.ts: отдельного routes.txt
+ * больше нет, список страниц живёт в одном месте.
+ *
+ * @returns {Set<string>} Множество адресов вида '/wiki'.
+ */
+function parsePrerenderRoutes() {
+    const text = readFileSync(join(ROOT, 'src', 'app', 'app.routes.server.ts'), 'utf8');
+    const block = /const PRERENDERED = \[([\s\S]*?)\];/.exec(text);
+    const routes = new Set();
+
+    if (block) {
+        for (const match of block[1].matchAll(/'([^']+)'/g)) {
+            routes.add('/' + match[1]);
+        }
+    }
+
+    // Корень домена в списке записан пустой строкой.
+    if (text.includes("path: '', renderMode: RenderMode.Prerender")) {
+        routes.add('/');
+    }
+
+    return routes;
+}
+
 const routes = parseRoutes();
-const prerender = new Set(
-    readFileSync(join(ROOT, 'routes.txt'), 'utf8')
-        .split('\n')
-        .map((line) => line.trim())
-        .filter(Boolean)
-);
+const prerender = parsePrerenderRoutes();
 
 const dictionaryUsage = new Map();
 

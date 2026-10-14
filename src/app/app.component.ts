@@ -48,8 +48,7 @@ export class AppComponent {
         title: 'Last Hearth — ролевой сервер Vintage Story',
         description:
             'Last Hearth — уникальный ролевой политико-экономический сервер Vintage Story. Развивайте поселения, ведите войны, заключайте союзы и участвуйте в жизни Империи.',
-        keywords: 'Vintage Story сервер, Last Hearth, ролевой сервер VS, Vintage Story PvP, Vintage Story RP',
-        url: 'https://lasthearth.ru/home',
+        url: 'https://lasthearth.ru/',
         type: 'website',
         locale: 'ru_RU',
         siteName: 'Last Hearth — ролевой сервер Vintage Story',

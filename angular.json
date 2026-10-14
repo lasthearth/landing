@@ -37,15 +37,17 @@
                         ],
                         "styles": [
                             "@taiga-ui/core/styles/taiga-ui-theme.less",
-                            "@taiga-ui/core/styles/taiga-ui-fonts.less",
                             "src/styles.css",
                             "src/app/shared/styles/variables.less",
                             "src/app/shared/styles/appearances/icon.appearance.css"
                         ],
                         "scripts": [],
-                        "prerender": {
-                            "routesFile": "routes.txt",
-                            "discoverRoutes": false
+                        // Серверный режим: статика собирается заранее, статьи вики,
+                        // новости, поселения и игроки рисуются по запросу.
+                        // Что именно и как рендерить — решает src/app/app.routes.server.ts.
+                        "outputMode": "server",
+                        "ssr": {
+                            "entry": "src/server.ts"
                         }
                     },
                     "configurations": {

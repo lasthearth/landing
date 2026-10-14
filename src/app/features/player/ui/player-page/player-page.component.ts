@@ -1,9 +1,9 @@
-import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, PLATFORM_ID, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, TemplateRef, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { SeoService } from '@core/services/seo.service';
+import { ServerResponseService } from '@core/services/server-response.service';
 import { SettlementDisplayNamePipe } from '@entities/settlement';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
@@ -57,8 +57,8 @@ export class PlayerPageComponent {
     private readonly profiles = inject(PlayerProfileService);
     private readonly styles = inject(ProfileStyleService);
     private readonly seo = inject(SeoService);
+    private readonly serverResponse = inject(ServerResponseService);
     private readonly i18n = inject(I18nService);
-    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly previews = inject(TuiPreviewDialogService);
 
     /**
@@ -72,17 +72,17 @@ export class PlayerPageComponent {
     protected readonly state = toSignal(
         inject(ActivatedRoute).paramMap.pipe(
             map((params) => decodeURIComponent(params.get('nick') ?? '')),
+            // Профиль собирается из открытых данных и не зависит от браузера:
+            // грузим его и при серверном рендере, чтобы робот увидел статистику.
             switchMap((nickname) =>
-                !this.isBrowser
-                    ? of<PlayerPageState>({ status: 'loading' })
-                    : this.profiles.load(nickname).pipe(
-                          map(
-                              (profile): PlayerPageState =>
-                                  profile ? { status: 'ready', profile } : { status: 'not-found', nickname }
-                          ),
-                          catchError(() => of<PlayerPageState>({ status: 'not-found', nickname })),
-                          startWith<PlayerPageState>({ status: 'loading' })
-                      )
+                this.profiles.load(nickname).pipe(
+                    map(
+                        (profile): PlayerPageState =>
+                            profile ? { status: 'ready', profile } : { status: 'not-found', nickname }
+                    ),
+                    catchError(() => of<PlayerPageState>({ status: 'not-found', nickname })),
+                    startWith<PlayerPageState>({ status: 'loading' })
+                )
             )
         ),
         { initialValue: { status: 'loading' } as PlayerPageState }
@@ -142,10 +142,10 @@ export class PlayerPageComponent {
      */
     private applySeo(state: PlayerPageState): void {
         if (state.status === 'not-found') {
+            this.serverResponse.setStatus(404);
             this.seo.setSeoTags({
                 title: this.i18n.translate('player.notFound.title') + ' — Last Hearth',
                 description: this.i18n.translate('player.notFound.text'),
-                keywords: '',
                 robots: 'noindex, follow',
             });
         } else if (state.status === 'ready') {
@@ -156,7 +156,6 @@ export class PlayerPageComponent {
                     name: profile.nickname,
                     hours: Math.round(profile.hours),
                 }),
-                keywords: '',
                 robots: 'noindex, follow',
                 url: `${SITE_URL}/player/${encodeURIComponent(profile.nickname)}`,
             });

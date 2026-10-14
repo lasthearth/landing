@@ -5,13 +5,12 @@ import {
     DestroyRef,
     effect,
     inject,
-    PLATFORM_ID,
     signal,
     untracked,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { I18nService } from '@core/i18n';
+import { ServerResponseService } from '@core/services/server-response.service';
 import { SeoService } from '@core/services/seo.service';
 import { plainWikiText } from '../../../lib/wiki-plain-text.function';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -65,13 +64,9 @@ export class WikiArticlePageComponent {
     private readonly user = inject(UserService);
     private readonly authorNames = inject(WikiAuthorNameService);
     private readonly seo = inject(SeoService);
+    private readonly serverResponse = inject(ServerResponseService);
     private readonly i18n = inject(I18nService);
     private readonly destroyRef = inject(DestroyRef);
-
-    /**
-     * Сайт пререндерится: серверный проход данные не грузит и скелетона не рисует.
-     */
-    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     /**
      * Адрес статьи из маршрута. Меняется вместе с адресом, без пересоздания
@@ -141,9 +136,8 @@ export class WikiArticlePageComponent {
         // Список грузим целиком: из него подписываются «См. также» и ссылки [[адрес]],
         // а заодно он и есть снимок, по которому страница находит статью. Пока
         // снимок едет, показываем скелетон, чтобы не мигало «не найдена».
-        if (this.isBrowser) {
-            effect(() => void this.load(this.slug()));
-        }
+        // При серверном рендере грузим тоже: роботу нужен текст статьи в HTML.
+        effect(() => void this.load(this.slug()));
 
         // Ники для ссылок [[player:id]] догружаем по мере появления в тексте;
         // разбор пересчитается сам, потому что name() читает сигнал.
@@ -176,10 +170,10 @@ export class WikiArticlePageComponent {
             this.seo.setJsonLd('wiki-faq', null);
 
             if (state === 'not-found') {
+                this.serverResponse.setStatus(404);
                 this.seo.setSeoTags({
                     title: `${this.i18n.translate('wiki.public.notFound')} — Last Hearth`,
                     description: this.i18n.translate('wiki.public.notFoundHint'),
-                    keywords: '',
                     robots: 'noindex, follow',
                 });
             }
@@ -195,7 +189,6 @@ export class WikiArticlePageComponent {
         this.seo.setSeoTags({
             title: `${article.title} — ${this.i18n.translate('wiki.seo.suffix')}`,
             description,
-            keywords: article.tags.join(', '),
             robots:
                 article.status === 'draft'
                     ? 'noindex, nofollow'
