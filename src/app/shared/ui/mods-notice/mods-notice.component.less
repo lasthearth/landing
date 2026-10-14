@@ -7,11 +7,13 @@
 }
 
 .mods-notice {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem 1rem;
-    padding: 0.875rem 1rem;
+    // Справа место под «×», чтобы ссылка не залезала под крестик.
+    padding: 0.875rem 3rem 0.875rem 1rem;
     border-radius: var(--lh-radius-lg);
     background-color: color-mix(in srgb, var(--lh-brand) 9%, var(--lh-surface-2));
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 35%, transparent);
@@ -89,5 +91,47 @@
 
     .mods-notice__link {
         min-height: 2.25rem;
+    }
+}
+
+// «×» — в углу, тихий: не спорит со ссылкой, но находится сразу.
+.mods-notice__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: var(--lh-radius-full);
+    background: none;
+    color: var(--lh-ink-3);
+    cursor: pointer;
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-smooth),
+        color var(--lh-dur-fast) var(--lh-ease-smooth);
+
+    tui-icon {
+        width: 1rem;
+        height: 1rem;
+        font-size: 1rem;
+    }
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+        color: var(--lh-ink);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 1px;
+    }
+
+    // Нижняя граница касания — 44px: невидимое поле вокруг кнопки.
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -0.375rem;
     }
 }

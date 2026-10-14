@@ -1942,3 +1942,13 @@ html body tui-root {
         display: none;
     }
 }
+
+/*
+ * Плашка «Проверьте моды» скрыта игроком: класс на <html> ставит ранний скрипт
+ * в index.html и кнопка «×» самой плашки. Обёртки с классом lh-mods-notice-slot
+ * прячутся вместе с ней, чтобы не оставлять пустой отступ.
+ */
+.lh-mods-notice-hidden app-mods-notice,
+.lh-mods-notice-hidden .lh-mods-notice-slot {
+    display: none !important;
+}

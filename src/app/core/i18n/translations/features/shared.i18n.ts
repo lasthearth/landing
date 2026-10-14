@@ -6,6 +6,7 @@ export const SHARED_I18N = {
                 title: 'Не пускает на сервер? Проверьте моды',
                 hint: 'Обязательные моды игра скачивает сама при первом входе. Не скачались — возьмите их архивом или по одному.',
                 link: 'Моды сервера',
+                dismiss: 'Скрыть подсказку',
             },
             breadcrumbs: {
                 label: 'Путь по сайту',
@@ -279,6 +280,7 @@ export const SHARED_I18N = {
                 title: 'Can’t join the server? Check the mods',
                 hint: 'The game downloads the required mods itself on first join. If it didn’t, get them as one archive or one by one.',
                 link: 'Server mods',
+                dismiss: 'Hide this tip',
             },
             breadcrumbs: {
                 label: 'Breadcrumbs',

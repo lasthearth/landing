@@ -53,6 +53,22 @@
                 }
             })();
         </script>
+        <!--
+            Игрок скрыл плашку «Проверьте моды» — прячем её до первой отрисовки:
+            страница приходит с сервера, который о выборе не знает, и без этого
+            плашка мелькала бы при каждом заходе.
+        -->
+        <script>
+            (function () {
+                try {
+                    if (localStorage.getItem('lh-mods-notice-hidden') === '1') {
+                        document.documentElement.classList.add('lh-mods-notice-hidden');
+                    }
+                } catch (e) {
+                    // localStorage недоступен — плашку показываем
+                }
+            })();
+        </script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta

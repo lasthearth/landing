@@ -12,4 +12,13 @@
         {{ "shared.modsNotice.link" | translate }}
         <tui-icon icon="@tui.arrow-right" class="size-4!" />
     </a>
+    <button
+        type="button"
+        class="mods-notice__close"
+        [attr.aria-label]="'shared.modsNotice.dismiss' | translate"
+        [attr.title]="'shared.modsNotice.dismiss' | translate"
+        (click)="dismiss()"
+    >
+        <tui-icon icon="@tui.x" />
+    </button>
 </aside>
