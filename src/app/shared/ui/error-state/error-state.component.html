@@ -8,12 +8,16 @@
         <p class="text-xl md:text-2xl font-bold text-lh-primary">{{ title() | translate }}</p>
         <p class="text-base md:text-lg text-ink-2 max-w-lg leading-relaxed">{{ description() | translate }}</p>
     </div>
+    <!-- Повторить — действие внутри панели состояния, а не главная кнопка страницы:
+         размер m (2.75rem) держит кнопку в одном ряду с полями и стрелками пагинации,
+         полноразмерная l (3.5rem) выглядела слишком высокой. -->
     <button
         tuiButton
         type="button"
         appearance="primary"
+        size="m"
         (click)="retry.emit()"
-        class="min-w-[12rem] text-lg"
+        class="min-w-[12rem] text-base"
     >
         <tui-icon icon="@tui.refresh-cw" class="size-5!" />
         {{ retryText() | translate }}
