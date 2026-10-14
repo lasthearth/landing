@@ -158,6 +158,9 @@
 <!-- Ближайшее событие календаря (без событий не выводится) -->
 <app-upcoming-event />
 
+<!-- Объявления «Ищу компанию»: тихой строкой, только когда есть открытые -->
+<app-lfg-ticker />
+
 @if (loading()) {
     <section class="lh-page-container pt-8 pb-0 flex flex-col gap-5">
         <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">

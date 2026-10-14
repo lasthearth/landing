@@ -21,6 +21,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RevealDirective } from '@shared/lib/directives';
 import { PulseStat } from './model/pulse-stat.interface';
 import { UpcomingEventComponent } from '@features/events';
+import { LfgTickerComponent } from '@features/lfg';
 import { ModsNoticeComponent } from '@shared/ui/mods-notice';
 
 /**
@@ -29,7 +30,7 @@ import { ModsNoticeComponent } from '@shared/ui/mods-notice';
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe, RevealDirective, UpcomingEventComponent, ModsNoticeComponent],
+    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe, RevealDirective, UpcomingEventComponent, ModsNoticeComponent, LfgTickerComponent],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
