@@ -187,14 +187,14 @@
 
                     <div class="flex flex-wrap items-center gap-1">
                         @for (roleName of roleNamesOf(data, item.user_id); track roleName) {
-                            <span class="px-1.5 py-0.5 rounded-md bg-surface-3 text-ink-3 text-xs font-semibold">
+                            <span class="px-1.5 py-0.5 rounded-md bg-surface-3 text-ink-3 text-sm font-semibold">
                                 {{ roleName }}
                             </span>
                         }
                         @if (isCurrentOwner() && data.roles_enabled !== false) {
                             <button
                                 type="button"
-                                class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-ink-3 text-xs font-semibold hover:bg-surface-3"
+                                class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-ink-3 text-sm font-semibold hover:bg-surface-3"
                                 [disabled]="busy()"
                                 (click)="openMemberRoles(item.user_id)"
                             >
