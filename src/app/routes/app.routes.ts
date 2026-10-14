@@ -318,6 +318,20 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.join, seo: routeSeoData.join },
             },
             {
+                path: 'players',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/players').then((m) => m.PlayersPageComponent),
+                        [
+                            () =>
+                                import('@core/i18n/translations/features/players.i18n').then(
+                                    (m) => m.PLAYERS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.players, seo: routeSeoData.players },
+            },
+            {
                 path: 'player/:nick',
                 loadComponent: () =>
                     loadPage(

@@ -1,0 +1,48 @@
+<a class="player-card lh-panel" [routerLink]="['/player', player().nickname]">
+    <div class="player-card__head">
+        <app-player-frame
+            class="player-card__avatar"
+            [src]="player().avatarUrl"
+            [alt]="player().nickname"
+            [frame]="look().frameId"
+            [effect]="look().frameEffect"
+            [compact]="true"
+        />
+
+        <div class="player-card__id">
+            <span class="player-card__name lh-display">{{ player().nickname }}</span>
+
+            <span class="player-card__status" [class.player-card__status--online]="player().isOnline">
+                <span class="player-card__dot" aria-hidden="true"></span>
+                @if (player().isOnline) {
+                    {{ "players.status.online" | translate }}
+                } @else if (player().lastOnline) {
+                    {{ "players.status.lastSeen" | translate }}
+                    <time [appRelativeTime]="player().lastOnline"></time>
+                } @else {
+                    {{ "players.status.offline" | translate }}
+                }
+            </span>
+        </div>
+    </div>
+
+    @if (player().about) {
+        <p class="player-card__about">{{ player().about }}</p>
+    } @else {
+        <p class="player-card__about player-card__about--empty">{{ "players.noAbout" | translate }}</p>
+    }
+
+    <div class="player-card__foot">
+        <span class="player-card__settlement">
+            @if (settlement(); as place) {
+                <tui-icon [icon]="role() === 'leader' ? '@tui.crown' : '@tui.house'" class="size-4!" />
+                {{ "players.role." + (role() ?? "resident") | translate }}
+                «{{ place | settlementDisplayName }}»
+            } @else {
+                {{ "players.noSettlement" | translate }}
+            }
+        </span>
+
+        <span class="player-card__hours">{{ "players.hours" | translate: { count: player().hours } }}</span>
+    </div>
+</a>

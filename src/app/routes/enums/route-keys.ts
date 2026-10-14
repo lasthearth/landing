@@ -50,4 +50,6 @@ export enum RouteKeys {
     wiki = 24,
 
     mySuggestions = 25,
+
+    players = 26,
 }

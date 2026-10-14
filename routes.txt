@@ -4,6 +4,7 @@
 /wiki
 /market
 /settlements
+/players
 /start-game
 /privacy-policy
 /public-offer

@@ -1,0 +1,93 @@
+// Нумерация страниц: стрелки 44×44 и номера с многоточиями.
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    &__arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--lh-line);
+        border-radius: 0.75rem;
+        background-color: var(--lh-surface);
+        color: var(--lh-ink);
+        cursor: pointer;
+        transition:
+            color var(--lh-dur-fast) var(--lh-ease-out-quart),
+            border-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+
+        &:hover:not(:disabled) {
+            border-color: var(--lh-brand);
+            color: var(--lh-brand-ink);
+        }
+
+        &:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+    }
+
+    &__list {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__page {
+        min-width: 44px;
+        height: 44px;
+        padding: 0 0.5rem;
+        border: 1px solid transparent;
+        border-radius: 0.75rem;
+        background: none;
+        color: var(--lh-ink);
+        font: inherit;
+        font-variant-numeric: tabular-nums;
+        cursor: pointer;
+        transition:
+            color var(--lh-dur-fast) var(--lh-ease-out-quart),
+            background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+
+        &:hover {
+            color: var(--lh-brand-ink);
+            background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+        }
+    }
+
+    &__page--current,
+    &__page--current:hover {
+        color: var(--lh-parchment);
+        background-image: linear-gradient(150deg, var(--lh-brand-deep), var(--lh-brand-deep-2));
+    }
+
+    &__gap {
+        display: inline-flex;
+        justify-content: center;
+        min-width: 1.5rem;
+        color: var(--lh-ink-3);
+    }
+
+    &__of {
+        display: none;
+        color: var(--lh-ink-2);
+    }
+}
+
+// Уже 480px номера не помещаются в ряд: остаются стрелки и «X из Y».
+@media (max-width: 480px) {
+    .pagination__list {
+        display: none;
+    }
+
+    .pagination__of {
+        display: inline;
+    }
+}

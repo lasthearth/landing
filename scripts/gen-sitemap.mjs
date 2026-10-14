@@ -37,6 +37,7 @@ const STATIC_PAGES = {
     '/wiki': { changefreq: 'daily', priority: '0.9' },
     '/market': { changefreq: 'daily', priority: '0.8' },
     '/settlements': { changefreq: 'daily', priority: '0.7' },
+    '/players': { changefreq: 'daily', priority: '0.6' },
     '/start-game': { changefreq: 'monthly', priority: '0.8' },
     '/privacy-policy': { changefreq: 'yearly', priority: '0.3' },
     '/public-offer': { changefreq: 'yearly', priority: '0.3' },
