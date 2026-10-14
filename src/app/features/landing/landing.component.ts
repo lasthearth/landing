@@ -59,7 +59,8 @@ export class LandingComponent {
             RouteKeys.howPlay,
             RouteKeys.settlement,
             RouteKeys.referral,
-            RouteKeys.profileStyle
+            RouteKeys.profileStyle,
+            RouteKeys.mySuggestions
         ].includes(routeKey);
     }
 
