@@ -1,0 +1,231 @@
+<section class="map">
+    <header class="map__head">
+        <div class="map__head-text">
+            <h2 class="map__title lh-display">{{ "mods.admin.title" | translate }}</h2>
+            <p class="map__subtitle">{{ "mods.admin.subtitle" | translate }}</p>
+        </div>
+        <button type="button" class="lh-cta lh-cta--ghost" [disabled]="refreshState() === 'busy' || !mods()?.length" (click)="refresh()">
+            <tui-icon icon="@tui.refresh-cw" class="size-4!" [class.map__spin]="refreshState() === 'busy'" />
+            @switch (refreshState()) {
+                @case ("busy") {
+                    {{ "mods.admin.refreshing" | translate }}
+                }
+                @case ("done") {
+                    {{ "mods.admin.refreshed" | translate }}
+                }
+                @default {
+                    {{ "mods.admin.refresh" | translate }}
+                }
+            }
+        </button>
+    </header>
+
+    <div class="map__add lh-panel">
+        <form class="map__lookup" (submit)="$event.preventDefault(); find()">
+            <label class="map__field">
+                <span class="map__label">{{ "mods.admin.lookupLabel" | translate }}</span>
+                <input
+                    type="text"
+                    class="map__input"
+                    autocomplete="off"
+                    inputmode="url"
+                    [value]="link()"
+                    [attr.placeholder]="'mods.admin.lookupPlaceholder' | translate"
+                    (input)="link.set($any($event.target).value)"
+                />
+            </label>
+            <button type="submit" class="lh-cta" [disabled]="looking() || !link().trim()">
+                <tui-icon [icon]="looking() ? '@tui.loader' : '@tui.search'" class="size-4!" [class.map__spin]="looking()" />
+                {{ "mods.admin.lookup" | translate }}
+            </button>
+        </form>
+
+        @if (formError()) {
+            <p class="map__error" role="alert">{{ formError() | translate }}</p>
+        }
+
+        @if (found(); as result) {
+            <div class="map__found">
+                <div class="map__mod">
+                    @if (result.mod.logoUrl) {
+                        <img class="map__logo" [src]="result.mod.logoUrl" alt="" width="56" height="56" />
+                    } @else {
+                        <span class="map__logo map__logo--letter" aria-hidden="true">{{ result.mod.name.charAt(0) }}</span>
+                    }
+                    <div class="map__mod-text">
+                        <span class="map__mod-name lh-display">{{ result.mod.name }}</span>
+                        <span class="map__mod-meta">
+                            @if (result.mod.author) {
+                                {{ "mods.by" | translate: { author: result.mod.author } }} ·
+                            }
+                            {{ "mods.admin.found" | translate }}
+                        </span>
+                    </div>
+                </div>
+
+                @if (foundExists()) {
+                    <p class="map__error" role="alert">{{ "mods.admin.errors.exists" | translate }}</p>
+                } @else {
+                    <div class="map__grid">
+                        <lh-input
+                            type="select"
+                            [label]="'mods.admin.version' | translate"
+                            [items]="result.releases"
+                            [displayWith]="releaseLabel"
+                            [ngModel]="draftRelease()"
+                            (ngModelChange)="draftRelease.set($event)"
+                        />
+                        <lh-input
+                            type="select"
+                            [label]="'mods.admin.audience' | translate"
+                            [items]="audiences"
+                            [displayWith]="audienceLabel"
+                            [ngModel]="draftAudience()"
+                            (ngModelChange)="draftAudience.set($event)"
+                        />
+                    </div>
+
+                    <label class="map__field">
+                        <span class="map__label">{{ "mods.admin.note" | translate }}</span>
+                        <textarea
+                            class="map__input map__textarea"
+                            rows="2"
+                            [attr.maxlength]="noteMax"
+                            [value]="draftNote()"
+                            [attr.placeholder]="'mods.admin.notePlaceholder' | translate"
+                            (input)="draftNote.set($any($event.target).value)"
+                        ></textarea>
+                        <span class="map__hint">{{ "mods.admin.noteHint" | translate }}</span>
+                    </label>
+                }
+
+                <div class="map__form-actions">
+                    <button type="button" class="lh-cta lh-cta--ghost" (click)="cancel()">{{ "mods.admin.cancel" | translate }}</button>
+                    @if (!foundExists()) {
+                        <button type="button" class="lh-cta" [disabled]="adding() || !draftRelease()" (click)="add()">
+                            <tui-icon icon="@tui.plus" class="size-4!" />
+                            {{ "mods.admin.add" | translate }}
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (loadFailed()) {
+        <app-error-state [title]="'mods.admin.errors.load' | translate" (retry)="load()" />
+    } @else if (mods(); as list) {
+        @if (list.length) {
+            <div class="map__list-head">
+                <h3 class="map__list-title lh-display">{{ "mods.admin.listTitle" | translate: { count: list.length } }}</h3>
+                <span class="map__hint">{{ "mods.admin.orderHint" | translate }}</span>
+            </div>
+
+            <ol class="map__list">
+                @for (mod of list; track mod.id; let index = $index, first = $first, last = $last) {
+                    <li class="map__row lh-panel" [class.map__row--busy]="isBusy(mod.id)" [class.map__row--hidden]="mod.audience === 'MOD_AUDIENCE_HIDDEN'">
+                        <div class="map__order">
+                            <button
+                                type="button"
+                                class="map__icon-btn"
+                                [disabled]="first"
+                                [attr.aria-label]="'mods.admin.up' | translate: { name: mod.name }"
+                                (click)="move(index, -1)"
+                            >
+                                <tui-icon icon="@tui.chevron-up" class="size-4!" />
+                            </button>
+                            <button
+                                type="button"
+                                class="map__icon-btn"
+                                [disabled]="last"
+                                [attr.aria-label]="'mods.admin.down' | translate: { name: mod.name }"
+                                (click)="move(index, 1)"
+                            >
+                                <tui-icon icon="@tui.chevron-down" class="size-4!" />
+                            </button>
+                        </div>
+
+                        @if (mod.logoUrl) {
+                            <img class="map__logo" [src]="mod.logoUrl" alt="" width="48" height="48" loading="lazy" />
+                        } @else {
+                            <span class="map__logo map__logo--letter" aria-hidden="true">{{ mod.name.charAt(0) }}</span>
+                        }
+
+                        <div class="map__info">
+                            <a class="map__mod-name lh-display" [href]="mod.moddbUrl" target="_blank" rel="noopener">{{ mod.name }}</a>
+
+                            @if (editingNote()?.id === mod.id) {
+                                <div class="map__note-edit">
+                                    <textarea
+                                        class="map__input map__textarea"
+                                        rows="2"
+                                        [attr.maxlength]="noteMax"
+                                        [attr.aria-label]="'mods.admin.note' | translate"
+                                        [value]="editingNote()?.text ?? ''"
+                                        (input)="setNoteDraft($any($event.target).value)"
+                                    ></textarea>
+                                    <div class="map__note-actions">
+                                        <button type="button" class="map__link-btn" (click)="editingNote.set(null)">
+                                            {{ "mods.admin.cancel" | translate }}
+                                        </button>
+                                        <button type="button" class="map__link-btn map__link-btn--strong" (click)="saveNote(mod)">
+                                            {{ "mods.admin.saveNote" | translate }}
+                                        </button>
+                                    </div>
+                                </div>
+                            } @else {
+                                <button type="button" class="map__note" [attr.aria-label]="'mods.admin.editNote' | translate" (click)="editNote(mod)">
+                                    <span class="map__note-text" [class.map__note-text--fallback]="!mod.note">{{ mod.note || mod.summary }}</span>
+                                    <tui-icon icon="@tui.pencil" class="size-3.5!" />
+                                </button>
+                            }
+
+                            @if (mod.latestVersion) {
+                                <span class="map__update">
+                                    {{ "mods.admin.update" | translate: { version: mod.latestVersion } }}
+                                    <button type="button" class="map__update-btn" [disabled]="isBusy(mod.id)" (click)="applyUpdate(mod)">
+                                        {{ "mods.admin.updateApply" | translate }}
+                                    </button>
+                                </span>
+                            }
+                        </div>
+
+                        <lh-input
+                            class="map__select"
+                            type="select"
+                            [label]="'mods.admin.version' | translate"
+                            [items]="releasesOf(mod)"
+                            [displayWith]="releaseLabel"
+                            [ngModel]="currentRelease(mod)"
+                            (ngModelChange)="setRelease(mod, $event)"
+                        />
+
+                        <lh-input
+                            class="map__select"
+                            type="select"
+                            [label]="'mods.admin.audience' | translate"
+                            [items]="audiences"
+                            [displayWith]="audienceLabel"
+                            [ngModel]="mod.audience"
+                            (ngModelChange)="setAudience(mod, $event)"
+                        />
+
+                        <button
+                            type="button"
+                            class="map__icon-btn map__icon-btn--danger"
+                            [disabled]="isBusy(mod.id)"
+                            [attr.aria-label]="'mods.admin.remove' | translate: { name: mod.name }"
+                            (click)="remove(mod)"
+                        >
+                            <tui-icon icon="@tui.trash-2" class="size-4!" />
+                        </button>
+                    </li>
+                }
+            </ol>
+        } @else {
+            <app-empty-state icon="@tui.puzzle" [title]="'mods.admin.emptyTitle' | translate" [description]="'mods.admin.emptyDescription' | translate" />
+        }
+    } @else {
+        <app-admin-list-skeleton [count]="3" />
+    }
+</section>

@@ -1,194 +1,339 @@
 /**
  * Страница «Моды сервера».
  *
- * На широком экране — таблица-ведомость (разделители — hairline на токене
- * `--lh-border`, своих поверхностей у строк нет), на телефоне — карточки
- * в одну колонку. Обе разметки живут в DOM одновременно: какую показать,
- * решает медиазапрос, а не JS, иначе серверный рендер отдавал бы пустую страницу.
+ * Сверху — тёмная плашка архива (как шапка сайта: ночной фон в обеих темах),
+ * ниже — подсказка про папку Mods, поиск с фильтром и карточки модов.
+ * Текст карточек крупный: страницу открывают, когда загрузка в игре застряла,
+ * и человеку нужно быстро найти кнопку, а не вчитываться.
  */
 :host {
     display: block;
 }
 
-/* Кнопка в шапке: как «скопировать адрес» на главной, но на токенах панели. */
-.mods__copy {
-    display: inline-flex;
+.mods {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem;
+}
+
+/* Архив «Скачать всё». */
+.mods__archive {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: var(--lh-space-1_5);
-    flex-shrink: 0;
-    padding: var(--lh-space-2) var(--lh-space-4);
-    border: 1px solid var(--lh-border);
-    border-radius: var(--lh-radius-full);
-    background: var(--lh-surface-2);
-    color: var(--lh-ink);
-    font-size: 0.875rem;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 1.5rem 1.75rem;
+    border-radius: var(--lh-panel-radius, 1.5rem);
+    background-color: var(--lh-night-2);
+    color: var(--lh-parchment-2);
+    box-shadow: inset 0 2px 0 0 color-mix(in srgb, var(--lh-brand) 70%, transparent);
+}
+
+.mods__archive-text {
+    display: flex;
+    flex: 1 1 26rem;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+}
+
+.mods__archive-title {
+    margin: 0;
+    font-size: 1.625rem;
+    line-height: 1.15;
+    color: var(--lh-parchment-3);
+}
+
+.mods__archive-meta,
+.mods__archive-hint {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--lh-parchment-2) 85%, transparent);
+}
+
+.mods__archive-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+
+    // Главное действие страницы — кнопки крупнее обычной CTA.
+    .lh-cta {
+        min-height: 3rem;
+        font-size: 1.0625rem;
+    }
+}
+
+/* Где папка Mods. */
+.mods__folder {
+    padding: 0.875rem 1.25rem;
+}
+
+.mods__folder-title {
+    font-size: 1.0625rem;
     font-weight: 700;
     cursor: pointer;
-    transition:
-        border-color var(--lh-dur-fast) var(--lh-ease-smooth),
-        background-color var(--lh-dur-fast) var(--lh-ease-smooth),
-        color var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
-.mods__copy:hover {
-    border-color: var(--lh-border-strong);
-    background: var(--lh-surface-3);
+.mods__folder-list {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.5rem 1rem;
+    margin: 0.875rem 0 0.25rem;
+
+    dt {
+        font-weight: 700;
+    }
+
+    dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    code {
+        font-size: 0.9375rem;
+    }
 }
 
-.mods__copy--done {
-    border-color: var(--lh-peace);
-    color: var(--lh-peace);
+/* Поиск и фильтр. */
+.mods__filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
 }
 
-/* Пометка обязательности: одна на таблицу и на карточки. */
-.mods__badge {
-    display: inline-block;
-    padding: var(--lh-space-0_5) var(--lh-space-2);
-    border-radius: var(--lh-radius-sm);
-    background: color-mix(in srgb, var(--lh-brand) 14%, transparent);
-    color: var(--lh-brand-ink);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    white-space: nowrap;
+.mods__search {
+    display: flex;
+    flex: 1 1 16rem;
+    min-width: 12rem;
 }
 
-.mods__badge--optional {
-    background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+.mods__field {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--lh-border);
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-surface-2);
     color: var(--lh-ink-3);
 }
 
-.mods__link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--lh-space-1);
-    color: var(--lh-link);
-    font-weight: 700;
-    text-decoration: none;
-    transition: color var(--lh-dur-fast) var(--lh-ease-smooth);
+.mods__input {
+    width: 100%;
+    border: 0;
+    background: none;
+    color: var(--lh-ink);
+    font: inherit;
+    font-size: 1.0625rem;
+    outline: none;
 }
 
-.mods__link:hover {
-    color: var(--lh-link-hover);
-}
-
-/*
- * Переключение раскладок: до 767px — карточки, с 768px — таблица.
- * Обе части присутствуют в разметке, поэтому скрытая убирается из потока
- * целиком (display: none), а не прячется за пределами экрана.
- */
-.mods__table-wrap {
-    display: none;
-}
-
-.mods__cards {
+/* Карточки. */
+.mods__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--lh-space-4);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 28rem), 1fr));
+    gap: 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.mods-card {
+.mods__card {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: var(--lh-space-2);
-    padding: var(--lh-space-5);
-    border: 1px solid var(--lh-border);
-    border-radius: var(--lh-radius-lg);
-    background: var(--lh-surface-2);
-    color: var(--lh-ink);
+    gap: 0.875rem;
 }
 
-.mods-card__name {
+.mods__card-head {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--lh-space-2);
-    margin: 0;
-    font-size: 1.125rem;
-    font-weight: 800;
+    align-items: flex-start;
+    gap: 1rem;
 }
 
-.mods-card__version {
-    color: var(--lh-ink-3);
+.mods__logo {
+    flex: none;
+    width: 4rem;
+    height: 4rem;
+    border-radius: var(--lh-radius-lg);
+    object-fit: cover;
+    background-color: var(--lh-surface-3);
+}
+
+.mods__logo--letter {
+    display: grid;
+    place-items: center;
+    background-color: var(--lh-wood);
+    color: var(--lh-parchment-3);
+    font-family: 'Alegreya', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.mods__card-title {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.mods__name {
+    margin: 0;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.mods__version {
+    margin-left: 0.375rem;
+    font-family: inherit;
     font-size: 0.9375rem;
     font-weight: 700;
+    color: var(--lh-ink-2);
     font-variant-numeric: tabular-nums;
 }
 
-.mods-card__description {
+.mods__by {
     margin: 0;
-    color: var(--lh-ink-2);
-    line-height: 1.6;
-}
-
-@media (min-width: 768px) {
-    .mods__table-wrap {
-        display: block;
-        overflow-x: auto;
-    }
-
-    .mods__cards {
-        display: none;
-    }
-}
-
-.mods-table {
-    inline-size: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-.mods-table th,
-.mods-table td {
-    padding: var(--lh-space-3) var(--lh-space-4);
-    border-bottom: 1px solid var(--lh-border);
-    vertical-align: top;
-}
-
-.mods-table tbody tr:last-child > * {
-    border-bottom: 0;
-}
-
-.mods-table thead th {
+    font-size: 0.9375rem;
     color: var(--lh-ink-3);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    white-space: nowrap;
 }
 
-.mods-table__name {
-    color: var(--lh-ink);
+.mods__badge {
+    flex: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--lh-radius-full);
+    box-shadow: inset 0 0 0 1px var(--lh-border-strong);
+    color: var(--lh-ink-2);
+    font-size: 0.875rem;
     font-weight: 800;
 }
 
-.mods-table__version {
-    color: var(--lh-ink-2);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+.mods__badge--required {
+    background-color: var(--lh-brand);
+    box-shadow: none;
+    color: #fff;
 }
 
-.mods-table__description {
-    color: var(--lh-ink-2);
-    line-height: 1.6;
-    min-inline-size: 20rem;
+.mods__text {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: var(--lh-ink);
 }
 
-.mods-table__muted {
+.mods__card-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.625rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--lh-border);
+}
+
+.mods__compat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
     color: var(--lh-ink-3);
+
+    &[data-compat='exact'] {
+        color: var(--lh-success);
+    }
+
+    &[data-compat='other'] {
+        color: var(--lh-warning-ink);
+    }
 }
 
-/*
- * Возврат к «нет движения»: смена цвета и границы мгновенная.
- * Длительность берём из шкалы, поэтому здесь достаточно обнулить переходы.
- */
-@media (prefers-reduced-motion: reduce) {
-    .mods__copy,
-    .mods__link {
-        transition: none;
+.mods__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.mods__download,
+.mods__moddb {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border-radius: var(--lh-radius-full);
+    font-size: 1rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-smooth),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth),
+        color var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.mods__download {
+    background-color: var(--lh-night-2);
+    color: var(--lh-parchment-2);
+
+    &:hover {
+        background-color: var(--lh-brand);
+        color: #fff;
+    }
+}
+
+.mods__moddb {
+    box-shadow: inset 0 0 0 1px var(--lh-border-strong);
+    color: var(--lh-ink-2);
+
+    &:hover {
+        box-shadow: inset 0 0 0 2px var(--lh-brand);
+        color: var(--lh-brand-ink);
+    }
+}
+
+.mods__not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (max-width: 640px) {
+    .mods {
+        padding: 1rem;
+    }
+
+    .mods__archive {
+        padding: 1.25rem;
+    }
+
+    .mods__logo {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .mods__logo--letter {
+        font-size: 1.375rem;
+    }
+
+    .mods__name {
+        font-size: 1.25rem;
+    }
+
+    .mods__archive-actions {
+        width: 100%;
+
+        > * {
+            flex: 1 1 auto;
+            justify-content: center;
+        }
     }
 }

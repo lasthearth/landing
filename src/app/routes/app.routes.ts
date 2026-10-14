@@ -180,6 +180,7 @@ export const routes: Routes = [
                                     () =>
                                         import('@core/i18n/translations/features/admin.i18n').then((m) => m.ADMIN_I18N),
                                     () => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N),
+                                    () => import('@core/i18n/translations/features/mods.i18n').then((m) => m.MODS_I18N),
                                 ]
                             ),
                         canActivate: [adminGuard],

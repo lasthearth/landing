@@ -1,0 +1,362 @@
+/**
+ * Вкладка «Моды» в админке: поиск на ModDB, форма добавления и список.
+ *
+ * Строка списка — сетка: порядок, логотип, название с пометкой, версия,
+ * аудитория, удаление. На узком экране выпадашки уходят под название.
+ */
+:host {
+    display: block;
+}
+
+.map {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.map__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.map__head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.map__title {
+    margin: 0;
+    font-size: 1.75rem;
+}
+
+.map__subtitle {
+    margin: 0;
+    color: var(--lh-ink-2);
+}
+
+.map__add {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.map__lookup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+.map__field {
+    display: flex;
+    flex: 1 1 20rem;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+}
+
+.map__label {
+    font-weight: 700;
+}
+
+.map__input {
+    min-height: 2.875rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--lh-border-strong);
+    border-radius: var(--lh-radius-md);
+    background-color: var(--lh-surface-2);
+    color: var(--lh-ink);
+    font: inherit;
+    font-size: 1.0625rem;
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 1px;
+    }
+}
+
+.map__textarea {
+    min-height: 4.5rem;
+    padding: 0.625rem 0.875rem;
+    resize: vertical;
+}
+
+.map__hint {
+    font-size: 0.875rem;
+    color: var(--lh-ink-3);
+}
+
+.map__error {
+    margin: 0;
+    font-weight: 700;
+    color: var(--lh-danger-ink);
+}
+
+.map__found {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: var(--lh-radius-lg);
+    background-color: var(--lh-surface-2);
+    box-shadow: inset 0 0 0 1px var(--lh-border);
+}
+
+.map__mod {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+}
+
+.map__mod-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.map__mod-name {
+    font-size: 1.25rem;
+    line-height: 1.15;
+    color: var(--lh-ink);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+a.map__mod-name:hover {
+    color: var(--lh-link-hover);
+}
+
+.map__mod-meta {
+    font-size: 0.9375rem;
+    color: var(--lh-ink-3);
+}
+
+.map__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 0.75rem;
+}
+
+.map__form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.625rem;
+}
+
+.map__logo {
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--lh-radius-md);
+    object-fit: cover;
+    background-color: var(--lh-surface-3);
+}
+
+.map__found .map__logo {
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+.map__logo--letter {
+    display: grid;
+    place-items: center;
+    background-color: var(--lh-wood);
+    color: var(--lh-parchment-3);
+    font-family: 'Alegreya', serif;
+    font-size: 1.375rem;
+    font-weight: 700;
+}
+
+.map__list-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.map__list-title {
+    margin: 0;
+    font-size: 1.375rem;
+}
+
+.map__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.map__row {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) minmax(11rem, 14rem) minmax(10rem, 12rem) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: opacity var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.map__row--busy {
+    opacity: 0.6;
+}
+
+.map__row--hidden .map__mod-name {
+    color: var(--lh-ink-3);
+}
+
+.map__select {
+    --lh-input-min-height: 2.5rem;
+}
+
+.map__order {
+    display: flex;
+    flex-direction: column;
+}
+
+.map__icon-btn {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: var(--lh-radius-full);
+    background: none;
+    color: var(--lh-ink-2);
+    cursor: pointer;
+
+    .map__order & {
+        height: 1.5rem;
+    }
+
+    &:hover:not(:disabled) {
+        background-color: var(--lh-surface-3);
+        color: var(--lh-ink);
+    }
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: default;
+    }
+}
+
+.map__icon-btn--danger {
+    color: var(--lh-danger-ink);
+    box-shadow: inset 0 0 0 1px var(--lh-border);
+}
+
+.map__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.map__note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--lh-ink-2);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--lh-ink);
+    }
+}
+
+.map__note-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.map__note-text--fallback {
+    font-style: italic;
+    color: var(--lh-ink-3);
+}
+
+.map__note-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.map__note-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.map__link-btn {
+    padding: 0.25rem 0;
+    border: 0;
+    background: none;
+    color: var(--lh-ink-2);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.map__link-btn--strong {
+    color: var(--lh-link);
+}
+
+.map__update {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--lh-link);
+}
+
+.map__update-btn {
+    min-height: 1.75rem;
+    padding: 0 0.625rem;
+    border: 1px solid currentColor;
+    border-radius: var(--lh-radius-full);
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.map__spin {
+    animation: map-spin 0.9s linear infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+@keyframes map-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 900px) {
+    .map__row {
+        grid-template-columns: auto auto minmax(0, 1fr) auto;
+    }
+
+    .map__select {
+        grid-column: 3 / -1;
+    }
+}

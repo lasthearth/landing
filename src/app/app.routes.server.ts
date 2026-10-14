@@ -13,7 +13,6 @@ const PRERENDERED = [
     'rules',
     'faq',
     'about',
-    'mods',
     'news',
     'start-game',
     'market',
@@ -38,7 +37,7 @@ const CLIENT_ONLY = ['profile', 'profile/**', 'wiki/edit/**', 'join/**'];
 /**
  * Режимы рендера по адресам.
  *
- * Статьи вики, новости, поселения и игроки появляются каждый день, поэтому
+ * Статьи вики, новости, поселения, игроки и моды меняются без выкладки, поэтому
  * рисуются на сервере по запросу (`RenderMode.Server`). Всё, что начинается
  * с `/`, отдаётся собранным заранее. Неизвестный адрес тоже идёт на сервер —
  * иначе приложение не смогло бы ответить на него кодом 404.
@@ -58,5 +57,7 @@ export const serverRoutes: ServerRoute[] = [
     { path: 'news/:id', renderMode: RenderMode.Server },
     { path: 'settlements/:id', renderMode: RenderMode.Server },
     { path: 'player/:nick', renderMode: RenderMode.Server },
+    // Список модов ведут в админке, он меняется без выкладки сайта.
+    { path: 'mods', renderMode: RenderMode.Server },
     { path: '**', renderMode: RenderMode.Server },
 ];

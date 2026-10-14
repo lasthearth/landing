@@ -6,4 +6,4 @@
  */
 
 export { ModsPageComponent } from './ui/mods-page/mods-page.component';
-export type { ServerMod } from './config/server-mods.constant';
+export { ModsAdminPanelComponent } from './ui/mods-admin-panel/mods-admin-panel.component';

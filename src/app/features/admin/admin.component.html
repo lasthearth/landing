@@ -153,6 +153,20 @@
             <span class="hidden sm:inline">{{ 'admin.tabs.wiki' | translate }}</span>
         </button>
 
+        <!-- Моды сервера -->
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.mods' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 11 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 11"
+            (click)="activeItemIndex = 11"
+        >
+            <tui-icon icon="@tui.puzzle" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.mods' | translate }}</span>
+        </button>
+
         <!-- Игра -->
         <button
             type="button"
@@ -235,6 +249,9 @@
             }
             @case (10) {
                 <app-wiki-admin-panel />
+            }
+            @case (11) {
+                <app-mods-admin-panel />
             }
         }
     </div>
