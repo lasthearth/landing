@@ -12,9 +12,10 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
-import { AmountPipe, TranslatePipe } from '@core/i18n';
+import { AmountPipe, I18nService, TranslatePipe } from '@core/i18n';
 import { buildSettlementMembers, SettlementMembership, SettlementService } from '@entities/settlement';
 import { defaultPlayerLook, PlayerLook, PlayerLookService } from '@entities/player-style';
 import {
@@ -29,6 +30,7 @@ import {
     toPlayersQueryParams,
 } from '@entities/user';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { PaginationComponent } from '@shared/ui/pagination';
@@ -82,8 +84,10 @@ type PlayersState =
     selector: 'app-players-page',
     imports: [
         AmountPipe,
+        FormsModule,
         TranslatePipe,
         TuiIcon,
+        LHInputComponent,
         EmptyStateComponent,
         ErrorStateComponent,
         PageHeaderComponent,
@@ -100,6 +104,7 @@ export class PlayersPageComponent {
     private readonly settlements = inject(SettlementService);
     private readonly looks = inject(PlayerLookService);
     private readonly router = inject(Router);
+    private readonly i18n = inject(I18nService);
     private readonly route = inject(ActivatedRoute);
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -111,7 +116,15 @@ export class PlayersPageComponent {
     /**
      * Порядки сортировки в порядке списка.
      */
-    protected readonly sortOptions: readonly PlayerSort[] = ['seen', 'hours', 'name'];
+    protected readonly sortValues: PlayerSort[] = ['seen', 'hours', 'name'];
+
+    /**
+     * Подпись порядка сортировки для выпадающего списка.
+     *
+     * @param sort Порядок сортировки.
+     * @returns Переведённая подпись.
+     */
+    protected readonly sortLabel = (sort: PlayerSort): string => this.i18n.translate(`players.sort.${sort}`);
 
     /**
      * Карточки-скелетоны на время загрузки.
@@ -286,11 +299,9 @@ export class PlayersPageComponent {
     /**
      * Меняет порядок сортировки и возвращает список на первую страницу.
      *
-     * @param event Событие выбора в списке сортировки.
+     * @param sort Выбранный порядок сортировки.
      */
-    protected setSort(event: Event): void {
-        const sort = (event.target as HTMLSelectElement).value as PlayerSort;
-
+    protected setSort(sort: PlayerSort): void {
         if (sort !== this.query().sort) {
             this.navigate({ sort, page: 1 });
         }

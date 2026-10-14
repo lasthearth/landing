@@ -3,7 +3,7 @@
 
     <div class="players-page__filters lh-panel">
         <label class="players-page__search">
-            <span class="players-page__label">{{ "players.searchLabel" | translate }}</span>
+            <span class="sr-only">{{ "players.searchLabel" | translate }}</span>
             <span class="players-page__field">
                 <tui-icon icon="@tui.search" class="size-4!" />
                 <input
@@ -16,14 +16,15 @@
             </span>
         </label>
 
-        <label class="players-page__sort">
-            <span class="players-page__label">{{ "players.sort.label" | translate }}</span>
-            <select class="players-page__select" [value]="query().sort" (change)="setSort($event)">
-                @for (option of sortOptions; track option) {
-                    <option [value]="option">{{ "players.sort." + option | translate }}</option>
-                }
-            </select>
-        </label>
+        <lh-input
+            class="players-page__sort"
+            type="select"
+            [label]="'players.sort.label' | translate"
+            [items]="sortValues"
+            [displayWith]="sortLabel"
+            [ngModel]="query().sort"
+            (ngModelChange)="setSort($event)"
+        />
 
         <div class="lh-chips players-page__seen" role="group" [attr.aria-label]="'players.seen.label' | translate">
             <span class="lh-chips__label">{{ "players.seen.label" | translate }}</span>
