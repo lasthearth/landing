@@ -3,17 +3,24 @@ import { provideRouter, withInMemoryScrolling, withPreloading } from '@angular/r
 import { buildAngularAuthConfig } from '@logto/js';
 import { AbstractSecurityStorage, DefaultLocalStorageService, LogLevel, provideAuth } from 'angular-auth-oidc-client';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay, withHttpTransferCacheOptions } from '@angular/platform-browser';
 import { provideEventPlugins } from '@taiga-ui/event-plugins';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from '../interceptors/auth.interceptor';
 import { errorInterceptor } from '../interceptors/error.interceptor';
+import { serverApiTimeoutInterceptor } from '../interceptors/server-api-timeout.interceptor';
 import { of } from 'rxjs';
 
 import { routes } from '../../routes/app.routes';
 import { NavPreloadingStrategy } from '../../routes/nav-preloading.strategy';
 import { environment } from './environments/environment';
 import { TUI_COPY_TEXTS, TUI_FILE_TEXTS, TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
+
+/**
+ * Запросы, ответы на которые не переносятся из серверного рендера в браузер:
+ * онлайн на главной и сообщения чата должны приезжать заново.
+ */
+const FRESH_ON_CLIENT_URLS = ['/serverinfo', '/discord'];
 
 /**
  * Формирует конфигурацию OIDC-аутентификации через Logto.
@@ -69,6 +76,11 @@ function getConfig() {
     config.silentRenew = true;
     config.useRefreshToken = true;
     config.renewTimeBeforeTokenExpiresInSeconds = 120;
+    // Logto возвращает на зарегистрированный /home/?code=…, а сервер сразу
+    // переводит этот адрес на /?code=… (один канонический адрес главной).
+    // Без этого флага библиотека признаёт колбэком только точный redirectUri
+    // и молча не завершает вход. Других параметров code/state на сайте нет.
+    config.checkRedirectUrlWhenCheckingIfIsCallback = false;
     config.logLevel = environment.production ? LogLevel.Warn : LogLevel.Debug;
 
     return config;
@@ -89,7 +101,15 @@ export const appConfig: ApplicationConfig = {
         provideAnimations(),
         // Пререндеренная разметка переиспользуется, а не строится заново:
         // без гидратации страница «схлопывалась» и раскрывалась (CLS ~0.7).
-        provideClientHydration(withEventReplay()),
+        // Ответы API, запрошенные при серверном рендере, переносятся в браузер:
+        // страница не запрашивает те же данные второй раз. Онлайн и чат должны
+        // быть свежими, поэтому их запросы в перенос не попадают.
+        provideClientHydration(
+            withEventReplay(),
+            withHttpTransferCacheOptions({
+                filter: (request) => !FRESH_ON_CLIENT_URLS.some((part) => request.url.includes(part)),
+            })
+        ),
         provideEventPlugins(),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(
@@ -100,7 +120,13 @@ export const appConfig: ApplicationConfig = {
             // Чанки разделов меню скачиваются в фоне, чтобы клик не ждал сеть.
             withPreloading(NavPreloadingStrategy)
         ),
-        provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
+        // Ограничение ожидания API при серверном рендере стоит первым: оно
+        // не даёт серверу ждать недоступный API и заменяет ошибку на пустой ответ
+        // раньше, чем до дела дойдёт показ уведомлений.
+        provideHttpClient(
+            withFetch(),
+            withInterceptors([serverApiTimeoutInterceptor, authInterceptor, errorInterceptor])
+        ),
         provideAuth({
             config: getConfig(),
         }),

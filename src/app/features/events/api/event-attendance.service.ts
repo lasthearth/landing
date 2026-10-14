@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CalendarEvent, EventApiService, EventAttendance } from '@entities/event';
 import { UserService } from '@entities/user';
 import { catchError, distinctUntilChanged, Observable, of, switchMap, tap } from 'rxjs';
+import { AnalyticsService } from '@core/services/analytics.service';
 
 /**
  * Записи игрока на события: на какие предстоящие события он идёт.
@@ -15,6 +16,12 @@ import { catchError, distinctUntilChanged, Observable, of, switchMap, tap } from
 export class EventAttendanceService {
     private readonly api = inject(EventApiService);
     private readonly userService = inject(UserService);
+
+    /**
+     * Сервис аналитики: цель event_join.
+     */
+    private readonly analytics: AnalyticsService = inject(AnalyticsService);
+
     private readonly destroyRef = inject(DestroyRef);
 
     /**
@@ -61,6 +68,10 @@ export class EventAttendanceService {
     public set(event: CalendarEvent, attending: boolean): Observable<EventAttendance> {
         return this.api.setAttendance(event.id, attending).pipe(
             tap((result) => {
+                if (result.attending) {
+                    this.analytics.goal('event_join');
+                }
+
                 const updated: CalendarEvent = {
                     ...event,
                     attendeeCount: result.count,

@@ -1,0 +1,45 @@
+// Лента новостей: карточки в сетке, каждая — ссылка на новость.
+.news-list__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 1rem;
+}
+
+.news-list__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--lh-ink);
+    text-decoration: none;
+    transition:
+        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.news-list__card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--lh-shadow-lift);
+}
+
+.news-list__date {
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.news-list__title {
+    font-size: 1.25rem;
+}
+
+.news-list__preview {
+    color: var(--lh-ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .news-list__card {
+        transition: none;
+    }
+
+    .news-list__card:hover {
+        transform: none;
+    }
+}

@@ -4,6 +4,29 @@
 }
 
 /**
+ * Разделы сайта: ссылки на всё, что есть на сайте, включая спрятанное
+ * в выпадающее меню шапки. Строки переносятся, поэтому ряд не ломает подвал.
+ */
+.footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    max-width: 34rem;
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+}
+
+.footer-nav__link {
+    color: var(--lh-ink-2);
+    text-decoration: none;
+    transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.footer-nav__link:hover {
+    color: var(--lh-brand-ink);
+}
+
+/**
  * Едва заметное тёплое свечение очага над футером.
  */
 :host::before {

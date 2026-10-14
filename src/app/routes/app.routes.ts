@@ -39,11 +39,16 @@ export const routes: Routes = [
         loadComponent: () => import('../features/landing/landing.component').then((m) => m.LandingComponent),
         children: [
             {
-                // Канонический адрес главной — /home; корень перенаправляет туда,
-                // чтобы у поисковиков не было двух одинаковых страниц.
+                // Канонический адрес главной — корень домена: он сильнее в выдаче,
+                // а ссылки на сайт короче. Старый /home перенаправляет сюда.
                 path: '',
-                redirectTo: 'home',
                 pathMatch: 'full',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('../features/home/home.component').then((m) => m.HomeComponent),
+                        [() => import('@core/i18n/translations/features/home.i18n').then((m) => m.HOME_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.home, seo: routeSeoData.home },
             },
             {
                 // Вики: список статей. Статьи приезжают с сервера, снимок держит WikiStoreService.
@@ -56,6 +61,17 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.wiki, seo: routeSeoData.wiki },
             },
             {
+                // Раздел вики отдельным адресом: фильтр ?section= поисковик
+                // за страницу не считает. Роут стоит до wiki/:slug.
+                path: 'wiki/razdel/:section',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/wiki').then((m) => m.WikiSectionPageComponent),
+                        [() => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.wiki, seo: routeSeoData.wikiSection },
+            },
+            {
                 path: 'wiki/:slug',
                 loadComponent: () =>
                     loadPage(
@@ -65,13 +81,11 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.wiki, seo: routeSeoData.wikiArticle },
             },
             {
+                // Прежний адрес главной: уводим в корень, чтобы у поисковиков
+                // не было двух одинаковых страниц.
                 path: 'home',
-                loadComponent: () =>
-                    loadPage(
-                        () => import('../features/home/home.component').then((m) => m.HomeComponent),
-                        [() => import('@core/i18n/translations/features/home.i18n').then((m) => m.HOME_I18N)]
-                    ),
-                data: { route_keys: RouteKeys.home, seo: routeSeoData.home },
+                redirectTo: '',
+                pathMatch: 'full',
             },
             {
                 path: 'rules',
@@ -166,6 +180,7 @@ export const routes: Routes = [
                                     () =>
                                         import('@core/i18n/translations/features/admin.i18n').then((m) => m.ADMIN_I18N),
                                     () => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N),
+                                    () => import('@core/i18n/translations/features/mods.i18n').then((m) => m.MODS_I18N),
                                 ]
                             ),
                         canActivate: [adminGuard],
@@ -179,6 +194,32 @@ export const routes: Routes = [
                     import('../features/start-game/start-game.component').then((m) => m.StartGameComponent),
                 canActivate: [guestGuard],
                 data: { route_keys: RouteKeys.startGame, seo: routeSeoData.startGame },
+            },
+            {
+                // О сервере: тексты разделов пишет владелец (задача 010).
+                path: 'about',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/about').then((m) => m.AboutPageComponent),
+                        [
+                            () => import('@core/i18n/translations/features/about.i18n').then((m) => m.ABOUT_I18N),
+                            () =>
+                                import('@core/i18n/translations/features/settlements.i18n').then(
+                                    (m) => m.SETTLEMENTS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.about, seo: routeSeoData.about },
+            },
+            {
+                // Моды сервера: список ведёт владелец (задача 010), страница — здесь.
+                path: 'mods',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/mods').then((m) => m.ModsPageComponent),
+                        [() => import('@core/i18n/translations/features/mods.i18n').then((m) => m.MODS_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.mods, seo: routeSeoData.mods },
             },
             {
                 path: 'market',
@@ -318,6 +359,20 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.join, seo: routeSeoData.join },
             },
             {
+                path: 'players',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/players').then((m) => m.PlayersPageComponent),
+                        [
+                            () =>
+                                import('@core/i18n/translations/features/players.i18n').then(
+                                    (m) => m.PLAYERS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.players, seo: routeSeoData.players },
+            },
+            {
                 path: 'player/:nick',
                 loadComponent: () =>
                     loadPage(
@@ -353,6 +408,17 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.settlements, seo: routeSeoData.settlements },
             },
             {
+                // Лента новостей: отдельный адрес, чтобы робот видел все новости,
+                // а не только блок на главной. Роут стоит до news/:id.
+                path: 'news',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/news').then((m) => m.NewsListPageComponent),
+                        [() => import('@core/i18n/translations/features/news.i18n').then((m) => m.NEWS_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.news, seo: routeSeoData.newsList },
+            },
+            {
                 path: 'news/:id',
                 loadComponent: () =>
                     import('../features/news/ui/news-page/news-page.component').then((m) => m.NewsPageComponent),
@@ -360,7 +426,7 @@ export const routes: Routes = [
             },
             {
                 path: 'unauthorized',
-                redirectTo: '/home',
+                redirectTo: '/',
                 pathMatch: 'full',
             },
             {

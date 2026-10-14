@@ -1,0 +1,24 @@
+# Last Hearth
+
+Last Hearth — русскоязычный ролевой сервер Vintage Story: поселения от лагеря до провинции, дипломатия, войны по правилам, экономика, собственные моды, вики и события.
+
+## Основное
+
+- [О сервере](https://lasthearth.ru/about): концепция, поселения, дипломатия, экономика
+- [Как начать](https://lasthearth.ru/start-game): установка игры, подключение, проверка анкеты
+- [Правила](https://lasthearth.ru/rules): правила сервера Last Hearth
+- [Вики](https://lasthearth.ru/wiki): справочник по механикам игры
+- [FAQ](https://lasthearth.ru/faq): частые вопросы
+- [Поселения](https://lasthearth.ru/settlements): список поселений сервера
+- [Игроки](https://lasthearth.ru/players): список игроков сервера
+- [Моды](https://lasthearth.ru/mods): моды сервера с версиями
+
+## Вики
+
+- [Раздел «Начало игры»](https://lasthearth.ru/wiki/razdel/start)
+- [Раздел «Поселения»](https://lasthearth.ru/wiki/razdel/settlements)
+- [Раздел «Войны»](https://lasthearth.ru/wiki/razdel/war)
+- [Раздел «Экономика»](https://lasthearth.ru/wiki/razdel/economy)
+- [Раздел «Мир»](https://lasthearth.ru/wiki/razdel/world)
+- [Раздел «Помощь»](https://lasthearth.ru/wiki/razdel/help)
+- [Как защищать своё поселение?](https://lasthearth.ru/wiki/pvp-beginner)

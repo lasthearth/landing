@@ -1,5 +1,6 @@
+import { isPlatformBrowser } from '@angular/common';
 import { HttpContextToken, HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { environment } from '@core/config/environments/environment';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { catchError, switchMap, take, throwError } from 'rxjs';
@@ -54,6 +55,12 @@ function isPublicApi(url: string): boolean {
  * и повторить запрос один раз.
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+    // Серверный рендер — всегда гостевая версия: токена у сервера нет,
+    // а обращение к хранилищу сессии сломало бы рендер.
+    if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+        return next(req);
+    }
+
     const oidcSecurityService = inject(OidcSecurityService);
 
     /**

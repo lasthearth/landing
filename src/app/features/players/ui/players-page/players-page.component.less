@@ -1,0 +1,126 @@
+// Страница «Игроки»: панель фильтров и сетка карточек.
+.players-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+.players-page__filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem 1.5rem;
+}
+
+.players-page__search {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 16rem;
+    min-width: 12rem;
+}
+
+// Сорта нужен только размер: подпись, триггер и список рисует проектный lh-input.
+// Высота — как у поля поиска рядом (2.75rem), а не 50px по умолчанию контрола.
+.players-page__sort {
+    --lh-input-min-height: 2.75rem;
+
+    min-width: 12rem;
+    max-width: 16rem;
+}
+
+.players-page__field {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--lh-line);
+    border-radius: 0.75rem;
+    background-color: var(--lh-surface-2);
+    color: var(--lh-ink-3);
+}
+
+.players-page__input {
+    width: 100%;
+    border: 0;
+    background: none;
+    color: var(--lh-ink);
+    font: inherit;
+    outline: none;
+}
+
+.players-page__seen {
+    flex: 1 1 100%;
+}
+
+.players-page__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background-color: var(--lh-peace);
+}
+
+.players-page__summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.players-page__found {
+    margin: 0;
+    color: var(--lh-ink-2);
+}
+
+.players-page__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    scroll-margin-top: 5rem;
+}
+
+.players-page__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+}
+
+.players-page__skeleton {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 10rem;
+}
+
+.players-page__skeleton-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1 1 auto;
+}
+
+.players-page__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+// На телефоне карточки идут в одну колонку, а чипы прокручиваются вбок.
+@media (max-width: 640px) {
+    .players-page {
+        padding: 1rem;
+    }
+
+    .players-page__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .players-page__seen {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+    }
+}

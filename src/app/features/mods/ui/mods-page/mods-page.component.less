@@ -1,0 +1,339 @@
+/**
+ * Страница «Моды сервера».
+ *
+ * Сверху — тёмная плашка архива (как шапка сайта: ночной фон в обеих темах),
+ * ниже — подсказка про папку Mods, поиск с фильтром и карточки модов.
+ * Текст карточек крупный: страницу открывают, когда загрузка в игре застряла,
+ * и человеку нужно быстро найти кнопку, а не вчитываться.
+ */
+:host {
+    display: block;
+}
+
+.mods {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem;
+}
+
+/* Архив «Скачать всё». */
+.mods__archive {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 1.5rem 1.75rem;
+    border-radius: var(--lh-panel-radius, 1.5rem);
+    background-color: var(--lh-night-2);
+    color: var(--lh-parchment-2);
+    box-shadow: inset 0 2px 0 0 color-mix(in srgb, var(--lh-brand) 70%, transparent);
+}
+
+.mods__archive-text {
+    display: flex;
+    flex: 1 1 26rem;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+}
+
+.mods__archive-title {
+    margin: 0;
+    font-size: 1.625rem;
+    line-height: 1.15;
+    color: var(--lh-parchment-3);
+}
+
+.mods__archive-meta,
+.mods__archive-hint {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--lh-parchment-2) 85%, transparent);
+}
+
+.mods__archive-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+
+    // Главное действие страницы — кнопки крупнее обычной CTA.
+    .lh-cta {
+        min-height: 3rem;
+        font-size: 1.0625rem;
+    }
+}
+
+/* Где папка Mods. */
+.mods__folder {
+    padding: 0.875rem 1.25rem;
+}
+
+.mods__folder-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mods__folder-list {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.5rem 1rem;
+    margin: 0.875rem 0 0.25rem;
+
+    dt {
+        font-weight: 700;
+    }
+
+    dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    code {
+        font-size: 0.9375rem;
+    }
+}
+
+/* Поиск и фильтр. */
+.mods__filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+}
+
+.mods__search {
+    display: flex;
+    flex: 1 1 16rem;
+    min-width: 12rem;
+}
+
+.mods__field {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--lh-border);
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-surface-2);
+    color: var(--lh-ink-3);
+}
+
+.mods__input {
+    width: 100%;
+    border: 0;
+    background: none;
+    color: var(--lh-ink);
+    font: inherit;
+    font-size: 1.0625rem;
+    outline: none;
+}
+
+/* Карточки. */
+.mods__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 28rem), 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mods__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.mods__card-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.mods__logo {
+    flex: none;
+    width: 4rem;
+    height: 4rem;
+    border-radius: var(--lh-radius-lg);
+    object-fit: cover;
+    background-color: var(--lh-surface-3);
+}
+
+.mods__logo--letter {
+    display: grid;
+    place-items: center;
+    background-color: var(--lh-wood);
+    color: var(--lh-parchment-3);
+    font-family: 'Alegreya', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.mods__card-title {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.mods__name {
+    margin: 0;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.mods__version {
+    margin-left: 0.375rem;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--lh-ink-2);
+    font-variant-numeric: tabular-nums;
+}
+
+.mods__by {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--lh-ink-3);
+}
+
+.mods__badge {
+    flex: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--lh-radius-full);
+    box-shadow: inset 0 0 0 1px var(--lh-border-strong);
+    color: var(--lh-ink-2);
+    font-size: 0.875rem;
+    font-weight: 800;
+}
+
+.mods__badge--required {
+    background-color: var(--lh-brand);
+    box-shadow: none;
+    color: #fff;
+}
+
+.mods__text {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: var(--lh-ink);
+}
+
+.mods__card-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.625rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--lh-border);
+}
+
+.mods__compat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--lh-ink-3);
+
+    &[data-compat='exact'] {
+        color: var(--lh-success);
+    }
+
+    &[data-compat='other'] {
+        color: var(--lh-warning-ink);
+    }
+}
+
+.mods__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.mods__download,
+.mods__moddb {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border-radius: var(--lh-radius-full);
+    font-size: 1rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-smooth),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth),
+        color var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.mods__download {
+    background-color: var(--lh-night-2);
+    color: var(--lh-parchment-2);
+
+    &:hover {
+        background-color: var(--lh-brand);
+        color: #fff;
+    }
+}
+
+.mods__moddb {
+    box-shadow: inset 0 0 0 1px var(--lh-border-strong);
+    color: var(--lh-ink-2);
+
+    &:hover {
+        box-shadow: inset 0 0 0 2px var(--lh-brand);
+        color: var(--lh-brand-ink);
+    }
+}
+
+.mods__not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (max-width: 640px) {
+    .mods {
+        padding: 1rem;
+    }
+
+    .mods__archive {
+        padding: 1.25rem;
+    }
+
+    .mods__logo {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .mods__logo--letter {
+        font-size: 1.375rem;
+    }
+
+    .mods__name {
+        font-size: 1.25rem;
+    }
+
+    .mods__archive-actions {
+        width: 100%;
+
+        > * {
+            flex: 1 1 auto;
+            justify-content: center;
+        }
+    }
+}

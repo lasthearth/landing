@@ -1,0 +1,148 @@
+@if (!hidden()) {
+    @if (editing()) {
+        <section class="player-about lh-panel" [attr.aria-label]="'player.about.title' | translate">
+            <h2 class="player-about__title lh-display">
+                <tui-icon icon="@tui.feather" class="size-5!" />
+                {{ "player.about.title" | translate }}
+            </h2>
+
+            <label class="player-about__field">
+                <span class="player-about__label">{{ "player.about.title" | translate }}</span>
+                <textarea
+                    class="player-about__input"
+                    rows="7"
+                    [value]="draft()"
+                    [attr.placeholder]="'player.about.placeholder' | translate"
+                    (input)="onInput($any($event.target).value)"
+                    (keydown.control.enter)="save()"
+                    (keydown.escape)="cancel()"
+                ></textarea>
+            </label>
+
+            <p class="player-about__hint">{{ "player.about.hint" | translate }}</p>
+
+            <p
+                class="player-about__counter"
+                [class.player-about__counter--warning]="counterTone() === 'warning'"
+                [class.player-about__counter--danger]="counterTone() === 'danger'"
+                aria-live="polite"
+            >
+                {{ "player.about.counter" | translate: { count: length().symbols } }}
+            </p>
+
+            @if (tooLong()) {
+                <p class="player-about__error" role="alert">
+                    {{ "player.about.tooLong" | translate: { count: excess() } }}
+                </p>
+            }
+
+            @if (tooManyLines()) {
+                <p class="player-about__error" role="alert">{{ "player.about.tooManyLines" | translate }}</p>
+            }
+
+            @if (errorKey(); as key) {
+                <p class="player-about__error" role="alert">{{ key | translate }}</p>
+            }
+
+            <div class="player-about__actions">
+                @if (hasText()) {
+                    <button type="button" class="lh-cta lh-cta--ghost" [disabled]="busy()" (click)="remove()">
+                        {{ "player.about.remove" | translate }}
+                    </button>
+                }
+                <span class="player-about__spacer"></span>
+                <button type="button" class="lh-cta lh-cta--ghost" (click)="cancel()">
+                    {{ "player.about.cancel" | translate }}
+                </button>
+                <button type="button" class="lh-cta" [disabled]="!canSave()" (click)="save()">
+                    {{ "player.about.save" | translate }}
+                </button>
+            </div>
+        </section>
+    } @else if (hasText()) {
+        <section class="player-about lh-panel" [attr.aria-label]="'player.about.title' | translate">
+            <div class="player-about__head">
+                <h2 class="player-about__title lh-display">
+                    <tui-icon icon="@tui.feather" class="size-5!" />
+                    {{ "player.about.title" | translate }}
+                </h2>
+
+                @if (profile().aboutUpdatedAt; as updated) {
+                    <span class="player-about__updated">
+                        {{ "player.about.updated" | translate }}
+                        <time [appRelativeTime]="updated"></time>
+                    </span>
+                }
+
+                @if (isOwner()) {
+                    <button type="button" class="lh-chip" (click)="startEdit()">
+                        <tui-icon icon="@tui.pencil" class="size-4!" />
+                        {{ "player.about.edit" | translate }}
+                    </button>
+                }
+            </div>
+
+            <p class="player-about__text">{{ text() }}</p>
+
+            @if (saved()) {
+                <p class="player-about__saved" role="status">{{ "player.about.saved" | translate }}</p>
+            }
+
+            @if (canModerate() && !isOwner()) {
+                <div class="player-about__hide">
+                    @if (hiding()) {
+                        <p class="player-about__question">{{ "player.about.hideTitle" | translate }}</p>
+
+                        <label class="player-about__field">
+                            <span class="player-about__label">{{ "player.about.hideReason" | translate }}</span>
+                            <input
+                                type="text"
+                                class="player-about__input"
+                                [value]="reason()"
+                                (input)="onReason($any($event.target).value)"
+                            />
+                        </label>
+
+                        @if (errorKey(); as key) {
+                            <p class="player-about__error" role="alert">{{ key | translate }}</p>
+                        }
+
+                        <div class="player-about__actions">
+                            <button type="button" class="lh-cta" [disabled]="!canHide()" (click)="hide()">
+                                {{ "player.about.hide" | translate }}
+                            </button>
+                            <button type="button" class="lh-cta lh-cta--ghost" (click)="toggleHide()">
+                                {{ "player.about.cancel" | translate }}
+                            </button>
+                        </div>
+                    } @else {
+                        <button type="button" class="lh-cta lh-cta--ghost" (click)="toggleHide()">
+                            <tui-icon icon="@tui.eye-off" class="size-4!" />
+                            {{ "player.about.hide" | translate }}
+                        </button>
+                    }
+                </div>
+            }
+        </section>
+    } @else if (isOwner()) {
+        <section class="player-about player-about--empty lh-panel" [attr.aria-label]="'player.about.title' | translate">
+            <h2 class="player-about__title lh-display">
+                <tui-icon icon="@tui.feather" class="size-5!" />
+                {{ "player.about.title" | translate }}
+            </h2>
+
+            <p class="player-about__empty-text">{{ "player.about.emptyOwn" | translate }}</p>
+
+            <div class="player-about__actions">
+                <button type="button" class="lh-cta" (click)="startEdit()">
+                    <tui-icon icon="@tui.pencil" class="size-4!" />
+                    {{ "player.about.write" | translate }}
+                </button>
+
+                @if (saved()) {
+                    <p class="player-about__saved" role="status">{{ "player.about.saved" | translate }}</p>
+                }
+            </div>
+        </section>
+    }
+}

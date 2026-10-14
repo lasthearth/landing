@@ -1,0 +1,198 @@
+<section class="mods">
+    <app-page-header [level]="1" [title]="'mods.title' | translate" [subtitle]="'mods.subtitle' | translate" />
+
+    @switch (state().status) {
+        @case ("loading") {
+            <div class="mods__grid" aria-hidden="true">
+                @for (card of skeletons; track card) {
+                    <div class="mods__card lh-panel">
+                        <div class="mods__card-head">
+                            <app-skeleton width="16" height="16" rounded="xl" />
+                            <div class="mods__card-title">
+                                <app-skeleton width="1/2" height="6" />
+                                <app-skeleton width="1/3" height="4" />
+                            </div>
+                        </div>
+                        <app-skeleton width="full" height="4" />
+                        <app-skeleton width="2/3" height="4" />
+                    </div>
+                }
+            </div>
+        }
+
+        @case ("error") {
+            <app-error-state [title]="'mods.loadError' | translate" (retry)="retry()" />
+        }
+
+        @case ("ready") {
+            @if (noMods()) {
+                <app-empty-state icon="@tui.puzzle" [title]="'mods.title' | translate" [description]="'mods.empty' | translate" />
+            } @else {
+                @if (archive(); as pack) {
+                    <section class="mods__archive" aria-labelledby="mods-archive-title">
+                        <div class="mods__archive-text">
+                            <h2 id="mods-archive-title" class="mods__archive-title lh-display">
+                                {{ "mods.archive.title" | translate }}
+                            </h2>
+                            <p class="mods__archive-meta">
+                                {{ "mods.archive.meta" | translate: { count: pack.count, version: gameVersion } }}
+                                @if (archiveSize()) {
+                                    · {{ "mods.archive.zip" | translate: { size: archiveSize() } }}
+                                }
+                                @if (archiveDate()) {
+                                    · {{ "mods.archive.updated" | translate: { date: archiveDate() } }}
+                                }
+                            </p>
+                            <p class="mods__archive-hint">{{ "mods.archive.hint" | translate }}</p>
+                        </div>
+                        <div class="mods__archive-actions">
+                            <a class="lh-cta" [href]="pack.url" download rel="nofollow">
+                                <tui-icon icon="@tui.download" class="size-5!" />
+                                {{ "mods.archive.download" | translate }}
+                            </a>
+                            <button type="button" class="lh-cta lh-cta--on-dark" (click)="copyList()">
+                                <tui-icon [icon]="copied() ? '@tui.check' : '@tui.copy'" class="size-4!" />
+                                {{ (copied() ? "mods.copied" : "mods.copy") | translate }}
+                            </button>
+                        </div>
+                    </section>
+                }
+
+                <details class="mods__folder lh-panel">
+                    <summary class="mods__folder-title">{{ "mods.folder.title" | translate }}</summary>
+                    <dl class="mods__folder-list">
+                        @for (folder of folders; track folder.os) {
+                            <dt>{{ folder.os }}</dt>
+                            <dd><code>{{ folder.path }}</code></dd>
+                        }
+                    </dl>
+                </details>
+
+                <div class="mods__filters">
+                    <label class="mods__search">
+                        <span class="sr-only">{{ "mods.searchLabel" | translate }}</span>
+                        <span class="mods__field">
+                            <tui-icon icon="@tui.search" class="size-4!" />
+                            <input
+                                type="search"
+                                class="mods__input"
+                                autocomplete="off"
+                                [value]="query()"
+                                [attr.placeholder]="'mods.search' | translate"
+                                (input)="query.set($any($event.target).value)"
+                            />
+                        </span>
+                    </label>
+
+                    <div class="lh-chips" role="group" [attr.aria-label]="'mods.filter.label' | translate">
+                        @for (item of filters; track item) {
+                            <button type="button" class="lh-chip" [attr.aria-pressed]="filter() === item" (click)="setFilter(item)">
+                                {{ "mods.filter." + item | translate }}
+                                <span class="lh-chip__count">{{ countOf(item) }}</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                @if (visible().length) {
+                    <ul class="mods__grid" role="list">
+                        @for (card of visible(); track card.mod.id) {
+                            <li class="mods__card lh-panel">
+                                <div class="mods__card-head">
+                                    @if (card.mod.logoUrl) {
+                                        <img class="mods__logo" [src]="card.mod.logoUrl" alt="" loading="lazy" width="64" height="64" />
+                                    } @else {
+                                        <span class="mods__logo mods__logo--letter" aria-hidden="true">{{ card.initial }}</span>
+                                    }
+
+                                    <div class="mods__card-title">
+                                        <h2 class="mods__name lh-display">
+                                            {{ card.mod.name }}
+                                            @if (card.mod.release) {
+                                                <span class="mods__version">v{{ card.mod.release.version }}</span>
+                                            }
+                                        </h2>
+                                        <p class="mods__by">
+                                            @if (card.mod.author) {
+                                                {{ "mods.by" | translate: { author: card.mod.author } }}
+                                            }
+                                            @if (card.mod.author && card.sideKey) {
+                                                ·
+                                            }
+                                            @if (card.sideKey) {
+                                                {{ card.sideKey | translate }}
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <span class="mods__badge" [class.mods__badge--required]="card.required">
+                                        {{ (card.required ? "mods.audience.required" : "mods.audience.optional") | translate }}
+                                    </span>
+                                </div>
+
+                                @if (card.text) {
+                                    <p class="mods__text" [attr.lang]="card.mod.note ? null : 'en'">{{ card.text }}</p>
+                                }
+
+                                <div class="mods__card-foot">
+                                    @if (card.mod.release) {
+                                        <span class="mods__compat" [attr.data-compat]="card.compatibility">
+                                            <tui-icon
+                                                [icon]="card.compatibility === 'other' ? '@tui.triangle-alert' : '@tui.check'"
+                                                class="size-4!"
+                                            />
+                                            @switch (card.compatibility) {
+                                                @case ("exact") {
+                                                    {{ "mods.compat.exact" | translate: { version: gameVersion } }}
+                                                }
+                                                @case ("minor") {
+                                                    {{ "mods.compat.minor" | translate: { branch: gameBranch } }}
+                                                }
+                                                @default {
+                                                    {{ "mods.compat.other" | translate }}
+                                                }
+                                            }
+                                        </span>
+                                    }
+
+                                    <div class="mods__actions">
+                                        @if (card.mod.release?.fileUrl; as fileUrl) {
+                                            <a
+                                                class="mods__download"
+                                                [href]="fileUrl"
+                                                rel="nofollow"
+                                                [attr.aria-label]="
+                                                    'mods.downloadLabel' | translate: { name: card.mod.name, version: card.mod.release?.version ?? '' }
+                                                "
+                                            >
+                                                <tui-icon icon="@tui.download" class="size-4!" />
+                                                {{ card.size ? ("mods.downloadSize" | translate: { size: card.size }) : ("mods.download" | translate) }}
+                                            </a>
+                                        }
+                                        @if (card.mod.moddbUrl) {
+                                            <a
+                                                class="mods__moddb"
+                                                [href]="card.mod.moddbUrl"
+                                                target="_blank"
+                                                rel="noopener"
+                                                [attr.aria-label]="'mods.moddbLabel' | translate: { name: card.mod.name }"
+                                            >
+                                                {{ "mods.moddb" | translate }}
+                                                <tui-icon icon="@tui.arrow-up-right" class="size-3.5!" />
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                } @else {
+                    <div class="mods__not-found">
+                        <app-empty-state icon="@tui.search-x" [title]="'mods.notFound.title' | translate" [description]="'mods.notFound.text' | translate" />
+                        <button type="button" class="lh-chip" (click)="reset()">{{ "mods.notFound.reset" | translate }}</button>
+                    </div>
+                }
+            }
+        }
+    }
+</section>

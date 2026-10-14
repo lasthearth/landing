@@ -1,4 +1,24 @@
 @import 'tailwindcss';
+
+/**
+ * Шрифты раздаются со своего домена (@fontsource), а не через Google Fonts:
+ * из России fonts.googleapis.com открывается нестабильно, и его CSS блокирует
+ * первый рендер. Fontsource режет файлы по unicode-range, поэтому браузер
+ * скачивает только нужные кириллицу и латиницу.
+ *
+ * Набор начертаний повторяет прежнюю ссылку Google Fonts и taiga-ui-fonts.less:
+ * Advent Pro 400..900, Alegreya 400/500/700, Almendra 400/700, Manrope 500/800.
+ * Manrope — шрифт компонентов Taiga UI по умолчанию (--tui-font-text, --tui-font-heading).
+ */
+@import '@fontsource-variable/advent-pro/wght.css';
+@import '@fontsource/alegreya/400.css';
+@import '@fontsource/alegreya/500.css';
+@import '@fontsource/alegreya/700.css';
+@import '@fontsource/almendra/400.css';
+@import '@fontsource/almendra/700.css';
+@import '@fontsource/manrope/500.css';
+@import '@fontsource/manrope/800.css';
+
 @import './app/shared/styles/appearances/icon.appearance.css';
 @import './app/shared/styles/appearances/hint.appearance.css';
 :root {
@@ -383,7 +403,7 @@
 }
 
 html body {
-    font-family: 'LH Dash', 'Advent Pro', serif !important;
+    font-family: 'LH Dash', 'Advent Pro Variable', serif !important;
     font-optical-sizing: auto;
 }
 
@@ -458,7 +478,7 @@ html body {
 tui-dialog {
     .t-content {
         @apply text-base!;
-        font-family: 'LH Dash', 'Advent Pro', serif !important;
+        font-family: 'LH Dash', 'Advent Pro Variable', serif !important;
         font-optical-sizing: auto;
         background-color: #e2d7bb !important;
         background-image: url('/image_1.webp') !important;
@@ -496,7 +516,7 @@ tui-hint:not([data-appearance='lh-player']) {
 }
 
 tui-hint {
-    font-family: 'LH Dash', 'Advent Pro', serif !important;
+    font-family: 'LH Dash', 'Advent Pro Variable', serif !important;
     font-optical-sizing: auto;
 }
 
@@ -1856,5 +1876,36 @@ html[data-theme='dark'] {
         .lh-page-container {
             padding: 1.5rem;
         }
+    }
+}
+
+/**
+ * Полоса согласия на cookies (features/analytics/ui/consent-banner) у нижнего
+ * края экрана. Пока она видна, на body стоит `lh-has-consent`, а в
+ * `--lh-consent-h` — её высота: страница получает отступ снизу (полоса ничего
+ * не закрывает), плавающие кнопки и нижняя навигация профиля поднимаются над ней.
+ * Вне слоёв — чтобы перебить утилиты Tailwind у панели профиля (`bottom-0`).
+ */
+body.lh-has-consent {
+    padding-bottom: var(--lh-consent-h, 0px);
+}
+
+body.lh-has-consent .lh-scroll-top {
+    bottom: calc(1.75rem + var(--lh-consent-h, 0px));
+}
+
+@media (max-width: 640px) {
+    body.lh-has-consent .lh-scroll-top {
+        bottom: calc(1.25rem + var(--lh-consent-h, 0px));
+    }
+}
+
+@media (max-width: 1279px) {
+    body.lh-has-consent .lh-profile-bar {
+        bottom: var(--lh-consent-h, 0px);
+    }
+
+    body.lh-has-consent.lh-has-bottom-bar .lh-scroll-top {
+        bottom: calc(5.5rem + var(--lh-consent-h, 0px));
     }
 }

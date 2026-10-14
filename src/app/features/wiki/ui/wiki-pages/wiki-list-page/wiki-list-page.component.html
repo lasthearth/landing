@@ -9,7 +9,7 @@
              как у «Создать событие», чтобы шапки страниц не расходились. -->
         <a
             class="lh-cta wiki-list__create"
-            [routerLink]="isAuthenticated() ? '/wiki/edit/new' : '/home'"
+            [routerLink]="isAuthenticated() ? '/wiki/edit/new' : '/'"
             [queryParams]="isAuthenticated() && !isAdmin() ? { suggest: 1 } : {}"
         >
             <tui-icon icon="@tui.plus" class="size-4!" />
@@ -114,6 +114,17 @@
                 </p>
             }
         </div>
+
+        <!-- Разделы отдельными адресами: это ссылки на страницы, а не фильтр,
+             поэтому робот видит их как разделы вики. -->
+        <nav class="wiki-list__sections" [attr.aria-label]="'wiki.public.sections' | translate">
+            @for (link of sectionLinks; track link.id) {
+                <a class="lh-chip" [routerLink]="['/wiki/razdel', link.id]">
+                    <tui-icon [icon]="link.icon" class="size-4!" />
+                    {{ "wiki.sections." + link.id | translate }}
+                </a>
+            }
+        </nav>
 
         @if (cards().length) {
             <section class="wiki-list__grid" [attr.aria-label]="'wiki.public.articles' | translate">

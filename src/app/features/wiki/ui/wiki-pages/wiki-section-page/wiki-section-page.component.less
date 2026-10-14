@@ -1,0 +1,44 @@
+// Карточки статей раздела: короткие ссылки, чтобы раздел читался оглавлением.
+.wiki-section__articles {
+    display: block;
+}
+
+.wiki-section__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 1rem;
+}
+
+.wiki-section__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--lh-ink);
+    text-decoration: none;
+    transition:
+        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.wiki-section__card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--lh-shadow-lift);
+}
+
+.wiki-section__card-title {
+    font-size: 1.25rem;
+}
+
+.wiki-section__card-lead {
+    color: var(--lh-ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wiki-section__card {
+        transition: none;
+    }
+
+    .wiki-section__card:hover {
+        transform: none;
+    }
+}

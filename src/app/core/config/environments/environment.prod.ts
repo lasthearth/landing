@@ -1,5 +1,7 @@
 export const environment = {
     production: true,
+    // Адрес возврата зарегистрирован в Logto именно таким — менять только вместе
+    // с настройками приложения в Logto. Сервер переводит /home/?code=… на /?code=….
     redirectUri: 'https://lasthearth.ru/home/',
     postLogoutRedirectUri: 'https://lasthearth.ru/home/',
     apiUrl: 'https://api.lasthearth.ru/v1',

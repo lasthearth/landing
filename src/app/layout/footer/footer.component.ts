@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { environment } from '@core/config/environments/environment';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { TranslatePipe } from '@core/i18n';
+import { FOOTER_NAV_LINKS } from './config/footer-nav-links.constant';
 
 /**
  * Компонент подвала.
@@ -17,4 +18,9 @@ import { TranslatePipe } from '@core/i18n';
 })
 export class FooterComponent {
     protected readonly environment = environment;
+
+    /**
+     * Ссылки на публичные разделы сайта.
+     */
+    protected readonly navLinks = FOOTER_NAV_LINKS;
 }

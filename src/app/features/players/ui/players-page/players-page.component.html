@@ -1,0 +1,124 @@
+<section class="players-page">
+    <app-page-header [title]="'players.title' | translate" [subtitle]="'players.subtitle' | translate" />
+
+    <div class="players-page__filters lh-panel">
+        <label class="players-page__search">
+            <span class="sr-only">{{ "players.searchLabel" | translate }}</span>
+            <span class="players-page__field">
+                <tui-icon icon="@tui.search" class="size-4!" />
+                <input
+                    type="search"
+                    class="players-page__input"
+                    [value]="search()"
+                    [attr.placeholder]="'players.search' | translate"
+                    (input)="onSearchInput($any($event.target).value)"
+                />
+            </span>
+        </label>
+
+        <lh-input
+            class="players-page__sort"
+            type="select"
+            [label]="'players.sort.label' | translate"
+            [items]="sortValues"
+            [displayWith]="sortLabel"
+            [ngModel]="query().sort"
+            (ngModelChange)="setSort($event)"
+        />
+
+        <div class="lh-chips players-page__seen" role="group" [attr.aria-label]="'players.seen.label' | translate">
+            <span class="lh-chips__label">{{ "players.seen.label" | translate }}</span>
+            @for (filter of seenFilters; track filter) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-pressed]="query().lastSeen === filter"
+                    (click)="setSeen(filter)"
+                >
+                    @if (filter === "online") {
+                        <span class="players-page__dot" aria-hidden="true"></span>
+                    }
+                    {{ "players.seen." + filter | translate }}
+                    @if (countOf(filter); as count) {
+                        <span class="lh-chip__count">{{ count | amount }}</span>
+                    }
+                </button>
+            }
+        </div>
+    </div>
+
+    @switch (state().status) {
+        @case ("loading") {
+            <div class="players-page__grid">
+                @for (card of skeletons; track $index) {
+                    <div class="players-page__skeleton lh-panel">
+                        <app-skeleton width="12" height="12" [circle]="true" />
+                        <div class="players-page__skeleton-lines">
+                            <app-skeleton width="1/2" height="5" />
+                            <app-skeleton width="full" height="4" />
+                            <app-skeleton width="2/3" height="4" />
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @case ("error") {
+            <app-error-state [title]="'players.loadError' | translate" (retry)="retry()" />
+        }
+
+        @case ("ready") {
+            @if (page(); as list) {
+                @if (list.players.length) {
+                    <div class="players-page__summary">
+                        <p class="players-page__found">
+                            {{ "players.found" | translate: { count: list.total } }}
+                            ·
+                            {{ "players.pageOf" | translate: { page: list.page, pages: pages() } }}
+                        </p>
+
+                        @if (hasFilters()) {
+                            <button type="button" class="lh-chip" (click)="resetFilters()">
+                                {{ "players.reset" | translate }}
+                            </button>
+                        }
+                    </div>
+
+                    <section #listTop class="players-page__list">
+                        <div class="players-page__grid">
+                            @for (player of list.players; track player.userId) {
+                                <app-player-card
+                                    [player]="player"
+                                    [look]="lookOf(player)"
+                                    [settlement]="membershipOf(player)?.settlement ?? null"
+                                    [role]="membershipOf(player)?.role ?? null"
+                                />
+                            }
+                        </div>
+
+                        <app-pagination
+                            [page]="list.page"
+                            [total]="list.total"
+                            [pageSize]="list.pageSize"
+                            (pageChange)="goToPage($event)"
+                        />
+                    </section>
+                } @else {
+                    <div class="players-page__empty">
+                        <app-empty-state
+                            icon="@tui.users-round"
+                            [title]="'players.empty' | translate"
+                            [description]="'players.emptyHint' | translate"
+                        />
+
+                        @if (hasFilters()) {
+                            <button type="button" class="lh-chip" (click)="resetFilters()">
+                                {{ "players.reset" | translate }}
+                            </button>
+                        }
+                    </div>
+                }
+            }
+        }
+    }
+</section>

@@ -15,6 +15,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IVerificationQuestion } from '@entities/rule-question';
+import { AnalyticsService } from '@core/services/analytics.service';
 
 @Component({
     standalone: true,
@@ -72,6 +73,11 @@ export class PlayerVerificationFormComponent {
      * Сервис пользователя.
      */
     private readonly userService = inject(UserService);
+
+    /**
+     * Сервис аналитики: цель verification_submit.
+     */
+    private readonly analytics: AnalyticsService = inject(AnalyticsService);
 
     /**
      * Сервис интернационализации.
@@ -151,7 +157,9 @@ export class PlayerVerificationFormComponent {
                             ),
                             takeUntilDestroyed(this.destroyRef)
                         )
-                        .subscribe();
+                        .subscribe({
+                            next: () => this.analytics.goal('verification_submit'),
+                        });
                 }),
                 takeUntilDestroyed(this.destroyRef)
             )

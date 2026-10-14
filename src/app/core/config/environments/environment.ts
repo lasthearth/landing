@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
+    // Как и в проде, совпадает с адресом, зарегистрированным в Logto.
     redirectUri: 'http://127.0.0.1:4200/home',
     postLogoutRedirectUri: 'http://127.0.0.1:4200/home',
     apiUrl: 'https://api.lasthearth.ru/v1',

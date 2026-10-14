@@ -21,6 +21,7 @@ import { VerificationService } from '@features/verification';
 import { OnboardingService } from '../../api/onboarding.service';
 import { OnboardingStep } from '../../model/onboarding-step';
 import { OnboardingStepKey } from '../../model/onboarding-step-key';
+import { AnalyticsService } from '@core/services/analytics.service';
 
 /**
  * Приглашение в Discord сервера.
@@ -79,6 +80,11 @@ export class NewcomerPathComponent {
      * Сервис пользователя.
      */
     private readonly userService = inject(UserService);
+
+    /**
+     * Сервис аналитики: цель sign_up_click.
+     */
+    private readonly analytics: AnalyticsService = inject(AnalyticsService);
 
     /**
      * Сервис верификации.
@@ -306,6 +312,7 @@ export class NewcomerPathComponent {
      * Вход на сайт.
      */
     protected signIn(): void {
+        this.analytics.goal('sign_up_click');
         this.userService.signIn();
     }
 

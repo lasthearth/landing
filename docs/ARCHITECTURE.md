@@ -51,7 +51,7 @@ features/market/
 
 - Все страницы — ленивые (`loadComponent`) и подтягивают свой словарь через `loadPage()` (см. `docs/I18N.md`).
 - Тяжёлые виджеты — `@defer (on idle)`.
-- Новый пререндер-роут → добавить в `routes.txt`; таблица роутов — `docs/project-map.md`.
+- Новый роут → режим рендера в `src/app/app.routes.server.ts` (`RenderMode.Prerender`/`Server`/`Client`); таблица роутов — `docs/project-map.md`.
 - SEO: `SeoService` (`src/app/core/services/seo.service.ts`), ключи — `src/app/routes/enums/route-keys.ts`, данные — `src/app/routes/seo-data.ts`.
 
 ## Как добавить страницу
@@ -59,5 +59,5 @@ features/market/
 1. `features/<name>/` + компонент `<name>.component.ts` (+ html, less).
 2. Словарь `core/i18n/translations/features/<name>.i18n.ts` в двух локалях.
 3. Роут в `src/app/routes/app.routes.ts`: `loadComponent` + `loadPage` + `data: { route_keys, seo }`.
-4. Ключ в `route-keys.ts`, метаданные в `seo-data.ts`, путь в `routes.txt`, если нужен пререндер.
+4. Ключ в `route-keys.ts`, метаданные в `seo-data.ts`, режим рендера в `app.routes.server.ts`.
 5. `npm run map` — карта навигации обновится сама.

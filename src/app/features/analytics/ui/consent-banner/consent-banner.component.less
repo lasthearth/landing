@@ -1,0 +1,135 @@
+/**
+ * Полоса согласия на аналитические cookies — во всю ширину у нижнего края.
+ *
+ * Полоса не перекрывает страницу: пока она видна, компонент ставит на body
+ * класс `lh-has-consent` и переменную `--lh-consent-h` с её высотой. По ним
+ * у страницы появляется отступ снизу, а плавающие виджеты (чат, «наверх»,
+ * нижняя навигация профиля) поднимаются над полосой — см. src/styles.css.
+ *
+ * Фон — ночной, одинаковый в обеих темах: это часть тёмной рамки сайта, как
+ * шапка, а не пергаментная панель контента. Слой выше плавающих виджетов,
+ * но ниже приветственного экрана (z-200) — на заставке её не видно.
+ */
+:host {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 190;
+    display: block;
+    // Плашка смонтирована вне layout, где задан шрифт сайта, — повторяем его.
+    font-family: 'LH Dash', 'Advent Pro Variable', serif;
+}
+
+.consent-bar {
+    color: var(--lh-parchment-2);
+    background-color: color-mix(in srgb, var(--lh-night-2) 97%, transparent);
+    box-shadow:
+        inset 0 2px 0 0 color-mix(in srgb, var(--lh-brand) 75%, transparent),
+        0 -12px 32px -12px rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    animation: consent-rise var(--lh-dur-mid) var(--lh-ease-out-quart) both;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+.consent-bar__inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 76rem;
+    margin: 0 auto;
+    padding: 0.875rem 1.5rem calc(0.875rem + env(safe-area-inset-bottom));
+
+    @media (max-width: 720px) {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem calc(0.875rem + env(safe-area-inset-bottom));
+    }
+}
+
+// Сургучная печать вместо голой иконки — в духе сайта.
+.consent-bar__seal {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    color: var(--lh-parchment-3);
+    background-color: var(--lh-brand-deep);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--lh-parchment-3) 25%, transparent);
+
+    tui-icon {
+        width: 1.125rem;
+        height: 1.125rem;
+        font-size: 1.125rem;
+    }
+
+    @media (max-width: 720px) {
+        display: none;
+    }
+}
+
+.consent-bar__text {
+    flex: 1 1 22rem;
+    min-width: 0;
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: color-mix(in srgb, var(--lh-parchment-2) 85%, transparent);
+}
+
+.consent-bar__title {
+    font-weight: 800;
+    color: var(--lh-parchment-3);
+}
+
+.consent-bar__link {
+    font-weight: 700;
+    color: var(--lh-accent-soft);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    white-space: nowrap;
+
+    &:hover {
+        color: #fff;
+        text-decoration-thickness: 2px;
+    }
+}
+
+.consent-bar__actions {
+    display: flex;
+    flex: none;
+    gap: 0.5rem;
+
+    @media (max-width: 720px) {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+}
+
+// Кнопки одной ширины и высоты: выбор равнозначный, отказ не прячем.
+.consent-bar__btn {
+    justify-content: center;
+    min-width: 8.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    font-size: 1rem;
+
+    @media (max-width: 720px) {
+        min-width: 0;
+    }
+}
+
+@keyframes consent-rise {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+}

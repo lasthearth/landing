@@ -1,0 +1,18 @@
+<nav class="breadcrumbs" [attr.aria-label]="'shared.breadcrumbs.label' | translate">
+    <ol class="breadcrumbs__list">
+        <li class="breadcrumbs__item">
+            <a class="breadcrumbs__link" routerLink="/">{{ "shared.breadcrumbs.home" | translate }}</a>
+        </li>
+
+        @for (item of items(); track item.label; let last = $last) {
+            <li class="breadcrumbs__item">
+                <span class="breadcrumbs__sep" aria-hidden="true">/</span>
+                @if (last || !item.link) {
+                    <span class="breadcrumbs__current" aria-current="page">{{ item.label }}</span>
+                } @else {
+                    <a class="breadcrumbs__link" [routerLink]="item.link">{{ item.label }}</a>
+                }
+            </li>
+        }
+    </ol>
+</nav>

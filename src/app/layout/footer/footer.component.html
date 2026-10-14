@@ -8,6 +8,14 @@
                 <p class="font-semibold">© lasthearth.ru 2025-2026</p>
                 <p>{{ "footer.rights" | translate }}</p>
             </div>
+            <!-- Разделы: подвал — единственное место, где робот видит ссылки
+                 на всё, что в шапке спрятано в выпадающее меню «Сообщество». -->
+            <nav class="footer-nav" [attr.aria-label]="'footer.nav.title' | translate">
+                @for (link of navLinks; track link.route) {
+                    <a [routerLink]="link.route" class="footer-nav__link">{{ link.key | translate }}</a>
+                }
+            </nav>
+
             <div class="flex sm:gap-4 gap-2 flex-col sm:flex-row">
                 <a [routerLink]="['/faq']" class="self-start">{{ "footer.faq" | translate }}</a>
 

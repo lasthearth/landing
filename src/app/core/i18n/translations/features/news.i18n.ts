@@ -32,6 +32,10 @@ export const NEWS_I18N = {
                 notFoundText: 'Возможно, её удалили или ссылка неверна.',
             },
             list: {
+                title: 'Новости',
+                subtitle: 'Что происходит на сервере: обновления, события и жизнь поселений.',
+                empty: 'Новостей пока нет',
+                emptyHint: 'Первая новость появится здесь, как только её опубликуют.',
                 showMore: 'Показать ещё',
             },
             create: {
@@ -131,6 +135,10 @@ export const NEWS_I18N = {
                 notFoundText: 'It may have been deleted or the link is wrong.',
             },
             list: {
+                title: 'News',
+                subtitle: 'What happens on the server: updates, events and settlement life.',
+                empty: 'No news yet',
+                emptyHint: 'The first news will appear here once it is published.',
                 showMore: 'Show more',
             },
             create: {

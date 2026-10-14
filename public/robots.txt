@@ -1,5 +1,19 @@
 User-agent: *
 Allow: /
 Disallow: /profile
+Disallow: /wiki/edit
+Disallow: /join/
+Disallow: /*?ref=
 
+User-agent: Yandex
+Allow: /
+Disallow: /profile
+Disallow: /wiki/edit
+Disallow: /join/
+Clean-param: ref /
+Clean-param: q&section&tag&sort&seen&page /wiki
+Clean-param: q&seen&sort&page /players
+
+# ИИ-поисковики (GPTBot, ClaudeBot, PerplexityBot, YandexAdditional) разрешены:
+# общих запретов, которые их задевают, в файле нет.
 Sitemap: https://lasthearth.ru/sitemap.xml
