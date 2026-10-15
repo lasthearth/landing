@@ -1,6 +1,10 @@
 <div class="lh-page-container flex flex-col gap-6">
     <div class="flex flex-col gap-4">
         <app-page-header [title]="'settlements.list.title' | translate">
+            <a routerLink="/map" class="lh-cta lh-cta--ghost">
+                <tui-icon icon="@tui.map" class="size-4!" />
+                {{ 'settlements.list.map' | translate }}
+            </a>
             <button type="button" class="lh-cta" (click)="openFinder()">
                 <tui-icon icon="@tui.compass" class="size-4!" />
                 {{ 'settlements.finder.action' | translate }}

@@ -1,0 +1,160 @@
+<section class="world-map-page">
+    <app-page-header [level]="1" [title]="'worldMap.title' | translate" [subtitle]="'worldMap.subtitle' | translate">
+        <a routerLink="/settlements" class="lh-cta lh-cta--ghost">
+            <tui-icon icon="@tui.list" class="size-4!" />
+            {{ "worldMap.toList" | translate }}
+        </a>
+    </app-page-header>
+
+    @if (demo()) {
+        <p class="world-map-page__demo" role="note">
+            <tui-icon icon="@tui.info" class="size-5! shrink-0" />
+            {{ "worldMap.demo" | translate }}
+        </p>
+    }
+
+    @if (points().length === 0 && !demo()) {
+        <app-empty-state icon="@tui.map" [title]="'worldMap.empty.title' | translate" [description]="'worldMap.empty.description' | translate" />
+    } @else {
+        <figure class="world-map-page__sheet">
+            <div class="world-map-page__stage">
+                <app-world-map-canvas [points]="points()" [selectedId]="selectedId()" (selectedChange)="select($event)" />
+
+                @if (selected(); as entry) {
+                    <aside class="world-map-page__card" aria-live="polite">
+                        <button
+                            type="button"
+                            class="world-map-page__card-close"
+                            [attr.aria-label]="'worldMap.card.close' | translate"
+                            [attr.title]="'worldMap.card.close' | translate"
+                            (click)="select(null)"
+                        >
+                            <tui-icon icon="@tui.x" />
+                        </button>
+
+                        <div class="world-map-page__card-head">
+                            <svg class="world-map-page__sign" viewBox="-14 -14 28 28" [attr.data-course]="entry.course" aria-hidden="true">
+                                <circle r="12" class="world-map-page__sign-wash" />
+                                <path [attr.d]="entry.glyph" fill-rule="evenodd" class="world-map-page__sign-glyph" />
+                            </svg>
+                            <div class="min-w-0">
+                                <h2 class="world-map-page__card-title">{{ entry.point.name }}</h2>
+                                <!-- Без переносов между частями: иначе перед запятой встанет пробел. -->
+                                <p class="world-map-page__card-type">
+                                    {{ typeKey(entry.point.type) | translate }}@if (entry.course !== "none") {,
+                                        <span [attr.data-course]="entry.course" class="world-map-page__course">{{ courseKey(entry.course) | translate }}</span>}
+                                </p>
+                            </div>
+                        </div>
+
+                        <dl class="world-map-page__facts">
+                            @if (entry.point.membersCount !== undefined) {
+                                <div>
+                                    <dt>{{ "worldMap.card.members" | translate }}</dt>
+                                    <dd>{{ entry.point.membersCount }}</dd>
+                                </div>
+                            } @else if (entry.point.placedBy) {
+                                <div>
+                                    <dt>{{ "worldMap.card.owner" | translate }}</dt>
+                                    <dd>{{ entry.point.placedBy }}</dd>
+                                </div>
+                            }
+                            <div>
+                                <dt>{{ "worldMap.card.fromHearth" | translate }}</dt>
+                                <dd>
+                                    {{ "worldMap.blocks" | translate: { count: entry.distance } }}
+                                    @if (entry.directionKey) {
+                                        {{ entry.directionKey | translate }}
+                                    }
+                                </dd>
+                            </div>
+                            <div class="world-map-page__facts-wide">
+                                <dt>{{ "worldMap.card.herald" | translate }}</dt>
+                                <dd class="world-map-page__coords">
+                                    <span>X {{ formatCoordinate(entry.point.herald.x) }}</span>
+                                    <span>Z {{ formatCoordinate(entry.point.herald.z) }}</span>
+                                    <!-- Высота словом: в шрифте сайта латинская Y похожа на «Ч». -->
+                                    <span>{{ "worldMap.card.height" | translate: { y: entry.point.herald.y } }}</span>
+                                </dd>
+                            </div>
+                        </dl>
+
+                        @if (!entry.point.settlementId) {
+                            <p class="world-map-page__card-note">{{ "worldMap.card.hamletNote" | translate }}</p>
+                        } @else if (demo()) {
+                            <p class="world-map-page__card-note">{{ "worldMap.card.demoNote" | translate }}</p>
+                        } @else {
+                            <a class="world-map-page__card-link" [routerLink]="['/settlements', entry.point.settlementId]">
+                                {{ "worldMap.card.open" | translate }}
+                            </a>
+                        }
+                    </aside>
+                }
+            </div>
+
+            <!-- Условные знаки — подпись к карте, а не отдельный блок. -->
+            <figcaption class="world-map-page__key">
+                <span class="world-map-page__key-title">{{ "worldMap.legend.title" | translate }}</span>
+                <ul class="world-map-page__key-list" [attr.aria-label]="'worldMap.legend.types' | translate">
+                    @for (type of legendTypes; track type) {
+                        <li>
+                            <svg class="world-map-page__sign world-map-page__sign--key" viewBox="-10 -10 20 20" aria-hidden="true">
+                                <path [attr.d]="glyph(type)" fill-rule="evenodd" class="world-map-page__sign-glyph" />
+                            </svg>
+                            {{ typeKey(type) | translate }}
+                        </li>
+                    }
+                </ul>
+                <ul class="world-map-page__key-list" [attr.aria-label]="'worldMap.legend.courses' | translate">
+                    @for (course of legendCourses; track course) {
+                        <li>
+                            <svg class="world-map-page__sign world-map-page__sign--key" viewBox="-10 -10 20 20" [attr.data-course]="course" aria-hidden="true">
+                                <circle r="8" class="world-map-page__sign-wash" />
+                            </svg>
+                            {{ courseKey(course) | translate }}
+                        </li>
+                    }
+                </ul>
+            </figcaption>
+        </figure>
+
+        <section class="world-map-page__index" aria-labelledby="world-map-index-title">
+            <h2 id="world-map-index-title" class="world-map-page__index-title">
+                {{ "worldMap.list.title" | translate }}
+                <span class="world-map-page__index-count">{{ entries().length }}</span>
+            </h2>
+            <p class="world-map-page__index-hint">{{ "worldMap.list.hint" | translate }}</p>
+
+            <ol class="world-map-page__entries">
+                @for (entry of entries(); track entry.point.id) {
+                    <li>
+                        <button
+                            type="button"
+                            class="world-map-page__entry"
+                            [attr.aria-current]="entry.point.id === selectedId() ? 'true' : null"
+                            (click)="show(entry)"
+                        >
+                            <svg class="world-map-page__sign" viewBox="-14 -14 28 28" [attr.data-course]="entry.course" aria-hidden="true">
+                                <circle r="12" class="world-map-page__sign-wash" />
+                                <path [attr.d]="entry.glyph" fill-rule="evenodd" class="world-map-page__sign-glyph" />
+                            </svg>
+                            <span class="world-map-page__entry-text">
+                                <span class="world-map-page__entry-name">{{ entry.point.name }}</span>
+                                <span class="world-map-page__entry-meta">
+                                    {{ typeKey(entry.point.type) | translate }}@if (entry.point.membersCount !== undefined) {,
+                                        {{ "worldMap.list.members" | translate: { count: entry.point.membersCount } }} }
+                                </span>
+                                <span class="world-map-page__entry-distance">
+                                    {{ "worldMap.blocks" | translate: { count: entry.distance } }}
+                                    @if (entry.directionKey) {
+                                        {{ entry.directionKey | translate }}
+                                    }
+                                </span>
+                            </span>
+                        </button>
+                    </li>
+                }
+            </ol>
+        </section>
+    }
+</section>

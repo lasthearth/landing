@@ -279,6 +279,15 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.settlements, seo: routeSeoData.settlements },
             },
             {
+                path: 'map',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/world-map').then((m) => m.WorldMapPageComponent),
+                        [() => import('@core/i18n/translations/features/world-map.i18n').then((m) => m.WORLD_MAP_I18N)]
+                    ),
+                data: { route_keys: RouteKeys.worldMap, seo: routeSeoData.worldMap },
+            },
+            {
                 path: 'gallery',
                 loadComponent: () =>
                     loadPage(

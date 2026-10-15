@@ -26,6 +26,7 @@ const PRERENDERED = [
     'events',
     'lfg',
     'players',
+    'map',
 ];
 
 /**
