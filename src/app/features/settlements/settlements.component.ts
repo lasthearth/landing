@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
     SettlementService,
     ISettlement,
@@ -59,7 +59,8 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
  */
 @Component({
     selector: 'app-settlements',
-    imports: [PageHeaderComponent, 
+    imports: [PageHeaderComponent,
+        RouterLink,
         SettlementCardComponent,
         SettlementCardSkeletonComponent,
         EmptyStateComponent,

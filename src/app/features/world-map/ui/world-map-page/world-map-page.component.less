@@ -1,0 +1,354 @@
+/**
+ * Страница «Карта земель».
+ *
+ * Карта во всю ширину; карточка выбранного поселения на широком экране лежит
+ * поверх карты в левом верхнем углу (там нет кнопок), на телефоне — под ней.
+ * Ниже — легенда и список поселений по удалённости от Очага.
+ */
+:host {
+    display: block;
+}
+
+.world-map-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem;
+
+    @media (max-width: 767px) {
+        padding: 1rem;
+    }
+}
+
+.world-map-page__demo {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    margin: 0;
+    padding: 0.875rem 1rem;
+    border: 1px dashed var(--lh-border-strong);
+    border-radius: 1rem;
+    color: var(--lh-ink-2);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.world-map-page__stage {
+    position: relative;
+}
+
+/* Значок поселения — тот же, что на карте. */
+.world-map-page__mark {
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+.world-map-page__mark--small {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.world-map-page__mark-halo {
+    fill: none;
+    stroke: var(--mark-course, var(--lh-neutral));
+    stroke-width: 2.5;
+}
+
+.world-map-page__mark-disc {
+    fill: #2a1f18;
+}
+
+.world-map-page__mark-glyph {
+    fill: #f5eedd;
+}
+
+/* Цвет курса на светлых панелях — из палитры сайта, на тёмной карточке — посветлее. */
+[data-course='peace'] {
+    --mark-course: var(--lh-peace);
+}
+
+[data-course='neutral'] {
+    --mark-course: var(--lh-neutral);
+}
+
+[data-course='danger'] {
+    --mark-course: var(--lh-danger-strong);
+}
+
+/* В тёмной теме цвета сайта на тёмной панели тусклые — берём цвета карты. */
+:host-context([data-theme='dark']) {
+    [data-course='peace'] {
+        --mark-course: #6cc28a;
+    }
+
+    [data-course='neutral'] {
+        --mark-course: #cbc1af;
+    }
+
+    [data-course='danger'] {
+        --mark-course: #e5664c;
+    }
+}
+
+/* Карточка выбранного поселения. */
+.world-map-page__card {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    width: min(21rem, calc(100% - 5.5rem));
+    padding: 1.125rem 1.125rem 1.25rem;
+    border: 1px solid color-mix(in srgb, #c9a880 30%, transparent);
+    border-radius: 1.125rem;
+    background-color: rgb(24 17 13 / 0.94);
+    color: #f0e6d2;
+    box-shadow: 0 16px 36px -18px rgb(0 0 0 / 0.8);
+
+    &[data-course='peace'] {
+        --mark-course: #6cc28a;
+    }
+
+    &[data-course='neutral'] {
+        --mark-course: #cbc1af;
+    }
+
+    &[data-course='danger'] {
+        --mark-course: #e5664c;
+    }
+
+    @media (max-width: 767px) {
+        position: static;
+        width: auto;
+        margin-top: 0.75rem;
+    }
+}
+
+.world-map-page__card-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: color-mix(in srgb, #f0e6d2 75%, transparent);
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgb(255 255 255 / 0.08);
+        color: #f0e6d2;
+    }
+
+    &:focus-visible {
+        outline: 2px solid #ffaa5c;
+        outline-offset: 1px;
+    }
+
+    tui-icon {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+}
+
+.world-map-page__card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-right: 2rem;
+}
+
+.world-map-page__card-title {
+    margin: 0;
+    font-family: 'Almendra', 'Alegreya', Georgia, serif;
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.world-map-page__card-type {
+    margin: 0.125rem 0 0;
+    color: color-mix(in srgb, #f0e6d2 75%, transparent);
+    font-size: 0.9375rem;
+}
+
+.world-map-page__course {
+    color: var(--mark-course);
+}
+
+.world-map-page__facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem 1rem;
+    margin: 0;
+
+    dt {
+        color: color-mix(in srgb, #f0e6d2 62%, transparent);
+        font-size: 0.875rem;
+    }
+
+    dd {
+        margin: 0.125rem 0 0;
+        font-size: 1rem;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.world-map-page__facts-wide {
+    grid-column: 1 / -1;
+}
+
+.world-map-page__coords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+}
+
+.world-map-page__card-note {
+    margin: 0;
+    color: color-mix(in srgb, #f0e6d2 62%, transparent);
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+.world-map-page__card-link {
+    align-self: flex-start;
+}
+
+/* Легенда и список. */
+.world-map-page__below {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 2fr);
+    gap: 1.25rem;
+    align-items: start;
+
+    @media (max-width: 899px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.world-map-page__legend,
+.world-map-page__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+}
+
+.world-map-page__section-title {
+    margin: 0;
+    color: var(--lh-ink);
+    font-family: 'Almendra', 'Alegreya', Georgia, serif;
+    font-size: 1.375rem;
+    font-weight: 700;
+}
+
+.world-map-page__legend-caption {
+    margin: 0.25rem 0 0;
+    color: var(--lh-ink-3);
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+.world-map-page__legend-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        color: var(--lh-ink-2);
+        font-size: 0.9375rem;
+    }
+}
+
+.world-map-page__legend-note {
+    margin: 0.25rem 0 0;
+    color: var(--lh-ink-3);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+}
+
+.world-map-page__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.world-map-page__row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 0.875rem;
+    background: transparent;
+    color: var(--lh-ink);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--lh-ink) 6%, transparent);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 1px;
+    }
+
+    &[aria-current='true'] {
+        border-color: color-mix(in srgb, var(--lh-brand) 55%, transparent);
+        background-color: color-mix(in srgb, var(--lh-brand) 9%, transparent);
+    }
+}
+
+.world-map-page__row-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.world-map-page__row-name {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.world-map-page__row-meta {
+    color: var(--lh-ink-3);
+    font-size: 0.9375rem;
+}
+
+.world-map-page__row-distance {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+    color: var(--lh-ink-2);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.world-map-page__row-direction {
+    color: var(--lh-ink-3);
+}

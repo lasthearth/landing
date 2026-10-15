@@ -1,0 +1,210 @@
+<div
+    #stage
+    class="world-map"
+    [class.world-map--dragging]="dragging()"
+    tabindex="0"
+    role="application"
+    [attr.aria-label]="'worldMap.canvas.label' | translate"
+    aria-describedby="world-map-keys"
+    (keydown)="onKeydown($event)"
+>
+    <p id="world-map-keys" class="sr-only">{{ "worldMap.canvas.keys" | translate }}</p>
+
+    <svg
+        class="world-map__svg"
+        [attr.viewBox]="'0 0 ' + size().width + ' ' + size().height"
+        preserveAspectRatio="xMidYMid slice"
+        (pointerdown)="onPointerDown($event)"
+        (pointermove)="onPointerMove($event)"
+        (pointerup)="onPointerUp($event)"
+        (pointercancel)="onPointerUp($event)"
+        (pointerleave)="onPointerLeave()"
+        (wheel)="onWheel($event)"
+        (click)="onBackgroundClick()"
+    >
+        <defs>
+            <!-- Огонь поселения: тёплый центр, растворяется в темноте. -->
+            <radialGradient id="world-map-ember">
+                <stop offset="0" stop-color="#ffb05c" stop-opacity="0.55" />
+                <stop offset="0.35" stop-color="#e2661c" stop-opacity="0.22" />
+                <stop offset="1" stop-color="#b54a10" stop-opacity="0" />
+            </radialGradient>
+            <radialGradient id="world-map-hearth">
+                <stop offset="0" stop-color="#ffd38a" stop-opacity="0.75" />
+                <stop offset="0.3" stop-color="#ff8a2a" stop-opacity="0.32" />
+                <stop offset="1" stop-color="#c35a17" stop-opacity="0" />
+            </radialGradient>
+            <!-- Края карты уходят в ночь: мир за ними не исследован. -->
+            <radialGradient id="world-map-vignette" cx="50%" cy="50%" r="75%">
+                <stop offset="0.55" stop-color="#0d0907" stop-opacity="0" />
+                <stop offset="1" stop-color="#0d0907" stop-opacity="0.85" />
+            </radialGradient>
+            <!-- Зерно бумаги: без него тёмный фон выглядит как пустой экран. -->
+            <filter id="world-map-grain" x="0" y="0" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.85  0 0 0 0 0.7  0 0 0 0 0.5  0 0 0 0.07 0" />
+            </filter>
+        </defs>
+
+        <rect class="world-map__ground" [attr.width]="size().width" [attr.height]="size().height" />
+        <rect [attr.width]="size().width" [attr.height]="size().height" filter="url(#world-map-grain)" />
+
+        <!-- Румбы от Очага. -->
+        <g class="world-map__rhumbs">
+            @for (rhumb of rhumbs(); track $index) {
+                <line
+                    [class.world-map__rhumb--major]="rhumb.major"
+                    [attr.x1]="hearth().x"
+                    [attr.y1]="hearth().y"
+                    [attr.x2]="rhumb.x2"
+                    [attr.y2]="rhumb.y2"
+                />
+            }
+        </g>
+
+        <!-- Сетка координат: те же X и Z, что в игре. -->
+        <g class="world-map__grid">
+            @for (line of grid().xs; track line.value) {
+                <line
+                    [class.world-map__grid-origin]="line.origin"
+                    [attr.x1]="line.position"
+                    [attr.x2]="line.position"
+                    y1="0"
+                    [attr.y2]="size().height"
+                />
+            }
+            @for (line of grid().zs; track line.value) {
+                <line
+                    [class.world-map__grid-origin]="line.origin"
+                    x1="0"
+                    [attr.x2]="size().width"
+                    [attr.y1]="line.position"
+                    [attr.y2]="line.position"
+                />
+            }
+        </g>
+
+        <!-- Свет поселений и Очага: рисуется до меток, чтобы не мутить их. -->
+        <g class="world-map__glows">
+            <circle [attr.cx]="hearth().x" [attr.cy]="hearth().y" r="120" fill="url(#world-map-hearth)" class="world-map__hearth-glow" />
+            @for (mark of marks(); track mark.point.id) {
+                <circle [attr.cx]="mark.x" [attr.cy]="mark.y" [attr.r]="mark.glow" fill="url(#world-map-ember)" />
+            }
+        </g>
+
+        <rect [attr.width]="size().width" [attr.height]="size().height" fill="url(#world-map-vignette)" pointer-events="none" />
+
+        <!-- Подписи сетки по краям. -->
+        <g class="world-map__grid-labels" aria-hidden="true">
+            @for (line of grid().xs; track line.value) {
+                <text [attr.x]="line.position + 4" y="16">{{ line.label }}</text>
+            }
+            @for (line of grid().zs; track line.value) {
+                <text x="6" [attr.y]="line.position - 5">{{ line.label }}</text>
+            }
+        </g>
+
+        <!-- Очаг: точка появления. -->
+        <g class="world-map__hearth" [attr.transform]="'translate(' + hearth().x + ' ' + hearth().y + ')'">
+            <circle r="13" class="world-map__hearth-ring" />
+            <path
+                class="world-map__hearth-flame"
+                d="M0 -9C3 -5 6 -2 6 2.5C6 6.5 3.3 9 0 9S-6 6.5 -6 2.5C-6 -0.5 -4 -2.5 -2.5 -4C-2.2 -1.5 -1 0 0.5 0.5C0.2 -3 -0.5 -6 0 -9Z"
+            />
+            <text class="world-map__hearth-label" y="35" text-anchor="middle">{{ "worldMap.hearth" | translate }}</text>
+        </g>
+
+        <!-- Поселения. -->
+        <g class="world-map__marks">
+            @for (mark of marks(); track mark.point.id) {
+                <g
+                    class="world-map__mark"
+                    [class.world-map__mark--selected]="mark.point.id === selectedId()"
+                    [attr.data-course]="mark.course"
+                    [attr.transform]="'translate(' + mark.x + ' ' + mark.y + ')'"
+                    role="button"
+                    tabindex="0"
+                    [attr.aria-label]="mark.point.name"
+                    [attr.aria-pressed]="mark.point.id === selectedId()"
+                    (click)="onMarkClick($event, mark.point)"
+                    (keydown)="onMarkKeydown($event, mark.point)"
+                    (pointerenter)="hoveredId.set(mark.point.id)"
+                    (pointerleave)="hoveredId.set(null)"
+                    (focus)="hoveredId.set(mark.point.id)"
+                    (blur)="hoveredId.set(null)"
+                >
+                    <!-- Невидимый круг побольше: в метку легко попасть пальцем. -->
+                    <circle r="22" class="world-map__mark-hit" />
+                    <circle r="15" class="world-map__mark-halo" />
+                    <circle r="11.5" class="world-map__mark-disc" />
+                    <path [attr.d]="mark.glyph" fill-rule="evenodd" class="world-map__mark-glyph" />
+                    @if (mark.labelVisible) {
+                        <text
+                            class="world-map__mark-label"
+                            [attr.x]="mark.labelLeft ? -18 : 18"
+                            [attr.text-anchor]="mark.labelLeft ? 'end' : 'start'"
+                            y="5"
+                        >
+                            {{ mark.point.name }}
+                        </text>
+                    }
+                </g>
+            }
+        </g>
+    </svg>
+
+    <!-- Роза ветров: север — к отрицательной Z, как в игре. -->
+    <svg class="world-map__compass" viewBox="-40 -40 80 80" aria-hidden="true">
+        <circle r="27" class="world-map__compass-ring" />
+        <path d="M0 -30L5 0L0 30L-5 0Z" class="world-map__compass-needle" />
+        <path d="M-30 0L0 -4L30 0L0 4Z" class="world-map__compass-cross" />
+        <path d="M0 -30L5 0L0 0Z" class="world-map__compass-north" />
+        <text y="-32" text-anchor="middle">{{ "worldMap.compass.n" | translate }}</text>
+    </svg>
+
+    <div class="world-map__controls">
+        <button
+            type="button"
+            class="world-map__control"
+            [disabled]="!canZoomIn()"
+            [attr.aria-label]="'worldMap.canvas.zoomIn' | translate"
+            [attr.title]="'worldMap.canvas.zoomIn' | translate"
+            (click)="zoomIn()"
+        >
+            <tui-icon icon="@tui.plus" />
+        </button>
+        <button
+            type="button"
+            class="world-map__control"
+            [disabled]="!canZoomOut()"
+            [attr.aria-label]="'worldMap.canvas.zoomOut' | translate"
+            [attr.title]="'worldMap.canvas.zoomOut' | translate"
+            (click)="zoomOut()"
+        >
+            <tui-icon icon="@tui.minus" />
+        </button>
+        <button
+            type="button"
+            class="world-map__control"
+            [attr.aria-label]="'worldMap.canvas.fit' | translate"
+            [attr.title]="'worldMap.canvas.fit' | translate"
+            (click)="fit()"
+        >
+            <tui-icon icon="@tui.maximize" />
+        </button>
+    </div>
+
+    <div class="world-map__readout" aria-hidden="true">
+        @if (cursorLabel(); as cursor) {
+            <span class="world-map__coords">X {{ cursor.x }} &nbsp; Z {{ cursor.z }}</span>
+        }
+        <span class="world-map__scale">
+            <span class="world-map__scale-bar" [style.width.px]="scaleBar().width"></span>
+            {{ "worldMap.canvas.scale" | translate: { blocks: scaleBar().label } }}
+        </span>
+    </div>
+
+    @if (wheelHint()) {
+        <p class="world-map__wheel-hint" role="status">{{ "worldMap.canvas.wheelHint" | translate }}</p>
+    }
+</div>
