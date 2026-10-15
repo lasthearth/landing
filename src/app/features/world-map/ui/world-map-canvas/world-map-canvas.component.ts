@@ -31,7 +31,13 @@ import {
     zoomAt,
 } from '../../lib/map-view';
 import { placeLabels } from '../../lib/place-labels';
-import { WorldMapCourse, glowRadius, settlementCourse, settlementGlyph, settlementTier } from '../../lib/settlement-mark';
+import { WorldMapCourse, settlementCourse, settlementGlyph, settlementTier, washRadius } from '../../lib/settlement-mark';
+
+/**
+ * Начертание подписи: как на старых картах, крупное поселение подписано
+ * разрядкой прописными, мелкое — строчными и тоньше.
+ */
+type LabelStyle = 'major' | 'middle' | 'minor';
 
 /**
  * Поселение, пересчитанное в пиксели текущего вида.
@@ -40,22 +46,40 @@ interface ScreenMark {
     point: WorldMapPoint;
     x: number;
     y: number;
-    glow: number;
+    wash: number;
     glyph: string;
     course: WorldMapCourse;
+    labelStyle: LabelStyle;
     labelVisible: boolean;
-    /** Подпись слева от метки: справа она ушла бы за край карты. */
+    /** Подпись слева от знака: справа она ушла бы за рамку. */
     labelLeft: boolean;
 }
 
 /**
- * Линия сетки с подписью на краю карты.
+ * Линия сетки с подписью у рамки.
  */
 interface GridLine {
     value: number;
     position: number;
     label: string;
     origin: boolean;
+}
+
+/**
+ * Отрезок градусной рамки: старые карты размечали поля чередованием
+ * залитых и пустых делений, здесь деление — шаг сетки.
+ */
+interface FrameSegment {
+    from: number;
+    to: number;
+}
+
+/**
+ * Половина луча розы ветров: одна сторона залита тушью, другая — бумагой.
+ */
+interface RoseHalf {
+    d: string;
+    dark: boolean;
 }
 
 /** Размер до первого замера: при серверном рендере карта рисуется с ним. */
@@ -82,29 +106,42 @@ const FLY_DURATION = 420;
 /** Длины линейки масштаба в блоках. */
 const SCALE_BAR_STEPS = [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000];
 
-/** Направления румбов от Очага, градусы. */
-const RHUMB_ANGLES = Array.from({ length: 16 }, (_, index) => index * 22.5);
+/** Внешняя рамка: отступ от края листа, пиксели. */
+const FRAME_INSET = 10;
 
-/** Ширина угла, где подписи двух линеек столкнулись бы, пиксели. */
-const GRID_LABEL_CORNER = 64;
+/** Ширина градусной полосы между внешней и внутренней рамкой, пиксели. */
+const FRAME_BAND = 7;
 
-/** Полоса справа под кнопками масштаба, где подписи сетки не рисуются, пиксели. */
-const GRID_LABEL_CONTROLS = 64;
+/** Радиус розы ветров вокруг Очага, пиксели; на узком экране — ROSE_RADIUS_NARROW. */
+const ROSE_RADIUS = 44;
 
-/** Радиус метки вместе с кольцом, пиксели. */
-const MARK_RADIUS = 15;
+/** Радиус розы ветров на телефоне: большая роза закрывала бы ближние к Очагу поселения. */
+const ROSE_RADIUS_NARROW = 30;
 
-/** Расстояние от центра метки до подписи, пиксели. */
-const LABEL_OFFSET = 18;
+/** Ширина карты, начиная с которой роза ветров рисуется полного размера. */
+const ROSE_WIDE_FROM = 560;
+
+/** Отступ кнопок масштаба и картуша от края карты, пиксели (1.75rem). */
+const OVERLAY_INSET = 28;
+
+/** Радиус знака поселения вместе с полем вокруг, пиксели: сюда не ложатся чужие подписи. */
+const MARK_RADIUS = 11;
+
+/** Расстояние от центра знака до подписи, пиксели. */
+const LABEL_OFFSET = 13;
 
 /** Высота подписи поселения, пиксели. */
-const LABEL_HEIGHT = 20;
+const LABEL_HEIGHT = 18;
+
+/** Средняя ширина буквы для оценки длины подписи, по начертаниям. */
+const LETTER_WIDTH: Record<LabelStyle, number> = { major: 10.2, middle: 7.8, minor: 6.9 };
 
 /**
- * Карта земель: тёмный мир, в котором поселения светятся огнями, а в центре —
- * Очаг, точка появления новичков.
+ * Карта земель в манере старинной гравированной карты: лист бумаги в двойной
+ * рамке с градусной разметкой, роза ветров вокруг Очага и румбы от неё,
+ * условные знаки тушью и акварельная заливка курса под ними.
  *
- * Метки и подписи рисуются в пикселях экрана, поэтому при приближении не растут:
+ * Знаки и подписи рисуются в пикселях экрана, поэтому при приближении не растут:
  * растут только расстояния. Мышью карту двигают перетаскиванием, масштаб —
  * колёсиком с Ctrl (без Ctrl колёсико прокручивает страницу), на телефоне —
  * одним пальцем и щипком. С клавиатуры: стрелки, «+», «−» и «0».
@@ -133,6 +170,7 @@ export class WorldMapCanvasComponent {
     public readonly selectedChange = output<string | null>();
 
     protected readonly size = signal<MapSize>(DEFAULT_SIZE);
+
     /**
      * Вид, который выбрал человек. Пока он карту не трогал — null, и карта
      * показывает все поселения: так и при серверном рендере, и после загрузки данных.
@@ -142,69 +180,128 @@ export class WorldMapCanvasComponent {
     protected readonly view = computed<MapView>(
         () => this.manualView() ?? fitView(this.worldPoints(), this.size(), this.fitPadding())
     );
+
     protected readonly hoveredId = signal<string | null>(null);
     protected readonly cursor = signal<{ x: number; z: number } | null>(null);
     protected readonly wheelHint = signal(false);
     protected readonly dragging = signal(false);
 
+    /** Радиус розы ветров для текущей ширины карты. */
+    protected readonly roseRadius = computed(() => (this.size().width < ROSE_WIDE_FROM ? ROSE_RADIUS_NARROW : ROSE_RADIUS));
+
+    /** Лучи розы ветров: четыре главных стороны, четыре промежуточных и восемь малых. */
+    protected readonly rose = computed(() => buildRose(this.roseRadius()));
+
     protected readonly canZoomIn = computed(() => this.view().scale < MAX_SCALE * 0.999);
     protected readonly canZoomOut = computed(() => this.view().scale > MIN_SCALE * 1.001);
+
+    /** Внутренняя рамка: всё содержимое карты обрезается по ней. */
+    protected readonly inner = computed(() => {
+        const offset = FRAME_INSET + FRAME_BAND;
+        const { width, height } = this.size();
+
+        return { x: offset, y: offset, width: width - offset * 2, height: height - offset * 2 };
+    });
+
+    protected readonly frame = computed(() => {
+        const { width, height } = this.size();
+
+        return { inset: FRAME_INSET, band: FRAME_BAND, width: width - FRAME_INSET * 2, height: height - FRAME_INSET * 2 };
+    });
 
     /** Где на экране Очаг. */
     protected readonly hearth = computed<ScreenPoint>(() => worldToScreen(this.view(), this.size(), { x: 0, z: 0 }));
 
-    /** Лучи-румбы от Очага, как на старых морских картах. */
+    /** Румбы: тонкие линии от розы ветров, как на портуланах. */
     protected readonly rhumbs = computed(() => {
         const { x, y } = this.hearth();
+        const radius = this.roseRadius();
         const length = Math.hypot(this.size().width, this.size().height) * 2;
 
-        return RHUMB_ANGLES.map((angle) => {
-            const radians = (angle * Math.PI) / 180;
+        return Array.from({ length: 16 }, (_, index) => {
+            const radians = (index * 22.5 * Math.PI) / 180;
+            const cos = Math.cos(radians);
+            const sin = Math.sin(radians);
 
             return {
-                major: angle % 90 === 0,
-                x2: x + Math.cos(radians) * length,
-                y2: y + Math.sin(radians) * length,
+                major: index % 4 === 0,
+                x1: x + cos * radius,
+                y1: y + sin * radius,
+                x2: x + cos * length,
+                y2: y + sin * length,
             };
         });
     });
 
-    /** Сетка координат с подписями по краям. */
+    /**
+     * Подпись Очага прячется, если под ней стоит знак поселения: подпись Очага
+     * переставить некуда, а знак важнее.
+     */
+    protected readonly hearthLabelVisible = computed(() => {
+        const hearth = this.hearth();
+        const top = hearth.y + this.roseRadius() + 2;
+        const view = this.view();
+        const size = this.size();
+
+        return !this.points().some((point) => {
+            const mark = worldToScreen(view, size, { x: point.herald.x, z: point.herald.z });
+
+            return Math.abs(mark.x - hearth.x) < 34 + MARK_RADIUS && mark.y > top - MARK_RADIUS && mark.y < top + 18 + MARK_RADIUS;
+        });
+    });
+
+    /** Шаг сетки в блоках. */
+    private readonly step = computed(() => gridStep(this.view().scale));
+
+    /** Сетка координат с подписями у рамки. */
     protected readonly grid = computed(() => {
         const view = this.view();
         const size = this.size();
-        const step = gridStep(view.scale);
-        const lines = gridLines(view, size, step);
+        const inner = this.inner();
+        const lines = gridLines(view, size, this.step());
+        const toLine = (value: number, position: number): GridLine => ({
+            value,
+            position,
+            label: this.formatCoordinate(value),
+            origin: value === 0,
+        });
 
-        // Подписи не лезут в угол, где сходятся две линейки, и под кнопки масштаба.
         return {
-            xs: lines.xs
-                .filter((value) => {
-                    const x = worldToScreen(view, size, { x: value, z: 0 }).x;
+            xs: lines.xs.map((value) => toLine(value, worldToScreen(view, size, { x: value, z: 0 }).x)),
+            zs: lines.zs.map((value) => toLine(value, worldToScreen(view, size, { x: 0, z: value }).y)),
+            // Подписи не лезут в угол, где сходятся две линейки, и под кнопки масштаба.
+            xLabels: lines.xs
+                .map((value) => toLine(value, worldToScreen(view, size, { x: value, z: 0 }).x))
+                .filter((line) => line.position > inner.x + 48 && line.position < inner.x + inner.width - 60),
+            zLabels: lines.zs
+                .map((value) => toLine(value, worldToScreen(view, size, { x: 0, z: value }).y))
+                .filter((line) => line.position > inner.y + 28 && line.position < inner.y + inner.height - 6),
+        };
+    });
 
-                    return x > GRID_LABEL_CORNER && x < size.width - GRID_LABEL_CONTROLS;
-                })
-                .map(
-                (value): GridLine => ({
-                    value,
-                    position: worldToScreen(view, size, { x: value, z: 0 }).x,
-                    label: this.formatCoordinate(value),
-                    origin: value === 0,
-                })
+    /** Залитые деления градусной рамки по горизонтали и вертикали. */
+    protected readonly frameMarks = computed(() => {
+        const view = this.view();
+        const size = this.size();
+        const step = this.step();
+        const start = FRAME_INSET;
+
+        return {
+            xs: this.frameSegments(
+                (value) => worldToScreen(view, size, { x: value, z: 0 }).x,
+                screenToWorld(view, size, { x: start, y: 0 }).x,
+                screenToWorld(view, size, { x: size.width - start, y: 0 }).x,
+                step,
+                start,
+                size.width - start
             ),
-            zs: lines.zs
-                .filter((value) => {
-                    const y = worldToScreen(view, size, { x: 0, z: value }).y;
-
-                    return y > GRID_LABEL_CORNER / 2 && y < size.height - 8;
-                })
-                .map(
-                (value): GridLine => ({
-                    value,
-                    position: worldToScreen(view, size, { x: 0, z: value }).y,
-                    label: this.formatCoordinate(value),
-                    origin: value === 0,
-                })
+            zs: this.frameSegments(
+                (value) => worldToScreen(view, size, { x: 0, z: value }).y,
+                screenToWorld(view, size, { x: 0, y: start }).z,
+                screenToWorld(view, size, { x: 0, y: size.height - start }).z,
+                step,
+                start,
+                size.height - start
             ),
         };
     });
@@ -213,28 +310,33 @@ export class WorldMapCanvasComponent {
     protected readonly marks = computed<ScreenMark[]>(() => {
         const view = this.view();
         const size = this.size();
-        const glowZoom = Math.min(1.5, Math.max(0.75, Math.sqrt(view.scale / 0.04)));
+        const inner = this.inner();
         const forced = new Set([this.selectedId(), this.hoveredId()]);
 
-        const marks = this.points().map((point) => {
+        const marks = this.points().map((point): ScreenMark => {
             const screen = worldToScreen(view, size, { x: point.herald.x, z: point.herald.z });
+            const labelStyle = this.labelStyle(point);
+            const width = this.labelWidth(point.name, labelStyle);
 
             return {
                 point,
                 x: screen.x,
                 y: screen.y,
-                glow: glowRadius(point.type) * glowZoom,
+                wash: washRadius(point.type),
                 glyph: settlementGlyph(point.type),
                 course: settlementCourse(point.diplomacy),
+                labelStyle,
                 labelVisible: false,
-                labelLeft: screen.x + LABEL_OFFSET + this.labelWidth(point.name) > size.width - 8,
+                labelLeft: screen.x + LABEL_OFFSET + width > inner.x + inner.width - 6,
             };
         });
 
         const hearth = this.hearth();
-        // Подписи не ложатся на чужие метки и на Очаг.
+        const rose = this.roseRadius();
+        // Подписи не ложатся на знаки, розу ветров с подписью Очага, кнопки и картуш.
         const obstacles = [
-            { x: hearth.x - MARK_RADIUS, y: hearth.y - MARK_RADIUS, width: MARK_RADIUS * 2, height: MARK_RADIUS * 2 },
+            { x: hearth.x - rose, y: hearth.y - rose - 14, width: rose * 2, height: rose * 2 + 36 },
+            ...this.overlayBoxes(),
             ...marks.map((mark) => ({
                 x: mark.x - MARK_RADIUS,
                 y: mark.y - MARK_RADIUS,
@@ -242,26 +344,46 @@ export class WorldMapCanvasComponent {
                 height: MARK_RADIUS * 2,
             })),
         ];
-        const visible = placeLabels([
-            // Подпись Очага занимает место первой.
-            { id: '__hearth', x: hearth.x - 30, y: hearth.y + 22, width: 60, height: LABEL_HEIGHT, priority: 1000 },
-            ...marks.map((mark) => ({
-                id: mark.point.id,
-                x: mark.labelLeft ? mark.x - LABEL_OFFSET - this.labelWidth(mark.point.name) : mark.x + LABEL_OFFSET,
-                y: mark.y - LABEL_HEIGHT / 2,
-                width: this.labelWidth(mark.point.name),
-                height: LABEL_HEIGHT,
-                priority: (forced.has(mark.point.id) ? 100 : 0) + settlementTier(mark.point.type) * 10 + mark.point.membersCount / 100,
-            })),
-        ], obstacles);
+        const chosen = placeLabels(
+            marks.map((mark) => {
+                const width = this.labelWidth(mark.point.name, mark.labelStyle);
+                const y = mark.y - LABEL_HEIGHT / 2;
+                const right = { x: mark.x + LABEL_OFFSET, y, side: 'right' as const };
+                const left = { x: mark.x - LABEL_OFFSET - width, y, side: 'left' as const };
+
+                return {
+                    id: mark.point.id,
+                    // Справа от знака, а у правого края или при тесноте — слева;
+                    // за рамку подпись не выходит ни с какой стороны.
+                    positions: (mark.labelLeft ? [left] : [right, left]).filter(
+                        (position) => position.x >= inner.x + 4 && position.x + width <= inner.x + inner.width - 4
+                    ),
+                    width,
+                    height: LABEL_HEIGHT,
+                    priority:
+                        (forced.has(mark.point.id) ? 100 : 0) +
+                        settlementTier(mark.point.type) * 10 +
+                        (mark.point.membersCount ?? 0) / 100,
+                };
+            }),
+            obstacles
+        );
 
         // Сначала рисуем мелкие и невыбранные: выбранное поселение всегда сверху.
         return marks
-            .map((mark) => ({ ...mark, labelVisible: visible.has(mark.point.id) }))
+            .map((mark) => {
+                const side = chosen.get(mark.point.id)?.side;
+
+                return {
+                    ...mark,
+                    labelVisible: side !== undefined,
+                    labelLeft: side === 'left',
+                };
+            })
             .sort((a, b) => Number(forced.has(a.point.id)) - Number(forced.has(b.point.id)));
     });
 
-    /** Линейка масштаба: круглое число блоков длиной 60–150 пикселей. */
+    /** Линейка масштаба: круглое число блоков длиной 60–150 пикселей, в четыре деления. */
     protected readonly scaleBar = computed(() => {
         const scale = this.view().scale;
         const blocks = SCALE_BAR_STEPS.find((step) => step * scale >= 60) ?? SCALE_BAR_STEPS[SCALE_BAR_STEPS.length - 1];
@@ -273,7 +395,7 @@ export class WorldMapCanvasComponent {
     protected readonly cursorLabel = computed(() => {
         const cursor = this.cursor();
 
-        return cursor ? { x: this.formatNumber(Math.round(cursor.x)), z: this.formatNumber(Math.round(cursor.z)) } : null;
+        return cursor ? { x: this.formatCoordinate(Math.round(cursor.x)), z: this.formatCoordinate(Math.round(cursor.z)) } : null;
     });
 
     private readonly pointers = new Map<number, ScreenPoint>();
@@ -381,8 +503,8 @@ export class WorldMapCanvasComponent {
             return;
         }
 
-        // Захват — только когда началось перетаскивание: иначе щелчок по метке
-        // достался бы карте, а не метке.
+        // Захват — только когда началось перетаскивание: иначе щелчок по знаку
+        // достался бы карте, а не знаку.
         const target = event.currentTarget as Element;
         if (!target.hasPointerCapture(event.pointerId)) {
             target.setPointerCapture(event.pointerId);
@@ -453,15 +575,40 @@ export class WorldMapCanvasComponent {
         event.preventDefault();
     }
 
-    protected courseKey(course: WorldMapCourse): string {
-        return 'worldMap.course.' + course;
+    /**
+     * Начертание подписи по типу: провинция и город — разрядкой прописными,
+     * хутор — мельче и светлее.
+     */
+    private labelStyle(point: WorldMapPoint): LabelStyle {
+        const tier = settlementTier(point.type);
+
+        if (tier >= 4) {
+            return 'major';
+        }
+
+        return tier === 0 ? 'minor' : 'middle';
     }
 
     /**
      * Ширина подписи по числу букв: точнее не нужно, важно лишь не наложить соседей.
      */
-    private labelWidth(name: string): number {
-        return Math.round(name.length * 8.4 + 6);
+    private labelWidth(name: string, style: LabelStyle): number {
+        return Math.round(name.length * LETTER_WIDTH[style] + 4);
+    }
+
+    /**
+     * Места, занятые кнопками масштаба и картушем: подписи туда не кладутся.
+     * Размеры — с запасом по вёрстке из world-map-canvas.component.less.
+     */
+    private overlayBoxes(): { x: number; y: number; width: number; height: number }[] {
+        const { width, height } = this.size();
+        const narrow = width < 768;
+        const controls = { x: width - OVERLAY_INSET - 42, y: OVERLAY_INSET, width: 42, height: 124 };
+        const cartouche = narrow
+            ? { x: 24, y: height - 24 - 62, width: 140, height: 62 }
+            : { x: width - OVERLAY_INSET - 150, y: height - OVERLAY_INSET - 66, width: 150, height: 66 };
+
+        return [controls, cartouche];
     }
 
     private formatNumber(value: number): string {
@@ -469,10 +616,41 @@ export class WorldMapCanvasComponent {
     }
 
     /**
-     * Подпись линии сетки: со знаком, как в игре; минус — типографский.
+     * Подпись координаты: со знаком, как в игре; минус — типографский.
      */
     private formatCoordinate(value: number): string {
         return value < 0 ? '−' + this.formatNumber(-value) : this.formatNumber(value);
+    }
+
+    /**
+     * Залитые деления градусной рамки вдоль одной стороны: каждое второе
+     * деление между линиями сетки, обрезанное по рамке.
+     */
+    private frameSegments(
+        toScreen: (value: number) => number,
+        worldFrom: number,
+        worldTo: number,
+        step: number,
+        min: number,
+        max: number
+    ): FrameSegment[] {
+        const segments: FrameSegment[] = [];
+        let value = Math.floor(worldFrom / step) * step;
+
+        while (value < worldTo && segments.length < 200) {
+            if (Math.abs(Math.round(value / step)) % 2 === 0) {
+                const from = Math.max(min, toScreen(value));
+                const to = Math.min(max, toScreen(value + step));
+
+                if (to > from) {
+                    segments.push({ from, to });
+                }
+            }
+
+            value += step;
+        }
+
+        return segments;
     }
 
     /**
@@ -493,9 +671,7 @@ export class WorldMapCanvasComponent {
 
     private zoomBy(factor: number): void {
         const size = this.size();
-        const view = this.view();
-        const target = zoomAt(view, size, { x: size.width / 2, y: size.height / 2 }, factor);
-        this.flyTo(target);
+        this.flyTo(zoomAt(this.view(), size, { x: size.width / 2, y: size.height / 2 }, factor));
     }
 
     private pinch(pointerId: number, point: ScreenPoint): void {
@@ -587,11 +763,9 @@ export class WorldMapCanvasComponent {
             const width = Math.round(element.clientWidth);
             const height = Math.round(element.clientHeight);
 
-            if (width === 0 || height === 0) {
-                return;
+            if (width > 0 && height > 0) {
+                this.size.set({ width, height });
             }
-
-            this.size.set({ width, height });
         };
 
         measure();
@@ -604,4 +778,45 @@ export class WorldMapCanvasComponent {
         observer.observe(element);
         this.destroyRef.onDestroy(() => observer.disconnect());
     }
+}
+
+/**
+ * Строит лучи розы ветров с центром в нуле: у каждого луча тёмная и светлая
+ * половины, как на гравюрах. Север — вверх (отрицательная Z в игре).
+ *
+ * @param radius Длина главных лучей, пиксели.
+ * @returns Половины лучей: сначала мелкие, главные поверх.
+ */
+function buildRose(radius: number): RoseHalf[] {
+    const rays: { angle: number; length: number; width: number }[] = [];
+
+    for (let index = 0; index < 16; index++) {
+        const angle = index * 22.5;
+        const kind = index % 4 === 0 ? 'main' : index % 2 === 0 ? 'half' : 'minor';
+        rays.push({
+            angle,
+            length: kind === 'main' ? radius : kind === 'half' ? radius * 0.62 : radius * 0.38,
+            width: (kind === 'main' ? 6 : kind === 'half' ? 4.5 : 3) * (radius / ROSE_RADIUS),
+        });
+    }
+
+    // Мелкие лучи рисуются первыми, главные ложатся поверх.
+    rays.sort((a, b) => a.length - b.length);
+
+    const point = (angle: number, radius: number): string => {
+        const radians = (angle * Math.PI) / 180;
+
+        return `${(Math.sin(radians) * radius).toFixed(2)} ${(-Math.cos(radians) * radius).toFixed(2)}`;
+    };
+
+    return rays.flatMap((ray) => {
+        const tip = point(ray.angle, ray.length);
+        const left = point(ray.angle - 90, ray.width);
+        const right = point(ray.angle + 90, ray.width);
+
+        return [
+            { d: `M0 0L${left}L${tip}Z`, dark: true },
+            { d: `M0 0L${right}L${tip}Z`, dark: false },
+        ];
+    });
 }

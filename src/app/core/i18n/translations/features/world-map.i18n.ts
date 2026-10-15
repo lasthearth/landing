@@ -5,12 +5,13 @@ export const WORLD_MAP_I18N = {
     ru: {
         worldMap: {
             title: 'Карта земель',
-            subtitle: 'Поселения там, где их главы поставили глашатая. В центре — Очаг, где появляются новички.',
+            subtitle: 'Поселения и хутора там, где стоят их глашатаи. В центре — Очаг, где появляются новички.',
             toList: 'Список поселений',
             demo: 'Пока на карте пример. Настоящие поселения появятся, когда их главы поставят блок-глашатай.',
             hearth: 'Очаг',
             blocks: '{{count}} блоков',
             types: {
+                HAMLET: 'Хутор',
                 CAMP: 'Лагерь',
                 VILLAGE: 'Деревня',
                 TOWNSHIP: 'Посёлок',
@@ -46,21 +47,23 @@ export const WORLD_MAP_I18N = {
             },
             card: {
                 close: 'Закрыть',
+                owner: 'Хозяин',
                 members: 'Жителей',
                 fromHearth: 'От Очага',
                 herald: 'Глашатай стоит на',
                 height: 'высота {{y}}',
                 open: 'Страница поселения',
                 demoNote: 'Это поселение из примера, страницы у него нет.',
+                hamletNote: 'Хутора не регистрируют на сайте: он на карте, потому что хозяин поставил глашатая.',
             },
             legend: {
-                title: 'Как читать карту',
-                shape: 'Значок показывает тип поселения',
-                ring: 'Цвет кольца показывает курс',
-                hearth: 'Чем крупнее поселение, тем шире его свет. Координаты на краях — те же X и Z, что в игре.',
+                title: 'Условные знаки',
+                types: 'Типы поселений',
+                courses: 'Курс поселения',
             },
             list: {
-                title: 'Поселения на карте: {{count}}',
+                title: 'Указатель поселений',
+                hint: 'От ближних к Очагу до дальних. Нажмите, чтобы найти на карте.',
                 members: 'жителей: {{count}}',
             },
             empty: {
@@ -72,12 +75,13 @@ export const WORLD_MAP_I18N = {
     en: {
         worldMap: {
             title: 'Map of the lands',
-            subtitle: 'Settlements where their leaders placed a herald. The Hearth in the center is where newcomers spawn.',
+            subtitle: 'Settlements and homesteads where their heralds stand. The Hearth in the center is where newcomers spawn.',
             toList: 'Settlement list',
             demo: 'The map shows an example for now. Real settlements appear once their leaders place a herald block.',
             hearth: 'Hearth',
             blocks: '{{count}} blocks',
             types: {
+                HAMLET: 'Homestead',
                 CAMP: 'Camp',
                 VILLAGE: 'Village',
                 TOWNSHIP: 'Township',
@@ -113,21 +117,23 @@ export const WORLD_MAP_I18N = {
             },
             card: {
                 close: 'Close',
+                owner: 'Owner',
                 members: 'Residents',
                 fromHearth: 'From the Hearth',
                 herald: 'Herald stands at',
                 height: 'height {{y}}',
                 open: 'Settlement page',
                 demoNote: 'This settlement is part of the example and has no page.',
+                hamletNote: 'Homesteads are not registered on the site: this one is on the map because its owner placed a herald.',
             },
             legend: {
-                title: 'How to read the map',
-                shape: 'The icon shows the settlement type',
-                ring: 'The ring color shows the course',
-                hearth: 'The bigger the settlement, the wider its light. Edge coordinates are the same X and Z as in the game.',
+                title: 'Map key',
+                types: 'Settlement types',
+                courses: 'Settlement course',
             },
             list: {
-                title: 'Settlements on the map: {{count}}',
+                title: 'Settlement index',
+                hint: 'From nearest to the Hearth to farthest. Select one to find it on the map.',
                 members: 'residents: {{count}}',
             },
             empty: {

@@ -30,10 +30,10 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 903 | core, entities, features, layout, routes, shared |
-| core/ | 57 | config, guards, i18n, interceptors, services, types |
+| src/app | 919 | core, entities, features, layout, routes, shared |
+| core/ | 58 | config, guards, i18n, interceptors, services, types |
 | entities/ | 165 | discord, donate, event, hunger-games, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
-| features/ | 532 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki |
+| features/ | 547 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
 | layout/ | 19 | background-scene, footer, header |
 | routes/ | 5 | enums |
 | shared/ | 120 | lib, styles, ui |
@@ -77,6 +77,7 @@
 | features/videos | 15 | ui, model, api, lib, config | да | 1 |
 | features/welcome | 3 | — | **нет** | — |
 | features/wiki | 47 | ui, api, lib | да | 6 |
+| features/world-map | 15 | ui, model, api, lib, config | да | 1 |
 | entities/discord | 3 | model, api | да | 2 |
 | entities/donate | 12 | model, api | да | 11 |
 | entities/event | 5 | model, api, lib | да | 4 |
@@ -122,6 +123,7 @@
 | `/public-offer` | `—` | — | legal | да | publicOffer |
 | `/faq` | `FaqComponent` | — | faq | да | faq |
 | `/settlements` | `SettlementsComponent` | — | settlements | да | settlements |
+| `/map` | `WorldMapPageComponent` | — | world-map | да | worldMap |
 | `/gallery` | `GalleryComponent` | — | gallery | да | gallery |
 | `/videos` | `—` | — | videos | да | videos |
 | `/diplomacy` | `—` | — | diplomacy | да | diplomacy |
@@ -147,9 +149,9 @@
 | diplomacy | 1.7 | /diplomacy |
 | events | 7.8 | /profile, /events |
 | faq | 2.3 | /faq |
-| footer | 2.7 | — |
+| footer | 2.8 | — |
 | gallery | 1.3 | /gallery |
-| header | 2.5 | — |
+| header | 2.6 | — |
 | home | 10.8 | / |
 | legal | 68.7 | /privacy-policy, /public-offer |
 | lfg | 15.4 | /lfg |
@@ -162,10 +164,11 @@
 | profile | 23.2 | /profile |
 | referral | 1.5 | /profile/referral |
 | rules | 218.0 | /rules |
-| settlements | 58.0 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
-| shared | 26.9 | — |
+| settlements | 58.1 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
+| shared | 27.0 | — |
 | videos | 2.0 | /videos |
 | wiki | 63.7 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |
+| world-map | 6.2 | /map |
 
 Общие словари (common, header, footer, shared, news) подключены сразу в
 `src/app/core/i18n/translations/index.ts`. Остальные приезжают вместе с роутом через `loadPage()`.

@@ -1,12 +1,20 @@
 /**
+ * Место для подписи на экране (левый верхний угол), пиксели.
+ */
+export interface LabelPosition {
+    x: number;
+    y: number;
+    /** Сторона от знака, чтобы знать, как выровнять текст. */
+    side?: 'left' | 'right';
+}
+
+/**
  * Подпись, которую нужно разместить на карте.
  */
 export interface LabelCandidate {
     id: string;
-    /** Левый край подписи, пиксели. */
-    x: number;
-    /** Верхний край подписи, пиксели. */
-    y: number;
+    /** Места в порядке предпочтения: например, справа от знака, потом слева. */
+    positions: readonly LabelPosition[];
     width: number;
     height: number;
     /** Чем больше, тем раньше подпись получает место. */
@@ -14,48 +22,57 @@ export interface LabelCandidate {
 }
 
 /**
- * Выбирает подписи, которые помещаются без наложений.
- *
- * Когда карта отдалена, названия соседних поселений налезают друг на друга.
- * Крупные поселения подписываются первыми, мелкие — если осталось место;
- * скрытое название по-прежнему видно при наведении и в карточке.
- *
- * @param candidates Подписи с прямоугольниками.
- * @param obstacles Занятые места, куда подпись класть нельзя: сами метки.
- * @param gap Минимальный зазор между подписями, пиксели.
- * @returns Идентификаторы подписей, которые показываем.
+ * Прямоугольник на экране.
  */
-export function placeLabels(
-    candidates: readonly LabelCandidate[],
-    obstacles: readonly Box[] = [],
-    gap = 4
-): Set<string> {
-    const placed: Box[] = [];
-    const visible = new Set<string>();
-    const ordered = [...candidates].sort((a, b) => b.priority - a.priority);
-
-    for (const label of ordered) {
-        // Между подписями нужен зазор; метка же стоит вплотную к своей подписи.
-        const collides =
-            placed.some((other) => overlaps(label, other, gap)) || obstacles.some((other) => overlaps(label, other, 0));
-
-        if (!collides) {
-            placed.push(label);
-            visible.add(label.id);
-        }
-    }
-
-    return visible;
+export interface LabelBox {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 }
 
 /**
- * Прямоугольник на экране.
+ * Выбирает, какие подписи показать и с какой стороны от знака.
+ *
+ * Когда карта отдалена, названия соседних поселений налезают друг на друга.
+ * Крупные поселения подписываются первыми; подпись пробует места по порядку
+ * и скрывается, только если не влезла ни в одно — скрытое название
+ * по-прежнему видно при наведении и в карточке.
+ *
+ * @param candidates Подписи с возможными местами.
+ * @param obstacles Занятые места, куда подпись класть нельзя: знаки, кнопки, картуш.
+ * @param gap Минимальный зазор между подписями, пиксели.
+ * @returns Для каждой показанной подписи — выбранное место.
  */
-type Box = Pick<LabelCandidate, 'x' | 'y' | 'width' | 'height'>;
+export function placeLabels(
+    candidates: readonly LabelCandidate[],
+    obstacles: readonly LabelBox[] = [],
+    gap = 4
+): Map<string, LabelPosition> {
+    const placed: LabelBox[] = [];
+    const chosen = new Map<string, LabelPosition>();
+    const ordered = [...candidates].sort((a, b) => b.priority - a.priority);
+
+    for (const label of ordered) {
+        const position = label.positions.find((candidate) => {
+            const box = { x: candidate.x, y: candidate.y, width: label.width, height: label.height };
+
+            // Между подписями нужен зазор; знак же стоит вплотную к своей подписи.
+            return !placed.some((other) => overlaps(box, other, gap)) && !obstacles.some((other) => overlaps(box, other, 0));
+        });
+
+        if (position) {
+            placed.push({ x: position.x, y: position.y, width: label.width, height: label.height });
+            chosen.set(label.id, position);
+        }
+    }
+
+    return chosen;
+}
 
 /**
  * Пересекаются ли прямоугольники с учётом зазора.
  */
-function overlaps(a: Box, b: Box, gap: number): boolean {
+function overlaps(a: LabelBox, b: LabelBox, gap: number): boolean {
     return a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
 }

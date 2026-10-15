@@ -23,143 +23,180 @@
         (click)="onBackgroundClick()"
     >
         <defs>
-            <!-- Огонь поселения: тёплый центр, растворяется в темноте. -->
-            <radialGradient id="world-map-ember">
-                <stop offset="0" stop-color="#ffb05c" stop-opacity="0.55" />
-                <stop offset="0.35" stop-color="#e2661c" stop-opacity="0.22" />
-                <stop offset="1" stop-color="#b54a10" stop-opacity="0" />
-            </radialGradient>
-            <radialGradient id="world-map-hearth">
-                <stop offset="0" stop-color="#ffd38a" stop-opacity="0.75" />
-                <stop offset="0.3" stop-color="#ff8a2a" stop-opacity="0.32" />
-                <stop offset="1" stop-color="#c35a17" stop-opacity="0" />
-            </radialGradient>
-            <!-- Края карты уходят в ночь: мир за ними не исследован. -->
-            <radialGradient id="world-map-vignette" cx="50%" cy="50%" r="75%">
-                <stop offset="0.55" stop-color="#0d0907" stop-opacity="0" />
-                <stop offset="1" stop-color="#0d0907" stop-opacity="0.85" />
-            </radialGradient>
-            <!-- Зерно бумаги: без него тёмный фон выглядит как пустой экран. -->
-            <filter id="world-map-grain" x="0" y="0" width="100%" height="100%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
-                <feColorMatrix type="matrix" values="0 0 0 0 0.85  0 0 0 0 0.7  0 0 0 0 0.5  0 0 0 0.07 0" />
+            <!-- Пятна старой бумаги: крупный шум, едва заметный. -->
+            <filter id="world-map-stains" x="0" y="0" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.0045" numOctaves="3" seed="7" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.3  0 0 0 0 0.12  0 0 0 0.16 -0.02" />
             </filter>
+            <!-- Волокно бумаги. -->
+            <filter id="world-map-grain" x="0" y="0" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" seed="3" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0.3  0 0 0 0 0.2  0 0 0 0 0.1  0 0 0 0.09 0" />
+            </filter>
+            <!-- Края листа темнее: бумага старела снаружи. -->
+            <radialGradient id="world-map-age" cx="50%" cy="50%" r="72%">
+                <stop offset="0.6" class="world-map__age-stop" stop-opacity="0" />
+                <stop offset="1" class="world-map__age-stop" stop-opacity="0.42" />
+            </radialGradient>
+            <!-- Акварель под знаком: краска гуще в центре и растекается к краю. -->
+            @for (course of ["peace", "neutral", "danger"]; track course) {
+                <radialGradient [attr.id]="'world-map-wash-' + course">
+                    <stop offset="0" [attr.class]="'world-map__wash-stop world-map__wash-stop--' + course" stop-opacity="0.42" />
+                    <stop offset="0.7" [attr.class]="'world-map__wash-stop world-map__wash-stop--' + course" stop-opacity="0.2" />
+                    <stop offset="1" [attr.class]="'world-map__wash-stop world-map__wash-stop--' + course" stop-opacity="0" />
+                </radialGradient>
+            }
+            <clipPath id="world-map-inner">
+                <rect [attr.x]="inner().x" [attr.y]="inner().y" [attr.width]="inner().width" [attr.height]="inner().height" />
+            </clipPath>
         </defs>
 
-        <rect class="world-map__ground" [attr.width]="size().width" [attr.height]="size().height" />
+        <!-- Лист. -->
+        <rect class="world-map__paper" [attr.width]="size().width" [attr.height]="size().height" />
+        <rect [attr.width]="size().width" [attr.height]="size().height" filter="url(#world-map-stains)" />
         <rect [attr.width]="size().width" [attr.height]="size().height" filter="url(#world-map-grain)" />
 
-        <!-- Румбы от Очага. -->
-        <g class="world-map__rhumbs">
-            @for (rhumb of rhumbs(); track $index) {
-                <line
-                    [class.world-map__rhumb--major]="rhumb.major"
-                    [attr.x1]="hearth().x"
-                    [attr.y1]="hearth().y"
-                    [attr.x2]="rhumb.x2"
-                    [attr.y2]="rhumb.y2"
-                />
-            }
-        </g>
+        <g clip-path="url(#world-map-inner)">
+            <!-- Сетка координат: те же X и Z, что в игре. -->
+            <g class="world-map__grid">
+                @for (line of grid().xs; track line.value) {
+                    <line
+                        [class.world-map__grid-origin]="line.origin"
+                        [attr.x1]="line.position"
+                        [attr.x2]="line.position"
+                        [attr.y1]="inner().y"
+                        [attr.y2]="inner().y + inner().height"
+                    />
+                }
+                @for (line of grid().zs; track line.value) {
+                    <line
+                        [class.world-map__grid-origin]="line.origin"
+                        [attr.x1]="inner().x"
+                        [attr.x2]="inner().x + inner().width"
+                        [attr.y1]="line.position"
+                        [attr.y2]="line.position"
+                    />
+                }
+            </g>
 
-        <!-- Сетка координат: те же X и Z, что в игре. -->
-        <g class="world-map__grid">
-            @for (line of grid().xs; track line.value) {
-                <line
-                    [class.world-map__grid-origin]="line.origin"
-                    [attr.x1]="line.position"
-                    [attr.x2]="line.position"
-                    y1="0"
-                    [attr.y2]="size().height"
-                />
-            }
-            @for (line of grid().zs; track line.value) {
-                <line
-                    [class.world-map__grid-origin]="line.origin"
-                    x1="0"
-                    [attr.x2]="size().width"
-                    [attr.y1]="line.position"
-                    [attr.y2]="line.position"
-                />
-            }
-        </g>
+            <!-- Румбы от розы ветров. -->
+            <g class="world-map__rhumbs">
+                @for (rhumb of rhumbs(); track $index) {
+                    <line
+                        [class.world-map__rhumb--major]="rhumb.major"
+                        [attr.x1]="rhumb.x1"
+                        [attr.y1]="rhumb.y1"
+                        [attr.x2]="rhumb.x2"
+                        [attr.y2]="rhumb.y2"
+                    />
+                }
+            </g>
 
-        <!-- Свет поселений и Очага: рисуется до меток, чтобы не мутить их. -->
-        <g class="world-map__glows">
-            <circle [attr.cx]="hearth().x" [attr.cy]="hearth().y" r="120" fill="url(#world-map-hearth)" class="world-map__hearth-glow" />
-            @for (mark of marks(); track mark.point.id) {
-                <circle [attr.cx]="mark.x" [attr.cy]="mark.y" [attr.r]="mark.glow" fill="url(#world-map-ember)" />
-            }
-        </g>
-
-        <rect [attr.width]="size().width" [attr.height]="size().height" fill="url(#world-map-vignette)" pointer-events="none" />
-
-        <!-- Подписи сетки по краям. -->
-        <g class="world-map__grid-labels" aria-hidden="true">
-            @for (line of grid().xs; track line.value) {
-                <text [attr.x]="line.position + 4" y="16">{{ line.label }}</text>
-            }
-            @for (line of grid().zs; track line.value) {
-                <text x="6" [attr.y]="line.position - 5">{{ line.label }}</text>
-            }
-        </g>
-
-        <!-- Очаг: точка появления. -->
-        <g class="world-map__hearth" [attr.transform]="'translate(' + hearth().x + ' ' + hearth().y + ')'">
-            <circle r="13" class="world-map__hearth-ring" />
-            <path
-                class="world-map__hearth-flame"
-                d="M0 -9C3 -5 6 -2 6 2.5C6 6.5 3.3 9 0 9S-6 6.5 -6 2.5C-6 -0.5 -4 -2.5 -2.5 -4C-2.2 -1.5 -1 0 0.5 0.5C0.2 -3 -0.5 -6 0 -9Z"
-            />
-            <text class="world-map__hearth-label" y="35" text-anchor="middle">{{ "worldMap.hearth" | translate }}</text>
-        </g>
-
-        <!-- Поселения. -->
-        <g class="world-map__marks">
-            @for (mark of marks(); track mark.point.id) {
-                <g
-                    class="world-map__mark"
-                    [class.world-map__mark--selected]="mark.point.id === selectedId()"
-                    [attr.data-course]="mark.course"
-                    [attr.transform]="'translate(' + mark.x + ' ' + mark.y + ')'"
-                    role="button"
-                    tabindex="0"
-                    [attr.aria-label]="mark.point.name"
-                    [attr.aria-pressed]="mark.point.id === selectedId()"
-                    (click)="onMarkClick($event, mark.point)"
-                    (keydown)="onMarkKeydown($event, mark.point)"
-                    (pointerenter)="hoveredId.set(mark.point.id)"
-                    (pointerleave)="hoveredId.set(null)"
-                    (focus)="hoveredId.set(mark.point.id)"
-                    (blur)="hoveredId.set(null)"
-                >
-                    <!-- Невидимый круг побольше: в метку легко попасть пальцем. -->
-                    <circle r="22" class="world-map__mark-hit" />
-                    <circle r="15" class="world-map__mark-halo" />
-                    <circle r="11.5" class="world-map__mark-disc" />
-                    <path [attr.d]="mark.glyph" fill-rule="evenodd" class="world-map__mark-glyph" />
-                    @if (mark.labelVisible) {
-                        <text
-                            class="world-map__mark-label"
-                            [attr.x]="mark.labelLeft ? -18 : 18"
-                            [attr.text-anchor]="mark.labelLeft ? 'end' : 'start'"
-                            y="5"
-                        >
-                            {{ mark.point.name }}
-                        </text>
+            <!-- Акварель курса под знаками. -->
+            <g class="world-map__washes">
+                @for (mark of marks(); track mark.point.id) {
+                    @if (mark.course !== "none") {
+                        <circle [attr.cx]="mark.x" [attr.cy]="mark.y" [attr.r]="mark.wash" [attr.fill]="'url(#world-map-wash-' + mark.course + ')'" />
                     }
-                </g>
+                }
+            </g>
+
+            <!-- Подписи сетки у рамки. -->
+            <g class="world-map__grid-labels" aria-hidden="true">
+                @for (line of grid().xLabels; track line.value) {
+                    <text [attr.x]="line.position + 3" [attr.y]="inner().y + 13">{{ line.label }}</text>
+                }
+                @for (line of grid().zLabels; track line.value) {
+                    <text [attr.x]="inner().x + 4" [attr.y]="line.position - 4">{{ line.label }}</text>
+                }
+            </g>
+
+            <!-- Роза ветров вокруг Очага: точка появления — начало всех дорог. -->
+            <g class="world-map__rose" [attr.transform]="'translate(' + hearth().x + ' ' + hearth().y + ')'">
+                <circle [attr.r]="roseRadius() * 0.7" class="world-map__rose-ring" />
+                <circle [attr.r]="roseRadius() * 0.7 - 3" class="world-map__rose-ring world-map__rose-ring--inner" />
+                @for (half of rose(); track $index) {
+                    <path [attr.d]="half.d" [class.world-map__rose-dark]="half.dark" [class.world-map__rose-light]="!half.dark" />
+                }
+                <circle r="7.5" class="world-map__hearth-disc" />
+                <path
+                    class="world-map__hearth-flame"
+                    d="M0 -5.6C1.9 -3.1 3.7 -1.3 3.7 1.5C3.7 4 2 5.6 0 5.6S-3.7 4 -3.7 1.5C-3.7 -0.3 -2.5 -1.6 -1.5 -2.5C-1.3 -1 -0.6 0 0.3 0.3C0.1 -1.9 -0.3 -3.7 0 -5.6Z"
+                />
+                <text class="world-map__rose-north" [attr.y]="-roseRadius() - 5" text-anchor="middle">
+                    {{ "worldMap.compass.n" | translate }}
+                </text>
+                @if (hearthLabelVisible()) {
+                    <text class="world-map__hearth-label" [attr.y]="roseRadius() + 15" text-anchor="middle">
+                        {{ "worldMap.hearth" | translate }}
+                    </text>
+                }
+            </g>
+
+            <!-- Поселения. -->
+            <g class="world-map__marks">
+                @for (mark of marks(); track mark.point.id) {
+                    <g
+                        class="world-map__mark"
+                        [class.world-map__mark--selected]="mark.point.id === selectedId()"
+                        [attr.transform]="'translate(' + mark.x + ' ' + mark.y + ')'"
+                        role="button"
+                        tabindex="0"
+                        [attr.aria-label]="mark.point.name"
+                        [attr.aria-pressed]="mark.point.id === selectedId()"
+                        (click)="onMarkClick($event, mark.point)"
+                        (keydown)="onMarkKeydown($event, mark.point)"
+                        (pointerenter)="hoveredId.set(mark.point.id)"
+                        (pointerleave)="hoveredId.set(null)"
+                        (focus)="hoveredId.set(mark.point.id)"
+                        (blur)="hoveredId.set(null)"
+                    >
+                        <!-- Невидимый круг побольше: в знак легко попасть пальцем. -->
+                        <circle r="20" class="world-map__mark-hit" />
+                        <circle r="13" class="world-map__mark-ring" />
+                        <path [attr.d]="mark.glyph" fill-rule="evenodd" class="world-map__mark-glyph" />
+                        @if (mark.labelVisible) {
+                            <text
+                                class="world-map__mark-label"
+                                [class.world-map__mark-label--major]="mark.labelStyle === 'major'"
+                                [class.world-map__mark-label--minor]="mark.labelStyle === 'minor'"
+                                [attr.x]="mark.labelLeft ? -13 : 13"
+                                [attr.text-anchor]="mark.labelLeft ? 'end' : 'start'"
+                                y="4.5"
+                            >
+                                {{ mark.point.name }}
+                            </text>
+                        }
+                    </g>
+                }
+            </g>
+        </g>
+
+        <rect [attr.width]="size().width" [attr.height]="size().height" fill="url(#world-map-age)" pointer-events="none" />
+
+        <!-- Двойная рамка с градусной разметкой. -->
+        <g class="world-map__frame" pointer-events="none">
+            <rect [attr.x]="frame().inset" [attr.y]="frame().inset" [attr.width]="frame().width" [attr.height]="frame().height" class="world-map__frame-outer" />
+            <rect [attr.x]="inner().x" [attr.y]="inner().y" [attr.width]="inner().width" [attr.height]="inner().height" class="world-map__frame-inner" />
+            @for (segment of frameMarks().xs; track segment.from) {
+                <rect [attr.x]="segment.from" [attr.y]="frame().inset" [attr.width]="segment.to - segment.from" [attr.height]="frame().band" />
+                <rect
+                    [attr.x]="segment.from"
+                    [attr.y]="size().height - frame().inset - frame().band"
+                    [attr.width]="segment.to - segment.from"
+                    [attr.height]="frame().band"
+                />
+            }
+            @for (segment of frameMarks().zs; track segment.from) {
+                <rect [attr.x]="frame().inset" [attr.y]="segment.from" [attr.width]="frame().band" [attr.height]="segment.to - segment.from" />
+                <rect
+                    [attr.x]="size().width - frame().inset - frame().band"
+                    [attr.y]="segment.from"
+                    [attr.width]="frame().band"
+                    [attr.height]="segment.to - segment.from"
+                />
             }
         </g>
-    </svg>
-
-    <!-- Роза ветров: север — к отрицательной Z, как в игре. -->
-    <svg class="world-map__compass" viewBox="-40 -40 80 80" aria-hidden="true">
-        <circle r="27" class="world-map__compass-ring" />
-        <path d="M0 -30L5 0L0 30L-5 0Z" class="world-map__compass-needle" />
-        <path d="M-30 0L0 -4L30 0L0 4Z" class="world-map__compass-cross" />
-        <path d="M0 -30L5 0L0 0Z" class="world-map__compass-north" />
-        <text y="-32" text-anchor="middle">{{ "worldMap.compass.n" | translate }}</text>
     </svg>
 
     <div class="world-map__controls">
@@ -194,14 +231,15 @@
         </button>
     </div>
 
-    <div class="world-map__readout" aria-hidden="true">
-        @if (cursorLabel(); as cursor) {
-            <span class="world-map__coords">X {{ cursor.x }} &nbsp; Z {{ cursor.z }}</span>
-        }
-        <span class="world-map__scale">
-            <span class="world-map__scale-bar" [style.width.px]="scaleBar().width"></span>
-            {{ "worldMap.canvas.scale" | translate: { blocks: scaleBar().label } }}
+    <!-- Картуш с масштабом, как в углу старых карт. -->
+    <div class="world-map__cartouche" aria-hidden="true">
+        <span class="world-map__scale-bar" [style.width.px]="scaleBar().width">
+            <span></span><span></span><span></span><span></span>
         </span>
+        <span class="world-map__scale-label">{{ "worldMap.canvas.scale" | translate: { blocks: scaleBar().label } }}</span>
+        @if (cursorLabel(); as cursor) {
+            <span class="world-map__coords">X {{ cursor.x }}, Z {{ cursor.z }}</span>
+        }
     </div>
 
     @if (wheelHint()) {

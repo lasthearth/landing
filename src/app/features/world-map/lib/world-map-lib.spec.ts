@@ -101,21 +101,23 @@ describe('world-map lib', () => {
     });
 
     describe('labels', () => {
-        it('крупное поселение подписывается первым, наложенная мелкая подпись скрывается', () => {
-            const visible = placeLabels([
-                { id: 'camp', x: 10, y: 10, width: 100, height: 20, priority: 1 },
-                { id: 'city', x: 50, y: 15, width: 100, height: 20, priority: 30 },
-                { id: 'far', x: 400, y: 10, width: 100, height: 20, priority: 0 },
+        it('крупное поселение подписывается первым, мелкое ищет другое место или скрывается', () => {
+            const chosen = placeLabels([
+                { id: 'camp', positions: [{ x: 10, y: 10 }], width: 100, height: 20, priority: 1 },
+                { id: 'city', positions: [{ x: 50, y: 15 }], width: 100, height: 20, priority: 30 },
+                { id: 'village', positions: [{ x: 60, y: 12 }, { x: 300, y: 12 }], width: 100, height: 20, priority: 5 },
             ]);
 
-            expect([...visible].sort()).toEqual(['city', 'far']);
+            expect(chosen.get('city')?.x).toBe(50);
+            expect(chosen.get('village')?.x).toBe(300);
+            expect(chosen.has('camp')).toBeFalse();
         });
 
-        it('подпись не ложится на чужую метку, но стоит вплотную к своей', () => {
-            const visible = placeLabels(
+        it('подпись не ложится на чужой знак, но стоит вплотную к своему', () => {
+            const chosen = placeLabels(
                 [
-                    { id: 'own', x: 116, y: 90, width: 80, height: 20, priority: 1 },
-                    { id: 'blocked', x: 300, y: 90, width: 80, height: 20, priority: 1 },
+                    { id: 'own', positions: [{ x: 116, y: 90 }], width: 80, height: 20, priority: 1 },
+                    { id: 'blocked', positions: [{ x: 300, y: 90 }], width: 80, height: 20, priority: 1 },
                 ],
                 [
                     { x: 85, y: 85, width: 30, height: 30 },
@@ -123,7 +125,7 @@ describe('world-map lib', () => {
                 ]
             );
 
-            expect([...visible]).toEqual(['own']);
+            expect([...chosen.keys()]).toEqual(['own']);
         });
     });
 
@@ -132,6 +134,10 @@ describe('world-map lib', () => {
             expect(settlementCourse('Миролюбивый')).toBe('peace');
             expect(settlementCourse('Нейтральный')).toBe('neutral');
             expect(settlementCourse('Агрессивный')).toBe('danger');
+        });
+
+        it('у хутора курса нет', () => {
+            expect(settlementCourse(undefined)).toBe('none');
         });
     });
 });

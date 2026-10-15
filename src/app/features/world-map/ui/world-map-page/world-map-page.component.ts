@@ -23,18 +23,20 @@ interface WorldMapEntry {
 }
 
 /** Типы в порядке легенды: от лагеря до провинции. */
-const LEGEND_TYPES: readonly WorldMapSettlementType[] = ['CAMP', 'VILLAGE', 'TOWNSHIP', 'CITY', 'PROVINCE'];
+const LEGEND_TYPES: readonly WorldMapSettlementType[] = ['HAMLET', 'CAMP', 'VILLAGE', 'TOWNSHIP', 'CITY', 'PROVINCE'];
 
 /** Курсы в порядке легенды. */
-const LEGEND_COURSES: readonly WorldMapCourse[] = ['peace', 'neutral', 'danger'];
+const LEGEND_COURSES: readonly Exclude<WorldMapCourse, 'none'>[] = ['peace', 'neutral', 'danger'];
 
 /**
  * Страница «Карта земель» `/map`.
  *
  * Поселения стоят там, где их главы поставили блок-глашатай: позицию пишет
  * сервер, поэтому она совпадает с миром, в отличие от координат из заявки.
- * Под картой — легенда и список поселений по удалённости от Очага: по нему
- * карту можно пройти без мыши, а на телефоне — без точных касаний.
+ * Под картой — строка условных знаков и указатель поселений по удалённости
+ * от Очага: по нему карту можно пройти без мыши, а на телефоне — без точных
+ * касаний. Хутора тоже на карте: на сайте они не регистрируются, но глашатая
+ * ставят, поэтому у них нет страницы, курса и числа жителей.
  */
 @Component({
     standalone: true,
