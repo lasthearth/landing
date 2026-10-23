@@ -1,13 +1,21 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, output, OutputEmitterRef } from '@angular/core';
 import { TranslatePipe } from '@core/i18n';
-import { BaseScrollableComponent } from '@app/features/rules/abstracts/base-scrollable.component';
 import { RuleParagraphComponent } from '@app/features/rules/ui/rule-paragraph/rule-paragraph.component';
-import { RuleLinkComponent } from '@app/features/rules/ui/rule-link/rule-link.component';
 
+/**
+ * Подраздел «3.7 Диверсии».
+ *
+ * Текст пунктов — в словаре `rules.i18n.ts` (`rules.content.actions.sabotage`).
+ */
 @Component({
     selector: 'app-saboteurs',
-    imports: [RuleParagraphComponent, RuleLinkComponent, TranslatePipe],
     templateUrl: './saboteurs.component.html',
+    imports: [RuleParagraphComponent, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SaboteursComponent extends BaseScrollableComponent {}
+export class SaboteursComponent {
+    /**
+     * Событие прокрутки к элементу.
+     */
+    public scrollTo: OutputEmitterRef<string> = output<string>();
+}

@@ -40,7 +40,7 @@
 
 ### Контекст для агента
 
-- [ ] Разбить `rules.i18n.ts` (222 kB, 776 ключей) на секции: сейчас любой агент, открывший файл, платит ~76k токенов.
+- [ ] Разбить `rules.i18n.ts` (250 kB, 922 ключа) на секции: сейчас любой агент, открывший файл, платит ~85k токенов.
       Обходной путь уже есть: `node scripts/i18n-tool.mjs get|set rules <ключ>`.
 - [ ] Подключить ESLint (`npm i -D eslint angular-eslint typescript-eslint` + `--cache ./.npm-cache`, если npm-кэш вне воркспейса закрыт):
       правила `no-restricted-imports` (границы FSD), `no-console`, запрет `any` и hex-цветов в шаблонах.

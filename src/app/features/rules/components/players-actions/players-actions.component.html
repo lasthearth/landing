@@ -1,25 +1,29 @@
-<div class="flex flex-col gap-4">
-    <app-rule-section sectionId="Theft" parentId="actions" title="rules.content.actions.titles.theft" [level]="1" appScrollAnchor="P3_1">
+<div class="flex flex-col gap-3">
+    <app-rule-section sectionId="theft" parentId="actions" title="rules.content.titles.theft" [level]="1" appScrollAnchor="Theft" id="P3_1">
         <app-theft (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Kills" parentId="actions" title="rules.content.actions.titles.kills" [level]="1">
+    <app-rule-section sectionId="kills" parentId="actions" title="rules.content.titles.kills" [level]="1" appScrollAnchor="Kills" id="P3_2">
         <app-kills (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Espionage" parentId="actions" title="rules.content.actions.titles.espionage" [level]="1">
+    <app-rule-section sectionId="espionage" parentId="actions" title="rules.content.titles.espionage" [level]="1" appScrollAnchor="Espionage" id="P3_3">
         <app-espionage (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Diplomacy" parentId="actions" title="rules.content.actions.titles.diplomacy" [level]="1" appScrollAnchor="Diplomacy">
+    <app-rule-section sectionId="robbery" parentId="actions" title="rules.content.titles.robbery" [level]="1" appScrollAnchor="RobberySection" id="P3_4">
+        <app-robbery (scrollTo)="scrollToElement($event)" />
+    </app-rule-section>
+
+    <app-rule-section sectionId="diplomacy" parentId="actions" title="rules.content.titles.diplomacy" [level]="1" appScrollAnchor="Diplomacy" id="P3_5">
         <app-diplomacy (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Special Interactions" parentId="actions" title="rules.content.actions.titles.special" [level]="1">
+    <app-rule-section sectionId="specialInteractions" parentId="actions" title="rules.content.titles.specialInteractions" [level]="1" appScrollAnchor="Special" id="P3_6">
         <app-special-interactions (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 
-    <app-rule-section sectionId="Sabateurs" parentId="actions" title="rules.content.actions.titles.sabotage" [level]="1">
+    <app-rule-section sectionId="sabotage" parentId="actions" title="rules.content.titles.sabotage" [level]="1" appScrollAnchor="Sabotage" id="P3_7">
         <app-saboteurs (scrollTo)="scrollToElement($event)" />
     </app-rule-section>
 </div>

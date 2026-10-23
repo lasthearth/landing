@@ -30,10 +30,10 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 903 | core, entities, features, layout, routes, shared |
+| src/app | 907 | core, entities, features, layout, routes, shared |
 | core/ | 57 | config, guards, i18n, interceptors, services, types |
 | entities/ | 165 | discord, donate, event, hunger-games, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
-| features/ | 532 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki |
+| features/ | 536 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki |
 | layout/ | 19 | background-scene, footer, header |
 | routes/ | 5 | enums |
 | shared/ | 120 | lib, styles, ui |
@@ -70,7 +70,7 @@
 | features/public-offer | 3 | — | **нет** | — |
 | features/reactions | 6 | ui, api | да | 2 |
 | features/referral | 5 | — | да | 2 |
-| features/rules | 79 | ui, model, config | да | 1 |
+| features/rules | 83 | ui, model, config | да | 1 |
 | features/settlements | 70 | — | **нет** | — |
 | features/start-game | 3 | — | **нет** | — |
 | features/verification | 4 | model, api | да | 4 |
@@ -145,7 +145,7 @@
 | analytics | 0.9 | — |
 | common | 1.0 | — |
 | diplomacy | 1.7 | /diplomacy |
-| events | 7.8 | /profile, /events |
+| events | 8.0 | /profile, /events |
 | faq | 2.3 | /faq |
 | footer | 2.7 | — |
 | gallery | 1.3 | /gallery |
@@ -153,7 +153,7 @@
 | home | 10.8 | / |
 | legal | 68.7 | /privacy-policy, /public-offer |
 | lfg | 15.4 | /lfg |
-| market | 13.5 | /profile, /market |
+| market | 13.7 | /profile, /market |
 | mods | 10.9 | /profile/admin, /mods |
 | news | 10.5 | /news |
 | pagination | 0.7 | — |
@@ -161,10 +161,10 @@
 | players | 3.3 | /players |
 | profile | 23.2 | /profile |
 | referral | 1.5 | /profile/referral |
-| rules | 218.0 | /rules |
+| rules | 251.4 | /rules |
 | settlements | 58.0 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
-| shared | 26.9 | — |
-| videos | 2.0 | /videos |
+| shared | 27.0 | — |
+| videos | 2.1 | /videos |
 | wiki | 63.7 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |
 
 Общие словари (common, header, footer, shared, news) подключены сразу в

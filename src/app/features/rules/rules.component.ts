@@ -7,7 +7,8 @@ import { TerminologyComponent } from './components/terminology/terminology.compo
 import { BaseComponent } from './components/base/base.component';
 import { AboutSettlementsComponent } from './components/about-settlements/about-settlements.component';
 import { PlayersActionsComponent } from './components/players-actions/players-actions.component';
-import { ColonizationComponent } from './components/colonization/colonization.component';
+import { VassalsComponent } from './components/vassals/vassals.component';
+import { EstatesComponent } from './components/estates/estates.component';
 import { MilitaryActionsComponent } from './components/military-actions/military-actions.component';
 import { AdminRightsComponent } from './components/admin-rights/admin-rights.component';
 import { ScrollService } from './services/scroll.service';
@@ -39,7 +40,8 @@ const SECTION_EXPAND_DELAY = 400;
         BaseComponent,
         AboutSettlementsComponent,
         PlayersActionsComponent,
-        ColonizationComponent,
+        VassalsComponent,
+        EstatesComponent,
         MilitaryActionsComponent,
         AdminRightsComponent,
         ScrollAnchorDirective,
@@ -167,6 +169,12 @@ export class RulesComponent implements OnDestroy {
             id = decodeURIComponent(raw);
         } catch {
             // Оставляем фрагмент как есть.
+        }
+
+        // Ссылки вики вида #P3_1 ведут на пункт 3.1: подраздел (id="P3_1") или параграф (id="rule-3-1").
+        const legacy = /^P(\d+(?:_\d+)*)$/.exec(id);
+        if (legacy && !document.getElementById(id)) {
+            id = `rule-${legacy[1].replace(/_/g, '-')}`;
         }
 
         this.scrollService.scrollToElement(id);

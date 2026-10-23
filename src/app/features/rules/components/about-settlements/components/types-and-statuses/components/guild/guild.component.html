@@ -1,135 +1,103 @@
 <div class="flex flex-col gap-3">
-    <app-rule-paragraph anchor="Guild" [level]="3">
-        <span [innerHTML]="'rules.content.settlements.types.guild.intro' | translate"></span>
-        <app-rule-link target="Settlement">{{ "rules.content.terms.settlement" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.guild.introAfter.before' | translate"></span>
-        <span [innerHTML]="'rules.content.settlements.types.guild.introAfter.after' | translate"></span>
+    <app-rule-paragraph [level]="3" anchor="Guild">
+        <span [innerHTML]="'rules.content.settlements.guild.intro' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>{{ "rules.content.settlements.common.requirements" | translate }}</b>
+        <span [innerHTML]="'rules.content.settlements.guild.requirements' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.location" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b1' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.population" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        <app-rule-link target="Monument" class="ml-2">{{ "rules.content.terms.monument" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.guild.monumentAfter.before' | translate"></span>
-        <app-rule-link target="Patent">{{ "rules.content.terms.patentImprovementDative" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.guild.monumentAfter.after' | translate"></span>
+        <span [innerHTML]="'rules.content.settlements.guild.b3.t0' | translate"></span>
+        <app-rule-link target="MastersScroll">{{ "rules.content.settlements.guild.b3.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.guild.b3.t2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.documentsHeading" | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ "rules.content.settlements.types.guild.patentBefore" | translate }}
-        <app-rule-link target="Patent">{{ "rules.content.terms.patent" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.guild.patentAfter' | translate"></span>
-        <app-rule-link target="GovernorEstate">{{ "rules.content.terms.governorGenitive" | translate }}</app-rule-link>
-        <span>;</span>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ "rules.content.settlements.types.guild.libertiesBefore" | translate }}
-        <app-rule-link target="Volnost">{{ "rules.content.terms.liberties" | translate }}</app-rule-link>
-        <span>.</span>
+        <span [innerHTML]="'rules.content.settlements.guild.b4' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.infrastructureHeading" | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ "rules.content.settlements.types.guild.square" | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ "rules.content.settlements.types.guild.well" | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ "rules.content.settlements.types.guild.paths" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b5.t0' | translate"></span>
+        <app-rule-link target="Passport">{{ "rules.content.settlements.guild.b5.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.guild.b5.t2' | translate"></span>
+        <app-rule-link target="Volnost">{{ "rules.content.settlements.guild.b5.l3" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.guild.b5.t4' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.economyHeading" | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ "rules.content.settlements.types.guild.storage" | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ "rules.content.settlements.types.guild.barn" | translate }}
-    </app-rule-paragraph>
-
-    <app-rule-paragraph [level]="4">
-        ◦ {{ "rules.content.settlements.types.guild.farm" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b6' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.politicalStatus" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b7' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.economicPosts" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b8' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.additionalBuildings" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b9' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.marketsLaw" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b10' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.defenses" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b11' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>{{ "rules.content.settlements.common.advantages" | translate }}</b>
+        <span [innerHTML]="'rules.content.settlements.guild.b12' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.territoryBlock" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b13' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        <span [innerHTML]="'rules.content.settlements.types.guild.raidTargetsBefore' | translate"></span>
+        <span [innerHTML]="'rules.content.settlements.guild.b14' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.trader" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b15' | translate"></span>
     </app-rule-paragraph>
+
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.bankrots" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.advantages' | translate"></span>
     </app-rule-paragraph>
+
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.guild.law" | translate }}
+        <span [innerHTML]="'rules.content.settlements.guild.b16' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <span [innerHTML]="'rules.content.settlements.guild.b17.t0' | translate"></span>
+        <app-rule-link target="Empire">{{ "rules.content.settlements.guild.b17.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.guild.b17.t2' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <span [innerHTML]="'rules.content.settlements.guild.b18.t0' | translate"></span>
+        <app-rule-link target="Capital">{{ "rules.content.settlements.guild.b18.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.guild.b18.t2' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <span [innerHTML]="'rules.content.settlements.guild.b19' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <span [innerHTML]="'rules.content.settlements.guild.b20' | translate"></span>
     </app-rule-paragraph>
 </div>

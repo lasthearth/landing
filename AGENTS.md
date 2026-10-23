@@ -51,7 +51,7 @@ npm run verify:full   # плюс ng build и тесты (нужен Chrome)
 npm run map           # перегенерировать карту навигации
 ```
 
-Правки текста — `npm run i18n -- get|set|find` (словарь `rules.i18n.ts` — 222 kB, читать его целиком не нужно).
+Правки текста — `npm run i18n -- get|set|find` (словарь `rules.i18n.ts` — 250 kB, читать его целиком не нужно).
 
 ## Порядок работы
 

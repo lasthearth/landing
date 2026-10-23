@@ -30,17 +30,26 @@
                 </app-rule-section>
             </div>
 
+            <!-- 1. Основы -->
             <div id="rules-base" class="lh-panel faq-scroll rules-layout__section">
-                <app-rule-section sectionId="base" title="rules.sections.base" (scrollTo)="scrollToElement($event)">
+                <app-rule-section
+                    sectionId="base"
+                    title="rules.sections.base"
+                    appScrollAnchor="P1"
+                    id="P1"
+                    (scrollTo)="scrollToElement($event)"
+                >
                     <app-base (scrollTo)="scrollToElement($event)" />
                 </app-rule-section>
             </div>
 
-            <!-- 2. О селениях -->
+            <!-- 2. О владении наделом и организацией -->
             <div id="rules-settlements" class="lh-panel faq-scroll rules-layout__section">
                 <app-rule-section
                     sectionId="settlements"
                     title="rules.sections.settlements"
+                    appScrollAnchor="P2"
+                    id="P2"
                     (scrollTo)="scrollToElement($event)"
                 >
                     <app-about-settlements (scrollTo)="scrollToElement($event)" />
@@ -53,38 +62,61 @@
                     sectionId="actions"
                     title="rules.sections.actions"
                     appScrollAnchor="P3"
+                    id="P3"
                     (scrollTo)="scrollToElement($event)"
                 >
                     <app-players-actions (scrollTo)="scrollToElement($event)" />
                 </app-rule-section>
             </div>
 
-            <!-- 4. Колонизация -->
-            <div id="rules-colonization" class="lh-panel faq-scroll rules-layout__section">
+            <!-- 4. Вассалы -->
+            <div id="rules-vassals" class="lh-panel faq-scroll rules-layout__section">
                 <app-rule-section
-                    sectionId="colonization"
-                    title="rules.sections.colonization"
+                    sectionId="vassals"
+                    title="rules.sections.vassals"
+                    appScrollAnchor="P4"
+                    id="P4"
                     (scrollTo)="scrollToElement($event)"
                 >
-                    <app-colonization (scrollTo)="scrollToElement($event)" />
+                    <app-vassals (scrollTo)="scrollToElement($event)" />
                 </app-rule-section>
             </div>
 
-            <!-- 5. Военные действия -->
+            <!-- 5. Сословия -->
+            <div id="rules-estates" class="lh-panel faq-scroll rules-layout__section">
+                <app-rule-section
+                    sectionId="estates"
+                    title="rules.sections.estates"
+                    appScrollAnchor="P5"
+                    id="P5"
+                    (scrollTo)="scrollToElement($event)"
+                >
+                    <app-estates (scrollTo)="scrollToElement($event)" />
+                </app-rule-section>
+            </div>
+
+            <!-- 6. Военные действия -->
             <div id="rules-military" class="lh-panel faq-scroll rules-layout__section">
                 <app-rule-section
                     sectionId="military"
                     title="rules.sections.military"
-                    appScrollAnchor="P5"
+                    appScrollAnchor="P6"
+                    id="P6"
                     (scrollTo)="scrollToElement($event)"
                 >
                     <app-military-actions (scrollTo)="scrollToElement($event)" />
                 </app-rule-section>
             </div>
 
-            <!-- 6. Права и обязанности администрации -->
+            <!-- 7. Права и обязанности администрации -->
             <div id="rules-admin" class="lh-panel faq-scroll rules-layout__section">
-                <app-rule-section sectionId="admin" title="rules.sections.admin" (scrollTo)="scrollToElement($event)">
+                <app-rule-section
+                    sectionId="admin"
+                    title="rules.sections.admin"
+                    appScrollAnchor="P7"
+                    id="P7"
+                    (scrollTo)="scrollToElement($event)"
+                >
                     <app-admin-rights (scrollTo)="scrollToElement($event)" />
                 </app-rule-section>
             </div>

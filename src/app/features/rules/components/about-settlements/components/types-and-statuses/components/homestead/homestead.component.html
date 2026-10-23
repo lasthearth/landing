@@ -1,58 +1,61 @@
 <div class="flex flex-col gap-3">
-    <app-rule-paragraph anchor="Homestead" [level]="3">
-        <span [innerHTML]="'rules.content.settlements.types.homestead.intro' | translate"></span>
-        <app-rule-link target="Settlement">{{ "rules.content.terms.settlement" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.homestead.introAfter' | translate"></span>
+    <app-rule-paragraph [level]="3" anchor="Homestead">
+        <span [innerHTML]="'rules.content.settlements.homestead.intro' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>{{ "rules.content.settlements.common.requirements" | translate }}</b>
+        <span [innerHTML]="'rules.content.settlements.homestead.requirements' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.homestead.location" | translate }}
+        <span [innerHTML]="'rules.content.settlements.homestead.b1' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.homestead.population" | translate }}
+        <span [innerHTML]="'rules.content.settlements.homestead.b2.t0' | translate"></span>
+        <app-rule-link target="Passport">{{ "rules.content.settlements.homestead.b2.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.homestead.b2.t2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        <app-rule-link target="Monument" class="ml-2">{{ "rules.content.terms.monument" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.camp.monumentAfter.before' | translate"></span>
-        <app-rule-link target="Patent">{{ "rules.content.terms.patentImprovementDative" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.settlements.types.camp.monumentAfter.after' | translate"></span>
+        <span [innerHTML]="'rules.content.settlements.homestead.b3.t0' | translate"></span>
+        <app-rule-link target="Monument">{{ "rules.content.settlements.homestead.b3.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.homestead.b3.t2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.homestead.defenses" | translate }}
+        <span [innerHTML]="'rules.content.settlements.homestead.b4.t0' | translate"></span>
+        <app-rule-link target="Defend0">{{ "rules.content.settlements.homestead.b4.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.homestead.b4.t2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.homestead.blockNote" | translate }}
+        <span [innerHTML]="'rules.content.settlements.homestead.b5' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>{{ "rules.content.settlements.common.advantages" | translate }}</b>
-    </app-rule-paragraph>
-    <app-rule-paragraph [level]="3">
-        <b>•</b>
-        {{ "rules.content.settlements.types.homestead.territoryBlock" | translate }}
+        <span [innerHTML]="'rules.content.settlements.homestead.b6.t0' | translate"></span>
+        <app-rule-link target="PoliticalCourse">{{ "rules.content.settlements.homestead.b6.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.homestead.b6.t2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="3">
-        <b>•</b>
-        <span [innerHTML]="'rules.content.settlements.types.homestead.raidTargetsBefore' | translate"></span>
-        <app-rule-link target="Homestead">
-            {{ "rules.content.terms.homesteadAccusativePlural" | translate }}
-        </app-rule-link>
-        <span>,&nbsp;</span>
-        <app-rule-link target="Camp">{{ "rules.content.terms.campAccusativePlural" | translate }}</app-rule-link>
-        <span>.</span>
+        <span [innerHTML]="'rules.content.settlements.homestead.advantages' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <span [innerHTML]="'rules.content.settlements.homestead.b7' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <span [innerHTML]="'rules.content.settlements.homestead.b8.t0' | translate"></span>
+        <app-rule-link target="Homestead">{{ "rules.content.settlements.homestead.b8.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.homestead.b8.t2' | translate"></span>
+        <app-rule-link target="Camp">{{ "rules.content.settlements.homestead.b8.l3" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.settlements.homestead.b8.t4' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="3">
+        <span [innerHTML]="'rules.content.settlements.homestead.b9' | translate"></span>
     </app-rule-paragraph>
 </div>

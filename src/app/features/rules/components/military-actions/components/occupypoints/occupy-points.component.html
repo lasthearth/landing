@@ -1,78 +1,63 @@
 <div class="flex flex-col gap-3">
     <app-rule-paragraph [level]="2">
-        {{ "rules.content.military.points.notice" | translate }}
+        <span [innerHTML]="'rules.content.military.points.intro' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_1.before' | translate"></span>
-        <span [innerHTML]="'rules.content.military.points.p5_3_1.after' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_1.t0' | translate"></span>
+        <app-rule-link target="KeyPoint">{{ "rules.content.military.points.p6_3_1.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.military.points.p6_3_1.t2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_2' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_3.before' | translate"></span>
-        <app-rule-link target="Raid">{{ "rules.content.terms.raidGenitive" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_3.mid1' | translate"></span>
-        <app-rule-link target="Monument">{{ "rules.content.terms.monumentGenitivePlural" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_3.mid2' | translate"></span>
-        <app-rule-link target="P5_3_13">{{ "rules.content.terms.pointRuleRef" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_3.after' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_3.t0' | translate"></span>
+        <app-rule-link target="rule-6-3-10">{{ "rules.content.military.points.p6_3_3.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.military.points.p6_3_3.t2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_4' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_4' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_5.before' | translate"></span>
-        <app-rule-link target="Raid">{{ "rules.content.terms.raidDative" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_5.after' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_5.t0' | translate"></span>
+        <app-rule-link target="RaidSection">{{ "rules.content.military.points.p6_3_5.l1" | translate }}</app-rule-link>
+        <span [innerHTML]="'rules.content.military.points.p6_3_5.t2' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_6.before' | translate"></span>
-        <app-rule-link target="Raid">{{ "rules.content.terms.initiateRaid" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_6.after' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_6' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_7' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_7' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_8' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_8' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_9.before' | translate"></span>
-        <span [innerHTML]="'rules.content.military.points.p5_3_9.mid1' | translate"></span>
-        <app-rule-link target="Diplomacy">{{ "rules.content.terms.diplomacyPrepositional" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_9.after' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_9' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="2" anchor="rule-6-3-10">
+        <span [innerHTML]="'rules.content.military.points.p6_3_10' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_12.before' | translate"></span>
-        <app-rule-link target="Patent">{{ "rules.content.terms.patentPrepositional" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_12.after' | translate"></span>
-    </app-rule-paragraph>
-
-    <app-rule-paragraph anchor="P5_3_13" [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_13.before' | translate"></span>
-        <app-rule-link target="Patent">{{ "rules.content.terms.patentDativeMonument" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_13.mid1' | translate"></span>
-        <span [innerHTML]="'rules.content.military.points.p5_3_13.after' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_11' | translate"></span>
     </app-rule-paragraph>
 
     <app-rule-paragraph [level]="2">
-        <span [innerHTML]="'rules.content.military.points.p5_3_14.before' | translate"></span>
-        <app-rule-link target="Key point">{{ "rules.content.terms.keyPointInstrumental" | translate }}</app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_14.mid1' | translate"></span>
-        <app-rule-link target="Monument">
-            {{ "rules.content.terms.monumentInstrumentalPlural" | translate }}
-        </app-rule-link>
-        <span [innerHTML]="'rules.content.military.points.p5_3_14.after' | translate"></span>
+        <span [innerHTML]="'rules.content.military.points.p6_3_12' | translate"></span>
+    </app-rule-paragraph>
+
+    <app-rule-paragraph [level]="2">
+        <span [innerHTML]="'rules.content.military.points.p6_3_13' | translate"></span>
     </app-rule-paragraph>
 </div>
