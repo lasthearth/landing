@@ -49,6 +49,9 @@ Thumbs.db
 .playwright-mcp/
 .codegraph/
 .npm-cache/
+.taste-skill/
+.dsh-progress/
+.scratch/
 
 # Генерируемые артефакты агентских прогонов
 RULES_EDIT.md

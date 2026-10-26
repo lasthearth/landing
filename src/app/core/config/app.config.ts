@@ -57,6 +57,7 @@ function getConfig() {
             'donate:purchase:issue',
             'donate:wallet:read',
             'kit:assign',
+            'kit:edit',
             'kit:list',
             'kit:read',
             'hungergames:match:record',

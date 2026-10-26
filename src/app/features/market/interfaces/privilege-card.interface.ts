@@ -1,4 +1,4 @@
-import { IAbilityItem } from '@entities/donate';
+import { IAbilityItem, ShopCategory } from '@entities/donate';
 import { KitItem } from './kit-item.interface';
 
 /**
@@ -9,6 +9,11 @@ export interface PrivilegeCard {
      * Идентификатор товара магазина (для покупки).
      */
     id?: string;
+
+    /**
+     * Категория товара: набор, привилегия или особый товар.
+     */
+    category: ShopCategory;
 
     /**
      * Название привилегии.
