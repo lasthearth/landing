@@ -28,8 +28,7 @@ export const MARKET_I18N = {
                 boosty: {
                     title: 'Boosty',
                     subtitle: 'Международные платежи',
-                    description:
-                        'Для оплаты из-за рубежа. К сумме пакета добавляется 300 ₽ комиссии сервиса.',
+                    description: 'Для оплаты из-за рубежа. К сумме пакета добавляется 300 ₽ комиссии сервиса.',
                     total: 'К оплате: {{total}} ₽ (включает 300 ₽ комиссии).',
                     nicknameWarning:
                         'Обязательно укажите ник {{nickname}} в сообщении к платежу, иначе мы не сможем зачислить осколки.',
@@ -63,28 +62,28 @@ export const MARKET_I18N = {
                 tabPrivileges: 'Привилегии',
                 tabKits: 'Наборы',
                 tabSpecial: 'Особое',
-                supportTitle: 'На что идут деньги',
+                supportTitle: 'Куда идут средства',
                 supportDescription:
-                    'Хостинг и домен оплачиваются каждый месяц, моды и события делаем сами. Деньги из магазина идут ровно на это.',
+                    'Средства от покупок в магазине идут на хостинг, доменное имя и работу команды. Моды и события команда разрабатывает самостоятельно.',
                 worldShotHouse: 'Дом у очага',
                 worldShotVillage: 'Поселение осенью',
                 worldShotSiege: 'Осада у моря',
                 worldShotMill: 'Мельница поселения',
                 fundingHosting: {
                     title: 'Хостинг',
-                    description: 'Сервер и домен оплачиваются каждый месяц.',
+                    description: 'Сервер и доменное имя оплачиваются ежемесячно.',
                 },
                 fundingMods: {
                     title: 'Моды',
-                    description: 'Свои механики и предметы для игры.',
+                    description: 'Разработка механик и предметов для сервера.',
                 },
                 fundingEvents: {
                     title: 'События',
-                    description: 'Турниры и сезонные активности.',
+                    description: 'Турниры и сезонные активности для игроков.',
                 },
                 fundingFair: {
                     title: 'Без pay-to-win',
-                    description: 'Преимущество в бою за деньги не продаём.',
+                    description: 'Игровое преимущество за деньги не продаётся.',
                 },
             },
             purchaseDialog: {
@@ -158,8 +157,7 @@ export const MARKET_I18N = {
                 boosty: {
                     title: 'Boosty',
                     subtitle: 'International payments',
-                    description:
-                        'For payments from abroad. A 300 ₽ service fee is added to the package amount.',
+                    description: 'For payments from abroad. A 300 ₽ service fee is added to the package amount.',
                     total: 'Total: {{total}} ₽ (includes 300 ₽ fee).',
                     nicknameWarning:
                         'Be sure to include nickname {{nickname}} in the payment message, otherwise we cannot credit shards.',
@@ -193,30 +191,30 @@ export const MARKET_I18N = {
                 tabPrivileges: 'Privileges',
                 tabKits: 'Kits',
                 tabSpecial: 'Special',
-                supportTitle: 'Where the money goes',
+                supportTitle: 'Where the funds go',
                 // Двойные кавычки намеренно: разборщик scripts/i18n-tool.mjs не понимает
                 // экранированный апостроф и теряет все ключи en после этой строки.
                 supportDescription:
-                    "Hosting and the domain get paid every month, and we make the mods and events ourselves. Shop money goes to exactly that.",
+                    'Money from shop purchases covers hosting, the domain name and the work of the team. The team develops the mods and the events itself.',
                 worldShotHouse: 'A house by the Hearth',
                 worldShotVillage: 'A settlement in autumn',
                 worldShotSiege: 'A siege by the sea',
                 worldShotMill: 'The settlement mill',
                 fundingHosting: {
                     title: 'Hosting',
-                    description: 'The server and the domain are paid every month.',
+                    description: 'The server and the domain name are paid monthly.',
                 },
                 fundingMods: {
                     title: 'Mods',
-                    description: 'Our own mechanics and items for the game.',
+                    description: 'Mechanics and items developed for the server.',
                 },
                 fundingEvents: {
                     title: 'Events',
-                    description: 'Tournaments and seasonal activities.',
+                    description: 'Tournaments and seasonal activities for players.',
                 },
                 fundingFair: {
                     title: 'No pay-to-win',
-                    description: 'We do not sell an advantage in a fight.',
+                    description: 'No in-game advantage is sold for money.',
                 },
             },
             purchaseDialog: {
