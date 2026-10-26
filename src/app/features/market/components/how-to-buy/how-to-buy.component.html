@@ -2,7 +2,7 @@
     <h2 class="lh-dialog-title text-center text-xl sm:text-2xl">{{ "market.howToBuy.title" | translate }}</h2>
 
     <!-- Блок выбора суммы -->
-    <div class="flex flex-col gap-4 pb-6 border-b border-line">
+    <div class="flex flex-col gap-4 pb-6">
         <!-- Итоговая сумма осколков -->
         <div class="flex flex-col items-center gap-1">
             <span class="text-lh-primary/60 text-base font-semibold uppercase">
@@ -88,18 +88,18 @@
 
         <!-- Сбербанк / СБП — основной способ -->
         <div
-            class="relative flex flex-col gap-3 rounded-2xl bg-surface border border-line shadow-sm overflow-hidden"
+            class="relative flex flex-col gap-3 rounded-2xl bg-surface border border-line overflow-hidden"
         >
             <div class="h-1.5 bg-sber"></div>
             <div
-                class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-sber text-white text-xs font-bold uppercase tracking-wide shadow-[0_2px_8px_rgba(33,160,56,0.35)]"
+                class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-sber text-white text-sm font-bold"
             >
                 {{ "common.recommended" | translate }}
             </div>
             <div class="p-4 pt-10 sm:p-5 sm:pt-10 flex flex-col gap-4">
                 <div class="flex items-center gap-3">
                     <div
-                        class="flex items-center justify-center w-12 h-12 rounded-full bg-sber text-white shrink-0 shadow-sm"
+                        class="flex items-center justify-center w-12 h-12 rounded-full bg-sber text-white shrink-0"
                     >
                         <tui-icon icon="@tui.smartphone" class="size-6!" />
                     </div>
@@ -125,7 +125,7 @@
                         {{ "market.howToBuy.sbp.phoneLabel" | translate }}
                     </label>
                     <div class="flex items-center gap-3">
-                        <span class="text-lh-primary text-2xl font-bold font-mono tracking-wide flex-1">
+                        <span class="text-lh-primary text-2xl font-bold tabular-nums flex-1">
                             {{ sbpPhone }}
                         </span>
                         <button
@@ -184,13 +184,13 @@
 
         <!-- Boosty — международный, низкий приоритет -->
         <div
-            class="relative flex flex-col gap-3 rounded-2xl bg-surface border border-line shadow-sm overflow-hidden"
+            class="relative flex flex-col gap-3 rounded-2xl bg-surface border border-line overflow-hidden"
         >
             <div class="h-1.5 bg-lh-primary"></div>
             <div class="p-4 sm:p-5 flex flex-col gap-3">
                 <div class="flex items-center gap-3">
                     <div
-                        class="flex items-center justify-center w-11 h-11 rounded-full bg-lh-primary text-white shrink-0 shadow-sm"
+                        class="flex items-center justify-center w-11 h-11 rounded-full bg-lh-primary text-white shrink-0"
                     >
                         <img src="/images/Boosty.svg" class="h-5 brightness-0 invert" alt="" />
                     </div>
@@ -248,7 +248,7 @@
             {{ "market.howToBuy.agreement" | translate }}
             <a
                 href="https://lasthearth.ru/privacy-policy"
-                class="text-lh-accent font-bold border-b border-dashed border-lh-accent hover:opacity-80 transition-opacity"
+                class="text-lh-accent font-bold underline decoration-dashed decoration-2 underline-offset-4 hover:opacity-80 transition-opacity"
                 target="_blank"
             >
                 {{ "market.howToBuy.privacyPolicy" | translate }}
@@ -256,7 +256,7 @@
             и
             <a
                 href="https://lasthearth.ru/public-offer"
-                class="text-lh-accent font-bold border-b border-dashed border-lh-accent hover:opacity-80 transition-opacity"
+                class="text-lh-accent font-bold underline decoration-dashed decoration-2 underline-offset-4 hover:opacity-80 transition-opacity"
                 target="_blank"
             >
                 {{ "market.howToBuy.publicOffer" | translate }}

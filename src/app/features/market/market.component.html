@@ -1,12 +1,10 @@
-<div class="lh-page-container flex flex-col gap-6">
+<div class="lh-page-container flex flex-col gap-6 lg:gap-8">
     <!-- Шапка: заголовок, баланс и быстрый доступ к пополнению -->
     <app-page-header [title]="'market.marketPage.title' | translate" [subtitle]="'market.marketPage.subtitle' | translate">
         <div class="flex flex-wrap items-center gap-3">
             @if (balance$ | async; as balance) {
-                <div
-                    class="flex items-center gap-2 rounded-xl border border-line bg-surface-3 px-4 py-2.5"
-                >
-                    <span class="text-sm font-bold uppercase tracking-wide text-ink-2">
+                <div class="flex items-center gap-2 rounded-xl bg-surface-3 px-4 py-2.5">
+                    <span class="text-sm font-bold text-ink-2">
                         {{ 'market.marketPage.balanceLabel' | translate }}
                     </span>
                     <img
@@ -28,19 +26,7 @@
         </div>
     </app-page-header>
 
-    <!-- Аргументы доверия -->
-    <div class="flex flex-wrap gap-x-6 gap-y-2 -mt-4 text-sm md:text-base text-ink-2">
-        <span class="flex items-center gap-2">
-            <tui-icon icon="@tui.clock" class="!text-base text-lh-accent" />
-            {{ 'market.marketPage.trustDelivery' | translate }}
-        </span>
-        <span class="flex items-center gap-2">
-            <tui-icon icon="@tui.credit-card" class="!text-base text-lh-accent" />
-            {{ 'market.marketPage.trustPayment' | translate }}
-        </span>
-    </div>
-
-    <!-- Вкладки -->
+    <!-- Вкладки: ключи сохраняются в адресе (?tab=), ссылка ведёт сразу на группу -->
     <div class="lh-chips" role="tablist" [attr.aria-label]="'market.marketPage.title' | translate">
         @for (tab of tabs; track tab; let index = $index) {
             <button
@@ -73,79 +59,57 @@
         }
     }
 
-    <!-- Заголовок раздела «Куда идут средства»; пополнение — кнопкой в шапке страницы -->
-    <div>
-        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-lh-primary">
-            {{ 'market.marketPage.supportTitle' | translate }}
-        </h2>
-        <p class="text-base md:text-lg text-ink-2 mt-2 max-w-2xl">
-            {{ 'market.marketPage.supportDescription' | translate }}
-        </p>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div
-            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"
-        >
-            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-parchment-2/10 text-parchment-2">
-                <tui-icon icon="@tui.server" class="!text-xl" />
-            </span>
-            <div>
-                <p class="font-bold text-parchment-2 text-base lg:text-lg uppercase tracking-wide">
-                    {{ 'market.marketPage.fundingHosting.title' | translate }}
-                </p>
-                <p class="text-base md:text-lg text-parchment-2/80 mt-1">
-                    {{ 'market.marketPage.fundingHosting.description' | translate }}
+    <!--
+        Раздел «Куда идут средства»: тёмное поле, асимметричная пара
+        «аргумент — кадры мира» и список четырёх направлений.
+        Пополнение остаётся кнопкой в шапке страницы.
+    -->
+    <section
+        class="mt-10 flex flex-col gap-8 rounded-2xl bg-night-deep p-5 sm:p-7 lg:mt-16 lg:p-10"
+        aria-labelledby="market-funding-title"
+    >
+        <div class="grid gap-8 lg:grid-cols-12 lg:gap-12">
+            <div class="flex flex-col gap-4 lg:col-span-5" appReveal>
+                <h2 id="market-funding-title" class="lh-display text-3xl text-parchment lg:text-5xl">
+                    {{ 'market.marketPage.supportTitle' | translate }}
+                </h2>
+                <p class="text-base leading-relaxed text-parchment-2 lg:text-lg">
+                    {{ 'market.marketPage.supportDescription' | translate }}
                 </p>
             </div>
+
+            <figure class="flex flex-col gap-3 lg:col-span-7">
+                <div class="grid grid-cols-2 gap-3">
+                    @for (shot of worldShots; track shot.image) {
+                        <img
+                            [src]="shot.image"
+                            [alt]="shot.altKey | translate"
+                            class="aspect-video w-full min-w-0 rounded-xl object-cover"
+                            decoding="async"
+                            width="1152"
+                            height="648"
+                            appReveal
+                            [appRevealDelay]="90 + $index * 60"
+                        />
+                    }
+                </div>
+                <figcaption class="text-sm text-parchment-2" appReveal [appRevealDelay]="330">
+                    {{ 'market.marketPage.worldShotsCaption' | translate }}
+                </figcaption>
+            </figure>
         </div>
 
-        <div
-            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"
-        >
-            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-parchment-2/10 text-parchment-2">
-                <tui-icon icon="@tui.code" class="!text-xl" />
-            </span>
-            <div>
-                <p class="font-bold text-parchment-2 text-base lg:text-lg uppercase tracking-wide">
-                    {{ 'market.marketPage.fundingMods.title' | translate }}
-                </p>
-                <p class="text-base md:text-lg text-parchment-2/80 mt-1">
-                    {{ 'market.marketPage.fundingMods.description' | translate }}
-                </p>
-            </div>
-        </div>
-
-        <div
-            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"
-        >
-            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-parchment-2/10 text-parchment-2">
-                <tui-icon icon="@tui.trophy" class="!text-xl" />
-            </span>
-            <div>
-                <p class="font-bold text-parchment-2 text-base lg:text-lg uppercase tracking-wide">
-                    {{ 'market.marketPage.fundingEvents.title' | translate }}
-                </p>
-                <p class="text-base md:text-lg text-parchment-2/80 mt-1">
-                    {{ 'market.marketPage.fundingEvents.description' | translate }}
-                </p>
-            </div>
-        </div>
-
-        <div
-            class="flex items-start gap-3 rounded-xl bg-gradient-to-br from-night-grad-1 via-night-grad-2 to-night-grad-3 border border-line-strong/50 p-4"
-        >
-            <span class="flex shrink-0 items-center justify-center size-10 rounded-lg bg-parchment-2/10 text-parchment-2">
-                <tui-icon icon="@tui.scale" class="!text-xl" />
-            </span>
-            <div>
-                <p class="font-bold text-parchment-2 text-base lg:text-lg uppercase tracking-wide">
-                    {{ 'market.marketPage.fundingFair.title' | translate }}
-                </p>
-                <p class="text-base md:text-lg text-parchment-2/80 mt-1">
-                    {{ 'market.marketPage.fundingFair.description' | translate }}
-                </p>
-            </div>
-        </div>
-    </div>
+        <dl class="grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-4" appReveal [appRevealDelay]="180">
+            @for (target of fundingTargets; track target.titleKey) {
+                <div class="flex flex-col gap-1.5">
+                    <dt class="lh-display text-xl text-parchment">
+                        {{ target.titleKey | translate }}
+                    </dt>
+                    <dd class="text-base leading-relaxed text-parchment-2">
+                        {{ target.descriptionKey | translate }}
+                    </dd>
+                </div>
+            }
+        </dl>
+    </section>
 </div>

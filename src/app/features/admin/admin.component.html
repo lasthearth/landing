@@ -102,6 +102,18 @@
         </button>
         <button
             type="button"
+            [attr.aria-label]="'admin.tabs.kits' | translate"
+            class="nav-button shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === 12 ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === 12"
+            (click)="activeItemIndex = 12"
+        >
+            <tui-icon icon="@tui.boxes" />
+            <span class="hidden sm:inline">{{ 'admin.tabs.kits' | translate }}</span>
+        </button>
+        <button
+            type="button"
             [attr.aria-label]="'admin.tabs.purchasesHistory' | translate"
             class="nav-button shrink-0"
             aria-controls="admin-panel"
@@ -252,6 +264,9 @@
             }
             @case (11) {
                 <app-mods-admin-panel />
+            }
+            @case (12) {
+                <app-kit-admin-panel />
             }
         }
     </div>

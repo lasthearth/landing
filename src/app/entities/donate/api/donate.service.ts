@@ -13,7 +13,6 @@ import {
     startWith,
     switchMap,
     take,
-    throwError,
 } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
@@ -62,11 +61,10 @@ export class DonateService {
     /**
      * Триггер запроса списка товаров.
      *
-     * Значение — признак «тихого» режима: в нём `errorInterceptor` не показывает
-     * алерт (см. `SKIP_ERROR_ALERT`). Прогрев кэша работает тихо, обычный запрос
-     * страницы магазина — как раньше.
+     * `BehaviorSubject` нужен, чтобы первый подписчик сразу запустил запрос:
+     * обычный `Subject` не дал бы значения до первого `next()`.
      */
-    private readonly shopItemsRefresh$ = new BehaviorSubject<boolean>(false);
+    private readonly shopItemsRefresh$ = new BehaviorSubject<void>(undefined);
 
     /**
      * Признак того, что список товаров уже запрошен или запрашивается.
@@ -82,23 +80,25 @@ export class DonateService {
      * Товары редко меняются, поэтому успех запоминается на всю сессию
      * (`share` с `ReplaySubject(1)`): следующие подписчики запрос не делают.
      * Ошибка кэш сбрасывает (`resetOnError`), чтобы подписчик получил новый
-     * запрос, а не запомненный сбой.
+     * запрос, а не запомненный сбой; `shareReplay(1)` здесь неприменим —
+     * он закэшировал бы сам сбой.
      * При вызове {@link refreshShopItems$} кэш сбрасывается и выполняется новый запрос.
+     *
+     * Запрос всегда уходит с `SKIP_ERROR_ALERT`: без него `errorInterceptor`
+     * подменил бы сбой GET на `EMPTY`, и подписчик не увидел бы ни ошибки,
+     * ни значений — скелетон загрузки остался бы висеть. Подмену сбоя пустым
+     * списком делает {@link getShopItems$}, а не этот поток, поэтому
+     * {@link getShopItemsOrThrow$} получает ошибку как есть.
      */
     private readonly shopItems$ = this.shopItemsRefresh$.pipe(
-        switchMap((silent) => {
+        switchMap(() => {
             this.shopItemsRequested = true;
 
             return this.http
                 .get<{ items: IShopItemDto[] }>(`${this.baseUrl}/donate/shop/items`, {
-                    context: new HttpContext().set(SKIP_ERROR_ALERT, silent),
+                    context: new HttpContext().set(SKIP_ERROR_ALERT, true),
                 })
-                .pipe(
-                    map((response) => response.items.map(mapDtoToShopItem)),
-                    // В тихом режиме сбой не подменяется пустым списком: иначе одна
-                    // ошибка сети навсегда показала бы «товаров нет» на всех страницах.
-                    catchError((error: unknown) => (silent ? throwError(() => error) : of([])))
-                );
+                .pipe(map((response) => response.items.map(mapDtoToShopItem)));
         }),
         share<IShopItem[]>({
             connector: () => new ReplaySubject<IShopItem[]>(1),
@@ -177,29 +177,50 @@ export class DonateService {
     }
 
     /**
-     * Получает список товаров магазина.
+     * Получает список товаров магазина, деградируя к пустому списку при сбое.
      *
      * Результат кэшируется на всю сессию: повторная подписка запрос не делает.
+     * Сбой не доходит до подписчика и не показывает алерт: поток выдаёт пустой
+     * массив. Подходит витрине, где «товаров нет» допустимо показать вместо
+     * ошибки. Там, где сбой нужно отличить от пустого магазина, берут
+     * {@link getShopItemsOrThrow$}.
      *
-     * @returns Observable с массивом товаров.
+     * @returns Observable с массивом товаров; при сбое — пустой массив.
      */
     public getShopItems$(): Observable<IShopItem[]> {
+        return this.shopItems$.pipe(catchError(() => of([])));
+    }
+
+    /**
+     * Получает список товаров магазина, пробрасывая сбой подписчику.
+     *
+     * Тот же кэш на сессию, что и у {@link getShopItems$}: повторная подписка
+     * запрос не делает. Отличие — ошибка доходит до подписчика, поэтому
+     * компонент сам рисует состояние ошибки и повтор. Общий алерт не
+     * показывается (`SKIP_ERROR_ALERT`): сообщение и кнопку повтора рисует
+     * вызывающий код. Кэш сбой не запоминает (`resetOnError`), так что
+     * следующая подписка после ошибки делает новый запрос.
+     *
+     * @returns Observable с массивом товаров; при сбое — ошибка.
+     */
+    public getShopItemsOrThrow$(): Observable<IShopItem[]> {
         return this.shopItems$;
     }
 
     /**
-     * Прогревает кэш списка товаров одним тихим запросом.
+     * Прогревает кэш списка товаров одним запросом.
      *
      * Назначение — заранее, до открытия страницы магазина, получить данные,
-     * которые пререндер в HTML не кладёт. Отличия от {@link getShopItems$}:
-     * при ошибке алерт не показывается (`SKIP_ERROR_ALERT`) и сбой не остаётся
-     * в кэше. Если товары уже запрошены, нового запроса не делает.
+     * которые пререндер в HTML не кладёт. Отличие от {@link getShopItems$}:
+     * при сбое поток завершается без значения и не подменяет ошибку пустым
+     * списком, поэтому в кэше не остаётся «товаров нет». Если товары уже
+     * запрошены, нового запроса не делает.
      *
      * @returns Observable со списком товаров; при ошибке завершается без значения.
      */
     public prefetchShopItems$(): Observable<IShopItem[]> {
         if (!this.shopItemsRequested) {
-            this.shopItemsRefresh$.next(true);
+            this.shopItemsRefresh$.next(undefined);
         }
 
         return this.shopItems$.pipe(
@@ -211,10 +232,11 @@ export class DonateService {
     /**
      * Сбрасывает кэш списка товаров и инициирует новый запрос к API.
      *
-     * Подписчики, использующие {@link getShopItems$}, автоматически получат актуальный список.
+     * Подписчики, использующие {@link getShopItems$} или
+     * {@link getShopItemsOrThrow$}, автоматически получат актуальный список.
      */
     public refreshShopItems$(): void {
-        this.shopItemsRefresh$.next(false);
+        this.shopItemsRefresh$.next(undefined);
     }
 
     /**

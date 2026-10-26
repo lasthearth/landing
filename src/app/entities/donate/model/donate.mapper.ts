@@ -1,4 +1,4 @@
-import { IShopItemDto, IShopItem, IKitEntryDto, IKitEntry } from './shop-item.interface';
+import { IKitEntry, IKitEntryDto, IShopItem, IShopItemDto, ShopCategory } from './shop-item.interface';
 import { IAbilityItem } from './ability-item.interface';
 import { IPurchaseDto, IPurchase } from './purchase.interface';
 import { ITransactionDto, ITransaction } from './transaction.interface';
@@ -56,6 +56,21 @@ export function formatDateOrFallback(rawDate: string | undefined): string {
 }
 
 /**
+ * Приводит категорию товара магазина к известному значению.
+ *
+ * Бэкенд присоединяет категорию из записи захваченного набора при чтении.
+ * Если набор не найден или товар создан до появления поля, приходит пустая
+ * строка (protobuf-JSON опускает её, поэтому поле может отсутствовать).
+ * Пустое и неизвестное значение приводится к `'kit'` — категории по умолчанию.
+ *
+ * @param raw Значение поля `category` из DTO товара: строка, `undefined` или `null`.
+ * @returns Одна из трёх известных категорий.
+ */
+export function normalizeShopCategory(raw: string | undefined | null): ShopCategory {
+    return raw === 'privilege' || raw === 'special' ? raw : 'kit';
+}
+
+/**
  * Преобразует DTO товара магазина в UI-модель.
  *
  * @param dto DTO товара от API.
@@ -83,6 +98,7 @@ export function mapDtoToShopItem(dto: IShopItemDto): IShopItem {
         hasDiscount: dto.has_discount,
         discountPercent: dto.discount_percent,
         effectivePrice: dto.effective_price,
+        category: normalizeShopCategory(dto.category),
     };
 }
 
