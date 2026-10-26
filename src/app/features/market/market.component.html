@@ -60,52 +60,48 @@
     }
 
     <!--
-        Раздел «Куда идут средства»: тёмное поле, асимметричная пара
-        «аргумент — кадры мира» и список четырёх направлений.
+        Раздел «На что идут деньги»: компактное тёмное поле, три полосы —
+        аргумент, кадры мира во всю ширину и список четырёх направлений.
+        Полоса кадров заняла всю ширину намеренно: в колонке 7/12 каждый из
+        четырёх кадров 16:9 выходит около 145×82px, а такой размер уже не
+        читается как фотография ни в метрике, ни глазами.
         Пополнение остаётся кнопкой в шапке страницы.
     -->
     <section
-        class="mt-10 flex flex-col gap-8 rounded-2xl bg-night-deep p-5 sm:p-7 lg:mt-16 lg:p-10"
+        class="mt-8 flex flex-col gap-6 rounded-2xl bg-night-deep p-5 sm:p-6 lg:mt-12 lg:p-8"
         aria-labelledby="market-funding-title"
     >
-        <div class="grid gap-8 lg:grid-cols-12 lg:gap-12">
-            <div class="flex flex-col gap-4 lg:col-span-5" appReveal>
-                <h2 id="market-funding-title" class="lh-display text-3xl text-parchment lg:text-5xl">
-                    {{ 'market.marketPage.supportTitle' | translate }}
-                </h2>
-                <p class="text-base leading-relaxed text-parchment-2 lg:text-lg">
-                    {{ 'market.marketPage.supportDescription' | translate }}
-                </p>
-            </div>
-
-            <figure class="flex flex-col gap-3 lg:col-span-7">
-                <div class="grid grid-cols-2 gap-3">
-                    @for (shot of worldShots; track shot.image) {
-                        <img
-                            [src]="shot.image"
-                            [alt]="shot.altKey | translate"
-                            class="aspect-video w-full min-w-0 rounded-xl object-cover"
-                            decoding="async"
-                            width="1152"
-                            height="648"
-                            appReveal
-                            [appRevealDelay]="90 + $index * 60"
-                        />
-                    }
-                </div>
-                <figcaption class="text-sm text-parchment-2" appReveal [appRevealDelay]="330">
-                    {{ 'market.marketPage.worldShotsCaption' | translate }}
-                </figcaption>
-            </figure>
+        <div class="grid gap-4 lg:grid-cols-12 lg:gap-12">
+            <h2 id="market-funding-title" class="lh-display text-2xl text-parchment lg:col-span-5 lg:text-3xl" appReveal>
+                {{ 'market.marketPage.supportTitle' | translate }}
+            </h2>
+            <p class="text-base leading-relaxed text-parchment-2 lg:col-span-7" appReveal [appRevealDelay]="60">
+                {{ 'market.marketPage.supportDescription' | translate }}
+            </p>
         </div>
 
-        <dl class="grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-4" appReveal [appRevealDelay]="180">
+        <div class="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3">
+            @for (shot of worldShots; track shot.image) {
+                <img
+                    [src]="shot.image"
+                    [alt]="shot.altKey | translate"
+                    class="aspect-video w-full min-w-0 rounded-xl object-cover"
+                    decoding="async"
+                    width="1152"
+                    height="648"
+                    appReveal
+                    [appRevealDelay]="120 + $index * 45"
+                />
+            }
+        </div>
+
+        <dl class="grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-4" appReveal [appRevealDelay]="300">
             @for (target of fundingTargets; track target.titleKey) {
                 <div class="flex flex-col gap-1.5">
-                    <dt class="lh-display text-xl text-parchment">
+                    <dt class="text-lg font-bold text-parchment">
                         {{ target.titleKey | translate }}
                     </dt>
-                    <dd class="text-base leading-relaxed text-parchment-2">
+                    <dd class="text-sm leading-relaxed text-parchment-2">
                         {{ target.descriptionKey | translate }}
                     </dd>
                 </div>

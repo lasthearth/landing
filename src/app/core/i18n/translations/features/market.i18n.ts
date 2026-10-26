@@ -63,29 +63,28 @@ export const MARKET_I18N = {
                 tabPrivileges: 'Привилегии',
                 tabKits: 'Наборы',
                 tabSpecial: 'Особое',
-                supportTitle: 'Поддержка сервера',
+                supportTitle: 'На что идут деньги',
                 supportDescription:
-                    'Ваш вклад помогает миру у очага оставаться живым. Любая покупка на сервере — помогает оплатить аренду хостинга, доменного имени и работу команды.',
-                worldShotsCaption: 'Мир у очага',
+                    'Хостинг и домен оплачиваются каждый месяц, моды и события делаем сами. Деньги из магазина идут ровно на это.',
                 worldShotHouse: 'Дом у очага',
                 worldShotVillage: 'Поселение осенью',
                 worldShotSiege: 'Осада у моря',
                 worldShotMill: 'Мельница поселения',
                 fundingHosting: {
                     title: 'Хостинг',
-                    description: 'Аренда мощностей для стабильной работы сервера',
+                    description: 'Сервер и домен оплачиваются каждый месяц.',
                 },
                 fundingMods: {
                     title: 'Моды',
-                    description: 'Разработка уникальных механик и контента',
+                    description: 'Свои механики и предметы для игры.',
                 },
                 fundingEvents: {
                     title: 'События',
-                    description: 'Проведение турниров, наград и сезонных активностей',
+                    description: 'Турниры и сезонные активности.',
                 },
                 fundingFair: {
                     title: 'Без pay-to-win',
-                    description: 'Мы не рушим баланс игры, выверяя предметы и цены',
+                    description: 'Преимущество в бою за деньги не продаём.',
                 },
             },
             purchaseDialog: {
@@ -194,31 +193,30 @@ export const MARKET_I18N = {
                 tabPrivileges: 'Privileges',
                 tabKits: 'Kits',
                 tabSpecial: 'Special',
-                supportTitle: 'Support the server',
+                supportTitle: 'Where the money goes',
                 // Двойные кавычки намеренно: разборщик scripts/i18n-tool.mjs не понимает
                 // экранированный апостроф и теряет все ключи en после этой строки.
                 supportDescription:
-                    "Your contribution helps the world by the Hearth stay alive. Every purchase on the server helps pay for hosting, the domain name, and the team's work.",
-                worldShotsCaption: 'The world by the Hearth',
+                    "Hosting and the domain get paid every month, and we make the mods and events ourselves. Shop money goes to exactly that.",
                 worldShotHouse: 'A house by the Hearth',
                 worldShotVillage: 'A settlement in autumn',
                 worldShotSiege: 'A siege by the sea',
                 worldShotMill: 'The settlement mill',
                 fundingHosting: {
                     title: 'Hosting',
-                    description: 'Renting capacity for stable server operation',
+                    description: 'The server and the domain are paid every month.',
                 },
                 fundingMods: {
                     title: 'Mods',
-                    description: 'Development of unique mechanics and content',
+                    description: 'Our own mechanics and items for the game.',
                 },
                 fundingEvents: {
                     title: 'Events',
-                    description: 'Hosting tournaments, rewards, and seasonal activities',
+                    description: 'Tournaments and seasonal activities.',
                 },
                 fundingFair: {
                     title: 'No pay-to-win',
-                    description: 'We do not break game balance, carefully balancing items and prices',
+                    description: 'We do not sell an advantage in a fight.',
                 },
             },
             purchaseDialog: {
