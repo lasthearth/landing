@@ -69,6 +69,7 @@
 | 12  | `PUT`    | `/donate/shop/items/{id}`                     | Обновить товар (админ, только кит)                 | ✅ + `donate:shop:update` | ✅ `updateShopItem$()`                                |
 | 13  | `DELETE` | `/donate/shop/items/{id}`                     | Удалить товар (админ)                              | ✅ + `donate:shop:delete` | ❌                                                    |
 | 14  | `POST`   | `/donate/shop/items/{item_id}:buy`            | Купить товар                                       | ✅                        | ✅ `buyItem$()`                                       |
+| 15  | `GET`    | `/donate/admin/shop/items`                    | Все записи магазина, включая скрытые (админ)       | ✅ + `donate:shop:update` | ✅ `getAdminShopItems$()`                             |
 
 **Ограничения записей магазина** (проверены прогоном против
 `https://api.lasthearth.ru`, 2026-10-26):
@@ -81,11 +82,11 @@
 - `image_url` обязателен (400 `image_url is required`), `entries` не могут быть
   пустыми (400 `kit must have at least one entry`).
 - На `code` в коллекции стоит уникальный индекс: вторая запись с тем же кодом
-  невозможна. Сервер сегодня отвечает **500** `failed to create shop item`
-  вместо 409 — фронт трактует 500 в режиме создания как «код уже занят».
-- `GET /donate/shop/items` отдаёт только записи с `is_available: true`,
-  админского варианта списка нет: скрытую запись из панели не видно и обратно
-  включить нельзя (лечится в ветке `feature/shop-items-admin-visibility` vsservice).
+  невозможна. Дубликат отвечает **409** `shop entry with this code already exists`
+  и на создании, и на обновлении (`code: 6`).
+- `GET /donate/shop/items` отдаёт только записи с `is_available: true` и не
+  требует авторизации. Полный список, включая скрытые, — отдельный маршрут
+  `GET /donate/admin/shop/items` (scope `donate:shop:update`), см. ниже.
 
 #### DTO
 

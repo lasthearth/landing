@@ -205,8 +205,15 @@ export const ADMIN_I18N = {
                 replaceEntriesText:
                     'Позиции, которые вы правили вручную, будут заменены составом набора «{{name}}».',
                 codeTaken: 'На этот код уже есть товар магазина: одному коду набора соответствует только одна запись.',
-                listScopeNote:
-                    'Список показывает только доступные для покупки товары. Скрытые записи сервер не возвращает.',
+                listIncludesHidden: 'Список показывает все записи, включая скрытые.',
+                showAction: 'Показать',
+                hideAction: 'Скрыть',
+                showTitle: 'Показать товар?',
+                showText: 'Товар «{{name}}» снова появится в магазине.',
+                hideTitle: 'Скрыть товар?',
+                hideText: 'Товар «{{name}}» исчезнет из магазина, но останется в этом списке: его можно показать снова.',
+                shownSuccess: 'Товар показан',
+                hiddenSuccess: 'Товар скрыт',
                 kitOnlyHint:
                     'Тип товара фиксирован: магазин продаёт захваченные наборы. Товар из одной позиции — это набор из одного предмета.',
                 snapshotHint:
@@ -566,8 +573,16 @@ export const ADMIN_I18N = {
                 replaceEntriesText:
                     'The positions you edited by hand will be replaced with the contents of "{{name}}".',
                 codeTaken: 'The shop already has an item with this code: one kit code maps to a single entry.',
-                listScopeNote:
-                    'The list shows only the items available for purchase. The server does not return hidden entries.',
+                listIncludesHidden: 'The list shows every entry, hidden ones included.',
+                showAction: 'Show',
+                hideAction: 'Hide',
+                showTitle: 'Publish the item?',
+                showText: 'The item "{{name}}" will appear in the shop again.',
+                hideTitle: 'Hide the item?',
+                hideText:
+                    'The item "{{name}}" will disappear from the shop but stay in this list: it can be published again.',
+                shownSuccess: 'Item published',
+                hiddenSuccess: 'Item hidden',
                 kitOnlyHint:
                     'The item type is fixed: the shop sells captured kits. A single-item product is a kit of one item.',
                 snapshotHint:

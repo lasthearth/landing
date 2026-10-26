@@ -240,6 +240,65 @@ export class DonateService {
     }
 
     /**
+     * Триггер запроса полного списка товаров для админки.
+     */
+    private readonly adminShopItemsRefresh$ = new BehaviorSubject<void>(undefined);
+
+    /**
+     * Кэшированный Observable с полным списком товаров магазина.
+     *
+     * Публичный {@link getShopItems$} отдаёт только доступные записи, поэтому
+     * скрытый товар исчезал и из админки: его нельзя было найти, чтобы снова
+     * опубликовать. Здесь список полный, каждый товар несёт `is_available`
+     * и `category`. Семантика кэша та же, что и у {@link getShopItemsOrThrow$}:
+     * успех запоминается на сессию, сбой кэш сбрасывает и доходит до
+     * подписчика, общий алерт не показывается.
+     */
+    private readonly adminShopItems$ = this.adminShopItemsRefresh$.pipe(
+        switchMap(() =>
+            this.http
+                .get<{ items: IShopItemDto[] }>(`${this.baseUrl}/donate/admin/shop/items`, {
+                    context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+                })
+                .pipe(map((response) => response.items.map(mapDtoToShopItem)))
+        ),
+        share<IShopItem[]>({
+            connector: () => new ReplaySubject<IShopItem[]>(1),
+            resetOnError: true,
+            resetOnComplete: false,
+            resetOnRefCountZero: false,
+        })
+    );
+
+    /**
+     * Получает полный список товаров магазина, включая скрытые.
+     *
+     * ⚠️ Требует права `donate:shop:update`: 401 без токена и 403 без права.
+     * Ошибка не показывает общий алерт и не подменяется пустым списком — она
+     * доходит до подписчика, поэтому состояние ошибки и кнопку повтора рисует
+     * вызывающий код. Результат кэшируется на сессию: повторная подписка
+     * запрос не делает, перечитывание запускает {@link refreshAdminShopItems$}.
+     *
+     * Публичный список витрины {@link getShopItems$} этот метод не заменяет:
+     * витрине скрытые товары не нужны.
+     *
+     * @returns Observable с массивом товаров; при сбое — ошибка.
+     */
+    public getAdminShopItems$(): Observable<IShopItem[]> {
+        return this.adminShopItems$;
+    }
+
+    /**
+     * Сбрасывает кэш полного списка товаров и инициирует новый запрос.
+     *
+     * Подписчики {@link getAdminShopItems$} автоматически получат актуальный
+     * список. Вызывают после создания, обновления или удаления товара.
+     */
+    public refreshAdminShopItems$(): void {
+        this.adminShopItemsRefresh$.next(undefined);
+    }
+
+    /**
      * Получает товар магазина по идентификатору.
      *
      * @param id Идентификатор товара.

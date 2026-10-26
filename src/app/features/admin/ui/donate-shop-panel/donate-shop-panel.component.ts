@@ -143,6 +143,11 @@ export class DonateShopPanelComponent implements OnInit {
     protected isLoading = signal(false);
 
     /**
+     * Идентификатор товара, запрос доступности по которому выполняется сейчас.
+     */
+    protected readonly busyItemId = signal<string | null>(null);
+
+    /**
      * Список товаров магазина; `null` — список ещё ни разу не пришёл.
      */
     protected readonly shopItems = signal<IShopItem[] | null>(null);
@@ -678,6 +683,89 @@ export class DonateShopPanelComponent implements OnInit {
     }
 
     /**
+     * Меняет доступность товара одним действием.
+     *
+     * Скрытая запись остаётся в списке: его отдаёт админский эндпоинт, поэтому
+     * скрытый товар можно найти и снова опубликовать. Перед запросом
+     * показывается диалог подтверждения — состояние влияет на витрину.
+     *
+     * @param item Товар из списка.
+     */
+    protected toggleAvailability(item: IShopItem): void {
+        const show = !item.isAvailable;
+
+        this.confirmDialog
+            .open({
+                title: this.i18n.translate(show ? 'admin.shop.showTitle' : 'admin.shop.hideTitle'),
+                text: this.i18n.translate(show ? 'admin.shop.showText' : 'admin.shop.hideText', {
+                    name: item.name,
+                }),
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((confirmed) => {
+                if (!confirmed) {
+                    return;
+                }
+
+                this.busyItemId.set(item.id);
+
+                this.donateService
+                    .updateShopItem$(item.id, this.buildAvailabilityRequest(item, show))
+                    .pipe(
+                        this.requestStatus.handleSuccess(
+                            this.i18n.translate(show ? 'admin.shop.shownSuccess' : 'admin.shop.hiddenSuccess')
+                        ),
+                        catchError((error: unknown) => {
+                            this.requestStatus.showError(this.saveErrorText(error));
+
+                            return EMPTY;
+                        }),
+                        // Список перечитывается и после успеха, и после ошибки:
+                        // бейдж доступности должен совпадать с сервером.
+                        finalize(() => {
+                            this.busyItemId.set(null);
+                            this.loadItems();
+                        }),
+                        takeUntilDestroyed(this.destroyRef)
+                    )
+                    .subscribe();
+            });
+    }
+
+    /**
+     * Собирает запрос обновления, меняющий только доступность товара.
+     *
+     * `PUT` перезаписывает запись целиком, поэтому остальные поля возвращаются
+     * на сервер в том виде, в котором их вернул список. `image_url` остаётся
+     * пустым: по контракту это значит «сохранить текущее изображение».
+     *
+     * @param item Товар из списка.
+     * @param isAvailable Новое значение доступности.
+     * @returns Тело запроса обновления.
+     */
+    private buildAvailabilityRequest(item: IShopItem, isAvailable: boolean): IUpdateShopItemRequest {
+        return {
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            code: item.code,
+            item_type: KIT_ITEM_TYPE,
+            is_available: isAvailable,
+            has_discount: item.hasDiscount,
+            discount_percent: item.hasDiscount ? item.discountPercent : undefined,
+            image_url: '',
+            entries: (item.entries ?? []).map((entry) => ({
+                name: entry.name,
+                description: entry.description,
+                quantity: entry.quantity,
+                image_url: entry.imageUrl,
+            })),
+            privileges: item.privileges ?? [],
+        };
+    }
+
+    /**
      * Сохраняет товар (создание или обновление).
      */
     protected async saveItem(): Promise<void> {
@@ -773,18 +861,18 @@ export class DonateShopPanelComponent implements OnInit {
     }
 
     /**
-     * Проверяет, что создание товара упало на повторе кода.
+     * Проверяет, что сохранение товара упало на повторе кода.
      *
-     * `donate_shop_items` несёт уникальный индекс по `code`, а `CreateShopItem`
-     * отвечает на повтор общим 500 `failed to create shop item`, а не 409,
-     * поэтому признак определяется по статусу 500 при создании. Другие 5xx
-     * (502, 503) остаются общей ошибкой сервера: повтор кода по ним не доказать.
+     * `donate_shop_items` несёт уникальный индекс по `code`: и `CreateShopItem`,
+     * и `UpdateShopItem` отвечают на повтор 409 ALREADY_EXISTS
+     * (`shop entry with this code already exists`), включая скрытые записи.
+     * Остальные статусы, включая 500, остаются общей ошибкой сервера.
      *
      * @param error Ошибка из HttpClient.
-     * @returns true, если это создание и сервер ответил 500.
+     * @returns true, если сервер ответил 409.
      */
     private isCodeTaken(error: unknown): boolean {
-        return !this.isEditMode() && error instanceof HttpErrorResponse && error.status === 500;
+        return error instanceof HttpErrorResponse && error.status === 409;
     }
 
     /**
@@ -849,19 +937,23 @@ export class DonateShopPanelComponent implements OnInit {
     }
 
     /**
-     * Загружает список товаров и подписывается на его обновления.
+     * Загружает полный список товаров и подписывается на его обновления.
+     *
+     * Админке нужен именно полный список (`GET /v1/donate/admin/shop/items`):
+     * публичный `ListShopItems` возвращает только доступные записи, и скрытый
+     * товар нельзя было бы найти, чтобы снова опубликовать.
      */
     private loadItems(): void {
         this.itemsLoading.set(true);
         this.itemsLoadFailed.set(false);
-        this.donateService.refreshShopItems$();
+        this.donateService.refreshAdminShopItems$();
 
         if (this.itemsSubscription && !this.itemsSubscription.closed) {
             return;
         }
 
         this.itemsSubscription = this.donateService
-            .getShopItemsOrThrow$()
+            .getAdminShopItems$()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (items) => {

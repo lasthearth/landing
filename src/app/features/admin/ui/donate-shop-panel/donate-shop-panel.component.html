@@ -49,8 +49,11 @@
                                     </div>
                                 }
 
+                                <!-- Скрытая запись дополнительно приглушена:
+                                     состояние читается и по бейджу, и по виду карточки. -->
                                 <div
                                     class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30 transition-colors"
+                                    [class.opacity-50]="!item.isAvailable"
                                 >
                                     @if (item.imageUrl) {
                                         <app-image-loader [src]="item.imageUrl" [alt]="item.name" />
@@ -114,16 +117,38 @@
                                     <button
                                         type="button"
                                         (click)="startEdit(item)"
-                                        class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base transition-colors flex items-center justify-center gap-1"
+                                        [disabled]="busyItemId() === item.id"
+                                        class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base transition-colors flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <tui-icon icon="@tui.pencil" class="size-4!" />
                                         {{ 'admin.shop.edit' | translate }}
                                     </button>
+                                    <!-- Одно действие показывает или скрывает запись:
+                                         скрытый товар остаётся в списке. -->
+                                    <button
+                                        type="button"
+                                        (click)="toggleAvailability(item)"
+                                        [disabled]="busyItemId() === item.id"
+                                        [title]="item.isAvailable ? ('admin.shop.hideAction' | translate) : ('admin.shop.showAction' | translate)"
+                                        [attr.aria-label]="
+                                            (item.isAvailable
+                                                ? ('admin.shop.hideAction' | translate)
+                                                : ('admin.shop.showAction' | translate)) + ': ' + item.name
+                                        "
+                                        class="py-2.5 px-3 rounded-xl bg-surface-3 border border-line text-ink transition-colors hover:bg-surface-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        @if (busyItemId() === item.id) {
+                                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                                        } @else {
+                                            <tui-icon [icon]="item.isAvailable ? '@tui.eye-off' : '@tui.eye'" class="size-4!" />
+                                        }
+                                    </button>
                                     <button
                                         type="button"
                                         (click)="deleteItem(item)"
+                                        [disabled]="busyItemId() === item.id"
                                         [attr.aria-label]="('admin.common.delete' | translate) + ': ' + item.name"
-                                        class="py-2.5 px-3 rounded-xl bg-lh-danger/10 hover:bg-lh-danger/30 text-lh-danger transition-colors"
+                                        class="py-2.5 px-3 rounded-xl bg-lh-danger/10 hover:bg-lh-danger/30 text-lh-danger transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <tui-icon icon="@tui.trash-2" class="size-4!" />
                                     </button>
@@ -140,9 +165,9 @@
                     </div>
                 }
 
-                <!-- `ListShopItems` всегда возвращает только доступные записи,
-                     скрытых товаров в этом списке не бывает. -->
-                <p class="text-base text-ink-3">{{ 'admin.shop.listScopeNote' | translate }}</p>
+                <!-- Список отдаёт админский эндпоинт: скрытые записи в нём есть,
+                     поэтому любую из них можно снова опубликовать. -->
+                <p class="text-base text-ink-3">{{ 'admin.shop.listIncludesHidden' | translate }}</p>
             } @else {
                 <app-market-grid-skeleton />
             }
