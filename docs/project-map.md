@@ -31,10 +31,10 @@
 
 | Слой      | Файлов | Внутри                                                                                                                                                                                                                                                                                                                                             |
 | --------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| src/app   | 910    | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                   |
+| src/app   | 942    | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                   |
 | core/     | 57     | config, guards, i18n, interceptors, services, types                                                                                                                                                                                                                                                                                                |
-| entities/ | 168    | discord, donate, event, hunger-games, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki                                                                                                                                                                          |
-| features/ | 536    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki |
+| entities/ | 182    | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki                                                                                                                                                                  |
+| features/ | 554    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki |
 | layout/   | 19     | background-scene, footer, header                                                                                                                                                                                                                                                                                                                   |
 | routes/   | 5      | enums                                                                                                                                                                                                                                                                                                                                              |
 | shared/   | 120    | lib, styles, ui                                                                                                                                                                                                                                                                                                                                    |
@@ -44,7 +44,7 @@
 | Слайс                   | Файлов | Сегменты                    | index.ts | Строк экспорта |
 | ----------------------- | ------ | --------------------------- | -------- | -------------- |
 | features/about          | 4      | ui                          | да       | 1              |
-| features/admin          | 44     | ui, model, config           | да       | 2              |
+| features/admin          | 56     | ui, model, lib, config      | да       | 2              |
 | features/analytics      | 4      | ui                          | да       | 1              |
 | features/announcement   | 7      | ui, model, api              | да       | 3              |
 | features/auth           | 4      | ui                          | да       | 1              |
@@ -57,7 +57,7 @@
 | features/hunger-games   | 2      | api                         | да       | 1              |
 | features/landing        | 2      | —                           | **нет**  | —              |
 | features/lfg            | 19     | ui                          | да       | 2              |
-| features/market         | 25     | ui, lib                     | да       | 2              |
+| features/market         | 31     | ui, lib                     | да       | 2              |
 | features/mods           | 8      | ui                          | да       | 2              |
 | features/new-content    | 4      | model, api, lib             | да       | 2              |
 | features/news           | 20     | ui, model                   | да       | 5              |
@@ -79,9 +79,10 @@
 | features/welcome        | 3      | —                           | **нет**  | —              |
 | features/wiki           | 47     | ui, api, lib                | да       | 6              |
 | entities/discord        | 3      | model, api                  | да       | 2              |
-| entities/donate         | 12     | model, api                  | да       | 11             |
+| entities/donate         | 13     | model, api                  | да       | 12             |
 | entities/event          | 5      | model, api, lib             | да       | 4              |
 | entities/hunger-games   | 7      | model, api                  | да       | 6              |
+| entities/kitdef         | 5      | model, api                  | да       | 4              |
 | entities/lfg            | 5      | model, api                  | да       | 3              |
 | entities/media          | 3      | model, api                  | да       | 2              |
 | entities/news           | 9      | model, api, lib             | да       | 7              |
@@ -93,7 +94,7 @@
 | entities/server-mod     | 9      | model, api, lib             | да       | 5              |
 | entities/settlement     | 40     | ui, model, api, lib, config | да       | 37             |
 | entities/settlement-tag | 13     | ui, model, api, lib         | да       | 10             |
-| entities/user           | 27     | ui, model, api, lib, config | да       | 16             |
+| entities/user           | 35     | ui, model, api, lib, config | да       | 23             |
 | entities/wiki           | 6      | model, api, lib             | да       | 6              |
 
 ## 4. Роуты
@@ -142,7 +143,7 @@
 | Словарь     | KB    | Грузится на                                                                                 |
 | ----------- | ----- | ------------------------------------------------------------------------------------------- |
 | about       | 11.8  | /about                                                                                      |
-| admin       | 31.9  | /profile/admin                                                                              |
+| admin       | 46.7  | /profile/admin                                                                              |
 | analytics   | 0.9   | —                                                                                           |
 | common      | 1.1   | —                                                                                           |
 | diplomacy   | 1.7   | /diplomacy                                                                                  |
@@ -154,7 +155,7 @@
 | home        | 10.8  | /                                                                                           |
 | legal       | 68.7  | /privacy-policy, /public-offer                                                              |
 | lfg         | 15.7  | /lfg                                                                                        |
-| market      | 14.0  | /profile, /market                                                                           |
+| market      | 16.1  | /profile, /market                                                                           |
 | mods        | 10.9  | /profile/admin, /mods                                                                       |
 | news        | 10.5  | /news                                                                                       |
 | pagination  | 0.7   | —                                                                                           |

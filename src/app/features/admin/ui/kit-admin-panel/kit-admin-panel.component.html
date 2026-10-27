@@ -1,0 +1,171 @@
+<div class="flex w-full flex-col gap-4">
+    <!-- Заголовок панели и перечитывание списка: игра перезаписывает состав
+         и категорию набора при новом захвате, поэтому обновление явное. -->
+    <div class="flex flex-wrap items-start justify-between gap-3">
+        <div class="flex min-w-0 flex-col gap-1">
+            <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.kits.title' | translate }}</h3>
+            <p class="text-base text-ink-3">{{ 'admin.kits.captureHint' | translate }}</p>
+        </div>
+        <button
+            type="button"
+            (click)="reload()"
+            [disabled]="denied() || loading()"
+            class="flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface-3 px-4 py-2 text-base font-bold uppercase text-ink transition-colors hover:bg-surface-4 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+            @if (loading()) {
+                <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+            } @else {
+                <tui-icon icon="@tui.refresh-cw" class="size-4!" />
+            }
+            {{ 'admin.kits.refresh' | translate }}
+        </button>
+    </div>
+
+    @if (denied()) {
+        <app-empty-state
+            icon="@tui.lock"
+            [title]="'admin.kits.deniedTitle' | translate"
+            [description]="'admin.kits.deniedDescription' | translate"
+        />
+    } @else if (loadFailed()) {
+        <app-error-state
+            [title]="'admin.kits.loadErrorTitle' | translate"
+            [description]="'admin.kits.loadErrorDescription' | translate"
+            (retry)="reload()"
+        />
+    } @else if (loading() && kits() === null) {
+        <app-admin-list-skeleton [count]="3" />
+    } @else if (kits(); as list) {
+        @if (list.length === 0) {
+            <app-empty-state
+                icon="@tui.package-open"
+                [title]="'admin.kits.emptyTitle' | translate"
+                [description]="'admin.kits.emptyDescription' | translate"
+            />
+        } @else {
+            @for (kit of list; track kit.code) {
+                <section class="flex flex-col gap-4 rounded-2xl border-2 border-line/40 bg-surface p-5">
+                    @if (forms().get(kit.code); as form) {
+                        <div [formGroup]="form" class="flex flex-col gap-3">
+                            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                                <code class="font-mono text-lg break-all tabular-nums text-ink">{{ kit.code }}</code> <!-- taste-skill-ignore: код набора — литерал из контракта -->
+                                <span class="text-base text-ink-3">
+                                    {{ 'admin.kits.createdLabel' | translate }}: {{ kit.formattedCreatedAt }} ·
+                                    {{ 'admin.kits.updatedLabel' | translate }}: {{ kit.formattedUpdatedAt }}
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-1 items-end gap-4 md:grid-cols-[minmax(0,1fr)_15rem_auto]">
+                                <lh-input
+                                    type="input"
+                                    [label]="'admin.kits.titleLabel' | translate"
+                                    [placeholder]="'admin.kits.titlePlaceholder' | translate"
+                                    [formControl]="form.controls.title"
+                                />
+                                <lh-input
+                                    type="select"
+                                    [label]="'admin.kits.categoryLabel' | translate"
+                                    [items]="categories"
+                                    [displayWith]="categoryDisplay"
+                                    [formControl]="form.controls.category"
+                                />
+                                <button
+                                    type="button"
+                                    (click)="saveKit(kit)"
+                                    [disabled]="!canSave(kit) || busyCode() === kit.code"
+                                    class="flex items-center justify-center gap-2 rounded-xl border border-line bg-surface-3 px-5 py-3 text-base font-bold uppercase text-ink transition-colors hover:bg-surface-4 disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    @if (busyCode() === kit.code) {
+                                        <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                                    }
+                                    {{ 'admin.kits.save' | translate }}
+                                </button>
+                            </div>
+
+                            @if (isTitleCleared(kit)) {
+                                <p class="text-base text-lh-danger">{{ 'admin.kits.titleRequired' | translate }}</p>
+                            }
+                        </div>
+                    }
+
+                    <div class="flex flex-col gap-2">
+                        <h4 class="text-lg font-semibold text-lh-primary">
+                            {{ 'admin.kits.itemsTitle' | translate }}
+                        </h4>
+
+                        @if (kit.items.length === 0) {
+                            <p class="text-base text-ink-3">{{ 'admin.kits.itemsEmpty' | translate }}</p>
+                        } @else {
+                            <!-- Позиция адресуется индексом в этом списке: коды
+                                 предметов внутри набора повторяются. -->
+                            <table class="w-full border-collapse text-left">
+                                <thead>
+                                    <tr class="text-base text-ink-3">
+                                        <th scope="col" class="py-2 pr-3 font-medium">
+                                            {{ 'admin.kits.columnItem' | translate }}
+                                        </th>
+                                        <th scope="col" class="py-2 pr-3 font-medium">
+                                            {{ 'admin.kits.columnType' | translate }}
+                                        </th>
+                                        <th scope="col" class="py-2 pr-3 text-right font-medium">
+                                            {{ 'admin.kits.columnQuantity' | translate }}
+                                        </th>
+                                        <th scope="col" class="w-12 py-2">
+                                            <span class="sr-only">{{ 'admin.kits.removeItem' | translate }}</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (item of kit.items; track $index) {
+                                        <!-- taste-skill-ignore: разделитель строк настоящей таблицы --> <tr class="border-t border-line/40">
+                                            <td class="py-2 pr-3">
+                                                <div class="flex min-w-0 items-center gap-3">
+                                                    <span
+                                                        class="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-line/40 bg-surface-3"
+                                                    >
+                                                        @if (item.imageUrl) {
+                                                            <app-image-loader
+                                                                [src]="item.imageUrl"
+                                                                [alt]="item.gameCode"
+                                                                objectFit="contain"
+                                                                imageClass="p-0.5"
+                                                            />
+                                                        } @else {
+                                                            <tui-icon icon="@tui.image" class="size-4! text-ink-3" />
+                                                        }
+                                                    </span>
+                                                    <code class="min-w-0 truncate font-mono text-base tabular-nums text-ink" [title]="item.gameCode">{{ item.gameCode }}</code> <!-- taste-skill-ignore: game_code — литерал Collectible.Code -->
+                                                </div>
+                                            </td>
+                                            <td class="py-2 pr-3 text-base text-ink-2">
+                                                {{ itemTypeLabel(item.type) }}
+                                            </td>
+                                            <td class="py-2 pr-3 text-right text-base tabular-nums text-ink">
+                                                {{ item.quantity }}
+                                            </td>
+                                            <td class="py-2 text-right">
+                                                <button
+                                                    type="button"
+                                                    (click)="removeItem(kit, $index)"
+                                                    [disabled]="busyCode() === kit.code"
+                                                    [attr.aria-label]="
+                                                        ('admin.kits.removeItem' | translate) + ': ' + item.gameCode
+                                                    "
+                                                    class="rounded-lg p-2 text-lh-danger transition-colors hover:bg-lh-danger/15 disabled:cursor-not-allowed disabled:opacity-50"
+                                                >
+                                                    <tui-icon icon="@tui.trash-2" class="size-5!" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </section>
+            }
+        }
+    } @else {
+        <app-admin-list-skeleton [count]="3" />
+    }
+</div>

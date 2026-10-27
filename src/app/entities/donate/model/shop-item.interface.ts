@@ -88,6 +88,22 @@ export interface IShopItemDto {
      * Итоговая цена с учётом скидки.
      */
     effective_price?: string;
+
+    /**
+     * Категория набора, который продаёт этот товар.
+     *
+     * Одно из значений `"kit"` | `"privilege"` | `"special"`. Пустая строка
+     * или отсутствие поля означает, что набор не найден либо запись товара
+     * появилась до введения поля; protobuf-JSON опускает пустую строку.
+     */
+    category?: string;
+
+    /**
+     * Раздел витрины внутри категории (ключ из `SHOP_SECTIONS`).
+     *
+     * Пустая строка или отсутствие поля — раздел не задан.
+     */
+    section?: string;
 }
 
 /**
@@ -96,11 +112,26 @@ export interface IShopItemDto {
 export type ShopItemType = 'ITEM_TYPE_UNSPECIFIED' | 'ITEM_TYPE_ITEM' | 'ITEM_TYPE_KIT';
 
 /**
+ * Категория товара магазина.
+ *
+ * Товар продаёт захваченный набор и наследует его категорию: бэкенд
+ * присоединяет её при чтении из записи набора. Значения совпадают
+ * с `KitCategory` в `@entities/kitdef`, но тип объявлен здесь, чтобы
+ * слайс «Донат» оставался независимым от другого слайса.
+ */
+export type ShopCategory = 'kit' | 'privilege' | 'special';
+
+/**
  * DTO составной части набора (kit entry).
  */
 export interface IKitEntryDto {
     /**
-     * Название позиции.
+     * Код захваченного предмета, к которому относится позиция.
+     */
+    game_code?: string;
+
+    /**
+     * Название позиции, которое видит игрок.
      */
     name: string;
 
@@ -124,6 +155,11 @@ export interface IKitEntryDto {
  * UI-модель составной части набора.
  */
 export interface IKitEntry {
+    /**
+     * Код захваченного предмета, к которому относится позиция.
+     */
+    gameCode?: string;
+
     /**
      * Название позиции.
      */
@@ -248,6 +284,19 @@ export interface IShopItem {
      * Итоговая цена с учётом скидки.
      */
     effectivePrice?: string;
+
+    /**
+     * Категория набора, который продаёт этот товар.
+     *
+     * Маппер гарантирует одно из трёх значений: пустая или неизвестная
+     * категория на проводе приводится к `'kit'`.
+     */
+    category: ShopCategory;
+
+    /**
+     * Раздел витрины внутри категории (ключ из `SHOP_SECTIONS`), пустая строка — без раздела.
+     */
+    section: string;
 }
 
 /**
@@ -305,6 +354,13 @@ export interface ICreateShopItemRequest {
      * Процент скидки.
      */
     discount_percent?: number;
+
+    /**
+     * Раздел витрины внутри категории (ключ из `SHOP_SECTIONS`).
+     *
+     * Пустая строка или отсутствие поля — раздел не задан.
+     */
+    section?: string;
 }
 
 /**
@@ -372,4 +428,11 @@ export interface IUpdateShopItemRequest {
      * Процент скидки.
      */
     discount_percent?: number;
+
+    /**
+     * Раздел витрины внутри категории (ключ из `SHOP_SECTIONS`).
+     *
+     * Пустая строка или отсутствие поля — раздел не задан.
+     */
+    section?: string;
 }

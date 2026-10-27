@@ -6,20 +6,61 @@
         (retry)="retryLoad()"
     />
 } @else if (items().length === 0) {
-    <app-empty-state
-        icon="@tui.sparkles"
-        [title]="'market.special.emptyTitle' | translate"
-        [description]="'market.special.emptyDescription' | translate"
-    />
+    <!-- Пустая витрина — нормальное состояние: записи появляются по мере захвата китов в игре -->
+    <div class="lh-panel p-5 lg:p-8">
+        <app-empty-state
+            icon="@tui.sparkles"
+            [title]="'market.special.emptyTitle' | translate"
+            [description]="'market.special.emptyDescription' | translate"
+        />
+    </div>
 } @else {
+    <!-- Разделы особых товаров: вкладки видны всегда, пустой раздел показывает заглушку -->
+    <nav class="mb-4 flex flex-wrap gap-2" [attr.aria-label]="'market.special.sectionsAria' | translate">
+        <button
+            type="button"
+            class="nav-button shrink-0"
+            [class.nav-button--active]="isSectionActive('')"
+            [attr.aria-pressed]="isSectionActive('')"
+            (click)="selectedSection.set('')"
+        >
+            <tui-icon icon="@tui.layout-grid" />
+            <span>{{ 'market.sections.all' | translate }}</span>
+            <span class="opacity-70">{{ items().length }}</span>
+        </button>
+        @for (section of sections; track section.key) {
+            <button
+                type="button"
+                class="nav-button shrink-0"
+                [class.nav-button--active]="isSectionActive(section.key)"
+                [attr.aria-pressed]="isSectionActive(section.key)"
+                (click)="selectedSection.set(section.key)"
+            >
+                <tui-icon [icon]="section.icon" />
+                <span>{{ section.labelKey | translate }}</span>
+                <span class="opacity-70">{{ sectionCounts().get(section.key) ?? 0 }}</span>
+            </button>
+        }
+    </nav>
+
+    @if (visibleItems().length === 0) {
+        <div class="lh-panel p-5 lg:p-8">
+            <app-empty-state
+                icon="@tui.sparkles"
+                [title]="'market.special.sectionEmptyTitle' | translate"
+                [description]="'market.special.sectionEmptyDescription' | translate"
+            />
+        </div>
+    }
+
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4 lh-stagger-list">
-        @for (item of items(); track item.id) {
+        @for (item of visibleItems(); track item.id) {
             <div
                 class="flex flex-col gap-2 lg:gap-3 lh-panel p-3 lg:p-4 items-center lh-card-glow hover:-translate-y-1 group"
             >
                 <!-- Image -->
                 <div
-                    class="relative w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30 transition-colors"
+                    class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-2 group-hover:bg-surface-3 transition-colors"
                 >
                     @if (item.imageUrl) {
                         <div
@@ -42,7 +83,7 @@
 
                     @if (hasDiscount(item)) {
                         <div
-                            class="absolute -top-0.5 -left-0.5 z-10 bg-white text-brand-ink text-xs lg:text-sm font-extrabold px-2 py-1 lg:px-2.5 lg:py-1.5 rounded-br-xl shadow-md discount-badge"
+                            class="absolute -top-0.5 -left-0.5 z-10 bg-parchment-3 text-night-deep text-xs lg:text-sm font-extrabold px-2 py-1 lg:px-2.5 lg:py-1.5 rounded-br-xl discount-badge"
                         >
                             −{{ getDiscountPercent(item) }}%
                         </div>
@@ -53,6 +94,22 @@
                 <p class="text-center text-base lg:text-lg font-bold text-lh-primary line-clamp-2 min-h-[3rem] lg:min-h-[3.5rem]">
                     {{ item.name }}
                 </p>
+
+                <!-- Состав набора с количеством -->
+                @if (item.entries?.length) {
+                    <div class="flex flex-wrap justify-center gap-1.5">
+                        @for (entry of item.entries; track $index) {
+                            <app-kit-item [data]="toKitItem(entry)" />
+                        }
+                    </div>
+                }
+
+                <!-- Категория товара -->
+                <span
+                    class="inline-flex items-center rounded-full bg-surface-3 px-3 py-1 text-sm font-semibold text-ink-2"
+                >
+                    {{ categoryLabelKey(item) | translate }}
+                </span>
 
                 <!-- Price -->
                 <div class="flex flex-col items-center gap-0.5">
@@ -79,8 +136,9 @@
 
                 <!-- Buy button -->
                 <button
+                    type="button"
                     (click)="openPurchaseDialog(item)"
-                    class="w-full text-white uppercase transition duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-brand-lit-2 hover:from-brand-lit-2 hover:to-lh-accent rounded-xl py-2 lg:py-2.5 text-sm lg:text-base shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
+                    class="w-full text-parchment-3 uppercase transition-colors duration-300 font-bold cursor-pointer bg-brand-strong hover:bg-brand rounded-xl py-2 lg:py-2.5 text-sm lg:text-base"
                 >
                     {{ 'market.common.buyButton' | translate }}
                 </button>

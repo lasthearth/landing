@@ -8,6 +8,11 @@ export interface KitItem {
     hint: string;
 
     /**
+     * Описание предмета для подсказки.
+     */
+    description?: string;
+
+    /**
      * Количество предметов.
      */
     count: number;

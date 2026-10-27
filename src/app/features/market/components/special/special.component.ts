@@ -1,22 +1,38 @@
-import { ChangeDetectionStrategy, Component, inject, signal, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    inject,
+    OnDestroy,
+    signal,
+    TemplateRef,
+    ViewChild,
+} from '@angular/core';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
-import { catchError, of } from 'rxjs';
-import { DonateService, IShopItem } from '@entities/donate';
+import { DonateService, IKitEntry, IShopItem, IShopSection, SHOP_SECTIONS } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
+import { createShopItemsLoader, ShopItemsLoader } from '../../lib/create-shop-items-loader.function';
+import { selectShopItemsByCategory } from '../../lib/select-shop-items-by-category.function';
+import { sortShopItemsByPrice } from '../../lib/sort-privilege-cards-by-price.function';
+import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant';
+import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
+import { KitItem } from '../../interfaces/kit-item.interface';
 
 /**
  * Компонент вкладки "Особое" в магазине.
  *
- * Отображает динамический список обычных предметов магазина
- * (ITEM_TYPE_ITEM без состава) в виде сетки карточек.
+ * Показывает доступные товары категории `special` сеткой карточек.
+ * Пустой список — нормальное состояние витрины, а не ошибка:
+ * записи появляются по мере захвата китов в игре.
  */
 @Component({
     selector: 'app-special',
@@ -28,17 +44,23 @@ import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/
         ImageLoaderComponent,
         EmptyStateComponent,
         ErrorStateComponent,
+        KitItemComponent,
         TranslatePipe,
     ],
     templateUrl: './special.component.html',
     styleUrl: './special.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SpecialComponent {
+export class SpecialComponent implements OnDestroy {
     /**
      * Сервис донат-валюты.
      */
     private readonly donateService = inject(DonateService);
+
+    /**
+     * Сервис явного обнаружения изменений.
+     */
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /**
      * Сервис предпросмотра изображений.
@@ -51,19 +73,66 @@ export class SpecialComponent {
     private readonly dialogs = inject(TuiDialogService);
 
     /**
+     * Загрузчик товаров: держит признаки загрузки и сбоя, отбирает особые товары.
+     */
+    private readonly loader: ShopItemsLoader = createShopItemsLoader(
+        this.donateService,
+        this.changeDetectorRef,
+        (list) => this.items.set(sortShopItemsByPrice(selectShopItemsByCategory(list, 'special')))
+    );
+
+    /**
      * Признак загрузки товаров.
      */
-    protected readonly loading = signal(true);
+    protected readonly loading = this.loader.loading;
 
     /**
      * Признак ошибки загрузки товаров.
      */
-    protected readonly error = signal(false);
+    protected readonly error = this.loader.error;
 
     /**
      * Список товаров магазина.
      */
     protected readonly items = signal<IShopItem[]>([]);
+
+    /**
+     * Выбранный раздел витрины, пустая строка — «Все».
+     */
+    protected readonly selectedSection = signal<string>('');
+
+    /**
+     * Разделы витрины в порядке `SHOP_SECTIONS`: вкладки видны всегда,
+     * пустой раздел показывает заглушку.
+     */
+    protected readonly sections: readonly IShopSection[] = SHOP_SECTIONS;
+
+    /**
+     * Число товаров в каждом разделе, по ключу раздела.
+     */
+    protected readonly sectionCounts = computed<Map<string, number>>(() => {
+        const counts = new Map<string, number>();
+        this.items().forEach((item) => counts.set(item.section, (counts.get(item.section) ?? 0) + 1));
+        return counts;
+    });
+
+    /**
+     * Товары выбранного раздела, для «Все» — все товары.
+     */
+    protected readonly visibleItems = computed<IShopItem[]>(() => {
+        const key = this.selectedSection();
+        return key ? this.items().filter((item) => item.section === key) : this.items();
+    });
+
+    /**
+     * Признак активной вкладки раздела.
+     *
+     * @param key Ключ раздела, пустая строка — «Все».
+     * @returns `true`, если вкладка выбрана.
+     */
+    protected isSectionActive(key: string): boolean {
+        return this.selectedSection() === key;
+    }
 
     /**
      * Описание изображения, открытого в предпросмотре.
@@ -82,50 +151,46 @@ export class SpecialComponent {
     protected previewContent: PolymorpheusContent;
 
     constructor() {
-        this.loadItems();
+        this.loader.load();
     }
 
     /**
-     * Загружает список особых товаров.
+     * Снимает подписку на поток товаров.
      */
-    private loadItems(): void {
-        this.loading.set(true);
-        this.error.set(false);
-        this.donateService
-            .getShopItems$()
-            .pipe(
-                catchError(() => {
-                    this.loading.set(false);
-                    this.error.set(true);
-                    return of([]);
-                })
-            )
-            .subscribe((list) => {
-                this.items.set(this.filterSpecialItems(list));
-                this.loading.set(false);
-            });
+    public ngOnDestroy(): void {
+        this.loader.destroy();
     }
 
     /**
      * Повторно загружает список особых товаров после ошибки.
      */
     protected retryLoad(): void {
-        this.loadItems();
+        this.loader.retry();
     }
 
     /**
-     * Оставляет только доступные обычные предметы без состава набора.
+     * Возвращает ключ перевода подписи категории товара.
      *
-     * @param list Список товаров магазина.
-     * @returns Отфильтрованный список предметов.
+     * @param item Товар магазина.
+     * @returns Ключ перевода подписи категории.
      */
-    private filterSpecialItems(list: IShopItem[]): IShopItem[] {
-        return list.filter(
-            (item) =>
-                item.isAvailable &&
-                item.itemType === 'ITEM_TYPE_ITEM' &&
-                (!item.entries || item.entries.length === 0)
-        );
+    protected categoryLabelKey(item: IShopItem): string {
+        return SHOP_CATEGORY_LABEL_KEY[item.category];
+    }
+
+    /**
+     * Переводит позицию состава в модель ячейки предмета.
+     *
+     * @param entry Позиция состава товара.
+     * @returns Данные для компонента ячейки с количеством.
+     */
+    protected toKitItem(entry: IKitEntry): KitItem {
+        return {
+            hint: entry.name,
+            description: entry.description,
+            count: entry.quantity,
+            image: entry.imageUrl,
+        };
     }
 
     /**

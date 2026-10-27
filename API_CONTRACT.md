@@ -52,23 +52,41 @@
 **Префикс:** `/v1/donate`
 **Frontend:** `entities/donate/api/donate.service.ts`
 
-| #   | Метод    | Путь                                          | Описание                         | Auth       | Реализовано                   |
-| --- | -------- | --------------------------------------------- | -------------------------------- | ---------- | ----------------------------- |
-| 1   | `GET`    | `/donate/me/balance`                          | Баланс текущего игрока           | ✅         | ✅ `getMyBalance$()`          |
-| 2   | `GET`    | `/donate/me/purchases`                        | История покупок текущего игрока  | ✅         | ✅ `getMyPurchases$()`        |
-| 3   | `POST`   | `/donate/players/{player_id}/coins:add`       | Начислить коины (админ)          | ✅ + admin | ✅ `addCoins$()`              |
-| 4   | `POST`   | `/donate/players/{player_id}/coins:deduct`    | Списать коины (админ)            | ✅ + admin | ✅ `deductCoins$()`           |
-| 5   | `GET`    | `/donate/players/{player_id}/purchases`       | Покупки игрока (админ)           | ✅ + admin | ✅ `getPlayerPurchases$()`    |
-| 6   | `GET`    | `/donate/players/{player_id}/transactions`    | Транзакции игрока (админ)        | ✅ + admin | ✅ `getPlayerTransactions$()` |
-| 7   | `GET`    | `/donate/purchases/pending`                   | Ожидающие выдачи покупки (админ) | ✅ + admin | ✅ `getPendingPurchases$()`   |
-| 7.1 | `GET`    | `/donate/purchases`                           | Все покупки всех игроков, cursor-пагинация (админ) | ✅ + admin | ✅ `getAllPurchases$()`       |
-| 8   | `POST`   | `/donate/purchases/{purchase_id}:mark-issued` | Отметить выданной (админ)        | ✅ + admin | ✅ `markPurchaseIssued$()`    |
-| 9   | `POST`   | `/donate/purchases/{purchase_id}:refund`      | Возврат покупки (админ)          | ✅ + admin | ✅ `refundPurchase$()`        |
-| 10  | `GET`    | `/donate/shop/items`                          | Список товаров магазина          | ✅         | ✅ `getShopItems$()` (кэш)    |
-| 11  | `POST`   | `/donate/shop/items`                          | Создать товар (админ)            | ✅ + admin | ❌                            |
-| 12  | `PUT`    | `/donate/shop/items/{id}`                     | Обновить товар (админ)           | ✅ + admin | ❌                            |
-| 13  | `DELETE` | `/donate/shop/items/{id}`                     | Удалить товар (админ)            | ✅ + admin | ❌                            |
-| 14  | `POST`   | `/donate/shop/items/{item_id}:buy`            | Купить товар                     | ✅         | ✅ `buyItem$()`               |
+| #   | Метод    | Путь                                          | Описание                                           | Auth                      | Реализовано                                           |
+| --- | -------- | --------------------------------------------- | -------------------------------------------------- | ------------------------- | ----------------------------------------------------- |
+| 1   | `GET`    | `/donate/me/balance`                          | Баланс текущего игрока                             | ✅                        | ✅ `getMyBalance$()`                                  |
+| 2   | `GET`    | `/donate/me/purchases`                        | История покупок текущего игрока                    | ✅                        | ✅ `getMyPurchases$()`                                |
+| 3   | `POST`   | `/donate/players/{player_id}/coins:add`       | Начислить коины (админ)                            | ✅ + admin                | ✅ `addCoins$()`                                      |
+| 4   | `POST`   | `/donate/players/{player_id}/coins:deduct`    | Списать коины (админ)                              | ✅ + admin                | ✅ `deductCoins$()`                                   |
+| 5   | `GET`    | `/donate/players/{player_id}/purchases`       | Покупки игрока (админ)                             | ✅ + admin                | ✅ `getPlayerPurchases$()`                            |
+| 6   | `GET`    | `/donate/players/{player_id}/transactions`    | Транзакции игрока (админ)                          | ✅ + admin                | ✅ `getPlayerTransactions$()`                         |
+| 7   | `GET`    | `/donate/purchases/pending`                   | Ожидающие выдачи покупки (админ)                   | ✅ + admin                | ✅ `getPendingPurchases$()`                           |
+| 7.1 | `GET`    | `/donate/purchases`                           | Все покупки всех игроков, cursor-пагинация (админ) | ✅ + admin                | ✅ `getAllPurchases$()`                               |
+| 8   | `POST`   | `/donate/purchases/{purchase_id}:mark-issued` | Отметить выданной (админ)                          | ✅ + admin                | ✅ `markPurchaseIssued$()`                            |
+| 9   | `POST`   | `/donate/purchases/{purchase_id}:refund`      | Возврат покупки (админ)                            | ✅ + admin                | ✅ `refundPurchase$()`                                |
+| 10  | `GET`    | `/donate/shop/items`                          | Список товаров магазина (только доступные)         | ✅                        | ✅ `getShopItems$()` / `getShopItemsOrThrow$()` (кэш) |
+| 11  | `POST`   | `/donate/shop/items`                          | Создать товар (админ, только кит)                  | ✅ + `donate:shop:create` | ✅ `createShopItem$()`                                |
+| 12  | `PUT`    | `/donate/shop/items/{id}`                     | Обновить товар (админ, только кит)                 | ✅ + `donate:shop:update` | ✅ `updateShopItem$()`                                |
+| 13  | `DELETE` | `/donate/shop/items/{id}`                     | Удалить товар (админ)                              | ✅ + `donate:shop:delete` | ❌                                                    |
+| 14  | `POST`   | `/donate/shop/items/{item_id}:buy`            | Купить товар                                       | ✅                        | ✅ `buyItem$()`                                       |
+| 15  | `GET`    | `/donate/admin/shop/items`                    | Все записи магазина, включая скрытые (админ)       | ✅ + `donate:shop:update` | ✅ `getAdminShopItems$()`                             |
+
+**Ограничения записей магазина** (проверены прогоном против
+`https://api.lasthearth.ru`, 2026-10-26):
+
+- Создавать можно только киты: `item_type` обязан быть `ITEM_TYPE_KIT`, иначе
+  400 `item-type shop entries are disabled`. Товар из одного предмета — это
+  кит из одного предмета.
+- `code` обязан быть кодом уже захваченного кита, иначе 404
+  `kit code not captured`.
+- `image_url` обязателен (400 `image_url is required`), `entries` не могут быть
+  пустыми (400 `kit must have at least one entry`).
+- На `code` в коллекции стоит уникальный индекс: вторая запись с тем же кодом
+  невозможна. Дубликат отвечает **409** `shop entry with this code already exists`
+  и на создании, и на обновлении (`code: 6`).
+- `GET /donate/shop/items` отдаёт только записи с `is_available: true` и не
+  требует авторизации. Полный список, включая скрытые, — отдельный маршрут
+  `GET /donate/admin/shop/items` (scope `donate:shop:update`), см. ниже.
 
 #### DTO
 
@@ -91,8 +109,13 @@ interface ShopItem {
     has_discount?: boolean;
     discount_percent?: number;
     effective_price?: string; // итоговая цена с учётом скидки
+    category?: 'kit' | 'privilege' | 'special'; // категория захваченного кита, присоединяется сервером при чтении; пустая = 'kit'
 }
 ```
+
+> `category` — не поле самой записи магазина, а категория её кита (`code`),
+> сервер джойнит её при выдаче списка. В UI нормализуется
+> `normalizeShopCategory`: пустое и неизвестное значение → `'kit'` («Набор»).
 
 **`KitEntry`**
 
@@ -334,6 +357,58 @@ interface Assignment {
 }
 ```
 
+#### Захваченные наборы (KitDefService)
+
+**Префикс:** `/v1/kitdefs`
+**Frontend:** `entities/kitdef/api/kitdef.service.ts` (вкладка «Наборы» админки,
+пикер кодов в форме товара магазина)
+
+Набор пишет игра при выдаче кита: `code`, `items` и `created_at` остаются
+игровыми, админка правит только отображаемые метаданные. Старый
+`POST /v1/kitdefs/{code}:rename` **удалён** на бэке — не использовать.
+
+| #   | Метод   | Путь                                   | Описание                           | Auth            | Реализовано           |
+| --- | ------- | -------------------------------------- | ---------------------------------- | --------------- | --------------------- |
+| 1   | `GET`   | `/kitdefs`                             | Список захваченных наборов         | ✅ + `kit:edit` | ✅ `getKits$()`       |
+| 2   | `PATCH` | `/kitdefs/{code}`                      | Переименование и смена категории   | ✅ + `kit:edit` | ✅ `updateKit$()`     |
+| 3   | `POST`  | `/kitdefs/{code}/items/{index}:remove` | Удалить позицию состава по индексу | ✅ + `kit:edit` | ✅ `removeKitItem$()` |
+
+**`KitDef`**
+
+```ts
+interface KitDef {
+    code: string; // код кита, он же ключ записи магазина
+    title: string; // отображаемое название
+    category: 'kit' | 'privilege' | 'special'; // пустое значение = 'kit'
+    items: KitItem[]; // состав из игры
+    created_at: string; // ISO 8601
+    updated_at: string; // ISO 8601
+}
+
+interface KitItem {
+    game_code: string; // внутриигровой код предмета, коды повторяются между позициями
+    type: string; // свободная строка, обычно 'item' | 'block'
+    quantity: number;
+    image_url: string;
+    // attr_snapshot в контракт не входит
+}
+```
+
+**`UpdateKitRequest`** (отправляем только изменённое поле)
+
+```ts
+interface UpdateKitRequest {
+    title?: string; // 400 при пустой строке
+    category?: 'kit' | 'privilege' | 'special'; // 400 на любое другое значение
+}
+```
+
+**Ошибки:** 404 `kit not found` (незахваченный код), 400 `validation error`
+(пустой `title`, неизвестная `category`), 412 при удалении последней позиции
+(набор не может остаться пустым), 400 `kit item index out of range`.
+Оптимистичной блокировки нет — `index` живёт до следующего `ListKits`, поэтому
+после каждой мутации список перечитывается.
+
 ---
 
 ### 2.4 LeaderboardService — Общий лидерборд
@@ -372,13 +447,13 @@ interface LeaderboardResponse {
 **Префикс:** `/v1/news`
 **Frontend:** `entities/news/api/news.api.ts` (новый FSD) + `services/news.service.ts` (легаси)
 
-| #   | Метод    | Путь                           | Описание        | Auth       | Реализовано                                                |
-| --- | -------- | ------------------------------ | --------------- | ---------- | ---------------------------------------------------------- |
-| 1   | `GET`    | `/news?page_size=&page_token=` | Список новостей | —          | ✅ `NewsApiService.getList()`                              |
-| 2   | `POST`   | `/news`                        | Создать новость | ✅ + admin | ✅ `NewsApiService.create()` / `NewsService.createNews$()` |
-| 3   | `GET`    | `/news/{id}`                   | Новость по ID   | —          | ✅ `NewsApiService.getById(id)`                            |
-| 4   | `DELETE` | `/news/{id}`                   | Удалить новость | ✅ + admin | ✅ `NewsApiService.delete(id)`                             |
-| 5   | `POST`   | `/news/{id}/views`             | Просмотр новости | ✅        | ✅ `NewsApiService.addView(id)`                            |
+| #   | Метод    | Путь                           | Описание         | Auth       | Реализовано                                                |
+| --- | -------- | ------------------------------ | ---------------- | ---------- | ---------------------------------------------------------- |
+| 1   | `GET`    | `/news?page_size=&page_token=` | Список новостей  | —          | ✅ `NewsApiService.getList()`                              |
+| 2   | `POST`   | `/news`                        | Создать новость  | ✅ + admin | ✅ `NewsApiService.create()` / `NewsService.createNews$()` |
+| 3   | `GET`    | `/news/{id}`                   | Новость по ID    | —          | ✅ `NewsApiService.getById(id)`                            |
+| 4   | `DELETE` | `/news/{id}`                   | Удалить новость  | ✅ + admin | ✅ `NewsApiService.delete(id)`                             |
+| 5   | `POST`   | `/news/{id}/views`             | Просмотр новости | ✅         | ✅ `NewsApiService.addView(id)`                            |
 
 #### DTO
 
@@ -572,27 +647,27 @@ interface WorldTimeResponse {
 > состав приходят только внутри `Settlement`, а все мутации ролей, владения и
 > контактов возвращают `{ settlement }` — UI перерисовывается из ответа.
 
-| #   | Метод    | Путь                                                                   | Описание                                     | Auth                  | Реализовано                     |
-| --- | -------- | ---------------------------------------------------------------------- | -------------------------------------------- | --------------------- | ------------------------------- |
-| 18  | `POST`   | `/settlements/{settlement_id}/join-requests`                           | Подать заявку на вступление                  | ✅                    | ✅ `createJoinRequest$()`       |
-| 19  | `GET`    | `/settlements/{settlement_id}/join-requests`                           | Заявки поселения                             | ✅ + право/owner      | ✅ `getJoinRequests$()`         |
-| 20  | `POST`   | `/settlements/{settlement_id}/join-requests/{id}:approve`              | Одобрить заявку                              | ✅ + право/owner      | ✅ `approveJoinRequest$()`      |
-| 21  | `POST`   | `/settlements/{settlement_id}/join-requests/{id}:reject`               | Отклонить заявку                             | ✅ + право/owner      | ✅ `rejectJoinRequest$()`       |
-| 22  | `POST`   | `/settlements/join-requests/{join_request_id}:cancel`                  | Отозвать свою заявку                         | ✅ (self)             | ✅ `cancelJoinRequest$()`       |
-| 23  | `GET`    | `/users/{user_id}/settlements/join-requests`                           | Свои заявки                                  | ✅ (self)             | ✅ `getMyJoinRequests$()`       |
-| 24  | `POST`   | `/settlements/{settlement_id}/roles`                                   | Создать роль                                 | ✅ + owner            | ✅ `createRole$()`              |
-| 25  | `PATCH`  | `/settlements/{settlement_id}/roles/{role_id}`                         | Переименовать роль, изменить права           | ✅ + owner            | ✅ `updateRole$()`              |
-| 26  | `DELETE` | `/settlements/{settlement_id}/roles/{role_id}`                         | Удалить роль (снимается со всех)             | ✅ + owner            | ✅ `deleteRole$()`              |
-| 27  | `POST`   | `/settlements/{settlement_id}/members/{user_id}/roles`                 | Выдать роль участнику                        | ✅ + owner            | ✅ `assignMemberRole$()`        |
-| 28  | `DELETE` | `/settlements/{settlement_id}/members/{user_id}/roles/{role_id}`       | Снять роль с участника                       | ✅ + owner            | ✅ `removeMemberRole$()`        |
-| 29  | `POST`   | `/settlements/{settlement_id}/ownership:transfer`                      | Передать владение                            | ✅ + owner            | ✅ `transferOwnership$()`       |
-| 30  | `POST`   | `/settlements/{settlement_id}:leave`                                   | Выйти из поселения                           | ✅                    | ✅ `leaveSettlement$()`         |
-| 31  | `PATCH`  | `/settlements/{settlement_id}/contact-info`                            | Обновить контакты (≤512, без `<` `>`)        | ✅ + owner            | ✅ `updateContactInfo$()`       |
-| 32  | `POST`   | `/admin/settlements/{settlement_id}/owners`                            | Выдать владение                              | ✅ + settlements:manage | ✅ `adminAddOwner$()`         |
-| 33  | `DELETE` | `/admin/settlements/{settlement_id}/owners/{user_id}`                  | Снять владение (400 на последнем)            | ✅ + settlements:manage | ✅ `adminRemoveOwner$()`      |
-| 34  | `POST`   | `/admin/settlements/{settlement_id}/roles:set-enabled`                 | Включить/выключить систему ролей             | ✅ + settlements:manage | ✅ `adminSetRolesEnabled$()`  |
-| 35  | `PATCH`  | `/admin/settlements/{settlement_id}`                                   | Изменить дипломатию                          | ✅ + settlements:manage | ✅ `adminUpdateSettlement$()` |
-| 36  | `DELETE` | `/admin/settlements/{settlement_id}`                                   | Удалить поселение (необратимо)               | ✅ + settlements:manage | ✅ `adminDeleteSettlement$()` |
+| #   | Метод    | Путь                                                             | Описание                              | Auth                    | Реализовано                   |
+| --- | -------- | ---------------------------------------------------------------- | ------------------------------------- | ----------------------- | ----------------------------- |
+| 18  | `POST`   | `/settlements/{settlement_id}/join-requests`                     | Подать заявку на вступление           | ✅                      | ✅ `createJoinRequest$()`     |
+| 19  | `GET`    | `/settlements/{settlement_id}/join-requests`                     | Заявки поселения                      | ✅ + право/owner        | ✅ `getJoinRequests$()`       |
+| 20  | `POST`   | `/settlements/{settlement_id}/join-requests/{id}:approve`        | Одобрить заявку                       | ✅ + право/owner        | ✅ `approveJoinRequest$()`    |
+| 21  | `POST`   | `/settlements/{settlement_id}/join-requests/{id}:reject`         | Отклонить заявку                      | ✅ + право/owner        | ✅ `rejectJoinRequest$()`     |
+| 22  | `POST`   | `/settlements/join-requests/{join_request_id}:cancel`            | Отозвать свою заявку                  | ✅ (self)               | ✅ `cancelJoinRequest$()`     |
+| 23  | `GET`    | `/users/{user_id}/settlements/join-requests`                     | Свои заявки                           | ✅ (self)               | ✅ `getMyJoinRequests$()`     |
+| 24  | `POST`   | `/settlements/{settlement_id}/roles`                             | Создать роль                          | ✅ + owner              | ✅ `createRole$()`            |
+| 25  | `PATCH`  | `/settlements/{settlement_id}/roles/{role_id}`                   | Переименовать роль, изменить права    | ✅ + owner              | ✅ `updateRole$()`            |
+| 26  | `DELETE` | `/settlements/{settlement_id}/roles/{role_id}`                   | Удалить роль (снимается со всех)      | ✅ + owner              | ✅ `deleteRole$()`            |
+| 27  | `POST`   | `/settlements/{settlement_id}/members/{user_id}/roles`           | Выдать роль участнику                 | ✅ + owner              | ✅ `assignMemberRole$()`      |
+| 28  | `DELETE` | `/settlements/{settlement_id}/members/{user_id}/roles/{role_id}` | Снять роль с участника                | ✅ + owner              | ✅ `removeMemberRole$()`      |
+| 29  | `POST`   | `/settlements/{settlement_id}/ownership:transfer`                | Передать владение                     | ✅ + owner              | ✅ `transferOwnership$()`     |
+| 30  | `POST`   | `/settlements/{settlement_id}:leave`                             | Выйти из поселения                    | ✅                      | ✅ `leaveSettlement$()`       |
+| 31  | `PATCH`  | `/settlements/{settlement_id}/contact-info`                      | Обновить контакты (≤512, без `<` `>`) | ✅ + owner              | ✅ `updateContactInfo$()`     |
+| 32  | `POST`   | `/admin/settlements/{settlement_id}/owners`                      | Выдать владение                       | ✅ + settlements:manage | ✅ `adminAddOwner$()`         |
+| 33  | `DELETE` | `/admin/settlements/{settlement_id}/owners/{user_id}`            | Снять владение (400 на последнем)     | ✅ + settlements:manage | ✅ `adminRemoveOwner$()`      |
+| 34  | `POST`   | `/admin/settlements/{settlement_id}/roles:set-enabled`           | Включить/выключить систему ролей      | ✅ + settlements:manage | ✅ `adminSetRolesEnabled$()`  |
+| 35  | `PATCH`  | `/admin/settlements/{settlement_id}`                             | Изменить дипломатию                   | ✅ + settlements:manage | ✅ `adminUpdateSettlement$()` |
+| 36  | `DELETE` | `/admin/settlements/{settlement_id}`                             | Удалить поселение (необратимо)        | ✅ + settlements:manage | ✅ `adminDeleteSettlement$()` |
 
 **Особенности, отличающие живую спеку от таблицы выше:**
 
@@ -831,13 +906,15 @@ interface CreateResponse {
 **Префикс:** `/v1/users`
 **Frontend:** `entities/user/api/user.service.ts`
 
-| #   | Метод  | Путь                        | Описание                        | Auth      | Реализовано                                                     |
-| --- | ------ | --------------------------- | ------------------------------- | --------- | --------------------------------------------------------------- |
-| 1   | `GET`  | `/users/search?query=`      | Поиск пользователей             | —         | ✅ `SettlementService.searchUser$()` ⚠️ _в `SettlementService`_ |
-| 2   | `GET`  | `/users/{user_id}`          | Профиль пользователя            | —         | ✅ `getPlayer$()`                                               |
-| 2.1 | `GET`  | `/users:batchGet`           | Пакетное получение профилей (до 100 ID) | — | ✅ `getPlayersBatch$()`                                         |
-| 3   | `POST` | `/users/{user_id}/avatar`   | Обновить аватар (self)          | ✅ (self) | ✅ `setProfileImage$()`                                         |
-| 4   | `PUT`  | `/users/{user_id}/nickname` | Сменить ник (self, cooldown 6м) | ✅ (self) | ✅ `changeUsername$()`                                          |
+| #   | Метод  | Путь                        | Описание                                | Auth      | Реализовано                                                     |
+| --- | ------ | --------------------------- | --------------------------------------- | --------- | --------------------------------------------------------------- |
+| 1   | `GET`  | `/users/search?query=`      | Поиск пользователей                     | —         | ✅ `SettlementService.searchUser$()` ⚠️ _в `SettlementService`_ |
+| 2   | `GET`  | `/users/{user_id}`          | Профиль пользователя                    | —         | ✅ `getPlayer$()`                                               |
+| 2.1 | `GET`  | `/users:batchGet`           | Пакетное получение профилей (до 100 ID) | —         | ✅ `getPlayersBatch$()`                                         |
+| 3   | `POST` | `/users/{user_id}/avatar`   | Обновить аватар (self)                  | ✅ (self) | ✅ `setProfileImage$()`                                         |
+| 4   | `PUT`  | `/users/{user_id}/nickname` | Сменить ник (self, cooldown 6м)         | ✅ (self) | ✅ `changeUsername$()`                                          |
+| 5   | `PUT`  | `/admin/users/{user_id}/nickname` | Принудительно сменить ник (админ, скоуп `players:nickname:write`, кулдаун игнорируется) | ✅ + scope | ✅ `AdminNicknameApiService.changeNickname$()` |
+| 6   | `POST` | `/admin/users/{user_id}/nickname:grant` | Разрешить игроку сменить ник досрочно (админ, скоуп `players:nickname:grant`, снимает кулдаун) | ✅ + scope | ✅ `AdminNicknameApiService.grantNicknameChange$()` |
 
 #### DTO
 
@@ -856,8 +933,35 @@ interface User {
     avatar: UserImage;
     user_name: string;
     previous_nickname?: string;
+    last_nickname_changed_at?: string; // ISO 8601; от неё считается кулдаун 6м. Grant снимает запись ($unset)
     is_online: boolean;
 }
+```
+
+**`AdminChangeNicknameRequest` / `AdminChangeNicknameResponse`**
+
+```ts
+interface AdminChangeNicknameRequest {
+    user_id: string;
+    new_nickname: string; // 1-15 символов: a-zA-Z0-9_-
+    reason?: string; // до 500 символов, уходит игроку в уведомлении
+}
+
+interface AdminChangeNicknameResponse {
+    old_nickname: string;
+    new_nickname: string;
+    next_change_allowed_at: string; // ISO 8601: момент смены + 6 месяцев
+}
+```
+
+**`AdminGrantNicknameChangeRequest`**
+
+```ts
+interface AdminGrantNicknameChangeRequest {
+    user_id: string;
+    reason?: string; // до 500 символов
+}
+// Ответ — пустой объект. Grant при отсутствующем кулдауне → 400 FAILED_PRECONDITION.
 ```
 
 **`ChangeNicknameRequest`**
@@ -1021,11 +1125,11 @@ interface CreateUploadUrlsResponse {
 **Префикс:** `/v1/discord`
 **Frontend:** `entities/discord/api/discord.api.ts`
 
-| #   | Метод  | Путь                                          | Описание                                      | Auth            | Реализовано                          |
-| --- | ------ | --------------------------------------------- | --------------------------------------------- | --------------- | ------------------------------------ |
-| 1   | `GET`  | `/discord/channels/{channel_id}/messages`     | Сообщения канала (очищенные, с типом)         | —               | ✅ `DiscordApiService.getMessages$()` |
-| 2   | `GET`  | `/discord/channels/{channel_id}/images`       | Изображения-вложения из канала                | —               | ✅ `DiscordApiService.getImages$()`   |
-| 3   | `POST` | `/discord/news`                               | Отправить embed новости в Discord-канал       | ✅ + news:create | ✅ `DiscordApiService.sendNews$()`    |
+| #   | Метод  | Путь                                      | Описание                                | Auth             | Реализовано                           |
+| --- | ------ | ----------------------------------------- | --------------------------------------- | ---------------- | ------------------------------------- |
+| 1   | `GET`  | `/discord/channels/{channel_id}/messages` | Сообщения канала (очищенные, с типом)   | —                | ✅ `DiscordApiService.getMessages$()` |
+| 2   | `GET`  | `/discord/channels/{channel_id}/images`   | Изображения-вложения из канала          | —                | ✅ `DiscordApiService.getImages$()`   |
+| 3   | `POST` | `/discord/news`                           | Отправить embed новости в Discord-канал | ✅ + news:create | ✅ `DiscordApiService.sendNews$()`    |
 
 #### DTO
 
