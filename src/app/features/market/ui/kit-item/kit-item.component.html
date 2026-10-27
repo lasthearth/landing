@@ -1,5 +1,16 @@
+<ng-template #hint>
+    <div class="flex max-w-64 flex-col gap-0.5">
+        <span class="text-base font-bold">{{ data().hint }}</span>
+        @if (data().description) {
+            <span class="text-sm opacity-80">{{ data().description }}</span>
+        }
+    </div>
+</ng-template>
+
 <div
-    [title]="data().hint"
+    [tuiHint]="hint"
+    tuiHintDirection="top"
+    [attr.aria-label]="data().hint"
     class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 cursor-pointer transition duration-150 hover:scale-110 hover:rotate-2 hover:border-lh-accent group"
 >
     <app-image-loader

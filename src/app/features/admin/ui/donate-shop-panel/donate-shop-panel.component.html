@@ -237,6 +237,22 @@
 
                 <p class="text-base text-ink-3">{{ 'admin.shop.kitOnlyHint' | translate }}</p>
 
+                <!-- Раздел витрины: вкладки есть только в «Особом» -->
+                @if (previewCategory() === 'special' || form.controls.section.value) {
+                    <div class="flex flex-col gap-2 md:max-w-sm">
+                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.sectionLabel' | translate }}</label>
+                        <lh-input
+                            type="select"
+                            [ariaLabel]="'admin.shop.sectionLabel' | translate"
+                            [placeholder]="'admin.shop.sectionNone' | translate"
+                            [items]="sectionKeys"
+                            [displayWith]="sectionDisplay"
+                            [formControl]="form.controls.section"
+                        />
+                        <p class="text-base text-ink-3">{{ 'admin.shop.sectionHint' | translate }}</p>
+                    </div>
+                }
+
                 <!-- Правки товара не трогают уже оплаченные покупки -->
                 <div class="flex flex-col gap-1 rounded-xl border border-line/40 bg-surface-3 p-4">
                     <p class="text-base text-ink-2">{{ 'admin.shop.snapshotHint' | translate }}</p>
@@ -608,9 +624,19 @@
                                 (cdkDropListDropped)="dropEntry($event)"
                             >
                                 @for (entry of previewItem().entries; track $index) {
+                                    <ng-template #entryHint>
+                                        <div class="flex max-w-64 flex-col gap-0.5">
+                                            <span class="text-base font-bold">{{ entry.name }}</span>
+                                            @if (entry.description) {
+                                                <span class="text-sm opacity-80">{{ entry.description }}</span>
+                                            }
+                                        </div>
+                                    </ng-template>
                                     <div
                                         cdkDrag
-                                        [title]="entry.name"
+                                        [tuiHint]="entryHint"
+                                        tuiHintDirection="top"
+                                        [attr.aria-label]="entry.name"
                                         class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 transition duration-150 hover:scale-110 hover:rotate-2 hover:border-lh-accent group/item cursor-grab active:cursor-grabbing"
                                     >
                                         @if (entry.imageUrl) {

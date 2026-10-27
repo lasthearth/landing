@@ -2,7 +2,6 @@
 @let requestExist = veriverificationRequests === null || veriverificationRequests?.length === 0;
 @let settlements = settlementsRequests$ | async;
 @let settlementsRequest = settlements === null || settlements?.length === 0;
-@let hasPendingPurchases = pendingPurchases().length > 0;
 
 <div class="lh-page-container w-full flex flex-col gap-3 lg:gap-6">
     <app-page-header [level]="2" [title]="'admin.title' | translate" />
@@ -72,21 +71,6 @@
         >
             <tui-icon icon="@tui.wallet" />
             <span class="hidden sm:inline">{{ 'admin.tabs.coins' | translate }}</span>
-        </button>
-        <button
-            type="button"
-            [attr.aria-label]="'admin.tabs.purchases' | translate"
-            class="nav-button relative shrink-0"
-            aria-controls="admin-panel"
-            [attr.aria-current]="activeItemIndex === 5 ? 'true' : null"
-            [class.nav-button--active]="activeItemIndex === 5"
-            (click)="activeItemIndex = 5"
-        >
-            <tui-icon icon="@tui.package" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.purchases' | translate }}</span>
-            @if (hasPendingPurchases) {
-                <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
-            }
         </button>
         <button
             type="button"
@@ -237,15 +221,6 @@
             }
             @case (4) {
                 <app-admin-coin-panel />
-            }
-            @case (5) {
-                <app-pending-purchases-panel
-                    [purchases]="pendingPurchases()"
-                    [loading]="pendingPurchasesLoading()"
-                    [error]="pendingPurchasesError()"
-                    (retry)="updatePendingPurchases()"
-                    (listChanged)="updatePendingPurchases()"
-                />
             }
             @case (6) {
                 <app-donate-shop-panel />

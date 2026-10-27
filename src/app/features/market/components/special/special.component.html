@@ -15,8 +15,46 @@
         />
     </div>
 } @else {
+    <!-- Разделы особых товаров: вкладки видны всегда, пустой раздел показывает заглушку -->
+    <nav class="mb-4 flex flex-wrap gap-2" [attr.aria-label]="'market.special.sectionsAria' | translate">
+        <button
+            type="button"
+            class="nav-button shrink-0"
+            [class.nav-button--active]="isSectionActive('')"
+            [attr.aria-pressed]="isSectionActive('')"
+            (click)="selectedSection.set('')"
+        >
+            <tui-icon icon="@tui.layout-grid" />
+            <span>{{ 'market.sections.all' | translate }}</span>
+            <span class="opacity-70">{{ items().length }}</span>
+        </button>
+        @for (section of sections; track section.key) {
+            <button
+                type="button"
+                class="nav-button shrink-0"
+                [class.nav-button--active]="isSectionActive(section.key)"
+                [attr.aria-pressed]="isSectionActive(section.key)"
+                (click)="selectedSection.set(section.key)"
+            >
+                <tui-icon [icon]="section.icon" />
+                <span>{{ section.labelKey | translate }}</span>
+                <span class="opacity-70">{{ sectionCounts().get(section.key) ?? 0 }}</span>
+            </button>
+        }
+    </nav>
+
+    @if (visibleItems().length === 0) {
+        <div class="lh-panel p-5 lg:p-8">
+            <app-empty-state
+                icon="@tui.sparkles"
+                [title]="'market.special.sectionEmptyTitle' | translate"
+                [description]="'market.special.sectionEmptyDescription' | translate"
+            />
+        </div>
+    }
+
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4 lh-stagger-list">
-        @for (item of items(); track item.id) {
+        @for (item of visibleItems(); track item.id) {
             <div
                 class="flex flex-col gap-2 lg:gap-3 lh-panel p-3 lg:p-4 items-center lh-card-glow hover:-translate-y-1 group"
             >
@@ -56,6 +94,15 @@
                 <p class="text-center text-base lg:text-lg font-bold text-lh-primary line-clamp-2 min-h-[3rem] lg:min-h-[3.5rem]">
                     {{ item.name }}
                 </p>
+
+                <!-- Состав набора с количеством -->
+                @if (item.entries?.length) {
+                    <div class="flex flex-wrap justify-center gap-1.5">
+                        @for (entry of item.entries; track $index) {
+                            <app-kit-item [data]="toKitItem(entry)" />
+                        }
+                    </div>
+                }
 
                 <!-- Категория товара -->
                 <span

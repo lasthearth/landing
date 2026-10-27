@@ -99,6 +99,7 @@ export function mapDtoToShopItem(dto: IShopItemDto): IShopItem {
         discountPercent: dto.discount_percent,
         effectivePrice: dto.effective_price,
         category: normalizeShopCategory(dto.category),
+        section: dto.section ?? '',
     };
 }
 

@@ -12,6 +12,7 @@ import {
     IKitEntryDto,
     IShopItem,
     IUpdateShopItemRequest,
+    SHOP_SECTIONS,
     ShopCategory,
     ShopItemType,
 } from '@entities/donate';
@@ -19,7 +20,7 @@ import { IKitDef, KitdefService } from '@entities/kitdef';
 import { MediaService } from '@entities/media';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
-import { TuiIcon, TuiLoader } from '@taiga-ui/core';
+import { TuiHint, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
@@ -56,6 +57,7 @@ const KIT_ITEM_TYPE: ShopItemType = 'ITEM_TYPE_KIT';
         AsyncPipe,
         LHInputComponent,
         TuiIcon,
+        TuiHint,
         TuiLoader,
         TuiFiles,
         TuiFilesComponent,
@@ -248,6 +250,7 @@ export class DonateShopPanelComponent implements OnInit {
         is_available: new FormControl<boolean>(true, { nonNullable: true }),
         has_discount: new FormControl<boolean>(false, { nonNullable: true }),
         discount_percent: new FormControl<number>(0, { nonNullable: true }),
+        section: new FormControl<string>('', { nonNullable: true }),
         image: new FormControl<File | null>(null),
         entries: new FormArray<FormGroup<KitEntryForm>>([]),
         privileges: new FormArray<FormGroup<AbilityForm>>([]),
@@ -407,6 +410,25 @@ export class DonateShopPanelComponent implements OnInit {
     protected readonly kitDisplay = (code: string): string => this.kitLabel(code);
 
     /**
+     * Варианты поля «Раздел»: пустая строка — без раздела.
+     */
+    protected readonly sectionKeys: string[] = ['', ...SHOP_SECTIONS.map((section) => section.key)];
+
+    /**
+     * Функция отображения раздела в выпадающем списке.
+     *
+     * Ключ, которого нет в `SHOP_SECTIONS` (раздел удалили из кода),
+     * показывается как есть, чтобы его можно было заметить и сменить.
+     */
+    protected readonly sectionDisplay = (key: string): string => {
+        if (!key) {
+            return this.i18n.translate('admin.shop.sectionNone');
+        }
+        const section = SHOP_SECTIONS.find((item) => item.key === key);
+        return section ? this.i18n.translate(section.labelKey) : key;
+    };
+
+    /**
      * Перечитывает список товаров с сервера.
      */
     protected reloadItems(): void {
@@ -452,6 +474,7 @@ export class DonateShopPanelComponent implements OnInit {
             is_available: item.isAvailable,
             has_discount: item.hasDiscount ?? false,
             discount_percent: item.discountPercent ?? 0,
+            section: item.section ?? '',
         });
 
         this.privilegesArray.clear();
@@ -759,6 +782,7 @@ export class DonateShopPanelComponent implements OnInit {
                 image_url: entry.imageUrl,
             })),
             privileges: item.privileges ?? [],
+            section: item.section ?? '',
         };
     }
 
@@ -802,6 +826,7 @@ export class DonateShopPanelComponent implements OnInit {
                     image_url: imageUrl,
                     entries,
                     privileges,
+                    section: values.section,
                 };
 
                 this.submit(this.donateService.updateShopItem$(this.editingItemId()!, request), 'admin.shop.updatedSuccess');
@@ -817,6 +842,7 @@ export class DonateShopPanelComponent implements OnInit {
                     discount_percent: values.has_discount ? values.discount_percent : undefined,
                     entries,
                     privileges,
+                    section: values.section,
                 };
 
                 this.submit(this.donateService.createShopItem$(request), 'admin.shop.createdSuccess');
@@ -1118,6 +1144,7 @@ export class DonateShopPanelComponent implements OnInit {
             is_available: true,
             has_discount: false,
             discount_percent: 0,
+            section: '',
             image: null,
         });
         this.privilegesArray.clear();

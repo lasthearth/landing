@@ -97,6 +97,13 @@ export interface IShopItemDto {
      * появилась до введения поля; protobuf-JSON опускает пустую строку.
      */
     category?: string;
+
+    /**
+     * Раздел витрины внутри категории (ключ из `SHOP_SECTIONS`).
+     *
+     * Пустая строка или отсутствие поля — раздел не задан.
+     */
+    section?: string;
 }
 
 /**
@@ -285,6 +292,11 @@ export interface IShopItem {
      * категория на проводе приводится к `'kit'`.
      */
     category: ShopCategory;
+
+    /**
+     * Раздел витрины внутри категории (ключ из `SHOP_SECTIONS`), пустая строка — без раздела.
+     */
+    section: string;
 }
 
 /**
@@ -342,6 +354,13 @@ export interface ICreateShopItemRequest {
      * Процент скидки.
      */
     discount_percent?: number;
+
+    /**
+     * Раздел витрины внутри категории (ключ из `SHOP_SECTIONS`).
+     *
+     * Пустая строка или отсутствие поля — раздел не задан.
+     */
+    section?: string;
 }
 
 /**
@@ -409,4 +428,11 @@ export interface IUpdateShopItemRequest {
      * Процент скидки.
      */
     discount_percent?: number;
+
+    /**
+     * Раздел витрины внутри категории (ключ из `SHOP_SECTIONS`).
+     *
+     * Пустая строка или отсутствие поля — раздел не задан.
+     */
+    section?: string;
 }

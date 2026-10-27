@@ -23,6 +23,7 @@ export function mapShopItemToPrivilegeCard(item: IShopItem): PrivilegeCard {
         seasonPriceOriginal: '',
         kitItems: (item.entries ?? []).map((entry) => ({
             hint: entry.name,
+            description: entry.description,
             count: entry.quantity,
             image: entry.imageUrl,
         })),

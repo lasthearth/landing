@@ -1,9 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, signal, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    inject,
+    OnDestroy,
+    signal,
+    TemplateRef,
+    ViewChild,
+} from '@angular/core';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
-import { DonateService, IShopItem } from '@entities/donate';
+import { DonateService, IKitEntry, IShopItem, IShopSection, SHOP_SECTIONS } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
@@ -14,6 +24,8 @@ import { createShopItemsLoader, ShopItemsLoader } from '../../lib/create-shop-it
 import { selectShopItemsByCategory } from '../../lib/select-shop-items-by-category.function';
 import { sortShopItemsByPrice } from '../../lib/sort-privilege-cards-by-price.function';
 import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant';
+import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
+import { KitItem } from '../../interfaces/kit-item.interface';
 
 /**
  * Компонент вкладки "Особое" в магазине.
@@ -32,6 +44,7 @@ import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant'
         ImageLoaderComponent,
         EmptyStateComponent,
         ErrorStateComponent,
+        KitItemComponent,
         TranslatePipe,
     ],
     templateUrl: './special.component.html',
@@ -84,6 +97,44 @@ export class SpecialComponent implements OnDestroy {
     protected readonly items = signal<IShopItem[]>([]);
 
     /**
+     * Выбранный раздел витрины, пустая строка — «Все».
+     */
+    protected readonly selectedSection = signal<string>('');
+
+    /**
+     * Разделы витрины в порядке `SHOP_SECTIONS`: вкладки видны всегда,
+     * пустой раздел показывает заглушку.
+     */
+    protected readonly sections: readonly IShopSection[] = SHOP_SECTIONS;
+
+    /**
+     * Число товаров в каждом разделе, по ключу раздела.
+     */
+    protected readonly sectionCounts = computed<Map<string, number>>(() => {
+        const counts = new Map<string, number>();
+        this.items().forEach((item) => counts.set(item.section, (counts.get(item.section) ?? 0) + 1));
+        return counts;
+    });
+
+    /**
+     * Товары выбранного раздела, для «Все» — все товары.
+     */
+    protected readonly visibleItems = computed<IShopItem[]>(() => {
+        const key = this.selectedSection();
+        return key ? this.items().filter((item) => item.section === key) : this.items();
+    });
+
+    /**
+     * Признак активной вкладки раздела.
+     *
+     * @param key Ключ раздела, пустая строка — «Все».
+     * @returns `true`, если вкладка выбрана.
+     */
+    protected isSectionActive(key: string): boolean {
+        return this.selectedSection() === key;
+    }
+
+    /**
      * Описание изображения, открытого в предпросмотре.
      */
     protected previewDesc: string | null = null;
@@ -125,6 +176,21 @@ export class SpecialComponent implements OnDestroy {
      */
     protected categoryLabelKey(item: IShopItem): string {
         return SHOP_CATEGORY_LABEL_KEY[item.category];
+    }
+
+    /**
+     * Переводит позицию состава в модель ячейки предмета.
+     *
+     * @param entry Позиция состава товара.
+     * @returns Данные для компонента ячейки с количеством.
+     */
+    protected toKitItem(entry: IKitEntry): KitItem {
+        return {
+            hint: entry.name,
+            description: entry.description,
+            count: entry.quantity,
+            image: entry.imageUrl,
+        };
     }
 
     /**

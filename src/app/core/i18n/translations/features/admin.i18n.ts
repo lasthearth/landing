@@ -214,6 +214,9 @@ export const ADMIN_I18N = {
                 hideText: 'Товар «{{name}}» исчезнет из магазина, но останется в этом списке: его можно показать снова.',
                 shownSuccess: 'Товар показан',
                 hiddenSuccess: 'Товар скрыт',
+                sectionLabel: 'Раздел',
+                sectionNone: 'Без раздела',
+                sectionHint: 'Вкладка на витрине «Особое». Товар без раздела виден только во вкладке «Все».',
                 kitOnlyHint:
                     'Тип товара фиксирован: магазин продаёт захваченные наборы. Товар из одной позиции — это набор из одного предмета.',
                 snapshotHint:
@@ -583,6 +586,9 @@ export const ADMIN_I18N = {
                     'The item "{{name}}" will disappear from the shop but stay in this list: it can be published again.',
                 shownSuccess: 'Item published',
                 hiddenSuccess: 'Item hidden',
+                sectionLabel: 'Section',
+                sectionNone: 'No section',
+                sectionHint: 'A tab in the Special shop. An item without a section shows only under All.',
                 kitOnlyHint:
                     'The item type is fixed: the shop sells captured kits. A single-item product is a kit of one item.',
                 snapshotHint:
