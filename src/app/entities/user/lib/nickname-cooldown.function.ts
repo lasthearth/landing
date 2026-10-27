@@ -1,3 +1,4 @@
+import { parseDateInput } from '@shared/lib/relative-time';
 import { NICKNAME_ADMIN_LIMITS } from '../config/nickname-admin-limits.constant';
 
 /**
@@ -11,13 +12,9 @@ import { NICKNAME_ADMIN_LIMITS } from '../config/nickname-admin-limits.constant'
  * @returns Дата окончания кулдауна либо `null`, если кулдауна нет.
  */
 export function getNicknameCooldownEnd(lastChangedAt?: string | null): Date | null {
-    if (!lastChangedAt || lastChangedAt.startsWith('0001-01-01')) {
-        return null;
-    }
+    const changed = parseDateInput(lastChangedAt);
 
-    const changed = new Date(lastChangedAt);
-
-    if (isNaN(changed.getTime())) {
+    if (!changed) {
         return null;
     }
 

@@ -20,9 +20,9 @@
         </div>
     </dl>
 
-    @if (canWrite || showGrant()) {
+    @if (canWrite() || showGrant()) {
         <div class="flex flex-col gap-3 mt-2">
-            @if (canWrite) {
+            @if (canWrite()) {
                 <div class="flex flex-col gap-1">
                     <lh-input
                         type="input"
@@ -30,8 +30,8 @@
                         [label]="'admin.nickname.newLabel' | translate"
                         [placeholder]="'admin.nickname.newPlaceholder' | translate"
                     />
-                    <span class="text-sm text-lh-primary/60 text-right" aria-live="polite">
-                        {{ nicknameLength() }}/{{ limits.nicknameMaxLength }}
+                    <span class="text-sm text-lh-primary/60 text-right">
+                        {{ nicknameControl.value.length }}/{{ nicknameMaxLength }}
                     </span>
                 </div>
             }
@@ -44,7 +44,7 @@
             />
 
             <div class="flex flex-wrap gap-4 mt-1">
-                @if (canWrite) {
+                @if (canWrite()) {
                     <button
                         type="button"
                         [disabled]="nicknameControl.invalid"

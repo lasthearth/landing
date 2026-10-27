@@ -1,24 +1,29 @@
 import { AsyncPipe } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    inject,
-    signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, debounceTime, distinctUntilChanged, filter, finalize, map, Observable, of, switchMap } from 'rxjs';
+import {
+    catchError,
+    debounceTime,
+    distinctUntilChanged,
+    EMPTY,
+    filter,
+    finalize,
+    map,
+    Observable,
+    of,
+    Subject,
+    switchMap,
+} from 'rxjs';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 
-import { IPlayer, UserService } from '@entities/user';
+import { IPlayer, ISearchedUser, UserService } from '@entities/user';
 import { SettlementService } from '@entities/settlement';
 import { TranslatePipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
-import { ISearchedUser } from '../../model/searched-user.model';
 import { PlayerNicknameAdminComponent } from '../player-nickname-admin/player-nickname-admin.component';
 
 /**
@@ -57,11 +62,6 @@ export class AdminPlayersPanelComponent {
     private readonly userService = inject(UserService);
 
     /**
-     * Ссылка на жизненный цикл компонента.
-     */
-    private readonly destroyRef = inject(DestroyRef);
-
-    /**
      * Поле поиска игрока по нику.
      */
     protected readonly searchControl = new FormControl('', { nonNullable: true });
@@ -97,8 +97,28 @@ export class AdminPlayersPanelComponent {
         distinctUntilChanged(),
         filter((term): term is string => term.length >= 2),
         switchMap((term) => this.settlementService.searchUser$(term).pipe(catchError(() => of({ users: [] })))),
-        map((response) => (response.users ?? []) as ISearchedUser[])
+        map((response) => response.users ?? [])
     );
+
+    /**
+     * Триггер загрузки карточки игрока; `null` отменяет текущий запрос.
+     */
+    private readonly loadPlayer$ = new Subject<string | null>();
+
+    constructor() {
+        // `switchMap` отменяет предыдущий запрос: запоздалый ответ одного
+        // игрока не должен перезаписать карточку уже выбранного другого.
+        this.loadPlayer$
+            .pipe(
+                switchMap((userId) =>
+                    userId
+                        ? this.userService.getPlayer$(userId).pipe(finalize(() => this.isLoadingPlayer.set(false)))
+                        : EMPTY
+                ),
+                takeUntilDestroyed()
+            )
+            .subscribe((player) => this.player.set(player));
+    }
 
     /**
      * Выбирает игрока из списка поиска и загружает его карточку.
@@ -114,8 +134,13 @@ export class AdminPlayersPanelComponent {
 
     /**
      * Сбрасывает выбранного игрока и возвращает панель к поиску.
+     *
+     * Незавершённый запрос карточки отменяется: запоздалый ответ не попадёт
+     * в сигнал следующего выбранного игрока.
      */
     protected clearPlayer(): void {
+        this.loadPlayer$.next(null);
+        this.isLoadingPlayer.set(false);
         this.selectedId.set(null);
         this.player.set(null);
     }
@@ -134,16 +159,14 @@ export class AdminPlayersPanelComponent {
     /**
      * Загружает данные игрока по идентификатору.
      *
-     * Ошибку `GET` показывает `errorInterceptor`, поэтому отдельного
-     * обработчика ошибки здесь нет.
+     * Запрос идёт через {@link loadPlayer$}: предыдущий незавершённый запрос
+     * отменяется `switchMap`. Ошибку `GET` показывает `errorInterceptor`,
+     * поэтому отдельного обработчика ошибки здесь нет.
      *
      * @param userId Идентификатор игрока.
      */
     private loadPlayer(userId: string): void {
+        this.loadPlayer$.next(userId);
         this.isLoadingPlayer.set(true);
-        this.userService
-            .getPlayer$(userId)
-            .pipe(finalize(() => this.isLoadingPlayer.set(false)), takeUntilDestroyed(this.destroyRef))
-            .subscribe((player) => this.player.set(player));
     }
 }

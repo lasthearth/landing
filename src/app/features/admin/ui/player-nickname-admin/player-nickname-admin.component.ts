@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EMPTY, catchError, finalize, tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService, TuiLoader } from '@taiga-ui/core';
 
@@ -19,13 +19,15 @@ import {
     getNicknameCooldownEnd,
     IPlayer,
     NICKNAME_ADMIN_LIMITS,
+    NICKNAME_ADMIN_SCOPES,
+    sanitizeNickname,
     UserService,
 } from '@entities/user';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
-import { formatFullDate } from '@shared/lib/relative-time';
+import { formatFullDate, parseDateInput } from '@shared/lib/relative-time';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
-import { getAdminActionErrorMessage } from '../../lib/admin-action-error.function';
+import { catchAdminActionError } from '../../lib/catch-admin-action-error.function';
 import { ConfirmNicknameChangeComponent } from '../confirm-nickname-change/confirm-nickname-change.component';
 
 /**
@@ -88,19 +90,22 @@ export class PlayerNicknameAdminComponent {
     public readonly changed = output<void>();
 
     /**
-     * Есть ли скоуп `players:nickname:write` (принудительная смена ника).
+     * Есть ли скоуп принудительной смены ника.
+     *
+     * `computed`, а не снимок в конструкторе: `UserService.scopes` обновляется
+     * при silent renew токена, и гейт кнопок должен пережить обновление.
      */
-    protected readonly canWrite = this.userService.hasScope('players:nickname:write');
+    protected readonly canWrite = computed(() => this.userService.hasScope(NICKNAME_ADMIN_SCOPES.write));
 
     /**
-     * Есть ли скоуп `players:nickname:grant` (досрочное разрешение смены).
+     * Есть ли скоуп досрочного разрешения смены.
      */
-    protected readonly canGrant = this.userService.hasScope('players:nickname:grant');
+    protected readonly canGrant = computed(() => this.userService.hasScope(NICKNAME_ADMIN_SCOPES.grant));
 
     /**
-     * Ограничения полей ника и причины.
+     * Максимальная длина ника для счётчика «N/15».
      */
-    protected readonly limits = NICKNAME_ADMIN_LIMITS;
+    protected readonly nicknameMaxLength = NICKNAME_ADMIN_LIMITS.nicknameMaxLength;
 
     /**
      * Поле нового ника: маска `[A-Za-z0-9_-]{1,15}`.
@@ -123,11 +128,6 @@ export class PlayerNicknameAdminComponent {
     });
 
     /**
-     * Текущая длина нового ника для счётчика «N/15».
-     */
-    protected readonly nicknameLength = signal(0);
-
-    /**
      * Признак выполнения запроса досрочного разрешения смены.
      */
     protected readonly isGranting = signal(false);
@@ -139,6 +139,10 @@ export class PlayerNicknameAdminComponent {
 
     /**
      * Активен ли кулдаун: дата окончания ещё не наступила.
+     *
+     * `Date.now()` не реактивен: значение пересчитывается только при смене
+     * `player()`. Для окна в 6 месяцев этого достаточно — истечение кулдауна
+     * без действия админа на открытой карточке не ожидается.
      */
     protected readonly isCooldownActive = computed(() => {
         const end = this.cooldownEnd();
@@ -149,31 +153,30 @@ export class PlayerNicknameAdminComponent {
     /**
      * Показывать ли кнопку «Разрешить смену раньше срока».
      */
-    protected readonly showGrant = computed(() => this.canGrant && this.isCooldownActive());
+    protected readonly showGrant = computed(() => this.canGrant() && this.isCooldownActive());
 
     /**
      * Текст строки «Последняя смена».
      */
     protected readonly lastChangeText = computed(() =>
-        this.formatDateText(this.player().last_nickname_changed_at, 'admin.nickname.neverChanged')
+        this.formatDateText(
+            parseDateInput(this.player().last_nickname_changed_at),
+            'admin.nickname.neverChanged'
+        )
     );
 
     /**
      * Текст строки «Смена разрешена с».
      */
-    protected readonly nextChangeText = computed(() => {
-        const end = this.cooldownEnd();
-
-        return end ? formatFullDate(end, this.i18n.language()) : this.i18n.translate('admin.nickname.available');
-    });
+    protected readonly nextChangeText = computed(() =>
+        this.formatDateText(this.cooldownEnd(), 'admin.nickname.available')
+    );
 
     constructor() {
         // Маска ника: недопустимые символы вырезаются сразу при вводе,
         // длина обрезается до 15 — до сервера невалидный ник не доходит.
         this.nicknameControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
-            const sanitized = this.sanitizeNickname(value);
-
-            this.nicknameLength.set(sanitized.length);
+            const sanitized = sanitizeNickname(value);
 
             if (sanitized !== value) {
                 this.nicknameControl.setValue(sanitized, { emitEvent: false });
@@ -215,7 +218,6 @@ export class PlayerNicknameAdminComponent {
 
                 this.nicknameControl.reset('');
                 this.reasonControl.reset('');
-                this.nicknameLength.set(0);
                 this.changed.emit();
             });
     }
@@ -241,11 +243,11 @@ export class PlayerNicknameAdminComponent {
                     this.reasonControl.reset('');
                     this.changed.emit();
                 }),
-                catchError((error: unknown) => {
-                    this.requestStatus.showError(this.buildErrorMessage(error));
-
-                    return EMPTY;
-                }),
+                catchAdminActionError(
+                    this.requestStatus,
+                    this.i18n.translate('admin.nickname.noPermission'),
+                    this.i18n.translate('admin.nickname.error')
+                ),
                 finalize(() => this.isGranting.set(false)),
                 takeUntilDestroyed(this.destroyRef)
             )
@@ -253,43 +255,13 @@ export class PlayerNicknameAdminComponent {
     }
 
     /**
-     * Собирает текст ошибки операции: «Нет прав» на 403, иначе текст сервера.
-     *
-     * @param error Ошибка запроса.
-     * @returns Строка для уведомления.
-     */
-    private buildErrorMessage(error: unknown): string {
-        return getAdminActionErrorMessage(
-            error,
-            this.i18n.translate('admin.nickname.noPermission'),
-            this.i18n.translate('admin.nickname.error')
-        );
-    }
-
-    /**
      * Форматирует дату либо возвращает текст-заглушку.
      *
-     * @param iso Дата в формате ISO 8601 либо `undefined`.
+     * @param date Дата либо `null`.
      * @param emptyKey Ключ перевода для пустого значения.
      * @returns Отформатированная дата или переведённая заглушка.
      */
-    private formatDateText(iso: string | undefined, emptyKey: string): string {
-        const date = iso ? new Date(iso) : null;
-
-        return date && !isNaN(date.getTime())
-            ? formatFullDate(date, this.i18n.language())
-            : this.i18n.translate(emptyKey);
-    }
-
-    /**
-     * Применяет маску ника: только `A-Za-z0-9_-`, не длиннее 15 символов.
-     *
-     * @param raw Введённое значение.
-     * @returns Значение, приведённое к маске.
-     */
-    private sanitizeNickname(raw: string): string {
-        return raw
-            .replace(/[^A-Za-z0-9_-]/g, '')
-            .slice(0, NICKNAME_ADMIN_LIMITS.nicknameMaxLength);
+    private formatDateText(date: Date | null, emptyKey: string): string {
+        return date ? formatFullDate(date, this.i18n.language()) : this.i18n.translate(emptyKey);
     }
 }

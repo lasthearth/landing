@@ -1,4 +1,4 @@
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 import { EventTypes, LoginResponse, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
@@ -86,9 +86,10 @@ export class UserService {
 
     /**
      * Скоупы (permissions) из access-токена, например `players:nickname:write`.
-     * Заполняются вместе с остальными данными в {@link hydrateUserData$}.
+     * Заполняются вместе с остальными данными в {@link hydrateUserData$};
+     * сигнал — чтобы UI с гейтом по скоупам пережил silent renew токена.
      */
-    public scopes: string[] = [];
+    public readonly scopes = signal<string[]>([]);
 
     /**
      * Access-токен авторизации.
@@ -290,7 +291,7 @@ export class UserService {
                 this.roles = decoded.roles ?? [];
                 this.userName = decoded.username ?? decoded.name ?? '';
                 this.userImage = decoded.picture ?? '';
-                this.scopes = this.parseScopes(accessToken);
+                this.scopes.set(this.parseScopes(accessToken));
 
                 return true;
             }),
@@ -333,7 +334,7 @@ export class UserService {
      * @returns `true`, если скоуп выдан в access-токене.
      */
     public hasScope(scope: string): boolean {
-        return this.scopes.includes(scope);
+        return this.scopes().includes(scope);
     }
 
     /**

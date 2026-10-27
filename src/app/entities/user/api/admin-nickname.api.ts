@@ -52,12 +52,9 @@ export class AdminNicknameApiService {
      * отсутствующем кулдауне сервер отвергает `FAILED_PRECONDITION`.
      *
      * @param request Идентификатор игрока и необязательная причина.
-     * @returns Пустой объект при успехе.
+     * @returns Observable без значения — признак успешной операции.
      */
-    public grantNicknameChange$(request: IAdminGrantNicknameChangeRequest): Observable<Record<string, never>> {
-        return this.http.post<Record<string, never>>(
-            `${this.baseUrl}/admin/users/${request.user_id}/nickname:grant`,
-            request
-        );
+    public grantNicknameChange$(request: IAdminGrantNicknameChangeRequest): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/admin/users/${request.user_id}/nickname:grant`, request);
     }
 }

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY, finalize, tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { TuiDialogContext, TuiIcon, TuiLoader } from '@taiga-ui/core';
 
 import { AdminNicknameApiService } from '@entities/user';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
-import { getAdminActionErrorMessage } from '../../lib/admin-action-error.function';
+import { catchAdminActionError } from '../../lib/catch-admin-action-error.function';
 import { IConfirmNicknameChangeData } from '../../model/confirm-nickname-change-data.model';
 
 /**
@@ -81,17 +81,11 @@ export class ConfirmNicknameChangeComponent {
                         })
                     )
                 ),
-                catchError((error: unknown) => {
-                    this.requestStatus.showError(
-                        getAdminActionErrorMessage(
-                            error,
-                            this.i18n.translate('admin.nickname.noPermission'),
-                            this.i18n.translate('admin.nickname.error')
-                        )
-                    );
-
-                    return EMPTY;
-                }),
+                catchAdminActionError(
+                    this.requestStatus,
+                    this.i18n.translate('admin.nickname.noPermission'),
+                    this.i18n.translate('admin.nickname.error')
+                ),
                 finalize(() => this.isSaving.set(false)),
                 takeUntilDestroyed(this.destroyRef)
             )
