@@ -12,6 +12,7 @@ import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { createShopItemsLoader, ShopItemsLoader } from '../../lib/create-shop-items-loader.function';
 import { selectShopItemsByCategory } from '../../lib/select-shop-items-by-category.function';
+import { sortShopItemsByPrice } from '../../lib/sort-privilege-cards-by-price.function';
 import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant';
 
 /**
@@ -64,7 +65,7 @@ export class SpecialComponent implements OnDestroy {
     private readonly loader: ShopItemsLoader = createShopItemsLoader(
         this.donateService,
         this.changeDetectorRef,
-        (list) => this.items.set(selectShopItemsByCategory(list, 'special'))
+        (list) => this.items.set(sortShopItemsByPrice(selectShopItemsByCategory(list, 'special')))
     );
 
     /**

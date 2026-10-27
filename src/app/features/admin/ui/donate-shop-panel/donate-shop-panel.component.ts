@@ -512,6 +512,7 @@ export class DonateShopPanelComponent implements OnInit {
     private fillEntriesFromKit(kit: IKitDef): void {
         this.replaceEntries(
             kit.items.map((item) => ({
+                gameCode: item.gameCode,
                 name: item.gameCode,
                 quantity: item.quantity,
                 imageUrl: item.imageUrl,
@@ -526,7 +527,7 @@ export class DonateShopPanelComponent implements OnInit {
      * @param entries Позиции состава в порядке ответа сервера.
      */
     private replaceEntries(
-        entries: { name: string; description?: string; quantity: number; imageUrl?: string }[]
+        entries: { gameCode?: string; name: string; description?: string; quantity: number; imageUrl?: string }[]
     ): void {
         this.fillingEntries = true;
         this.entriesArray.clear();
@@ -543,14 +544,6 @@ export class DonateShopPanelComponent implements OnInit {
     protected backToList(): void {
         this.activeTabIndex.set(0);
         this.resetForm();
-    }
-
-    /**
-     * Добавляет пустую позицию в набор.
-     */
-    protected addEntry(): void {
-        this.entriesError.set(false);
-        this.entriesArray.push(this.createEntryForm());
     }
 
     /**
@@ -603,9 +596,12 @@ export class DonateShopPanelComponent implements OnInit {
     /**
      * Перестраивает порядок entries в FormArray после drag-and-drop.
      *
+     * Вызывается и из списка позиций формы, и из сетки «Состав набора»
+     * в предпросмотре: индексы обоих списков совпадают с FormArray.
+     *
      * @param event Событие перетаскивания из Angular CDK.
      */
-    protected dropEntry(event: CdkDragDrop<FormGroup<KitEntryForm>[]>): void {
+    protected dropEntry(event: Pick<CdkDragDrop<unknown>, 'previousIndex' | 'currentIndex'>): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }
@@ -756,6 +752,7 @@ export class DonateShopPanelComponent implements OnInit {
             discount_percent: item.hasDiscount ? item.discountPercent : undefined,
             image_url: '',
             entries: (item.entries ?? []).map((entry) => ({
+                game_code: entry.gameCode,
                 name: entry.name,
                 description: entry.description,
                 quantity: entry.quantity,
@@ -1027,6 +1024,7 @@ export class DonateShopPanelComponent implements OnInit {
             }
 
             result.push({
+                game_code: entry.game_code || undefined,
                 name: entry.name.trimEnd(),
                 description: entry.description?.trimEnd() || undefined,
                 quantity: entry.quantity,
@@ -1056,6 +1054,7 @@ export class DonateShopPanelComponent implements OnInit {
      * @param entry Существующая entry (при редактировании).
      */
     private createEntryForm(entry?: {
+        gameCode?: string;
         name: string;
         description?: string;
         quantity: number;
@@ -1077,6 +1076,7 @@ export class DonateShopPanelComponent implements OnInit {
         this.entryImageSubscriptions.set(imageControl, subscription);
 
         return new FormGroup<KitEntryForm>({
+            game_code: new FormControl<string>(entry?.gameCode ?? '', { nonNullable: true }),
             name: new FormControl<string>(entry?.name ?? '', {
                 nonNullable: true,
                 validators: [Validators.required],
@@ -1132,6 +1132,7 @@ export class DonateShopPanelComponent implements OnInit {
  * Тип формы одной entry набора.
  */
 interface KitEntryForm {
+    game_code: FormControl<string>;
     name: FormControl<string>;
     description: FormControl<string>;
     quantity: FormControl<number>;

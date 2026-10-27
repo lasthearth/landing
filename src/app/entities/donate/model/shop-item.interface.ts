@@ -119,7 +119,12 @@ export type ShopCategory = 'kit' | 'privilege' | 'special';
  */
 export interface IKitEntryDto {
     /**
-     * Название позиции.
+     * Код захваченного предмета, к которому относится позиция.
+     */
+    game_code?: string;
+
+    /**
+     * Название позиции, которое видит игрок.
      */
     name: string;
 
@@ -143,6 +148,11 @@ export interface IKitEntryDto {
  * UI-модель составной части набора.
  */
 export interface IKitEntry {
+    /**
+     * Код захваченного предмета, к которому относится позиция.
+     */
+    gameCode?: string;
+
     /**
      * Название позиции.
      */

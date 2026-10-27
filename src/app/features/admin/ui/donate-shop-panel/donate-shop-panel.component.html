@@ -318,14 +318,6 @@
                 <div class="flex flex-col gap-5 pt-5">
                     <div class="flex items-center justify-between">
                         <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.entriesTitle' | translate }}</h3>
-                        <button
-                            type="button"
-                            (click)="addEntry()"
-                            class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
-                        >
-                            <tui-icon icon="@tui.plus" class="size-5!" />
-                            {{ 'admin.common.add' | translate }}
-                        </button>
                     </div>
 
                     <p class="text-base text-ink-3">{{ 'admin.shop.entriesPrefillHint' | translate }}</p>
@@ -342,7 +334,12 @@
                                 class="flex flex-col gap-4 p-4 rounded-xl border border-lh-primary-2/10 bg-lh-primary-2/5"
                             >
                                 <div class="flex items-center justify-between">
-                                    <span class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.position' | translate:{number: i + 1} }}</span>
+                                    <span class="text-lg font-semibold text-lh-primary">
+                                        {{ 'admin.shop.position' | translate:{number: i + 1} }}
+                                        @if (entry.controls.game_code.value; as gameCode) {
+                                            <span class="ml-2 text-sm font-normal text-ink-3">{{ gameCode }}</span>
+                                        }
+                                    </span>
                                     <div class="flex items-center gap-1">
                                         <button
                                             type="button"
@@ -604,11 +601,17 @@
                             <p class="text-lg font-bold text-lh-primary uppercase tracking-wide text-center">
                                 {{ 'admin.shop.entriesTitle' | translate }}
                             </p>
-                            <div class="flex gap-2 flex-wrap justify-center">
+                            <div
+                                cdkDropList
+                                cdkDropListOrientation="mixed"
+                                class="flex gap-2 flex-wrap justify-center"
+                                (cdkDropListDropped)="dropEntry($event)"
+                            >
                                 @for (entry of previewItem().entries; track $index) {
                                     <div
+                                        cdkDrag
                                         [title]="entry.name"
-                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 transition duration-150 hover:scale-110 hover:rotate-2 hover:border-lh-accent group/item"
+                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 transition duration-150 hover:scale-110 hover:rotate-2 hover:border-lh-accent group/item cursor-grab active:cursor-grabbing"
                                     >
                                         @if (entry.imageUrl) {
                                             <app-image-loader

@@ -200,7 +200,7 @@ export const ADMIN_I18N = {
                 codeNotCaptured: 'Набор с таким кодом не захвачен игрой. Выберите код из списка.',
                 entriesRequired: 'Добавьте хотя бы одну позицию: товар с пустым составом сохранить нельзя.',
                 entriesPrefillHint:
-                    'Состав подставляется из выбранного набора. Название позиции и количество можно изменить.',
+                    'Состав подставляется из выбранного набора. Название, описание и картинку позиции можно изменить, порядок — перетаскиванием. Количество всегда берётся из набора.',
                 replaceEntriesTitle: 'Заменить состав?',
                 replaceEntriesText:
                     'Позиции, которые вы правили вручную, будут заменены составом набора «{{name}}».',
@@ -568,7 +568,7 @@ export const ADMIN_I18N = {
                 codeNotCaptured: 'The game has not captured a kit with that code. Pick a code from the list.',
                 entriesRequired: 'Add at least one position: an item with empty contents cannot be saved.',
                 entriesPrefillHint:
-                    'The contents are taken from the selected kit. You can rename a position or change its quantity.',
+                    'The contents are taken from the selected kit. You can change a position\'s name, description and image, and reorder positions by dragging. Quantities always come from the kit.',
                 replaceEntriesTitle: 'Replace the contents?',
                 replaceEntriesText:
                     'The positions you edited by hand will be replaced with the contents of "{{name}}".',

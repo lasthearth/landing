@@ -110,6 +110,7 @@ export function mapDtoToShopItem(dto: IShopItemDto): IShopItem {
  */
 export function mapDtoToKitEntry(dto: IKitEntryDto): IKitEntry {
     return {
+        gameCode: dto.game_code,
         name: dto.name,
         description: dto.description,
         imageUrl: dto.image_url,

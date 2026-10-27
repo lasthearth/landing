@@ -11,6 +11,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
+import { sortPrivilegeCardsByPrice } from '../../lib/sort-privilege-cards-by-price.function';
 import { getRarityByPrice } from '../../lib/get-rarity-by-price.function';
 import { createShopItemsLoader, ShopItemsLoader } from '../../lib/create-shop-items-loader.function';
 import { selectShopItemsByCategory } from '../../lib/select-shop-items-by-category.function';
@@ -25,7 +26,16 @@ import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant'
  */
 @Component({
     selector: 'app-kits',
-    imports: [AmountPipe, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
+    imports: [
+        AmountPipe,
+        KitItemComponent,
+        TuiIcon,
+        MarketGridSkeletonComponent,
+        ImageLoaderComponent,
+        EmptyStateComponent,
+        ErrorStateComponent,
+        TranslatePipe,
+    ],
     templateUrl: './kits.component.html',
     styleUrl: './kits.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +63,9 @@ export class KitsComponent implements OnDestroy {
         this.donateService,
         this.changeDetectorRef,
         (items) => {
-            this.kits = selectShopItemsByCategory(items, 'kit').map(mapShopItemToPrivilegeCard);
+            this.kits = sortPrivilegeCardsByPrice(
+                selectShopItemsByCategory(items, 'kit').map(mapShopItemToPrivilegeCard)
+            );
             this.selectedPrivilege = this.kits[0] ?? null;
         }
     );
@@ -184,7 +196,7 @@ export class KitsComponent implements OnDestroy {
     protected getRarityFrameClass(price: string): string {
         switch (getRarityByPrice(price)) {
             case 'legendary':
-                return 'border-gold';
+                return 'border-lh-accent';
             case 'epic':
                 return 'border-rarity-epic';
             case 'rare':

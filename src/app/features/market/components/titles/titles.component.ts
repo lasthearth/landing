@@ -12,6 +12,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
+import { sortPrivilegeCardsByPrice } from '../../lib/sort-privilege-cards-by-price.function';
 import { getRarityByPrice } from '../../lib/get-rarity-by-price.function';
 import { createShopItemsLoader, ShopItemsLoader } from '../../lib/create-shop-items-loader.function';
 import { selectShopItemsByCategory } from '../../lib/select-shop-items-by-category.function';
@@ -26,7 +27,17 @@ import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant'
  */
 @Component({
     selector: 'app-titles',
-    imports: [AmountPipe, AbilityTagComponent, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
+    imports: [
+        AmountPipe,
+        AbilityTagComponent,
+        KitItemComponent,
+        TuiIcon,
+        MarketGridSkeletonComponent,
+        ImageLoaderComponent,
+        EmptyStateComponent,
+        ErrorStateComponent,
+        TranslatePipe,
+    ],
     templateUrl: './titles.component.html',
     styleUrl: './titles.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +65,9 @@ export class TitlesComponent implements OnDestroy {
         this.donateService,
         this.changeDetectorRef,
         (items) => {
-            this.titles = selectShopItemsByCategory(items, 'privilege').map(mapShopItemToPrivilegeCard);
+            this.titles = sortPrivilegeCardsByPrice(
+                selectShopItemsByCategory(items, 'privilege').map(mapShopItemToPrivilegeCard)
+            );
             this.selectedPrivilege = this.titles[0] ?? null;
         }
     );
@@ -150,9 +163,7 @@ export class TitlesComponent implements OnDestroy {
         if (!privilege) {
             return '';
         }
-        return this.selectedTerm() === 'season' && privilege.seasonPrice
-            ? privilege.seasonPrice
-            : privilege.monthPrice;
+        return this.selectedTerm() === 'season' && privilege.seasonPrice ? privilege.seasonPrice : privilege.monthPrice;
     }
 
     /**
@@ -166,7 +177,10 @@ export class TitlesComponent implements OnDestroy {
             return '';
         }
         const isSeason = this.selectedTerm() === 'season' && !!privilege.seasonPrice;
-        const original = parseInt((isSeason ? privilege.seasonPriceOriginal : privilege.monthPriceOriginal).replace(/\D/g, ''), 10);
+        const original = parseInt(
+            (isSeason ? privilege.seasonPriceOriginal : privilege.monthPriceOriginal).replace(/\D/g, ''),
+            10
+        );
         const current = parseInt((isSeason ? privilege.seasonPrice : privilege.monthPrice).replace(/\D/g, ''), 10);
         if (!original || !current || original <= current) {
             return '';
@@ -187,7 +201,7 @@ export class TitlesComponent implements OnDestroy {
     protected getRarityFrameClass(price: string): string {
         switch (getRarityByPrice(price)) {
             case 'legendary':
-                return 'border-gold';
+                return 'border-lh-accent';
             case 'epic':
                 return 'border-rarity-epic';
             case 'rare':
