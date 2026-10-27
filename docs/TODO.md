@@ -49,6 +49,28 @@
 
 ## Продукт
 
+Данные и причины — `docs/research/2026-10-27-conversion-friction.md` (срез Clarity за 25–27.10.2026).
+
+- [ ] Новичку без одобрения показывать вкладку «как играть», а не экран ожидания: `src/app/features/profile/profile.component.html:273`
+      (quickback 0.80 на сессию при 50 сессиях за три дня).
+- [x] Возвращать пользователя на исходную страницу после входа: сделано, `docs/history.md` §3.-25.
+- [ ] Показывать экран «войдите» вместо тихого редиректа на `/` в гардах (`src/app/core/guards/user.guard.ts:29`):
+      сейчас неавторизованный уход с `/profile` происходит молча, а при медленном продлении токена — до 15 с ожидания.
+- [ ] Вернуть CTA в первый экран на мобильных и снять блокировку прокрутки под сплешем: `src/app/features/home/home.component.html:50`,
+      `src/app/layout/layout.component.ts:133` (главная: 49 с на сессию и 46 % глубины скролла).
+- [x] Гостю в диалоге покупки — кнопка входа вместо «Купить» с последующим «Требуется авторизация»: сделано,
+      `docs/history.md` §3.-24 (`/market`: 109 мёртвых кликов на 138 сессий, самая посещаемая страница).
+- [ ] Баг данных: все шесть форм поселений отправляют `type: 'CAMP'`, выбранный уровень до сервера не доходит
+      (`src/app/features/profile/create-settlement-from/settlements-types-forms/village-form/village-form.component.ts:158`).
+- [ ] Черновик поселения очищать только после успеха ответа: сейчас таймаут 30 с стоит потери текста и 16 изображений
+      (`src/app/features/profile/create-settlement-from/settlements-types-forms/village-form/village-form.component.ts:174`).
+- [ ] Воронка не измеряется: `METRIKA_ID = 0`, а цели, отправленные до ответа на баннер согласия, теряются
+      (`src/app/core/services/analytics.service.ts:145`). Добавить события Clarity на CTA, вход и покупку, получить номер счётчика.
+- [ ] Поселения: ошибку загрузки участников показывать с повтором, а не писать в консоль
+      (`src/app/features/settlements/settlements.component.ts:230`, quickback 0.95 на сессию).
+- [ ] Верификация: ветка ошибки с повтором, когда GET с вопросами упал, и черновик восьми ответов
+      (`src/app/features/profile/player-verification-form/player-verification-form.component.html:3`).
+
 ## 8. TODO для следующей сессии
 
 - [x] Смержить `feat/settlement-roles-ownership` (owner-модель, роли, заявки).
