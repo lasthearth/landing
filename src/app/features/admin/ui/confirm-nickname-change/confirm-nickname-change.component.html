@@ -1,0 +1,36 @@
+<div class="lh-dialog-card">
+    <div class="flex items-center gap-4">
+        <div
+            class="flex items-center justify-center size-12 rounded-full bg-lh-accent/10 border border-lh-accent/20 shrink-0"
+        >
+            <tui-icon icon="@tui.pencil" class="size-6! text-lh-accent" />
+        </div>
+        <p class="lh-dialog-title">{{ 'admin.nickname.confirmTitle' | translate }}</p>
+    </div>
+
+    <p class="mt-4 text-base text-lh-primary/80">
+        {{ 'admin.nickname.confirmText' | translate: { nickname: context.data.newNickname } }}
+    </p>
+
+    <div class="lh-dialog-actions">
+        <button
+            type="button"
+            (click)="context.$implicit.complete()"
+            [disabled]="isSaving()"
+            class="lh-dialog-button lh-dialog-button-secondary"
+        >
+            {{ 'common.cancel' | translate }}
+        </button>
+        <button
+            type="button"
+            (click)="confirmChange()"
+            [disabled]="isSaving()"
+            class="lh-dialog-button lh-dialog-button-primary flex items-center gap-2"
+        >
+            @if (isSaving()) {
+                <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+            }
+            {{ 'admin.nickname.confirmSubmit' | translate }}
+        </button>
+    </div>
+</div>
