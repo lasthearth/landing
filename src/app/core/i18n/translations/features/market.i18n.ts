@@ -131,6 +131,7 @@ export const MARKET_I18N = {
                 healing: 'Возрождение и хил',
                 clothing: 'Одежда',
                 decor: 'Декор',
+                transport: 'Транспорт',
                 other: 'Прочее',
             },
             titles: {
@@ -277,6 +278,7 @@ export const MARKET_I18N = {
                 healing: 'Revival & healing',
                 clothing: 'Clothing',
                 decor: 'Decor',
+                transport: 'Transport',
                 other: 'Other',
             },
             titles: {

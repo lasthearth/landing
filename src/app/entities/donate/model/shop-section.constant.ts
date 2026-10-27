@@ -34,5 +34,6 @@ export const SHOP_SECTIONS: readonly IShopSection[] = [
     { key: 'healing', labelKey: 'market.sections.healing', icon: '@tui.heart-pulse' },
     { key: 'clothing', labelKey: 'market.sections.clothing', icon: '@tui.shirt' },
     { key: 'decor', labelKey: 'market.sections.decor', icon: '@tui.lamp' },
+    { key: 'transport', labelKey: 'market.sections.transport', icon: '@tui.sailboat' },
     { key: 'other', labelKey: 'market.sections.other', icon: '@tui.package' },
 ];
