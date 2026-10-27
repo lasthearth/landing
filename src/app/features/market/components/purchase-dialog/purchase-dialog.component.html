@@ -111,16 +111,42 @@
             </div>
         </div>
 
-        @if (balance() !== null) {
-            <div class="flex items-center justify-between text-base sm:text-lg">
-                <span class="text-ink-2">{{ 'market.purchaseDialog.yourBalance' | translate }}</span>
-                <div class="flex items-center gap-2">
-                    <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
-                    <span class="font-bold" [class.text-lh-danger]="missingAmount() > 0" [class.text-ink]="missingAmount() === 0">
-                        {{ balance() | amount }}
-                    </span>
+        @switch (balanceState()) {
+            @case ('unauthenticated') {
+                <p class="flex items-start gap-2 text-base sm:text-lg text-ink-2">
+                    <tui-icon icon="@tui.log-in" class="size-5! text-lh-accent shrink-0 mt-0.5" />
+                    {{ 'market.purchaseDialog.signInHint' | translate }}
+                </p>
+            }
+            @case ('loading') {
+                <p class="flex items-center gap-2 text-base sm:text-lg text-ink-2" role="status">
+                    <tui-icon icon="@tui.loader" class="size-5! animate-spin" />
+                    {{ 'common.loading' | translate }}
+                </p>
+            }
+            @case ('error') {
+                <div class="flex flex-wrap items-center justify-between gap-2 text-base sm:text-lg">
+                    <span class="text-lh-danger">{{ 'market.purchaseDialog.balanceError' | translate }}</span>
+                    <button
+                        type="button"
+                        (click)="onRetryBalance()"
+                        class="font-bold text-lh-accent border-b border-dashed border-lh-accent cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                        {{ 'common.retry' | translate }}
+                    </button>
                 </div>
-            </div>
+            }
+            @case ('ready') {
+                <div class="flex items-center justify-between text-base sm:text-lg">
+                    <span class="text-ink-2">{{ 'market.purchaseDialog.yourBalance' | translate }}</span>
+                    <div class="flex items-center gap-2">
+                        <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
+                        <span class="font-bold" [class.text-lh-danger]="missingAmount() > 0" [class.text-ink]="missingAmount() === 0">
+                            {{ balance() | amount }}
+                        </span>
+                    </div>
+                </div>
+            }
         }
 
         <p class="flex items-center gap-2 text-base sm:text-lg text-ink-2">
@@ -140,12 +166,17 @@
         <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-lg">
             {{ 'market.purchaseDialog.cancel' | translate }}
         </button>
-        @if (missingAmount() > 0) {
+        @if (balanceState() === 'unauthenticated') {
+            <button tuiButton appearance="primary" (click)="onSignIn()" class="flex-1 text-base sm:text-lg">
+                <tui-icon icon="@tui.log-in" class="size-5!" />
+                {{ 'market.purchaseDialog.signIn' | translate }}
+            </button>
+        } @else if (missingAmount() > 0) {
             <button tuiButton appearance="primary" (click)="onTopUp()" class="flex-1 text-base sm:text-lg">
                 {{ 'market.purchaseDialog.topUp' | translate }}
             </button>
         } @else {
-            <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-lg">
+            <button tuiButton appearance="primary" (click)="onBuy()" [disabled]="!canBuy()" class="flex-1 text-base sm:text-lg">
                 {{ 'market.purchaseDialog.buy' | translate }}
             </button>
         }

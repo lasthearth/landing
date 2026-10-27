@@ -98,6 +98,9 @@ export const MARKET_I18N = {
                 unknownItemError: 'Не удалось определить товар для покупки.',
                 purchaseError: 'Не удалось оформить покупку.',
                 successMessage: 'Покупка успешно оформлена',
+                signIn: 'Войти и купить',
+                signInHint: 'Покупка доступна после входа: войдите, чтобы увидеть баланс осколков и оплатить.',
+                balanceError: 'Баланс не загрузился.',
             },
             kits: {
                 loadError: 'Не удалось загрузить наборы. Попробуйте ещё раз.',
@@ -220,6 +223,9 @@ export const MARKET_I18N = {
                 unknownItemError: 'Could not determine the item to purchase.',
                 purchaseError: 'Could not complete the purchase.',
                 successMessage: 'Purchase successfully completed',
+                signIn: 'Sign in to purchase',
+                signInHint: 'Purchases are available after you sign in. Sign in to see your shard balance and pay.',
+                balanceError: 'Could not load your balance.',
             },
             kits: {
                 loadError: 'Failed to load kits. Please try again.',

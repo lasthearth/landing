@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { TuiButton, TuiIcon, TuiDialogContext, TuiAlertService, TuiDialogService } from '@taiga-ui/core';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
@@ -6,6 +6,7 @@ import { POLYMORPHEUS_CONTEXT, PolymorpheusComponent } from '@taiga-ui/polymorph
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { DonateService } from '@entities/donate';
+import { UserService } from '@entities/user';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
@@ -72,6 +73,15 @@ export interface PurchaseDialogData {
 }
 
 /**
+ * Состояние баланса в диалоге покупки.
+ *
+ * `idle` — запрос ещё не шёл; `unauthenticated` — гость, покупке нужен вход;
+ * `loading` — запрос в полёте; `ready` — баланс известен; `error` — запрос упал,
+ * покупку не блокируем: итоговую проверку средств сделает сервер.
+ */
+type BalanceState = 'idle' | 'unauthenticated' | 'loading' | 'ready' | 'error';
+
+/**
  * Диалог подтверждения покупки товара.
  *
  * Отображает информацию о товаре, его содержимое
@@ -95,6 +105,11 @@ export class PurchaseDialogComponent {
      * Сервис донат-магазина.
      */
     private readonly donateService = inject(DonateService);
+
+    /**
+     * Сервис пользователя: состояние авторизации и запуск входа.
+     */
+    private readonly userService = inject(UserService);
 
     /**
      * Сервис статуса запросов.
@@ -138,14 +153,75 @@ export class PurchaseDialogComponent {
      */
     protected readonly balance = signal<string | null>(null);
 
+    /**
+     * Состояние баланса: по нему шаблон выбирает доступные действия.
+     */
+    protected readonly balanceState = signal<BalanceState>('idle');
+
+    /**
+     * Покупка доступна вошедшему пользователю, когда баланс известен или не загрузился.
+     */
+    protected readonly canBuy = computed(() => this.balanceState() === 'ready' || this.balanceState() === 'error');
+
     constructor() {
+        this.userService.authState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isAuthed) => {
+            if (!isAuthed) {
+                this.balance.set(null);
+                this.balanceState.set('unauthenticated');
+
+                return;
+            }
+
+            // authState$ переизлучается при продлении токена: повторный запрос баланса не нужен.
+            if (this.balanceState() === 'ready' || this.balanceState() === 'loading') {
+                return;
+            }
+
+            this.loadBalance();
+        });
+    }
+
+    /**
+     * Запрашивает баланс осколков и переводит диалог в соответствующее состояние.
+     *
+     * Ошибку GET `errorInterceptor` заменяет на `EMPTY`, поэтому состояние `error`
+     * выставляется и в обработчике `complete`, если `next` так и не пришёл.
+     */
+    private loadBalance(): void {
+        this.balanceState.set('loading');
+
         this.donateService
             .getMyBalance$()
-            .pipe(
-                catchError(() => of(null)),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((response) => this.balance.set(response?.coins ?? null));
+            .pipe(catchError(() => of(null)), takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (response) => {
+                    this.balance.set(response?.coins ?? null);
+                    this.balanceState.set(response ? 'ready' : 'error');
+                },
+                complete: () => {
+                    if (this.balanceState() === 'loading') {
+                        this.balanceState.set('error');
+                    }
+                },
+            });
+    }
+
+    /**
+     * Повторяет запрос баланса после сбоя.
+     */
+    protected onRetryBalance(): void {
+        this.loadBalance();
+    }
+
+    /**
+     * Закрывает диалог и запускает вход через Logto.
+     *
+     * Диалог закрывается до перехода: после входа пользователь попадает на страницу
+     * магазина, а не на модальное окно поверх неё.
+     */
+    protected onSignIn(): void {
+        this.context.completeWith();
+        this.userService.signIn();
     }
 
     /**
@@ -188,6 +264,11 @@ export class PurchaseDialogComponent {
      * При успехе показывает уведомление и закрывает диалог.
      */
     protected onBuy(): void {
+        // Кнопка заблокирована в шаблоне; проверка страхует от программного вызова.
+        if (!this.canBuy()) {
+            return;
+        }
+
         const itemId = this.data.itemId;
         if (!itemId) {
             this.requestStatusService.showError(this.i18n.translate('market.purchaseDialog.unknownItemError'));
