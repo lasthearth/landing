@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, signal } from '@angular/core';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { catchError, of } from 'rxjs';
-import { DonateService, IShopItem } from '@entities/donate';
+import { DonateService } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
@@ -12,22 +11,36 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
+import { sortPrivilegeCardsByPrice } from '../../lib/sort-privilege-cards-by-price.function';
 import { getRarityByPrice } from '../../lib/get-rarity-by-price.function';
+import { createShopItemsLoader, ShopItemsLoader } from '../../lib/create-shop-items-loader.function';
+import { selectShopItemsByCategory } from '../../lib/select-shop-items-by-category.function';
+import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant';
 
 /**
  * Компонент вкладки «Наборы» в магазине.
  *
- * Загружает реальные товары типа ITEM_TYPE_KIT, кроме помеченных
- * описанием "привилегия", и отображает их состав в виде selectable карточек.
+ * Показывает доступные товары категории `kit` в виде списка с карточкой
+ * выбранного набора и его составом. Пустой список — нормальное состояние
+ * витрины, а не ошибка: записи появляются по мере захвата китов в игре.
  */
 @Component({
     selector: 'app-kits',
-    imports: [AmountPipe, KitItemComponent, TuiIcon, MarketGridSkeletonComponent, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe],
+    imports: [
+        AmountPipe,
+        KitItemComponent,
+        TuiIcon,
+        MarketGridSkeletonComponent,
+        ImageLoaderComponent,
+        EmptyStateComponent,
+        ErrorStateComponent,
+        TranslatePipe,
+    ],
     templateUrl: './kits.component.html',
     styleUrl: './kits.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KitsComponent {
+export class KitsComponent implements OnDestroy {
     /**
      * Сервис диалогов.
      */
@@ -44,6 +57,20 @@ export class KitsComponent {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /**
+     * Загрузчик товаров: держит признаки загрузки и сбоя, отбирает наборы.
+     */
+    private readonly loader: ShopItemsLoader = createShopItemsLoader(
+        this.donateService,
+        this.changeDetectorRef,
+        (items) => {
+            this.kits = sortPrivilegeCardsByPrice(
+                selectShopItemsByCategory(items, 'kit').map(mapShopItemToPrivilegeCard)
+            );
+            this.selectedPrivilege = this.kits[0] ?? null;
+        }
+    );
+
+    /**
      * Выбранный срок подписки.
      */
     protected readonly selectedTerm = signal<'month' | 'season'>('month');
@@ -51,12 +78,12 @@ export class KitsComponent {
     /**
      * Признак загрузки товаров.
      */
-    protected readonly loading = signal(true);
+    protected readonly loading = this.loader.loading;
 
     /**
      * Признак ошибки загрузки товаров.
      */
-    protected readonly error = signal(false);
+    protected readonly error = this.loader.error;
 
     /**
      * Список наборов.
@@ -69,54 +96,31 @@ export class KitsComponent {
     protected selectedPrivilege: PrivilegeCard | null = null;
 
     constructor() {
-        this.loadKits();
+        this.loader.load();
     }
 
     /**
-     * Загружает список наборов.
+     * Снимает подписку на поток товаров.
      */
-    private loadKits(): void {
-        this.loading.set(true);
-        this.error.set(false);
-        this.donateService
-            .getShopItems$()
-            .pipe(
-                catchError(() => {
-                    this.loading.set(false);
-                    this.error.set(true);
-                    return of([]);
-                })
-            )
-            .subscribe((items) => {
-                this.kits = this.filterAndMapKits(items);
-                this.selectedPrivilege = this.kits[0] ?? null;
-                this.loading.set(false);
-                this.changeDetectorRef.markForCheck();
-            });
+    public ngOnDestroy(): void {
+        this.loader.destroy();
     }
 
     /**
      * Повторно загружает список наборов после ошибки.
      */
     protected retryLoad(): void {
-        this.loadKits();
+        this.loader.retry();
     }
 
     /**
-     * Фильтрует наборы и преобразует их в модель карточки.
+     * Возвращает ключ перевода подписи категории карточки.
      *
-     * @param items Список товаров магазина.
-     * @returns Список карточек наборов.
+     * @param card Карточка товара.
+     * @returns Ключ перевода подписи категории.
      */
-    private filterAndMapKits(items: IShopItem[]): PrivilegeCard[] {
-        return items
-            .filter(
-                (item) =>
-                    item.isAvailable &&
-                    item.itemType === 'ITEM_TYPE_KIT' &&
-                    item.description !== 'привилегия'
-            )
-            .map(mapShopItemToPrivilegeCard);
+    protected categoryLabelKey(card: PrivilegeCard): string {
+        return SHOP_CATEGORY_LABEL_KEY[card.category];
     }
 
     /**
@@ -180,24 +184,25 @@ export class KitsComponent {
     }
 
     /**
-     * Возвращает CSS-классы рамки изображения по редкости товара.
+     * Возвращает CSS-класс цвета рамки изображения по редкости товара.
      *
      * Редкость определяется ценой: обычный (пергамент), редкий (синий),
-     * эпический (фиолетовый), легендарный (золотой).
+     * эпический (фиолетовый), легендарный (золотой). Рамка задаётся цветом
+     * рамки, без свечения и тени в покое.
      *
      * @param price Цена товара строкой.
-     * @returns Строка CSS-классов рамки и свечения.
+     * @returns Строка CSS-класса цвета рамки.
      */
     protected getRarityFrameClass(price: string): string {
         switch (getRarityByPrice(price)) {
             case 'legendary':
-                return 'border-gold shadow-[0_0_18px_rgba(212,175,55,0.4)]';
+                return 'border-lh-accent';
             case 'epic':
-                return 'border-rarity-epic/80 shadow-[0_0_14px_rgba(139,92,246,0.3)]';
+                return 'border-rarity-epic';
             case 'rare':
-                return 'border-rarity-rare/80 shadow-[0_0_12px_rgba(61,83,129,0.3)]';
+                return 'border-rarity-rare';
             default:
-                return 'border-line shadow-[0_4px_16px_rgba(0,0,0,0.12)]';
+                return 'border-line-strong';
         }
     }
 

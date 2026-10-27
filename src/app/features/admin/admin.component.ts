@@ -16,6 +16,7 @@ import { CreateNewsComponent } from '../news/components/create-news-form/create-
 import { AdminCoinPanelComponent } from './ui/admin-coin-panel/admin-coin-panel.component';
 import { HungerGamesPanelComponent } from './ui/hunger-games-panel/hunger-games-panel.component';
 import { DonateShopPanelComponent } from './ui/donate-shop-panel/donate-shop-panel.component';
+import { KitAdminPanelComponent } from './ui/kit-admin-panel/kit-admin-panel.component';
 import { PendingPurchasesPanelComponent } from './ui/pending-purchases-panel/pending-purchases-panel.component';
 import { AllPurchasesPanelComponent } from './ui/all-purchases-panel/all-purchases-panel.component';
 import { SettlementAdminPanelComponent } from './ui/settlement-admin-panel/settlement-admin-panel.component';
@@ -45,6 +46,7 @@ import { ModsAdminPanelComponent } from '@features/mods';
         AdminCoinPanelComponent,
         HungerGamesPanelComponent,
         DonateShopPanelComponent,
+        KitAdminPanelComponent,
         PendingPurchasesPanelComponent,
         AllPurchasesPanelComponent,
         SettlementAdminPanelComponent,

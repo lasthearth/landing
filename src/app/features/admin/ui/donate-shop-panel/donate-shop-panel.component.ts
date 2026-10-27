@@ -1,5 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList } from '@angular/cdk/drag-drop';
@@ -11,8 +12,10 @@ import {
     IKitEntryDto,
     IShopItem,
     IUpdateShopItemRequest,
+    ShopCategory,
     ShopItemType,
 } from '@entities/donate';
+import { IKitDef, KitdefService } from '@entities/kitdef';
 import { MediaService } from '@entities/media';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
@@ -20,15 +23,29 @@ import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
+import { ErrorStateComponent } from '@shared/ui/error-state';
 import { TuiFile, TuiFiles, TuiFilesComponent } from '@taiga-ui/kit';
 import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
-import { finalize, map, Observable, startWith, Subject, Subscription, switchMap, tap, timer } from 'rxjs';
+import { catchError, EMPTY, finalize, map, Observable, startWith, Subject, Subscription, switchMap, timer } from 'rxjs';
+import { KIT_CATEGORY_LABEL_KEYS } from '../../config/kit-category.constant';
+
+/**
+ * Тип товара, который принимает сервер.
+ *
+ * Магазин продаёт только захваченные наборы, поэтому тип фиксирован:
+ * товар из одной позиции — это набор из одного предмета, захваченный
+ * тем же способом. Любое другое значение `item_type` сервер отклоняет
+ * с 400 "item-type shop entries are disabled".
+ */
+const KIT_ITEM_TYPE: ShopItemType = 'ITEM_TYPE_KIT';
 
 /**
  * Панель управления донат-магазином в админке.
  *
  * Позволяет просматривать список товаров, создавать новые,
- * редактировать и удалять существующие.
+ * редактировать и удалять существующие. Товар всегда привязан
+ * к захваченному игрой набору: код выбирается из списка `GET /v1/kitdefs`,
+ * а не вводится вручную.
  */
 @Component({
     selector: 'app-donate-shop-panel',
@@ -48,6 +65,7 @@ import { finalize, map, Observable, startWith, Subject, Subscription, switchMap,
         CdkDrag,
         CdkDragHandle,
         AbilityTagComponent,
+        ErrorStateComponent,
         ImageLoaderComponent,
         TranslatePipe,
     ],
@@ -55,11 +73,16 @@ import { finalize, map, Observable, startWith, Subject, Subscription, switchMap,
     styleUrl: './donate-shop-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DonateShopPanelComponent {
+export class DonateShopPanelComponent implements OnInit {
     /**
      * Сервис донат-магазина.
      */
     private readonly donateService = inject(DonateService);
+
+    /**
+     * Сервис захваченных наборов: источник кодов для товара магазина.
+     */
+    private readonly kitdefService = inject(KitdefService);
 
     /**
      * Сервис загрузки медиафайлов.
@@ -87,9 +110,17 @@ export class DonateShopPanelComponent {
     private readonly i18n = inject(I18nService);
 
     /**
-     * Триггер обновления списка товаров.
+     * Подписка на общий поток списка товаров.
+     *
+     * Поток кэшируется на сессию и переживает обновления, поэтому подписка
+     * одна; повторная нужна только после ошибки, которая закрывает подписчика.
      */
-    private readonly refresh$ = new Subject<void>();
+    private itemsSubscription: Subscription | null = null;
+
+    /**
+     * Подписка на общий поток списка захваченных наборов.
+     */
+    private kitsSubscription: Subscription | null = null;
 
     /**
      * Индекс активной внутренней вкладки: 0 — список, 1 — форма.
@@ -107,9 +138,59 @@ export class DonateShopPanelComponent {
     protected editingItemId = signal<string | null>(null);
 
     /**
-     * Признак выполнения запроса.
+     * Признак выполнения запроса сохранения товара.
      */
     protected isLoading = signal(false);
+
+    /**
+     * Идентификатор товара, запрос доступности по которому выполняется сейчас.
+     */
+    protected readonly busyItemId = signal<string | null>(null);
+
+    /**
+     * Список товаров магазина; `null` — список ещё ни разу не пришёл.
+     */
+    protected readonly shopItems = signal<IShopItem[] | null>(null);
+
+    /**
+     * Признак загрузки списка товаров.
+     */
+    protected readonly itemsLoading = signal<boolean>(false);
+
+    /**
+     * Признак ошибки загрузки списка товаров.
+     */
+    protected readonly itemsLoadFailed = signal<boolean>(false);
+
+    /**
+     * Захваченные наборы — источник кодов для поля «Код набора».
+     */
+    protected readonly kits = signal<IKitDef[]>([]);
+
+    /**
+     * Признак загрузки списка наборов.
+     */
+    protected readonly kitsLoading = signal<boolean>(false);
+
+    /**
+     * Признак ошибки загрузки списка наборов.
+     *
+     * При ошибке вместо выбора из списка администратор вводит код вручную:
+     * сервер всё равно проверяет, что набор захвачен, и отвечает 404.
+     */
+    protected readonly kitsLoadFailed = signal<boolean>(false);
+
+    /**
+     * Коды захваченных наборов для выпадающего списка.
+     */
+    protected readonly kitCodes = computed<string[]>(() => this.kits().map((kit) => kit.code));
+
+    /**
+     * Наборы по коду для подписей и категории выбранного кода.
+     */
+    private readonly kitByCode = computed<Map<string, IKitDef>>(
+        () => new Map(this.kits().map((kit) => [kit.code, kit]))
+    );
 
     /**
      * URL превью выбранного изображения товара.
@@ -117,78 +198,44 @@ export class DonateShopPanelComponent {
     protected imagePreviewUrl = signal<string | null>(null);
 
     /**
+     * Признак попытки сохранить товар с пустым составом.
+     *
+     * Сервер отвечает 400 `kit must have at least one entry`, поэтому проверка
+     * делается на форме. Пустая форма нового товара ошибкой не подсвечивается:
+     * сообщение появляется только после нажатия кнопки сохранения.
+     */
+    protected readonly entriesError = signal<boolean>(false);
+
+    /**
+     * Признак того, что товар с выбранным кодом уже существует.
+     *
+     * `donate_shop_items` несёт уникальный индекс по `code`, но `CreateShopItem`
+     * отвечает на повтор общим 500 `failed to create shop item`, а не 409,
+     * поэтому признак выставляется по статусу 500 при создании.
+     */
+    protected readonly codeTaken = signal<boolean>(false);
+
+    /**
+     * Признак правки состава администратором после автозаполнения из набора.
+     */
+    private entriesEditedByAdmin = false;
+
+    /**
+     * Признак программного заполнения состава: подавляет подписку на правки.
+     */
+    private fillingEntries = false;
+
+    /**
      * Подписки на изменения файлов entry набора.
      */
     private readonly entryImageSubscriptions = new Map<FormControl<File | null>, Subscription>();
 
     /**
-     * Доступные типы товара.
-     */
-    /**
-     * Внутренний тип товара с псевдо-типом "Привилегия".
-     * На бэкенд отправляется как ITEM_TYPE_ITEM, но с поддержкой entries.
-     */
-    protected readonly itemTypes: (ShopItemType | 'ITEM_TYPE_PRIVILEGE')[] = [
-        'ITEM_TYPE_ITEM',
-        'ITEM_TYPE_KIT',
-        'ITEM_TYPE_PRIVILEGE',
-    ];
-
-    /**
-     * Возвращает отображаемое название типа товара.
-     *
-     * @param type Тип товара.
-     * @returns Локализованная строка.
-     */
-    protected itemTypeDisplay = (type: ShopItemType | 'ITEM_TYPE_PRIVILEGE'): string => this.getItemTypeLabel(type);
-
-    /**
-     * Возвращает локализованное название типа товара.
-     *
-     * @param type Тип товара.
-     * @returns Локализованная строка.
-     */
-    protected getItemTypeLabel(type: string): string {
-        return this.i18n.translate(
-            this.itemTypeLabels[type as ShopItemType | 'ITEM_TYPE_PRIVILEGE'] ?? 'admin.shop.types.unspecified'
-        );
-    }
-
-    /**
-     * Возвращает отображаемый тип товара с учётом привилегий.
-     *
-     * Привилегия на бэкенде хранится как `ITEM_TYPE_ITEM` с непустым массивом `entries`,
-     * поэтому для таких товаров возвращается label псевдо-типа `ITEM_TYPE_PRIVILEGE`.
-     *
-     * @param item Товар магазина.
-     * @returns Локализованная строка типа.
-     */
-    protected getItemTypeLabelForItem(item: IShopItem): string {
-        if (item.itemType === 'ITEM_TYPE_KIT') {
-            return item.description === 'привилегия'
-                ? this.i18n.translate('admin.shop.types.privilege')
-                : this.i18n.translate('admin.shop.types.kit');
-        }
-
-        if (item.itemType === 'ITEM_TYPE_ITEM' && (item.entries?.length ?? 0) > 0) {
-            return this.i18n.translate('admin.shop.types.privilege');
-        }
-
-        return this.getItemTypeLabel(item.itemType);
-    }
-
-    /**
-     * Отображаемое название типа товара.
-     */
-    protected readonly itemTypeLabels: Record<ShopItemType | 'ITEM_TYPE_PRIVILEGE', string> = {
-        ITEM_TYPE_ITEM: 'admin.shop.types.item',
-        ITEM_TYPE_KIT: 'admin.shop.types.kit',
-        ITEM_TYPE_UNSPECIFIED: 'admin.shop.types.unspecified',
-        ITEM_TYPE_PRIVILEGE: 'admin.shop.types.privilege',
-    };
-
-    /**
      * Форма создания/редактирования товара.
+     *
+     * `item_type` в форму не входит: сервер принимает только `ITEM_TYPE_KIT`.
+     * `description` — служебное поле без ввода: значение переносится из товара
+     * и возвращается на сервер как есть, чтобы обновление не затирало описание.
      */
     protected readonly form = new FormGroup({
         name: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
@@ -198,10 +245,6 @@ export class DonateShopPanelComponent {
             validators: [Validators.required, Validators.pattern(/^\d+\.?\d*$/)],
         }),
         code: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        item_type: new FormControl<ShopItemType | 'ITEM_TYPE_PRIVILEGE'>('ITEM_TYPE_ITEM', {
-            nonNullable: true,
-            validators: [Validators.required],
-        }),
         is_available: new FormControl<boolean>(true, { nonNullable: true }),
         has_discount: new FormControl<boolean>(false, { nonNullable: true }),
         discount_percent: new FormControl<number>(0, { nonNullable: true }),
@@ -242,33 +285,37 @@ export class DonateShopPanelComponent {
         const entries = this.entriesArray.getRawValue();
         const privileges = this.privilegesArray.getRawValue();
         const imageUrl = this.imagePreviewUrl() ?? '';
-        const isKitOrPrivilege = values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE';
 
         return {
             name: values.name || this.i18n.translate('admin.shop.defaultItemName'),
             price: values.price || '0',
             code: values.code || '',
-            itemType: values.item_type ?? 'ITEM_TYPE_ITEM',
             isAvailable: values.is_available ?? true,
             hasDiscount: values.has_discount ?? false,
             discountPercent: values.discount_percent ?? 0,
             imageUrl,
-            entries: isKitOrPrivilege
-                ? entries.map((entry, index) => ({
-                      name: entry.name || this.i18n.translate('admin.shop.defaultPositionName', { number: index + 1 }),
-                      description: entry.description,
-                      quantity: entry.quantity,
-                      imageUrl: entry.image_url ?? '',
-                  }))
-                : [],
-            privileges: isKitOrPrivilege
-                ? privileges.map((ability) => ({
-                      icon: ability.icon || '@tui.circle-help',
-                      text: ability.text || this.i18n.translate('admin.shop.defaultAbility'),
-                  }))
-                : [],
+            entries: entries.map((entry, index) => ({
+                name: entry.name || this.i18n.translate('admin.shop.defaultPositionName', { number: index + 1 }),
+                description: entry.description,
+                quantity: entry.quantity,
+                imageUrl: entry.image_url ?? '',
+            })),
+            privileges: privileges.map((ability) => ({
+                icon: ability.icon || '@tui.circle-help',
+                text: ability.text || this.i18n.translate('admin.shop.defaultAbility'),
+            })),
         };
     });
+
+    /**
+     * Категория набора, выбранного в поле «Код набора».
+     *
+     * Пустой код или незагруженный список дают категорию по умолчанию —
+     * сервер хранит её тем же значением `kit`.
+     */
+    protected readonly previewCategory = computed<ShopCategory>(
+        () => this.kitByCode().get(this.formValue().code ?? '')?.category ?? 'kit'
+    );
 
     /**
      * Эффективная цена товара с учётом скидки для предпросмотра.
@@ -285,15 +332,6 @@ export class DonateShopPanelComponent {
     });
 
     /**
-     * Список товаров магазина.
-     */
-    protected readonly shopItems$: Observable<IShopItem[]> = this.refresh$.pipe(
-        startWith(null),
-        switchMap(() => this.donateService.getShopItems$()),
-        tap(() => this.isLoading.set(false))
-    );
-
-    /**
      * Возвращает FormArray entries.
      */
     protected get entriesArray(): FormArray<FormGroup<KitEntryForm>> {
@@ -308,29 +346,12 @@ export class DonateShopPanelComponent {
     }
 
     /**
-     * Конструктор. Подписывается на изменение типа товара,
-     * сбрасывает entries при переключении на ITEM_TYPE_ITEM и
-     * автоматически заполняет служебное описание для наборов / привилегий.
+     * Конструктор.
+     *
+     * Подписывается на выбор файла изображения товара, на смену кода набора
+     * и на правки состава.
      */
     public constructor() {
-        this.form.controls.item_type.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((type) => {
-            if (type !== 'ITEM_TYPE_KIT' && type !== 'ITEM_TYPE_PRIVILEGE') {
-                this.entriesArray.clear();
-                this.privilegesArray.clear();
-                this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
-                this.entryImageSubscriptions.clear();
-            }
-
-            const descriptionControl = this.form.controls.description;
-            if (type === 'ITEM_TYPE_PRIVILEGE') {
-                descriptionControl.setValue('привилегия', { emitEvent: false });
-            } else if (type === 'ITEM_TYPE_KIT') {
-                descriptionControl.setValue('набор', { emitEvent: false });
-            } else {
-                descriptionControl.setValue('', { emitEvent: false });
-            }
-        });
-
         this.form.controls.image.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((file) => {
             if (file instanceof File) {
                 const reader = new FileReader();
@@ -340,6 +361,63 @@ export class DonateShopPanelComponent {
                 this.imagePreviewUrl.set(null);
             }
         });
+
+        // Состав подставляется из выбранного набора. В режиме редактирования
+        // позиции принадлежат товару, поэтому смена кода их не трогает.
+        this.form.controls.code.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((code) => {
+            this.codeTaken.set(false);
+
+            if (this.isEditMode()) {
+                return;
+            }
+
+            this.applyKitEntries(code);
+        });
+
+        // Правка состава руками — решение администратора: без подтверждения
+        // её не перетирает даже выбор другого набора.
+        this.entriesArray.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            if (!this.fillingEntries) {
+                this.entriesEditedByAdmin = true;
+            }
+        });
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public ngOnInit(): void {
+        this.loadItems();
+        this.loadKits();
+    }
+
+    /**
+     * Возвращает локализованное название категории набора.
+     *
+     * @param category Категория набора.
+     * @returns Локализованная строка.
+     */
+    protected categoryLabel(category: ShopCategory): string {
+        return this.i18n.translate(KIT_CATEGORY_LABEL_KEYS[category]);
+    }
+
+    /**
+     * Функция отображения кода набора в выпадающем списке.
+     */
+    protected readonly kitDisplay = (code: string): string => this.kitLabel(code);
+
+    /**
+     * Перечитывает список товаров с сервера.
+     */
+    protected reloadItems(): void {
+        this.loadItems();
+    }
+
+    /**
+     * Перечитывает список захваченных наборов с сервера.
+     */
+    protected reloadKits(): void {
+        this.loadKits();
     }
 
     /**
@@ -350,6 +428,8 @@ export class DonateShopPanelComponent {
         this.editingItemId.set(null);
         this.resetForm();
         this.activeTabIndex.set(1);
+        // Набор могли захватить в игре после открытия панели.
+        this.loadKits();
     }
 
     /**
@@ -361,51 +441,109 @@ export class DonateShopPanelComponent {
         this.isEditMode.set(true);
         this.editingItemId.set(item.id);
         this.imagePreviewUrl.set(item.imageUrl);
-
-        let itemType: ShopItemType | 'ITEM_TYPE_PRIVILEGE' = item.itemType;
-        if (item.itemType === 'ITEM_TYPE_KIT') {
-            itemType = item.description === 'привилегия' ? 'ITEM_TYPE_PRIVILEGE' : 'ITEM_TYPE_KIT';
-        }
+        this.codeTaken.set(false);
+        this.entriesError.set(false);
 
         this.form.patchValue({
             name: item.name,
+            description: item.description,
             price: item.price,
             code: item.code,
-            item_type: itemType,
             is_available: item.isAvailable,
             has_discount: item.hasDiscount ?? false,
             discount_percent: item.discountPercent ?? 0,
         });
 
-        this.entriesArray.clear();
         this.privilegesArray.clear();
-        this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
-        this.entryImageSubscriptions.clear();
-
-        item.entries?.forEach((entry) => {
-            this.entriesArray.push(this.createEntryForm(entry));
-        });
 
         item.privileges?.forEach((ability) => {
             this.privilegesArray.push(this.createAbilityForm(ability));
         });
 
+        this.replaceEntries(item.entries ?? []);
+
         this.activeTabIndex.set(1);
+        this.loadKits();
     }
 
     /**
-     * Возвращает на вкладку списка.
+     * Заполняет состав из выбранного захваченного набора.
+     *
+     * Выполняется только при создании товара: при редактировании позиции
+     * принадлежат товару, и код их не заменяет. Состав набора — черновик:
+     * позицию можно переименовать или поменять количество. Позиции, которые
+     * администратор уже правил руками, заменяются только с подтверждением.
+     *
+     * @param code Код набора, выбранный в поле «Код набора».
+     */
+    private applyKitEntries(code: string): void {
+        const kit = this.kitByCode().get(code);
+
+        if (!kit || kit.items.length === 0) {
+            return;
+        }
+
+        if (this.entriesArray.length > 0 && this.entriesEditedByAdmin) {
+            this.confirmDialog
+                .open({
+                    title: this.i18n.translate('admin.shop.replaceEntriesTitle'),
+                    text: this.i18n.translate('admin.shop.replaceEntriesText', {
+                        name: kit.title || kit.code,
+                    }),
+                })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((confirmed) => {
+                    if (confirmed) {
+                        this.fillEntriesFromKit(kit);
+                    }
+                });
+
+            return;
+        }
+
+        this.fillEntriesFromKit(kit);
+    }
+
+    /**
+     * Заменяет позиции состава значениями из набора.
+     *
+     * @param kit Выбранный захваченный набор.
+     */
+    private fillEntriesFromKit(kit: IKitDef): void {
+        this.replaceEntries(
+            kit.items.map((item) => ({
+                gameCode: item.gameCode,
+                name: item.gameCode,
+                quantity: item.quantity,
+                imageUrl: item.imageUrl,
+            }))
+        );
+        this.entriesError.set(false);
+    }
+
+    /**
+     * Заменяет состав на форме и сбрасывает признак ручной правки.
+     *
+     * @param entries Позиции состава в порядке ответа сервера.
+     */
+    private replaceEntries(
+        entries: { gameCode?: string; name: string; description?: string; quantity: number; imageUrl?: string }[]
+    ): void {
+        this.fillingEntries = true;
+        this.entriesArray.clear();
+        this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
+        this.entryImageSubscriptions.clear();
+        entries.forEach((entry) => this.entriesArray.push(this.createEntryForm(entry)));
+        this.fillingEntries = false;
+        this.entriesEditedByAdmin = false;
+    }
+
+    /**
+     * Возвращается на вкладку списка.
      */
     protected backToList(): void {
         this.activeTabIndex.set(0);
         this.resetForm();
-    }
-
-    /**
-     * Добавляет пустую позицию в набор.
-     */
-    protected addEntry(): void {
-        this.entriesArray.push(this.createEntryForm());
     }
 
     /**
@@ -458,9 +596,12 @@ export class DonateShopPanelComponent {
     /**
      * Перестраивает порядок entries в FormArray после drag-and-drop.
      *
+     * Вызывается и из списка позиций формы, и из сетки «Состав набора»
+     * в предпросмотре: индексы обоих списков совпадают с FormArray.
+     *
      * @param event Событие перетаскивания из Angular CDK.
      */
-    protected dropEntry(event: CdkDragDrop<FormGroup<KitEntryForm>[]>): void {
+    protected dropEntry(event: Pick<CdkDragDrop<unknown>, 'previousIndex' | 'currentIndex'>): void {
         if (event.previousIndex === event.currentIndex) {
             return;
         }
@@ -528,18 +669,114 @@ export class DonateShopPanelComponent {
                     .pipe(
                         this.requestStatus.handleError(),
                         this.requestStatus.handleSuccess(this.i18n.translate('admin.shop.deletedSuccess')),
+                        // Ошибка уже показана handleError: переводим её в EMPTY,
+                        // чтобы подписчик не получил unhandled exception.
+                        catchError(() => EMPTY),
                         takeUntilDestroyed(this.destroyRef)
                     )
-                    .subscribe(() => this.donateService.refreshShopItems$());
+                    .subscribe(() => this.loadItems());
             });
+    }
+
+    /**
+     * Меняет доступность товара одним действием.
+     *
+     * Скрытая запись остаётся в списке: его отдаёт админский эндпоинт, поэтому
+     * скрытый товар можно найти и снова опубликовать. Перед запросом
+     * показывается диалог подтверждения — состояние влияет на витрину.
+     *
+     * @param item Товар из списка.
+     */
+    protected toggleAvailability(item: IShopItem): void {
+        const show = !item.isAvailable;
+
+        this.confirmDialog
+            .open({
+                title: this.i18n.translate(show ? 'admin.shop.showTitle' : 'admin.shop.hideTitle'),
+                text: this.i18n.translate(show ? 'admin.shop.showText' : 'admin.shop.hideText', {
+                    name: item.name,
+                }),
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((confirmed) => {
+                if (!confirmed) {
+                    return;
+                }
+
+                this.busyItemId.set(item.id);
+
+                this.donateService
+                    .updateShopItem$(item.id, this.buildAvailabilityRequest(item, show))
+                    .pipe(
+                        this.requestStatus.handleSuccess(
+                            this.i18n.translate(show ? 'admin.shop.shownSuccess' : 'admin.shop.hiddenSuccess')
+                        ),
+                        catchError((error: unknown) => {
+                            this.requestStatus.showError(this.saveErrorText(error));
+
+                            return EMPTY;
+                        }),
+                        // Список перечитывается и после успеха, и после ошибки:
+                        // бейдж доступности должен совпадать с сервером.
+                        finalize(() => {
+                            this.busyItemId.set(null);
+                            this.loadItems();
+                        }),
+                        takeUntilDestroyed(this.destroyRef)
+                    )
+                    .subscribe();
+            });
+    }
+
+    /**
+     * Собирает запрос обновления, меняющий только доступность товара.
+     *
+     * `PUT` перезаписывает запись целиком, поэтому остальные поля возвращаются
+     * на сервер в том виде, в котором их вернул список. `image_url` остаётся
+     * пустым: по контракту это значит «сохранить текущее изображение».
+     *
+     * @param item Товар из списка.
+     * @param isAvailable Новое значение доступности.
+     * @returns Тело запроса обновления.
+     */
+    private buildAvailabilityRequest(item: IShopItem, isAvailable: boolean): IUpdateShopItemRequest {
+        return {
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            code: item.code,
+            item_type: KIT_ITEM_TYPE,
+            is_available: isAvailable,
+            has_discount: item.hasDiscount,
+            discount_percent: item.hasDiscount ? item.discountPercent : undefined,
+            image_url: '',
+            entries: (item.entries ?? []).map((entry) => ({
+                game_code: entry.gameCode,
+                name: entry.name,
+                description: entry.description,
+                quantity: entry.quantity,
+                image_url: entry.imageUrl,
+            })),
+            privileges: item.privileges ?? [],
+        };
     }
 
     /**
      * Сохраняет товар (создание или обновление).
      */
     protected async saveItem(): Promise<void> {
+        // Пустой состав сервер отклоняет с 400 `kit must have at least one entry`:
+        // проверка выполняется на форме, до запроса.
+        this.entriesError.set(this.entriesArray.length === 0);
+
         if (this.form.invalid) {
             this.form.markAllAsTouched();
+            return;
+        }
+
+        if (this.entriesArray.length === 0) {
+            this.requestStatus.showError(this.i18n.translate('admin.shop.entriesRequired'));
             return;
         }
 
@@ -550,9 +787,6 @@ export class DonateShopPanelComponent {
             const imageUrl = await this.resolveImageUrl();
             const entries = await this.resolveEntries();
             const privileges = this.resolvePrivileges();
-            const itemType = values.item_type === 'ITEM_TYPE_PRIVILEGE' ? 'ITEM_TYPE_KIT' : values.item_type;
-            const shouldSendEntries =
-                values.item_type === 'ITEM_TYPE_KIT' || values.item_type === 'ITEM_TYPE_PRIVILEGE';
 
             if (this.isEditMode() && this.editingItemId()) {
                 const request: IUpdateShopItemRequest = {
@@ -561,58 +795,202 @@ export class DonateShopPanelComponent {
                     description: values.description.trimEnd(),
                     price: values.price,
                     code: values.code.trimEnd(),
-                    item_type: itemType,
+                    item_type: KIT_ITEM_TYPE,
                     is_available: values.is_available,
                     has_discount: values.has_discount,
                     discount_percent: values.has_discount ? values.discount_percent : undefined,
                     image_url: imageUrl,
-                    entries: shouldSendEntries ? entries : undefined,
-                    privileges: shouldSendEntries ? privileges : undefined,
+                    entries,
+                    privileges,
                 };
 
-                this.donateService
-                    .updateShopItem$(this.editingItemId()!, request)
-                    .pipe(
-                        this.requestStatus.handleError(),
-                        this.requestStatus.handleSuccess(this.i18n.translate('admin.shop.updatedSuccess')),
-                        finalize(() => this.isLoading.set(false)),
-                        takeUntilDestroyed(this.destroyRef)
-                    )
-                    .subscribe(() => {
-                        this.donateService.refreshShopItems$();
-                        this.backToList();
-                    });
+                this.submit(this.donateService.updateShopItem$(this.editingItemId()!, request), 'admin.shop.updatedSuccess');
             } else {
                 const request: ICreateShopItemRequest = {
                     name: values.name.trimEnd(),
                     description: values.description.trimEnd(),
                     price: values.price,
                     code: values.code.trimEnd(),
-                    item_type: itemType,
+                    item_type: KIT_ITEM_TYPE,
                     image_url: imageUrl ?? '',
                     has_discount: values.has_discount,
                     discount_percent: values.has_discount ? values.discount_percent : undefined,
-                    entries: shouldSendEntries ? entries : undefined,
-                    privileges: shouldSendEntries ? privileges : undefined,
+                    entries,
+                    privileges,
                 };
 
-                this.donateService
-                    .createShopItem$(request)
-                    .pipe(
-                        this.requestStatus.handleError(),
-                        this.requestStatus.handleSuccess(this.i18n.translate('admin.shop.createdSuccess')),
-                        finalize(() => this.isLoading.set(false)),
-                        takeUntilDestroyed(this.destroyRef)
-                    )
-                    .subscribe(() => {
-                        this.donateService.refreshShopItems$();
-                        this.backToList();
-                    });
+                this.submit(this.donateService.createShopItem$(request), 'admin.shop.createdSuccess');
             }
         } catch (error) {
             this.isLoading.set(false);
             this.requestStatus.showError(this.i18n.translate('admin.shop.uploadError'));
         }
+    }
+
+    /**
+     * Отправляет запрос сохранения товара и показывает результат.
+     *
+     * Ошибка разбирается по статусу: 404 означает, что набор с выбранным
+     * кодом не захвачен игрой, 400 — что сервер отклонил данные товара.
+     *
+     * @param request$ Запрос создания или обновления товара.
+     * @param successKey Ключ перевода уведомления об успехе.
+     */
+    private submit(request$: Observable<IShopItem>, successKey: string): void {
+        request$
+            .pipe(
+                catchError((error: unknown) => {
+                    // Уникальный индекс по `code` даёт при создании общий 500
+                    // вместо 409: причину показываем рядом с полем кода.
+                    this.codeTaken.set(this.isCodeTaken(error));
+                    this.requestStatus.showError(this.saveErrorText(error));
+
+                    return EMPTY;
+                }),
+                this.requestStatus.handleSuccess(this.i18n.translate(successKey)),
+                finalize(() => this.isLoading.set(false)),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => {
+                this.loadItems();
+                this.backToList();
+            });
+    }
+
+    /**
+     * Проверяет, что сохранение товара упало на повторе кода.
+     *
+     * `donate_shop_items` несёт уникальный индекс по `code`: и `CreateShopItem`,
+     * и `UpdateShopItem` отвечают на повтор 409 ALREADY_EXISTS
+     * (`shop entry with this code already exists`), включая скрытые записи.
+     * Остальные статусы, включая 500, остаются общей ошибкой сервера.
+     *
+     * @param error Ошибка из HttpClient.
+     * @returns true, если сервер ответил 409.
+     */
+    private isCodeTaken(error: unknown): boolean {
+        return error instanceof HttpErrorResponse && error.status === 409;
+    }
+
+    /**
+     * Возвращает текст уведомления об ошибке сохранения товара.
+     *
+     * При повторе кода к общему тексту ошибки добавляется причина: одному коду
+     * набора соответствует одна запись магазина.
+     *
+     * @param error Ошибка из HttpClient.
+     * @returns Текст уведомления.
+     */
+    private saveErrorText(error: unknown): string {
+        const generic = this.i18n.translate(this.saveErrorKey(error));
+
+        if (this.isCodeTaken(error)) {
+            return `${this.i18n.translate('admin.shop.codeTaken')} ${generic}`;
+        }
+
+        return generic;
+    }
+
+    /**
+     * Возвращает ключ перевода ошибки сохранения товара.
+     *
+     * @param error Ошибка из HttpClient.
+     * @returns Ключ перевода для уведомления.
+     */
+    private saveErrorKey(error: unknown): string {
+        const status = error instanceof HttpErrorResponse ? error.status : 0;
+
+        switch (status) {
+            case 404:
+                return 'admin.shop.codeNotCaptured';
+            case 403:
+                return 'admin.shop.forbiddenError';
+            case 400:
+                return 'admin.shop.invalidError';
+            default:
+                return 'admin.shop.saveError';
+        }
+    }
+
+    /**
+     * Возвращает подпись варианта в списке кодов наборов.
+     *
+     * Неизвестный код (список не загружен или набор больше не захвачен)
+     * выводится как есть, чтобы администратор видел сохранённое значение.
+     *
+     * @param code Код набора.
+     * @returns Строка «название · код · категория» или сам код.
+     */
+    private kitLabel(code: string): string {
+        const kit = this.kitByCode().get(code);
+
+        if (!kit) {
+            return code;
+        }
+
+        const title = kit.title.trim() || code;
+
+        return `${title} · ${kit.code} · ${this.categoryLabel(kit.category)}`;
+    }
+
+    /**
+     * Загружает полный список товаров и подписывается на его обновления.
+     *
+     * Админке нужен именно полный список (`GET /v1/donate/admin/shop/items`):
+     * публичный `ListShopItems` возвращает только доступные записи, и скрытый
+     * товар нельзя было бы найти, чтобы снова опубликовать.
+     */
+    private loadItems(): void {
+        this.itemsLoading.set(true);
+        this.itemsLoadFailed.set(false);
+        this.donateService.refreshAdminShopItems$();
+
+        if (this.itemsSubscription && !this.itemsSubscription.closed) {
+            return;
+        }
+
+        this.itemsSubscription = this.donateService
+            .getAdminShopItems$()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (items) => {
+                    this.shopItems.set(items);
+                    this.itemsLoadFailed.set(false);
+                    this.itemsLoading.set(false);
+                },
+                error: () => {
+                    this.itemsLoadFailed.set(true);
+                    this.itemsLoading.set(false);
+                },
+            });
+    }
+
+    /**
+     * Загружает список захваченных наборов для поля кода.
+     */
+    private loadKits(): void {
+        this.kitsLoading.set(true);
+        this.kitsLoadFailed.set(false);
+        this.kitdefService.refreshKits$();
+
+        if (this.kitsSubscription && !this.kitsSubscription.closed) {
+            return;
+        }
+
+        this.kitsSubscription = this.kitdefService
+            .getKits$()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (kits) => {
+                    this.kits.set(kits);
+                    this.kitsLoadFailed.set(false);
+                    this.kitsLoading.set(false);
+                },
+                error: () => {
+                    this.kitsLoadFailed.set(true);
+                    this.kitsLoading.set(false);
+                },
+            });
     }
 
     /**
@@ -646,6 +1024,7 @@ export class DonateShopPanelComponent {
             }
 
             result.push({
+                game_code: entry.game_code || undefined,
                 name: entry.name.trimEnd(),
                 description: entry.description?.trimEnd() || undefined,
                 quantity: entry.quantity,
@@ -675,6 +1054,7 @@ export class DonateShopPanelComponent {
      * @param entry Существующая entry (при редактировании).
      */
     private createEntryForm(entry?: {
+        gameCode?: string;
         name: string;
         description?: string;
         quantity: number;
@@ -696,6 +1076,7 @@ export class DonateShopPanelComponent {
         this.entryImageSubscriptions.set(imageControl, subscription);
 
         return new FormGroup<KitEntryForm>({
+            game_code: new FormControl<string>(entry?.gameCode ?? '', { nonNullable: true }),
             name: new FormControl<string>(entry?.name ?? '', {
                 nonNullable: true,
                 validators: [Validators.required],
@@ -734,17 +1115,16 @@ export class DonateShopPanelComponent {
             description: '',
             price: '',
             code: '',
-            item_type: 'ITEM_TYPE_ITEM',
             is_available: true,
             has_discount: false,
             discount_percent: 0,
             image: null,
         });
-        this.entriesArray.clear();
         this.privilegesArray.clear();
-        this.entryImageSubscriptions.forEach((sub) => sub.unsubscribe());
-        this.entryImageSubscriptions.clear();
+        this.replaceEntries([]);
         this.imagePreviewUrl.set(null);
+        this.codeTaken.set(false);
+        this.entriesError.set(false);
     }
 }
 
@@ -752,6 +1132,7 @@ export class DonateShopPanelComponent {
  * Тип формы одной entry набора.
  */
 interface KitEntryForm {
+    game_code: FormControl<string>;
     name: FormControl<string>;
     description: FormControl<string>;
     quantity: FormControl<number>;

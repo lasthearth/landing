@@ -13,6 +13,7 @@ export function mapShopItemToPrivilegeCard(item: IShopItem): PrivilegeCard {
 
     return {
         id: item.id,
+        category: item.category,
         title: item.name,
         description: item.description,
         image: item.imageUrl,

@@ -19,6 +19,13 @@ export {
     mapDtoToPurchase,
     mapDtoToTransaction,
     mapDtoToBalanceResponse,
+    normalizeShopCategory,
+    // Помощники дат экспортируются для повторного использования в других
+    // слайсах entities (например, `@entities/kitdef`): формат "DD.MM.YY - HH:mm"
+    // и правило нулевой даты protobuf должны остаться в одном месте.
+    parseDate,
+    formatDate,
+    formatDateOrFallback,
 } from './model/donate.mapper';
 export { mapDtoToPendingPurchase } from './model/pending-purchase.mapper';
 export * from './model/transaction.interface';

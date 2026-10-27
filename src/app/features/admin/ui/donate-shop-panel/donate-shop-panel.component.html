@@ -1,44 +1,40 @@
 <div class="flex flex-col gap-6 w-full donate-shop-panel">
     <!-- Внутренние табы -->
-    <div class="flex gap-3">
+    <div class="flex flex-wrap gap-2">
         <button
             type="button"
             (click)="activeTabIndex.set(0)"
-            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition duration-200"
-            [class.border-brand]="activeTabIndex() === 0"
-            [class.bg-gradient-to-r]="activeTabIndex() === 0"
-            [class.from-brand]="activeTabIndex() === 0"
-            [class.to-brand-hover]="activeTabIndex() === 0"
-            [class.text-white]="activeTabIndex() === 0"
-            [class.border-line]="activeTabIndex() !== 0"
-            [class.bg-surface-3]="activeTabIndex() !== 0"
-            [class.text-ink]="activeTabIndex() !== 0"
-            [class.hover:bg-surface-4]="activeTabIndex() !== 0"
+            class="nav-button shrink-0"
+            [class.nav-button--active]="activeTabIndex() === 0"
+            [attr.aria-current]="activeTabIndex() === 0 ? 'true' : null"
         >
-            {{ 'admin.shop.listTab' | translate }}
+            <tui-icon icon="@tui.shopping-cart" />
+            <span>{{ 'admin.shop.listTab' | translate }}</span>
         </button>
         <button
             type="button"
             (click)="startCreate()"
-            class="flex-1 py-3.5 rounded-xl border-2 text-xl font-bold uppercase transition duration-200"
-            [class.border-brand]="activeTabIndex() === 1"
-            [class.bg-gradient-to-r]="activeTabIndex() === 1"
-            [class.from-brand]="activeTabIndex() === 1"
-            [class.to-brand-hover]="activeTabIndex() === 1"
-            [class.text-white]="activeTabIndex() === 1"
-            [class.border-line]="activeTabIndex() !== 1"
-            [class.bg-surface-3]="activeTabIndex() !== 1"
-            [class.text-ink]="activeTabIndex() !== 1"
-            [class.hover:bg-surface-4]="activeTabIndex() !== 1"
+            class="nav-button shrink-0"
+            [class.nav-button--active]="activeTabIndex() === 1"
+            [attr.aria-current]="activeTabIndex() === 1 ? 'true' : null"
         >
-            {{ isEditMode() ? ('admin.shop.editTab' | translate) : ('admin.shop.createTab' | translate) }}
+            <tui-icon icon="@tui.plus" />
+            <span>{{ isEditMode() ? ('admin.shop.editTab' | translate) : ('admin.shop.createTab' | translate) }}</span>
         </button>
     </div>
 
     <!-- Список товаров -->
     @if (activeTabIndex() === 0) {
         <div class="flex flex-col gap-5">
-            @if (shopItems$ | async; as items) {
+            @if (itemsLoadFailed()) {
+                <app-error-state
+                    [title]="'admin.shop.loadErrorTitle' | translate"
+                    [description]="'admin.shop.loadErrorDescription' | translate"
+                    (retry)="reloadItems()"
+                />
+            } @else if (itemsLoading() && shopItems() === null) {
+                <app-market-grid-skeleton />
+            } @else if (shopItems(); as items) {
                 @if (items.length > 0) {
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         @for (item of items; track item.id) {
@@ -47,14 +43,17 @@
                             >
                                 @if (item.hasDiscount) {
                                     <div
-                                        class="absolute top-3 left-3 bg-white text-brand-ink text-base font-extrabold px-3 py-1 rounded-br-xl shadow-md -rotate-3 z-10"
+                                        class="absolute top-3 left-3 bg-white text-brand-ink text-base font-extrabold px-3 py-1 rounded-br-xl -rotate-3 z-10"
                                     >
                                         -{{ item.discountPercent }}%
                                     </div>
                                 }
 
+                                <!-- Скрытая запись дополнительно приглушена:
+                                     состояние читается и по бейджу, и по виду карточки. -->
                                 <div
                                     class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30 transition-colors"
+                                    [class.opacity-50]="!item.isAvailable"
                                 >
                                     @if (item.imageUrl) {
                                         <app-image-loader [src]="item.imageUrl" [alt]="item.name" />
@@ -103,7 +102,7 @@
                                     <span
                                         class="px-2.5 py-1 rounded-lg bg-lh-primary-2/10 text-lh-primary text-base font-semibold"
                                     >
-                                        {{ getItemTypeLabelForItem(item) }}
+                                        {{ categoryLabel(item.category) }}
                                     </span>
                                     <span
                                         class="px-2.5 py-1 rounded-lg text-base font-semibold text-white"
@@ -118,15 +117,38 @@
                                     <button
                                         type="button"
                                         (click)="startEdit(item)"
-                                        class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base transition-colors flex items-center justify-center gap-1"
+                                        [disabled]="busyItemId() === item.id"
+                                        class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base transition-colors flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <tui-icon icon="@tui.pencil" class="size-4!" />
                                         {{ 'admin.shop.edit' | translate }}
                                     </button>
+                                    <!-- Одно действие показывает или скрывает запись:
+                                         скрытый товар остаётся в списке. -->
+                                    <button
+                                        type="button"
+                                        (click)="toggleAvailability(item)"
+                                        [disabled]="busyItemId() === item.id"
+                                        [title]="item.isAvailable ? ('admin.shop.hideAction' | translate) : ('admin.shop.showAction' | translate)"
+                                        [attr.aria-label]="
+                                            (item.isAvailable
+                                                ? ('admin.shop.hideAction' | translate)
+                                                : ('admin.shop.showAction' | translate)) + ': ' + item.name
+                                        "
+                                        class="py-2.5 px-3 rounded-xl bg-surface-3 border border-line text-ink transition-colors hover:bg-surface-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        @if (busyItemId() === item.id) {
+                                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                                        } @else {
+                                            <tui-icon [icon]="item.isAvailable ? '@tui.eye-off' : '@tui.eye'" class="size-4!" />
+                                        }
+                                    </button>
                                     <button
                                         type="button"
                                         (click)="deleteItem(item)"
-                                        class="py-2.5 px-3 rounded-xl bg-lh-danger/10 hover:bg-lh-danger/30 text-lh-danger transition-colors"
+                                        [disabled]="busyItemId() === item.id"
+                                        [attr.aria-label]="('admin.common.delete' | translate) + ': ' + item.name"
+                                        class="py-2.5 px-3 rounded-xl bg-lh-danger/10 hover:bg-lh-danger/30 text-lh-danger transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <tui-icon icon="@tui.trash-2" class="size-4!" />
                                     </button>
@@ -142,6 +164,10 @@
                         <p class="text-xl font-bold text-lh-primary/50">{{ 'admin.shop.empty' | translate }}</p>
                     </div>
                 }
+
+                <!-- Список отдаёт админский эндпоинт: скрытые записи в нём есть,
+                     поэтому любую из них можно снова опубликовать. -->
+                <p class="text-base text-ink-3">{{ 'admin.shop.listIncludesHidden' | translate }}</p>
             } @else {
                 <app-market-grid-skeleton />
             }
@@ -153,7 +179,7 @@
         <form [formGroup]="form" (ngSubmit)="saveItem()" class="flex flex-col lg:flex-row gap-8 items-start">
             <!-- Левая колонка: форма -->
             <div class="flex-1 min-w-0 flex flex-col gap-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div class="flex flex-col gap-2">
                         <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.nameLabel' | translate }}</label>
                         <lh-input type="input" [placeholder]="'admin.shop.namePlaceholder' | translate" [formControl]="form.controls.name" />
@@ -166,19 +192,54 @@
 
                     <div class="flex flex-col gap-2">
                         <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.codeLabel' | translate }}</label>
-                        <lh-input type="input" [placeholder]="'admin.shop.codePlaceholder' | translate" [formControl]="form.controls.code" />
-                    </div>
+                        @if (kitsLoadFailed()) {
+                            <!-- Список наборов не загрузился: код вводится вручную,
+                                 а сервер сам проверит, что набор захвачен (404). -->
+                            <lh-input
+                                type="input"
+                                [ariaLabel]="'admin.shop.codeLabel' | translate"
+                                [placeholder]="'admin.shop.codePlaceholder' | translate"
+                                [formControl]="form.controls.code"
+                            />
+                            <p class="text-base text-ink-3">{{ 'admin.shop.codeLoadError' | translate }}</p>
+                            <button
+                                type="button"
+                                (click)="reloadKits()"
+                                class="self-start rounded-lg border border-line bg-surface-3 px-3 py-1.5 text-base font-semibold text-ink transition-colors hover:bg-surface-4"
+                            >
+                                {{ 'admin.shop.codeRetry' | translate }}
+                            </button>
+                        } @else {
+                            <lh-input
+                                type="select"
+                                [ariaLabel]="'admin.shop.codeLabel' | translate"
+                                [placeholder]="'admin.shop.codePlaceholder' | translate"
+                                [items]="kitCodes()"
+                                [displayWith]="kitDisplay"
+                                [formControl]="form.controls.code"
+                            />
+                            @if (kitsLoading() && kitCodes().length === 0) {
+                                <p class="text-base text-ink-3">{{ 'admin.shop.codeLoading' | translate }}</p>
+                            } @else if (kitCodes().length === 0) {
+                                <p class="text-base text-ink-3">{{ 'admin.shop.codeEmpty' | translate }}</p>
+                                <p class="text-base text-ink-3">{{ 'admin.shop.codeEmptyHint' | translate }}</p>
+                            }
+                        }
 
-                    <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.typeLabel' | translate }}</label>
-                        <lh-input
-                            type="select"
-                            [placeholder]="'admin.shop.typePlaceholder' | translate"
-                            [items]="itemTypes"
-                            [displayWith]="itemTypeDisplay"
-                            [formControl]="form.controls.item_type"
-                        />
+                        @if (codeTaken()) {
+                            <!-- Повтор кода: сервер отвечает общим 500, поэтому
+                                 причина объясняется рядом с полем кода. -->
+                            <p class="text-base text-lh-danger">{{ 'admin.shop.codeTaken' | translate }}</p>
+                            <p class="text-base text-ink-3">{{ 'admin.shop.saveError' | translate }}</p>
+                        }
                     </div>
+                </div>
+
+                <p class="text-base text-ink-3">{{ 'admin.shop.kitOnlyHint' | translate }}</p>
+
+                <!-- Правки товара не трогают уже оплаченные покупки -->
+                <div class="flex flex-col gap-1 rounded-xl border border-line/40 bg-surface-3 p-4">
+                    <p class="text-base text-ink-2">{{ 'admin.shop.snapshotHint' | translate }}</p>
                 </div>
 
                 <!-- Изображение -->
@@ -253,185 +314,180 @@
                     }
                 </div>
 
-                <!-- Entries для набора / привилегии -->
-                @if (
-                    form.controls.item_type.value === "ITEM_TYPE_KIT" ||
-                    form.controls.item_type.value === "ITEM_TYPE_PRIVILEGE"
-                ) {
-                    <div class="flex flex-col gap-5 pt-5 border-t border-lh-primary-2/15">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.entriesTitle' | translate }}</h3>
-                            <button
-                                type="button"
-                                (click)="addEntry()"
-                                class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
+                <!-- Entries набора -->
+                <div class="flex flex-col gap-5 pt-5">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.entriesTitle' | translate }}</h3>
+                    </div>
+
+                    <p class="text-base text-ink-3">{{ 'admin.shop.entriesPrefillHint' | translate }}</p>
+
+                    <div
+                        cdkDropList
+                        class="flex flex-col gap-5"
+                        [cdkDropListData]="entriesArray.controls"
+                        (cdkDropListDropped)="dropEntry($event)"
+                    >
+                        @for (entry of entriesArray.controls; track entry; let i = $index) {
+                            <div
+                                cdkDrag
+                                class="flex flex-col gap-4 p-4 rounded-xl border border-lh-primary-2/10 bg-lh-primary-2/5"
                             >
-                                <tui-icon icon="@tui.plus" class="size-5!" />
-                                {{ 'admin.common.add' | translate }}
-                            </button>
-                        </div>
-
-                        <div
-                            cdkDropList
-                            class="flex flex-col gap-5"
-                            [cdkDropListData]="entriesArray.controls"
-                            (cdkDropListDropped)="dropEntry($event)"
-                        >
-                            @for (entry of entriesArray.controls; track entry; let i = $index) {
-                                <div
-                                    cdkDrag
-                                    class="flex flex-col gap-4 p-4 rounded-xl border border-lh-primary-2/10 bg-lh-primary-2/5"
-                                >
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.position' | translate:{number: i + 1} }}</span>
-                                        <div class="flex items-center gap-1">
-                                            <button
-                                                type="button"
-                                                cdkDragHandle
-                                                class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors cursor-grab active:cursor-grabbing"
-                                                [title]="'admin.shop.dragTitle' | translate"
-                                                [attr.aria-label]="'admin.shop.dragAria' | translate"
-                                            >
-                                                <tui-icon icon="@tui.grip-vertical" class="size-5!" />
-                                            </button>
-                                            <button
-                                                type="button"
-                                                (click)="removeEntry(i)"
-                                                class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
-                                            >
-                                                <tui-icon icon="@tui.trash-2" class="size-5!" />
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <lh-input
-                                            type="input"
-                                            [placeholder]="'admin.shop.entryNamePlaceholder' | translate"
-                                            [formControl]="entry.controls.name"
-                                        />
-                                        <lh-input
-                                            type="inputNumber"
-                                            [placeholder]="'admin.shop.entryQuantityPlaceholder' | translate"
-                                            [formControl]="entry.controls.quantity"
-                                        />
-                                    </div>
-
-                                    <lh-input
-                                        type="textarea"
-                                        [placeholder]="'admin.shop.entryDescriptionPlaceholder' | translate"
-                                        [formControl]="entry.controls.description"
-                                    />
-
-                                    <div class="flex items-center gap-4">
-                                        <div
-                                            class="w-20 h-20 rounded-lg overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0"
+                                <div class="flex items-center justify-between">
+                                    <span class="text-lg font-semibold text-lh-primary">
+                                        {{ 'admin.shop.position' | translate:{number: i + 1} }}
+                                        @if (entry.controls.game_code.value; as gameCode) {
+                                            <span class="ml-2 text-sm font-normal text-ink-3">{{ gameCode }}</span>
+                                        }
+                                    </span>
+                                    <div class="flex items-center gap-1">
+                                        <button
+                                            type="button"
+                                            cdkDragHandle
+                                            class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors cursor-grab active:cursor-grabbing"
+                                            [title]="'admin.shop.dragTitle' | translate"
+                                            [attr.aria-label]="'admin.shop.dragAria' | translate"
                                         >
-                                            @if (entry.controls.image_url.value; as url) {
-                                                <app-image-loader [src]="url" [alt]="'admin.common.previewAlt' | translate" />
-                                            } @else {
-                                                <div
-                                                    class="w-full h-full flex items-center justify-center text-ink-3"
-                                                >
-                                                    <tui-icon icon="@tui.image" class="size-8!" />
-                                                </div>
-                                            }
-                                        </div>
-                                        <div class="flex flex-col gap-2 flex-1">
-                                            <label tuiInputFiles>
-                                                <ng-template tuiInputFilesContent>
-                                                    <span class="text-ink-2 text-base">
-                                                        {{ 'admin.shop.addImage' | translate }}
-                                                    </span>
-                                                    <input
-                                                        accept="image/*"
-                                                        tuiInputFiles
-                                                        [formControl]="entry.controls.image"
-                                                    />
-                                                </ng-template>
-                                            </label>
-                                            <tui-files>
-                                                @if (
-                                                    entry.controls.image.value
-                                                        | tuiFileRejected: { accept: "image/*" }
-                                                        | async;
-                                                    as file
-                                                ) {
-                                                    <tui-file
-                                                        state="error"
-                                                        [file]="file"
-                                                        (remove)="removeEntryFile(i)"
-                                                    />
-                                                }
-                                                @if (entry.controls.image.value; as file) {
-                                                    <tui-file [file]="file" (remove)="removeEntryFile(i)" />
-                                                }
-                                            </tui-files>
-                                        </div>
+                                            <tui-icon icon="@tui.grip-vertical" class="size-5!" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            (click)="removeEntry(i)"
+                                            class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
+                                        >
+                                            <tui-icon icon="@tui.trash-2" class="size-5!" />
+                                        </button>
                                     </div>
                                 </div>
-                            }
-                        </div>
 
-                        @if (entriesArray.length === 0) {
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <lh-input
+                                        type="input"
+                                        [placeholder]="'admin.shop.entryNamePlaceholder' | translate"
+                                        [formControl]="entry.controls.name"
+                                    />
+                                    <lh-input
+                                        type="inputNumber"
+                                        [placeholder]="'admin.shop.entryQuantityPlaceholder' | translate"
+                                        [formControl]="entry.controls.quantity"
+                                    />
+                                </div>
+
+                                <lh-input
+                                    type="textarea"
+                                    [placeholder]="'admin.shop.entryDescriptionPlaceholder' | translate"
+                                    [formControl]="entry.controls.description"
+                                />
+
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="w-20 h-20 rounded-lg overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0"
+                                    >
+                                        @if (entry.controls.image_url.value; as url) {
+                                            <app-image-loader [src]="url" [alt]="'admin.common.previewAlt' | translate" />
+                                        } @else {
+                                            <div
+                                                class="w-full h-full flex items-center justify-center text-ink-3"
+                                            >
+                                                <tui-icon icon="@tui.image" class="size-8!" />
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="flex flex-col gap-2 flex-1">
+                                        <label tuiInputFiles>
+                                            <ng-template tuiInputFilesContent>
+                                                <span class="text-ink-2 text-base">
+                                                    {{ 'admin.shop.addImage' | translate }}
+                                                </span>
+                                                <input
+                                                    accept="image/*"
+                                                    tuiInputFiles
+                                                    [formControl]="entry.controls.image"
+                                                />
+                                            </ng-template>
+                                        </label>
+                                        <tui-files>
+                                            @if (
+                                                entry.controls.image.value
+                                                    | tuiFileRejected: { accept: "image/*" }
+                                                    | async;
+                                                as file
+                                            ) {
+                                                <tui-file
+                                                    state="error"
+                                                    [file]="file"
+                                                    (remove)="removeEntryFile(i)"
+                                                />
+                                            }
+                                            @if (entry.controls.image.value; as file) {
+                                                <tui-file [file]="file" (remove)="removeEntryFile(i)" />
+                                            }
+                                        </tui-files>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    @if (entriesArray.length === 0) {
+                        @if (entriesError()) {
+                            <p class="text-lg text-lh-danger text-center py-4">
+                                {{ 'admin.shop.entriesRequired' | translate }}
+                            </p>
+                        } @else {
                             <p class="text-lg text-lh-primary/50 text-center py-4">
                                 {{ 'admin.shop.emptyEntries' | translate }}
                             </p>
                         }
-                    </div>
-                }
+                    }
+                </div>
 
                 <!-- Возможности товара -->
-                @if (
-                    form.controls.item_type.value === "ITEM_TYPE_KIT" ||
-                    form.controls.item_type.value === "ITEM_TYPE_PRIVILEGE"
-                ) {
-                    <div class="flex flex-col gap-5 pt-5 border-t border-lh-primary-2/15">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.abilitiesTitle' | translate }}</h3>
-                            <button
-                                type="button"
-                                (click)="addAbility()"
-                                class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
+                <div class="flex flex-col gap-5 pt-5">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.abilitiesTitle' | translate }}</h3>
+                        <button
+                            type="button"
+                            (click)="addAbility()"
+                            class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
+                        >
+                            <tui-icon icon="@tui.plus" class="size-5!" />
+                            {{ 'admin.common.add' | translate }}
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        @for (ability of privilegesArray.controls; track ability; let i = $index) {
+                            <div
+                                class="flex items-center gap-4 p-4 rounded-xl border border-lh-primary-2/10 bg-lh-primary-2/5"
                             >
-                                <tui-icon icon="@tui.plus" class="size-5!" />
-                                {{ 'admin.common.add' | translate }}
-                            </button>
-                        </div>
-
-                        <div class="flex flex-col gap-4">
-                            @for (ability of privilegesArray.controls; track ability; let i = $index) {
-                                <div
-                                    class="flex items-center gap-4 p-4 rounded-xl border border-lh-primary-2/10 bg-lh-primary-2/5"
+                                <lh-input
+                                    type="input"
+                                    [placeholder]="'admin.shop.abilityIconPlaceholder' | translate"
+                                    class="w-48"
+                                    [formControl]="ability.controls.icon"
+                                />
+                                <lh-input
+                                    type="input"
+                                    [placeholder]="'admin.shop.abilityTextPlaceholder' | translate"
+                                    class="flex-1"
+                                    [formControl]="ability.controls.text"
+                                />
+                                <button
+                                    type="button"
+                                    (click)="removeAbility(i)"
+                                    class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
                                 >
-                                    <lh-input
-                                        type="input"
-                                        [placeholder]="'admin.shop.abilityIconPlaceholder' | translate"
-                                        class="w-48"
-                                        [formControl]="ability.controls.icon"
-                                    />
-                                    <lh-input
-                                        type="input"
-                                        [placeholder]="'admin.shop.abilityTextPlaceholder' | translate"
-                                        class="flex-1"
-                                        [formControl]="ability.controls.text"
-                                    />
-                                    <button
-                                        type="button"
-                                        (click)="removeAbility(i)"
-                                        class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
-                                    >
-                                        <tui-icon icon="@tui.trash-2" class="size-5!" />
-                                    </button>
-                                </div>
-                            }
-                        </div>
-
-                        @if (privilegesArray.length === 0) {
-                            <p class="text-lg text-lh-primary/50 text-center py-4">{{ 'admin.shop.emptyAbilities' | translate }}</p>
+                                    <tui-icon icon="@tui.trash-2" class="size-5!" />
+                                </button>
+                            </div>
                         }
                     </div>
-                }
+
+                    @if (privilegesArray.length === 0) {
+                        <p class="text-lg text-lh-primary/50 text-center py-4">{{ 'admin.shop.emptyAbilities' | translate }}</p>
+                    }
+                </div>
 
                 <!-- Кнопки -->
                 <div class="flex gap-4 pt-2">
@@ -445,7 +501,7 @@
                     <button
                         type="submit"
                         [disabled]="form.invalid || isLoading()"
-                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-brand-hover text-white font-bold uppercase text-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-[0_2px_8px_rgba(255,121,32,0.25)]"
+                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-brand-hover text-white font-bold uppercase text-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
                     >
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -465,7 +521,7 @@
                 >
                     @if (previewItem().hasDiscount && previewItem().discountPercent) {
                         <div
-                            class="absolute top-4 left-4 bg-white text-brand-ink text-base font-extrabold px-3 py-1.5 rounded-br-xl shadow-md -rotate-3 z-10"
+                            class="absolute top-4 left-4 bg-white text-brand-ink text-base font-extrabold px-3 py-1.5 rounded-br-xl -rotate-3 z-10"
                         >
                             -{{ previewItem().discountPercent }}%
                         </div>
@@ -507,7 +563,7 @@
 
                     <div class="flex flex-wrap items-center justify-center gap-2">
                         <span class="px-3 py-1 rounded-lg bg-lh-primary-2/10 text-lh-primary text-base font-semibold">
-                            {{ getItemTypeLabel(previewItem().itemType) }}
+                            {{ categoryLabel(previewCategory()) }}
                         </span>
                         <span
                             class="px-3 py-1 rounded-lg text-base font-semibold text-white"
@@ -520,14 +576,14 @@
 
                     <button
                         type="button"
-                        class="w-full text-white uppercase transition duration-300 font-bold cursor-pointer bg-gradient-to-r from-lh-accent to-brand-lit-2 hover:from-brand-lit-2 hover:to-lh-accent rounded-xl py-3 text-lg shadow-[0_2px_8px_rgba(255,121,32,0.25)] hover:shadow-[0_4px_16px_rgba(255,121,32,0.35)]"
+                        class="w-full text-white uppercase transition duration-300 font-bold cursor-pointer bg-lh-accent hover:bg-brand-hover rounded-xl py-3 text-lg"
                     >
                         {{ 'admin.shop.buy' | translate }}
                     </button>
 
                     <!-- Предпросмотр возможностей -->
                     @if (previewItem().privileges.length) {
-                        <div class="flex flex-col gap-3 pt-2 border-t border-lh-primary-2/10">
+                        <div class="flex flex-col gap-3 pt-2">
                             <p class="text-lg font-bold text-lh-primary uppercase tracking-wide text-center">
                                 {{ 'admin.shop.abilitiesTitle' | translate }}
                             </p>
@@ -541,22 +597,28 @@
 
                     <!-- Предпросмотр состава набора -->
                     @if (previewItem().entries.length) {
-                        <div class="flex flex-col gap-3 pt-2 border-t border-lh-primary-2/10">
+                        <div class="flex flex-col gap-3 pt-2">
                             <p class="text-lg font-bold text-lh-primary uppercase tracking-wide text-center">
                                 {{ 'admin.shop.entriesTitle' | translate }}
                             </p>
-                            <div class="flex gap-2 flex-wrap justify-center">
+                            <div
+                                cdkDropList
+                                cdkDropListOrientation="mixed"
+                                class="flex gap-2 flex-wrap justify-center"
+                                (cdkDropListDropped)="dropEntry($event)"
+                            >
                                 @for (entry of previewItem().entries; track $index) {
                                     <div
+                                        cdkDrag
                                         [title]="entry.name"
-                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_2px_4px_rgba(0,0,0,0.15)] transition duration-150 hover:scale-110 hover:rotate-2 hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.25)] hover:border-lh-accent group/item"
+                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 transition duration-150 hover:scale-110 hover:rotate-2 hover:border-lh-accent group/item cursor-grab active:cursor-grabbing"
                                     >
                                         @if (entry.imageUrl) {
                                             <app-image-loader
                                                     [src]="entry.imageUrl"
                                                     [alt]="entry.name"
                                                     objectFit="contain"
-                                                    imageClass="p-1 drop-shadow-md"
+                                                    imageClass="p-1"
                                                 />
                                         } @else {
                                             <div class="w-full h-full flex items-center justify-center text-ink-2">
@@ -565,7 +627,7 @@
                                         }
                                         @if (entry.quantity > 1) {
                                             <span
-                                                class="absolute bottom-0.5 right-0.5 min-w-[1.5rem] h-6 flex items-center justify-center bg-lh-primary text-white text-base font-extrabold leading-none px-1 rounded-md border border-white/30 shadow-sm"
+                                                class="absolute bottom-0.5 right-0.5 min-w-[1.5rem] h-6 flex items-center justify-center bg-lh-primary text-white text-base font-extrabold leading-none px-1 rounded-md border border-white/30"
                                             >
                                                 {{ entry.quantity }}
                                             </span>

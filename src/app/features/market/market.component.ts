@@ -12,13 +12,16 @@ import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
 import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
+import { FUNDING_TARGETS } from './lib/funding-targets.constant';
+import { WORLD_SHOTS } from './lib/world-shots.constant';
 
 /**
  * Компонент магазина привилегий.
  */
 @Component({
     selector: 'app-market',
-    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe],
+    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -71,6 +74,16 @@ export class MarketComponent {
     ] as const;
 
     private readonly dialogs = inject(TuiDialogService);
+
+    /**
+     * Скриншоты мира сервера для раздела «Поддержка сервера».
+     */
+    protected readonly worldShots = WORLD_SHOTS;
+
+    /**
+     * Направления, на которые идут покупки, для раздела «Поддержка сервера».
+     */
+    protected readonly fundingTargets = FUNDING_TARGETS;
 
     /**
      * Сервис донат-магазина.

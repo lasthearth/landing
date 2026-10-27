@@ -1,4 +1,13 @@
-import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Injector, PLATFORM_ID, Renderer2 } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    Injector,
+    PLATFORM_ID,
+    Renderer2,
+} from '@angular/core';
 import { isPlatformBrowser, AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { UserService } from '@entities/user';
@@ -15,7 +24,6 @@ import { ShopPrefetchService } from '@core/services/shop-prefetch.service';
 import { WELCOME_SEEN_STORAGE_KEY } from './welcome-seen-storage-key.constant';
 import { SiteAnnouncementComponent } from '@features/announcement';
 import { TranslatePipe } from '@core/i18n';
-
 
 /**
  * Компонент разметки.
@@ -59,8 +67,18 @@ export class LayoutComponent {
      * Читается один раз при создании компонента; на сервере localStorage
      * недоступен, и флаг остаётся `false`.
      */
-    private readonly isWelcomeSeen: boolean =
-        this.localStorage.getItem<boolean>(WELCOME_SEEN_STORAGE_KEY) ?? false;
+    private readonly isWelcomeSeen: boolean = this.localStorage.getItem<boolean>(WELCOME_SEEN_STORAGE_KEY) ?? false;
+
+    /**
+     * Признак подавления приветственного экрана параметром `?nowelcome`.
+     *
+     * Нужен скриншот-гейтам и агентским прогонам: они открывают страницу
+     * в свежем профиле Chrome, где нет localStorage-флага «уже видел»,
+     * и оверлей накрывал измеряемую страницу. Состояние при этом не пишется:
+     * параметр только скрывает экран в текущем открытии.
+     */
+    private readonly isWelcomeSuppressed: boolean =
+        isPlatformBrowser(this.platformId) && new URLSearchParams(window.location.search).has('nowelcome');
 
     /**
      * {@link Observable} Признак необходимости показать приветственный экран.
@@ -78,7 +96,7 @@ export class LayoutComponent {
      * где localStorage отсутствует, экран показывается как прежде.
      */
     protected readonly showWelcome$: Observable<boolean> = inject(UserService).authSettled$.pipe(
-        map((isAuth) => !isAuth && !this.isWelcomeSeen)
+        map((isAuth) => !isAuth && !this.isWelcomeSeen && !this.isWelcomeSuppressed)
     );
 
     /**
@@ -107,7 +125,9 @@ export class LayoutComponent {
         // тянул в стартовый бандл весь слайс onboarding вместе с компонентом пути (~25 КБ).
         const injector = inject(Injector);
         afterNextRender(() => {
-            void import('@features/onboarding').then(({ OnboardingService }) => injector.get(OnboardingService).start());
+            void import('@features/onboarding').then(({ OnboardingService }) =>
+                injector.get(OnboardingService).start()
+            );
         });
 
         // Магазин: пререндер кладёт в HTML только разметку, а товары приходят запросом
