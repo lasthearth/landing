@@ -11,6 +11,14 @@ export { Role } from './model/role';
 export type { ILeaderBoard } from './model/i-leader-board';
 export { UserService } from './api/user.service';
 export { PlayersApiService } from './api/players.api';
+export { AdminNicknameApiService } from './api/admin-nickname.api';
+export type {
+    IAdminChangeNicknameRequest,
+    IAdminChangeNicknameResponse,
+    IAdminGrantNicknameChangeRequest,
+} from './model/admin-nickname.dto';
+export { NICKNAME_ADMIN_LIMITS } from './config/nickname-admin-limits.constant';
+export { getNicknameCooldownEnd } from './lib/nickname-cooldown.function';
 export type { PlayerListItem, PlayersPage } from './model/players-page';
 export type { LastSeenFilter, PlayerSort, PlayersQuery } from './model/players-query';
 export { PLAYERS_PAGE_SIZE } from './config/players-page-size.constant';

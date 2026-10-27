@@ -85,6 +85,12 @@ export class UserService {
     public roles: string[] = [];
 
     /**
+     * Скоупы (permissions) из access-токена, например `players:nickname:write`.
+     * Заполняются вместе с остальными данными в {@link hydrateUserData$}.
+     */
+    public scopes: string[] = [];
+
+    /**
      * Access-токен авторизации.
      */
     public accessToken!: string;
@@ -284,6 +290,7 @@ export class UserService {
                 this.roles = decoded.roles ?? [];
                 this.userName = decoded.username ?? decoded.name ?? '';
                 this.userImage = decoded.picture ?? '';
+                this.scopes = this.parseScopes(accessToken);
 
                 return true;
             }),
@@ -292,6 +299,41 @@ export class UserService {
                 return of(false);
             })
         );
+    }
+
+    /**
+     * Разбирает скоупы из access-токена.
+     *
+     * Logto кладёт выданные разрешения в claim `scope` строкой через пробел.
+     * Неразбираемый токен даёт пустой список: кнопки, скрытые по скоупам,
+     * не показываются, а сервер отдельно проверяет права на каждый запрос.
+     *
+     * @param accessToken Access-токен OIDC.
+     * @returns Список скоупов, например `players:nickname:write`.
+     */
+    private parseScopes(accessToken: string | null): string[] {
+        if (!accessToken) {
+            return [];
+        }
+
+        try {
+            const decoded = jwtDecode<{ scope?: string }>(accessToken);
+
+            return (decoded.scope ?? '').split(' ').filter(Boolean);
+        } catch {
+            // Токен не JWT (или повреждён) — считаем, что скоупов нет.
+            return [];
+        }
+    }
+
+    /**
+     * Проверяет наличие скоупа (permission) у текущего пользователя.
+     *
+     * @param scope Искомый скоуп, например `players:nickname:write`.
+     * @returns `true`, если скоуп выдан в access-токене.
+     */
+    public hasScope(scope: string): boolean {
+        return this.scopes.includes(scope);
     }
 
     /**

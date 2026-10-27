@@ -62,6 +62,8 @@ function getConfig() {
             'hungergames:match:record',
             'hungergames:season:reset',
             'hungergames:season:create',
+            'players:nickname:write',
+            'players:nickname:grant',
             'news:create',
             'news:delete',
             'offline_access',

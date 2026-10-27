@@ -1,0 +1,73 @@
+<section class="flex flex-col gap-4 p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2 lh-card-glow">
+    <p class="text-xl font-semibold text-lh-primary">{{ 'admin.nickname.title' | translate }}</p>
+
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-base">
+        <div class="flex flex-col">
+            <dt class="text-lh-primary/60">{{ 'admin.nickname.current' | translate }}</dt>
+            <dd class="text-lh-primary font-semibold">{{ player().user_game_name }}</dd>
+        </div>
+        <div class="flex flex-col">
+            <dt class="text-lh-primary/60">{{ 'admin.nickname.previous' | translate }}</dt>
+            <dd class="text-lh-primary">{{ player().previous_nickname || '—' }}</dd>
+        </div>
+        <div class="flex flex-col">
+            <dt class="text-lh-primary/60">{{ 'admin.nickname.lastChange' | translate }}</dt>
+            <dd class="text-lh-primary">{{ lastChangeText() }}</dd>
+        </div>
+        <div class="flex flex-col">
+            <dt class="text-lh-primary/60">{{ 'admin.nickname.nextChange' | translate }}</dt>
+            <dd class="text-lh-primary">{{ nextChangeText() }}</dd>
+        </div>
+    </dl>
+
+    @if (canWrite || showGrant()) {
+        <div class="flex flex-col gap-3 mt-2">
+            @if (canWrite) {
+                <div class="flex flex-col gap-1">
+                    <lh-input
+                        type="input"
+                        [formControl]="nicknameControl"
+                        [label]="'admin.nickname.newLabel' | translate"
+                        [placeholder]="'admin.nickname.newPlaceholder' | translate"
+                    />
+                    <span class="text-sm text-lh-primary/60 text-right" aria-live="polite">
+                        {{ nicknameLength() }}/{{ limits.nicknameMaxLength }}
+                    </span>
+                </div>
+            }
+
+            <lh-input
+                type="textarea"
+                [formControl]="reasonControl"
+                [label]="'admin.nickname.reasonLabel' | translate"
+                [placeholder]="'admin.nickname.reasonPlaceholder' | translate"
+            />
+
+            <div class="flex flex-wrap gap-4 mt-1">
+                @if (canWrite) {
+                    <button
+                        type="button"
+                        [disabled]="nicknameControl.invalid"
+                        (click)="openChangeDialog()"
+                        class="flex-1 min-w-48 py-3 px-4 rounded-xl bg-lh-accent-3 hover:bg-brand text-white font-bold uppercase transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {{ 'admin.nickname.change' | translate }}
+                    </button>
+                }
+                @if (showGrant()) {
+                    <button
+                        type="button"
+                        [disabled]="isGranting()"
+                        (click)="grantEarlyChange()"
+                        class="flex-1 min-w-48 py-3 px-4 rounded-xl bg-lh-primary-2 hover:bg-lh-primary-2/70 text-lh-primary font-bold uppercase transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                        @if (isGranting()) {
+                            <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                        }
+                        {{ 'admin.nickname.grant' | translate }}
+                    </button>
+                }
+            </div>
+        </div>
+    }
+</section>
