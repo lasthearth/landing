@@ -17,6 +17,7 @@
         "sitemap": "node scripts/gen-sitemap.mjs",
         "icons": "node scripts/generate-icons.mjs",
         "i18n": "node scripts/i18n-tool.mjs",
+        "clarity": "node scripts/clarity.mjs",
         "context:cost": "node scripts/check-context-budget.mjs",
         "format": "prettier --write AGENTS.md AGENT_RULES_MAP.md README.md docs package.json",
         "format:check": "prettier --check AGENTS.md AGENT_RULES_MAP.md README.md docs package.json"
