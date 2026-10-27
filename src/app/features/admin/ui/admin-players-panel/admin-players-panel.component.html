@@ -1,0 +1,81 @@
+<div class="flex flex-col gap-6 max-w-4xl mx-auto w-full">
+    @if (!selectedId()) {
+        <div class="flex flex-col gap-3">
+            <p class="text-xl font-semibold text-lh-primary">{{ 'admin.players.searchTitle' | translate }}</p>
+            <lh-input
+                type="input"
+                [formControl]="searchControl"
+                [ariaLabel]="'admin.players.searchTitle' | translate"
+                [placeholder]="'admin.players.searchPlaceholder' | translate"
+                icon="@tui.search"
+            />
+
+            @if (searchResults$ | async; as users) {
+                <div
+                    class="flex flex-col gap-1 max-h-72 overflow-y-auto hide-scrollbar rounded-xl border border-lh-primary-2 bg-lh-primary-2/10 backdrop-blur-sm p-2 shadow-lg"
+                >
+                    @for (user of users; track user.user_id) {
+                        <div
+                            class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-lh-primary-2/30 transition-colors"
+                            (click)="selectPlayer(user)"
+                        >
+                            <app-image-loader
+                                [src]="resolveAvatarUrl(user.avatar)"
+                                class="size-8 shrink-0"
+                                containerClass="rounded-full"
+                                objectFit="cover"
+                                [alt]="'admin.common.avatarAlt' | translate"
+                            />
+                            <span class="text-lh-primary font-medium">{{ user.user_game_name }}</span>
+                        </div>
+                    } @empty {
+                        <app-empty-state
+                            class="py-6"
+                            icon="@tui.search-x"
+                            [title]="'admin.players.noResultsTitle' | translate"
+                            [description]="'admin.players.noResultsDescription' | translate"
+                        />
+                    }
+                </div>
+            }
+        </div>
+    } @else {
+        <div class="flex flex-col gap-6">
+            <div
+                class="flex items-center justify-between p-4 rounded-xl bg-lh-primary-2/10 border border-lh-primary-2 lh-card-glow"
+            >
+                <div class="flex items-center gap-4">
+                    <app-image-loader
+                        [src]="resolveAvatarUrl(player()?.avatar)"
+                        class="size-10 shrink-0"
+                        containerClass="rounded-full"
+                        objectFit="cover"
+                        [alt]="'admin.common.avatarAlt' | translate"
+                    />
+                    <div class="flex flex-col">
+                        <span class="text-xl font-bold text-lh-primary">{{ player()?.user_game_name ?? '…' }}</span>
+                        <span class="text-base text-lh-primary/60 font-mono">{{ selectedId() }}</span>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    (click)="clearPlayer()"
+                    class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors"
+                    [attr.aria-label]="'admin.players.clearPlayer' | translate"
+                >
+                    <tui-icon icon="@tui.x" />
+                </button>
+            </div>
+
+            @if (isLoadingPlayer() || !player()) {
+                <div class="flex justify-center py-8">
+                    <tui-loader [showLoader]="true" size="m" />
+                </div>
+            }
+            @if (player(); as p) {
+                <app-player-nickname-admin [player]="p" (changed)="reloadPlayer()" />
+            }
+        </div>
+    }
+</div>

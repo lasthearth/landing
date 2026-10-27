@@ -4,6 +4,9 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
+// Type-only: `@entities/user` в рантайме сам импортирует этот слайс,
+// обычный import создал бы цикл модулей.
+import type { ISearchedUser } from '@entities/user';
 import { ICreateSettlement } from '../model/i-create-settlement';
 import { IRequestSettlement } from '../model/i-request-settlement';
 import { ISettlement } from '../model/i-settlement';
@@ -160,12 +163,10 @@ export class SettlementService {
      * @param name Имя для поиска.
      * @returns Observable с результатами поиска.
      */
-    public searchUser$(name: string) {
+    public searchUser$(name: string): Observable<{ users: ISearchedUser[] }> {
         const params = new HttpParams().set('query', name.trim());
 
-        return this.http.get<{
-            users: any[];
-        }>(`${this.baseUrl}/users/search`, { params });
+        return this.http.get<{ users: ISearchedUser[] }>(`${this.baseUrl}/users/search`, { params });
     }
 
     /**

@@ -913,6 +913,8 @@ interface CreateResponse {
 | 2.1 | `GET`  | `/users:batchGet`           | Пакетное получение профилей (до 100 ID) | —         | ✅ `getPlayersBatch$()`                                         |
 | 3   | `POST` | `/users/{user_id}/avatar`   | Обновить аватар (self)                  | ✅ (self) | ✅ `setProfileImage$()`                                         |
 | 4   | `PUT`  | `/users/{user_id}/nickname` | Сменить ник (self, cooldown 6м)         | ✅ (self) | ✅ `changeUsername$()`                                          |
+| 5   | `PUT`  | `/admin/users/{user_id}/nickname` | Принудительно сменить ник (админ, скоуп `players:nickname:write`, кулдаун игнорируется) | ✅ + scope | ✅ `AdminNicknameApiService.changeNickname$()` |
+| 6   | `POST` | `/admin/users/{user_id}/nickname:grant` | Разрешить игроку сменить ник досрочно (админ, скоуп `players:nickname:grant`, снимает кулдаун) | ✅ + scope | ✅ `AdminNicknameApiService.grantNicknameChange$()` |
 
 #### DTO
 
@@ -931,8 +933,35 @@ interface User {
     avatar: UserImage;
     user_name: string;
     previous_nickname?: string;
+    last_nickname_changed_at?: string; // ISO 8601; от неё считается кулдаун 6м. Grant снимает запись ($unset)
     is_online: boolean;
 }
+```
+
+**`AdminChangeNicknameRequest` / `AdminChangeNicknameResponse`**
+
+```ts
+interface AdminChangeNicknameRequest {
+    user_id: string;
+    new_nickname: string; // 1-15 символов: a-zA-Z0-9_-
+    reason?: string; // до 500 символов, уходит игроку в уведомлении
+}
+
+interface AdminChangeNicknameResponse {
+    old_nickname: string;
+    new_nickname: string;
+    next_change_allowed_at: string; // ISO 8601: момент смены + 6 месяцев
+}
+```
+
+**`AdminGrantNicknameChangeRequest`**
+
+```ts
+interface AdminGrantNicknameChangeRequest {
+    user_id: string;
+    reason?: string; // до 500 символов
+}
+// Ответ — пустой объект. Grant при отсутствующем кулдауне → 400 FAILED_PRECONDITION.
 ```
 
 **`ChangeNicknameRequest`**

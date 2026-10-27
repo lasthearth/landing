@@ -18,6 +18,7 @@ import { DonateShopPanelComponent } from './ui/donate-shop-panel/donate-shop-pan
 import { KitAdminPanelComponent } from './ui/kit-admin-panel/kit-admin-panel.component';
 import { AllPurchasesPanelComponent } from './ui/all-purchases-panel/all-purchases-panel.component';
 import { SettlementAdminPanelComponent } from './ui/settlement-admin-panel/settlement-admin-panel.component';
+import { AdminPlayersPanelComponent } from './ui/admin-players-panel/admin-players-panel.component';
 import { TuiPulse } from '@taiga-ui/kit';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
@@ -46,6 +47,7 @@ import { ModsAdminPanelComponent } from '@features/mods';
         KitAdminPanelComponent,
         AllPurchasesPanelComponent,
         SettlementAdminPanelComponent,
+        AdminPlayersPanelComponent,
         EmptyStateComponent,
         AdminListSkeletonComponent,
         TranslatePipe,
