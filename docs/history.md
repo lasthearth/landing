@@ -34,6 +34,25 @@ src/app/
 
 ## 3. Недавние крупные изменения
 
+### 3.-27 Возврат на исходную страницу после входа
+
+> После колбэка Logto сайт всегда открывался на `/`, поэтому вход с `/market` или
+> `/join/:code` терял страницу (след из `docs/research/2026-10-27-conversion-friction.md`, пункт 7).
+
+- `signIn()` сохраняет относительный адрес без параметров OIDC в ключе `lh-return-url`;
+  возврат — один раз по `authSettled$`, запись стирается до перехода, устаревшая старше
+  10 минут игнорируется, внешние адреса (`//host`, `/\host`) отсекаются.
+
+### 3.-26 Диалог покупки: гость видит вход, а не «Приобрести»
+
+> Срез Clarity 25–27.10.2026: `/market` — 138 сессий и 109 мёртвых кликов (0.79 на сессию).
+> Гость жал «Приобрести», получал «Требуется авторизация» и не имел способа войти.
+
+- Состояние баланса `idle | unauthenticated | loading | ready | error` вместо «есть/нет»:
+  запрос уходит только вошедшим, гостю — «Войти и купить», при сбое — «Повторить», во время
+  загрузки покупка заблокирована. При `error` покупку не блокируем: средства проверит сервер.
+  Ключи `market.purchaseDialog.signIn`, `.signInHint`, `.balanceError`.
+
 ### 3.-25 Админка: управление ником игрока (смена и досрочный grant)
 
 > Вкладка «Игроки» в `/profile/admin`: карточка игрока, блок
@@ -1166,50 +1185,23 @@ POST/PUT/DELETE (фидбек через `RequestStatusService`).
   Пластина наследует ту же переменную, концентричность не ломается.
 - Файлы: те же, что в §3.9, плюс `WikiCard.tags` и `LEAD_TAG_LIMIT` в компоненте.
 
-## 4. Текущая проблема: Discord Bot Token — РЕШЕНО
+## 4–5. Перенесено в архив
 
-- Логика Discord API вынесена на бэкенд `vsservice`:
-    - Домен `internal/discord` с сервисом `DiscordService`.
-    - REST-эндпоинты `/v1/discord/channels/{channel_id}/messages`, `/v1/discord/channels/{channel_id}/images`, `/v1/discord/news`.
-- Фронтенд теперь ходит на бэкенд:
-    - `entities/discord/api/discord.api.ts` — единый API-сервис.
-    - `GameChatService`, `DiscordGalleryService`, `DiscordWebhookService` обновлены.
-    - `DiplomacyPageComponent` использует `GameChatService` с `discordDiplomacyChannelId`.
-- Удалены:
-    - `proxy.conf.js`, `.env.example`.
-    - nginx-проксирование `/discord` и подстановка `DISCORD_BOT_TOKEN` в `Dockerfile`/`nginx.conf`.
-- Требования к развёртыванию:
-    - `DISCORD_BOT_TOKEN` и `DISCORD_NEWS_WEBHOOK_URL` добавлены в `vsservice/compose.yaml` и `compose.dev.yaml`.
-    - `DiscordBotToken` обязателен для запуска `vsservice`.
-
-## 5. Конфигурация окружения
-
-- `src/app/core/config/environments/environment.ts`
-- `src/app/core/config/environments/environment.prod.ts`
-- Ключи:
-    - `discordGameChatChannelId` — игровой чат.
-    - `discordDiplomacyChannelId` — канал дипломатии.
-    - `youtubeApiKey` — YouTube Data API v3.
+> «Discord Bot Token — РЕШЕНО» и «Конфигурация окружения» — в `docs/archive/history-stale.md`.
 
 ## 6. Важные файлы
 
-- `API_CONTRACT.md` — бэкенд-контракт.
-- `AGENTS.md` — конституция проекта.
-- `src/app/routes/seo-data.ts` — SEO-метаданные.
-- `src/app/routes/enums/route-keys.ts` — ключи роутов.
-- `src/styles.css` — семантические токены цвета + тёмная тема.
-- `scripts/check-contrast.mjs` — проверка контраста токенов по WCAG AA.
-- `scripts/check-i18n.mjs` — проверка полноты обеих локалей в словаре i18n.
+> Список вынесен в `docs/archive/history-stale.md`: его заменили таблица указателей
+> в `AGENTS.md` и `docs/project-map.md`.
 
 ---
 
 > Разделы «Дизайн-система» (§6.1–6.3) переехали в `docs/DESIGN_SYSTEM.md`,
 > открытые задачи (§8) — в `docs/TODO.md`. Ниже — остальная летопись без изменений.
 
-## 7. Последний коммит
+## 7. Летопись оптимизаций
 
-- `LH | feat: add diplomacy, gallery, videos, game chat, radio widget; remove secrets from configs`
-- Сборка: `npm run build` проходит, 11 prerender-роутов.
+> Срез «Последний коммит» перенесён в `docs/archive/history-stale.md`.
 
 ### 7.0 Оптимизация бандла и загрузки
 

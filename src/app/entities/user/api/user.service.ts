@@ -1,5 +1,6 @@
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { EventTypes, LoginResponse, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { jwtDecode } from 'jwt-decode';
@@ -28,6 +29,9 @@ import { LocalStorageService } from '@core/services/local-storage.service';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { SESSION_RESTORE_TIMEOUT_MS } from '../config/session-restore-timeout.constant';
+import { RETURN_URL_STORAGE_KEY } from '../config/return-url-storage-key.constant';
+import { RETURN_URL_TTL_MS } from '../config/return-url-ttl.constant';
+import { IReturnUrl } from '../model/i-return-url';
 import { IJwtTokenLh } from '../model/i-jwt-token-lh';
 import { IUser } from '../model/i-user';
 import { IPlayer } from '../model/i-player';
@@ -44,6 +48,52 @@ const LEADERBOARD_ALL_LIMIT = '1000';
  * Максимальное количество идентификаторов в одном запросе `users:batchGet`.
  */
 const BATCH_GET_USERS_LIMIT = 100;
+
+/**
+ * Служебные параметры OIDC-колбэка: в адресе возврата их быть не должно.
+ */
+const OIDC_CALLBACK_PARAMS = ['code', 'state', 'error', 'error_description', 'iss'];
+
+/**
+ * Вырезает из адреса маршрута служебные параметры OIDC-колбэка.
+ *
+ * @param url Адрес маршрута вида `/market?tab=kits`.
+ * @returns Адрес без параметров `code`, `state`, `error`, `error_description`, `iss`.
+ */
+function stripOidcParams(url: string): string {
+    const [path = '', query = ''] = url.split('?');
+    const kept = query.split('&').filter((pair) => pair !== '' && !OIDC_CALLBACK_PARAMS.includes(pair.split('=')[0] ?? ''));
+
+    return kept.length > 0 ? `${path}?${kept.join('&')}` : path;
+}
+
+/**
+ * Проверяет, что сохранённый адрес возврата пригоден для перехода и не устарел.
+ *
+ * @param entry Запись из хранилища.
+ * @returns true, если по адресу можно переходить.
+ */
+function isUsableReturnUrl(entry: IReturnUrl | null): entry is IReturnUrl {
+    if (!entry || typeof entry.url !== 'string' || typeof entry.savedAt !== 'number') {
+        return false;
+    }
+
+    if (Date.now() - entry.savedAt > RETURN_URL_TTL_MS) {
+        return false;
+    }
+
+    const url = entry.url;
+
+    // Только относительный путь этого сайта: `//host` и `/\host` браузер раскрывает во внешний адрес.
+    return (
+        url.length <= 2048 &&
+        url.startsWith('/') &&
+        !url.startsWith('//') &&
+        !url.startsWith('/\\') &&
+        !url.includes('\n') &&
+        !url.includes('\r')
+    );
+}
 
 /**
  * Сервис пользователя.
@@ -176,6 +226,11 @@ export class UserService {
     private readonly localStorageService = inject(LocalStorageService);
 
     /**
+     * Роутер: читает адрес перед уходом на вход и возвращает пользователя обратно.
+     */
+    private readonly router = inject(Router);
+
+    /**
      * Триггер принудительной проверки авторизации.
      */
     public checkAuthTrigger$ = new Subject<boolean>();
@@ -188,6 +243,7 @@ export class UserService {
             this.initAuthStream();
             this.checkAuthTrigger$.next(false);
             this.listenToAuthEvents();
+            this.restoreReturnUrlOnAuth();
         }
     }
 
@@ -352,8 +408,13 @@ export class UserService {
 
     /**
      * Инициирует вход через OIDC-провайдер.
+     *
+     * Перед уходом на Logto сохраняет текущий адрес: после колбэка приложение
+     * всегда открывается на `/`, и без сохранённого адреса пользователь терял
+     * страницу, с которой входил (магазин, приглашение `/join/:code`).
      */
     public signIn(): void {
+        this.saveReturnUrl();
         this.oidcSecurityService.authorize();
     }
 
@@ -362,7 +423,59 @@ export class UserService {
      */
     public signOut(): void {
         this.localStorageService.removeItem('welcomeWasWatched');
+        this.localStorageService.removeItem(RETURN_URL_STORAGE_KEY);
         this.oidcSecurityService.logoff().subscribe();
+    }
+
+    /**
+     * Сохраняет адрес возврата перед уходом на страницу входа.
+     *
+     * Главная и адрес колбэка (`/home`) не сохраняются: возвращаться на них
+     * бессмысленно. Служебные параметры OIDC из адреса вырезаются.
+     */
+    private saveReturnUrl(): void {
+        const current = this.router.url;
+
+        if (!current.startsWith('/') || current === '/' || current.startsWith('/home')) {
+            return;
+        }
+
+        const url = stripOidcParams(current);
+
+        if (!url.startsWith('/')) {
+            return;
+        }
+
+        const entry: IReturnUrl = { url, savedAt: Date.now() };
+
+        this.localStorageService.setItem(RETURN_URL_STORAGE_KEY, entry);
+    }
+
+    /**
+     * Возвращает пользователя на страницу, с которой он начал вход.
+     *
+     * Срабатывает один раз и только после успешной проверки авторизации:
+     * {@link authSettled$} начинает выдавать значения после `checkAuth`.
+     * Запись удаляется до перехода, а устаревшая игнорируется: вход можно
+     * бросить на странице провайдера и вернуться на сайт через день.
+     */
+    private restoreReturnUrlOnAuth(): void {
+        this.authSettled$
+            .pipe(
+                filter(Boolean),
+                take(1)
+            )
+            .subscribe(() => {
+                const entry = this.localStorageService.getItem<IReturnUrl>(RETURN_URL_STORAGE_KEY);
+
+                this.localStorageService.removeItem(RETURN_URL_STORAGE_KEY);
+
+                if (!isUsableReturnUrl(entry) || this.router.url === entry.url) {
+                    return;
+                }
+
+                void this.router.navigateByUrl(entry.url);
+            });
     }
 
     /**
