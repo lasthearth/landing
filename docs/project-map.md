@@ -30,9 +30,9 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 994 | core, entities, features, layout, routes, shared |
+| src/app | 995 | core, entities, features, layout, routes, shared |
 | core/ | 59 | config, guards, i18n, interceptors, services, types |
-| entities/ | 179 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
+| entities/ | 180 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
 | features/ | 607 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
 | layout/ | 19 | background-scene, footer, header |
 | routes/ | 5 | enums |
@@ -93,7 +93,7 @@
 | entities/referral | 5 | model, api | да | 4 |
 | entities/rule-question | 4 | model, api | да | 4 |
 | entities/server-mod | 9 | model, api, lib | да | 5 |
-| entities/settlement | 40 | ui, model, api, lib, config | да | 37 |
+| entities/settlement | 41 | ui, model, api, lib, config | да | 38 |
 | entities/settlement-tag | 13 | ui, model, api, lib | да | 10 |
 | entities/user | 32 | ui, model, api, lib, config | да | 23 |
 | entities/wiki | 6 | model, api, lib | да | 6 |
@@ -168,7 +168,7 @@
 | profile | 23.2 | /profile |
 | referral | 1.5 | /profile/referral |
 | rules | 251.4 | /rules |
-| settlements | 58.1 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
+| settlements | 58.2 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared | 27.2 | — |
 | videos | 2.0 | /videos |
 | wiki | 63.7 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |

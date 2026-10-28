@@ -640,7 +640,8 @@ export class WorldMapCanvasComponent {
      */
     private formatCoordinate(value: number): string {
         // Шаг сетки считается в дробях: ноль приходил как −0,0000001 и подписывался «−0».
-        const rounded = Math.round(value);
+        // `|| 0` убирает −0: Intl печатает его как «-0».
+        const rounded = Math.round(value) || 0;
         return rounded < 0 ? '−' + this.formatNumber(-rounded) : this.formatNumber(rounded);
     }
 

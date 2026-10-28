@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { isGuildSettlement, ISettlement, SettlementService } from '@entities/settlement';
+import { catchError, forkJoin, map, Observable, of } from 'rxjs';
+import { INotifierPlacement, isGuildSettlement, ISettlement, SettlementService } from '@entities/settlement';
 import { WORLD_MAP_DEMO_POINTS } from '../config/world-map-demo-points.constant';
 import { WorldMapData, WorldMapPoint, WorldMapSettlementType } from '../model/world-map-point.interface';
 
@@ -12,14 +12,13 @@ const MAP_TYPES: readonly WorldMapSettlementType[] = ['CAMP', 'VILLAGE', 'TOWNSH
 /**
  * Источник данных карты земель.
  *
- * Позиция глашатая (`notifier_position`) приходит только в ответе на одно поселение,
- * в списке её нет. Поэтому сервис берёт список и дочитывает каждое поселение
- * (их единицы-десятки, запросы идут параллельно). Гильдии пропускаются: их глашатай
- * позицию не пишет.
+ * Два параллельных запроса: позиции всех глашатаев (`GET /settlements/notifiers`)
+ * и список поселений (`GET /settlements`) — из него берутся название, тип, курс
+ * и число жителей. Глашатай, чьё поселение не нашлось в списке (поселение удалили,
+ * а блок в мире остался) или оказалось гильдией, на карту не попадает.
  *
- * Если ни у кого глашатай не стоит (или API недоступен), возвращается пример
- * с флагом `demo` — страница об этом предупреждает. Хуторов в API нет совсем,
- * поэтому на живой карте их пока не будет.
+ * Если ни одного глашатая нет (или API недоступен), возвращается пример с флагом
+ * `demo` — страница об этом предупреждает. Хуторов в API нет, на живой карте их пока не будет.
  */
 @Injectable({ providedIn: 'root' })
 export class WorldMapApiService {
@@ -31,47 +30,48 @@ export class WorldMapApiService {
      * @returns Поселения с поставленным глашатаем и признак примера.
      */
     public load(): Observable<WorldMapData> {
-        return this.settlements.getSettlements().pipe(
-            map((list) => list.filter((settlement) => !isGuildSettlement(settlement))),
-            switchMap((list) =>
-                list.length
-                    ? forkJoin(
-                          list.map((settlement) =>
-                              this.settlements.getSettlementById(settlement.id, true).pipe(catchError(() => of(null)))
-                          )
-                      )
-                    : of([])
-            ),
-            map((details) => details.map((settlement) => this.toPoint(settlement)).filter((point) => point !== null)),
+        return forkJoin({
+            placements: this.settlements.getNotifierPositions$(),
+            list: this.settlements.getSettlements(),
+        }).pipe(
+            map(({ placements, list }) => this.toPoints(placements, list)),
             catchError(() => of([] as WorldMapPoint[])),
             map((points) => (points.length ? { points, demo: false } : this.demo()))
         );
     }
 
     /**
-     * Превращает поселение в точку карты, если у него стоит глашатай.
+     * Сопоставляет глашатаев с поселениями.
      *
-     * @param settlement Поселение из `GET /settlements/{id}` (или `null` при ошибке).
-     * @returns Точка карты или `null`, если глашатая нет.
+     * @param placements Позиции глашатаев.
+     * @param list Поселения с сайта.
+     * @returns Точки карты.
      */
-    private toPoint(settlement: ISettlement | null): WorldMapPoint | null {
-        const position = settlement?.notifier_position;
-        if (!settlement || !position) {
-            return null;
+    private toPoints(placements: readonly INotifierPlacement[], list: readonly ISettlement[]): WorldMapPoint[] {
+        const byId = new Map(list.map((settlement) => [settlement.id, settlement]));
+        const points: WorldMapPoint[] = [];
+
+        for (const placement of placements) {
+            const settlement = byId.get(placement.settlement_id);
+            if (!settlement || isGuildSettlement(settlement)) {
+                continue;
+            }
+
+            const type = String(settlement.type) as WorldMapSettlementType;
+            const position = placement.position ?? {};
+
+            points.push({
+                id: settlement.id,
+                settlementId: settlement.id,
+                name: settlement.name,
+                type: MAP_TYPES.includes(type) ? type : 'CAMP',
+                diplomacy: settlement.diplomacy,
+                membersCount: settlement.members?.length,
+                herald: { x: position.x ?? 0, y: position.y ?? 0, z: position.z ?? 0 },
+            });
         }
 
-        const type = String(settlement.type) as WorldMapSettlementType;
-
-        return {
-            id: settlement.id,
-            settlementId: settlement.id,
-            name: settlement.name,
-            type: MAP_TYPES.includes(type) ? type : 'CAMP',
-            diplomacy: settlement.diplomacy,
-            membersCount: settlement.members?.length,
-            // proto3 не присылает нулевые поля: 0 по оси приходит как отсутствие.
-            herald: { x: position.x ?? 0, y: position.y ?? 0, z: position.z ?? 0 },
-        };
+        return points;
     }
 
     /**
