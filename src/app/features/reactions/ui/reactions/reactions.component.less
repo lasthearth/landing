@@ -11,6 +11,8 @@
     gap: 0.375rem;
 }
 
+// Без `backdrop-filter`: пилюль на карточке до шести, а карточек в ленте десятки.
+// Каждый blur — свой слой композитора, лента с ними не прокручивалась.
 .reactions__pill,
 .reactions__add {
     display: inline-flex;
@@ -20,13 +22,12 @@
     padding: 0 0.625rem;
     border-radius: 999px;
     border: 1px solid rgba(232, 216, 184, 0.16);
-    background: rgba(20, 14, 10, 0.45);
+    background: rgba(20, 14, 10, 0.68);
     color: var(--color-parchment-2, #e8d8b8);
     font-size: 0.875rem;
     font-weight: 700;
     line-height: 1;
     cursor: pointer;
-    backdrop-filter: blur(6px);
     transition:
         background-color 0.15s ease,
         border-color 0.15s ease,
@@ -34,7 +35,7 @@
 
     &:hover {
         border-color: rgba(232, 216, 184, 0.35);
-        background: rgba(40, 28, 20, 0.6);
+        background: rgba(40, 28, 20, 0.82);
     }
 
     &:active {
@@ -50,6 +51,16 @@
 .reactions__pill--mine {
     border-color: rgba(224, 163, 92, 0.75);
     background: rgba(160, 82, 30, 0.45);
+}
+
+// «+N» и стрелка сворачивания: не реакция, а управление рядом, поэтому глуше пилюль.
+.reactions__pill--more {
+    padding: 0 0.5rem;
+    opacity: 0.75;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .reactions__glyph {
