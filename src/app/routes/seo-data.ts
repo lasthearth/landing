@@ -42,6 +42,7 @@ export const routeSeoData: {
     wikiArticle: ISeoData;
     wikiSection: ISeoData;
     mods: ISeoData;
+    worldMap: ISeoData;
     about: ISeoData;
     keyPoints: ISeoData;
     players: ISeoData;
@@ -269,6 +270,20 @@ export const routeSeoData: {
         siteName,
         image: ogImage,
         imageAlt: 'Моды сервера Last Hearth',
+    },
+    worldMap: {
+        title: 'Карта земель — Last Hearth',
+        description:
+            'Карта поселений сервера Last Hearth: где стоят глашатаи поселений, как далеко они от Очага и какой у них курс.',
+        url: `${siteUrl}/map`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Карта земель Last Hearth',
+        // Пока на карте пример (бэкенд не отдаёт позиции глашатаев), страница
+        // не индексируется. Убрать вместе с примером.
+        robots: 'noindex, follow',
     },
     about: {
         title: 'О сервере Last Hearth',

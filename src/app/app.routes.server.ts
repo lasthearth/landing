@@ -60,5 +60,8 @@ export const serverRoutes: ServerRoute[] = [
     { path: 'player/:nick', renderMode: RenderMode.Server },
     // Список модов ведут в админке, он меняется без выкладки сайта.
     { path: 'mods', renderMode: RenderMode.Server },
+    // Карта: глашатаев ставят в игре, позиция меняется без выкладки. При пререндере
+    // в страницу навсегда попадал снимок на момент сборки.
+    { path: 'map', renderMode: RenderMode.Server },
     { path: '**', renderMode: RenderMode.Server },
 ];

@@ -1,16 +1,41 @@
 <div class="reactions" role="group" [attr.aria-label]="'shared.reactions.label' | translate">
-    @for (emoji of shown(); track emoji.key) {
+    @for (emoji of visible(); track emoji.key) {
         <button
             type="button"
             class="reactions__pill"
             [class.reactions__pill--mine]="emoji.mine"
             [attr.aria-pressed]="emoji.mine"
-            [attr.aria-label]="'shared.reactions.' + emoji.key | translate"
-            [title]="'shared.reactions.' + emoji.key | translate"
+            [attr.aria-label]="emoji.label"
+            [title]="emoji.label"
             (click)="toggle(emoji.key, $event)"
         >
             <span class="reactions__glyph" aria-hidden="true">{{ emoji.glyph }}</span>
             <span class="reactions__count">{{ emoji.count }}</span>
+        </button>
+    }
+
+    <!-- Остальные реакции прячем за «+N»: на живой новости их до 48, и длинный ряд тормозит ленту -->
+    @if (hiddenCount() > 0) {
+        <button
+            type="button"
+            class="reactions__pill reactions__pill--more"
+            [attr.aria-expanded]="false"
+            [attr.aria-label]="moreLabel()"
+            [title]="moreLabel()"
+            (click)="toggleExpanded($event)"
+        >
+            <span class="reactions__count">+{{ hiddenCount() }}</span>
+        </button>
+    } @else if (canCollapse()) {
+        <button
+            type="button"
+            class="reactions__pill reactions__pill--more"
+            [attr.aria-expanded]="true"
+            [attr.aria-label]="lessLabel()"
+            [title]="lessLabel()"
+            (click)="toggleExpanded($event)"
+        >
+            <tui-icon icon="@tui.chevron-up" class="size-4!" />
         </button>
     }
 

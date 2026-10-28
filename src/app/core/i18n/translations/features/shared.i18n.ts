@@ -123,6 +123,8 @@ export const SHARED_I18N = {
             reactions: {
                 label: 'Реакции',
                 add: 'Поставить реакцию',
+                more: 'Показать все реакции',
+                less: 'Свернуть реакции',
                 groups: {
                     recent: 'Недавние',
                     emotions: 'Чувства',
@@ -397,6 +399,8 @@ export const SHARED_I18N = {
             reactions: {
                 label: 'Reactions',
                 add: 'Add reaction',
+                more: 'Show all reactions',
+                less: 'Collapse reactions',
                 groups: {
                     recent: 'Recent',
                     emotions: 'Feelings',

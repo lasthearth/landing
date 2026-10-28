@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, signal } from '@angular/core';
-import { TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import {
     REACTION_EMOJIS,
     REACTION_GROUPS,
@@ -18,6 +18,14 @@ import { RecentReactionsService } from '../../api/recent-reactions.service';
  * Вкладка выбора: недавние или группа.
  */
 type PickerTab = 'recent' | ReactionGroupKey;
+
+/**
+ * Сколько пилюль реакций показывать в ряду до кнопки «+N».
+ *
+ * На живой новости стоит почти весь каталог (48 реакций): ряд из тридцати пилюль
+ * на каждой карточке ленты давал сотни слоёв с `backdrop-filter` и тормозил прокрутку.
+ */
+const MAX_VISIBLE_PILLS = 5;
 
 /**
  * Реакции под контентом: поставленные реакции со счётчиками и кнопка выбора новой.
@@ -44,6 +52,11 @@ export class ReactionsComponent {
      * Хранилище реакций.
      */
     private readonly store = inject(ReactionsStoreService);
+
+    /**
+     * Сервис переводов: подписи пилюль считаем сигналом, а не нечистым пайпом.
+     */
+    private readonly i18n = inject(I18nService);
 
     /**
      * Корневой элемент (для закрытия выбора по клику снаружи).
@@ -145,6 +158,54 @@ export class ReactionsComponent {
      */
     protected readonly mine = computed(() => this.reactions().mine);
 
+    /**
+     * Показан весь ряд реакций (кнопка «+N» нажата).
+     */
+    protected readonly expanded = signal(false);
+
+    /**
+     * Пилюли в ряду: {@link MAX_VISIBLE_PILLS} популярных, свои — всегда.
+     *
+     * Своя реакция не обязана войти в пятёрку: игрок видит то, что поставил.
+     * Подпись считаем здесь, а не пайпом в шаблоне: `translate` нечистый, и две
+     * привязки на пилюле вызывали его дважды на каждый проход проверки изменений.
+     */
+    protected readonly visible = computed(() => {
+        const all = this.shown();
+        let kept = all;
+
+        if (!this.expanded() && all.length > MAX_VISIBLE_PILLS) {
+            kept = [
+                ...all.slice(0, MAX_VISIBLE_PILLS),
+                ...all.slice(MAX_VISIBLE_PILLS).filter((emoji) => emoji.mine),
+            ];
+        }
+
+        return kept.map((emoji) => ({ ...emoji, label: this.i18n.translate(`shared.reactions.${emoji.key}`) }));
+    });
+
+    /**
+     * Сколько реакций спрятано за кнопкой «+N» (ноль, когда ряд раскрыт).
+     */
+    protected readonly hiddenCount = computed(() => this.shown().length - this.visible().length);
+
+    /**
+     * Есть ли что сворачивать: ряд раскрыт и длиннее лимита.
+     *
+     * Без этой проверки стрелка оставалась бы после того, как реакций стало мало.
+     */
+    protected readonly canCollapse = computed(() => this.expanded() && this.shown().length > MAX_VISIBLE_PILLS);
+
+    /**
+     * Подпись кнопки «+N».
+     */
+    protected readonly moreLabel = computed(() => this.i18n.translate('shared.reactions.more'));
+
+    /**
+     * Подпись кнопки сворачивания ряда.
+     */
+    protected readonly lessLabel = computed(() => this.i18n.translate('shared.reactions.less'));
+
     public constructor() {
         effect(() => this.store.watch(this.target()));
     }
@@ -163,6 +224,17 @@ export class ReactionsComponent {
             this.recent.remember(emoji);
         }
         this.store.toggle(this.target(), emoji);
+    }
+
+    /**
+     * Раскрывает или сворачивает полный ряд реакций.
+     *
+     * @param event Клик (не даём ему дойти до ссылки карточки).
+     */
+    protected toggleExpanded(event: Event): void {
+        event.preventDefault();
+        event.stopPropagation();
+        this.expanded.update((value) => !value);
     }
 
     /**
