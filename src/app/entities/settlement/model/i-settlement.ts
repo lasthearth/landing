@@ -41,6 +41,17 @@ export interface ISettlement {
         y: number;
     };
 
+    /**
+     * Где стоит блок-глашатай поселения (x, z — по карте, y — высота).
+     * Позицию пишет сервер, когда глашатая ставят в игре. Приходит только в ответе
+     * на одно поселение (`GET /settlements/{id}`), в списке её нет; у гильдии нет никогда.
+     */
+    notifier_position?: {
+        x?: number;
+        y?: number;
+        z?: number;
+    };
+
     tags: [
         {
             id: string;

@@ -110,6 +110,17 @@
     --lh-online: #05ad5f;
     --lh-offline: #3b3c36;
 
+    /* Карта земель (/map): лист старинной карты — бумага, тушь, киноварь, акварель. */
+    --lh-map-paper: #ecdfc2;
+    --lh-map-paper-2: #f4ead3;
+    --lh-map-paper-edge: #b98d55;
+    --lh-map-ink: #3a2a1c;
+    --lh-map-ink-soft: #6e5a44;
+    --lh-map-vermilion: #a3361c;
+    --lh-map-wash-peace: #5d8a3c;
+    --lh-map-wash-neutral: #8f7d5e;
+    --lh-map-wash-danger: #b03a22;
+
     --lh-leader: #3d5381;
     --lh-leader-hover: #4a649a;
     --lh-leader-ink: #3d5381;
@@ -1542,6 +1553,11 @@ html[data-theme='dark'] {
     --lh-ink: #e9dfc9;
     --lh-ink-2: #c3b79c;
     --lh-ink-3: #afa289;
+
+    /* Лист карты на тёмном сайте чуть приглушён, чтобы не слепил. */
+    --lh-map-paper: #d9c9a6;
+    --lh-map-paper-2: #e6d8b9;
+    --lh-map-paper-edge: #8f6a3c;
 
     --lh-link: #e07830;
     --lh-link-hover: #ffaa5c;
