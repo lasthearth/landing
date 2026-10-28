@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
-import { AmountPipe, TranslatePipe } from '@core/i18n';
+import { AmountPipe, I18nService, TranslatePipe } from '@core/i18n';
 import { buildSchemeEdges } from '../../lib/build-scheme-edges.function';
 import { collectAncestors } from '../../lib/collect-ancestors.function';
 import { collectDescendants } from '../../lib/collect-descendants.function';
 import { getNodeState } from '../../lib/get-node-state.function';
+import { resourceUnitKey } from '../../lib/resource-unit-key.function';
 import { sumCosts } from '../../lib/sum-costs.function';
 import { KeyPointPlannerStore } from '../../model/key-point-planner.store';
 import { KeyPointScheme } from '../../model/key-point-scheme.interface';
+import { UpgradeCost } from '../../model/upgrade-cost.interface';
 import { UpgradeNode } from '../../model/upgrade-node.interface';
 import { UpgradeNodeState } from '../../model/upgrade-node-state.type';
 import { UpgradeNodeDetailsComponent } from '../upgrade-node-details/upgrade-node-details.component';
@@ -50,6 +52,36 @@ interface SchemeNodeView {
      * Лежит на пути выделенного узла (предок, потомок или он сам).
      */
     readonly related: boolean;
+
+    /**
+     * Цена под подписью: первая строка стоимости (у большинства узлов она одна).
+     */
+    readonly price: UpgradeCost | null;
+
+    /**
+     * Сколько ещё строк стоимости не поместилось под подпись.
+     */
+    readonly morePrices: number;
+}
+
+/**
+ * Подсказка над узлом под курсором или в фокусе.
+ */
+interface SchemeTip {
+    /**
+     * Узел с состоянием.
+     */
+    readonly view: SchemeNodeView;
+
+    /**
+     * Показать под узлом, а не над ним (верхний ряд — сверху нет места).
+     */
+    readonly below: boolean;
+
+    /**
+     * Прижать к краю: узел в крайней колонке, по центру подсказка вылезла бы за холст.
+     */
+    readonly align: 'start' | 'center' | 'end';
 }
 
 /**
@@ -89,6 +121,7 @@ interface ChoiceMark {
 })
 export class UpgradeSchemeComponent {
     private readonly planner = inject(KeyPointPlannerStore);
+    private readonly i18n = inject(I18nService);
 
     /**
      * Схема точки.
@@ -113,7 +146,7 @@ export class UpgradeSchemeComponent {
     /**
      * Построенные узлы точки.
      */
-    protected readonly built = computed(() => this.planner.builtOf(this.scheme().id));
+    protected readonly built = computed(() => this.planner.builtOf(this.scheme()));
 
     /**
      * Узлы на пути подсвеченного узла, включая его самого.
@@ -144,6 +177,8 @@ export class UpgradeSchemeComponent {
             y: ((node.tier + 0.5) / scheme.tiers) * 100,
             levelNumber: node.kind === 'level' ? (ROMAN[level++] ?? null) : null,
             related: related.has(node.id),
+            price: node.cost[0] ?? null,
+            morePrices: Math.max(node.cost.length - 1, 0),
         }));
     });
 
@@ -174,23 +209,67 @@ export class UpgradeSchemeComponent {
         const marks: ChoiceMark[] = [];
 
         for (const node of scheme.nodes) {
-            const neighbour = scheme.nodes.find(
-                (other) =>
-                    other.choiceGroup !== undefined &&
-                    other.choiceGroup === node.choiceGroup &&
-                    other.tier === node.tier &&
-                    other.lane === node.lane + 1
+            // Ближайший справа узел той же группы в том же ряду.
+            const neighbour = scheme.nodes
+                .filter(
+                    (other) =>
+                        other.choiceGroup !== undefined &&
+                        other.choiceGroup === node.choiceGroup &&
+                        other.tier === node.tier &&
+                        other.lane > node.lane
+                )
+                .sort((a, b) => a.lane - b.lane)[0];
+            if (!neighbour) {
+                continue;
+            }
+
+            const between = scheme.nodes.find(
+                (other) => other.tier === node.tier && other.lane > node.lane && other.lane < neighbour.lane
             );
-            if (neighbour) {
+            const y = ((node.tier + 0.5) / scheme.tiers) * 100;
+
+            if (between) {
+                // Посередине стоит другой узел (итог выбора): «или» ставится на обе
+                // связи к нему, получается «вариант — или — итог — или — вариант».
+                marks.push(
+                    {
+                        key: `${node.id}-${between.id}`,
+                        x: ((node.lane + between.lane + 1) / 2 / scheme.lanes) * 100,
+                        y,
+                    },
+                    {
+                        key: `${between.id}-${neighbour.id}`,
+                        x: ((between.lane + neighbour.lane + 1) / 2 / scheme.lanes) * 100,
+                        y,
+                    }
+                );
+            } else {
                 marks.push({
                     key: `${node.id}-${neighbour.id}`,
-                    x: ((node.lane + 1) / scheme.lanes) * 100,
-                    y: ((node.tier + 0.5) / scheme.tiers) * 100,
+                    x: ((node.lane + neighbour.lane + 1) / 2 / scheme.lanes) * 100,
+                    y,
                 });
             }
         }
 
         return marks;
+    });
+
+    /**
+     * Подсказка для узла под курсором или в фокусе: что даёт, сколько стоит, в каком состоянии.
+     */
+    protected readonly tip = computed<SchemeTip | null>(() => {
+        const id = this.hoveredId();
+        const view = id ? this.nodes().find((item) => item.node.id === id) : undefined;
+        if (!view) {
+            return null;
+        }
+
+        const lanes = this.scheme().lanes;
+        const align =
+            lanes > 1 && view.node.lane === 0 ? 'start' : view.node.lane === lanes - 1 && lanes > 1 ? 'end' : 'center';
+
+        return { view, below: view.node.tier === 0, align };
     });
 
     /**
@@ -211,6 +290,17 @@ export class UpgradeSchemeComponent {
     protected readonly planCost = computed(() =>
         sumCosts(this.scheme().nodes.filter((node) => this.built().has(node.id)))
     );
+
+    /**
+     * Ключ словаря для названия ресурса в нужной форме числа.
+     *
+     * @param resource Ресурс.
+     * @param amount Количество.
+     * @returns Ключ словаря.
+     */
+    protected unitKey(resource: UpgradeCost['resource'], amount: number): string {
+        return resourceUnitKey(resource, amount, this.i18n.language());
+    }
 
     /**
      * Есть ли подсвеченный путь: остальные узлы и линии тогда приглушаются.

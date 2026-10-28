@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
-import { AmountPipe, TranslatePipe } from '@core/i18n';
+import { AmountPipe, I18nService, TranslatePipe } from '@core/i18n';
+import { resourceUnitKey } from '../../lib/resource-unit-key.function';
+import { UpgradeCost } from '../../model/upgrade-cost.interface';
 import { KeyPointScheme } from '../../model/key-point-scheme.interface';
 import { UpgradeNode } from '../../model/upgrade-node.interface';
 import { UpgradeNodeState } from '../../model/upgrade-node-state.type';
@@ -20,6 +22,8 @@ import { UpgradeNodeState } from '../../model/upgrade-node-state.type';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpgradeNodeDetailsComponent {
+    private readonly i18n = inject(I18nService);
+
     /**
      * Схема точки.
      */
@@ -66,5 +70,18 @@ export class UpgradeNodeDetailsComponent {
     /**
      * Ключ подписи кнопки действия по состоянию узла.
      */
-    protected readonly actionKey = computed(() => `keyPoints.details.action.${this.state()}`);
+    protected readonly actionKey = computed(() =>
+        this.node().automatic ? 'keyPoints.details.action.automatic' : `keyPoints.details.action.${this.state()}`
+    );
+
+    /**
+     * Ключ словаря для названия ресурса в нужной форме числа.
+     *
+     * @param resource Ресурс.
+     * @param amount Количество.
+     * @returns Ключ словаря.
+     */
+    protected unitKey(resource: UpgradeCost['resource'], amount: number): string {
+        return resourceUnitKey(resource, amount, this.i18n.language());
+    }
 }

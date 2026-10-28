@@ -28,14 +28,18 @@
 
     <div class="details__block">
         <h4 class="details__label">{{ "keyPoints.details.cost" | translate }}</h4>
-        <ul class="details__costs">
-            @for (cost of node().cost; track cost.resource) {
-                <li class="details__cost">
-                    <span class="details__cost-amount">{{ cost.amount | amount }}</span>
-                    {{ "keyPoints.resources." + cost.resource | translate }}
-                </li>
-            }
-        </ul>
+        @if (node().cost.length) {
+            <ul class="details__costs">
+                @for (cost of node().cost; track cost.resource) {
+                    <li class="details__cost">
+                        <span class="details__cost-amount">{{ cost.amount | amount }}</span>
+                        {{ unitKey(cost.resource, cost.amount) | translate }}
+                    </li>
+                }
+            </ul>
+        } @else {
+            <p class="details__any">{{ "keyPoints.details.free" | translate }}</p>
+        }
     </div>
 
     @if (node().requires.length || node().requiresAny?.length) {
@@ -87,7 +91,7 @@
         type="button"
         class="lh-cta details__action"
         [class.lh-cta--ghost]="state() === 'built'"
-        [disabled]="state() === 'locked' || state() === 'excluded'"
+        [disabled]="node().automatic || state() === 'locked' || state() === 'excluded'"
         (click)="toggle.emit()"
     >
         <tui-icon [icon]="state() === 'built' ? '@tui.undo-2' : '@tui.hammer'" />

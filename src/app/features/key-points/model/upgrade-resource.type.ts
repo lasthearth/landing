@@ -1,5 +1,6 @@
 /**
  * Ресурс, из которого складывается стоимость улучшения.
- * Название ресурса — в словаре `keyPoints.resources.<ресурс>`.
+ * Название ресурса — в словаре `keyPoints.resources.<ресурс>.<форма множественного числа>`.
+ * Дукаты — золотая монета сервера: на весь сервер изначально в обороте 400 дукатов.
  */
-export type UpgradeResource = 'coins' | 'timber' | 'stone' | 'metal' | 'labor';
+export type UpgradeResource = 'ducats' | 'coins' | 'timber' | 'stone' | 'metal' | 'labor';

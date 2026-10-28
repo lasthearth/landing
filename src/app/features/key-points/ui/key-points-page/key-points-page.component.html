@@ -54,6 +54,10 @@
             </p>
         </div>
 
-        <app-upgrade-scheme [scheme]="active()" />
+        <!--
+            Без гидратации: страница пререндерится без ?point, и при открытии другой точки
+            разметка сервера расходится с клиентской — оставались чужие цены и номера уровней.
+        -->
+        <app-upgrade-scheme ngSkipHydration [scheme]="active()" />
     </section>
 </div>

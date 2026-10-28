@@ -48,7 +48,13 @@ export interface UpgradeNode {
     readonly choiceGroup?: string;
 
     /**
-     * Стоимость.
+     * Узел открывается сам, как только выполнены требования, и отдельно не строится.
+     * Например, «3 торговца» на торговой точке — итог найма торговца, а не покупка.
+     */
+    readonly automatic?: boolean;
+
+    /**
+     * Стоимость. Пустая — узел отдельно не оплачивается.
      */
     readonly cost: readonly UpgradeCost[];
 }

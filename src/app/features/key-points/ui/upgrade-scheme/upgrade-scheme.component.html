@@ -2,77 +2,125 @@
 
 <div class="scheme" [style.--kp-accent]="scheme().accent">
     <div class="scheme__board lh-panel">
-        <div
-            class="scheme__canvas"
-            role="group"
-            [class.scheme__canvas--focused]="hasFocus()"
-            [style.--kp-tiers]="scheme().tiers"
-            [attr.aria-label]="'keyPoints.scheme.label' | translate: { name: (point + '.name' | translate) }"
-            (mouseleave)="hoveredId.set(null)"
-        >
-            <svg class="scheme__lines" [attr.viewBox]="viewBox()" preserveAspectRatio="none" aria-hidden="true">
-                @for (edge of edges(); track edge.key) {
-                    <path
-                        class="scheme__line"
-                        [class.scheme__line--optional]="edge.optional"
-                        [class.scheme__line--built]="edge.built"
-                        [class.scheme__line--related]="edge.related"
-                        [attr.d]="edge.path"
-                        vector-effect="non-scaling-stroke"
-                    />
+        <!-- Широкую схему (5 колонок) на телефоне листают вбок, а не сжимают до нечитаемого. -->
+        <div class="scheme__scroll">
+            <div
+                class="scheme__canvas"
+                role="group"
+                [class.scheme__canvas--focused]="hasFocus()"
+                [style.--kp-tiers]="scheme().tiers"
+                [style.--kp-lanes]="scheme().lanes"
+                [attr.aria-label]="'keyPoints.scheme.label' | translate: { name: (point + '.name' | translate) }"
+                (mouseleave)="hoveredId.set(null)"
+            >
+                <svg class="scheme__lines" [attr.viewBox]="viewBox()" preserveAspectRatio="none" aria-hidden="true">
+                    @for (edge of edges(); track edge.key) {
+                        <path
+                            class="scheme__line"
+                            [class.scheme__line--optional]="edge.optional"
+                            [class.scheme__line--built]="edge.built"
+                            [class.scheme__line--related]="edge.related"
+                            [attr.d]="edge.path"
+                            vector-effect="non-scaling-stroke"
+                        />
+                    }
+                </svg>
+
+                @for (mark of choiceMarks(); track mark.key) {
+                    <span class="scheme__or" [style.left.%]="mark.x" [style.top.%]="mark.y" aria-hidden="true">
+                        {{ "keyPoints.scheme.or" | translate }}
+                    </span>
                 }
-            </svg>
 
-            @for (mark of choiceMarks(); track mark.key) {
-                <span class="scheme__or" [style.left.%]="mark.x" [style.top.%]="mark.y" aria-hidden="true">
-                    {{ "keyPoints.scheme.or" | translate }}
-                </span>
-            }
+                @for (view of nodes(); track view.node.id) {
+                    <button
+                        type="button"
+                        class="scheme-node"
+                        [class]="'scheme-node--' + view.state + ' scheme-node--' + view.node.kind"
+                        [class.scheme-node--selected]="view.node.id === selectedId()"
+                        [class.scheme-node--related]="view.related"
+                        [style.left.%]="view.x"
+                        [style.top.%]="view.y"
+                        [attr.aria-pressed]="view.node.id === selectedId()"
+                        [attr.aria-describedby]="tip()?.view?.node?.id === view.node.id ? 'kp-tip' : null"
+                        [attr.aria-label]="
+                            (point + '.nodes.' + view.node.id + '.title' | translate) +
+                            ' — ' +
+                            ('keyPoints.states.' + view.state | translate)
+                        "
+                        (click)="select(view.node.id)"
+                        (mouseenter)="hoveredId.set(view.node.id)"
+                        (focus)="hoveredId.set(view.node.id)"
+                        (blur)="hoveredId.set(null)"
+                    >
+                        <span class="scheme-node__medal">
+                            <tui-icon class="scheme-node__icon" [icon]="view.node.icon" />
 
-            @for (view of nodes(); track view.node.id) {
-                <button
-                    type="button"
-                    class="scheme-node"
-                    [class]="'scheme-node--' + view.state + ' scheme-node--' + view.node.kind"
-                    [class.scheme-node--selected]="view.node.id === selectedId()"
-                    [class.scheme-node--related]="view.related"
-                    [style.left.%]="view.x"
-                    [style.top.%]="view.y"
-                    [attr.aria-pressed]="view.node.id === selectedId()"
-                    [attr.aria-label]="
-                        (point + '.nodes.' + view.node.id + '.title' | translate) +
-                        ' — ' +
-                        ('keyPoints.states.' + view.state | translate)
-                    "
-                    (click)="select(view.node.id)"
-                    (mouseenter)="hoveredId.set(view.node.id)"
-                    (focus)="hoveredId.set(view.node.id)"
-                    (blur)="hoveredId.set(null)"
-                >
-                    <span class="scheme-node__medal">
-                        <tui-icon class="scheme-node__icon" [icon]="view.node.icon" />
+                            @if (view.levelNumber) {
+                                <span class="scheme-node__level">{{ view.levelNumber }}</span>
+                            }
 
-                        @if (view.levelNumber) {
-                            <span class="scheme-node__level">{{ view.levelNumber }}</span>
+                            @switch (view.state) {
+                                @case ("built") {
+                                    <span class="scheme-node__badge"><tui-icon icon="@tui.check" /></span>
+                                }
+                                @case ("locked") {
+                                    <span class="scheme-node__badge"><tui-icon icon="@tui.lock" /></span>
+                                }
+                                @case ("excluded") {
+                                    <span class="scheme-node__badge"><tui-icon icon="@tui.x" /></span>
+                                }
+                            }
+                        </span>
+                        <span class="scheme-node__label">
+                            {{ point + ".nodes." + view.node.id + ".title" | translate }}
+                        </span>
+                        @if (view.price; as price) {
+                            <span class="scheme-node__price">
+                                {{ price.amount | amount }} {{ unitKey(price.resource, price.amount) | translate }}
+                                @if (view.morePrices) {
+                                    +{{ view.morePrices }}
+                                }
+                            </span>
                         }
+                    </button>
+                }
 
-                        @switch (view.state) {
-                            @case ("built") {
-                                <span class="scheme-node__badge"><tui-icon icon="@tui.check" /></span>
-                            }
-                            @case ("locked") {
-                                <span class="scheme-node__badge"><tui-icon icon="@tui.lock" /></span>
-                            }
-                            @case ("excluded") {
-                                <span class="scheme-node__badge"><tui-icon icon="@tui.x" /></span>
-                            }
+                @if (tip(); as tip) {
+                    <div
+                        id="kp-tip"
+                        role="tooltip"
+                        class="scheme-tip"
+                        [class]="'scheme-tip--' + tip.align"
+                        [class.scheme-tip--below]="tip.below"
+                        [class.scheme-tip--level]="tip.view.node.kind === 'level'"
+                        [style.left.%]="tip.view.x"
+                        [style.top.%]="tip.view.y"
+                    >
+                        <span class="scheme-tip__head">
+                            <span class="scheme-tip__title">
+                                {{ point + ".nodes." + tip.view.node.id + ".title" | translate }}
+                            </span>
+                            <span class="scheme-tip__state" [class]="'scheme-tip__state--' + tip.view.state">
+                                {{ "keyPoints.states." + tip.view.state | translate }}
+                            </span>
+                        </span>
+                        <span class="scheme-tip__effect">
+                            {{ point + ".nodes." + tip.view.node.id + ".effect" | translate }}
+                        </span>
+                        @if (tip.view.node.cost.length) {
+                            <span class="scheme-tip__cost">
+                                @for (cost of tip.view.node.cost; track cost.resource) {
+                                    <span>
+                                        <b>{{ cost.amount | amount }}</b>
+                                        {{ unitKey(cost.resource, cost.amount) | translate }}
+                                    </span>
+                                }
+                            </span>
                         }
-                    </span>
-                    <span class="scheme-node__label">
-                        {{ point + ".nodes." + view.node.id + ".title" | translate }}
-                    </span>
-                </button>
-            }
+                    </div>
+                }
+            </div>
         </div>
 
         <ul class="scheme__legend" [attr.aria-label]="'keyPoints.legend.title' | translate">
@@ -126,7 +174,7 @@
                     @for (cost of planCost(); track cost.resource) {
                         <li class="scheme__cost">
                             <span class="scheme__cost-amount">{{ cost.amount | amount }}</span>
-                            {{ "keyPoints.resources." + cost.resource | translate }}
+                            {{ unitKey(cost.resource, cost.amount) | translate }}
                         </li>
                     }
                 </ul>
