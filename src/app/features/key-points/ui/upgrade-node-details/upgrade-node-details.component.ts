@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
-import { AmountPipe, I18nService, TranslatePipe } from '@core/i18n';
-import { resourceUnitKey } from '../../lib/resource-unit-key.function';
+import { I18nService, TranslatePipe } from '@core/i18n';
+import { formatCost } from '../../lib/format-cost.function';
 import { UpgradeCost } from '../../model/upgrade-cost.interface';
 import { KeyPointScheme } from '../../model/key-point-scheme.interface';
 import { UpgradeNode } from '../../model/upgrade-node.interface';
@@ -16,7 +16,7 @@ import { UpgradeNodeState } from '../../model/upgrade-node-state.type';
  */
 @Component({
     selector: 'app-upgrade-node-details',
-    imports: [AmountPipe, TranslatePipe, TuiIcon],
+    imports: [TranslatePipe, TuiIcon],
     templateUrl: './upgrade-node-details.component.html',
     styleUrl: './upgrade-node-details.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,13 +75,13 @@ export class UpgradeNodeDetailsComponent {
     );
 
     /**
-     * Ключ словаря для названия ресурса в нужной форме числа.
+     * Стоимость текстом: «1 дукат 10 серебряных» или кратко «1 зол. 10 сер.».
      *
-     * @param resource Ресурс.
-     * @param amount Количество.
-     * @returns Ключ словаря.
+     * @param cost Строка стоимости.
+     * @param short Краткая форма — для бирки под узлом.
+     * @returns Текст стоимости.
      */
-    protected unitKey(resource: UpgradeCost['resource'], amount: number): string {
-        return resourceUnitKey(resource, amount, this.i18n.language());
+    protected costText(cost: UpgradeCost, short = false): string {
+        return formatCost(cost, this.i18n.language(), (key) => this.i18n.translate(key), short);
     }
 }

@@ -32,8 +32,7 @@
             <ul class="details__costs">
                 @for (cost of node().cost; track cost.resource) {
                     <li class="details__cost">
-                        <span class="details__cost-amount">{{ cost.amount | amount }}</span>
-                        {{ unitKey(cost.resource, cost.amount) | translate }}
+                        {{ costText(cost) }}
                     </li>
                 }
             </ul>

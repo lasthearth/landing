@@ -9,8 +9,8 @@ import { KeyPointScheme } from '../model/key-point-scheme.interface';
  * печи. Узлы без цены (ульевая печь, сталеварня, уровни кирпичей, готовые стальные
  * печи) открываются сами (`automatic`), когда оплачен предыдущий шаг.
  *
- * Цены — в дукатах по тому же курсу, что у торговой точки: 1 дукат = 24 БИ,
- * округление до целого. Полная прокачка — 367 дукатов (8770 БИ).
+ * Цены — в серебряных (1 серебряная = 1 БИ, 1 дукат = 100), как в схеме владельца.
+ * Сумма всех узлов: 8770 серебряных ≈ 87.7 дукатов.
  * Тексты узлов — в словаре `keyPoints.points.industry.nodes`.
  */
 export const INDUSTRY_SCHEME: KeyPointScheme = {
@@ -28,7 +28,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 1,
             icon: '@tui.factory',
             requires: [],
-            cost: [{ resource: 'ducats', amount: 5 }],
+            cost: [{ resource: 'money', amount: 110 }],
         },
         {
             id: 'bloomery1',
@@ -37,7 +37,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.flame',
             requires: ['works'],
-            cost: [{ resource: 'ducats', amount: 3 }],
+            cost: [{ resource: 'money', amount: 60 }],
         },
         {
             id: 'bloomery2',
@@ -46,7 +46,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.flame',
             requires: ['bloomery1'],
-            cost: [{ resource: 'ducats', amount: 4 }],
+            cost: [{ resource: 'money', amount: 90 }],
         },
         {
             id: 'bloomery3',
@@ -55,7 +55,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.flame',
             requires: ['bloomery2'],
-            cost: [{ resource: 'ducats', amount: 5 }],
+            cost: [{ resource: 'money', amount: 120 }],
         },
         {
             id: 'anvilBronze',
@@ -64,7 +64,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.anvil',
             requires: ['works'],
-            cost: [{ resource: 'ducats', amount: 3 }],
+            cost: [{ resource: 'money', amount: 60 }],
         },
         {
             id: 'anvilIron',
@@ -73,7 +73,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.anvil',
             requires: ['anvilBronze'],
-            cost: [{ resource: 'ducats', amount: 10 }],
+            cost: [{ resource: 'money', amount: 250 }],
         },
         {
             id: 'beehive',
@@ -92,7 +92,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.brick-wall',
             requires: ['beehive'],
-            cost: [{ resource: 'ducats', amount: 4 }],
+            cost: [{ resource: 'money', amount: 96 }],
         },
         {
             id: 'beehiveFiring',
@@ -101,7 +101,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.flame-kindling',
             requires: ['beehiveBase'],
-            cost: [{ resource: 'ducats', amount: 10 }],
+            cost: [{ resource: 'money', amount: 240 }],
         },
         {
             id: 'beehiveSecond',
@@ -110,7 +110,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.heater',
             requires: ['beehiveFiring'],
-            cost: [{ resource: 'ducats', amount: 20 }],
+            cost: [{ resource: 'money', amount: 480 }],
         },
         {
             id: 'beehiveRepair',
@@ -119,7 +119,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 0,
             icon: '@tui.wrench',
             requires: ['beehive'],
-            cost: [{ resource: 'ducats', amount: 4 }],
+            cost: [{ resource: 'money', amount: 96 }],
         },
         {
             id: 'beehiveDiscount',
@@ -128,7 +128,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 0,
             icon: '@tui.badge-percent',
             requires: ['beehiveRepair'],
-            cost: [{ resource: 'ducats', amount: 6 }],
+            cost: [{ resource: 'money', amount: 144 }],
         },
         {
             id: 'steelworks',
@@ -147,7 +147,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 0,
             icon: '@tui.wrench',
             requires: ['steelworks'],
-            cost: [{ resource: 'ducats', amount: 6 }],
+            cost: [{ resource: 'money', amount: 144 }],
         },
         {
             id: 'steelDiscount',
@@ -156,7 +156,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 0,
             icon: '@tui.badge-percent',
             requires: ['steelRepair'],
-            cost: [{ resource: 'ducats', amount: 17 }],
+            cost: [{ resource: 'money', amount: 400 }],
         },
         {
             id: 'bricks1',
@@ -175,7 +175,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.shovel',
             requires: ['bricks1'],
-            cost: [{ resource: 'ducats', amount: 17 }],
+            cost: [{ resource: 'money', amount: 400 }],
         },
         {
             id: 'furnace1Stage2',
@@ -184,7 +184,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.brick-wall',
             requires: ['furnace1Stage1'],
-            cost: [{ resource: 'ducats', amount: 25 }],
+            cost: [{ resource: 'money', amount: 600 }],
         },
         {
             id: 'furnace1Stage3',
@@ -193,7 +193,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.construction',
             requires: ['furnace1Stage2'],
-            cost: [{ resource: 'ducats', amount: 33 }],
+            cost: [{ resource: 'money', amount: 800 }],
         },
         {
             id: 'steel1',
@@ -222,7 +222,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.shovel',
             requires: ['bricks2'],
-            cost: [{ resource: 'ducats', amount: 22 }],
+            cost: [{ resource: 'money', amount: 520 }],
         },
         {
             id: 'furnace2Stage2',
@@ -231,7 +231,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.brick-wall',
             requires: ['furnace2Stage1'],
-            cost: [{ resource: 'ducats', amount: 30 }],
+            cost: [{ resource: 'money', amount: 720 }],
         },
         {
             id: 'furnace2Stage3',
@@ -240,7 +240,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.construction',
             requires: ['furnace2Stage2'],
-            cost: [{ resource: 'ducats', amount: 38 }],
+            cost: [{ resource: 'money', amount: 920 }],
         },
         {
             id: 'steel2',
@@ -269,7 +269,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.shovel',
             requires: ['bricks3'],
-            cost: [{ resource: 'ducats', amount: 27 }],
+            cost: [{ resource: 'money', amount: 640 }],
         },
         {
             id: 'furnace3Stage2',
@@ -278,7 +278,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.brick-wall',
             requires: ['furnace3Stage1'],
-            cost: [{ resource: 'ducats', amount: 35 }],
+            cost: [{ resource: 'money', amount: 840 }],
         },
         {
             id: 'furnace3Stage3',
@@ -287,7 +287,7 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.construction',
             requires: ['furnace3Stage2'],
-            cost: [{ resource: 'ducats', amount: 43 }],
+            cost: [{ resource: 'money', amount: 1040 }],
         },
         {
             id: 'steel3',

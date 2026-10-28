@@ -57,12 +57,25 @@ export const KEY_POINTS_I18N = {
             },
             resources: {
                 ducats: { one: 'дукат', few: 'дуката', many: 'дукатов', other: 'дуката' },
+                silver: { one: 'серебряная', few: 'серебряные', many: 'серебряных', other: 'серебряной' },
+                copper: { one: 'медная', few: 'медные', many: 'медных', other: 'медной' },
                 coins: { one: 'монета', few: 'монеты', many: 'монет', other: 'монеты' },
                 timber: { one: 'бревно', few: 'бревна', many: 'брёвен', other: 'бревна' },
                 stone: { one: 'блок камня', few: 'блока камня', many: 'блоков камня', other: 'блока камня' },
                 metal: { one: 'слиток', few: 'слитка', many: 'слитков', other: 'слитка' },
                 labor: { one: 'рабочий', few: 'рабочих', many: 'рабочих', other: 'рабочего' },
             },
+            short: {
+                ducats: 'зол.',
+                silver: 'сер.',
+                copper: 'мед.',
+                coins: 'мон.',
+                timber: 'бр.',
+                stone: 'кам.',
+                metal: 'сл.',
+                labor: 'раб.',
+            },
+            moneyNote: 'Цены — в монетах сервера: 1 дукат (золотая) = 100 серебряных, 1 серебряная = 10 медных.',
             points: {
                 mine: {
                     name: 'Шахта',
@@ -146,41 +159,113 @@ export const KEY_POINTS_I18N = {
                 },
                 harbor: {
                     name: 'Воздушная гавань',
-                    tagline: 'Перелёты и почта',
+                    tagline: 'Торговля с Империей',
                     description:
-                        'Причал для воздушных судов. Сокращает путь между ленами и столицей, открывает почтовые и грузовые рейсы.',
+                        'Крупный воздушный торговый порт, позволяющий торговать с Империей путём отправки аэростатов и дирижаблей.',
                     nodes: {
-                        mast: {
-                            title: 'Причальная мачта',
-                            effect: 'Первый причал: перелёт до столицы раз в реальный день.',
+                        access: {
+                            title: 'Право на гавань',
+                            effect: 'Доступ к возведению воздушной гавани на одной из ключевых точек — по предварительному проекту, как с великим строением.',
                         },
-                        beacon: {
-                            title: 'Сигнальный огонь',
-                            effect: 'Суда находят гавань ночью и в непогоду.',
+                        balloon: {
+                            title: 'Аэростатная мачта',
+                            effect: 'Открывает покупку аэростата за 20 дукатов.',
                         },
-                        hangar: {
-                            title: 'Эллинг',
-                            effect: 'Судно можно оставить на стоянке без риска поломки.',
+                        supplies: {
+                            title: 'Имперские поставки',
+                            effect: 'Открывает поставки строительных материалов из Империи.',
                         },
-                        harbor2: {
-                            title: 'Воздушная пристань',
-                            effect: 'Уровень II: рейсы в союзные лены.',
+                        discount10: {
+                            title: 'Скидка поставщика',
+                            effect: 'Скидка 10% на покупку ресурсов в торговой точке.',
                         },
-                        courier: {
-                            title: 'Почтовые рейсы',
-                            effect: 'Специализация: письма и малые посылки доходят мгновенно.',
+                        airship: {
+                            title: 'Дирижабельная пристань',
+                            effect: 'Открывает покупку дирижабля за 15 дукатов.',
+                        },
+                        discount15: {
+                            title: 'Оптовый договор',
+                            effect: 'Скидка 15% на покупку ресурсов в торговой точке.',
+                        },
+                        empireTrade: {
+                            title: 'Торговля с Империей',
+                            effect: 'Продажа ресурсов в Империю за монеты. Торговый дирижабль из Империи прибывает раз в неделю и без улучшений увозит только один двойной сундук ресурсов — 36 слотов.',
+                        },
+                        discount25: {
+                            title: 'Имперская привилегия',
+                            effect: 'Скидка 25% на покупку ресурсов в торговой точке.',
+                        },
+                        rivetedSale: {
+                            title: 'Клёпаный товар',
+                            effect: 'Империя начинает покупать клёпаные блоки из металлов.',
+                        },
+                        metals: {
+                            title: 'Металлы',
+                            effect: 'Ветка продажи металлов. Слитки можно продавать сразу, клёпаные блоки — только после «Клёпаного товара».',
                         },
                         cargo: {
-                            title: 'Грузовые рейсы',
-                            effect: 'Специализация: перевозка ящиков без каравана.',
+                            title: 'Трюм дирижабля',
+                            effect: 'Ветка улучшения грузоподъёмности торгового дирижабля Империи.',
                         },
-                        shipyard: {
-                            title: 'Верфь',
-                            effect: 'Ремонт и постройка собственных воздушных судов.',
+                        luxury: {
+                            title: 'Предметы роскоши',
+                            effect: 'Ветка продажи предметов роскоши.',
                         },
-                        harbor3: {
-                            title: 'Воздушная гавань',
-                            effect: 'Уровень III: регулярное сообщение со всеми ключевыми землями.',
+                        metal1: {
+                            title: 'Медь',
+                            effect: 'Империя покупает: слиток меди — 50 медных/шт; клёпаный блок меди — 4 серебряных/шт.',
+                        },
+                        metal2: {
+                            title: 'Латунь',
+                            effect: 'Империя покупает: слиток латуни — 60 медных/шт; клёпаный блок латуни — 4 серебряных 80 медных/шт.',
+                        },
+                        metal3: {
+                            title: 'Золото',
+                            effect: 'Империя покупает: слиток золота — 2 серебряных 50 медных/шт; клёпаный блок золота — 20 серебряных/шт.',
+                        },
+                        metal4: {
+                            title: 'Висмут',
+                            effect: 'Империя покупает: слиток висмута — 55 медных/шт; клёпаный блок висмута — 4 серебряных 40 медных/шт.',
+                        },
+                        metal5: {
+                            title: 'Серебро',
+                            effect: 'Империя покупает: слиток серебра — 2 серебряных 50 медных/шт; клёпаный блок серебра — 20 серебряных/шт.',
+                        },
+                        metal6: {
+                            title: 'Мельхиор',
+                            effect: 'Империя покупает: слиток мельхиора — 3 серебряных/шт; клёпаный блок мельхиора — 24 серебряных/шт.',
+                        },
+                        metal7: {
+                            title: 'Железо',
+                            effect: 'Империя покупает: слиток обычного железа — 4 серебряных/шт; клёпаный блок железа — 32 серебряных/шт.',
+                        },
+                        hold1: {
+                            title: 'Расширенный трюм',
+                            effect: 'Грузоподъёмность дирижабля +1 одиночный сундук (+16 слотов).',
+                        },
+                        hold2: {
+                            title: 'Второй трюм',
+                            effect: 'Грузоподъёмность дирижабля ещё +1 одиночный сундук (+16 слотов).',
+                        },
+                        hold3: {
+                            title: 'Сдвоенный трюм',
+                            effect: 'Два одиночных сундука объединяются в один двойной: вместо +32 слотов — +36.',
+                        },
+                        lux1: {
+                            title: 'Искусство и диковины',
+                            effect: 'Империя покупает картины, гобелены (полные, не поштучно), детские игрушки (категория хлама), художественную бутыль, резонансные цилиндры — 1 серебряная/шт.',
+                        },
+                        lux2: {
+                            title: 'Наряды и украшения',
+                            effect: 'Империя покупает одежду (не крафтовую), украшения, маски, головные уборы — 2 серебряных/шт.',
+                        },
+                        lux3: {
+                            title: 'Драгоценные камни',
+                            effect: 'Империя покупает драгоценные камни от высокого качества — 3 серебряных/шт.',
+                        },
+                        lux4: {
+                            title: 'Артефакты',
+                            effect: 'Империя покупает артефакты — 5 серебряных/шт: черепа (хрустальный, деформированный, саблезуба), мумифицированную голову, голову Эйдолона, статуэтки, насекомое в янтаре, древнюю вырезанную голову, реликварий обречённого, серебряную и золотую шестерёнки, песочные часы, гунбай, прототип странного устройства, странное устройство, зоолит, мультитул.',
                         },
                     },
                 },
@@ -430,12 +515,25 @@ export const KEY_POINTS_I18N = {
             },
             resources: {
                 ducats: { one: 'ducat', few: 'ducats', many: 'ducats', other: 'ducats' },
+                silver: { one: 'silver', few: 'silver', many: 'silver', other: 'silver' },
+                copper: { one: 'copper', few: 'copper', many: 'copper', other: 'copper' },
                 coins: { one: 'coin', few: 'coins', many: 'coins', other: 'coins' },
                 timber: { one: 'log', few: 'logs', many: 'logs', other: 'logs' },
                 stone: { one: 'stone block', few: 'stone blocks', many: 'stone blocks', other: 'stone blocks' },
                 metal: { one: 'ingot', few: 'ingots', many: 'ingots', other: 'ingots' },
                 labor: { one: 'worker', few: 'workers', many: 'workers', other: 'workers' },
             },
+            short: {
+                ducats: 'g',
+                silver: 's',
+                copper: 'c',
+                coins: 'coins',
+                timber: 'logs',
+                stone: 'stone',
+                metal: 'ingots',
+                labor: 'workers',
+            },
+            moneyNote: 'Prices are in server coins: 1 ducat (gold) = 100 silver, 1 silver = 10 copper.',
             points: {
                 mine: {
                     name: 'Mine',
@@ -519,41 +617,113 @@ export const KEY_POINTS_I18N = {
                 },
                 harbor: {
                     name: 'Air harbor',
-                    tagline: 'Flights and mail',
+                    tagline: 'Trade with the Empire',
                     description:
-                        'A dock for airships. Shortens the way between fiefs and the capital and opens mail and cargo routes.',
+                        'A large air trade port that lets you trade with the Empire by sending balloons and airships.',
                     nodes: {
-                        mast: {
-                            title: 'Mooring mast',
-                            effect: 'First dock: a flight to the capital once per real day.',
+                        access: {
+                            title: 'Harbor charter',
+                            effect: 'Access to building an air harbor at one of the key points — by preliminary design, as with a great structure.',
                         },
-                        beacon: {
-                            title: 'Signal beacon',
-                            effect: 'Ships find the harbor at night and in bad weather.',
+                        balloon: {
+                            title: 'Balloon mast',
+                            effect: 'Unlocks buying a balloon for 20 ducats.',
                         },
-                        hangar: {
-                            title: 'Hangar',
-                            effect: 'A ship can be left moored without risk of damage.',
+                        supplies: {
+                            title: 'Imperial supplies',
+                            effect: 'Unlocks building material supplies from the Empire.',
                         },
-                        harbor2: {
-                            title: 'Air pier',
-                            effect: 'Level II: flights to allied fiefs.',
+                        discount10: {
+                            title: 'Supplier discount',
+                            effect: '10% off buying resources at the trade point.',
                         },
-                        courier: {
-                            title: 'Mail flights',
-                            effect: 'Specialization: letters and small parcels arrive instantly.',
+                        airship: {
+                            title: 'Airship pier',
+                            effect: 'Unlocks buying an airship for 15 ducats.',
+                        },
+                        discount15: {
+                            title: 'Wholesale contract',
+                            effect: '15% off buying resources at the trade point.',
+                        },
+                        empireTrade: {
+                            title: 'Trade with the Empire',
+                            effect: 'Selling resources to the Empire for coins. The imperial trade airship arrives once a week and without upgrades carries only one double chest of resources — 36 slots.',
+                        },
+                        discount25: {
+                            title: 'Imperial privilege',
+                            effect: '25% off buying resources at the trade point.',
+                        },
+                        rivetedSale: {
+                            title: 'Riveted goods',
+                            effect: 'The Empire starts buying riveted metal blocks.',
+                        },
+                        metals: {
+                            title: 'Metals',
+                            effect: 'The metal sales branch. Ingots can be sold right away, riveted blocks only after “Riveted goods”.',
                         },
                         cargo: {
-                            title: 'Cargo flights',
-                            effect: 'Specialization: crate transport without a caravan.',
+                            title: 'Airship hold',
+                            effect: 'The branch for upgrading the imperial trade airship’s capacity.',
                         },
-                        shipyard: {
-                            title: 'Shipyard',
-                            effect: 'Repair and construction of your own airships.',
+                        luxury: {
+                            title: 'Luxury goods',
+                            effect: 'The luxury goods sales branch.',
                         },
-                        harbor3: {
-                            title: 'Air harbor',
-                            effect: 'Level III: regular routes to all key lands.',
+                        metal1: {
+                            title: 'Copper',
+                            effect: 'The Empire buys: copper ingot — 50 copper/pc; riveted copper block — 4 silver/pc.',
+                        },
+                        metal2: {
+                            title: 'Brass',
+                            effect: 'The Empire buys: brass ingot — 60 copper/pc; riveted brass block — 4 silver 80 copper/pc.',
+                        },
+                        metal3: {
+                            title: 'Gold',
+                            effect: 'The Empire buys: gold ingot — 2 silver 50 copper/pc; riveted gold block — 20 silver/pc.',
+                        },
+                        metal4: {
+                            title: 'Bismuth',
+                            effect: 'The Empire buys: bismuth ingot — 55 copper/pc; riveted bismuth block — 4 silver 40 copper/pc.',
+                        },
+                        metal5: {
+                            title: 'Silver',
+                            effect: 'The Empire buys: silver ingot — 2 silver 50 copper/pc; riveted silver block — 20 silver/pc.',
+                        },
+                        metal6: {
+                            title: 'Cupronickel',
+                            effect: 'The Empire buys: cupronickel ingot — 3 silver/pc; riveted cupronickel block — 24 silver/pc.',
+                        },
+                        metal7: {
+                            title: 'Iron',
+                            effect: 'The Empire buys: plain iron ingot — 4 silver/pc; riveted iron block — 32 silver/pc.',
+                        },
+                        hold1: {
+                            title: 'Extended hold',
+                            effect: 'Airship capacity +1 single chest (+16 slots).',
+                        },
+                        hold2: {
+                            title: 'Second hold',
+                            effect: 'Airship capacity +1 more single chest (+16 slots).',
+                        },
+                        hold3: {
+                            title: 'Double hold',
+                            effect: 'Two single chests merge into one double chest: +36 slots instead of +32.',
+                        },
+                        lux1: {
+                            title: 'Art and curiosities',
+                            effect: 'The Empire buys paintings, tapestries (whole, not by piece), children’s toys (junk category), the art bottle, resonance cylinders — 1 silver/pc.',
+                        },
+                        lux2: {
+                            title: 'Garments and jewellery',
+                            effect: 'The Empire buys clothing (not crafted), jewellery, masks, headwear — 2 silver/pc.',
+                        },
+                        lux3: {
+                            title: 'Gemstones',
+                            effect: 'The Empire buys gemstones of high quality and above — 3 silver/pc.',
+                        },
+                        lux4: {
+                            title: 'Artifacts',
+                            effect: 'The Empire buys artifacts — 5 silver/pc: skulls (crystal, deformed, sabertooth), mummified head, Eidolon head, statuettes, insect in amber, ancient carved head, doomed reliquary, silver and gold gears, hourglass, gunbai, strange device prototype, strange device, zoolite, multitool.',
                         },
                     },
                 },

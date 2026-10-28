@@ -4,12 +4,12 @@ import { KeyPointScheme } from '../model/key-point-scheme.interface';
  * Схема прокачки торговой точки — торгового поста с широким спектром товаров.
  *
  * Рынок строится с двумя торговцами. Каждый следующий торговец (3-й…6-й) нанимается
- * на выбор: случайный дешевле, конкретный — вдвое дороже. Ступень «N торговцев»
- * открывается сама после найма (`automatic`). Венчает ветку имперский торговый прилавок.
+ * на выбор: заезжий со случайной специализацией дешевле, приглашённый (специализацию
+ * выбирают) — вдвое дороже. Ступень «N торговцев» открывается сама после найма
+ * (`automatic`). Венчает ветку имперский торговый прилавок.
  *
- * Цены — в дукатах. Исходная схема была в БИ; перевод 1 дукат = 24 БИ сохраняет
- * все соотношения и даёт целые числа. Полная прокачка стоит 56 дукатов через случайных
- * торговцев и 81 — через конкретных, при 400 дукатах в обороте на весь сервер.
+ * Цены — в серебряных (1 серебряная = 1 БИ, 1 дукат = 100), как в схеме владельца.
+ * Сумма всех узлов: 2544 серебряных ≈ 25.44 дукатов.
  * Тексты узлов — в словаре `keyPoints.points.trade.nodes`.
  */
 export const TRADE_SCHEME: KeyPointScheme = {
@@ -27,7 +27,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             lane: 1,
             icon: '@tui.store',
             requires: [],
-            cost: [{ resource: 'ducats', amount: 3 }],
+            cost: [{ resource: 'money', amount: 72 }],
         },
         {
             id: 'random3',
@@ -37,7 +37,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             icon: '@tui.dices',
             requires: ['market'],
             choiceGroup: 'trader3',
-            cost: [{ resource: 'ducats', amount: 3 }],
+            cost: [{ resource: 'money', amount: 72 }],
         },
         {
             id: 'traders3',
@@ -58,7 +58,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             icon: '@tui.user-search',
             requires: ['market'],
             choiceGroup: 'trader3',
-            cost: [{ resource: 'ducats', amount: 6 }],
+            cost: [{ resource: 'money', amount: 144 }],
         },
         {
             id: 'random4',
@@ -68,7 +68,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             icon: '@tui.dices',
             requires: ['traders3'],
             choiceGroup: 'trader4',
-            cost: [{ resource: 'ducats', amount: 4 }],
+            cost: [{ resource: 'money', amount: 96 }],
         },
         {
             id: 'traders4',
@@ -89,7 +89,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             icon: '@tui.user-search',
             requires: ['traders3'],
             choiceGroup: 'trader4',
-            cost: [{ resource: 'ducats', amount: 8 }],
+            cost: [{ resource: 'money', amount: 192 }],
         },
         {
             id: 'random5',
@@ -99,7 +99,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             icon: '@tui.dices',
             requires: ['traders4'],
             choiceGroup: 'trader5',
-            cost: [{ resource: 'ducats', amount: 6 }],
+            cost: [{ resource: 'money', amount: 144 }],
         },
         {
             id: 'traders5',
@@ -120,7 +120,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             icon: '@tui.user-search',
             requires: ['traders4'],
             choiceGroup: 'trader5',
-            cost: [{ resource: 'ducats', amount: 12 }],
+            cost: [{ resource: 'money', amount: 288 }],
         },
         {
             id: 'random6',
@@ -130,7 +130,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             icon: '@tui.dices',
             requires: ['traders5'],
             choiceGroup: 'trader6',
-            cost: [{ resource: 'ducats', amount: 12 }],
+            cost: [{ resource: 'money', amount: 288 }],
         },
         {
             id: 'traders6',
@@ -151,7 +151,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             icon: '@tui.user-search',
             requires: ['traders5'],
             choiceGroup: 'trader6',
-            cost: [{ resource: 'ducats', amount: 24 }],
+            cost: [{ resource: 'money', amount: 576 }],
         },
         {
             id: 'imperial',
@@ -160,7 +160,7 @@ export const TRADE_SCHEME: KeyPointScheme = {
             lane: 1,
             icon: '@tui.landmark',
             requires: ['traders6'],
-            cost: [{ resource: 'ducats', amount: 28 }],
+            cost: [{ resource: 'money', amount: 672 }],
         },
     ],
 };

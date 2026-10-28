@@ -77,7 +77,7 @@
                         </span>
                         @if (view.price; as price) {
                             <span class="scheme-node__price">
-                                {{ price.amount | amount }} {{ unitKey(price.resource, price.amount) | translate }}
+                                {{ costText(price, true) }}
                                 @if (view.morePrices) {
                                     +{{ view.morePrices }}
                                 }
@@ -112,8 +112,7 @@
                             <span class="scheme-tip__cost">
                                 @for (cost of tip.view.node.cost; track cost.resource) {
                                     <span>
-                                        <b>{{ cost.amount | amount }}</b>
-                                        {{ unitKey(cost.resource, cost.amount) | translate }}
+                                        {{ costText(cost) }}
                                     </span>
                                 }
                             </span>
@@ -173,8 +172,7 @@
                 <ul class="scheme__costs">
                     @for (cost of planCost(); track cost.resource) {
                         <li class="scheme__cost">
-                            <span class="scheme__cost-amount">{{ cost.amount | amount }}</span>
-                            {{ unitKey(cost.resource, cost.amount) | translate }}
+                            {{ costText(cost) }}
                         </li>
                     }
                 </ul>

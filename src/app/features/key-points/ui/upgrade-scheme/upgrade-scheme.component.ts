@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
-import { AmountPipe, I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { buildSchemeEdges } from '../../lib/build-scheme-edges.function';
 import { collectAncestors } from '../../lib/collect-ancestors.function';
 import { collectDescendants } from '../../lib/collect-descendants.function';
 import { getNodeState } from '../../lib/get-node-state.function';
-import { resourceUnitKey } from '../../lib/resource-unit-key.function';
+import { formatCost } from '../../lib/format-cost.function';
 import { sumCosts } from '../../lib/sum-costs.function';
 import { KeyPointPlannerStore } from '../../model/key-point-planner.store';
 import { KeyPointScheme } from '../../model/key-point-scheme.interface';
@@ -114,7 +114,7 @@ interface ChoiceMark {
  */
 @Component({
     selector: 'app-upgrade-scheme',
-    imports: [AmountPipe, TranslatePipe, TuiIcon, UpgradeNodeDetailsComponent],
+    imports: [TranslatePipe, TuiIcon, UpgradeNodeDetailsComponent],
     templateUrl: './upgrade-scheme.component.html',
     styleUrl: './upgrade-scheme.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -292,14 +292,14 @@ export class UpgradeSchemeComponent {
     );
 
     /**
-     * Ключ словаря для названия ресурса в нужной форме числа.
+     * Стоимость текстом: «1 дукат 10 серебряных» или кратко «1 зол. 10 сер.».
      *
-     * @param resource Ресурс.
-     * @param amount Количество.
-     * @returns Ключ словаря.
+     * @param cost Строка стоимости.
+     * @param short Краткая форма — для бирки под узлом.
+     * @returns Текст стоимости.
      */
-    protected unitKey(resource: UpgradeCost['resource'], amount: number): string {
-        return resourceUnitKey(resource, amount, this.i18n.language());
+    protected costText(cost: UpgradeCost, short = false): string {
+        return formatCost(cost, this.i18n.language(), (key) => this.i18n.translate(key), short);
     }
 
     /**
