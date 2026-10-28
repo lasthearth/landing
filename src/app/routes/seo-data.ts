@@ -43,6 +43,7 @@ export const routeSeoData: {
     wikiSection: ISeoData;
     mods: ISeoData;
     about: ISeoData;
+    keyPoints: ISeoData;
     players: ISeoData;
 } = {
     home: {
@@ -279,6 +280,17 @@ export const routeSeoData: {
         siteName,
         image: ogImage,
         imageAlt: 'О сервере Last Hearth',
+    },
+    keyPoints: {
+        title: 'Ключевые точки и их прокачка — Last Hearth',
+        description:
+            'Схемы прокачки ключевых точек сервера Last Hearth: шахта, форт, воздушная гавань, промышленная и торговая точки — уровни, улучшения и стоимость.',
+        url: `${siteUrl}/key-points`,
+        type: 'website',
+        locale: 'ru_RU',
+        siteName,
+        image: ogImage,
+        imageAlt: 'Ключевые точки сервера Last Hearth',
     },
     wikiSection: {
         title: 'Раздел вики — Last Hearth',

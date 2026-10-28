@@ -12,6 +12,7 @@ export const FOOTER_NAV_LINKS: readonly { route: string; key: string }[] = [
     { route: '/wiki', key: 'footer.nav.wiki' },
     { route: '/faq', key: 'footer.nav.faq' },
     { route: '/settlements', key: 'footer.nav.settlements' },
+    { route: '/key-points', key: 'footer.nav.keyPoints' },
     { route: '/players', key: 'footer.nav.players' },
     { route: '/diplomacy', key: 'footer.nav.diplomacy' },
     { route: '/events', key: 'footer.nav.events' },

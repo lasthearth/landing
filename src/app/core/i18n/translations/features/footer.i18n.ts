@@ -12,6 +12,7 @@ export const FOOTER_I18N = {
             nav: {
                 title: 'Разделы сайта',
                 about: 'О сервере',
+                keyPoints: 'Ключевые точки',
                 startGame: 'Как начать',
                 rules: 'Правила',
                 wiki: 'Вики',
@@ -45,6 +46,7 @@ export const FOOTER_I18N = {
             nav: {
                 title: 'Site sections',
                 about: 'About the server',
+                keyPoints: 'Key points',
                 startGame: 'Getting started',
                 rules: 'Rules',
                 wiki: 'Wiki',

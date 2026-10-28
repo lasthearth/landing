@@ -50,6 +50,7 @@ const STATIC_PAGES = {
     '/rules': { changefreq: 'weekly', priority: '0.9' },
     '/about': { changefreq: 'monthly', priority: '0.8' },
     '/mods': { changefreq: 'weekly', priority: '0.7' },
+    '/key-points': { changefreq: 'weekly', priority: '0.7' },
     '/faq': { changefreq: 'weekly', priority: '0.9' },
     '/wiki': { changefreq: 'daily', priority: '0.9' },
     '/wiki/razdel/start': { changefreq: 'weekly', priority: '0.7' },
@@ -325,6 +326,7 @@ function buildLlms(articles) {
         ['Поселения', '/settlements', 'список поселений сервера'],
         ['Игроки', '/players', 'список игроков сервера'],
         ['Моды', '/mods', 'моды сервера с версиями'],
+        ['Ключевые точки', '/key-points', 'схемы прокачки ключевых точек'],
     ];
     const sections = [
         ['Начало игры', '/wiki/razdel/start'],

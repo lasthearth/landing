@@ -1,0 +1,96 @@
+@let point = pointKey();
+
+<section class="details lh-panel" [attr.aria-labelledby]="'kp-details-' + node().id">
+    <div class="details__head">
+        <span class="details__medal" [class.details__medal--built]="state() === 'built'">
+            <tui-icon [icon]="node().icon" />
+        </span>
+        <div class="details__heading">
+            <p class="details__kind">{{ "keyPoints.kinds." + node().kind | translate }}</p>
+            <h3 class="details__title" [id]="'kp-details-' + node().id">
+                {{ point + ".nodes." + node().id + ".title" | translate }}
+            </h3>
+        </div>
+    </div>
+
+    <span class="details__state" [class]="'details__state--' + state()">
+        {{ "keyPoints.states." + state() | translate }}
+    </span>
+
+    <p class="details__effect">{{ point + ".nodes." + node().id + ".effect" | translate }}</p>
+
+    @if (node().choiceGroup) {
+        <p class="details__note">
+            <tui-icon icon="@tui.split" />
+            {{ "keyPoints.details.choiceNote" | translate }}
+        </p>
+    }
+
+    <div class="details__block">
+        <h4 class="details__label">{{ "keyPoints.details.cost" | translate }}</h4>
+        <ul class="details__costs">
+            @for (cost of node().cost; track cost.resource) {
+                <li class="details__cost">
+                    <span class="details__cost-amount">{{ cost.amount | amount }}</span>
+                    {{ "keyPoints.resources." + cost.resource | translate }}
+                </li>
+            }
+        </ul>
+    </div>
+
+    @if (node().requires.length || node().requiresAny?.length) {
+        <div class="details__block">
+            <h4 class="details__label">{{ "keyPoints.details.requires" | translate }}</h4>
+            <ul class="details__links">
+                @for (id of node().requires; track id) {
+                    <li>
+                        <button type="button" class="details__link" (click)="selectNode.emit(id)">
+                            <tui-icon [icon]="built().has(id) ? '@tui.circle-check' : '@tui.circle'" />
+                            {{ point + ".nodes." + id + ".title" | translate }}
+                        </button>
+                    </li>
+                }
+            </ul>
+            @if (node().requiresAny?.length) {
+                <p class="details__any">{{ "keyPoints.details.requiresAny" | translate }}</p>
+                <ul class="details__links">
+                    @for (id of node().requiresAny; track id) {
+                        <li>
+                            <button type="button" class="details__link" (click)="selectNode.emit(id)">
+                                <tui-icon [icon]="built().has(id) ? '@tui.circle-check' : '@tui.circle'" />
+                                {{ point + ".nodes." + id + ".title" | translate }}
+                            </button>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+
+    @if (unlocks().length) {
+        <div class="details__block">
+            <h4 class="details__label">{{ "keyPoints.details.unlocks" | translate }}</h4>
+            <ul class="details__links">
+                @for (next of unlocks(); track next.id) {
+                    <li>
+                        <button type="button" class="details__link" (click)="selectNode.emit(next.id)">
+                            <tui-icon icon="@tui.arrow-down-right" />
+                            {{ point + ".nodes." + next.id + ".title" | translate }}
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    <button
+        type="button"
+        class="lh-cta details__action"
+        [class.lh-cta--ghost]="state() === 'built'"
+        [disabled]="state() === 'locked' || state() === 'excluded'"
+        (click)="toggle.emit()"
+    >
+        <tui-icon [icon]="state() === 'built' ? '@tui.undo-2' : '@tui.hammer'" />
+        {{ actionKey() | translate }}
+    </button>
+</section>

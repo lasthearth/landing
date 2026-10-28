@@ -1,0 +1,398 @@
+// Схема прокачки: холст с узлами слева, подробности и план справа.
+// Акцент точки приходит переменной --kp-accent и красит только декор:
+// кольца, линии, заливку медальона. Текст — всегда на *-ink токенах.
+:host {
+    display: block;
+}
+
+.scheme {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    gap: 1rem;
+    align-items: start;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.scheme__board {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.scheme__side {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (min-width: 1025px) {
+        position: sticky;
+        top: 1rem;
+    }
+}
+
+// Холст: высота задаётся числом рядов, узлы стоят абсолютно в процентах,
+// поэтому схема тянется по ширине без пересчёта координат.
+.scheme__canvas {
+    --kp-row: 8.5rem;
+    position: relative;
+    height: calc(var(--kp-tiers) * var(--kp-row));
+    margin: 0 auto;
+    width: 100%;
+    max-width: 40rem;
+
+    @media (max-width: 640px) {
+        --kp-row: 7.5rem;
+    }
+}
+
+.scheme__lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.scheme__line {
+    fill: none;
+    stroke: var(--lh-border-strong);
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition:
+        stroke var(--lh-dur-fast) var(--lh-ease-smooth),
+        stroke-width var(--lh-dur-fast) var(--lh-ease-smooth),
+        opacity var(--lh-dur-fast) var(--lh-ease-smooth);
+
+    &--optional {
+        stroke-dasharray: 6 6;
+    }
+
+    &--built {
+        stroke: var(--kp-accent);
+        stroke-width: 3.5;
+    }
+
+    &--related {
+        stroke: var(--kp-accent);
+        stroke-width: 3;
+    }
+}
+
+// Есть подсвеченный путь — всё вне него отступает на второй план.
+.scheme__canvas--focused .scheme__line:not(.scheme__line--related) {
+    opacity: 0.35;
+}
+
+.scheme__canvas--focused .scheme-node:not(.scheme-node--related) {
+    opacity: 0.55;
+}
+
+.scheme__or {
+    position: absolute;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    padding: 0.125rem 0.5rem;
+    border: 1px dashed var(--lh-border-strong);
+    border-radius: 999px;
+    background: var(--lh-surface);
+    color: var(--lh-ink-2);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+// Узел: медальон, центр которого совпадает с точкой сетки, и подпись под ним.
+.scheme-node {
+    --kp-size: 3.5rem;
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+    width: 7.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--lh-ink);
+    cursor: pointer;
+    transform: translate(-50%, calc(var(--kp-size) / -2));
+    transition: opacity var(--lh-dur-fast) var(--lh-ease-smooth);
+
+    &--level {
+        --kp-size: 4.5rem;
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    @media (max-width: 640px) {
+        width: 6.25rem;
+    }
+}
+
+.scheme-node__medal {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--kp-size);
+    height: var(--kp-size);
+    border: 2px solid var(--lh-border-strong);
+    border-radius: 50%;
+    background: var(--lh-surface-2);
+    color: var(--lh-ink-3);
+    box-shadow: var(--lh-shadow-soft);
+    transition:
+        transform var(--lh-dur-fast) var(--lh-ease-spring),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth),
+        background-color var(--lh-dur-fast) var(--lh-ease-smooth),
+        border-color var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.scheme-node__icon {
+    width: 45%;
+    height: 45%;
+    font-size: calc(var(--kp-size) * 0.45);
+}
+
+.scheme-node:hover .scheme-node__medal {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: var(--lh-shadow-lift);
+}
+
+.scheme-node:active .scheme-node__medal {
+    transform: scale(0.96);
+}
+
+// Уровень точки: двойное кольцо, чтобы ступени читались издалека.
+.scheme-node--level .scheme-node__medal {
+    border-width: 3px;
+    box-shadow:
+        inset 0 0 0 3px var(--lh-surface-2),
+        inset 0 0 0 5px var(--lh-border),
+        var(--lh-shadow-soft);
+}
+
+.scheme-node--available .scheme-node__medal {
+    border-color: var(--kp-accent);
+    color: var(--lh-ink);
+    animation: scheme-node-breath 2.4s ease-in-out infinite;
+}
+
+.scheme-node--built .scheme-node__medal {
+    border-color: var(--kp-accent);
+    background: color-mix(in srgb, var(--kp-accent) 78%, var(--lh-night));
+    color: var(--lh-parchment);
+}
+
+.scheme-node--locked .scheme-node__medal {
+    border-style: dashed;
+}
+
+.scheme-node--excluded .scheme-node__medal {
+    border-style: dashed;
+    opacity: 0.6;
+}
+
+.scheme-node--selected .scheme-node__medal {
+    outline: 3px solid var(--lh-brand);
+    outline-offset: 3px;
+}
+
+.scheme-node:focus-visible .scheme-node__medal {
+    outline: 3px solid var(--lh-accent);
+    outline-offset: 3px;
+}
+
+.scheme-node__level {
+    position: absolute;
+    top: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background: var(--lh-night);
+    color: var(--lh-parchment);
+    font-family: Almendra, serif;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+}
+
+.scheme-node__badge {
+    position: absolute;
+    right: -0.125rem;
+    bottom: -0.125rem;
+    display: grid;
+    place-items: center;
+    width: 1.375rem;
+    height: 1.375rem;
+    border: 2px solid var(--lh-surface);
+    border-radius: 50%;
+    background: var(--lh-surface-4);
+    color: var(--lh-ink);
+    font-size: 0.75rem;
+}
+
+.scheme-node--built .scheme-node__badge {
+    background: var(--lh-success);
+    color: var(--lh-parchment);
+}
+
+// Подпись на подложке: линии проходят под ней и не перечёркивают текст.
+.scheme-node__label {
+    display: -webkit-box;
+    max-width: 100%;
+    padding: 0.125rem 0.5rem;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--lh-surface) 92%, transparent);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    @media (max-width: 640px) {
+        font-size: 0.8125rem;
+    }
+}
+
+.scheme-node--locked .scheme-node__label,
+.scheme-node--excluded .scheme-node__label {
+    color: var(--lh-ink-2);
+}
+
+@keyframes scheme-node-breath {
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 0 color-mix(in srgb, var(--kp-accent) 0%, transparent),
+            var(--lh-shadow-soft);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 6px color-mix(in srgb, var(--kp-accent) 28%, transparent),
+            var(--lh-shadow-soft);
+    }
+}
+
+.scheme__legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.25rem;
+    margin: 0;
+    padding: 0.75rem 0 0;
+    border-top: 1px solid var(--lh-border);
+    list-style: none;
+    color: var(--lh-ink-2);
+    font-size: 0.875rem;
+}
+
+.scheme__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.scheme__legend-dot {
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid var(--lh-border-strong);
+    border-radius: 50%;
+    background: var(--lh-surface-2);
+
+    &--available {
+        border-color: var(--kp-accent);
+    }
+
+    &--built {
+        border-color: var(--kp-accent);
+        background: color-mix(in srgb, var(--kp-accent) 78%, var(--lh-night));
+    }
+
+    &--locked {
+        border-style: dashed;
+    }
+}
+
+.scheme__legend-line {
+    width: 1.5rem;
+    border-top: 2px dashed var(--lh-border-strong);
+}
+
+.scheme__plan {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.scheme__plan-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.scheme__plan-title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 800;
+}
+
+.scheme__plan-reset {
+    height: 2rem;
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+}
+
+.scheme__plan-text {
+    margin: 0;
+    color: var(--lh-ink-2);
+}
+
+.scheme__costs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.scheme__cost {
+    padding: 0.25rem 0.625rem;
+    border: 1px solid var(--lh-border);
+    border-radius: 999px;
+    background: var(--lh-surface-2);
+    color: var(--lh-ink-2);
+    font-size: 0.875rem;
+}
+
+.scheme__cost-amount {
+    color: var(--lh-ink);
+    font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scheme__line,
+    .scheme-node,
+    .scheme-node__medal {
+        transition: none;
+    }
+
+    .scheme-node--available .scheme-node__medal {
+        animation: none;
+    }
+
+    .scheme-node:hover .scheme-node__medal {
+        transform: none;
+    }
+}

@@ -1,0 +1,59 @@
+@let point = "keyPoints.points." + active().id;
+
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <app-breadcrumbs [items]="crumbs()" />
+
+    <app-page-header [level]="1" [title]="'keyPoints.title' | translate" [subtitle]="'keyPoints.intro' | translate" />
+
+    @if (active().draft) {
+        <p class="kp-draft">
+            <tui-icon icon="@tui.info" />
+            {{ "keyPoints.draft" | translate }}
+        </p>
+    }
+
+    <div class="kp-tabs" role="tablist" [attr.aria-label]="'keyPoints.tabsLabel' | translate">
+        @for (scheme of schemes; track scheme.id; let index = $index) {
+            <button
+                type="button"
+                role="tab"
+                class="kp-tab"
+                [class.kp-tab--active]="scheme.id === active().id"
+                [style.--kp-accent]="scheme.accent"
+                [id]="'kp-tab-' + scheme.id"
+                [attr.aria-selected]="scheme.id === active().id"
+                [attr.aria-controls]="'kp-panel'"
+                [attr.tabindex]="scheme.id === active().id ? 0 : -1"
+                (click)="open(scheme)"
+                (keydown)="onTabKeydown($event, index)"
+            >
+                <span class="kp-tab__medal"><tui-icon [icon]="scheme.icon" /></span>
+                <span class="kp-tab__text">
+                    <span class="kp-tab__name">{{ "keyPoints.points." + scheme.id + ".name" | translate }}</span>
+                    <span class="kp-tab__tagline">
+                        {{ "keyPoints.points." + scheme.id + ".tagline" | translate }}
+                    </span>
+                </span>
+            </button>
+        }
+    </div>
+
+    <section
+        id="kp-panel"
+        class="kp-panel"
+        role="tabpanel"
+        [attr.aria-labelledby]="'kp-tab-' + active().id"
+        [style.--kp-accent]="active().accent"
+    >
+        <div class="kp-panel__intro">
+            <h2 class="kp-panel__title lh-display">{{ point + ".name" | translate }}</h2>
+            <p class="kp-panel__text">{{ point + ".description" | translate }}</p>
+            <p class="kp-panel__hint">
+                <tui-icon icon="@tui.mouse-pointer-click" />
+                {{ "keyPoints.howTo" | translate }}
+            </p>
+        </div>
+
+        <app-upgrade-scheme [scheme]="active()" />
+    </section>
+</div>

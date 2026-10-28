@@ -1,0 +1,138 @@
+@let point = "keyPoints.points." + scheme().id;
+
+<div class="scheme" [style.--kp-accent]="scheme().accent">
+    <div class="scheme__board lh-panel">
+        <div
+            class="scheme__canvas"
+            role="group"
+            [class.scheme__canvas--focused]="hasFocus()"
+            [style.--kp-tiers]="scheme().tiers"
+            [attr.aria-label]="'keyPoints.scheme.label' | translate: { name: (point + '.name' | translate) }"
+            (mouseleave)="hoveredId.set(null)"
+        >
+            <svg class="scheme__lines" [attr.viewBox]="viewBox()" preserveAspectRatio="none" aria-hidden="true">
+                @for (edge of edges(); track edge.key) {
+                    <path
+                        class="scheme__line"
+                        [class.scheme__line--optional]="edge.optional"
+                        [class.scheme__line--built]="edge.built"
+                        [class.scheme__line--related]="edge.related"
+                        [attr.d]="edge.path"
+                        vector-effect="non-scaling-stroke"
+                    />
+                }
+            </svg>
+
+            @for (mark of choiceMarks(); track mark.key) {
+                <span class="scheme__or" [style.left.%]="mark.x" [style.top.%]="mark.y" aria-hidden="true">
+                    {{ "keyPoints.scheme.or" | translate }}
+                </span>
+            }
+
+            @for (view of nodes(); track view.node.id) {
+                <button
+                    type="button"
+                    class="scheme-node"
+                    [class]="'scheme-node--' + view.state + ' scheme-node--' + view.node.kind"
+                    [class.scheme-node--selected]="view.node.id === selectedId()"
+                    [class.scheme-node--related]="view.related"
+                    [style.left.%]="view.x"
+                    [style.top.%]="view.y"
+                    [attr.aria-pressed]="view.node.id === selectedId()"
+                    [attr.aria-label]="
+                        (point + '.nodes.' + view.node.id + '.title' | translate) +
+                        ' — ' +
+                        ('keyPoints.states.' + view.state | translate)
+                    "
+                    (click)="select(view.node.id)"
+                    (mouseenter)="hoveredId.set(view.node.id)"
+                    (focus)="hoveredId.set(view.node.id)"
+                    (blur)="hoveredId.set(null)"
+                >
+                    <span class="scheme-node__medal">
+                        <tui-icon class="scheme-node__icon" [icon]="view.node.icon" />
+
+                        @if (view.levelNumber) {
+                            <span class="scheme-node__level">{{ view.levelNumber }}</span>
+                        }
+
+                        @switch (view.state) {
+                            @case ("built") {
+                                <span class="scheme-node__badge"><tui-icon icon="@tui.check" /></span>
+                            }
+                            @case ("locked") {
+                                <span class="scheme-node__badge"><tui-icon icon="@tui.lock" /></span>
+                            }
+                            @case ("excluded") {
+                                <span class="scheme-node__badge"><tui-icon icon="@tui.x" /></span>
+                            }
+                        }
+                    </span>
+                    <span class="scheme-node__label">
+                        {{ point + ".nodes." + view.node.id + ".title" | translate }}
+                    </span>
+                </button>
+            }
+        </div>
+
+        <ul class="scheme__legend" [attr.aria-label]="'keyPoints.legend.title' | translate">
+            <li class="scheme__legend-item">
+                <span class="scheme__legend-dot scheme__legend-dot--available"></span>
+                {{ "keyPoints.states.available" | translate }}
+            </li>
+            <li class="scheme__legend-item">
+                <span class="scheme__legend-dot scheme__legend-dot--built"></span>
+                {{ "keyPoints.states.built" | translate }}
+            </li>
+            <li class="scheme__legend-item">
+                <span class="scheme__legend-dot scheme__legend-dot--locked"></span>
+                {{ "keyPoints.states.locked" | translate }}
+            </li>
+            <li class="scheme__legend-item">
+                <span class="scheme__legend-line"></span>
+                {{ "keyPoints.legend.optional" | translate }}
+            </li>
+        </ul>
+    </div>
+
+    <aside class="scheme__side">
+        @if (selected(); as view) {
+            <app-upgrade-node-details
+                [scheme]="scheme()"
+                [node]="view.node"
+                [state]="view.state"
+                [built]="built()"
+                (selectNode)="select($event)"
+                (toggle)="toggleSelected()"
+            />
+        }
+
+        <section class="scheme__plan lh-panel" aria-live="polite">
+            <div class="scheme__plan-head">
+                <h3 class="scheme__plan-title">{{ "keyPoints.plan.title" | translate }}</h3>
+                @if (builtCount()) {
+                    <button type="button" class="lh-chip scheme__plan-reset" (click)="reset()">
+                        <tui-icon icon="@tui.rotate-ccw" />
+                        {{ "keyPoints.plan.reset" | translate }}
+                    </button>
+                }
+            </div>
+
+            @if (builtCount()) {
+                <p class="scheme__plan-text">
+                    {{ "keyPoints.plan.count" | translate: { count: builtCount(), total: scheme().nodes.length } }}
+                </p>
+                <ul class="scheme__costs">
+                    @for (cost of planCost(); track cost.resource) {
+                        <li class="scheme__cost">
+                            <span class="scheme__cost-amount">{{ cost.amount | amount }}</span>
+                            {{ "keyPoints.resources." + cost.resource | translate }}
+                        </li>
+                    }
+                </ul>
+            } @else {
+                <p class="scheme__plan-text">{{ "keyPoints.plan.empty" | translate }}</p>
+            }
+        </section>
+    </aside>
+</div>

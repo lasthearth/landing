@@ -222,6 +222,21 @@ export const routes: Routes = [
                 data: { route_keys: RouteKeys.mods, seo: routeSeoData.mods },
             },
             {
+                // Схемы прокачки ключевых точек: данные — черновик в features/key-points/config.
+                path: 'key-points',
+                loadComponent: () =>
+                    loadPage(
+                        () => import('@features/key-points').then((m) => m.KeyPointsPageComponent),
+                        [
+                            () =>
+                                import('@core/i18n/translations/features/key-points.i18n').then(
+                                    (m) => m.KEY_POINTS_I18N
+                                ),
+                        ]
+                    ),
+                data: { route_keys: RouteKeys.keyPoints, seo: routeSeoData.keyPoints },
+            },
+            {
                 path: 'market',
                 loadComponent: () =>
                     loadPage(

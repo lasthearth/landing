@@ -13,6 +13,7 @@ const PRERENDERED = [
     'rules',
     'faq',
     'about',
+    'key-points',
     'news',
     'start-game',
     'market',
