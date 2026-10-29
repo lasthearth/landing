@@ -13,7 +13,6 @@ const PRERENDERED = [
     'rules',
     'faq',
     'about',
-    'key-points',
     'news',
     'start-game',
     'market',
@@ -63,5 +62,8 @@ export const serverRoutes: ServerRoute[] = [
     // Карта: глашатаев ставят в игре, позиция меняется без выкладки. При пререндере
     // в страницу навсегда попадал снимок на момент сборки.
     { path: 'map', renderMode: RenderMode.Server },
+    // Ключевые точки: тип и шахта — в адресе (?point=, ?variant=). Пререндер знает только
+    // адрес без параметров, и при гидратации на чужой точке оставались её кнопки и цены.
+    { path: 'key-points', renderMode: RenderMode.Server },
     { path: '**', renderMode: RenderMode.Server },
 ];
