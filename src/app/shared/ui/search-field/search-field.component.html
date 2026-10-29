@@ -1,0 +1,22 @@
+<label class="search-field">
+    <span class="sr-only">{{ label() }}</span>
+    <tui-icon icon="@tui.search" class="search-field__icon" />
+    <input
+        type="search"
+        class="search-field__input"
+        autocomplete="off"
+        [value]="value()"
+        [attr.placeholder]="placeholder() || null"
+        (input)="onInput($event)"
+    />
+    @if (value()) {
+        <button
+            type="button"
+            class="search-field__clear"
+            [attr.aria-label]="clearLabel()"
+            (click)="valueChange.emit('')"
+        >
+            <tui-icon icon="@tui.x" />
+        </button>
+    }
+</label>

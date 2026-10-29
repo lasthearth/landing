@@ -43,6 +43,8 @@ export const SETTLEMENTS_I18N = {
             },
             list: {
                 title: 'Список поселений игроков',
+                map: 'Карта земель',
+                keyPoints: 'Ключевые точки',
                 sort: {
                     label: 'Сортировка',
                     default: 'По умолчанию',
@@ -556,6 +558,8 @@ export const SETTLEMENTS_I18N = {
             },
             list: {
                 title: 'Player settlement list',
+                map: 'Map of the lands',
+                keyPoints: 'Key points',
                 sort: {
                     label: 'Sort',
                     default: 'Default',

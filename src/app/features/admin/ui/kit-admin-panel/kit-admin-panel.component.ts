@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { I18nService, TranslatePipe } from '@core/i18n';
@@ -14,9 +14,11 @@ import { ErrorStateComponent } from '@shared/ui/error-state';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { AdminListSkeletonComponent } from '@shared/ui/skeletons';
+import { SearchFieldComponent } from '@shared/ui/search-field';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { catchError, EMPTY, finalize, Subscription } from 'rxjs';
 import { KIT_CATEGORIES, KIT_CATEGORY_LABEL_KEYS } from '../../config/kit-category.constant';
+import { filterKits } from '../../lib/filter-kits.function';
 
 /**
  * Ключи переводов типов позиции набора (`kitdef.v1.KitItem.type`).
@@ -51,11 +53,13 @@ const ITEM_TYPE_LABEL_KEYS: Record<string, string> = {
         ImageLoaderComponent,
         LHInputComponent,
         ReactiveFormsModule,
+        SearchFieldComponent,
         TuiIcon,
         TuiLoader,
         TranslatePipe,
     ],
     templateUrl: './kit-admin-panel.component.html',
+    styleUrl: './kit-admin-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KitAdminPanelComponent implements OnInit {
@@ -142,6 +146,50 @@ export class KitAdminPanelComponent implements OnInit {
     protected readonly forms = signal<ReadonlyMap<string, FormGroup<KitForm>>>(new Map());
 
     /**
+     * Категории для фильтра.
+     */
+    protected readonly categoryFilters: readonly (KitCategory | 'all')[] = ['all', ...KIT_CATEGORIES];
+
+    /**
+     * Текст поиска: код, название или код предмета внутри набора.
+     */
+    protected readonly query = signal('');
+
+    /**
+     * Выбранная категория.
+     */
+    protected readonly categoryFilter = signal<KitCategory | 'all'>('all');
+
+    /**
+     * Раскрытые наборы. По умолчанию все свёрнуты в строку — так длинный список читается целиком.
+     */
+    protected readonly expanded = signal<ReadonlySet<string>>(new Set());
+
+    /**
+     * Наборы после поиска и фильтра.
+     */
+    protected readonly visibleKits = computed(() => filterKits(this.kits() ?? [], this.query(), this.categoryFilter()));
+
+    /**
+     * Сколько наборов в каждой категории — числа на чипах.
+     */
+    protected readonly categoryCounts = computed(() => {
+        const counts = new Map<KitCategory | 'all', number>([['all', this.kits()?.length ?? 0]]);
+        for (const kit of this.kits() ?? []) {
+            counts.set(kit.category, (counts.get(kit.category) ?? 0) + 1);
+        }
+        return counts;
+    });
+
+    /**
+     * Раскрыты ли все видимые наборы — от этого зависит подпись общей кнопки.
+     */
+    protected readonly allExpanded = computed(() => {
+        const visible = this.visibleKits();
+        return visible.length > 0 && visible.every((kit) => this.expanded().has(kit.code));
+    });
+
+    /**
      * Конструктор. Запоминает уничтожение компонента.
      */
     public constructor() {
@@ -175,6 +223,28 @@ export class KitAdminPanelComponent implements OnInit {
         this.loadFailed.set(false);
         this.kitdefService.refreshKits$();
         this.subscribeToKits();
+    }
+
+    /**
+     * Раскрывает или сворачивает набор.
+     *
+     * @param code Код набора.
+     */
+    protected toggleKit(code: string): void {
+        this.expanded.update((current) => {
+            const next = new Set(current);
+            if (!next.delete(code)) {
+                next.add(code);
+            }
+            return next;
+        });
+    }
+
+    /**
+     * Раскрывает все видимые наборы или сворачивает все.
+     */
+    protected toggleAll(): void {
+        this.expanded.set(this.allExpanded() ? new Set() : new Set(this.visibleKits().map((kit) => kit.code)));
     }
 
     /**

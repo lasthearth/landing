@@ -620,6 +620,7 @@ interface WorldTimeResponse {
 | #   | Метод    | Путь                                                              | Описание                            | Auth           | Реализовано                        |
 | --- | -------- | ----------------------------------------------------------------- | ----------------------------------- | -------------- | ---------------------------------- |
 | 1   | `GET`    | `/settlements`                                                    | Список одобренных поселений         | —              | ✅ `getSettlements()`              |
+| 1a  | `GET`    | `/settlements/notifiers`                                          | Позиции всех стоящих глашатаев      | —              | ✅ `getNotifierPositions$()`       |
 | 2   | `POST`   | `/settlements`                                                    | Подать/повысить заявку на поселение | ✅             | ✅ `postRequestSettlement$()`      |
 | 3   | `POST`   | `/settlements/invitations/{invitation_id}:accept`                 | Принять приглашение                 | ✅             | ✅ `inviteAccept()`                |
 | 4   | `POST`   | `/settlements/invitations/{invitation_id}:reject`                 | Отклонить приглашение               | ✅             | ✅ `rejectAccept()`                |

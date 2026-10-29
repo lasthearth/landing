@@ -13,6 +13,7 @@ import { ISettlement } from '../model/i-settlement';
 import { ISettlementInvitation } from '../model/i-settlement-invitation';
 import { IUpdateSettlementRequest } from '../model/i-update-settlement';
 import { IJoinRequest } from '../model/i-join-request';
+import { INotifierPlacement } from '../model/i-notifier-placement';
 import { ICreateInviteLink, IInviteLink, IInviteLinkPreview } from '../model/i-invite-link';
 import { Permission } from '../model/permission';
 /**
@@ -118,6 +119,24 @@ export class SettlementService {
                 context: new HttpContext().set(SKIP_ERROR_ALERT, true),
             })
             .pipe(map((data) => data.settlements));
+    }
+
+    /**
+     * Позиции всех стоящих блоков-глашатаев одним запросом.
+     *
+     * Соответствует `GET /v1/settlements/notifiers` (публичный). Ошибку не показываем
+     * алертом: потребитель (карта земель) деградирует сам.
+     *
+     * @returns Observable со списком позиций.
+     */
+    public getNotifierPositions$(): Observable<INotifierPlacement[]> {
+        return this.http
+            .get<{
+                placements?: INotifierPlacement[];
+            }>(`${this.baseUrl}/settlements/notifiers`, {
+                context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+            })
+            .pipe(map((data) => data.placements ?? []));
     }
 
     /**

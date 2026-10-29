@@ -24,11 +24,20 @@ import { TuiHint, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
+import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { TuiFile, TuiFiles, TuiFilesComponent } from '@taiga-ui/kit';
 import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { catchError, EMPTY, finalize, map, Observable, startWith, Subject, Subscription, switchMap, timer } from 'rxjs';
-import { KIT_CATEGORY_LABEL_KEYS } from '../../config/kit-category.constant';
+import { LocalStorageService } from '@core/services/local-storage.service';
+import { SearchFieldComponent } from '@shared/ui/search-field';
+import { ADMIN_SHOP_VIEW_STORAGE_KEY } from '../../config/admin-shop-view-storage-key.constant';
+import { KIT_CATEGORIES, KIT_CATEGORY_LABEL_KEYS } from '../../config/kit-category.constant';
+import { filterShopItems } from '../../lib/filter-shop-items.function';
+import { sortShopItems } from '../../lib/sort-shop-items.function';
+import { AdminListView } from '../../model/admin-list-view.type';
+import { ShopSort } from '../../model/shop-sort.type';
+import { ShopStatusFilter } from '../../model/shop-status-filter.type';
 
 /**
  * Тип товара, который принимает сервер.
@@ -51,7 +60,8 @@ const KIT_ITEM_TYPE: ShopItemType = 'ITEM_TYPE_KIT';
 @Component({
     selector: 'app-donate-shop-panel',
     standalone: true,
-    imports: [AmountPipe, 
+    imports: [
+        AmountPipe,
         ReactiveFormsModule,
         FormsModule,
         AsyncPipe,
@@ -67,8 +77,10 @@ const KIT_ITEM_TYPE: ShopItemType = 'ITEM_TYPE_KIT';
         CdkDrag,
         CdkDragHandle,
         AbilityTagComponent,
+        EmptyStateComponent,
         ErrorStateComponent,
         ImageLoaderComponent,
+        SearchFieldComponent,
         TranslatePipe,
     ],
     templateUrl: './donate-shop-panel.component.html',
@@ -112,6 +124,11 @@ export class DonateShopPanelComponent implements OnInit {
     private readonly i18n = inject(I18nService);
 
     /**
+     * Хранилище браузера: помнит выбранный вид списка.
+     */
+    private readonly storage = inject(LocalStorageService);
+
+    /**
      * Подписка на общий поток списка товаров.
      *
      * Поток кэшируется на сессию и переживает обновления, поэтому подписка
@@ -153,6 +170,90 @@ export class DonateShopPanelComponent implements OnInit {
      * Список товаров магазина; `null` — список ещё ни разу не пришёл.
      */
     protected readonly shopItems = signal<IShopItem[] | null>(null);
+
+    /**
+     * Категории для фильтра — те же, что у наборов.
+     */
+    protected readonly categoryFilters: readonly (ShopCategory | 'all')[] = ['all', ...KIT_CATEGORIES];
+
+    /**
+     * Варианты фильтра по видимости.
+     */
+    protected readonly statusFilters: readonly ShopStatusFilter[] = ['all', 'available', 'hidden'];
+
+    /**
+     * Варианты сортировки.
+     */
+    protected readonly sorts: readonly ShopSort[] = ['updated', 'name', 'price'];
+
+    /**
+     * Текст поиска по названию, коду набора и разделу.
+     */
+    protected readonly query = signal('');
+
+    /**
+     * Выбранная категория.
+     */
+    protected readonly categoryFilter = signal<ShopCategory | 'all'>('all');
+
+    /**
+     * Выбранная видимость.
+     */
+    protected readonly statusFilter = signal<ShopStatusFilter>('all');
+
+    /**
+     * Показывать только товары со скидкой.
+     */
+    protected readonly discountOnly = signal(false);
+
+    /**
+     * Порядок списка.
+     */
+    protected readonly sort = signal<ShopSort>('updated');
+
+    /**
+     * Вид списка: компактные строки (по умолчанию) или карточки. Запоминается в браузере.
+     */
+    protected readonly view = signal<AdminListView>(
+        this.storage.getItem<AdminListView>(ADMIN_SHOP_VIEW_STORAGE_KEY) === 'grid' ? 'grid' : 'list'
+    );
+
+    /**
+     * Товары после фильтров и сортировки.
+     */
+    protected readonly visibleItems = computed(() =>
+        sortShopItems(
+            filterShopItems(this.shopItems() ?? [], {
+                query: this.query(),
+                category: this.categoryFilter(),
+                status: this.statusFilter(),
+                discountOnly: this.discountOnly(),
+            }),
+            this.sort()
+        )
+    );
+
+    /**
+     * Включён ли хоть один фильтр — тогда показывается «Сбросить».
+     */
+    protected readonly hasFilters = computed(
+        () =>
+            this.query().trim() !== '' ||
+            this.categoryFilter() !== 'all' ||
+            this.statusFilter() !== 'all' ||
+            this.discountOnly()
+    );
+
+    /**
+     * Сколько товаров в каждой категории — числа на чипах.
+     */
+    protected readonly categoryCounts = computed(() => {
+        const counts = new Map<ShopCategory | 'all', number>([['all', this.shopItems()?.length ?? 0]]);
+        for (const item of this.shopItems() ?? []) {
+            counts.set(item.category, (counts.get(item.category) ?? 0) + 1);
+        }
+        return counts;
+    });
 
     /**
      * Признак загрузки списка товаров.
@@ -392,6 +493,26 @@ export class DonateShopPanelComponent implements OnInit {
     public ngOnInit(): void {
         this.loadItems();
         this.loadKits();
+    }
+
+    /**
+     * Переключает вид списка и запоминает выбор.
+     *
+     * @param view Новый вид.
+     */
+    protected setView(view: AdminListView): void {
+        this.view.set(view);
+        this.storage.setItem(ADMIN_SHOP_VIEW_STORAGE_KEY, view);
+    }
+
+    /**
+     * Сбрасывает все фильтры списка.
+     */
+    protected resetFilters(): void {
+        this.query.set('');
+        this.categoryFilter.set('all');
+        this.statusFilter.set('all');
+        this.discountOnly.set(false);
     }
 
     /**
@@ -829,7 +950,10 @@ export class DonateShopPanelComponent implements OnInit {
                     section: values.section,
                 };
 
-                this.submit(this.donateService.updateShopItem$(this.editingItemId()!, request), 'admin.shop.updatedSuccess');
+                this.submit(
+                    this.donateService.updateShopItem$(this.editingItemId()!, request),
+                    'admin.shop.updatedSuccess'
+                );
             } else {
                 const request: ICreateShopItemRequest = {
                     name: values.name.trimEnd(),
