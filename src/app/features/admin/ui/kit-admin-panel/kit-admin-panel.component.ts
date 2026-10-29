@@ -19,6 +19,8 @@ import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { catchError, EMPTY, finalize, Subscription } from 'rxjs';
 import { KIT_CATEGORIES, KIT_CATEGORY_LABEL_KEYS } from '../../config/kit-category.constant';
 import { filterKits } from '../../lib/filter-kits.function';
+import { sortKits } from '../../lib/sort-kits.function';
+import { KitSort } from '../../model/kit-sort.type';
 
 /**
  * Ключи переводов типов позиции набора (`kitdef.v1.KitItem.type`).
@@ -168,7 +170,19 @@ export class KitAdminPanelComponent implements OnInit {
     /**
      * Наборы после поиска и фильтра.
      */
-    protected readonly visibleKits = computed(() => filterKits(this.kits() ?? [], this.query(), this.categoryFilter()));
+    protected readonly visibleKits = computed(() =>
+        sortKits(filterKits(this.kits() ?? [], this.query(), this.categoryFilter()), this.sort())
+    );
+
+    /**
+     * Варианты сортировки.
+     */
+    protected readonly sorts: readonly KitSort[] = ['newest', 'oldest', 'updated', 'name'];
+
+    /**
+     * Порядок списка: по умолчанию новые сверху.
+     */
+    protected readonly sort = signal<KitSort>('newest');
 
     /**
      * Сколько наборов в каждой категории — числа на чипах.
