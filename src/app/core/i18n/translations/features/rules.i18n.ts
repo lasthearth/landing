@@ -192,7 +192,7 @@ export const RULES_I18N = {
                         b1: '<b>•</b> Население: 1-2 человека.',
                         b2: {
                             t0: '<b>•</b> Хартии: ',
-                            l1: 'паспорт горожанина',
+                            l1: 'купчая вольности',
                             t2: ' для главы.',
                         },
                         b3: {
@@ -771,7 +771,7 @@ export const RULES_I18N = {
                             l3: 'Центре имперского эксклава',
                             t4: ' [столице], либо на собственность ',
                             l5: 'гильдии',
-                            t6: ' [её конторы, где бы они ни находились].',
+                            t6: ' [её конторы, где бы они ни находились]. Действие можно начать, если цель находится в сети, вне зависимости от территориального нахождения.',
                         },
                         p3_4_2: {
                             t0: '<b>3.4.2</b> Разбой разрешено совершить, только если в сети находится не менее 1-го ',
@@ -790,14 +790,13 @@ export const RULES_I18N = {
                         p3_4_5_5: '• Разбой достиг своей цели.',
                         p3_4_5_6:
                             '• Цель разбоя или его соратники/союзники [для гильдии оными могут являться любые люди эксклава] уничтожили или обратили в бегство нападающих [возвращение после смерти или бегства запрещено, разбой считается завершенным для данного человека].',
-                        p3_4_6: '<b>3.4.6</b> Действие можно начать, если цель находится в сети, вне зависимости от территориального нахождения.',
-                        p3_4_7: '<b>3.4.7</b> Нападающим запрещается устанавливать любые блоки, кроме веревочных лестниц.',
-                        p3_4_8: '<b>3.4.8</b> При разбое запрещено использование зубила и его проявлений.',
-                        p3_4_9: '<b>3.4.9</b> При разбое нападающим запрещено использовать темпоральные шестеренки и телепорт терминуса.',
-                        p3_4_10:
-                            '<b>3.4.10</b> Нападающие могут носить следующие типы брони: ламеллярная, любая медная, любая бронзовая, медвежья, стеганая, стеганая сшитая на заказ.',
-                        p3_4_11: {
-                            t0: '<b>3.4.11</b> Обороняющимся допускается устанавливать блоки и прочее, согласно ',
+                        p3_4_6: '<b>3.4.6</b> Нападающим запрещается устанавливать любые блоки, кроме веревочных лестниц.',
+                        p3_4_7: '<b>3.4.7</b> При разбое запрещено использование зубила и его проявлений.',
+                        p3_4_8: '<b>3.4.8</b> При разбое нападающим запрещено использовать темпоральные шестеренки и телепорт терминуса.',
+                        p3_4_9:
+                            '<b>3.4.9</b> Нападающие могут носить следующие типы брони: ламеллярная, любая медная, любая бронзовая, медвежья, стеганая, стеганая сшитая на заказ.',
+                        p3_4_10: {
+                            t0: '<b>3.4.10</b> Обороняющимся допускается устанавливать блоки и прочее, согласно ',
                             l1: 'правилам набега',
                             t2: '.',
                         },
@@ -818,13 +817,6 @@ export const RULES_I18N = {
                             t0: '• При объявлении ',
                             l1: 'набега',
                             t2: ' на миролюбивый лен, данный надел имеет право откупиться атакующим валютой в размере установленном согласно типу надела, вплоть до следующего объявления. Соглашение атакующих не требуется. Размер откупа:',
-                        },
-                        p3_5_5_1_2: {
-                            t0: '• ',
-                            l1: 'Усадьбам',
-                            t2: ' цена 5 ',
-                            l3: 'купчих',
-                            t4: '.',
                         },
                         p3_5_5_1_3: {
                             t0: '• ',
@@ -960,7 +952,7 @@ export const RULES_I18N = {
                         t2: '.',
                     },
                     p4_2_2: '• Призывать своих вассалов к оружию, вне заключения союзов.',
-                    p4_2_3: '• Запрашивать оплачиваемое выполнение контрактов/работ/запросов вассалами, не менее чем 1 раз в полгода.',
+                    p4_2_3: '• Запрашивать оплачиваемое выполнение контрактов/работ/запросов вассалами по мере необходимости. Это право сюзерена, а не обязательная квота: запрос направляется только при реальной надобности.',
                     p4_3: '<b>4.3</b> Сюзерен обязан:',
                     p4_3_1: '• Обеспечивать защиту своим вассалам и представлять их в суде.',
                     p4_3_2: '• Не вести противоправных [воровских, разбойных, набежных и военных] действий против своего вассала.',
@@ -969,13 +961,15 @@ export const RULES_I18N = {
                     p4_4_1: '• Освобождается от уплаты налогов в казну столицы, вместо этого он уплачивает налог своему сюзерену.',
                     p4_4_2: '• На своевременную и справедливую защиту от своего сюзерена.',
                     p4_4_3: '• На свободную и ликвидную торговлю между сюзереном и вассалом.',
+                    p4_4_4: '• Если сюзерен не направлял поручений в течение 1 игрового года, вассал вправе выйти из вассалитета досрочно.',
                     p4_5: '<b>4.5</b> Вассал обязан:',
                     p4_5_1: '• Выйти из вассалитета не ранее, чем через 2 года.',
                     p4_5_2: '• Принимать сюзерена у себя в наделе, обеспечивая его жильем и едой.',
                     p4_5_3: '• Самостоятельно выдвинуться на помощь своему сюзерену, если ему грозит опасность.',
-                    p4_5_4: '• Выполнять не менее 1-го ликвидно оплачиваемого запроса на поставки/работы от сюзерена раз в игровые полгода.',
+                    p4_5_4: '• Выполнять ликвидно оплачиваемый запрос на поставки/работы от сюзерена, когда такой запрос направлен [обязанность возникает только по факту поручения, а не как периодическая норма].',
                     p4_5_5: '• Выплачивать установленный сюзереном налог.',
                     p4_5_6: '• Не предпринимать против сюзерена противоправных [воровских, разбойных, набежных и военных] действий.',
+                    p4_5_7: '• За невыполнение выданного сюзереном поручения на вассала накладывается штраф в размере 2-х купчих.',
                 },
                 estates: {
                     intro: 'Всего существует 4 основных сословия: Крепостной, Вольный, Горожанин, Дворянин, каждое из этих сословий дает определенные возможности.',
@@ -989,7 +983,7 @@ export const RULES_I18N = {
                     serfDuties: '<b>На крепостного накладывается:</b>',
                     p5_1_6: '<b>•</b> Запрет на владение недвижимостью в столице.',
                     p5_1_7: '<b>•</b> Запрет на владение любым наделом/организацией.',
-                    p5_1_8: '<b>•</b> Запрет на состояние в наделе/организации, до момента выкупа себя у наместника.',
+                    p5_1_8: '<b>•</b> Запрет на состояние в наделе/организации, до момента выкупа себя у наместника. Чтобы вступить в иное селение, не покупая вольность, крепостной выкупается у наместника за половину цены купчей вольности: вольность не выдаётся, но вступить в селение разрешается.',
                     p5_1_9: '<b>•</b> Запрет занимать средние и старшие должности в столице.',
                     p5_1_10:
                         '<b>•</b> Отсутствие права любых подписей и печатей [подписи крепостного - ничего не значат].',
@@ -1489,7 +1483,7 @@ export const RULES_I18N = {
                         b1: '<b>•</b> Population: 1-2 people.',
                         b2: {
                             t0: '<b>•</b> Charters: a ',
-                            l1: "Townsman's Passport",
+                            l1: 'Deed of Freedom',
                             t2: ' for the head.',
                         },
                         b3: {
@@ -2068,7 +2062,7 @@ export const RULES_I18N = {
                             l3: 'Center of the Imperial Exclave',
                             t4: ' [the capital] or against ',
                             l5: 'guild',
-                            t6: ' property [its offices, wherever they are located].',
+                            t6: ' property [its offices, wherever they are located]. The action can be started if the target is online, regardless of where they are located.',
                         },
                         p3_4_2: {
                             t0: '<b>3.4.2</b> Robbery may be committed only if at least 1 ',
@@ -2087,14 +2081,13 @@ export const RULES_I18N = {
                         p3_4_5_5: '• The robbery has achieved its goal.',
                         p3_4_5_6:
                             '• The target of the robbery or their comrades/allies [for a guild, these may be any people of the exclave] have killed the attackers or put them to flight [returning after death or flight is prohibited; the robbery is considered finished for that person].',
-                        p3_4_6: '<b>3.4.6</b> The action can be started if the target is online, regardless of where they are located.',
-                        p3_4_7: '<b>3.4.7</b> Attackers are prohibited from placing any blocks other than rope ladders.',
-                        p3_4_8: '<b>3.4.8</b> Using a chisel and any of its variants during a robbery is prohibited.',
-                        p3_4_9: '<b>3.4.9</b> During a robbery, attackers are prohibited from using temporal gears and the terminus teleporter.',
-                        p3_4_10:
-                            '<b>3.4.10</b> Attackers may wear the following types of armor: lamellar, any copper, any bronze, bear, gambeson, custom-tailored gambeson.',
-                        p3_4_11: {
-                            t0: '<b>3.4.11</b> Defenders may place blocks and other items according to the ',
+                        p3_4_6: '<b>3.4.6</b> Attackers are prohibited from placing any blocks other than rope ladders.',
+                        p3_4_7: '<b>3.4.7</b> Using a chisel and any of its variants during a robbery is prohibited.',
+                        p3_4_8: '<b>3.4.8</b> During a robbery, attackers are prohibited from using temporal gears and the terminus teleporter.',
+                        p3_4_9:
+                            '<b>3.4.9</b> Attackers may wear the following types of armor: lamellar, any copper, any bronze, bear, gambeson, custom-tailored gambeson.',
+                        p3_4_10: {
+                            t0: '<b>3.4.10</b> Defenders may place blocks and other items according to the ',
                             l1: 'raid rules',
                             t2: '.',
                         },
@@ -2115,13 +2108,6 @@ export const RULES_I18N = {
                             t0: '• When a ',
                             l1: 'raid',
                             t2: " is declared on a peaceful fief, that fief has the right to buy off the attackers with currency in the amount set according to the type of fief, until the next declaration. The attackers' consent is not required. Ransom amount:",
-                        },
-                        p3_5_5_1_2: {
-                            t0: '• ',
-                            l1: 'Manors',
-                            t2: ': 5 ',
-                            l3: 'Deeds',
-                            t4: '.',
                         },
                         p3_5_5_1_3: {
                             t0: '• ',
@@ -2257,7 +2243,7 @@ export const RULES_I18N = {
                         t2: '.',
                     },
                     p4_2_2: '• Call its vassals to arms, outside of concluded alliances.',
-                    p4_2_3: '• Request paid fulfillment of contracts/work/requests by vassals, at least once every half a year.',
+                    p4_2_3: "• Request paid fulfillment of contracts/work/requests by vassals as needed. This is the suzerain's right, not a mandatory quota: a request is issued only when there is a real need.",
                     p4_3: '<b>4.3</b> The suzerain must:',
                     p4_3_1: '• Protect its vassals and represent them in court.',
                     p4_3_2: '• Not conduct unlawful [theft, robbery, raid and military] actions against its vassal.',
@@ -2266,13 +2252,15 @@ export const RULES_I18N = {
                     p4_4_1: '• Be exempt from paying taxes to the capital treasury; instead, it pays the tax to its suzerain.',
                     p4_4_2: '• Timely and fair protection from its suzerain.',
                     p4_4_3: '• Free and liquid trade between the suzerain and the vassal.',
+                    p4_4_4: '• If the suzerain has issued no orders for 1 game year, the vassal has the right to leave vassalage early.',
                     p4_5: '<b>4.5</b> A vassal must:',
                     p4_5_1: '• Leave vassalage no earlier than after 2 years.',
                     p4_5_2: '• Host the suzerain in its fief, providing housing and food.',
                     p4_5_3: '• Set out on its own to help its suzerain if the suzerain is in danger.',
-                    p4_5_4: '• Fulfill at least 1 liquidly paid request for supplies/work from the suzerain every half a game year.',
+                    p4_5_4: '• Fulfill a liquidly paid request for supplies/work from the suzerain when such a request is issued [the obligation arises only upon an actual order, not as a periodic quota].',
                     p4_5_5: '• Pay the tax set by the suzerain.',
                     p4_5_6: '• Not undertake unlawful [theft, robbery, raid and military] actions against the suzerain.',
+                    p4_5_7: '• For failing to fulfill an order issued by the suzerain, a fine of 2 Deeds is imposed on the vassal.',
                 },
                 estates: {
                     intro: 'There are 4 main estates in total: Serf, Freeman, Townsman, Noble; each of these estates provides certain opportunities.',
@@ -2286,7 +2274,7 @@ export const RULES_I18N = {
                     serfDuties: '<b>Imposed on a serf:</b>',
                     p5_1_6: '<b>•</b> A ban on owning real estate in the capital.',
                     p5_1_7: '<b>•</b> A ban on owning any fief/organization.',
-                    p5_1_8: '<b>•</b> A ban on being a member of a fief/organization until buying oneself out from the governor.',
+                    p5_1_8: '<b>•</b> A ban on being a member of a fief/organization until buying oneself out from the governor. To join another settlement without buying freedom, a serf buys out from the governor at half the price of a Deed of Freedom: freedom is not granted, but joining a settlement is allowed.',
                     p5_1_9: '<b>•</b> A ban on holding middle and senior positions in the capital.',
                     p5_1_10: "<b>•</b> No right to any signatures or seals [a serf's signatures mean nothing].",
                     p5_1_11: '<b>•</b> Obey the laws of the settlement in which one is registered.',

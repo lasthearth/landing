@@ -11,5 +11,5 @@ import { DiplomacyOption } from '../model/diplomacy-option';
 export const DIPLOMACY_OPTIONS: readonly DiplomacyOption[] = [
     { value: 'Миролюбивый', labelKey: 'admin.settlementAdmin.diplomacy.peaceful' },
     { value: 'Нейтральный', labelKey: 'admin.settlementAdmin.diplomacy.neutral' },
-    { value: 'Агрессивный', labelKey: 'admin.settlementAdmin.diplomacy.aggressive' },
+    { value: 'Свободный', labelKey: 'admin.settlementAdmin.diplomacy.aggressive' },
 ];

@@ -39,7 +39,7 @@
                 <stop offset="1" class="world-map__age-stop" stop-opacity="0.42" />
             </radialGradient>
             <!-- Акварель под знаком: краска гуще в центре и растекается к краю. -->
-            @for (course of ["peace", "neutral", "danger"]; track course) {
+            @for (course of ["peace", "neutral", "free"]; track course) {
                 <radialGradient [attr.id]="'world-map-wash-' + course">
                     <stop
                         offset="0"

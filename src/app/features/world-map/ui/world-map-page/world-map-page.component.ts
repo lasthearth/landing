@@ -26,7 +26,7 @@ interface WorldMapEntry {
 const LEGEND_TYPES: readonly WorldMapSettlementType[] = ['HAMLET', 'CAMP', 'VILLAGE', 'TOWNSHIP', 'CITY', 'PROVINCE'];
 
 /** Курсы в порядке легенды. */
-const LEGEND_COURSES: readonly Exclude<WorldMapCourse, 'none'>[] = ['peace', 'neutral', 'danger'];
+const LEGEND_COURSES: readonly Exclude<WorldMapCourse, 'none'>[] = ['peace', 'neutral', 'free'];
 
 /**
  * Страница «Карта земель» `/map`.

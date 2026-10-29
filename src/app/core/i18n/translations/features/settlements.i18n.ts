@@ -21,7 +21,7 @@ export const SETTLEMENTS_I18N = {
                         title: 'Чем хотите заниматься?',
                         peace: { title: 'Строить и обживаться', hint: 'Мирные поселения: хозяйство, стройка, торговля' },
                         neutral: { title: 'По обстоятельствам', hint: 'Нейтральные: мир, но умеют за себя постоять' },
-                        war: { title: 'Воевать и рисковать', hint: 'Агрессивные: набеги, осады, PvP' },
+                        war: { title: 'Воевать и рисковать', hint: 'Свободные: набеги, осады, PvP' },
                         any: { title: 'Не важно', hint: 'Покажем лучшие по остальным ответам' },
                     },
                     size: {
@@ -95,7 +95,7 @@ export const SETTLEMENTS_I18N = {
                 peaceful: 'Миролюбивый',
                 guild: 'Торгово-миролюбивый',
                 neutral: 'Нейтральный',
-                aggressive: 'Агрессивный',
+                aggressive: 'Свободный',
             },
             tags: {
                 title: 'Управление тегами',
@@ -536,7 +536,7 @@ export const SETTLEMENTS_I18N = {
                         title: 'What do you want to do?',
                         peace: { title: 'Build and settle', hint: 'Peaceful settlements: farming, building, trade' },
                         neutral: { title: 'Depends', hint: 'Neutral: peaceful, but can stand their ground' },
-                        war: { title: 'Fight and take risks', hint: 'Aggressive: raids, sieges, PvP' },
+                        war: { title: 'Fight and take risks', hint: 'Free: raids, sieges, PvP' },
                         any: { title: 'Does not matter', hint: 'We will rank by your other answers' },
                     },
                     size: {
@@ -610,7 +610,7 @@ export const SETTLEMENTS_I18N = {
                 peaceful: 'Peaceful',
                 guild: 'Trade-peaceful',
                 neutral: 'Neutral',
-                aggressive: 'Aggressive',
+                aggressive: 'Free',
             },
             tags: {
                 title: 'Manage tags',

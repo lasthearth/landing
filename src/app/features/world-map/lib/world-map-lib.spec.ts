@@ -152,7 +152,7 @@ describe('world-map lib', () => {
         it('совпадает с бейджем дипломатии в списке поселений', () => {
             expect(settlementCourse('Миролюбивый')).toBe('peace');
             expect(settlementCourse('Нейтральный')).toBe('neutral');
-            expect(settlementCourse('Агрессивный')).toBe('danger');
+            expect(settlementCourse('Свободный')).toBe('free');
         });
 
         it('у хутора курса нет', () => {
