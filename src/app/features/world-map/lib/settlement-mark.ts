@@ -3,7 +3,7 @@ import { WorldMapSettlementType } from '../model/world-map-point.interface';
 /**
  * Курс поселения: цвет акварельной заливки под знаком. У хутора курса нет.
  */
-export type WorldMapCourse = 'peace' | 'neutral' | 'danger' | 'none';
+export type WorldMapCourse = 'peace' | 'neutral' | 'free' | 'none';
 
 /**
  * Ранг типа: от хутора (0) до провинции (5).
@@ -46,7 +46,7 @@ export function washRadius(type: WorldMapSettlementType): number {
  * Курс по значению дипломатии из API.
  *
  * Значения те же, что у бейджа дипломатии в списке поселений: всё, что не
- * «Миролюбивый» и не «Нейтральный», считается агрессивным. Без значения (хутор)
+ * «Миролюбивый» и не «Нейтральный», считается свободным. Без значения (хутор)
  * курса нет.
  *
  * @param diplomacy Дипломатия из API.
@@ -62,7 +62,7 @@ export function settlementCourse(diplomacy: string | undefined): WorldMapCourse 
         case 'Нейтральный':
             return 'neutral';
         default:
-            return 'danger';
+            return 'free';
     }
 }
 
