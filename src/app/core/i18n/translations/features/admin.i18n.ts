@@ -170,7 +170,7 @@ export const ADMIN_I18N = {
                 diplomacy: {
                     peaceful: 'Миролюбивый',
                     neutral: 'Нейтральный',
-                    aggressive: 'Агрессивный',
+                    aggressive: 'Свободный',
                 },
                 diplomacyUpdated: 'Дипломатический курс изменён',
                 diplomacyError: 'Не удалось изменить дипломатический курс. Попробуйте снова',
@@ -623,7 +623,7 @@ export const ADMIN_I18N = {
                 diplomacy: {
                     peaceful: 'Peaceful',
                     neutral: 'Neutral',
-                    aggressive: 'Aggressive',
+                    aggressive: 'Free',
                 },
                 diplomacyUpdated: 'Diplomatic course changed',
                 diplomacyError: 'Could not change the diplomatic course. Try again',
