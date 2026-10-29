@@ -11,15 +11,6 @@ import { WorldMapPoint } from '../model/world-map-point.interface';
  */
 export const WORLD_MAP_DEMO_POINTS: readonly WorldMapPoint[] = [
     {
-        id: 'demo-imperial-exclave-center',
-        settlementId: 'demo-imperial-exclave-center',
-        name: 'Центр Имперского эксклава',
-        type: 'PROVINCE',
-        diplomacy: 'Свободный',
-        membersCount: 3,
-        herald: { x: 1304, y: 223, z: -3040 },
-    },
-    {
         id: 'demo-zlatograd',
         settlementId: 'demo-zlatograd',
         name: 'Златоград',
