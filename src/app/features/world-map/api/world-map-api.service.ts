@@ -3,6 +3,7 @@ import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 import { INotifierPlacement, isGuildSettlement, ISettlement, SettlementService } from '@entities/settlement';
 import { WORLD_MAP_DEMO_POINTS } from '../config/world-map-demo-points.constant';
 import { WORLD_SPAWN } from '../config/world-spawn.constant';
+import { WORLD_MAP_CENTER } from '../config/world-map-center.constant';
 import {
     WorldMapData,
     WorldMapPoint,
@@ -61,7 +62,7 @@ export class WorldMapApiService {
         const points: WorldMapPoint[] = [];
 
         placements.forEach((placement, index) => {
-            const herald = this.fromHearth(placement.position);
+            const herald = this.fromCenter(placement.position);
 
             if (!placement.settlement_id) {
                 points.push({
@@ -100,11 +101,11 @@ export class WorldMapApiService {
      * @param position Позиция блока из API (нулевые оси proto3 не присылает).
      * @returns Позиция от Очага.
      */
-    private fromHearth(position: INotifierPlacement['position']): WorldMapPosition {
+    private fromCenter(position: INotifierPlacement['position']): WorldMapPosition {
         return {
-            x: (position?.x ?? 0) - WORLD_SPAWN.x,
+            x: (position?.x ?? 0) - WORLD_SPAWN.x - WORLD_MAP_CENTER.x,
             y: position?.y ?? 0,
-            z: (position?.z ?? 0) - WORLD_SPAWN.z,
+            z: (position?.z ?? 0) - WORLD_SPAWN.z - WORLD_MAP_CENTER.z,
         };
     }
 
@@ -114,6 +115,16 @@ export class WorldMapApiService {
      * @returns Выдуманные поселения с флагом `demo`.
      */
     private demo(): WorldMapData {
-        return { points: WORLD_MAP_DEMO_POINTS.map((point) => ({ ...point })), demo: true };
+        return {
+            points: WORLD_MAP_DEMO_POINTS.map((point) => ({
+                ...point,
+                herald: {
+                    ...point.herald,
+                    x: point.herald.x - WORLD_MAP_CENTER.x,
+                    z: point.herald.z - WORLD_MAP_CENTER.z,
+                },
+            })),
+            demo: true,
+        };
     }
 }

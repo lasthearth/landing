@@ -50,7 +50,7 @@ export const WORLD_MAP_I18N = {
                 close: 'Закрыть',
                 owner: 'Хозяин',
                 members: 'Жителей',
-                fromHearth: 'От Очага',
+                fromHearth: 'От столицы',
                 herald: 'Глашатай стоит на',
                 height: 'высота {{y}}',
                 open: 'Страница поселения',
@@ -66,7 +66,7 @@ export const WORLD_MAP_I18N = {
             },
             list: {
                 title: 'Указатель поселений',
-                hint: 'От ближних к Очагу до дальних. Нажмите, чтобы найти на карте.',
+                hint: 'От ближних к столице до дальних. Нажмите, чтобы найти на карте.',
                 members: 'жителей: {{count}}',
             },
             empty: {
@@ -123,7 +123,7 @@ export const WORLD_MAP_I18N = {
                 close: 'Close',
                 owner: 'Owner',
                 members: 'Residents',
-                fromHearth: 'From the Hearth',
+                fromHearth: 'From the capital',
                 herald: 'Herald stands at',
                 height: 'height {{y}}',
                 open: 'Settlement page',
@@ -140,7 +140,7 @@ export const WORLD_MAP_I18N = {
             },
             list: {
                 title: 'Settlement index',
-                hint: 'From nearest to the Hearth to farthest. Select one to find it on the map.',
+                hint: 'From nearest to the capital to farthest. Select one to find it on the map.',
                 members: 'residents: {{count}}',
             },
             empty: {
