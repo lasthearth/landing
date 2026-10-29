@@ -9,6 +9,7 @@ import { BreadcrumbsComponent } from '@shared/ui/breadcrumbs';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { KEY_POINT_SCHEMES } from '../../config/key-point-schemes.constant';
 import { KeyPointPlannerStore } from '../../model/key-point-planner.store';
+import { resolveVariant } from '../../lib/resolve-variant.function';
 import { KeyPointScheme } from '../../model/key-point-scheme.interface';
 import { UpgradeSchemeComponent } from '../upgrade-scheme/upgrade-scheme.component';
 
@@ -58,6 +59,26 @@ export class KeyPointsPageComponent {
     );
 
     /**
+     * Отдельная точка из адреса (`?variant=`), например конкретная шахта.
+     */
+    private readonly variantParam = toSignal(this.route.queryParamMap.pipe(map((params) => params.get('variant'))), {
+        initialValue: null,
+    });
+
+    /**
+     * Схема для показа: у типа с отдельными точками — схема выбранной точки.
+     */
+    protected readonly shown = computed(() => resolveVariant(this.active(), this.variantParam()));
+
+    /**
+     * Ключ выбранной отдельной точки (или `null`, если у типа их нет).
+     */
+    protected readonly activeVariant = computed(() => {
+        const variants = this.active().variants;
+        return variants?.length ? (variants.find((item) => item.key === this.variantParam()) ?? variants[0]).key : null;
+    });
+
+    /**
      * Хлебные крошки страницы.
      */
     protected readonly crumbs = computed(() => [{ label: this.i18n.translate('keyPoints.breadcrumb') }]);
@@ -74,7 +95,22 @@ export class KeyPointsPageComponent {
     protected open(scheme: KeyPointScheme): void {
         void this.router.navigate([], {
             relativeTo: this.route,
-            queryParams: { point: scheme.id === this.schemes[0].id ? null : scheme.id },
+            queryParams: { point: scheme.id === this.schemes[0].id ? null : scheme.id, variant: null },
+            replaceUrl: true,
+        });
+    }
+
+    /**
+     * Открывает отдельную точку внутри типа (например, другую шахту).
+     *
+     * @param key Ключ отдельной точки.
+     */
+    protected openVariant(key: string): void {
+        const first = this.active().variants?.[0]?.key;
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { variant: key === first ? null : key },
+            queryParamsHandling: 'merge',
             replaceUrl: true,
         });
     }

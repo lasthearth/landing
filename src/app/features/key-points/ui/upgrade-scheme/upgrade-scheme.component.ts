@@ -7,6 +7,7 @@ import { collectDescendants } from '../../lib/collect-descendants.function';
 import { getNodeState } from '../../lib/get-node-state.function';
 import { formatCost } from '../../lib/format-cost.function';
 import { sumCosts } from '../../lib/sum-costs.function';
+import { textKeyOf } from '../../lib/text-key-of.function';
 import { KeyPointPlannerStore } from '../../model/key-point-planner.store';
 import { KeyPointScheme } from '../../model/key-point-scheme.interface';
 import { UpgradeCost } from '../../model/upgrade-cost.interface';
@@ -132,6 +133,11 @@ export class UpgradeSchemeComponent {
      * Выбранный узел. При смене точки выбирается её первый узел.
      */
     protected readonly selectedId = linkedSignal(() => this.scheme().nodes[0]?.id ?? null);
+
+    /**
+     * Префикс ключей словаря для текстов узлов.
+     */
+    protected readonly textKey = computed(() => textKeyOf(this.scheme()));
 
     /**
      * Узел под курсором или в фокусе клавиатуры.
@@ -330,6 +336,6 @@ export class UpgradeSchemeComponent {
      * Сбрасывает план точки.
      */
     protected reset(): void {
-        this.planner.reset(this.scheme().id);
+        this.planner.reset(this.scheme());
     }
 }
