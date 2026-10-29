@@ -184,7 +184,7 @@ export class DonateShopPanelComponent implements OnInit {
     /**
      * Варианты сортировки.
      */
-    protected readonly sorts: readonly ShopSort[] = ['updated', 'name', 'price'];
+    protected readonly sorts: readonly ShopSort[] = ['newest', 'oldest', 'updated', 'name', 'price'];
 
     /**
      * Текст поиска по названию, коду набора и разделу.
@@ -209,7 +209,7 @@ export class DonateShopPanelComponent implements OnInit {
     /**
      * Порядок списка.
      */
-    protected readonly sort = signal<ShopSort>('updated');
+    protected readonly sort = signal<ShopSort>('newest');
 
     /**
      * Вид списка: компактные строки (по умолчанию) или карточки. Запоминается в браузере.
