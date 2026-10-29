@@ -82,7 +82,7 @@ export class RegionFormComponent {
     /**
      * Основная форма создания.
      */
-    protected readonly form = new FormGroup({
+        protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         x: new FormControl<number | null>(null, [Validators.required]),
         z: new FormControl<number | null>(null, [Validators.required]),
@@ -90,49 +90,33 @@ export class RegionFormComponent {
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        nobleScroll: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        passports: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        liberties: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        playersDocuments: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        loreBooks: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        yardage: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        bigYardage: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         pit: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        localRoads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        globalRoads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house5: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house6: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        headBuilding: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        courtBuilding: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        barn: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         seedbeds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        oneFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        oneFloorHouse2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        oneFloorHouse3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        oneFloorHouse4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        doubleFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        doubleFloorHouse2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        doubleFloorHouse3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        doubleFloorHouse4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        doubleFloorHouse5: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        doubleFloorHouse6: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        thirdFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        square: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        capitalRoad: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        roads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        foodMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        craftMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        buyMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        churchOrTavern: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        prison: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         workshop1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         workshop2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        blacksmithShop: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        religionOrCultureOrEconomicHouse1: new FormControl<File | null>(null, [
-            Validators.required,
-            maxFileSizeValidator(2),
-        ]),
-        religionOrCultureOrEconomicHouse2: new FormControl<File | null>(null, [
-            Validators.required,
-            maxFileSizeValidator(2),
-        ]),
-        marketPlace1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        marketPlace2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        marketPlace3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        marketPlace4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        marketPlace5: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        stablesOrHarbor: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        tavern: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        importantBuilding: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        greateBuilding: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        steelBuilding: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        capitalRepresentation: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        noticeBoard: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
     });
 
     /**
@@ -218,6 +202,20 @@ export class RegionFormComponent {
                 next: () => this.submitEvent.emit(),
                 error: () => {},
             });
+    }
+
+    /**
+     * Обрабатывает отправку формы: помечает все поля затронутыми, чтобы
+     * показать ошибки валидации, и запускает отправку только если форма валидна.
+     */
+    protected submit(): void {
+        this.form.markAllAsTouched();
+
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.onSubmit.next();
     }
     /**
      * Метод для удаления файла из формы

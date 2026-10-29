@@ -66,7 +66,7 @@ export class CampFormComponent {
     /**
      * Основная форма создания.
      */
-    protected readonly form = new FormGroup({
+        protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         x: new FormControl<number | null>(null, [Validators.required]),
         z: new FormControl<number | null>(null, [Validators.required]),
@@ -74,10 +74,11 @@ export class CampFormComponent {
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        liberty: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         beds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
     });
 
     /**
@@ -171,6 +172,20 @@ export class CampFormComponent {
                 next: () => this.submitEvent.emit(),
                 error: () => {},
             });
+    }
+
+    /**
+     * Обрабатывает отправку формы: помечает все поля затронутыми, чтобы
+     * показать ошибки валидации, и запускает отправку только если форма валидна.
+     */
+    protected submit(): void {
+        this.form.markAllAsTouched();
+
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.onSubmit.next();
     }
     /**
      * Метод для удаления файла из формы

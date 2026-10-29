@@ -83,33 +83,30 @@ export class TownshipFormComponent {
     /**
      * Основная форма создания.
      */
-    protected readonly form = new FormGroup({
-        preview: new FormControl<File | null>(null, Validators.required),
+        protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         x: new FormControl<number | null>(null, [Validators.required]),
         z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
+        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        nobleScroll: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        passports: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        liberties: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        playersDocuments: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        yardage: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         pit: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        roads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        house3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        barn: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         seedbeds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        oneFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        oneFloorHouse2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        oneFloorHouse3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        oneFloorHouse4: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        doubleFloorHouse1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        workshop: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        blacksmithShop: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        religionOrCultureOrEconomicHouse: new FormControl<File | null>(null, [
-            Validators.required,
-            maxFileSizeValidator(2),
-        ]),
+        square: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        capitalRoad: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        roads: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        foodMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        craftMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        churchOrTavern: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
     });
 
     /**
@@ -195,6 +192,20 @@ export class TownshipFormComponent {
                 next: () => this.submitEvent.emit(),
                 error: () => {},
             });
+    }
+
+    /**
+     * Обрабатывает отправку формы: помечает все поля затронутыми, чтобы
+     * показать ошибки валидации, и запускает отправку только если форма валидна.
+     */
+    protected submit(): void {
+        this.form.markAllAsTouched();
+
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.onSubmit.next();
     }
 
     /**

@@ -1,49 +1,9 @@
 /**
  * Тип, представляющий любой ключ из массива `fileFieldsRegion`.
- * Используется для обращения к конкретным файлам региона.
+ * Используется для обращения к конкретным файлам маркграфство.
  */
 export type FileKeyRegion = (typeof fileFieldsRegion)[number];
 /**
- * Список ключей файлов, связанных с провинцией.
+ * Список ключей файлов, связанных с маркграфство.
  */
-export const fileFieldsRegion = [
-    'preview',
-    'map',
-    'monument',
-    'playersDocuments',
-    'loreBooks',
-    'yardage',
-    'bigYardage',
-    'pit',
-    'localRoads',
-    'globalRoads',
-    'warehouse',
-    'barn',
-    'seedbeds',
-    'oneFloorHouse1',
-    'oneFloorHouse2',
-    'oneFloorHouse3',
-    'oneFloorHouse4',
-    'doubleFloorHouse1',
-    'doubleFloorHouse2',
-    'doubleFloorHouse3',
-    'doubleFloorHouse4',
-    'doubleFloorHouse5',
-    'doubleFloorHouse6',
-    'thirdFloorHouse1',
-    'workshop1',
-    'workshop2',
-    'blacksmithShop',
-    'religionOrCultureOrEconomicHouse1',
-    'religionOrCultureOrEconomicHouse2',
-    'marketPlace1',
-    'marketPlace2',
-    'marketPlace3',
-    'marketPlace4',
-    'marketPlace5',
-    'stablesOrHarbor',
-    'tavern',
-    'importantBuilding',
-    'greateBuilding',
-    'steelBuilding',
-] as const;
+export const fileFieldsRegion = ['preview', 'map', 'nobleScroll', 'passports', 'liberties', 'monument', 'pit', 'house1', 'house2', 'house3', 'house4', 'house5', 'house6', 'headBuilding', 'courtBuilding', 'warehouse', 'seedbeds', 'square', 'capitalRoad', 'roads', 'foodMarket', 'craftMarket', 'buyMarket', 'churchOrTavern', 'prison', 'workshop1', 'workshop2', 'capitalRepresentation', 'noticeBoard'] as const;

@@ -228,7 +228,7 @@ export const RULES_I18N = {
                         b1: '<b>•</b> Население: от 3-х человек.',
                         b2: {
                             t0: '<b>•</b> Хартии: ',
-                            l1: 'паспорт горожанина',
+                            l1: 'купчая вольности',
                             t2: ' для главы.',
                         },
                         b3: {
@@ -1519,7 +1519,7 @@ export const RULES_I18N = {
                         b1: '<b>•</b> Population: 3 people or more.',
                         b2: {
                             t0: '<b>•</b> Charters: a ',
-                            l1: "Townsman's Passport",
+                            l1: 'Deed of Freedom',
                             t2: ' for the head.',
                         },
                         b3: {
