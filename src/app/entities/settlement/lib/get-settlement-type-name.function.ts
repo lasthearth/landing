@@ -2,9 +2,9 @@ import { ISettlement } from '../model/i-settlement';
 import { getSettlementTypeByKey } from './get-settlement-type-by-key.function';
 
 /**
- * Название тега, который делает надел столицей (приоритетнее type).
+ * Идентификатор тега «Центральное поселение», который делает надел столицей.
  */
-export const CAPITAL_TAG_NAME = 'центральное поселение';
+export const CAPITAL_TAG_ID = '6a455f03a601f408b02ef444';
 
 /**
  * Название типа «Столица» (Центр Имперского эксклава).
@@ -18,14 +18,10 @@ export const CAPITAL_TYPE_NAME = 'Столица';
  * что приходит в поле type (тег главнее).
  *
  * @param settlement Надел.
- * @param getTagName Резолвер имени тега по id (например, store.getTagById).
  * @returns Название типа.
  */
-export function getSettlementTypeName(
-    settlement: ISettlement,
-    getTagName: (tagId: string) => string | undefined
-): string {
-    const isCapital = settlement.tags.some((tag) => getTagName(tag.id) === CAPITAL_TAG_NAME);
+export function getSettlementTypeName(settlement: ISettlement): string {
+    const isCapital = settlement.tags.some((tag) => tag.id === CAPITAL_TAG_ID);
 
     return isCapital ? CAPITAL_TYPE_NAME : getSettlementTypeByKey(settlement.type);
 }

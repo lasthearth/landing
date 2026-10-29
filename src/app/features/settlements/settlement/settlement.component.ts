@@ -327,7 +327,7 @@ export class SettlementComponent {
     protected getSettlementType(settlement: ISettlement): string {
         return isGuildSettlement(settlement)
             ? this.i18n.translate('settlements.types.guild')
-            : getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
+            : getSettlementTypeName(settlement);
     }
 
     /**

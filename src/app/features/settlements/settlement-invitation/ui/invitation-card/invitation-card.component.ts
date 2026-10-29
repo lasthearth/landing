@@ -37,8 +37,6 @@ import { RequestStatusService } from '@core/services/request-status.service';
  * тип и дипломатию: решение «вступать или нет» нельзя принять по одному имени.
  * Данные надела подгружаются по идентификатору из приглашения.
  */
-import { SettlementTagStore } from '@entities/settlement-tag';
-
 @Component({
     selector: 'app-invitation-card',
     standalone: true,
@@ -48,7 +46,6 @@ import { SettlementTagStore } from '@entities/settlement-tag';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvitationCardComponent {
-    protected readonly tagStore = inject(SettlementTagStore);
     /**
      * Сервис наделов.
      */
@@ -119,7 +116,7 @@ export class InvitationCardComponent {
     protected typeLabel(settlement: ISettlement): string {
         return isGuildSettlement(settlement)
             ? this.i18n.translate('settlements.types.guild')
-            : getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
+            : getSettlementTypeName(settlement);
     }
 
     /**

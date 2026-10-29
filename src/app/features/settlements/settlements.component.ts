@@ -418,6 +418,6 @@ export class SettlementsComponent {
             return this.i18n.translate('settlements.types.guild');
         }
 
-        return getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
+        return getSettlementTypeName(settlement);
     }
 }

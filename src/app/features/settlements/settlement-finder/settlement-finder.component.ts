@@ -36,8 +36,6 @@ interface FinderQuestion<K extends keyof FinderAnswers> {
  * Открывается диалогом. Считает по открытым данным: дипломатии, числу жителей,
  * кто сейчас в игре и как давно надел обновлялось.
  */
-import { SettlementTagStore } from '@entities/settlement-tag';
-
 @Component({
     selector: 'app-settlement-finder',
     templateUrl: './settlement-finder.component.html',
@@ -46,7 +44,6 @@ import { SettlementTagStore } from '@entities/settlement-tag';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementFinderComponent {
-    protected readonly tagStore = inject(SettlementTagStore);
     private readonly context = inject<TuiDialogContext<void>>(POLYMORPHEUS_CONTEXT);
     private readonly i18n = inject(I18nService);
     private readonly settlementService = inject(SettlementService);
@@ -192,7 +189,7 @@ export class SettlementFinderComponent {
                             name: getSettlementDisplayName(settlement),
                             typeLabel: isGuildSettlement(settlement)
                                 ? this.i18n.translate('settlements.types.guild')
-                                : getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name),
+                                : getSettlementTypeName(settlement),
                             diplomacy: settlement.diplomacy,
                             members,
                             online,

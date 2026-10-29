@@ -62,8 +62,6 @@ import { ApplicationCardComponent, ApplicationState } from './ui/application-car
 import { ProfileWaitingComponent } from './ui/profile-waiting/profile-waiting.component';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComponent } from '@entities/player-style';
-import { SettlementTagStore } from '@entities/settlement-tag';
-
 @Component({
     standalone: true,
     imports: [AmountPipe,
@@ -92,7 +90,6 @@ import { SettlementTagStore } from '@entities/settlement-tag';
     styleUrl: './profile.component.less',
 })
 export class ProfileComponent {
-    protected readonly tagStore = inject(SettlementTagStore);
     protected readonly userService = inject(UserService);
 
     /**
@@ -502,7 +499,7 @@ export class ProfileComponent {
             return this.i18n.translate('settlements.types.guild');
         }
 
-        return getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
+        return getSettlementTypeName(settlement);
     }
 
     /**
