@@ -78,8 +78,6 @@ export class GuildFormComponent {
      */
         protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(4)]),
-        x: new FormControl<number | null>(null, [Validators.required]),
-        z: new FormControl<number | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
@@ -106,7 +104,7 @@ export class GuildFormComponent {
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
 
@@ -138,10 +136,7 @@ export class GuildFormComponent {
                                 name: buildGuildName((values.name ?? '').trimEnd()),
                                 description: (values.description ?? '').trimEnd(),
                                 diplomacy: this.i18n.translate('settlements.diplomacy.peaceful'),
-                                coordinates: {
-                                    x: values.x ?? 0,
-                                    y: values.z ?? 0,
-                                },
+                                coordinates: { x: 0, y: 0 },
                                 attachments,
                             };
 

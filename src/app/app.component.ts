@@ -38,7 +38,7 @@ export class AppComponent {
     private readonly referralApplier: ReferralApplierService = inject(ReferralApplierService);
 
     /**
-     * Возвращает игрока на страницу приглашения в поселение после входа.
+     * Возвращает игрока на страницу приглашения в надел после входа.
      */
     private readonly pendingInvite = inject(PendingInviteService);
 
@@ -48,7 +48,7 @@ export class AppComponent {
     private readonly defaultSeo: ISeoData = {
         title: 'Last Hearth — ролевой сервер Vintage Story',
         description:
-            'Last Hearth — уникальный ролевой политико-экономический сервер Vintage Story. Развивайте поселения, ведите войны, заключайте союзы и участвуйте в жизни Империи.',
+            'Last Hearth — уникальный ролевой политико-экономический сервер Vintage Story. Развивайте надела, ведите войны, заключайте союзы и участвуйте в жизни Империи.',
         url: 'https://lasthearth.ru/',
         type: 'website',
         locale: 'ru_RU',

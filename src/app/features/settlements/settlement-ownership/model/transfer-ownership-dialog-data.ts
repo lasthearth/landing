@@ -2,16 +2,16 @@ import { ISettlement } from '@entities/settlement';
 import { IPlayer } from '@entities/user';
 
 /**
- * Входные данные диалога передачи владения поселением.
+ * Входные данные диалога передачи владения наделом.
  */
 export interface TransferOwnershipDialogData {
     /**
-     * Поселение, чьё владение передаётся.
+     * Надел, чьё владение передаётся.
      */
     settlement: ISettlement;
 
     /**
-     * Профили участников поселения, загруженные одним батчем.
+     * Профили участников надела, загруженные одним батчем.
      */
     players: IPlayer[];
 }

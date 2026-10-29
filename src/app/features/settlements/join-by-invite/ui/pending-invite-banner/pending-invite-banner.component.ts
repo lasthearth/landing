@@ -5,7 +5,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { PendingInviteService } from '../../api/pending-invite.service';
 
 /**
- * Плашка «Вас пригласили в поселение» — пока приглашение ждёт игрока.
+ * Плашка «Вас пригласили в надел» — пока приглашение ждёт игрока.
  */
 @Component({
     selector: 'app-pending-invite-banner',

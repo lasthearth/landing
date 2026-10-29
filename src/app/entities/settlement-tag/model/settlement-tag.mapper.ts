@@ -2,7 +2,7 @@ import { ISettlementTag } from './i-settlement-tag';
 import { ISettlementTagDto } from './i-settlement-tag-dto';
 
 /**
- * Маппер тегов поселений между DTO и UI-моделью.
+ * Маппер тегов наделов между DTO и UI-моделью.
  */
 export class SettlementTagMapper {
     /**

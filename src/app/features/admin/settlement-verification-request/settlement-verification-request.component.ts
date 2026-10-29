@@ -23,7 +23,7 @@ import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
 import { MarkupPipe } from '@shared/lib/news-markdown';
 
 /**
- * Компонент отображения запроса на верификацию селения.
+ * Компонент отображения запроса на верификацию надела.
  */
 @Component({
     standalone: true,
@@ -44,7 +44,7 @@ export class SettlementVerificationRequestComponent {
     protected previewDesc: string | null = null;
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     protected readonly settlementService: SettlementService = inject(SettlementService);
 
@@ -133,11 +133,11 @@ export class SettlementVerificationRequestComponent {
     };
 
     /**
-     * Возвращает локализованное название типа селения по ключу.
+     * Возвращает локализованное название типа надела по ключу.
      *
      * Для гильдий возвращает "Гильдия".
      *
-     * @param request Данные заявки на селение.
+     * @param request Данные заявки на надел.
      * @returns Локализованная строка.
      */
     protected getSettlementType(request: IRequestSettlement): string {
@@ -150,9 +150,9 @@ export class SettlementVerificationRequestComponent {
     }
 
     /**
-     * Возвращает отображаемое название селения без маркера гильдии.
+     * Возвращает отображаемое название надела без маркера гильдии.
      *
-     * @param request Данные заявки на селение.
+     * @param request Данные заявки на надел.
      * @returns Очищенное название.
      */
     protected getDisplayName(request: IRequestSettlement): string {

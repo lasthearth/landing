@@ -1,5 +1,5 @@
 /**
- * Публичный API слайса «Владение поселением».
+ * Публичный API слайса «Владение наделом».
  */
 
 export { TransferOwnershipDialogComponent } from './ui/transfer-ownership-dialog/transfer-ownership-dialog.component';

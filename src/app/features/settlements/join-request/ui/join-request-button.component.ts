@@ -4,13 +4,13 @@ import { TranslatePipe } from '@core/i18n';
 import { MyJoinRequestsStore } from '../model/my-join-requests.store';
 
 /**
- * Кнопка подачи и отзыва заявки на вступление в поселение.
+ * Кнопка подачи и отзыва заявки на вступление в надел.
  *
  * Тихий элемент: штатный ghost-CTA без собственного визуального языка —
- * заявка не должна конкурировать по весу с содержимым карточки селения.
+ * заявка не должна конкурировать по весу с содержимым карточки надела.
  * Показывает одно из трёх состояний: «Подать заявку», «Заявка отправлена»
  * с отзывом или подсказку о верификации. Ничего не рисует, если игрок
- * не авторизован или уже состоит в поселении.
+ * не авторизован или уже состоит в наделе.
  */
 @Component({
     selector: 'app-join-request-button',
@@ -27,12 +27,12 @@ export class JoinRequestButtonComponent {
     private readonly store = inject(MyJoinRequestsStore);
 
     /**
-     * Идентификатор поселения, в которое подаётся заявка.
+     * Идентификатор надела, в которое подаётся заявка.
      */
     public readonly settlementId: InputSignal<string> = input.required();
 
     /**
-     * Признак отправленной заявки в это поселение.
+     * Признак отправленной заявки в это надел.
      */
     protected readonly sent: Signal<boolean> = computed(() => this.store.hasRequest(this.settlementId()));
 

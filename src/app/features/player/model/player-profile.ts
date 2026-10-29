@@ -96,12 +96,12 @@ export interface PlayerProfile {
     totalPlayers: number;
 
     /**
-     * Поселение игрока.
+     * Надел игрока.
      */
     settlement: ISettlement | null;
 
     /**
-     * Роль в поселении.
+     * Роль в наделе.
      */
     settlementRole: 'leader' | 'resident' | null;
 

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { SettlementFinderComponent } from './settlement-finder.component';
 
 /**
- * Открывает «Подбери поселение».
+ * Открывает «Подбери надел».
  */
 @Injectable({ providedIn: 'root' })
 export class SettlementFinderService {

@@ -10,7 +10,7 @@ import { ROLE_NAME_MAX_LENGTH } from '../../config/role-name-max-length.constant
 import { isValidRoleName } from '../../lib/is-valid-role-name.function';
 
 /**
- * Диалог создания и переименования роли поселения.
+ * Диалог создания и переименования роли наделы.
  *
  * Имя роли валидируется на клиенте: 1–64 символа, символы `<` и `>` запрещены —
  * сервер хранит имя как есть и не экранирует его при выдаче.
@@ -86,7 +86,7 @@ export class RoleFormDialogComponent {
     /**
      * Проверяет, выбрано ли право.
      *
-     * @param permission Право члена поселения.
+     * @param permission Право члена надела.
      * @returns true, если право выбрано.
      */
     protected isSelected(permission: Permission): boolean {
@@ -96,7 +96,7 @@ export class RoleFormDialogComponent {
     /**
      * Переключает выбор права.
      *
-     * @param permission Право члена поселения.
+     * @param permission Право члена надела.
      */
     protected toggle(permission: Permission): void {
         this.selected.set(

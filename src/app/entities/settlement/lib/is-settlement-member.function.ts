@@ -1,14 +1,14 @@
 import { ISettlement } from '../model/i-settlement';
 
 /**
- * Проверяет, состоит ли пользователь в поселении.
+ * Проверяет, состоит ли пользователь в наделе.
  *
  * Владельцы входят в `members` наравне с остальными (их отличает роль `owner`),
  * поэтому отдельная проверка `leader` не нужна — поле помечено `@deprecated`.
  *
- * @param settlement Поселение или `null`, если поселения у пользователя нет.
+ * @param settlement Надел или `null`, если наделы у пользователя нет.
  * @param userId Идентификатор пользователя.
- * @returns true, если пользователь — член поселения.
+ * @returns true, если пользователь — член надела.
  */
 export function isSettlementMember(settlement: ISettlement | null | undefined, userId: string): boolean {
     if (!settlement || !userId) {

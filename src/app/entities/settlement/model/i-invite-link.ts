@@ -10,7 +10,7 @@ export type InviteLinkStatus =
     | 'INVITE_LINK_STATUS_REVOKED';
 
 /**
- * Ссылка-приглашение в поселение (`settlement.v1.InviteLink`). Даты — ISO 8601.
+ * Ссылка-приглашение в надел (`settlement.v1.InviteLink`). Даты — ISO 8601.
  */
 export interface IInviteLink {
     id: string;

@@ -64,7 +64,7 @@ export class PlayerInviteComponent {
     );
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
 

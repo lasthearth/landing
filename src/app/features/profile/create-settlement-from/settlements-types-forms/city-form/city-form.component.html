@@ -13,17 +13,7 @@
         <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
     </div>
 
-    <div class="flex flex-col gap-2">
-        <p class="text-xl text-ink font-semibold">
-            {{ 'settlements.form.coordinatesLabel' | translate }}
-            <span class="text-lh-danger">*</span>
-            <lh-hint [hintText]="'settlements.form.coordinatesHint' | translate" />
-        </p>
-        <lh-input [placeholder]="'settlements.form.xPlaceholder' | translate" type="inputNumber" formControlName="x" />
-        <tui-error formControlName="x" [error]="[] | tuiFieldError | async" />
-        <lh-input [placeholder]="'settlements.form.zPlaceholder' | translate" type="inputNumber" formControlName="z" />
-        <tui-error formControlName="z" [error]="[] | tuiFieldError | async" />
-    </div>
+    
 
     <div class="flex flex-col gap-2">
         <p class="text-xl text-ink font-semibold">

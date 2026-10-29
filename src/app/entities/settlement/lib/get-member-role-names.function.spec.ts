@@ -4,10 +4,10 @@ import { getMemberRoleNames } from './get-member-role-names.function';
 import { OWNER_ROLE_ID } from './owner-role-id.constant';
 
 /**
- * Собирает поселение для проверок бейджей ролей.
+ * Собирает надел для проверок бейджей ролей.
  *
- * @param overrides Переопределяемые поля поселения.
- * @returns Поселение с минимально достаточным набором полей.
+ * @param overrides Переопределяемые поля надела.
+ * @returns Надел с минимально достаточным набором полей.
  */
 function makeSettlement(overrides: Partial<ISettlement>): ISettlement {
     return {
@@ -70,7 +70,7 @@ describe('getMemberRoleNames', () => {
         expect(getMemberRoleNames(settlement, 'member-1')).toEqual(['Дозорный']);
     });
 
-    it('возвращает пустой список для пользователя вне поселения', () => {
+    it('возвращает пустой список для пользователя вне надела', () => {
         const settlement = makeSettlement({
             members: [{ user_id: 'member-1', role_ids: ['r-1'] }],
             roles: [{ id: 'r-1', name: 'Дозорный', permissions: [] }],

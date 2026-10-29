@@ -12,7 +12,7 @@ import { WorldMapCourse, settlementCourse, settlementGlyph } from '../../lib/set
 import { WorldMapCanvasComponent } from '../world-map-canvas/world-map-canvas.component';
 
 /**
- * Поселение со всеми подписями для списка и карточки.
+ * Надел со всеми подписями для списка и карточки.
  */
 interface WorldMapEntry {
     point: WorldMapPoint;
@@ -39,9 +39,9 @@ const LEGEND_COURSES: readonly Exclude<WorldMapCourse, 'none'>[] = ['peace', 'ne
 /**
  * Страница «Карта земель» `/map`.
  *
- * Поселения стоят там, где их главы поставили блок-глашатай: позицию пишет
+ * Наделы стоят там, где их главы поставили блок-глашатай: позицию пишет
  * сервер, поэтому она совпадает с миром, в отличие от координат из заявки.
- * Под картой — строка условных знаков и указатель поселений по удалённости
+ * Под картой — строка условных знаков и указатель наделов по удалённости
  * от Очага: по нему карту можно пройти без мыши, а на телефоне — без точных
  * касаний. Хутора тоже на карте: на сайте они не регистрируются, но глашатая
  * ставят, поэтому у них нет страницы, курса и числа жителей.
@@ -69,7 +69,7 @@ export class WorldMapPageComponent {
     protected readonly demo = computed(() => this.data().demo);
     protected readonly selectedId = signal<string | null>(null);
 
-    /** Поселения от ближнего к Очагу до дальнего. */
+    /** Наделы от ближнего к Очагу до дальнего. */
     protected readonly entries = computed<WorldMapEntry[]>(() => {
         const format = new Intl.NumberFormat(this.i18n.language() === 'en' ? 'en-US' : 'ru-RU');
 
@@ -100,7 +100,7 @@ export class WorldMapPageComponent {
     }
 
     /**
-     * Выбор из списка: карта перелетает к поселению.
+     * Выбор из списка: карта перелетает к наделу.
      */
     protected show(entry: WorldMapEntry): void {
         this.selectedId.set(entry.point.id);

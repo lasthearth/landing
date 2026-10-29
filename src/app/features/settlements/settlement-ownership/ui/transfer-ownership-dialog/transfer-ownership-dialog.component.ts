@@ -7,7 +7,7 @@ import { TranslatePipe } from '@core/i18n';
 import { TransferOwnershipDialogData } from '../../model/transfer-ownership-dialog-data';
 
 /**
- * Диалог передачи владения поселением.
+ * Диалог передачи владения наделом.
  *
  * Владение передаётся, а не добавляется: число владельцев не растёт,
  * прежний владелец теряет статус. Поэтому выбор участника отделён от
@@ -23,13 +23,13 @@ import { TransferOwnershipDialogData } from '../../model/transfer-ownership-dial
 })
 export class TransferOwnershipDialogComponent {
     /**
-     * Контекст диалога: поселение и профили участников.
+     * Контекст диалога: надел и профили участников.
      */
     protected readonly context: TuiDialogContext<string | null, TransferOwnershipDialogData> =
         inject<TuiDialogContext<string | null, TransferOwnershipDialogData>>(POLYMORPHEUS_CONTEXT);
 
     /**
-     * Поселение, чьё владение передаётся.
+     * Надел, чьё владение передаётся.
      */
     private readonly settlement: ISettlement = this.context.data.settlement;
 

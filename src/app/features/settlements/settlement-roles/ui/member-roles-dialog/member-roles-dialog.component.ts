@@ -6,10 +6,10 @@ import { TranslatePipe } from '@core/i18n';
 import { MemberRolesDialogData } from '../../model/member-roles-dialog-data';
 
 /**
- * Диалог выдачи и снятия ролей участника поселения.
+ * Диалог выдачи и снятия ролей участника надела.
  *
  * Возвращает решения по одной роли за раз: каждая мутация — отдельный запрос,
- * который отдаёт обновлённое поселение, и вызывающая сторона перерисовывает
+ * который отдаёт обновлённое надел, и вызывающая сторона перерисовывает
  * себя из ответа.
  */
 @Component({
@@ -22,13 +22,13 @@ import { MemberRolesDialogData } from '../../model/member-roles-dialog-data';
 })
 export class MemberRolesDialogComponent {
     /**
-     * Контекст диалога: поселение, участник и обработчик переключения роли.
+     * Контекст диалога: надел, участник и обработчик переключения роли.
      */
     protected readonly context: TuiDialogContext<void, MemberRolesDialogData> =
         inject<TuiDialogContext<void, MemberRolesDialogData>>(POLYMORPHEUS_CONTEXT);
 
     /**
-     * Актуальное состояние поселения.
+     * Актуальное состояние надела.
      * Обновляется из ответа сервера после каждой мутации.
      */
     protected readonly settlement = signal<ISettlement>(this.context.data.settlement);
@@ -44,7 +44,7 @@ export class MemberRolesDialogComponent {
     protected readonly memberName: string = this.context.data.memberName;
 
     /**
-     * Редактируемые роли поселения. Служебная роль владельца исключена:
+     * Редактируемые роли наделы. Служебная роль владельца исключена:
      * владение передаётся отдельным действием, а не выдачей роли.
      */
     protected readonly roles: Signal<IRole[]> = computed(() =>
@@ -65,7 +65,7 @@ export class MemberRolesDialogComponent {
     /**
      * Проверяет, выдана ли роль участнику.
      *
-     * @param role Роль поселения.
+     * @param role Роль надела.
      * @returns true, если роль есть у участника.
      */
     protected hasRole(role: IRole): boolean {
@@ -75,7 +75,7 @@ export class MemberRolesDialogComponent {
     /**
      * Переключает роль участника через обработчик из вызывающего компонента.
      *
-     * @param role Роль поселения.
+     * @param role Роль надела.
      */
     protected toggle(role: IRole): void {
         if (this.busy()) {

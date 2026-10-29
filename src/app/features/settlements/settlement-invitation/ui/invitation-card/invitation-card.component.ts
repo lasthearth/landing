@@ -30,11 +30,11 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 
 /**
- * Карточка входящего приглашения в поселение.
+ * Карточка входящего приглашения в надел.
  *
- * Показывает то же, что и карточка селения в списке — изображение, название,
+ * Показывает то же, что и карточка надела в списке — изображение, название,
  * тип и дипломатию: решение «вступать или нет» нельзя принять по одному имени.
- * Данные селения подгружаются по идентификатору из приглашения.
+ * Данные надела подгружаются по идентификатору из приглашения.
  */
 @Component({
     selector: 'app-invitation-card',
@@ -46,7 +46,7 @@ import { RequestStatusService } from '@core/services/request-status.service';
 })
 export class InvitationCardComponent {
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService = inject(SettlementService);
 
@@ -66,7 +66,7 @@ export class InvitationCardComponent {
     public readonly invitationId: InputSignal<string> = input.required();
 
     /**
-     * Идентификатор приглашающего поселения.
+     * Идентификатор приглашающего надела.
      */
     public readonly settlementId: InputSignal<string> = input.required();
 
@@ -76,7 +76,7 @@ export class InvitationCardComponent {
     public readonly resolved: OutputEmitterRef<void> = output();
 
     /**
-     * Данные приглашающего поселения.
+     * Данные приглашающего надела.
      */
     protected readonly settlement = signal<ISettlement | null>(null);
 
@@ -86,7 +86,7 @@ export class InvitationCardComponent {
     protected readonly busy = signal(false);
 
     /**
-     * Отображаемое название поселения.
+     * Отображаемое название надела.
      */
     protected readonly displayName: Signal<string> = computed(() => {
         const settlement = this.settlement();
@@ -95,21 +95,21 @@ export class InvitationCardComponent {
     });
 
     /**
-     * Ссылка на изображение селения с заглушкой.
+     * Ссылка на изображение надела с заглушкой.
      */
     protected readonly imageUrl: Signal<string> = computed(
         () => this.settlement()?.attachments?.[0]?.url || DEFAULT_SETTLEMENT_COVER
     );
 
     constructor() {
-        // Приглашение приходит без данных селения — только с его идентификатором.
+        // Приглашение приходит без данных надела — только с его идентификатором.
         queueMicrotask(() => this.load());
     }
 
     /**
-     * Возвращает локализованный тип селения.
+     * Возвращает локализованный тип надела.
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Название типа.
      */
     protected typeLabel(settlement: ISettlement): string {
@@ -119,9 +119,9 @@ export class InvitationCardComponent {
     }
 
     /**
-     * Возвращает тон бейджа типа селения.
+     * Возвращает тон бейджа типа надела.
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Тон бейджа.
      */
     protected typeTone(settlement: ISettlement): SettlementBadgeTone {
@@ -129,9 +129,9 @@ export class InvitationCardComponent {
     }
 
     /**
-     * Возвращает иконку типа селения.
+     * Возвращает иконку типа надела.
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Имя иконки Taiga UI.
      */
     protected typeIcon(settlement: ISettlement): string {
@@ -199,7 +199,7 @@ export class InvitationCardComponent {
     }
 
     /**
-     * Загружает данные приглашающего поселения.
+     * Загружает данные приглашающего надела.
      */
     private load(): void {
         this.settlementService

@@ -6,4 +6,4 @@ export type FileKeyCamp = (typeof fileFieldsCamp)[number];
 /**
  * Список ключей файлов, связанных с стан.
  */
-export const fileFieldsCamp = ['preview', 'map', 'liberty', 'monument', 'fireplace', 'beds', 'warehouse'] as const;
+export const fileFieldsCamp = ['preview', 'map', 'passport', 'monument', 'fireplace', 'beds', 'warehouse'] as const;

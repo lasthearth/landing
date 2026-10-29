@@ -1,5 +1,5 @@
 /**
- * Публичный API слайса «Контакты поселения».
+ * Публичный API слайса «Контакты надела».
  */
 
 export { ContactInfoDialogComponent } from './ui/contact-info-dialog/contact-info-dialog.component';

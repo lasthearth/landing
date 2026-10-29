@@ -17,7 +17,7 @@ import { scoreSettlement } from './score-settlement.function';
 import { FinderActivity, FinderAnswers, FinderMatch, FinderSize, FinderStyle } from './settlement-finder.model';
 
 /**
- * Сколько поселений показать в итоге.
+ * Сколько наделов показать в итоге.
  */
 const RESULTS = 3;
 
@@ -30,10 +30,10 @@ interface FinderQuestion<K extends keyof FinderAnswers> {
 }
 
 /**
- * «Подбери поселение»: три вопроса — и три подходящих поселения.
+ * «Подбери надел»: три вопроса — и три подходящих надела.
  *
  * Открывается диалогом. Считает по открытым данным: дипломатии, числу жителей,
- * кто сейчас в игре и как давно поселение обновлялось.
+ * кто сейчас в игре и как давно надел обновлялось.
  */
 @Component({
     selector: 'app-settlement-finder',
@@ -95,7 +95,7 @@ export class SettlementFinderComponent {
     protected readonly matches = signal<FinderMatch[] | null>(null);
 
     /**
-     * Не удалось загрузить поселения.
+     * Не удалось загрузить надела.
      */
     protected readonly failed = signal(false);
 
@@ -105,7 +105,7 @@ export class SettlementFinderComponent {
     protected readonly question = computed(() => this.questions[this.step()] ?? null);
 
     /**
-     * Поселения с числом игроков онлайн (загружаются один раз при первом показе итогов).
+     * Наделы с числом игроков онлайн (загружаются один раз при первом показе итогов).
      */
     private data$?: Observable<Array<{ settlement: ISettlement; online: number }>>;
 
@@ -142,7 +142,7 @@ export class SettlementFinderComponent {
     }
 
     /**
-     * Закрывает диалог (после перехода по ссылке на поселение).
+     * Закрывает диалог (после перехода по ссылке на надел).
      */
     protected close(): void {
         this.context.completeWith();

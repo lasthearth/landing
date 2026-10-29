@@ -1,5 +1,5 @@
 /**
- * Публичный API сущности "Тег поселения".
+ * Публичный API сущности "Тег надела".
  */
 
 export { SettlementTagService } from './api/settlement-tag.service';

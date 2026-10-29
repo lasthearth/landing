@@ -145,7 +145,7 @@ export class NotificationsFeedService {
                 broadcast,
                 read: broadcast ? readBroadcasts.has(dto.id) : serverRead || readLocally.has(dto.id),
                 // Уведомление о новости ведёт к ленте новостей, о событии — в календарь,
-                // личное — туда, где можно ответить (событие, объявление, поселение).
+                // личное — туда, где можно ответить (событие, объявление, надел).
                 link,
                 category: !broadcast ? 'personal' : link === '/events' ? 'events' : 'news',
             } satisfies FeedNotification;
@@ -320,7 +320,7 @@ export class NotificationsFeedService {
 
     /**
      * Куда ведёт личное уведомление: напоминание или перенос события — в календарь,
-     * отклик на объявление — на доску «Ищу компанию», новый житель — в поселение.
+     * отклик на объявление — на доску «Ищу компанию», новый житель — в надел.
      *
      * @param title Заголовок уведомления.
      * @returns Ссылка или `null`.

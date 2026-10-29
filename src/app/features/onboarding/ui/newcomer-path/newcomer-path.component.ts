@@ -60,12 +60,12 @@ interface ApplicationDetails {
 }
 
 /**
- * Путь новичка: игра → аккаунт → правила → анкета → вход на сервер, а по желанию — поселение и Discord.
+ * Путь новичка: игра → аккаунт → правила → анкета → вход на сервер, а по желанию — надел и Discord.
  *
  * Шаги отмечаются сами (вход на сайт, статус анкеты, открытые правила, скопированный адрес)
  * или кнопкой («Игра уже установлена»). Текущий шаг раскрыт, остальные можно раскрыть кликом.
  *
- * Живёт на гостевой странице «Начать игру» и сам загружает анкету и поселение.
+ * Живёт на гостевой странице «Начать игру» и сам загружает анкету и надел.
  * В профиле его нет: вошедшему игроку прогресс показывает вкладка «Как начать играть».
  */
 @Component({
@@ -93,7 +93,7 @@ export class NewcomerPathComponent {
     private readonly verificationService = inject(VerificationService);
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService = inject(SettlementService);
 
@@ -158,7 +158,7 @@ export class NewcomerPathComponent {
     protected readonly applicationDetails = signal<ApplicationDetails | null>(null);
 
     /**
-     * Название поселения игрока (`null` — не в поселении или ещё не загружено).
+     * Название надела игрока (`null` — не в наделе или ещё не загружено).
      */
     protected readonly settlement = signal<string | null>(null);
 

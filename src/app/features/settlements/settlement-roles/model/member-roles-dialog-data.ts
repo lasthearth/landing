@@ -6,7 +6,7 @@ import { ISettlement } from '@entities/settlement';
  */
 export interface MemberRolesDialogData {
     /**
-     * Поселение — источник справочника ролей и текущих ролей участника.
+     * Надел — источник справочника ролей и текущих ролей участника.
      */
     settlement: ISettlement;
 
@@ -28,7 +28,7 @@ export interface MemberRolesDialogData {
      *
      * @param roleId Идентификатор роли.
      * @param granted Целевое состояние: `true` — выдать, `false` — снять.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     toggle: (roleId: string, granted: boolean) => Observable<ISettlement>;
 }

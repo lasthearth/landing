@@ -52,7 +52,7 @@ import { PlayerNicknameAdminComponent } from '../player-nickname-admin/player-ni
 })
 export class AdminPlayersPanelComponent {
     /**
-     * Сервис поселений: от него поиск пользователей (`GET /users/search`).
+     * Сервис наделов: от него поиск пользователей (`GET /users/search`).
      */
     private readonly settlementService = inject(SettlementService);
 

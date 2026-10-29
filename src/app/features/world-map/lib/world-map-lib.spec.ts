@@ -88,7 +88,7 @@ describe('world-map lib', () => {
             }
         });
 
-        it('без поселений показывает окрестности Очага, а не весь мир в точку', () => {
+        it('без наделов показывает окрестности Очага, а не весь мир в точку', () => {
             const view = fitView([], size, 40);
 
             expect(view.cx).toBe(0);
@@ -111,7 +111,7 @@ describe('world-map lib', () => {
     });
 
     describe('labels', () => {
-        it('крупное поселение подписывается первым, мелкое ищет другое место или скрывается', () => {
+        it('крупное надел подписывается первым, мелкое ищет другое место или скрывается', () => {
             const chosen = placeLabels([
                 { id: 'camp', positions: [{ x: 10, y: 10 }], width: 100, height: 20, priority: 1 },
                 { id: 'city', positions: [{ x: 50, y: 15 }], width: 100, height: 20, priority: 30 },
@@ -149,7 +149,7 @@ describe('world-map lib', () => {
     });
 
     describe('course', () => {
-        it('совпадает с бейджем дипломатии в списке поселений', () => {
+        it('совпадает с бейджем дипломатии в списке наделов', () => {
             expect(settlementCourse('Миролюбивый')).toBe('peace');
             expect(settlementCourse('Нейтральный')).toBe('neutral');
             expect(settlementCourse('Свободный')).toBe('free');

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SkeletonComponent } from './skeleton.component';
 
 /**
- * Скелетон карточки поселения из списка.
+ * Скелетон карточки наделы из списка.
  */
 @Component({
     selector: 'app-settlement-card-skeleton',

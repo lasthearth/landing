@@ -18,7 +18,7 @@ const STORAGE_KEY = 'lh_pending_invite';
 const TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 /**
- * Отложенное приглашение в поселение.
+ * Отложенное приглашение в надел.
  *
  * Гость открыл `/join/<код>` и пошёл входить — после входа OIDC возвращает его
  * на главную, а этот сервис один раз возвращает его на страницу приглашения.
@@ -51,7 +51,7 @@ export class PendingInviteService {
      * Запоминает приглашение.
      *
      * @param code Код ссылки.
-     * @param settlementName Название поселения.
+     * @param settlementName Название надела.
      * @param redirectOnSignIn Вернуть ли на страницу приглашения после входа.
      */
     public save(code: string, settlementName: string, redirectOnSignIn: boolean): void {

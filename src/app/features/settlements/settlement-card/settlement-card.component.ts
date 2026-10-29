@@ -55,12 +55,12 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
 })
 export class SettlementCardComponent {
     /**
-     * Данные поселения.
+     * Данные надела.
      */
     public data: InputSignal<ISettlement> = input.required();
 
     /**
-     * Профили лидера и участников селения.
+     * Профили лидера и участников надела.
      * Загружаются одним батчем на странице списка и передаются готовыми.
      */
     public players: InputSignal<IPlayer[]> = input<IPlayer[]>([]);
@@ -71,7 +71,7 @@ export class SettlementCardComponent {
     public isControlCard: InputSignal<boolean> = input(false);
 
     /**
-     * Событие изменения тегов поселения.
+     * Событие изменения тегов надела.
      */
     public tagsChanged: OutputEmitterRef<void> = output();
 
@@ -92,12 +92,12 @@ export class SettlementCardComponent {
     private readonly i18n = inject(I18nService);
 
     /**
-     * Идентификаторы владельцев (owner) поселения.
+     * Идентификаторы владельцев (owner) надела.
      */
     protected readonly ownerIds: Signal<string[]> = computed(() => getOwnerIds(this.data()));
 
     /**
-     * Лидеры поселения (владельцы). Может быть несколько.
+     * Лидеры надела (владельцы). Может быть несколько.
      */
     protected readonly leaders: Signal<IPlayer[]> = computed(() => {
         const owners = this.ownerIds();
@@ -105,7 +105,7 @@ export class SettlementCardComponent {
     });
 
     /**
-     * Список участников поселения без владельцев.
+     * Список участников надела без владельцев.
      */
     protected readonly users: Signal<IPlayer[]> = computed(() => {
         const owners = this.ownerIds();
@@ -139,7 +139,7 @@ export class SettlementCardComponent {
     );
 
     /**
-     * Ссылка на изображение селения с заглушкой.
+     * Ссылка на изображение надела с заглушкой.
      * Обращение к `attachments[0]` через optional chaining: у части селений
      * массив вложений приходит пустым, и шаблон падал на чтении `.url`.
      */
@@ -148,22 +148,22 @@ export class SettlementCardComponent {
     );
 
     /**
-     * Количество онлайн-участников селения.
+     * Количество онлайн-участников надела.
      */
     protected readonly onlineCount: Signal<number> = computed(
         () => this.players().filter((player) => player.is_online).length
     );
 
     /**
-     * Имя закреплённого селения.
+     * Имя закреплённого надела.
      */
     protected readonly pinnedSettlementName = 'Поместье Эренхольд';
 
     /**
-     * Проверяет, является ли селение закреплённым.
+     * Проверяет, является ли надел закреплённым.
      *
-     * @param settlement Селение.
-     * @returns true, если селение — Поместье Эренхольд.
+     * @param settlement Надел.
+     * @returns true, если надел — Поместье Эренхольд.
      */
     protected isPinned(settlement: ISettlement): boolean {
         return getSettlementDisplayName(settlement) === this.pinnedSettlementName;
@@ -173,7 +173,7 @@ export class SettlementCardComponent {
      * Возвращает отображаемый статус дипломатии.
      * Для гильдий миролюбивый статус отображается как "Торгово-миролюбивый".
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Локализованное название дипломатии.
      */
     protected getDiplomacyLabel(settlement: ISettlement): string {
@@ -185,10 +185,10 @@ export class SettlementCardComponent {
     }
 
     /**
-     * Возвращает отображаемый тип селения.
-     * Для закреплённого селения всегда возвращает "Поместье наместника".
+     * Возвращает отображаемый тип надела.
+     * Для закреплённого надела всегда возвращает "Поместье наместника".
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Локализованное название типа.
      */
     protected getSettlementTypeLabel(settlement: ISettlement): string {
@@ -204,9 +204,9 @@ export class SettlementCardComponent {
     }
 
     /**
-     * Уровень селения от 1 до 5; 0 — шкала не применима.
+     * Уровень надела от 1 до 5; 0 — шкала не применима.
      *
-     * Закреплённое селение исключено из шкалы наравне с гильдией: его тип на
+     * Закреплённое надел исключено из шкалы наравне с гильдией: его тип на
      * бэкенде — лагерь, и честная шкала показала бы «1/5» у поместья
      * наместника, что противоречит и подписи типа, и золотой оправе.
      */
@@ -215,14 +215,14 @@ export class SettlementCardComponent {
     );
 
     /**
-     * Позиции засечек шкалы уровня. Пять — максимальный уровень селения.
+     * Позиции засечек шкалы уровня. Пять — максимальный уровень надела.
      */
     protected readonly tierScale: readonly number[] = [1, 2, 3, 4, 5];
 
     /**
-     * Возвращает тон бейджа типа селения.
+     * Возвращает тон бейджа типа надела.
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Тон бейджа.
      */
     protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
@@ -230,11 +230,11 @@ export class SettlementCardComponent {
     }
 
     /**
-     * Возвращает иконку типа селения.
-     * Закреплённое селение получает иконку максимального тира (замок),
+     * Возвращает иконку типа надела.
+     * Закреплённое надел получает иконку максимального тира (замок),
      * несмотря на то что его тип на бэкенде — лагерь.
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Имя иконки Taiga UI.
      */
     protected getSettlementTypeIcon(settlement: ISettlement): string {
@@ -256,10 +256,10 @@ export class SettlementCardComponent {
     }
 
     /**
-     * Получает тип поселения по ключу.
+     * Получает тип надела по ключу.
      *
-     * @param key - уникальный идентификатор поселения (может быть undefined)
-     * @returns Тип поселения в виде строки:
+     * @param key - уникальный идентификатор надела (может быть undefined)
+     * @returns Тип надела в виде строки:
      * 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция'
      */
     protected getSettlementTypeByKey(
@@ -290,9 +290,9 @@ export class SettlementCardComponent {
 
 
     /**
-     * Возвращает CSS-класс окантовки карточки в зависимости от типа селения.
+     * Возвращает CSS-класс окантовки карточки в зависимости от типа надела.
      *
-     * @param type Тип селения (строка или число из enum).
+     * @param type Тип надела (строка или число из enum).
      * @returns Класс окантовки: settlement-card--camp | --village | --township | --city | --region.
      */
     protected getBorderClass(type: string | number | undefined): string {
@@ -325,9 +325,9 @@ export class SettlementCardComponent {
     }
 
     /**
-     * Определяет, является ли селение лагерем (без окантовки).
+     * Определяет, является ли надел лагерем (без окантовки).
      *
-     * @param type Тип селения.
+     * @param type Тип надела.
      * @returns true, если тип соответствует лагерю.
      */
     protected isCampType(type: string | number | undefined): boolean {

@@ -21,7 +21,7 @@ import { TranslatePipe } from '@core/i18n';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 
 /**
- * Матрица прав ролей поселения.
+ * Матрица прав ролей надела.
  *
  * Роли — строки, права — столбцы, на пересечении отметка. Форма честна
  * относительно данных: право роли — декартово произведение «роль × право»,
@@ -41,7 +41,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 })
 export class RolesMatrixComponent {
     /**
-     * Поселение — источник справочника ролей и флага `roles_enabled`.
+     * Надел — источник справочника ролей и флага `roles_enabled`.
      */
     public readonly settlement: InputSignal<ISettlement> = input.required();
 
@@ -86,7 +86,7 @@ export class RolesMatrixComponent {
     protected readonly permissionLabelKey = permissionLabelKey;
 
     /**
-     * Редактируемые роли поселения — строки матрицы.
+     * Редактируемые роли наделы — строки матрицы.
      * Служебная роль владельца исключена.
      */
     protected readonly roles: Signal<IRole[]> = computed(() =>
@@ -103,7 +103,7 @@ export class RolesMatrixComponent {
     /**
      * Проверяет, даёт ли роль указанное право.
      *
-     * @param role Роль поселения.
+     * @param role Роль надела.
      * @param permission Проверяемое право.
      * @returns true, если право есть у роли.
      */
@@ -114,7 +114,7 @@ export class RolesMatrixComponent {
     /**
      * Переключает право роли.
      *
-     * @param role Роль поселения.
+     * @param role Роль надела.
      * @param permission Переключаемое право.
      */
     protected onToggle(role: IRole, permission: Permission): void {

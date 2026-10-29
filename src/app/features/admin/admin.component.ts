@@ -70,7 +70,7 @@ export class AdminComponent {
     private readonly notificationService = inject(NotificationService);
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
 

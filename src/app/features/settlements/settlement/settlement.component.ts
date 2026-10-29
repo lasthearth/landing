@@ -66,10 +66,10 @@ import { PlayerInviteComponent } from '../player-invite/player-invite.component'
 import { MarkupPipe } from '@shared/lib/news-markdown';
 
 /**
- * Страница управления собственным поселением.
+ * Страница управления собственным наделом.
  *
  * Все данные держатся в сигналах: мутации ролей, владения и контактов
- * возвращают обновлённое поселение, и страница перерисовывается из ответа —
+ * возвращают обновлённое надел, и страница перерисовывается из ответа —
  * эндпоинтов `GET .../roles` и `GET .../members` не существует, дозапрос
  * `getSettlementInfo` после каждой правки был бы лишним.
  *
@@ -140,7 +140,7 @@ export class SettlementComponent {
     private readonly i18n = inject(I18nService);
 
     /**
-     * Хранилище тегов поселений.
+     * Хранилище тегов наделов.
      */
     protected readonly tagStore: SettlementTagStore = inject(SettlementTagStore);
 
@@ -155,35 +155,35 @@ export class SettlementComponent {
     private readonly requestStatus: RequestStatusService = inject(RequestStatusService);
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     protected readonly settlementService: SettlementService = inject(SettlementService);
 
     /**
-     * Поселение пользователя.
-     * `null` — данные ещё загружаются, `undefined` — поселения нет.
+     * Надел пользователя.
+     * `null` — данные ещё загружаются, `undefined` — надела нет.
      */
     protected readonly settlement = signal<ISettlement | null | undefined>(null);
 
     /**
-     * Профили участников поселения, загруженные одним батчем.
+     * Профили участников надела, загруженные одним батчем.
      */
     protected readonly players = signal<IPlayer[]>([]);
 
     /**
-     * Входящие приглашения в поселения.
+     * Входящие приглашения в надела.
      */
     protected readonly invitations = signal<ISettlementInvitation[]>([]);
 
     /**
-     * Статус заявки на основание поселения либо `null`, если заявки нет.
+     * Статус заявки на основание надела либо `null`, если заявки нет.
      */
     protected readonly requestStatusInfo = signal<{ status: string; rejection_reason: string } | null>(
         null
     );
 
     /**
-     * Отправленные приглашения поселения.
+     * Отправленные приглашения надела.
      */
     protected readonly sentInvitations = signal<ISettlementInvitation[]>([]);
 
@@ -193,7 +193,7 @@ export class SettlementComponent {
     private readonly invitedNames = signal<Record<string, string>>({});
 
     /**
-     * Признак загрузки изображения селения.
+     * Признак загрузки изображения надела.
      */
     protected readonly isImageUploading = signal(false);
 
@@ -203,7 +203,7 @@ export class SettlementComponent {
     protected readonly busy = signal(false);
 
     /**
-     * Идентификаторы владельцев поселения.
+     * Идентификаторы владельцев надела.
      */
     private readonly ownerIds: Signal<string[]> = computed(() => {
         const settlement = this.settlement();
@@ -212,21 +212,21 @@ export class SettlementComponent {
     });
 
     /**
-     * Владельцы поселения. Их может быть несколько.
+     * Владельцы надела. Их может быть несколько.
      */
     protected readonly leaders: Signal<IPlayer[]> = computed(() =>
         this.players().filter((player) => this.ownerIds().includes(player.user_id))
     );
 
     /**
-     * Участники поселения без владельцев.
+     * Участники наделы без владельцев.
      */
     protected readonly users: Signal<IPlayer[]> = computed(() =>
         this.players().filter((player) => !this.ownerIds().includes(player.user_id))
     );
 
     /**
-     * Ссылка на изображение селения с заглушкой.
+     * Ссылка на изображение надела с заглушкой.
      * У части селений массив вложений пуст, и шаблон падал на чтении `.url`.
      */
     protected readonly imageUrl: Signal<string> = computed(
@@ -234,7 +234,7 @@ export class SettlementComponent {
     );
 
     /**
-     * Признак того, что текущий пользователь — владелец поселения.
+     * Признак того, что текущий пользователь — владелец надела.
      */
     protected readonly isCurrentOwner: Signal<boolean> = computed(() => {
         const settlement = this.settlement();
@@ -274,7 +274,7 @@ export class SettlementComponent {
     );
 
     /**
-     * Признак возможности покинуть поселение.
+     * Признак возможности покинуть надел.
      * Последний владелец выйти не может — сначала нужно передать владение.
      */
     protected readonly canLeave: Signal<boolean> = computed(
@@ -298,7 +298,7 @@ export class SettlementComponent {
      * Возвращает имена ролей участника для бейджей.
      * ВНИМАНИЕ (XSS): имена выводить только через интерполяцию `{{ }}`.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @param targetUserId Идентификатор участника.
      * @returns Массив имён ролей.
      */
@@ -317,10 +317,10 @@ export class SettlementComponent {
     }
 
     /**
-     * Возвращает локализованный тип селения.
+     * Возвращает локализованный тип надела.
      * Для гильдий — «Гильдия» вместо бэкенд-типа «Лагерь».
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Название типа.
      */
     protected getSettlementType(settlement: ISettlement): string {
@@ -332,7 +332,7 @@ export class SettlementComponent {
     /**
      * Возвращает отображаемый статус дипломатии.
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Локализованное название дипломатии.
      */
     protected getDiplomacyLabel(settlement: ISettlement): string {
@@ -342,9 +342,9 @@ export class SettlementComponent {
     }
 
     /**
-     * Возвращает тон бейджа типа селения.
+     * Возвращает тон бейджа типа надела.
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Тон бейджа.
      */
     protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
@@ -362,10 +362,10 @@ export class SettlementComponent {
     }
 
     /**
-     * Проверяет, является ли селение гильдией.
+     * Проверяет, является ли надел гильдией.
      *
-     * @param settlement Селение.
-     * @returns true, если селение содержит маркер гильдии.
+     * @param settlement Надел.
+     * @returns true, если надел содержит маркер гильдии.
      */
     protected isGuild(settlement: ISettlement): boolean {
         return isGuildSettlement(settlement);
@@ -381,7 +381,7 @@ export class SettlementComponent {
     }
 
     /**
-     * Открывает диалог основания поселения.
+     * Открывает диалог основания надела.
      */
     protected createSettlement(): void {
         this.dialogs
@@ -403,9 +403,9 @@ export class SettlementComponent {
     }
 
     /**
-     * Открывает диалог повышения уровня поселения.
+     * Открывает диалог повышения уровня надела.
      *
-     * @param currentType Текущий тип поселения.
+     * @param currentType Текущий тип надела.
      */
     protected levelUp(currentType: string | number): void {
         const type =
@@ -419,7 +419,7 @@ export class SettlementComponent {
     /**
      * Открывает диалог приглашения игрока.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected invitePlayer(settlement: ISettlement): void {
         this.dialogs
@@ -668,9 +668,9 @@ export class SettlementComponent {
     }
 
     /**
-     * Исключает участника из поселения либо выходит из него самому.
+     * Исключает участника из надела либо выходит из него самому.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param targetUserId Идентификатор участника.
      */
     protected settlementLeave(settlementId: string, targetUserId: string): void {
@@ -752,7 +752,7 @@ export class SettlementComponent {
     /**
      * Отзывает отправленное приглашение.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param invitationId Идентификатор приглашения.
      */
     protected revokeInvitation(settlementId: string, invitationId: string): void {
@@ -795,12 +795,12 @@ export class SettlementComponent {
     }
 
     /**
-     * Обрабатывает выбор нового изображения селения.
+     * Обрабатывает выбор нового изображения надела.
      *
      * Сжимает файл, загружает через `MediaService` и обновляет вложения.
      * Доступно только владельцу.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @param event Событие выбора файла.
      */
     protected async onSettlementImageSelected(settlement: ISettlement, event: Event): Promise<void> {
@@ -888,9 +888,9 @@ export class SettlementComponent {
     }
 
     /**
-     * Возвращает элемент перечисления типов селения по ключу.
+     * Возвращает элемент перечисления типов надела по ключу.
      *
-     * @param key Ключ типа селения.
+     * @param key Ключ типа надела.
      * @returns Элемент перечисления.
      */
     private getSettlementsTypeEnumByKey(key: string): SettlementsTypes {
@@ -910,9 +910,9 @@ export class SettlementComponent {
     }
 
     /**
-     * Загружает поселение пользователя и профили участников.
+     * Загружает надел пользователя и профили участников.
      *
-     * Отсутствие поселения — штатный 404, поэтому запрос помечен
+     * Отсутствие надела — штатный 404, поэтому запрос помечен
      * `SKIP_ERROR_ALERT`.
      */
     private loadSettlement(): void {
@@ -946,9 +946,9 @@ export class SettlementComponent {
     }
 
     /**
-     * Загружает профили участников поселения одним батчем.
+     * Загружает профили участников надела одним батчем.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     private loadPlayers(settlement: ISettlement): void {
         this.userService
@@ -966,7 +966,7 @@ export class SettlementComponent {
      * Эндпоинт доступен только тем, кто может приглашать: обычный житель
      * получал 403 и попап. Запрос закрыт гейтом и `SKIP_ERROR_ALERT`.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     private loadSentInvitations(settlement: ISettlement): void {
         this.settlementService
@@ -999,7 +999,7 @@ export class SettlementComponent {
     }
 
     /**
-     * Загружает статус заявки на основание поселения.
+     * Загружает статус заявки на основание надела.
      *
      * У игрока, который заявку не подавал, эндпоинт отвечает 404 — это
      * штатный ответ, поэтому алерт подавляется.
@@ -1019,7 +1019,7 @@ export class SettlementComponent {
     }
 
     /**
-     * Выполняет мутацию, возвращающую обновлённое поселение.
+     * Выполняет мутацию, возвращающую обновлённое надел.
      *
      * Страница перерисовывается из ответа: отдельных эндпоинтов для ролей и
      * участников нет, а `getSettlementInfo` вернул бы те же данные лишним

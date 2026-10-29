@@ -42,7 +42,7 @@ export class HungerGamesPanelComponent implements OnInit {
     private readonly hungerGamesService = inject(HungerGamesService);
 
     /**
-     * Сервис поселений для поиска пользователей.
+     * Сервис наделов для поиска пользователей.
      */
     private readonly settlementService = inject(SettlementService);
 

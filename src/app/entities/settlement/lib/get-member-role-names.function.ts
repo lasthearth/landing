@@ -2,7 +2,7 @@ import { ISettlement } from '../model/i-settlement';
 import { OWNER_ROLE_ID } from './owner-role-id.constant';
 
 /**
- * Возвращает имена ролей члена поселения для показа бейджей.
+ * Возвращает имена ролей члена надела для показа бейджей.
  *
  * Служебная роль владельца (`owner`) исключается: владелец помечается короной
  * в чипе игрока, а бейдж «owner» дублировал бы её служебным идентификатором.
@@ -14,8 +14,8 @@ import { OWNER_ROLE_ID } from './owner-role-id.constant';
  *
  * ВНИМАНИЕ (XSS): сервер не экранирует `role.name` — выводить только через `{{ }}`.
  *
- * @param settlement Поселение (справочник `roles` и флаг `roles_enabled`).
- * @param userId Идентификатор члена поселения.
+ * @param settlement Надел (справочник `roles` и флаг `roles_enabled`).
+ * @param userId Идентификатор члена надела.
  * @returns Массив имён ролей без служебной роли владельца.
  */
 export function getMemberRoleNames(settlement: ISettlement, userId: string): string[] {

@@ -40,13 +40,13 @@ import {
 } from '../../lib/settlement-mark';
 
 /**
- * Начертание подписи: как на старых картах, крупное поселение подписано
+ * Начертание подписи: как на старых картах, крупное надел подписано
  * разрядкой прописными, мелкое — строчными и тоньше.
  */
 type LabelStyle = 'major' | 'middle' | 'minor';
 
 /**
- * Поселение, пересчитанное в пиксели текущего вида.
+ * Надел, пересчитанное в пиксели текущего вида.
  */
 interface ScreenMark {
     point: WorldMapPoint;
@@ -103,7 +103,7 @@ const PAN_STEP = 80;
 /** Сколько пикселей нужно протащить, чтобы это считалось перетаскиванием, а не щелчком. */
 const DRAG_THRESHOLD = 4;
 
-/** Масштаб, до которого карта приближается к выбранному поселению, если сейчас она мельче. */
+/** Масштаб, до которого карта приближается к выбранному наделу, если сейчас она мельче. */
 const FOCUS_SCALE = 0.09;
 
 /** Длина анимации перелёта, мс. */
@@ -121,7 +121,7 @@ const FRAME_BAND = 7;
 /** Радиус розы ветров вокруг Очага, пиксели; на узком экране — ROSE_RADIUS_NARROW. */
 const ROSE_RADIUS = 44;
 
-/** Радиус розы ветров на телефоне: большая роза закрывала бы ближние к Очагу поселения. */
+/** Радиус розы ветров на телефоне: большая роза закрывала бы ближние к Очагу надела. */
 const ROSE_RADIUS_NARROW = 30;
 
 /** Ширина карты, начиная с которой роза ветров рисуется полного размера. */
@@ -130,13 +130,13 @@ const ROSE_WIDE_FROM = 560;
 /** Отступ кнопок масштаба и картуша от края карты, пиксели (1.75rem). */
 const OVERLAY_INSET = 28;
 
-/** Радиус знака поселения вместе с полем вокруг, пиксели: сюда не ложатся чужие подписи. */
+/** Радиус знака надела вместе с полем вокруг, пиксели: сюда не ложатся чужие подписи. */
 const MARK_RADIUS = 11;
 
 /** Расстояние от центра знака до подписи, пиксели. */
 const LABEL_OFFSET = 13;
 
-/** Высота подписи поселения, пиксели. */
+/** Высота подписи наделы, пиксели. */
 const LABEL_HEIGHT = 18;
 
 /** Средняя ширина буквы для оценки длины подписи, по начертаниям. */
@@ -166,20 +166,20 @@ export class WorldMapCanvasComponent {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly stage = viewChild.required<ElementRef<HTMLElement>>('stage');
 
-    /** Поселения на карте. */
+    /** Наделы на карте. */
     public readonly points = input.required<readonly WorldMapPoint[]>();
 
-    /** Выбранное поселение. */
+    /** Выбранное надел. */
     public readonly selectedId = input<string | null>(null);
 
-    /** Щелчок по поселению; null — щелчок по пустому месту. */
+    /** Щелчок по наделу; null — щелчок по пустому месту. */
     public readonly selectedChange = output<string | null>();
 
     protected readonly size = signal<MapSize>(DEFAULT_SIZE);
 
     /**
      * Вид, который выбрал человек. Пока он карту не трогал — null, и карта
-     * показывает все поселения: так и при серверном рендере, и после загрузки данных.
+     * показывает все наделы: так и при серверном рендере, и после загрузки данных.
      */
     private readonly manualView = signal<MapView | null>(null);
 
@@ -302,7 +302,7 @@ export class WorldMapCanvasComponent {
         };
     });
 
-    /** Поселения в пикселях с решением, чью подпись показать. */
+    /** Наделы в пикселях с решением, чью подпись показать. */
     protected readonly marks = computed<ScreenMark[]>(() => {
         const view = this.view();
         const size = this.size();
@@ -365,7 +365,7 @@ export class WorldMapCanvasComponent {
             obstacles
         );
 
-        // Сначала рисуем мелкие и невыбранные: выбранное поселение всегда сверху.
+        // Сначала рисуем мелкие и невыбранные: выбранное надел всегда сверху.
         return marks
             .map((mark) => {
                 const side = chosen.get(mark.point.id)?.side;
@@ -413,16 +413,16 @@ export class WorldMapCanvasComponent {
     }
 
     /**
-     * Показывает все поселения и Очаг.
+     * Показывает все наделы и Очаг.
      */
     public fit(): void {
         this.flyTo(fitView(this.worldPoints(), this.size(), this.fitPadding()));
     }
 
     /**
-     * Перелетает к поселению и при необходимости приближает.
+     * Перелетает к наделу и при необходимости приближает.
      *
-     * @param point Поселение.
+     * @param point Надел.
      */
     public focusOn(point: WorldMapPoint): void {
         this.flyTo({
@@ -657,7 +657,7 @@ export class WorldMapCanvasComponent {
 
     /**
      * Отступ при «Показать всё»: на телефоне 72 пикселя с каждой стороны съели бы
-     * почти половину ширины, и поселения сбились бы в кучу посередине.
+     * почти половину ширины, и наделы сбились бы в кучу посередине.
      */
     private fitPadding(): number {
         return Math.min(FIT_PADDING, Math.round(this.size().width * 0.1));
@@ -761,7 +761,7 @@ export class WorldMapCanvasComponent {
 
     /**
      * Следит за размером карты. Пока человек карту не трогал, она заново
-     * вписывает все поселения; потом при изменении размера центр остаётся на месте.
+     * вписывает все наделы; потом при изменении размера центр остаётся на месте.
      */
     private observeSize(): void {
         const element = this.stage().nativeElement;

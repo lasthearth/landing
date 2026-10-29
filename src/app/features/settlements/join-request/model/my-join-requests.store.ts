@@ -8,9 +8,9 @@ import { I18nService } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 
 /**
- * Хранилище собственных заявок игрока на вступление в поселения.
+ * Хранилище собственных заявок игрока на вступление в надела.
  *
- * Список заявок и признак «уже состою в поселении» загружаются один раз на
+ * Список заявок и признак «уже состою в наделе» загружаются один раз на
  * страницу списка селений, а не на каждую карточку. Карточка и диалог
  * «Подробнее» читают одно и то же состояние, поэтому не расходятся после
  * отправки или отзыва заявки.
@@ -20,7 +20,7 @@ import { RequestStatusService } from '@core/services/request-status.service';
 })
 export class MyJoinRequestsStore {
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService = inject(SettlementService);
 
@@ -40,19 +40,19 @@ export class MyJoinRequestsStore {
     private readonly requestStatus = inject(RequestStatusService);
 
     /**
-     * Идентификаторы заявок по идентификатору поселения.
+     * Идентификаторы заявок по идентификатору надела.
      * Идентификатор заявки нужен для отзыва: эндпоинт отмены работает по нему.
      */
     private readonly requestIdBySettlement: WritableSignal<Record<string, string>> = signal({});
 
     /**
-     * Признак того, что игрок уже состоит в каком-либо поселении.
+     * Признак того, что игрок уже состоит в каком-либо наделе.
      * Пока значение не загружено — `null`, кнопка в этот момент не показывается.
      */
     private readonly hasSettlement: WritableSignal<boolean | null> = signal(null);
 
     /**
-     * Поселения, по которым идёт запрос (подача или отзыв заявки).
+     * Наделы, по которым идёт запрос (подача или отзыв заявки).
      */
     private readonly pending: WritableSignal<Record<string, boolean>> = signal({});
 
@@ -75,7 +75,7 @@ export class MyJoinRequestsStore {
 
     /**
      * Можно ли в принципе подавать заявки: игрок авторизован, верифицирован
-     * и не состоит ни в одном поселении.
+     * и не состоит ни в одном наделе.
      */
     public readonly canApply: Signal<boolean> = computed(
         () => this.authorized() && this.verified() && this.hasSettlement() === false
@@ -91,7 +91,7 @@ export class MyJoinRequestsStore {
     /**
      * Загружает состояние заявок и членства игрока.
      *
-     * Оба запроса помечены `SKIP_ERROR_ALERT`: отсутствие поселения — штатный
+     * Оба запроса помечены `SKIP_ERROR_ALERT`: отсутствие надела — штатный
      * 404, а не ошибка, и показывать по нему попап нельзя.
      */
     public load(): void {
@@ -125,9 +125,9 @@ export class MyJoinRequestsStore {
     }
 
     /**
-     * Проверяет, отправлена ли заявка в указанное поселение.
+     * Проверяет, отправлена ли заявка в указанное надел.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @returns true, если активная заявка уже есть.
      */
     public hasRequest(settlementId: string): boolean {
@@ -135,9 +135,9 @@ export class MyJoinRequestsStore {
     }
 
     /**
-     * Проверяет, выполняется ли сейчас запрос по указанному поселению.
+     * Проверяет, выполняется ли сейчас запрос по указанному наделу.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @returns true, если запрос в процессе.
      */
     public isPending(settlementId: string): boolean {
@@ -145,12 +145,12 @@ export class MyJoinRequestsStore {
     }
 
     /**
-     * Отправляет заявку на вступление в поселение.
+     * Отправляет заявку на вступление в надел.
      *
      * Ответ сервера пустой, поэтому идентификатор заявки перечитывается
      * из списка собственных заявок — без него нельзя отозвать заявку.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      */
     public apply(settlementId: string): void {
         if (this.isPending(settlementId)) {
@@ -177,7 +177,7 @@ export class MyJoinRequestsStore {
     /**
      * Отзывает ранее отправленную заявку.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      */
     public cancel(settlementId: string): void {
         const requestId = this.requestIdBySettlement()[settlementId];
@@ -263,7 +263,7 @@ export class MyJoinRequestsStore {
     /**
      * Убирает заявку из состояния.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      */
     private forget(settlementId: string): void {
         const next = { ...this.requestIdBySettlement() };
@@ -272,9 +272,9 @@ export class MyJoinRequestsStore {
     }
 
     /**
-     * Помечает поселение как ожидающее ответа сервера.
+     * Помечает надел как ожидающее ответа сервера.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param value Признак ожидания.
      */
     private setPending(settlementId: string, value: boolean): void {

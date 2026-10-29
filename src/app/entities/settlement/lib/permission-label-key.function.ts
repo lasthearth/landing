@@ -6,7 +6,7 @@ import { Permission } from '../model/permission';
  * Право называется тем, чем управляет человек («Приглашать игроков»),
  * а не идентификатором enum — идентификатор в интерфейсе не показывается.
  *
- * @param permission Право члена поселения.
+ * @param permission Право члена надела.
  * @returns Ключ перевода из ветки `settlements.roles.permissions.*`.
  */
 export function permissionLabelKey(permission: Permission): string {

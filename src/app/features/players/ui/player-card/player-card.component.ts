@@ -33,12 +33,12 @@ export class PlayerCardComponent {
     public readonly look = input.required<PlayerLook>();
 
     /**
-     * Поселение игрока; `null` — без поселения.
+     * Надел игрока; `null` — без надела.
      */
     public readonly settlement = input<ISettlement | null>(null);
 
     /**
-     * Роль игрока в поселении.
+     * Роль игрока в наделе.
      */
     public readonly role = input<SettlementRole | null>(null);
 }

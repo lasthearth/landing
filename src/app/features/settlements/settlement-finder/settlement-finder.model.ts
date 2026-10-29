@@ -4,12 +4,12 @@
 export type FinderStyle = 'peace' | 'neutral' | 'war' | 'any';
 
 /**
- * Каким по размеру видит поселение.
+ * Каким по размеру видит надел.
  */
 export type FinderSize = 'small' | 'medium' | 'large' | 'any';
 
 /**
- * Важно ли, чтобы в поселении сейчас кто-то играл.
+ * Важно ли, чтобы в наделе сейчас кто-то играл.
  */
 export type FinderActivity = 'online' | 'any';
 
@@ -23,11 +23,11 @@ export interface FinderAnswers {
 }
 
 /**
- * Поселение в выдаче подбора.
+ * Надел в выдаче подбора.
  */
 export interface FinderMatch {
     /**
-     * Идентификатор поселения.
+     * Идентификатор надела.
      */
     id: string;
 
@@ -37,7 +37,7 @@ export interface FinderMatch {
     name: string;
 
     /**
-     * Тип поселения (подпись).
+     * Тип надела (подпись).
      */
     typeLabel: string;
 

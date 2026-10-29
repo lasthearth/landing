@@ -62,7 +62,7 @@ export class HomeComponent {
     private readonly serverInfo = inject(ServerInformationService);
 
     /**
-     * Сервис поселений (счётчик для пульса).
+     * Сервис наделов (счётчик для пульса).
      */
     private readonly settlementService = inject(SettlementService);
 
@@ -275,7 +275,7 @@ export class HomeComponent {
     );
 
     /**
-     * Количество одобренных поселений сервера.
+     * Количество одобренных наделов сервера.
      */
     protected readonly settlementsCount = toSignal(
         this.settlementService.getSettlements().pipe(

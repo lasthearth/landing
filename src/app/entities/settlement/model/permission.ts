@@ -1,5 +1,5 @@
 /**
- * Право члена поселения.
+ * Право члена надела.
  * Соответствует enum `Permission` из REST-контракта (docs/v1/openapi.yaml).
  */
 export enum Permission {
@@ -11,7 +11,7 @@ export enum Permission {
     Unspecified = 'PERMISSION_UNSPECIFIED',
 
     /**
-     * Право приглашать новых членов в поселение.
+     * Право приглашать новых членов в надел.
      */
     InviteMember = 'PERMISSION_INVITE_MEMBER',
 

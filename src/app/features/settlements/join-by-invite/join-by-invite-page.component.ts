@@ -28,7 +28,7 @@ import { PendingInviteService } from './api/pending-invite.service';
 type InviteState = { status: 'loading' } | { status: 'not-found' } | { status: 'ready'; preview: IInviteLinkPreview };
 
 /**
- * Страница ссылки-приглашения `/join/<код>`: поселение, кто приглашает и
+ * Страница ссылки-приглашения `/join/<код>`: надел, кто приглашает и
  * кнопка «Вступить» — или объяснение, почему вступить нельзя.
  */
 @Component({
@@ -56,7 +56,7 @@ export class JoinByInvitePageComponent {
     protected readonly state = signal<InviteState>({ status: 'loading' });
 
     /**
-     * Поселение, в котором уже состоит игрок (`undefined` — ещё не известно).
+     * Надел, в котором уже состоит игрок (`undefined` — ещё не известно).
      */
     protected readonly mySettlement = signal<ISettlement | null | undefined>(undefined);
 
@@ -186,7 +186,7 @@ export class JoinByInvitePageComponent {
     }
 
     /**
-     * Вступает в поселение.
+     * Вступает в надел.
      */
     protected join(): void {
         if (this.joining()) {

@@ -36,7 +36,7 @@ import { ISelectedPlayer } from '../../model/selected-player.model';
 })
 export class AdminCoinPanelComponent {
     /**
-     * Сервис поселений для поиска пользователей.
+     * Сервис наделов для поиска пользователей.
      */
     private readonly settlementService = inject(SettlementService);
 

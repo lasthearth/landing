@@ -17,10 +17,10 @@ import { INotifierPlacement } from '../model/i-notifier-placement';
 import { ICreateInviteLink, IInviteLink, IInviteLinkPreview } from '../model/i-invite-link';
 import { Permission } from '../model/permission';
 /**
- * API-сервис для работы с поселениями.
+ * API-сервис для работы с наделами.
  *
  * Предоставляет методы для создания, получения, модерации
- * и управления членами и тегами поселений.
+ * и управления членами и тегами наделов.
  */
 @Injectable({
     providedIn: 'root',
@@ -37,10 +37,10 @@ export class SettlementService {
     private readonly http: HttpClient = inject(HttpClient);
 
     /**
-     * Создает запрос на основание поселения.
+     * Создает запрос на основание надела.
      *
      * @param settlement Объект данных о селении.
-     * @returns Observable с созданным поселением.
+     * @returns Observable с созданным наделом.
      */
     public postRequestSettlement$(settlement: ICreateSettlement): Observable<ICreateSettlement> {
         return this.http.post<ICreateSettlement>(`${this.baseUrl}/settlements`, settlement);
@@ -49,7 +49,7 @@ export class SettlementService {
     /**
      * Возвращает список селений, которые ожидают верификации.
      *
-     * @returns Observable с массивом запросов на поселение.
+     * @returns Observable с массивом запросов на надел.
      */
     public getSettlementsRequests$(): Observable<IRequestSettlement[]> {
         return this.http
@@ -60,9 +60,9 @@ export class SettlementService {
     }
 
     /**
-     * Одобряет запрос на создание поселения.
+     * Одобряет запрос на создание надела.
      *
-     * @param settlementId Идентификатор селения.
+     * @param settlementId Идентификатор надела.
      * @returns Observable с результатом операции.
      */
     public postVerifySettlementApprove(settlementId: string) {
@@ -74,9 +74,9 @@ export class SettlementService {
     }
 
     /**
-     * Отклоняет запрос на создание поселения.
+     * Отклоняет запрос на создание надела.
      *
-     * @param settlementId Идентификатор селения.
+     * @param settlementId Идентификатор надела.
      * @param rejectReason Причина отклонения.
      * @returns Observable с результатом операции.
      */
@@ -89,11 +89,11 @@ export class SettlementService {
     }
 
     /**
-     * Получает информацию о поселении пользователя.
+     * Получает информацию о наделе пользователя.
      *
      * @param userId Идентификатор пользователя.
      * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
-     * @returns Observable с данными поселения.
+     * @returns Observable с данными наделы.
      */
     public getSettlementInfo(userId: string, context?: HttpContext): Observable<ISettlement> {
         return this.http
@@ -104,12 +104,12 @@ export class SettlementService {
     }
 
     /**
-     * Получает список всех поселений.
+     * Получает список всех наделов.
      *
      * Вспомогательный запрос: при ошибке алерт не показывается
      * (`SKIP_ERROR_ALERT`), страницы деградируют к своим error-состояниям.
      *
-     * @returns Observable с массивом поселений.
+     * @returns Observable с массивом наделов.
      */
     public getSettlements(): Observable<ISettlement[]> {
         return this.http
@@ -140,11 +140,11 @@ export class SettlementService {
     }
 
     /**
-     * Получает поселение по идентификатору.
+     * Получает надел по идентификатору.
      *
-     * @param settlementId Идентификатор поселения.
-     * @param silent Не показывать всплывающую ошибку (страница поселения обрабатывает 404 сама).
-     * @returns Observable с данными поселения.
+     * @param settlementId Идентификатор надела.
+     * @param silent Не показывать всплывающую ошибку (страница надела обрабатывает 404 сама).
+     * @returns Observable с данными наделы.
      */
     public getSettlementById(settlementId: string, silent = false): Observable<ISettlement> {
         return this.http
@@ -157,13 +157,13 @@ export class SettlementService {
     }
 
     /**
-     * Обновляет данные поселения.
+     * Обновляет данные надела.
      *
-     * Доступно только лидеру поселения.
+     * Доступно только лидеру надела.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param request Данные для обновления.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public updateSettlement$(
         settlementId: string,
@@ -189,14 +189,14 @@ export class SettlementService {
     }
 
     /**
-     * Приглашает игрока в поселение.
+     * Приглашает игрока в надел.
      *
      * Соответствует `POST /v1/settlements/{settlement_id}/invitations`:
      * обязательные поля `settlement_id` и `user_id` идут и в пути, и в теле —
      * без них бэкенд ответит `INVALID_ARGUMENT`. Ответ пустой
      * (`InviteMemberResponse`), список приглашений перечитывается отдельно.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param userId Идентификатор приглашаемого пользователя.
      * @returns Пустой {@link Observable} — признак завершения операции.
      */
@@ -211,7 +211,7 @@ export class SettlementService {
     }
 
     /**
-     * Принимает приглашение в поселение.
+     * Принимает приглашение в надел.
      *
      * @param invitationId Идентификатор приглашения.
      * @returns Observable с результатом операции.
@@ -227,7 +227,7 @@ export class SettlementService {
     }
 
     /**
-     * Отклоняет приглашение в поселение.
+     * Отклоняет приглашение в надел.
      *
      * @param invitationId Идентификатор приглашения.
      * @returns Observable с результатом операции.
@@ -243,9 +243,9 @@ export class SettlementService {
     }
 
     /**
-     * Получает список отправленных приглашений для поселения.
+     * Получает список отправленных приглашений для надела.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
      * @returns Observable с массивом приглашений.
      */
@@ -261,12 +261,12 @@ export class SettlementService {
     }
 
     /**
-     * Отзывает приглашение в поселение.
+     * Отзывает приглашение в надел.
      *
      * По спеке тело запроса обязательно и повторяет идентификаторы из пути,
-     * а ответ содержит актуальный список приглашений поселения.
+     * а ответ содержит актуальный список приглашений надела.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param invitationId Идентификатор приглашения.
      * @returns Observable с идентификаторами оставшихся приглашений.
      */
@@ -282,9 +282,9 @@ export class SettlementService {
     }
 
     /**
-     * Исключает пользователя из поселения.
+     * Исключает пользователя из надела.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param userId Идентификатор пользователя.
      * @returns Observable с результатом операции.
      */
@@ -293,9 +293,9 @@ export class SettlementService {
     }
 
     /**
-     * Возвращает локализованное название типа поселения по ключу.
+     * Возвращает локализованное название типа надела по ключу.
      *
-     * @param key Ключ типа поселения.
+     * @param key Ключ типа надела.
      * @returns Локализованное название.
      */
     public getSettlementTypeByKey(key: string | number | undefined) {
@@ -317,10 +317,10 @@ export class SettlementService {
     }
 
     /**
-     * Добавляет тег к поселению.
+     * Добавляет тег к наделу.
      *
      * @param tagId Идентификатор тега.
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @returns Observable с результатом операции.
      */
     public postSettlementTags(tagId: string, settlementId: string) {
@@ -332,10 +332,10 @@ export class SettlementService {
     }
 
     /**
-     * Удаляет тег из поселения.
+     * Удаляет тег из надела.
      *
      * @param tagId Идентификатор тега.
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @returns Observable с результатом операции.
      */
     public removeTagFromSettlement$(tagId: string, settlementId: string) {
@@ -343,7 +343,7 @@ export class SettlementService {
     }
 
     /**
-     * Получает статус верификации поселения пользователя.
+     * Получает статус верификации наделы пользователя.
      *
      * @param userId Идентификатор пользователя.
      * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
@@ -359,13 +359,13 @@ export class SettlementService {
     // ─── Заявки на вступление (игрок) ───
 
     /**
-     * Подаёт заявку на вступление в поселение.
+     * Подаёт заявку на вступление в надел.
      *
      * Ответ пустой (`CreateJoinRequestResponse` в спеке — пустая схема),
      * поэтому созданную заявку нужно перечитать через `getMyJoinRequests$`.
-     * Ошибки: 409 (уже в поселении/уже подал), 429 (лимит активных заявок), 404.
+     * Ошибки: 409 (уже в наделе/уже подал), 429 (лимит активных заявок), 404.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @returns Observable, завершающийся после создания заявки.
      */
     public createJoinRequest$(settlementId: string): Observable<void> {
@@ -403,13 +403,13 @@ export class SettlementService {
             .pipe(map((data) => data.join_requests ?? []));
     }
 
-    // ─── Заявки на вступление (сторона поселения) ───
+    // ─── Заявки на вступление (сторона надела) ───
 
     /**
-     * Возвращает список заявок на вступление в поселение.
+     * Возвращает список заявок на вступление в надел.
      * Требует право `PERMISSION_REVIEW_JOIN_REQUEST` или owner.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
      * @returns Observable с массивом заявок.
      */
@@ -425,7 +425,7 @@ export class SettlementService {
      * Одобряет заявку на вступление.
      * 409, если игрок за это время вступил куда-то ещё.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param joinRequestId Идентификатор заявки.
      * @returns Observable с результатом операции.
      */
@@ -439,7 +439,7 @@ export class SettlementService {
     /**
      * Отклоняет заявку на вступление.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param joinRequestId Идентификатор заявки.
      * @returns Observable с результатом операции.
      */
@@ -453,13 +453,13 @@ export class SettlementService {
     // ─── Роли (только owner). Все методы возвращают обновлённый Settlement ───
 
     /**
-     * Создаёт роль в поселении.
+     * Создаёт роль в наделе.
      * `name` 1-64, без `<`/`>`. Лимит 20 ролей. 400 если `roles_enabled=false`.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param name Имя роли.
      * @param permissions Список прав роли.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public createRole$(
         settlementId: string,
@@ -478,12 +478,12 @@ export class SettlementService {
     }
 
     /**
-     * Обновляет роль поселения.
+     * Обновляет роль надела.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param roleId Идентификатор роли.
      * @param patch Обновляемые поля роли.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public updateRole$(
         settlementId: string,
@@ -502,11 +502,11 @@ export class SettlementService {
     }
 
     /**
-     * Удаляет роль поселения (снимается со всех членов).
+     * Удаляет роль надела (снимается со всех членов).
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param roleId Идентификатор роли.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public deleteRole$(settlementId: string, roleId: string): Observable<ISettlement> {
         return this.http
@@ -517,12 +517,12 @@ export class SettlementService {
     }
 
     /**
-     * Выдаёт роль члену поселения. Роль `owner` так выдать нельзя (400).
+     * Выдаёт роль члену надела. Роль `owner` так выдать нельзя (400).
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param userId Идентификатор члена.
      * @param roleId Идентификатор роли.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public assignMemberRole$(
         settlementId: string,
@@ -541,12 +541,12 @@ export class SettlementService {
     }
 
     /**
-     * Снимает роль с члена поселения.
+     * Снимает роль с члена надела.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param userId Идентификатор члена.
      * @param roleId Идентификатор роли.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public removeMemberRole$(
         settlementId: string,
@@ -563,12 +563,12 @@ export class SettlementService {
     // ─── Владение и выход ───
 
     /**
-     * Передаёт владение поселением другому члену.
+     * Передаёт владение наделом другому члену.
      * Owner перестаёт быть owner, число owner-ов не растёт.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param toUserId Идентификатор нового владельца.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public transferOwnership$(settlementId: string, toUserId: string): Observable<ISettlement> {
         return this.http
@@ -582,10 +582,10 @@ export class SettlementService {
     }
 
     /**
-     * Выход из поселения.
+     * Выход из надела.
      * 400, если ты последний owner (сначала передай владение).
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @returns Observable с результатом операции.
      */
     public leaveSettlement$(settlementId: string) {
@@ -595,11 +595,11 @@ export class SettlementService {
     // ─── Контакты (только owner) ───
 
     /**
-     * Обновляет контактную информацию поселения (≤512, без `<`/`>`).
+     * Обновляет контактную информацию надела (≤512, без `<`/`>`).
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param contactInfo Текст контактной информации.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public updateContactInfo$(settlementId: string, contactInfo: string): Observable<ISettlement> {
         return this.http
@@ -615,9 +615,9 @@ export class SettlementService {
     // ─── Админка (scope settlements:manage) ───
 
     /**
-     * Добавляет владельца поселению (единственный способ сделать второго равного лидера).
+     * Добавляет владельца наделу (единственный способ сделать второго равного лидера).
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param userId Идентификатор нового владельца.
      * @returns Observable с результатом операции.
      */
@@ -629,9 +629,9 @@ export class SettlementService {
     }
 
     /**
-     * Снимает владельца с поселения. 400 на последнем owner.
+     * Снимает владельца с надела. 400 на последнем owner.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param userId Идентификатор владельца.
      * @returns Observable с результатом операции.
      */
@@ -640,10 +640,10 @@ export class SettlementService {
     }
 
     /**
-     * Включает или выключает систему ролей поселения.
+     * Включает или выключает систему ролей надела.
      * При `false` роли скрыты и не применяются, остаётся только owner.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param enabled Флаг включения ролей.
      * @returns Observable с результатом операции.
      */
@@ -655,11 +655,11 @@ export class SettlementService {
     }
 
     /**
-     * Изменяет дипломатический статус поселения.
+     * Изменяет дипломатический статус надела.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param diplomacy Новый дипломатический статус.
-     * @returns Observable с обновлённым поселением.
+     * @returns Observable с обновлённым наделом.
      */
     public adminUpdateSettlement$(settlementId: string, diplomacy: string): Observable<ISettlement> {
         return this.http
@@ -670,9 +670,9 @@ export class SettlementService {
     }
 
     /**
-     * Удаляет поселение (необратимо — показать confirm перед вызовом).
+     * Удаляет надел (необратимо — показать confirm перед вызовом).
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @returns Observable с результатом операции.
      */
     public adminDeleteSettlement$(settlementId: string) {
@@ -684,7 +684,7 @@ export class SettlementService {
     /**
      * Создаёт ссылку-приглашение. Требует право приглашать (или owner).
      *
-     * @param settlementId Поселение.
+     * @param settlementId Надел.
      * @param request Срок и число использований.
      * @returns Observable с созданной ссылкой.
      */
@@ -693,11 +693,11 @@ export class SettlementService {
     }
 
     /**
-     * Возвращает ссылки-приглашения поселения (кроме отозванных), новые первыми.
+     * Возвращает ссылки-приглашения надела (кроме отозванных), новые первыми.
      *
      * Без всплывающей ошибки: право могли отобрать, панель просто опустеет.
      *
-     * @param settlementId Поселение.
+     * @param settlementId Надел.
      * @returns Observable со списком.
      */
     public getInviteLinks$(settlementId: string): Observable<IInviteLink[]> {
@@ -711,7 +711,7 @@ export class SettlementService {
     /**
      * Отзывает ссылку-приглашение.
      *
-     * @param settlementId Поселение.
+     * @param settlementId Надел.
      * @param linkId Ссылка.
      * @returns Observable с отозванной ссылкой.
      */
@@ -723,7 +723,7 @@ export class SettlementService {
     }
 
     /**
-     * Открывает ссылку-приглашение: её состояние и поселение. Работает и для гостя.
+     * Открывает ссылку-приглашение: её состояние и надел. Работает и для гостя.
      *
      * @param code Код из ссылки.
      * @returns Observable с превью.
@@ -735,10 +735,10 @@ export class SettlementService {
     }
 
     /**
-     * Вступает в поселение по ссылке-приглашению.
+     * Вступает в надел по ссылке-приглашению.
      *
      * @param code Код из ссылки.
-     * @returns Observable с идентификатором поселения.
+     * @returns Observable с идентификатором надела.
      */
     public joinByInviteLink$(code: string): Observable<string> {
         return this.http

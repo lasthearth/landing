@@ -236,7 +236,7 @@ export class ProfileComponent {
     );
 
     /**
-     * Поселение текущего пользователя.
+     * Надел текущего пользователя.
      */
     protected readonly settlement$ = this.userService.authState$.pipe(
         switchMap((isAuth) => {
@@ -253,7 +253,7 @@ export class ProfileComponent {
     );
 
     /**
-     * Количество онлайн-участников селения текущего пользователя.
+     * Количество онлайн-участников надела текущего пользователя.
      */
     protected readonly settlementMembersOnline$ = this.settlement$.pipe(
         switchMap((settlement) => {
@@ -349,7 +349,7 @@ export class ProfileComponent {
     protected readonly headerExpanded = signal(false);
 
     /**
-     * Свёрнутая шапка: на вкладках «Статистика», «Поселение», «Оформление» и др.
+     * Свёрнутая шапка: на вкладках «Статистика», «Надел», «Оформление» и др.
      * остаются аватар, ник и действия, а баннерные плашки, показатели и события
      * прячутся — раньше они занимали полэкрана до содержимого вкладки.
      */
@@ -486,11 +486,11 @@ export class ProfileComponent {
     }
 
     /**
-     * Возвращает отображаемый тип селения.
+     * Возвращает отображаемый тип надела.
      *
      * Для гильдий возвращает "Гильдия".
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @returns Локализованное название типа.
      */
     protected getSettlementTypeLabel(settlement: ISettlement): string {
@@ -502,9 +502,9 @@ export class ProfileComponent {
     }
 
     /**
-     * Возвращает тон бейджа типа селения.
+     * Возвращает тон бейджа типа надела.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @returns Тон бейджа.
      */
     protected getSettlementTypeTone(settlement: ISettlement): SettlementBadgeTone {
@@ -512,9 +512,9 @@ export class ProfileComponent {
     }
 
     /**
-     * Проверяет, является ли текущий пользователь владельцем (owner) поселения.
+     * Проверяет, является ли текущий пользователь владельцем (owner) надела.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @returns true, если текущий пользователь — owner.
      */
     protected isSettlementOwner(settlement: ISettlement): boolean {

@@ -2,7 +2,7 @@ import { ISettlement } from '@entities/settlement';
 import { IPlayer } from '@entities/user';
 
 /**
- * Состояние страницы поселения.
+ * Состояние страницы надела.
  */
 export type SettlementPageState =
     | { status: 'loading' }
