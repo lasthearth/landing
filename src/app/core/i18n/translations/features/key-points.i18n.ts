@@ -259,41 +259,97 @@ export const KEY_POINTS_I18N = {
                 },
                 fort: {
                     name: 'Форт',
-                    tagline: 'Оборона и контроль дорог',
+                    tagline: 'Оборона, казна и арсенал',
                     description:
-                        'Укреплённая точка на перекрёстке земель. Даёт владельцу обзор, защиту соседних наделов и право держать гарнизон.',
+                        'Укреплённая точка: растёт от заставы до твердыни. Форт копит деньги в казённом сундуке, снабжает оружием из арсенала и держит баллисты, которые ставят там, где укажет владелец. Схема предварительная — уровни, цены и доходы обсуждаются.',
                     nodes: {
                         outpost: {
                             title: 'Застава',
-                            effect: 'Флаг лена над точкой, оповещение о чужих у стен.',
+                            effect: 'Уровень I. Точка захвачена: флаг владельца и монумент.',
                         },
-                        palisade: {
-                            title: 'Частокол',
-                            effect: 'Первая линия стен: время набега на точку +10 минут.',
+                        chest: {
+                            title: 'Казённый сундук',
+                            effect: 'В форте появляется сундук, который раз в реальные сутки сам пополняется: 5 серебряных.',
                         },
                         watchtower: {
-                            title: 'Сторожевая башня',
-                            effect: 'Обзор округи: набег на соседние наделы виден заранее.',
+                            title: 'Сторожевая вышка',
+                            effect: 'Обзор округи: подход к форту виден издалека.',
                         },
-                        fort2: {
-                            title: 'Форт',
-                            effect: 'Уровень II: точка выдерживает осаду, монумент прочнее.',
+                        stockade: {
+                            title: 'Острог',
+                            effect: 'Уровень II. Частокол вокруг форта.',
                         },
-                        garrison: {
-                            title: 'Гарнизон',
-                            effect: 'Специализация: защитники точки получают бонус в бою.',
+                        ironChest: {
+                            title: 'Окованный сундук',
+                            effect: 'Сундук пополняется на 5 серебряных в сутки больше — всего 10.',
                         },
-                        walls: {
-                            title: 'Каменные стены',
-                            effect: 'Специализация: места пролома сокращаются вдвое.',
+                        monument: {
+                            title: 'Укреплённый монумент',
+                            effect: 'Монумент форта прочнее: для захвата его нужно ломать дольше.',
                         },
                         armory: {
                             title: 'Оружейная',
-                            effect: 'Хранилище снаряжения, починка оружия на месте.',
+                            effect: 'Раз в неделю в арсенале появляется комплект простого оружия: копья и стрелы.',
+                        },
+                        stronghold: {
+                            title: 'Крепость',
+                            effect: 'Уровень III. Каменная крепость и выбор специализации форта.',
+                        },
+                        treasury: {
+                            title: 'Казначейство',
+                            effect: 'Специализация. Доход казённого сундука ×1,5.',
+                        },
+                        garrison: {
+                            title: 'Гарнизон',
+                            effect: 'Специализация. Время набега на форт +30 минут: защитники успевают собраться.',
+                        },
+                        vigil: {
+                            title: 'Дозор',
+                            effect: 'Специализация. Когда у форта появляются чужие, владелец получает оповещение.',
+                        },
+                        tollgate: {
+                            title: 'Пошлинная застава',
+                            effect: 'Форт берёт пошлину с проходящих караванов: +10 серебряных в сутки, всего 20.',
+                        },
+                        forge: {
+                            title: 'Кузня арсенала',
+                            effect: 'Оружие и стрелы в арсенале — из железа.',
                         },
                         citadel: {
                             title: 'Цитадель',
-                            effect: 'Уровень III: форт прикрывает союзные наделы в радиусе.',
+                            effect: 'Уровень IV. Открываются баллисты, стены и стальной арсенал.',
+                        },
+                        ballista: {
+                            title: 'Баллиста',
+                            effect: 'Можно купить баллисту — её установят там, где укажет владелец форта.',
+                        },
+                        wages: {
+                            title: 'Имперское жалованье',
+                            effect: 'Империя платит гарнизону: +15 серебряных в сутки, всего 35.',
+                        },
+                        walls: {
+                            title: 'Каменные стены',
+                            effect: 'Мест пролома в стенах форта вдвое меньше.',
+                        },
+                        ballista2: {
+                            title: 'Вторая баллиста',
+                            effect: 'Можно купить вторую баллисту и поставить её, где скажет владелец.',
+                        },
+                        steelArmory: {
+                            title: 'Стальной арсенал',
+                            effect: 'Раз в неделю — стальное оружие и доспехи для гарнизона.',
+                        },
+                        bastion: {
+                            title: 'Твердыня',
+                            effect: 'Уровень V. Вершина форта.',
+                        },
+                        warChest: {
+                            title: 'Военная казна',
+                            effect: '+15 серебряных в сутки — всего 50 (половина дуката).',
+                        },
+                        scorpion: {
+                            title: 'Скорпион',
+                            effect: 'Тяжёлая осадная баллиста дальнего боя: ставится, где укажет владелец.',
                         },
                     },
                 },
@@ -857,41 +913,97 @@ export const KEY_POINTS_I18N = {
                 },
                 fort: {
                     name: 'Fort',
-                    tagline: 'Defence and road control',
+                    tagline: 'Defence, treasury and armory',
                     description:
-                        'A fortified point at a crossroads. Gives its holder a wide view, protection for nearby holdings and the right to keep a garrison.',
+                        'A fortified point that grows from an outpost to a bastion. The fort fills a treasury chest with coins, supplies weapons from its armory and holds ballistas placed wherever the owner says. Preliminary scheme — levels, prices and income are under discussion.',
                     nodes: {
                         outpost: {
                             title: 'Outpost',
-                            effect: 'The fief’s banner over the point, alerts about strangers at the walls.',
+                            effect: 'Level I. The point is captured: the owner’s banner and monument.',
                         },
-                        palisade: {
-                            title: 'Palisade',
-                            effect: 'First line of walls: raid time on the point +10 minutes.',
+                        chest: {
+                            title: 'Treasury chest',
+                            effect: 'A chest appears in the fort and refills itself once per real day: 5 silver.',
                         },
                         watchtower: {
                             title: 'Watchtower',
-                            effect: 'A view of the area: raids on nearby holdings are visible in advance.',
+                            effect: 'A wide view: approaches to the fort are seen from afar.',
                         },
-                        fort2: {
-                            title: 'Fort',
-                            effect: 'Level II: the point withstands a siege, the monument is sturdier.',
+                        stockade: {
+                            title: 'Stockade',
+                            effect: 'Level II. A palisade around the fort.',
                         },
-                        garrison: {
-                            title: 'Garrison',
-                            effect: 'Specialization: the point’s defenders get a combat bonus.',
+                        ironChest: {
+                            title: 'Iron-bound chest',
+                            effect: 'The chest refills 5 silver more per day — 10 in total.',
                         },
-                        walls: {
-                            title: 'Stone walls',
-                            effect: 'Specialization: breach spots are halved.',
+                        monument: {
+                            title: 'Reinforced monument',
+                            effect: 'The fort’s monument is sturdier: it takes longer to break for a capture.',
                         },
                         armory: {
                             title: 'Armory',
-                            effect: 'Gear storage and on-site weapon repair.',
+                            effect: 'Once a week a set of simple weapons appears in the armory: spears and arrows.',
+                        },
+                        stronghold: {
+                            title: 'Stronghold',
+                            effect: 'Level III. A stone stronghold and the choice of the fort’s specialization.',
+                        },
+                        treasury: {
+                            title: 'Treasury',
+                            effect: 'Specialization. Treasury chest income ×1.5.',
+                        },
+                        garrison: {
+                            title: 'Garrison',
+                            effect: 'Specialization. Raid time on the fort +30 minutes: defenders have time to gather.',
+                        },
+                        vigil: {
+                            title: 'Vigil',
+                            effect: 'Specialization. The owner is alerted when strangers appear near the fort.',
+                        },
+                        tollgate: {
+                            title: 'Toll gate',
+                            effect: 'The fort tolls passing caravans: +10 silver per day, 20 in total.',
+                        },
+                        forge: {
+                            title: 'Armory forge',
+                            effect: 'Armory weapons and arrows are made of iron.',
                         },
                         citadel: {
                             title: 'Citadel',
-                            effect: 'Level III: the fort shields allied holdings within its radius.',
+                            effect: 'Level IV. Unlocks ballistas, walls and the steel armory.',
+                        },
+                        ballista: {
+                            title: 'Ballista',
+                            effect: 'A ballista can be bought — it is installed wherever the fort’s owner says.',
+                        },
+                        wages: {
+                            title: 'Imperial wages',
+                            effect: 'The Empire pays the garrison: +15 silver per day, 35 in total.',
+                        },
+                        walls: {
+                            title: 'Stone walls',
+                            effect: 'Half as many breach spots in the fort’s walls.',
+                        },
+                        ballista2: {
+                            title: 'Second ballista',
+                            effect: 'A second ballista can be bought and placed wherever the owner says.',
+                        },
+                        steelArmory: {
+                            title: 'Steel armory',
+                            effect: 'Once a week — steel weapons and armor for the garrison.',
+                        },
+                        bastion: {
+                            title: 'Bastion',
+                            effect: 'Level V. The top of the fort.',
+                        },
+                        warChest: {
+                            title: 'War chest',
+                            effect: '+15 silver per day — 50 in total (half a ducat).',
+                        },
+                        scorpion: {
+                            title: 'Scorpion',
+                            effect: 'A heavy long-range siege ballista, placed wherever the owner says.',
                         },
                     },
                 },
