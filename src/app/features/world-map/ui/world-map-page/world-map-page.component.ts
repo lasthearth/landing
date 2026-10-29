@@ -22,8 +22,16 @@ interface WorldMapEntry {
     directionKey: string | null;
 }
 
-/** Типы в порядке легенды: от лагеря до провинции. */
-const LEGEND_TYPES: readonly WorldMapSettlementType[] = ['HAMLET', 'CAMP', 'VILLAGE', 'TOWNSHIP', 'CITY', 'PROVINCE'];
+/** Типы в порядке легенды: от хутора до провинции, в конце — ключевая точка. */
+const LEGEND_TYPES: readonly WorldMapSettlementType[] = [
+    'HAMLET',
+    'CAMP',
+    'VILLAGE',
+    'TOWNSHIP',
+    'CITY',
+    'PROVINCE',
+    'KEY_POINT',
+];
 
 /** Курсы в порядке легенды. */
 const LEGEND_COURSES: readonly Exclude<WorldMapCourse, 'none'>[] = ['peace', 'neutral', 'danger'];

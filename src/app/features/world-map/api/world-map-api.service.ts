@@ -2,7 +2,13 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 import { INotifierPlacement, isGuildSettlement, ISettlement, SettlementService } from '@entities/settlement';
 import { WORLD_MAP_DEMO_POINTS } from '../config/world-map-demo-points.constant';
-import { WorldMapData, WorldMapPoint, WorldMapSettlementType } from '../model/world-map-point.interface';
+import { WORLD_SPAWN } from '../config/world-spawn.constant';
+import {
+    WorldMapData,
+    WorldMapPoint,
+    WorldMapPosition,
+    WorldMapSettlementType,
+} from '../model/world-map-point.interface';
 
 /**
  * Типы поселений, которые знает карта.
@@ -12,27 +18,30 @@ const MAP_TYPES: readonly WorldMapSettlementType[] = ['CAMP', 'VILLAGE', 'TOWNSH
 /**
  * Источник данных карты земель.
  *
- * Два параллельных запроса: позиции всех глашатаев (`GET /settlements/notifiers`)
+ * Два параллельных запроса: все стоящие глашатаи (`GET /settlements/notifiers`)
  * и список поселений (`GET /settlements`) — из него берутся название, тип, курс
- * и число жителей. Глашатай, чьё поселение не нашлось в списке (поселение удалили,
- * а блок в мире остался) или оказалось гильдией, на карту не попадает.
+ * и число жителей.
  *
- * Если ни одного глашатая нет (или API недоступен), возвращается пример с флагом
- * `demo` — страница об этом предупреждает. Хуторов в API нет, на живой карте их пока не будет.
+ * - Глашатай с `settlement_id` — поселение. Если поселение не нашлось в списке
+ *   (удалено, а блок в мире остался) или оказалось гильдией, на карту он не попадает.
+ * - Глашатай без `settlement_id` — ключевая точка: на карте с названием с глашатая.
+ *
+ * Сервер присылает абсолютные координаты; карта показывает их от Очага (`WORLD_SPAWN`).
+ * Если глашатаев нет (или API недоступен), возвращается пример с флагом `demo`.
  */
 @Injectable({ providedIn: 'root' })
 export class WorldMapApiService {
     private readonly settlements = inject(SettlementService);
 
     /**
-     * Загружает поселения для карты.
+     * Загружает точки карты.
      *
-     * @returns Поселения с поставленным глашатаем и признак примера.
+     * @returns Поселения и ключевые точки с глашатаями и признак примера.
      */
     public load(): Observable<WorldMapData> {
         return forkJoin({
             placements: this.settlements.getNotifierPositions$(),
-            list: this.settlements.getSettlements(),
+            list: this.settlements.getSettlements().pipe(catchError(() => of([] as ISettlement[]))),
         }).pipe(
             map(({ placements, list }) => this.toPoints(placements, list)),
             catchError(() => of([] as WorldMapPoint[])),
@@ -41,9 +50,9 @@ export class WorldMapApiService {
     }
 
     /**
-     * Сопоставляет глашатаев с поселениями.
+     * Превращает глашатаев в точки карты.
      *
-     * @param placements Позиции глашатаев.
+     * @param placements Глашатаи.
      * @param list Поселения с сайта.
      * @returns Точки карты.
      */
@@ -51,15 +60,26 @@ export class WorldMapApiService {
         const byId = new Map(list.map((settlement) => [settlement.id, settlement]));
         const points: WorldMapPoint[] = [];
 
-        for (const placement of placements) {
+        placements.forEach((placement, index) => {
+            const herald = this.fromHearth(placement.position);
+
+            if (!placement.settlement_id) {
+                points.push({
+                    // У ключевой точки нет id: ключ — номер и позиция, они стабильны между запросами.
+                    id: `key-point-${index}-${herald.x}-${herald.z}`,
+                    name: placement.name?.trim() || '—',
+                    type: 'KEY_POINT',
+                    herald,
+                });
+                return;
+            }
+
             const settlement = byId.get(placement.settlement_id);
             if (!settlement || isGuildSettlement(settlement)) {
-                continue;
+                return;
             }
 
             const type = String(settlement.type) as WorldMapSettlementType;
-            const position = placement.position ?? {};
-
             points.push({
                 id: settlement.id,
                 settlementId: settlement.id,
@@ -67,11 +87,25 @@ export class WorldMapApiService {
                 type: MAP_TYPES.includes(type) ? type : 'CAMP',
                 diplomacy: settlement.diplomacy,
                 membersCount: settlement.members?.length,
-                herald: { x: position.x ?? 0, y: position.y ?? 0, z: position.z ?? 0 },
+                herald,
             });
-        }
+        });
 
         return points;
+    }
+
+    /**
+     * Переводит абсолютную позицию в координаты от Очага.
+     *
+     * @param position Позиция блока из API (нулевые оси proto3 не присылает).
+     * @returns Позиция от Очага.
+     */
+    private fromHearth(position: INotifierPlacement['position']): WorldMapPosition {
+        return {
+            x: (position?.x ?? 0) - WORLD_SPAWN.x,
+            y: position?.y ?? 0,
+            z: (position?.z ?? 0) - WORLD_SPAWN.z,
+        };
     }
 
     /**

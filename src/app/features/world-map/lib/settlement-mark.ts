@@ -23,6 +23,8 @@ export function settlementTier(type: WorldMapSettlementType): number {
             return 4;
         case 'PROVINCE':
             return 5;
+        case 'KEY_POINT':
+            return 3;
         case 'CAMP':
         default:
             return 1;
@@ -68,7 +70,8 @@ export function settlementCourse(diplomacy: string | undefined): WorldMapCourse 
  * Условный знак типа поселения — контур в квадрате 18×18 с центром в нуле,
  * в манере гравированных карт: хутор — кружок с точкой, лагерь — шатёр,
  * деревня — дом, посёлок — два дома, город — башня со стенами, провинция —
- * замок с флагом. Рисуется с `fill-rule="evenodd"`: двери — вырезы.
+ * замок с флагом, ключевая точка — восьмиконечная звезда-веха с кольцом.
+ * Рисуется с `fill-rule="evenodd"`: двери — вырезы.
  *
  * @param type Тип поселения.
  * @returns Атрибут `d` для `<path>`.
@@ -85,6 +88,8 @@ export function settlementGlyph(type: WorldMapSettlementType): string {
             return 'M-7 6V0H-4.5V-6.5H-3V-5H-1.5V-6.5H1.5V-5H3V-6.5H4.5V0H7V6ZM-1.2 6V2.6H1.2V6Z';
         case 'PROVINCE':
             return 'M-8 6V-4H-6.5V-2.8H-5V-4H-3.5V-1H3.5V-4H5V-2.8H6.5V-4H8V6ZM-1.6 6V1.8H1.6V6ZM-0.4-1V-9H0.4V-1ZM0.4-9L4.5-7.6L0.4-6.2Z';
+        case 'KEY_POINT':
+            return 'M0-8L2.1-2.1L8 0L2.1 2.1L0 8L-2.1 2.1L-8 0L-2.1-2.1ZM0-2.4a2.4 2.4 0 1 0 0 4.8a2.4 2.4 0 1 0 0-4.8Z';
         case 'CAMP':
         default:
             return 'M-6 5L0-6L6 5ZM-1.6 5L0 1L1.6 5Z';

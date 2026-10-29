@@ -3,8 +3,9 @@
  *
  * CAMP…PROVINCE — те же значения, что отдаёт API поселений. HAMLET — хутор:
  * на сайте его не регистрируют, но глашатая в игре ставят, поэтому на карте он есть.
+ * KEY_POINT — ключевая точка: глашатай без поселения (`settlement_id` пустой).
  */
-export type WorldMapSettlementType = 'HAMLET' | 'CAMP' | 'VILLAGE' | 'TOWNSHIP' | 'CITY' | 'PROVINCE';
+export type WorldMapSettlementType = 'HAMLET' | 'CAMP' | 'VILLAGE' | 'TOWNSHIP' | 'CITY' | 'PROVINCE' | 'KEY_POINT';
 
 /**
  * Позиция блока-глашатая в мире.

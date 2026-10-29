@@ -5,7 +5,8 @@ export const WORLD_MAP_I18N = {
     ru: {
         worldMap: {
             title: 'Карта земель',
-            subtitle: 'Поселения и хутора там, где стоят их глашатаи. В центре — Очаг, где появляются новички.',
+            subtitle:
+                'Поселения, хутора и ключевые точки там, где стоят их глашатаи. В центре — Очаг, где появляются новички.',
             toList: 'Список поселений',
             demo: 'Пока на карте пример. Настоящие поселения появятся, когда их главы поставят блок-глашатай.',
             hearth: 'Очаг',
@@ -17,6 +18,7 @@ export const WORLD_MAP_I18N = {
                 TOWNSHIP: 'Посёлок',
                 CITY: 'Город',
                 PROVINCE: 'Провинция',
+                KEY_POINT: 'Ключевая точка',
             },
             course: {
                 peace: 'миролюбивый курс',
@@ -54,6 +56,8 @@ export const WORLD_MAP_I18N = {
                 height: 'высота {{y}}',
                 open: 'Страница поселения',
                 demoNote: 'Это поселение из примера, страницы у него нет.',
+                keyPointNote: 'Ключевая точка — ею владеет поселение, которое её захватило и удерживает.',
+                keyPoints: 'Как прокачать ключевые точки',
                 hamletNote: 'Хутора не регистрируют на сайте: он на карте, потому что хозяин поставил глашатая.',
             },
             legend: {
@@ -75,7 +79,8 @@ export const WORLD_MAP_I18N = {
     en: {
         worldMap: {
             title: 'Map of the lands',
-            subtitle: 'Settlements and homesteads where their heralds stand. The Hearth in the center is where newcomers spawn.',
+            subtitle:
+                'Settlements, homesteads and key points where their heralds stand. The Hearth in the center is where newcomers spawn.',
             toList: 'Settlement list',
             demo: 'The map shows an example for now. Real settlements appear once their leaders place a herald block.',
             hearth: 'Hearth',
@@ -87,6 +92,7 @@ export const WORLD_MAP_I18N = {
                 TOWNSHIP: 'Township',
                 CITY: 'City',
                 PROVINCE: 'Province',
+                KEY_POINT: 'Key point',
             },
             course: {
                 peace: 'peaceful course',
@@ -124,7 +130,10 @@ export const WORLD_MAP_I18N = {
                 height: 'height {{y}}',
                 open: 'Settlement page',
                 demoNote: 'This settlement is part of the example and has no page.',
-                hamletNote: 'Homesteads are not registered on the site: this one is on the map because its owner placed a herald.',
+                keyPointNote: 'A key point — it belongs to the settlement that captured and holds it.',
+                keyPoints: 'How to upgrade key points',
+                hamletNote:
+                    'Homesteads are not registered on the site: this one is on the map because its owner placed a herald.',
             },
             legend: {
                 title: 'Map key',
