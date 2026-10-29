@@ -72,7 +72,7 @@ export class CampFormComponent {
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        liberty: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        passport: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         beds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
