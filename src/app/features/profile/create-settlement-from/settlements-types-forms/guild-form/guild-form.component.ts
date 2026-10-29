@@ -132,7 +132,7 @@ export class GuildFormComponent {
                     ).pipe(
                         map((attachments) => {
                             const request: ICreateSettlement = {
-                                type: 'CAMP',
+                                type: 0,
                                 name: buildGuildName((values.name ?? '').trimEnd()),
                                 description: (values.description ?? '').trimEnd(),
                                 diplomacy: this.i18n.translate('settlements.diplomacy.peaceful'),
