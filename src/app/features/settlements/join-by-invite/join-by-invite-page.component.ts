@@ -15,7 +15,7 @@ import {
     SettlementBadgeComponent,
     SettlementService,
 } from '@entities/settlement';
-import { getSettlementTypeByKey } from '@entities/settlement';
+import { getSettlementTypeByKey, getSettlementTypeName } from '@entities/settlement';
 import { IPlayer, PlayerChipComponent, UserService } from '@entities/user';
 import { MarkupPipe } from '@shared/lib/news-markdown';
 import { TuiIcon } from '@taiga-ui/core';
@@ -31,6 +31,8 @@ type InviteState = { status: 'loading' } | { status: 'not-found' } | { status: '
  * Страница ссылки-приглашения `/join/<код>`: надел, кто приглашает и
  * кнопка «Вступить» — или объяснение, почему вступить нельзя.
  */
+import { SettlementTagStore } from '@entities/settlement-tag';
+
 @Component({
     selector: 'app-join-by-invite-page',
     templateUrl: './join-by-invite-page.component.html',
@@ -39,6 +41,7 @@ type InviteState = { status: 'loading' } | { status: 'not-found' } | { status: '
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JoinByInvitePageComponent {
+    protected readonly tagStore = inject(SettlementTagStore);
     private readonly settlementService = inject(SettlementService);
     private readonly userService = inject(UserService);
     private readonly pending = inject(PendingInviteService);
@@ -99,7 +102,7 @@ export class JoinByInvitePageComponent {
 
     protected readonly typeLabel = computed(() => {
         const settlement = this.settlement();
-        return settlement ? getSettlementTypeByKey(settlement.type) : '';
+        return settlement ? getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name) : '';
     });
 
     protected readonly typeTone = computed(() => {

@@ -45,6 +45,7 @@ import {
     SettlementService,
     isGuildSettlement,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     getSettlementTypeTone,
     getDiplomacyTone,
     isOwner,
@@ -61,6 +62,8 @@ import { ApplicationCardComponent, ApplicationState } from './ui/application-car
 import { ProfileWaitingComponent } from './ui/profile-waiting/profile-waiting.component';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComponent } from '@entities/player-style';
+import { SettlementTagStore } from '@entities/settlement-tag';
+
 @Component({
     standalone: true,
     imports: [AmountPipe,
@@ -89,6 +92,7 @@ import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComp
     styleUrl: './profile.component.less',
 })
 export class ProfileComponent {
+    protected readonly tagStore = inject(SettlementTagStore);
     protected readonly userService = inject(UserService);
 
     /**
@@ -498,7 +502,7 @@ export class ProfileComponent {
             return this.i18n.translate('settlements.types.guild');
         }
 
-        return getSettlementTypeByKey(settlement.type);
+        return getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
     }
 
     /**

@@ -17,6 +17,7 @@ import {
     DEFAULT_SETTLEMENT_COVER,
     ISettlement,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     getSettlementDisplayName,
     getSettlementTypeTone,
     getSettlementTypeIcon,
@@ -34,6 +35,8 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import { JoinRequestButtonComponent } from '../join-request';
 import { SetTagsComponent } from './set-tags/set-tags.component';
 import { MarkupPipe } from '@shared/lib/news-markdown';
+
+import { SettlementTagStore } from '@entities/settlement-tag';
 
 @Component({
     standalone: true,
@@ -54,6 +57,7 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettlementCardComponent {
+    protected readonly tagStore = inject(SettlementTagStore);
     /**
      * Данные надела.
      */
@@ -200,7 +204,7 @@ export class SettlementCardComponent {
             return this.i18n.translate('settlements.types.guild');
         }
 
-        return getSettlementTypeByKey(settlement.type);
+        return getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
     }
 
     /**

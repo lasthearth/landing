@@ -4,6 +4,7 @@ import {
     SettlementService,
     ISettlement,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     getSettlementDisplayName,
     isGuildSettlement,
 } from '@entities/settlement';
@@ -417,6 +418,6 @@ export class SettlementsComponent {
             return this.i18n.translate('settlements.types.guild');
         }
 
-        return getSettlementTypeByKey(settlement.type);
+        return getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
     }
 }

@@ -11,6 +11,7 @@ import {
     getSettlementDisplayName,
     getSettlementTier,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     getSettlementTypeIcon,
     getSettlementTypeTone,
     isGuildSettlement,
@@ -209,7 +210,7 @@ export class SettlementPageComponent {
             return this.i18n.translate('settlements.types.guild');
         }
 
-        return getSettlementTypeByKey(settlement.type);
+        return getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
     }
 
     /**

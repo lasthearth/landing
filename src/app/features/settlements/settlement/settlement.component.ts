@@ -20,6 +20,7 @@ import {
     getMemberRoleNames,
     getOwnerIds,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     getSettlementTypeTone,
     IRole,
     isGuildSettlement,
@@ -326,7 +327,7 @@ export class SettlementComponent {
     protected getSettlementType(settlement: ISettlement): string {
         return isGuildSettlement(settlement)
             ? this.i18n.translate('settlements.types.guild')
-            : getSettlementTypeByKey(settlement.type);
+            : getSettlementTypeName(settlement, (id) => this.tagStore.getTagById(id)?.name);
     }
 
     /**
