@@ -66,6 +66,16 @@
                     }
                 </div>
             </div>
+            <div class="lh-chips" role="group" aria-labelledby="kits-sort-label">
+                <span id="kits-sort-label" class="lh-chips__label">
+                    {{ "admin.kits.filters.sortLabel" | translate }}
+                </span>
+                @for (key of sorts; track key) {
+                    <button type="button" class="lh-chip" [attr.aria-pressed]="sort() === key" (click)="sort.set(key)">
+                        {{ "admin.kits.filters.sort." + key | translate }}
+                    </button>
+                }
+            </div>
             <div class="kits-meta">
                 <p class="kits-meta__count" aria-live="polite">
                     {{ "admin.kits.filters.shown" | translate: { shown: visibleKits().length, total: list.length } }}
