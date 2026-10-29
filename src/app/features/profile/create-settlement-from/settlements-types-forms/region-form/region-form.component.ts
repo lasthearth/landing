@@ -84,8 +84,6 @@ export class RegionFormComponent {
      */
         protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        x: new FormControl<number | null>(null, [Validators.required]),
-        z: new FormControl<number | null>(null, [Validators.required]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
@@ -173,10 +171,7 @@ export class RegionFormComponent {
                                 name: (values.name ?? '').trimEnd(),
                                 description: (values.description ?? '').trimEnd(),
                                 diplomacy: values.diplomacy ?? '',
-                                coordinates: {
-                                    x: values.x ?? 0,
-                                    y: values.z ?? 0,
-                                },
+                                coordinates: { x: 0, y: 0 },
                                 attachments,
                             };
 
