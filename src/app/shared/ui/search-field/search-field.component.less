@@ -1,0 +1,62 @@
+// Поле поиска для списков: пилюля, как у фильтров-чипов рядом.
+:host {
+    display: flex;
+    flex: 1 1 16rem;
+    min-width: 12rem;
+}
+
+.search-field {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.5rem;
+    padding: 0 0.5rem 0 0.875rem;
+    border: 1px solid var(--lh-border);
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-surface-2);
+    color: var(--lh-ink-3);
+    transition: border-color var(--lh-dur-fast) var(--lh-ease-smooth);
+
+    &:focus-within {
+        border-color: var(--lh-brand);
+    }
+}
+
+.search-field__icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+}
+
+.search-field__input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    background: none;
+    color: var(--lh-ink);
+    font: inherit;
+    font-size: 1rem;
+    outline: none;
+
+    &::-webkit-search-cancel-button {
+        display: none;
+    }
+}
+
+.search-field__clear {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--lh-ink-3);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--lh-surface-3);
+        color: var(--lh-ink);
+    }
+}

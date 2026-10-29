@@ -203,6 +203,33 @@ export const ADMIN_I18N = {
                 },
             },
             shop: {
+                filters: {
+                    searchLabel: 'Поиск товара',
+                    search: 'Название, код набора или раздел',
+                    clear: 'Очистить поиск',
+                    viewLabel: 'Вид списка',
+                    viewList: 'Строки',
+                    viewGrid: 'Карточки',
+                    categoryLabel: 'Категория',
+                    all: 'Все',
+                    statusLabel: 'Видимость',
+                    status: {
+                        all: 'Любые',
+                        available: 'В продаже',
+                        hidden: 'Скрытые',
+                    },
+                    discount: 'Со скидкой',
+                    sortLabel: 'Порядок',
+                    sort: {
+                        updated: 'Свежие',
+                        name: 'По названию',
+                        price: 'По цене',
+                    },
+                    shown: 'Показано {{shown}} из {{total}}',
+                    reset: 'Сбросить фильтры',
+                    notFoundTitle: 'Ничего не нашлось',
+                    notFoundText: 'Измените поиск или сбросьте фильтры.',
+                },
                 listTab: 'Список товаров',
                 createTab: 'Создать товар',
                 editTab: 'Редактировать товар',
@@ -233,8 +260,7 @@ export const ADMIN_I18N = {
                 entriesPrefillHint:
                     'Состав подставляется из выбранного набора. Название, описание и картинку позиции можно изменить, порядок — перетаскиванием. Количество всегда берётся из набора.',
                 replaceEntriesTitle: 'Заменить состав?',
-                replaceEntriesText:
-                    'Позиции, которые вы правили вручную, будут заменены составом набора «{{name}}».',
+                replaceEntriesText: 'Позиции, которые вы правили вручную, будут заменены составом набора «{{name}}».',
                 codeTaken: 'На этот код уже есть товар магазина: одному коду набора соответствует только одна запись.',
                 listIncludesHidden: 'Список показывает все записи, включая скрытые.',
                 showAction: 'Показать',
@@ -242,7 +268,8 @@ export const ADMIN_I18N = {
                 showTitle: 'Показать товар?',
                 showText: 'Товар «{{name}}» снова появится в магазине.',
                 hideTitle: 'Скрыть товар?',
-                hideText: 'Товар «{{name}}» исчезнет из магазина, но останется в этом списке: его можно показать снова.',
+                hideText:
+                    'Товар «{{name}}» исчезнет из магазина, но останется в этом списке: его можно показать снова.',
                 shownSuccess: 'Товар показан',
                 hiddenSuccess: 'Товар скрыт',
                 sectionLabel: 'Раздел',
@@ -284,6 +311,20 @@ export const ADMIN_I18N = {
                 hiddenStatus: 'Скрыт',
             },
             kits: {
+                filters: {
+                    searchLabel: 'Поиск набора',
+                    search: 'Код, название или предмет внутри',
+                    clear: 'Очистить поиск',
+                    all: 'Все',
+                    shown: 'Показано {{shown}} из {{total}}',
+                    expandAll: 'Раскрыть все',
+                    collapseAll: 'Свернуть все',
+                    notFoundTitle: 'Ничего не нашлось',
+                    notFoundText: 'Измените поиск или выберите другую категорию.',
+                    untitled: 'Без названия',
+                    itemsCount: 'Предметов: {{count}}',
+                    unsaved: 'Не сохранено',
+                },
                 title: 'Наборы игры',
                 refresh: 'Обновить',
                 captureHint:
@@ -596,7 +637,8 @@ export const ADMIN_I18N = {
                 loadMore: 'Load more',
                 issuedBy: 'Issued by:',
                 refundedAt: 'Refunded:',
-                expiredHint: 'The privilege has expired (a month has passed since issuance) — revoke the player\'s rights manually.',
+                expiredHint:
+                    "The privilege has expired (a month has passed since issuance) — revoke the player's rights manually.",
                 status: {
                     active: 'Active',
                     completed: 'Completed',
@@ -606,6 +648,33 @@ export const ADMIN_I18N = {
                 },
             },
             shop: {
+                filters: {
+                    searchLabel: 'Search products',
+                    search: 'Name, kit code or section',
+                    clear: 'Clear search',
+                    viewLabel: 'List view',
+                    viewList: 'Rows',
+                    viewGrid: 'Cards',
+                    categoryLabel: 'Category',
+                    all: 'All',
+                    statusLabel: 'Visibility',
+                    status: {
+                        all: 'Any',
+                        available: 'On sale',
+                        hidden: 'Hidden',
+                    },
+                    discount: 'Discounted',
+                    sortLabel: 'Order',
+                    sort: {
+                        updated: 'Recent',
+                        name: 'By name',
+                        price: 'By price',
+                    },
+                    shown: 'Showing {{shown}} of {{total}}',
+                    reset: 'Reset filters',
+                    notFoundTitle: 'Nothing found',
+                    notFoundText: 'Change the search or reset the filters.',
+                },
                 listTab: 'Item list',
                 createTab: 'Create item',
                 editTab: 'Edit item',
@@ -633,7 +702,7 @@ export const ADMIN_I18N = {
                 codeNotCaptured: 'The game has not captured a kit with that code. Pick a code from the list.',
                 entriesRequired: 'Add at least one position: an item with empty contents cannot be saved.',
                 entriesPrefillHint:
-                    'The contents are taken from the selected kit. You can change a position\'s name, description and image, and reorder positions by dragging. Quantities always come from the kit.',
+                    "The contents are taken from the selected kit. You can change a position's name, description and image, and reorder positions by dragging. Quantities always come from the kit.",
                 replaceEntriesTitle: 'Replace the contents?',
                 replaceEntriesText:
                     'The positions you edited by hand will be replaced with the contents of "{{name}}".',
@@ -687,6 +756,20 @@ export const ADMIN_I18N = {
                 hiddenStatus: 'Hidden',
             },
             kits: {
+                filters: {
+                    searchLabel: 'Search kits',
+                    search: 'Code, title or an item inside',
+                    clear: 'Clear search',
+                    all: 'All',
+                    shown: 'Showing {{shown}} of {{total}}',
+                    expandAll: 'Expand all',
+                    collapseAll: 'Collapse all',
+                    notFoundTitle: 'Nothing found',
+                    notFoundText: 'Change the search or pick another category.',
+                    untitled: 'Untitled',
+                    itemsCount: 'Items: {{count}}',
+                    unsaved: 'Unsaved',
+                },
                 title: 'Game kits',
                 refresh: 'Refresh',
                 captureHint:

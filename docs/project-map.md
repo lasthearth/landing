@@ -30,20 +30,20 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 995 | core, entities, features, layout, routes, shared |
+| src/app | 1010 | core, entities, features, layout, routes, shared |
 | core/ | 59 | config, guards, i18n, interceptors, services, types |
 | entities/ | 180 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
-| features/ | 607 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
+| features/ | 618 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
 | layout/ | 19 | background-scene, footer, header |
 | routes/ | 5 | enums |
-| shared/ | 120 | lib, styles, ui |
+| shared/ | 124 | lib, styles, ui |
 
 ## 3. Слайсы features / entities
 
 | Слайс | Файлов | Сегменты | index.ts | Строк экспорта |
 |---|---|---|---|---|
 | features/about | 4 | ui | да | 1 |
-| features/admin | 56 | ui, model, lib, config | да | 2 |
+| features/admin | 66 | ui, model, lib, config | да | 2 |
 | features/analytics | 4 | ui | да | 1 |
 | features/announcement | 7 | ui, model, api | да | 3 |
 | features/auth | 4 | ui | да | 1 |
@@ -78,7 +78,7 @@
 | features/videos | 15 | ui, model, api, lib, config | да | 1 |
 | features/welcome | 3 | — | **нет** | — |
 | features/wiki | 47 | ui, api, lib | да | 6 |
-| features/world-map | 15 | ui, model, api, lib, config | да | 1 |
+| features/world-map | 16 | ui, model, api, lib, config | да | 1 |
 | entities/discord | 3 | model, api | да | 2 |
 | entities/donate | 13 | model, api | да | 12 |
 | entities/event | 5 | model, api, lib | да | 4 |
@@ -146,7 +146,7 @@
 | Словарь | KB | Грузится на |
 |---|---|---|
 | about | 11.8 | /about |
-| admin | 46.7 | /profile/admin |
+| admin | 50.7 | /profile/admin |
 | analytics | 0.9 | — |
 | common | 1.0 | — |
 | diplomacy | 1.7 | /diplomacy |
@@ -172,7 +172,7 @@
 | shared | 27.2 | — |
 | videos | 2.0 | /videos |
 | wiki | 63.7 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |
-| world-map | 6.2 | /map |
+| world-map | 6.8 | /map |
 
 Общие словари (common, header, footer, shared, news) подключены сразу в
 `src/app/core/i18n/translations/index.ts`. Остальные приезжают вместе с роутом через `loadPage()`.

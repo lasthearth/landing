@@ -9,7 +9,7 @@
             [attr.aria-current]="activeTabIndex() === 0 ? 'true' : null"
         >
             <tui-icon icon="@tui.shopping-cart" />
-            <span>{{ 'admin.shop.listTab' | translate }}</span>
+            <span>{{ "admin.shop.listTab" | translate }}</span>
         </button>
         <button
             type="button"
@@ -19,7 +19,7 @@
             [attr.aria-current]="activeTabIndex() === 1 ? 'true' : null"
         >
             <tui-icon icon="@tui.plus" />
-            <span>{{ isEditMode() ? ('admin.shop.editTab' | translate) : ('admin.shop.createTab' | translate) }}</span>
+            <span>{{ isEditMode() ? ("admin.shop.editTab" | translate) : ("admin.shop.createTab" | translate) }}</span>
         </button>
     </div>
 
@@ -35,9 +35,231 @@
             } @else if (itemsLoading() && shopItems() === null) {
                 <app-market-grid-skeleton />
             } @else if (shopItems(); as items) {
-                @if (items.length > 0) {
+                <!-- Панель фильтров: поиск, категория, видимость, скидка, порядок и вид. -->
+                <div class="shop-toolbar">
+                    <div class="shop-toolbar__row">
+                        <app-search-field
+                            [value]="query()"
+                            [label]="'admin.shop.filters.searchLabel' | translate"
+                            [placeholder]="'admin.shop.filters.search' | translate"
+                            [clearLabel]="'admin.shop.filters.clear' | translate"
+                            (valueChange)="query.set($event)"
+                        />
+                        <div
+                            class="lh-chips"
+                            role="group"
+                            [attr.aria-label]="'admin.shop.filters.viewLabel' | translate"
+                        >
+                            <button
+                                type="button"
+                                class="lh-chip"
+                                [attr.aria-pressed]="view() === 'list'"
+                                [title]="'admin.shop.filters.viewList' | translate"
+                                (click)="setView('list')"
+                            >
+                                <tui-icon icon="@tui.list" />
+                                <span class="hidden sm:inline">{{ "admin.shop.filters.viewList" | translate }}</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="lh-chip"
+                                [attr.aria-pressed]="view() === 'grid'"
+                                [title]="'admin.shop.filters.viewGrid' | translate"
+                                (click)="setView('grid')"
+                            >
+                                <tui-icon icon="@tui.layout-grid" />
+                                <span class="hidden sm:inline">{{ "admin.shop.filters.viewGrid" | translate }}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="shop-toolbar__row">
+                        <div
+                            class="lh-chips"
+                            role="group"
+                            [attr.aria-label]="'admin.shop.filters.categoryLabel' | translate"
+                        >
+                            @for (category of categoryFilters; track category) {
+                                <button
+                                    type="button"
+                                    class="lh-chip"
+                                    [attr.aria-pressed]="categoryFilter() === category"
+                                    (click)="categoryFilter.set(category)"
+                                >
+                                    {{
+                                        category === "all"
+                                            ? ("admin.shop.filters.all" | translate)
+                                            : categoryLabel(category)
+                                    }}
+                                    <span class="lh-chip__count">{{ categoryCounts().get(category) ?? 0 }}</span>
+                                </button>
+                            }
+                        </div>
+                        <div
+                            class="lh-chips"
+                            role="group"
+                            [attr.aria-label]="'admin.shop.filters.statusLabel' | translate"
+                        >
+                            @for (status of statusFilters; track status) {
+                                <button
+                                    type="button"
+                                    class="lh-chip"
+                                    [attr.aria-pressed]="statusFilter() === status"
+                                    (click)="statusFilter.set(status)"
+                                >
+                                    {{ "admin.shop.filters.status." + status | translate }}
+                                </button>
+                            }
+                            <button
+                                type="button"
+                                class="lh-chip"
+                                [attr.aria-pressed]="discountOnly()"
+                                (click)="discountOnly.set(!discountOnly())"
+                            >
+                                <tui-icon icon="@tui.percent" />
+                                {{ "admin.shop.filters.discount" | translate }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="shop-toolbar__row shop-toolbar__row--meta">
+                        <div class="lh-chips" role="group" aria-labelledby="shop-sort-label">
+                            <span id="shop-sort-label" class="lh-chips__label">
+                                {{ "admin.shop.filters.sortLabel" | translate }}
+                            </span>
+                            @for (key of sorts; track key) {
+                                <button
+                                    type="button"
+                                    class="lh-chip"
+                                    [attr.aria-pressed]="sort() === key"
+                                    (click)="sort.set(key)"
+                                >
+                                    {{ "admin.shop.filters.sort." + key | translate }}
+                                </button>
+                            }
+                        </div>
+                        <p class="shop-toolbar__count" aria-live="polite">
+                            {{
+                                "admin.shop.filters.shown"
+                                    | translate: { shown: visibleItems().length, total: items.length }
+                            }}
+                            @if (hasFilters()) {
+                                <button type="button" class="shop-toolbar__reset" (click)="resetFilters()">
+                                    {{ "admin.shop.filters.reset" | translate }}
+                                </button>
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                @if (items.length > 0 && visibleItems().length === 0) {
+                    <app-empty-state
+                        icon="@tui.search-x"
+                        [title]="'admin.shop.filters.notFoundTitle' | translate"
+                        [description]="'admin.shop.filters.notFoundText' | translate"
+                    />
+                } @else if (items.length > 0 && view() === "list") {
+                    <!-- Компактный список: одна строка на товар, всё нужное видно без прокрутки карточек. -->
+                    <ul class="shop-rows">
+                        @for (item of visibleItems(); track item.id) {
+                            <li class="shop-row" [class.shop-row--hidden]="!item.isAvailable">
+                                <span class="shop-row__thumb">
+                                    @if (item.imageUrl) {
+                                        <app-image-loader [src]="item.imageUrl" [alt]="item.name" objectFit="contain" />
+                                    } @else {
+                                        <tui-icon icon="@tui.image" />
+                                    }
+                                </span>
+                                <span class="shop-row__main">
+                                    <button
+                                        type="button"
+                                        class="shop-row__name"
+                                        (click)="startEdit(item)"
+                                        [title]="item.name"
+                                    >
+                                        {{ item.name }}
+                                    </button>
+                                    <span class="shop-row__meta">
+                                        <code class="shop-row__code">{{ item.code }}</code>
+                                        <span class="shop-row__tag">{{ categoryLabel(item.category) }}</span>
+                                        @if (item.section) {
+                                            <span class="shop-row__tag">{{ item.section }}</span>
+                                        }
+                                    </span>
+                                </span>
+                                <span class="shop-row__price">
+                                    @if (item.effectivePrice && item.effectivePrice !== item.price) {
+                                        <s class="shop-row__old">{{ item.price | amount }}</s>
+                                        <b class="shop-row__new">{{ item.effectivePrice | amount }}</b>
+                                        <span class="shop-row__discount">−{{ item.discountPercent }}%</span>
+                                    } @else {
+                                        <b>{{ item.price | amount }}</b>
+                                    }
+                                    <img
+                                        src="/splinter-of-spark.webp"
+                                        [alt]="'admin.common.shardAlt' | translate"
+                                        class="shop-row__shard"
+                                    />
+                                </span>
+                                <span class="shop-row__status" [class.shop-row__status--on]="item.isAvailable">
+                                    {{
+                                        item.isAvailable
+                                            ? ("admin.shop.availableStatus" | translate)
+                                            : ("admin.shop.hiddenStatus" | translate)
+                                    }}
+                                </span>
+                                <span class="shop-row__actions">
+                                    <button
+                                        type="button"
+                                        class="shop-row__action"
+                                        (click)="startEdit(item)"
+                                        [disabled]="busyItemId() === item.id"
+                                        [title]="'admin.shop.edit' | translate"
+                                        [attr.aria-label]="('admin.shop.edit' | translate) + ': ' + item.name"
+                                    >
+                                        <tui-icon icon="@tui.pencil" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="shop-row__action"
+                                        (click)="toggleAvailability(item)"
+                                        [disabled]="busyItemId() === item.id"
+                                        [title]="
+                                            item.isAvailable
+                                                ? ('admin.shop.hideAction' | translate)
+                                                : ('admin.shop.showAction' | translate)
+                                        "
+                                        [attr.aria-label]="
+                                            (item.isAvailable
+                                                ? ('admin.shop.hideAction' | translate)
+                                                : ('admin.shop.showAction' | translate)) +
+                                            ': ' +
+                                            item.name
+                                        "
+                                    >
+                                        @if (busyItemId() === item.id) {
+                                            <tui-loader [showLoader]="true" [inheritColor]="true" size="xs" />
+                                        } @else {
+                                            <tui-icon [icon]="item.isAvailable ? '@tui.eye-off' : '@tui.eye'" />
+                                        }
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="shop-row__action shop-row__action--danger"
+                                        (click)="deleteItem(item)"
+                                        [disabled]="busyItemId() === item.id"
+                                        [title]="'admin.common.delete' | translate"
+                                        [attr.aria-label]="('admin.common.delete' | translate) + ': ' + item.name"
+                                    >
+                                        <tui-icon icon="@tui.trash-2" />
+                                    </button>
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                } @else if (items.length > 0) {
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        @for (item of items; track item.id) {
+                        @for (item of visibleItems(); track item.id) {
                             <div
                                 class="relative flex flex-col gap-4 lh-panel p-4 lh-card-glow hover:-translate-y-1 group"
                             >
@@ -109,7 +331,11 @@
                                         [class.bg-lh-success]="item.isAvailable"
                                         [class.bg-lh-danger]="!item.isAvailable"
                                     >
-                                        {{ item.isAvailable ? ('admin.shop.availableStatus' | translate) : ('admin.shop.hiddenStatus' | translate) }}
+                                        {{
+                                            item.isAvailable
+                                                ? ("admin.shop.availableStatus" | translate)
+                                                : ("admin.shop.hiddenStatus" | translate)
+                                        }}
                                     </span>
                                 </div>
 
@@ -121,7 +347,7 @@
                                         class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base transition-colors flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <tui-icon icon="@tui.pencil" class="size-4!" />
-                                        {{ 'admin.shop.edit' | translate }}
+                                        {{ "admin.shop.edit" | translate }}
                                     </button>
                                     <!-- Одно действие показывает или скрывает запись:
                                          скрытый товар остаётся в списке. -->
@@ -129,18 +355,27 @@
                                         type="button"
                                         (click)="toggleAvailability(item)"
                                         [disabled]="busyItemId() === item.id"
-                                        [title]="item.isAvailable ? ('admin.shop.hideAction' | translate) : ('admin.shop.showAction' | translate)"
+                                        [title]="
+                                            item.isAvailable
+                                                ? ('admin.shop.hideAction' | translate)
+                                                : ('admin.shop.showAction' | translate)
+                                        "
                                         [attr.aria-label]="
                                             (item.isAvailable
                                                 ? ('admin.shop.hideAction' | translate)
-                                                : ('admin.shop.showAction' | translate)) + ': ' + item.name
+                                                : ('admin.shop.showAction' | translate)) +
+                                            ': ' +
+                                            item.name
                                         "
                                         class="py-2.5 px-3 rounded-xl bg-surface-3 border border-line text-ink transition-colors hover:bg-surface-4 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         @if (busyItemId() === item.id) {
                                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                                         } @else {
-                                            <tui-icon [icon]="item.isAvailable ? '@tui.eye-off' : '@tui.eye'" class="size-4!" />
+                                            <tui-icon
+                                                [icon]="item.isAvailable ? '@tui.eye-off' : '@tui.eye'"
+                                                class="size-4!"
+                                            />
                                         }
                                     </button>
                                     <button
@@ -161,13 +396,13 @@
                         class="flex flex-col items-center justify-center gap-4 py-16 bg-lh-primary-2/5 rounded-2xl border border-dashed border-lh-primary-2/30"
                     >
                         <tui-icon icon="@tui.package" class="size-16! text-ink-3" />
-                        <p class="text-xl font-bold text-lh-primary/50">{{ 'admin.shop.empty' | translate }}</p>
+                        <p class="text-xl font-bold text-lh-primary/50">{{ "admin.shop.empty" | translate }}</p>
                     </div>
                 }
 
                 <!-- Список отдаёт админский эндпоинт: скрытые записи в нём есть,
                      поэтому любую из них можно снова опубликовать. -->
-                <p class="text-base text-ink-3">{{ 'admin.shop.listIncludesHidden' | translate }}</p>
+                <p class="text-base text-ink-3">{{ "admin.shop.listIncludesHidden" | translate }}</p>
             } @else {
                 <app-market-grid-skeleton />
             }
@@ -181,17 +416,31 @@
             <div class="flex-1 min-w-0 flex flex-col gap-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.nameLabel' | translate }}</label>
-                        <lh-input type="input" [placeholder]="'admin.shop.namePlaceholder' | translate" [formControl]="form.controls.name" />
+                        <label class="text-lg font-semibold text-lh-primary">
+                            {{ "admin.shop.nameLabel" | translate }}
+                        </label>
+                        <lh-input
+                            type="input"
+                            [placeholder]="'admin.shop.namePlaceholder' | translate"
+                            [formControl]="form.controls.name"
+                        />
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.priceLabel' | translate }}</label>
-                        <lh-input type="inputNumber" [placeholder]="'admin.shop.pricePlaceholder' | translate" [formControl]="form.controls.price" />
+                        <label class="text-lg font-semibold text-lh-primary">
+                            {{ "admin.shop.priceLabel" | translate }}
+                        </label>
+                        <lh-input
+                            type="inputNumber"
+                            [placeholder]="'admin.shop.pricePlaceholder' | translate"
+                            [formControl]="form.controls.price"
+                        />
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.codeLabel' | translate }}</label>
+                        <label class="text-lg font-semibold text-lh-primary">
+                            {{ "admin.shop.codeLabel" | translate }}
+                        </label>
                         @if (kitsLoadFailed()) {
                             <!-- Список наборов не загрузился: код вводится вручную,
                                  а сервер сам проверит, что набор захвачен (404). -->
@@ -201,13 +450,13 @@
                                 [placeholder]="'admin.shop.codePlaceholder' | translate"
                                 [formControl]="form.controls.code"
                             />
-                            <p class="text-base text-ink-3">{{ 'admin.shop.codeLoadError' | translate }}</p>
+                            <p class="text-base text-ink-3">{{ "admin.shop.codeLoadError" | translate }}</p>
                             <button
                                 type="button"
                                 (click)="reloadKits()"
                                 class="self-start rounded-lg border border-line bg-surface-3 px-3 py-1.5 text-base font-semibold text-ink transition-colors hover:bg-surface-4"
                             >
-                                {{ 'admin.shop.codeRetry' | translate }}
+                                {{ "admin.shop.codeRetry" | translate }}
                             </button>
                         } @else {
                             <lh-input
@@ -219,28 +468,30 @@
                                 [formControl]="form.controls.code"
                             />
                             @if (kitsLoading() && kitCodes().length === 0) {
-                                <p class="text-base text-ink-3">{{ 'admin.shop.codeLoading' | translate }}</p>
+                                <p class="text-base text-ink-3">{{ "admin.shop.codeLoading" | translate }}</p>
                             } @else if (kitCodes().length === 0) {
-                                <p class="text-base text-ink-3">{{ 'admin.shop.codeEmpty' | translate }}</p>
-                                <p class="text-base text-ink-3">{{ 'admin.shop.codeEmptyHint' | translate }}</p>
+                                <p class="text-base text-ink-3">{{ "admin.shop.codeEmpty" | translate }}</p>
+                                <p class="text-base text-ink-3">{{ "admin.shop.codeEmptyHint" | translate }}</p>
                             }
                         }
 
                         @if (codeTaken()) {
                             <!-- Повтор кода: сервер отвечает общим 500, поэтому
                                  причина объясняется рядом с полем кода. -->
-                            <p class="text-base text-lh-danger">{{ 'admin.shop.codeTaken' | translate }}</p>
-                            <p class="text-base text-ink-3">{{ 'admin.shop.saveError' | translate }}</p>
+                            <p class="text-base text-lh-danger">{{ "admin.shop.codeTaken" | translate }}</p>
+                            <p class="text-base text-ink-3">{{ "admin.shop.saveError" | translate }}</p>
                         }
                     </div>
                 </div>
 
-                <p class="text-base text-ink-3">{{ 'admin.shop.kitOnlyHint' | translate }}</p>
+                <p class="text-base text-ink-3">{{ "admin.shop.kitOnlyHint" | translate }}</p>
 
                 <!-- Раздел витрины: вкладки есть только в «Особом» -->
-                @if (previewCategory() === 'special' || form.controls.section.value) {
+                @if (previewCategory() === "special" || form.controls.section.value) {
                     <div class="flex flex-col gap-2 md:max-w-sm">
-                        <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.sectionLabel' | translate }}</label>
+                        <label class="text-lg font-semibold text-lh-primary">
+                            {{ "admin.shop.sectionLabel" | translate }}
+                        </label>
                         <lh-input
                             type="select"
                             [ariaLabel]="'admin.shop.sectionLabel' | translate"
@@ -249,18 +500,20 @@
                             [displayWith]="sectionDisplay"
                             [formControl]="form.controls.section"
                         />
-                        <p class="text-base text-ink-3">{{ 'admin.shop.sectionHint' | translate }}</p>
+                        <p class="text-base text-ink-3">{{ "admin.shop.sectionHint" | translate }}</p>
                     </div>
                 }
 
                 <!-- Правки товара не трогают уже оплаченные покупки -->
                 <div class="flex flex-col gap-1 rounded-xl border border-line/40 bg-surface-3 p-4">
-                    <p class="text-base text-ink-2">{{ 'admin.shop.snapshotHint' | translate }}</p>
+                    <p class="text-base text-ink-2">{{ "admin.shop.snapshotHint" | translate }}</p>
                 </div>
 
                 <!-- Изображение -->
                 <div class="flex flex-col gap-3 p-5 rounded-2xl border border-lh-primary-2/10 bg-lh-primary-2/5">
-                    <label class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.imageLabel' | translate }}</label>
+                    <label class="text-lg font-semibold text-lh-primary">
+                        {{ "admin.shop.imageLabel" | translate }}
+                    </label>
                     <div class="flex items-center gap-5">
                         <div
                             class="w-36 h-36 rounded-xl overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0"
@@ -277,7 +530,7 @@
                             @if (!form.controls.image.value) {
                                 <label tuiInputFiles>
                                     <ng-template tuiInputFilesContent>
-                                        <span class="text-ink-2 text-lg">{{ 'admin.shop.addImage' | translate }}</span>
+                                        <span class="text-ink-2 text-lg">{{ "admin.shop.addImage" | translate }}</span>
                                         <input accept="image/*" tuiInputFiles [formControl]="form.controls.image" />
                                     </ng-template>
                                 </label>
@@ -309,17 +562,23 @@
                 >
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" [formControl]="form.controls.is_available" class="lh-checkbox" />
-                        <span class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.available' | translate }}</span>
+                        <span class="text-lg font-semibold text-lh-primary">
+                            {{ "admin.shop.available" | translate }}
+                        </span>
                     </label>
 
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" [formControl]="form.controls.has_discount" class="lh-checkbox" />
-                        <span class="text-lg font-semibold text-lh-primary">{{ 'admin.shop.discount' | translate }}</span>
+                        <span class="text-lg font-semibold text-lh-primary">
+                            {{ "admin.shop.discount" | translate }}
+                        </span>
                     </label>
 
                     @if (form.controls.has_discount.value) {
                         <div class="flex items-center gap-3">
-                            <span class="text-lg text-lh-primary font-semibold">{{ 'admin.shop.percent' | translate }}</span>
+                            <span class="text-lg text-lh-primary font-semibold">
+                                {{ "admin.shop.percent" | translate }}
+                            </span>
                             <lh-input
                                 type="inputNumber"
                                 [placeholder]="'admin.shop.discountPlaceholder' | translate"
@@ -333,10 +592,10 @@
                 <!-- Entries набора -->
                 <div class="flex flex-col gap-5 pt-5">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.entriesTitle' | translate }}</h3>
+                        <h3 class="text-xl font-bold text-lh-primary">{{ "admin.shop.entriesTitle" | translate }}</h3>
                     </div>
 
-                    <p class="text-base text-ink-3">{{ 'admin.shop.entriesPrefillHint' | translate }}</p>
+                    <p class="text-base text-ink-3">{{ "admin.shop.entriesPrefillHint" | translate }}</p>
 
                     <div
                         cdkDropList
@@ -351,7 +610,7 @@
                             >
                                 <div class="flex items-center justify-between">
                                     <span class="text-lg font-semibold text-lh-primary">
-                                        {{ 'admin.shop.position' | translate:{number: i + 1} }}
+                                        {{ "admin.shop.position" | translate: { number: i + 1 } }}
                                         @if (entry.controls.game_code.value; as gameCode) {
                                             <span class="ml-2 text-sm font-normal text-ink-3">{{ gameCode }}</span>
                                         }
@@ -400,11 +659,12 @@
                                         class="w-20 h-20 rounded-lg overflow-hidden border border-lh-primary-2/10 bg-lh-primary-2/5 shrink-0"
                                     >
                                         @if (entry.controls.image_url.value; as url) {
-                                            <app-image-loader [src]="url" [alt]="'admin.common.previewAlt' | translate" />
+                                            <app-image-loader
+                                                [src]="url"
+                                                [alt]="'admin.common.previewAlt' | translate"
+                                            />
                                         } @else {
-                                            <div
-                                                class="w-full h-full flex items-center justify-center text-ink-3"
-                                            >
+                                            <div class="w-full h-full flex items-center justify-center text-ink-3">
                                                 <tui-icon icon="@tui.image" class="size-8!" />
                                             </div>
                                         }
@@ -413,7 +673,7 @@
                                         <label tuiInputFiles>
                                             <ng-template tuiInputFilesContent>
                                                 <span class="text-ink-2 text-base">
-                                                    {{ 'admin.shop.addImage' | translate }}
+                                                    {{ "admin.shop.addImage" | translate }}
                                                 </span>
                                                 <input
                                                     accept="image/*"
@@ -429,11 +689,7 @@
                                                     | async;
                                                 as file
                                             ) {
-                                                <tui-file
-                                                    state="error"
-                                                    [file]="file"
-                                                    (remove)="removeEntryFile(i)"
-                                                />
+                                                <tui-file state="error" [file]="file" (remove)="removeEntryFile(i)" />
                                             }
                                             @if (entry.controls.image.value; as file) {
                                                 <tui-file [file]="file" (remove)="removeEntryFile(i)" />
@@ -448,11 +704,11 @@
                     @if (entriesArray.length === 0) {
                         @if (entriesError()) {
                             <p class="text-lg text-lh-danger text-center py-4">
-                                {{ 'admin.shop.entriesRequired' | translate }}
+                                {{ "admin.shop.entriesRequired" | translate }}
                             </p>
                         } @else {
                             <p class="text-lg text-lh-primary/50 text-center py-4">
-                                {{ 'admin.shop.emptyEntries' | translate }}
+                                {{ "admin.shop.emptyEntries" | translate }}
                             </p>
                         }
                     }
@@ -461,14 +717,14 @@
                 <!-- Возможности товара -->
                 <div class="flex flex-col gap-5 pt-5">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-xl font-bold text-lh-primary">{{ 'admin.shop.abilitiesTitle' | translate }}</h3>
+                        <h3 class="text-xl font-bold text-lh-primary">{{ "admin.shop.abilitiesTitle" | translate }}</h3>
                         <button
                             type="button"
                             (click)="addAbility()"
                             class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.plus" class="size-5!" />
-                            {{ 'admin.common.add' | translate }}
+                            {{ "admin.common.add" | translate }}
                         </button>
                     </div>
 
@@ -501,7 +757,9 @@
                     </div>
 
                     @if (privilegesArray.length === 0) {
-                        <p class="text-lg text-lh-primary/50 text-center py-4">{{ 'admin.shop.emptyAbilities' | translate }}</p>
+                        <p class="text-lg text-lh-primary/50 text-center py-4">
+                            {{ "admin.shop.emptyAbilities" | translate }}
+                        </p>
                     }
                 </div>
 
@@ -512,7 +770,7 @@
                         (click)="backToList()"
                         class="px-6 py-3.5 rounded-xl border border-lh-primary-2 text-lh-primary font-bold uppercase text-lg hover:bg-lh-primary-2/10 transition"
                     >
-                        {{ 'admin.common.cancel' | translate }}
+                        {{ "admin.common.cancel" | translate }}
                     </button>
                     <button
                         type="submit"
@@ -522,7 +780,9 @@
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
                         }
-                        {{ isEditMode() ? ('admin.shop.saveButton' | translate) : ('admin.shop.createTab' | translate) }}
+                        {{
+                            isEditMode() ? ("admin.shop.saveButton" | translate) : ("admin.shop.createTab" | translate)
+                        }}
                     </button>
                 </div>
             </div>
@@ -531,10 +791,10 @@
             <div
                 class="w-full lg:w-[360px] lg:sticky lg:top-20 self-start flex flex-col gap-4 preview-col lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto"
             >
-                <p class="text-xl font-bold text-lh-primary uppercase tracking-wide">{{ 'admin.shop.previewTitle' | translate }}</p>
-                <div
-                    class="relative flex flex-col gap-4 lh-panel p-5 lh-card-glow hover:-translate-y-1 group"
-                >
+                <p class="text-xl font-bold text-lh-primary uppercase tracking-wide">
+                    {{ "admin.shop.previewTitle" | translate }}
+                </p>
+                <div class="relative flex flex-col gap-4 lh-panel p-5 lh-card-glow hover:-translate-y-1 group">
                     @if (previewItem().hasDiscount && previewItem().discountPercent) {
                         <div
                             class="absolute top-4 left-4 bg-white text-brand-ink text-base font-extrabold px-3 py-1.5 rounded-br-xl -rotate-3 z-10"
@@ -563,16 +823,28 @@
                         @if (previewItem().hasDiscount && previewItem().discountPercent) {
                             <span class="text-lg text-lh-primary/50 line-through flex items-center gap-1">
                                 {{ previewItem().price | amount }}
-                                <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-4 w-4 object-contain" />
+                                <img
+                                    src="/splinter-of-spark.webp"
+                                    [alt]="'admin.common.shardAlt' | translate"
+                                    class="h-4 w-4 object-contain"
+                                />
                             </span>
                             <span class="text-2xl font-extrabold text-lh-accent flex items-center gap-1">
                                 {{ previewEffectivePrice() | amount }}
-                                <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
+                                <img
+                                    src="/splinter-of-spark.webp"
+                                    [alt]="'admin.common.shardAlt' | translate"
+                                    class="h-6 w-6 object-contain"
+                                />
                             </span>
                         } @else {
                             <span class="text-2xl font-extrabold text-lh-primary flex items-center gap-1">
                                 {{ previewItem().price | amount }}
-                                <img src="/splinter-of-spark.webp" [alt]="'admin.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
+                                <img
+                                    src="/splinter-of-spark.webp"
+                                    [alt]="'admin.common.shardAlt' | translate"
+                                    class="h-6 w-6 object-contain"
+                                />
                             </span>
                         }
                     </div>
@@ -586,7 +858,11 @@
                             [class.bg-lh-success]="previewItem().isAvailable"
                             [class.bg-lh-danger]="!previewItem().isAvailable"
                         >
-                            {{ previewItem().isAvailable ? ('admin.shop.availableStatus' | translate) : ('admin.shop.hiddenStatus' | translate) }}
+                            {{
+                                previewItem().isAvailable
+                                    ? ("admin.shop.availableStatus" | translate)
+                                    : ("admin.shop.hiddenStatus" | translate)
+                            }}
                         </span>
                     </div>
 
@@ -594,14 +870,14 @@
                         type="button"
                         class="w-full text-white uppercase transition duration-300 font-bold cursor-pointer bg-lh-accent hover:bg-brand-hover rounded-xl py-3 text-lg"
                     >
-                        {{ 'admin.shop.buy' | translate }}
+                        {{ "admin.shop.buy" | translate }}
                     </button>
 
                     <!-- Предпросмотр возможностей -->
                     @if (previewItem().privileges.length) {
                         <div class="flex flex-col gap-3 pt-2">
                             <p class="text-lg font-bold text-lh-primary uppercase tracking-wide text-center">
-                                {{ 'admin.shop.abilitiesTitle' | translate }}
+                                {{ "admin.shop.abilitiesTitle" | translate }}
                             </p>
                             <div class="flex gap-2 flex-wrap justify-center">
                                 @for (ability of previewItem().privileges; track $index) {
@@ -615,7 +891,7 @@
                     @if (previewItem().entries.length) {
                         <div class="flex flex-col gap-3 pt-2">
                             <p class="text-lg font-bold text-lh-primary uppercase tracking-wide text-center">
-                                {{ 'admin.shop.entriesTitle' | translate }}
+                                {{ "admin.shop.entriesTitle" | translate }}
                             </p>
                             <div
                                 cdkDropList
@@ -641,11 +917,11 @@
                                     >
                                         @if (entry.imageUrl) {
                                             <app-image-loader
-                                                    [src]="entry.imageUrl"
-                                                    [alt]="entry.name"
-                                                    objectFit="contain"
-                                                    imageClass="p-1"
-                                                />
+                                                [src]="entry.imageUrl"
+                                                [alt]="entry.name"
+                                                objectFit="contain"
+                                                imageClass="p-1"
+                                            />
                                         } @else {
                                             <div class="w-full h-full flex items-center justify-center text-ink-2">
                                                 <tui-icon icon="@tui.image" class="size-8!" />
