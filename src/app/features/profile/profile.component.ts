@@ -45,6 +45,7 @@ import {
     SettlementService,
     isGuildSettlement,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     getSettlementTypeTone,
     getDiplomacyTone,
     isOwner,
@@ -498,7 +499,7 @@ export class ProfileComponent {
             return this.i18n.translate('settlements.types.guild');
         }
 
-        return getSettlementTypeByKey(settlement.type);
+        return getSettlementTypeName(settlement);
     }
 
     /**

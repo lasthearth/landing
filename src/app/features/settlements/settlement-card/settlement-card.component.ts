@@ -17,6 +17,7 @@ import {
     DEFAULT_SETTLEMENT_COVER,
     ISettlement,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     getSettlementDisplayName,
     getSettlementTypeTone,
     getSettlementTypeIcon,
@@ -200,7 +201,7 @@ export class SettlementCardComponent {
             return this.i18n.translate('settlements.types.guild');
         }
 
-        return getSettlementTypeByKey(settlement.type);
+        return getSettlementTypeName(settlement);
     }
 
     /**

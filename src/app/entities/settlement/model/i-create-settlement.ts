@@ -1,5 +1,6 @@
 export interface ICreateSettlement {
-    type?: string;
+    /** Тип надела: 0 = CAMP (стан). Бэкенд принимает int32. */
+    type?: number;
 
     name: string;
 

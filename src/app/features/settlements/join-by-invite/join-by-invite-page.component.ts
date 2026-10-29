@@ -15,7 +15,7 @@ import {
     SettlementBadgeComponent,
     SettlementService,
 } from '@entities/settlement';
-import { getSettlementTypeByKey } from '@entities/settlement';
+import { getSettlementTypeByKey, getSettlementTypeName } from '@entities/settlement';
 import { IPlayer, PlayerChipComponent, UserService } from '@entities/user';
 import { MarkupPipe } from '@shared/lib/news-markdown';
 import { TuiIcon } from '@taiga-ui/core';
@@ -99,7 +99,7 @@ export class JoinByInvitePageComponent {
 
     protected readonly typeLabel = computed(() => {
         const settlement = this.settlement();
-        return settlement ? getSettlementTypeByKey(settlement.type) : '';
+        return settlement ? getSettlementTypeName(settlement) : '';
     });
 
     protected readonly typeTone = computed(() => {

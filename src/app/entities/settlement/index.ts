@@ -28,6 +28,7 @@ export { SettlementsTypes } from './model/settlements-types';
 export type { SettlementBadgeTone } from './model/settlement-badge-tone';
 export { SettlementService } from './api/settlement.service';
 export { getSettlementTypeByKey } from './lib/get-settlement-type-by-key.function';
+export { getSettlementTypeName, CAPITAL_TAG_ID, CAPITAL_TYPE_NAME } from './lib/get-settlement-type-name.function';
 export { getSettlementTypeTone } from './lib/get-settlement-type-tone.function';
 export { getSettlementTypeIcon } from './lib/get-settlement-type-icon.function';
 export { getSettlementTier } from './lib/get-settlement-tier.function';

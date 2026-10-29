@@ -157,7 +157,7 @@ export class TownshipFormComponent {
                     ).pipe(
                         map((attachments) => {
                             const request: ICreateSettlement = {
-                                type: 'CAMP',
+                                type: 0,
                                 name: (values.name ?? '').trimEnd(),
                                 description: (values.description ?? '').trimEnd(),
                                 diplomacy: values.diplomacy ?? '',

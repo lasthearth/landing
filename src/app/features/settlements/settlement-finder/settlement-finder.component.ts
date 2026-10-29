@@ -4,6 +4,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import {
     getSettlementDisplayName,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     isGuildSettlement,
     ISettlement,
     SettlementService,
@@ -188,7 +189,7 @@ export class SettlementFinderComponent {
                             name: getSettlementDisplayName(settlement),
                             typeLabel: isGuildSettlement(settlement)
                                 ? this.i18n.translate('settlements.types.guild')
-                                : getSettlementTypeByKey(settlement.type),
+                                : getSettlementTypeName(settlement),
                             diplomacy: settlement.diplomacy,
                             members,
                             online,

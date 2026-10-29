@@ -17,6 +17,7 @@ import {
     getDiplomacyTone,
     getSettlementDisplayName,
     getSettlementTypeByKey,
+    getSettlementTypeName,
     getSettlementTypeIcon,
     getSettlementTypeTone,
     isGuildSettlement,
@@ -115,7 +116,7 @@ export class InvitationCardComponent {
     protected typeLabel(settlement: ISettlement): string {
         return isGuildSettlement(settlement)
             ? this.i18n.translate('settlements.types.guild')
-            : getSettlementTypeByKey(settlement.type);
+            : getSettlementTypeName(settlement);
     }
 
     /**
