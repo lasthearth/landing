@@ -76,25 +76,22 @@ export class GuildFormComponent {
     /**
      * Основная форма создания.
      */
-    protected readonly form = new FormGroup({
+        protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(4)]),
         x: new FormControl<number | null>(null, [Validators.required]),
         z: new FormControl<number | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
         map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildPatentDocument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildLibertiesDocument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildSquare: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildWell: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildPaths: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildStorage: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildBarn: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildFarm: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildAdditionalBuilding1: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildAdditionalBuilding2: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildAdditionalBuilding3: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        passport: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        guildLiberties: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        guildOffice: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        guildMinorOffice: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        guildBoard: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        guildSellMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        guildBuyMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        guildMinorSellMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        guildMinorBuyMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
     });
 
     /**
@@ -170,6 +167,20 @@ export class GuildFormComponent {
                 next: () => this.submitEvent.emit(),
                 error: () => {},
             });
+    }
+
+    /**
+     * Обрабатывает отправку формы: помечает все поля затронутыми, чтобы
+     * показать ошибки валидации, и запускает отправку только если форма валидна.
+     */
+    protected submit(): void {
+        this.form.markAllAsTouched();
+
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.onSubmit.next();
     }
 
     /**

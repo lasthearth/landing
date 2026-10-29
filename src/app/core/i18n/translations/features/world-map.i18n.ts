@@ -5,8 +5,7 @@ export const WORLD_MAP_I18N = {
     ru: {
         worldMap: {
             title: 'Карта земель',
-            subtitle:
-                'Поселения, хутора и ключевые точки там, где стоят их глашатаи. В центре — Очаг, где появляются новички.',
+            subtitle: 'Поселения, хутора и ключевые точки там, где стоят их глашатаи.',
             toList: 'Список поселений',
             demo: 'Пока на карте пример. Настоящие поселения появятся, когда их главы поставят блок-глашатай.',
             hearth: 'Очаг',
@@ -79,8 +78,7 @@ export const WORLD_MAP_I18N = {
     en: {
         worldMap: {
             title: 'Map of the lands',
-            subtitle:
-                'Settlements, homesteads and key points where their heralds stand. The Hearth in the center is where newcomers spawn.',
+            subtitle: 'Settlements, homesteads and key points where their heralds stand.',
             toList: 'Settlement list',
             demo: 'The map shows an example for now. Real settlements appear once their leaders place a herald block.',
             hearth: 'Hearth',

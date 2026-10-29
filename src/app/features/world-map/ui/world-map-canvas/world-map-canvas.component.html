@@ -144,19 +144,9 @@
                         [class.world-map__rose-light]="!half.dark"
                     />
                 }
-                <circle r="7.5" class="world-map__hearth-disc" />
-                <path
-                    class="world-map__hearth-flame"
-                    d="M0 -5.6C1.9 -3.1 3.7 -1.3 3.7 1.5C3.7 4 2 5.6 0 5.6S-3.7 4 -3.7 1.5C-3.7 -0.3 -2.5 -1.6 -1.5 -2.5C-1.3 -1 -0.6 0 0.3 0.3C0.1 -1.9 -0.3 -3.7 0 -5.6Z"
-                />
                 <text class="world-map__rose-north" [attr.y]="-roseRadius() - 5" text-anchor="middle">
                     {{ "worldMap.compass.n" | translate }}
                 </text>
-                @if (hearthLabelVisible()) {
-                    <text class="world-map__hearth-label" [attr.y]="roseRadius() + 15" text-anchor="middle">
-                        {{ "worldMap.hearth" | translate }}
-                    </text>
-                }
             </g>
 
             <!-- Поселения. -->

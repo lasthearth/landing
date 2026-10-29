@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="flex flex-col gap-6 w-full" (ngSubmit)="onSubmit.next()">
+<form [formGroup]="form" class="flex flex-col gap-6 w-full" (ngSubmit)="submit()">
     <p class="text-2xl text-ink font-bold self-center">{{ 'settlements.form.title.township' | translate }}</p>
 
     <div class="flex flex-col gap-2">
@@ -10,6 +10,7 @@
             />
         </p>
         <lh-input [placeholder]="'settlements.form.namePlaceholder' | translate" formControlName="name" />
+        <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
     </div>
 
     <div class="flex flex-col gap-2">
@@ -19,7 +20,9 @@
             <lh-hint [hintText]="'settlements.form.coordinatesHint' | translate" />
         </p>
         <lh-input [placeholder]="'settlements.form.xPlaceholder' | translate" type="inputNumber" formControlName="x" />
+        <tui-error formControlName="x" [error]="[] | tuiFieldError | async" />
         <lh-input [placeholder]="'settlements.form.zPlaceholder' | translate" type="inputNumber" formControlName="z" />
+        <tui-error formControlName="z" [error]="[] | tuiFieldError | async" />
     </div>
 
     <div class="flex flex-col gap-2">
@@ -29,6 +32,7 @@
             <lh-hint [hintText]="'settlements.form.diplomacyHint' | translate" />
         </p>
         <lh-input formControlName="diplomacy" type="select" [items]="diplomacy()" [placeholder]="'settlements.form.diplomacyPlaceholder' | translate" />
+        <tui-error formControlName="diplomacy" [error]="[] | tuiFieldError | async" />
     </div>
 
     <div class="flex flex-col gap-2">
@@ -45,6 +49,7 @@
             [preview]="true"
             [rows]="7"
         />
+        <tui-error formControlName="description" [error]="[] | tuiFieldError | async" />
     </div>
 
     <div *ngFor="let key of fileFields">
@@ -90,7 +95,7 @@
     <button
         type="submit"
         class="lh-secondary-button text-base py-2 px-4 mt-2 self-start disabled:text-ink-3 disabled:bg-lh-primary-2/5 disabled:cursor-not-allowed"
-        [disabled]="form.invalid || isLoading()"
+        [disabled]="isLoading()"
     >
         @if (isLoading()) {
             <tui-loader [showLoader]="isLoading()" />

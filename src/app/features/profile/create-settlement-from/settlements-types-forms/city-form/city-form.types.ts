@@ -1,36 +1,9 @@
 /**
  * Тип, представляющий любой ключ из массива `fileFieldsCity`.
- * Используется для обращения к конкретным файлам города.
+ * Используется для обращения к конкретным файлам графство.
  */
 export type FileKeyCity = (typeof fileFieldsCity)[number];
 /**
- * Список ключей файлов, связанных с городом.
+ * Список ключей файлов, связанных с графство.
  */
-export const fileFieldsCity = [
-    'preview',
-    'map',
-    'monument',
-    'playersDocuments',
-    'document',
-    'yardage',
-    'pit',
-    'localRoads',
-    'globalRoads',
-    'warehouse',
-    'barn',
-    'seedbeds',
-    'oneFloorHouse1',
-    'oneFloorHouse2',
-    'oneFloorHouse3',
-    'oneFloorHouse4',
-    'doubleFloorHouse1',
-    'doubleFloorHouse2',
-    'doubleFloorHouse3',
-    'doubleFloorHouse4',
-    'doubleFloorHouse5',
-    'workshop',
-    'blacksmithShop',
-    'religionOrCultureOrEconomicHouse',
-    'marketPlace1',
-    'marketPlace2',
-] as const;
+export const fileFieldsCity = ['preview', 'map', 'nobleScroll', 'passports', 'liberties', 'patentCounty', 'monument', 'pit', 'house1', 'house2', 'house3', 'house4', 'house5', 'headBuilding', 'warehouse', 'seedbeds', 'square', 'capitalRoad', 'roads', 'foodMarket', 'craftMarket', 'buyMarket', 'churchOrTavern', 'prison', 'workshop1', 'noticeBoard'] as const;

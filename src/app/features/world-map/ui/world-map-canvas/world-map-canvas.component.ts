@@ -246,27 +246,6 @@ export class WorldMapCanvasComponent {
         });
     });
 
-    /**
-     * Подпись Очага прячется, если под ней стоит знак поселения: подпись Очага
-     * переставить некуда, а знак важнее.
-     */
-    protected readonly hearthLabelVisible = computed(() => {
-        const hearth = this.hearth();
-        const top = hearth.y + this.roseRadius() + 2;
-        const view = this.view();
-        const size = this.size();
-
-        return !this.points().some((point) => {
-            const mark = worldToScreen(view, size, { x: point.herald.x, z: point.herald.z });
-
-            return (
-                Math.abs(mark.x - hearth.x) < 34 + MARK_RADIUS &&
-                mark.y > top - MARK_RADIUS &&
-                mark.y < top + 18 + MARK_RADIUS
-            );
-        });
-    });
-
     /** Шаг сетки в блоках. */
     private readonly step = computed(() => gridStep(this.view().scale));
 
@@ -350,7 +329,7 @@ export class WorldMapCanvasComponent {
 
         const hearth = this.hearth();
         const rose = this.roseRadius();
-        // Подписи не ложатся на знаки, розу ветров с подписью Очага, кнопки и картуш.
+        // Подписи не ложатся на знаки, розу ветров, кнопки и картуш.
         const obstacles = [
             { x: hearth.x - rose, y: hearth.y - rose - 14, width: rose * 2, height: rose * 2 + 36 },
             ...this.overlayBoxes(),
