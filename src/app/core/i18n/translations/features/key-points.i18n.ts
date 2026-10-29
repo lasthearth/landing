@@ -14,6 +14,7 @@ export const KEY_POINTS_I18N = {
             intro: 'Ключевые точки — особые локации эксклава, которые дают выгоды селению-владельцу. Здесь видно, как прокачать каждый тип точки: какие улучшения открываются, сколько они стоят и какую специализацию выбрать.',
             draft: 'Схемы предварительные: уровни, стоимость и бонусы ещё уточняются и могут измениться.',
             tabsLabel: 'Типы ключевых точек',
+            variantsLabel: 'Какая точка',
             howTo: 'Нажмите на улучшение, чтобы увидеть подробности, и отмечайте построенное — схема подскажет, что откроется дальше.',
             scheme: {
                 label: 'Схема прокачки: {{name}}',
@@ -79,41 +80,180 @@ export const KEY_POINTS_I18N = {
             points: {
                 mine: {
                     name: 'Шахта',
-                    tagline: 'Руда, уголь и камень',
+                    tagline: 'Руды без разведки',
                     description:
-                        'Ключевая точка с тремя монументами: даёт владельцу постоянный приток руды и камня. Чем глубже шахта, тем богаче добыча и тем дороже её удержать.',
-                    nodes: {
-                        adit: {
-                            title: 'Штольня',
-                            effect: 'Открывает добычу: +1 ящик руды в реальный день.',
+                        'Масштабная подземная точка, позволяющая добывать различные руды в крупном объёме без поиска и геологической разведки. На сервере три шахты, у каждой свой набор руд.',
+                    variants: {
+                        north: {
+                            name: 'Рудник Северной равнины',
+                            nodes: {
+                                open: {
+                                    title: 'Открытие шахты',
+                                    effect: 'Шахта открыта: вся руда — средней богатости.',
+                                },
+                                coal: {
+                                    title: 'Каменный уголь',
+                                    effect: 'В шахте добывается: каменный уголь.',
+                                },
+                                amount: {
+                                    title: 'Обильная добыча',
+                                    effect: 'Увеличение количества руды.',
+                                },
+                                sulfur: {
+                                    title: 'Сера',
+                                    effect: 'В шахте добывается: сера.',
+                                },
+                                olivine: {
+                                    title: 'Оливин',
+                                    effect: 'В шахте добывается: оливин.',
+                                },
+                                limonite: {
+                                    title: 'Лимонит',
+                                    effect: 'В шахте добывается: лимонит.',
+                                },
+                                regen4: {
+                                    title: 'Скорый отвал',
+                                    effect: 'Время восстановления руды сокращается на 4 часа.',
+                                },
+                                quality: {
+                                    title: 'Богатые жилы',
+                                    effect: 'Повышение качества руды: руда становится богатой.',
+                                },
+                                hematite: {
+                                    title: 'Гематит',
+                                    effect: 'В шахте добывается: гематит.',
+                                },
+                                regen6: {
+                                    title: 'Неистощимые жилы',
+                                    effect: 'Время восстановления руды сокращается на 6 часов.',
+                                },
+                            },
                         },
-                        props: {
-                            title: 'Деревянная крепь',
-                            effect: 'Шахта не обваливается при набеге: защита монументов +10%.',
+                        slope: {
+                            name: 'Недра Мрачного склона',
+                            nodes: {
+                                open: {
+                                    title: 'Открытие шахты',
+                                    effect: 'Шахта открыта: вся руда — средней богатости.',
+                                },
+                                malachite: {
+                                    title: 'Малахит',
+                                    effect: 'В шахте добывается: малахит.',
+                                },
+                                amount: {
+                                    title: 'Обильная добыча',
+                                    effect: 'Увеличение количества руды.',
+                                },
+                                zinc: {
+                                    title: 'Цинк',
+                                    effect: 'В шахте добывается: цинк.',
+                                },
+                                quality: {
+                                    title: 'Богатые жилы',
+                                    effect: 'Повышение качества руды: руда становится богатой.',
+                                },
+                                bismuthinite: {
+                                    title: 'Висмутин',
+                                    effect: 'В шахте добывается: висмутин.',
+                                },
+                                cassiterite: {
+                                    title: 'Касситерит',
+                                    effect: 'В шахте добывается: касситерит.',
+                                },
+                                regen4: {
+                                    title: 'Скорый отвал',
+                                    effect: 'Время восстановления руды сокращается на 4 часа.',
+                                },
+                                sulfur: {
+                                    title: 'Сера',
+                                    effect: 'В шахте добывается: сера.',
+                                },
+                                emeraldLow: {
+                                    title: 'Изумруды (низкие)',
+                                    effect: 'В шахте добываются изумруды низкого качества.',
+                                },
+                                emeraldMid: {
+                                    title: 'Изумруды (средние)',
+                                    effect: 'В шахте добываются изумруды среднего качества.',
+                                },
+                                regen6: {
+                                    title: 'Неистощимые жилы',
+                                    effect: 'Время восстановления руды сокращается на 6 часов.',
+                                },
+                                chromite: {
+                                    title: 'Хромит',
+                                    effect: 'В шахте добывается: хромит.',
+                                },
+                                emeraldHigh: {
+                                    title: 'Изумруды (высокие)',
+                                    effect: 'В шахте добываются изумруды высокого качества.',
+                                },
+                            },
                         },
-                        lift: {
-                            title: 'Ворот-подъёмник',
-                            effect: 'Добыча поднимается быстрее: +15% к выдаче руды.',
-                        },
-                        mine2: {
-                            title: 'Рудник',
-                            effect: 'Уровень II: +2 ящика руды и уголь в реальный день.',
-                        },
-                        deep: {
-                            title: 'Глубокий забой',
-                            effect: 'Специализация: шанс редкой руды и самоцветов.',
-                        },
-                        sorting: {
-                            title: 'Рудная сортировка',
-                            effect: 'Специализация: руда приходит уже обогащённой, +25% металла.',
-                        },
-                        carts: {
-                            title: 'Рельсы и вагонетки',
-                            effect: 'Доставка в лен без каравана, склад шахты больше.',
-                        },
-                        mine3: {
-                            title: 'Горный двор',
-                            effect: 'Уровень III: максимальная добыча и собственная стража шахты.',
+                        barrow: {
+                            name: 'Чёрный курган',
+                            nodes: {
+                                open: {
+                                    title: 'Открытие шахты',
+                                    effect: 'Шахта открыта: вся руда — средней богатости.',
+                                },
+                                cassiterite: {
+                                    title: 'Касситерит',
+                                    effect: 'В шахте добывается: касситерит.',
+                                },
+                                amount: {
+                                    title: 'Обильная добыча',
+                                    effect: 'Увеличение количества руды.',
+                                },
+                                nativeCopper: {
+                                    title: 'Самородная медь',
+                                    effect: 'В шахте добывается: самородная медь.',
+                                },
+                                quality: {
+                                    title: 'Богатые жилы',
+                                    effect: 'Повышение качества руды: руда становится богатой.',
+                                },
+                                gold: {
+                                    title: 'Золото',
+                                    effect: 'В шахте добывается: золото.',
+                                },
+                                lead: {
+                                    title: 'Свинец',
+                                    effect: 'В шахте добывается: свинец.',
+                                },
+                                regen4: {
+                                    title: 'Скорый отвал',
+                                    effect: 'Время восстановления руды сокращается на 4 часа.',
+                                },
+                                silver: {
+                                    title: 'Серебро',
+                                    effect: 'В шахте добывается: серебро.',
+                                },
+                                diamondLow: {
+                                    title: 'Алмазы (низкие)',
+                                    effect: 'В шахте добываются алмазы низкого качества.',
+                                },
+                                diamondMid: {
+                                    title: 'Алмазы (средние)',
+                                    effect: 'В шахте добываются алмазы среднего качества.',
+                                },
+                                regen6: {
+                                    title: 'Неистощимые жилы',
+                                    effect: 'Время восстановления руды сокращается на 6 часов.',
+                                },
+                                titanium: {
+                                    title: 'Титан',
+                                    effect: 'В шахте добывается: титан.',
+                                },
+                                diamondHigh: {
+                                    title: 'Алмазы (высокие)',
+                                    effect: 'В шахте добываются алмазы высокого качества.',
+                                },
+                                meteoricIron: {
+                                    title: 'Метеоритное железо',
+                                    effect: 'В шахте добывается: метеоритное железо.',
+                                },
+                            },
                         },
                     },
                 },
@@ -472,6 +612,7 @@ export const KEY_POINTS_I18N = {
             intro: 'Key points are special locations of the exclave that benefit the settlement holding them. Here you can see how to upgrade each type of point: which upgrades open up, what they cost and which specialization to pick.',
             draft: 'These schemes are preliminary: levels, costs and bonuses are still being worked out and may change.',
             tabsLabel: 'Key point types',
+            variantsLabel: 'Which point',
             howTo: 'Click an upgrade to see the details and mark what you have built — the scheme shows what opens next.',
             scheme: {
                 label: 'Upgrade scheme: {{name}}',
@@ -537,41 +678,180 @@ export const KEY_POINTS_I18N = {
             points: {
                 mine: {
                     name: 'Mine',
-                    tagline: 'Ore, coal and stone',
+                    tagline: 'Ore without prospecting',
                     description:
-                        'A key point with three monuments that gives its holder a steady flow of ore and stone. The deeper the mine, the richer the yield — and the costlier it is to hold.',
-                    nodes: {
-                        adit: {
-                            title: 'Adit',
-                            effect: 'Opens mining: +1 crate of ore per real day.',
+                        'A large underground point that yields various ores in bulk without searching or geological prospecting. There are three mines on the server, each with its own set of ores.',
+                    variants: {
+                        north: {
+                            name: 'Northern Plain Mine',
+                            nodes: {
+                                open: {
+                                    title: 'Opening the mine',
+                                    effect: 'The mine is open: all ore is of medium richness.',
+                                },
+                                coal: {
+                                    title: 'Bituminous coal',
+                                    effect: 'The mine yields bituminous coal.',
+                                },
+                                amount: {
+                                    title: 'Abundant yield',
+                                    effect: 'More ore.',
+                                },
+                                sulfur: {
+                                    title: 'Sulfur',
+                                    effect: 'The mine yields sulfur.',
+                                },
+                                olivine: {
+                                    title: 'Olivine',
+                                    effect: 'The mine yields olivine.',
+                                },
+                                limonite: {
+                                    title: 'Limonite',
+                                    effect: 'The mine yields limonite.',
+                                },
+                                regen4: {
+                                    title: 'Quick replenishment',
+                                    effect: 'Ore regeneration time is 4 hours shorter.',
+                                },
+                                quality: {
+                                    title: 'Rich veins',
+                                    effect: 'Ore quality improves: ore becomes rich.',
+                                },
+                                hematite: {
+                                    title: 'Hematite',
+                                    effect: 'The mine yields hematite.',
+                                },
+                                regen6: {
+                                    title: 'Inexhaustible veins',
+                                    effect: 'Ore regeneration time is 6 hours shorter.',
+                                },
+                            },
                         },
-                        props: {
-                            title: 'Timber props',
-                            effect: 'The mine does not collapse during raids: monument protection +10%.',
+                        slope: {
+                            name: 'Depths of the Gloomy Slope',
+                            nodes: {
+                                open: {
+                                    title: 'Opening the mine',
+                                    effect: 'The mine is open: all ore is of medium richness.',
+                                },
+                                malachite: {
+                                    title: 'Malachite',
+                                    effect: 'The mine yields malachite.',
+                                },
+                                amount: {
+                                    title: 'Abundant yield',
+                                    effect: 'More ore.',
+                                },
+                                zinc: {
+                                    title: 'Zinc',
+                                    effect: 'The mine yields zinc.',
+                                },
+                                quality: {
+                                    title: 'Rich veins',
+                                    effect: 'Ore quality improves: ore becomes rich.',
+                                },
+                                bismuthinite: {
+                                    title: 'Bismuthinite',
+                                    effect: 'The mine yields bismuthinite.',
+                                },
+                                cassiterite: {
+                                    title: 'Cassiterite',
+                                    effect: 'The mine yields cassiterite.',
+                                },
+                                regen4: {
+                                    title: 'Quick replenishment',
+                                    effect: 'Ore regeneration time is 4 hours shorter.',
+                                },
+                                sulfur: {
+                                    title: 'Sulfur',
+                                    effect: 'The mine yields sulfur.',
+                                },
+                                emeraldLow: {
+                                    title: 'Emeralds (low)',
+                                    effect: 'The mine yields low-quality emeralds.',
+                                },
+                                emeraldMid: {
+                                    title: 'Emeralds (medium)',
+                                    effect: 'The mine yields medium-quality emeralds.',
+                                },
+                                regen6: {
+                                    title: 'Inexhaustible veins',
+                                    effect: 'Ore regeneration time is 6 hours shorter.',
+                                },
+                                chromite: {
+                                    title: 'Chromite',
+                                    effect: 'The mine yields chromite.',
+                                },
+                                emeraldHigh: {
+                                    title: 'Emeralds (high)',
+                                    effect: 'The mine yields high-quality emeralds.',
+                                },
+                            },
                         },
-                        lift: {
-                            title: 'Hoist',
-                            effect: 'Ore comes up faster: +15% ore output.',
-                        },
-                        mine2: {
-                            title: 'Ore mine',
-                            effect: 'Level II: +2 crates of ore and coal per real day.',
-                        },
-                        deep: {
-                            title: 'Deep shaft',
-                            effect: 'Specialization: chance of rare ore and gems.',
-                        },
-                        sorting: {
-                            title: 'Ore sorting',
-                            effect: 'Specialization: ore arrives pre-processed, +25% metal.',
-                        },
-                        carts: {
-                            title: 'Rails and carts',
-                            effect: 'Delivery to the fief without a caravan, larger mine storage.',
-                        },
-                        mine3: {
-                            title: 'Mining court',
-                            effect: 'Level III: maximum yield and the mine’s own guard.',
+                        barrow: {
+                            name: 'Black Barrow',
+                            nodes: {
+                                open: {
+                                    title: 'Opening the mine',
+                                    effect: 'The mine is open: all ore is of medium richness.',
+                                },
+                                cassiterite: {
+                                    title: 'Cassiterite',
+                                    effect: 'The mine yields cassiterite.',
+                                },
+                                amount: {
+                                    title: 'Abundant yield',
+                                    effect: 'More ore.',
+                                },
+                                nativeCopper: {
+                                    title: 'Native copper',
+                                    effect: 'The mine yields native copper.',
+                                },
+                                quality: {
+                                    title: 'Rich veins',
+                                    effect: 'Ore quality improves: ore becomes rich.',
+                                },
+                                gold: {
+                                    title: 'Gold',
+                                    effect: 'The mine yields gold.',
+                                },
+                                lead: {
+                                    title: 'Lead',
+                                    effect: 'The mine yields lead.',
+                                },
+                                regen4: {
+                                    title: 'Quick replenishment',
+                                    effect: 'Ore regeneration time is 4 hours shorter.',
+                                },
+                                silver: {
+                                    title: 'Silver',
+                                    effect: 'The mine yields silver.',
+                                },
+                                diamondLow: {
+                                    title: 'Diamonds (low)',
+                                    effect: 'The mine yields low-quality diamonds.',
+                                },
+                                diamondMid: {
+                                    title: 'Diamonds (medium)',
+                                    effect: 'The mine yields medium-quality diamonds.',
+                                },
+                                regen6: {
+                                    title: 'Inexhaustible veins',
+                                    effect: 'Ore regeneration time is 6 hours shorter.',
+                                },
+                                titanium: {
+                                    title: 'Titanium',
+                                    effect: 'The mine yields titanium.',
+                                },
+                                diamondHigh: {
+                                    title: 'Diamonds (high)',
+                                    effect: 'The mine yields high-quality diamonds.',
+                                },
+                                meteoricIron: {
+                                    title: 'Meteoric iron',
+                                    effect: 'The mine yields meteoric iron.',
+                                },
+                            },
                         },
                     },
                 },

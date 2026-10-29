@@ -1,8 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { expandAutomatic } from '../lib/expand-automatic.function';
 import { getNodeState } from '../lib/get-node-state.function';
+import { planKeyOf } from '../lib/plan-key-of.function';
 import { pruneBuilt } from '../lib/prune-built.function';
-import { KeyPointId } from './key-point-id.type';
 import { KeyPointScheme } from './key-point-scheme.interface';
 import { UpgradeNode } from './upgrade-node.interface';
 
@@ -17,7 +17,7 @@ export class KeyPointPlannerStore {
     /**
      * Построенные узлы по точкам.
      */
-    private readonly plans = signal<Partial<Record<KeyPointId, ReadonlySet<string>>>>({});
+    private readonly plans = signal<Readonly<Record<string, ReadonlySet<string>>>>({});
 
     /**
      * Построенные узлы точки вместе с открывшимися автоматически.
@@ -26,17 +26,17 @@ export class KeyPointPlannerStore {
      * @returns Набор идентификаторов (пустой, если план не начат).
      */
     public builtOf(scheme: KeyPointScheme): ReadonlySet<string> {
-        return expandAutomatic(scheme, this.marked(scheme.id));
+        return expandAutomatic(scheme, this.marked(planKeyOf(scheme)));
     }
 
     /**
      * Узлы, которые игрок отметил сам (без автоматических).
      *
-     * @param pointId Тип точки.
+     * @param planKey Ключ плана (`planKeyOf`).
      * @returns Набор идентификаторов.
      */
-    private marked(pointId: KeyPointId): ReadonlySet<string> {
-        return this.plans()[pointId] ?? new Set<string>();
+    private marked(planKey: string): ReadonlySet<string> {
+        return this.plans()[planKey] ?? new Set<string>();
     }
 
     /**
@@ -53,34 +53,34 @@ export class KeyPointPlannerStore {
             return;
         }
 
-        const marked = this.marked(scheme.id);
+        const marked = this.marked(planKeyOf(scheme));
         const state = getNodeState(scheme, node, this.builtOf(scheme));
 
         if (state === 'built') {
             const next = new Set(marked);
             next.delete(node.id);
-            this.set(scheme.id, pruneBuilt(scheme, next));
+            this.set(planKeyOf(scheme), pruneBuilt(scheme, next));
         } else if (state === 'available') {
-            this.set(scheme.id, new Set([...marked, node.id]));
+            this.set(planKeyOf(scheme), new Set([...marked, node.id]));
         }
     }
 
     /**
      * Сбрасывает план точки.
      *
-     * @param pointId Тип точки.
+     * @param scheme Схема точки.
      */
-    public reset(pointId: KeyPointId): void {
-        this.set(pointId, new Set<string>());
+    public reset(scheme: KeyPointScheme): void {
+        this.set(planKeyOf(scheme), new Set<string>());
     }
 
     /**
      * Записывает план точки.
      *
-     * @param pointId Тип точки.
+     * @param planKey Ключ плана (`planKeyOf`).
      * @param built Новый набор построенных узлов.
      */
-    private set(pointId: KeyPointId, built: ReadonlySet<string>): void {
-        this.plans.update((plans) => ({ ...plans, [pointId]: built }));
+    private set(planKey: string, built: ReadonlySet<string>): void {
+        this.plans.update((plans) => ({ ...plans, [planKey]: built }));
     }
 }

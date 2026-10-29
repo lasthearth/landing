@@ -45,9 +45,33 @@
         [attr.aria-labelledby]="'kp-tab-' + active().id"
         [style.--kp-accent]="active().accent"
     >
+        @if (active().variants; as variants) {
+            <!-- Отдельные точки типа: у каждой шахты своя схема. -->
+            <div class="lh-chips" role="group" [attr.aria-label]="'keyPoints.variantsLabel' | translate">
+                @for (variant of variants; track variant.key) {
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-pressed]="variant.key === activeVariant()"
+                        (click)="openVariant(variant.key)"
+                    >
+                        <tui-icon [icon]="active().icon" />
+                        {{ point + ".variants." + variant.key + ".name" | translate }}
+                    </button>
+                }
+            </div>
+        }
+
         <div class="kp-panel__intro">
-            <h2 class="kp-panel__title lh-display">{{ point + ".name" | translate }}</h2>
-            <p class="kp-panel__text">{{ point + ".description" | translate }}</p>
+            @if (activeVariant(); as variant) {
+                <h2 class="kp-panel__title lh-display">
+                    {{ point + ".variants." + variant + ".name" | translate }}
+                </h2>
+                <p class="kp-panel__text">{{ point + ".description" | translate }}</p>
+            } @else {
+                <h2 class="kp-panel__title lh-display">{{ point + ".name" | translate }}</h2>
+                <p class="kp-panel__text">{{ point + ".description" | translate }}</p>
+            }
             <p class="kp-panel__hint">
                 <tui-icon icon="@tui.mouse-pointer-click" />
                 {{ "keyPoints.howTo" | translate }}
@@ -62,6 +86,6 @@
             Без гидратации: страница пререндерится без ?point, и при открытии другой точки
             разметка сервера расходится с клиентской — оставались чужие цены и номера уровней.
         -->
-        <app-upgrade-scheme ngSkipHydration [scheme]="active()" />
+        <app-upgrade-scheme ngSkipHydration [scheme]="shown()" />
     </section>
 </div>

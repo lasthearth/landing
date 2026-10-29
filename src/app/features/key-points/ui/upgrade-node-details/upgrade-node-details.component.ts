@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output } f
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { formatCost } from '../../lib/format-cost.function';
+import { textKeyOf } from '../../lib/text-key-of.function';
 import { UpgradeCost } from '../../model/upgrade-cost.interface';
 import { KeyPointScheme } from '../../model/key-point-scheme.interface';
 import { UpgradeNode } from '../../model/upgrade-node.interface';
@@ -57,7 +58,7 @@ export class UpgradeNodeDetailsComponent {
     /**
      * Префикс ключей словаря точки.
      */
-    protected readonly pointKey = computed(() => `keyPoints.points.${this.scheme().id}`);
+    protected readonly pointKey = computed(() => textKeyOf(this.scheme()));
 
     /**
      * Узлы, которые открываются сразу после выбранного.
