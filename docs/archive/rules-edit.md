@@ -182,7 +182,7 @@
 <!-- anchor: P1.16.1 -->
 <!-- keys: rules.content.base.p1_16_1.before + rules.content.terms.raidPrepositionalPlural + rules.content.base.p1_16_1.middle + rules.content.terms.warGenitive + rules.content.base.p1_16_1.after -->
 
-**1.16.1** Вне зависимости от того, в каком селении физически находится персонаж, оба аккаунта считаются принадлежащими к одному дипломатическому статусу [миролюбивый, нейтральный, агрессивный]. Запрещается использовать второй аккаунт для совершения действий, запрещённых для основного аккаунта в силу его дипломатического статуса [например, если основной аккаунт является жителем миролюбивого селения и не может воровать и участвовать в {link:Raid|набегах}, то и второй аккаунт не имеет права совершать эти действия в отношении других игроков, даже если он формально без селения]. Второй аккаунт не может состоять в селении, которое находится в состоянии {link:War|войны} или вражды с селением первого аккаунта, а также не может претендовать на нейтралитет, если первый аккаунт является воюющей стороной.
+**1.16.1** Вне зависимости от того, в каком селении физически находится персонаж, оба аккаунта считаются принадлежащими к одному дипломатическому статусу [миролюбивый, нейтральный, свободный]. Запрещается использовать второй аккаунт для совершения действий, запрещённых для основного аккаунта в силу его дипломатического статуса [например, если основной аккаунт является жителем миролюбивого селения и не может воровать и участвовать в {link:Raid|набегах}, то и второй аккаунт не имеет права совершать эти действия в отношении других игроков, даже если он формально без селения]. Второй аккаунт не может состоять в селении, которое находится в состоянии {link:War|войны} или вражды с селением первого аккаунта, а также не может претендовать на нейтралитет, если первый аккаунт является воюющей стороной.
 
 <!-- anchor: P1.16.2 -->
 <!-- keys: rules.content.base.p1_16_2 -->
@@ -850,9 +850,9 @@
 
 •Не имеет права владеть {link:Key point|ключевыми точками}.
 
-<!-- keys: rules.content.settlements.types.exclaveCenter.aggressiveOnly.before + rules.content.terms.politicalCourseAggressive + rules.content.settlements.types.exclaveCenter.aggressiveOnly.after -->
+<!-- keys: rules.content.settlements.types.exclaveCenter.freeOnly.before + rules.content.terms.politicalCourseFree + rules.content.settlements.types.exclaveCenter.freeOnly.after -->
 
-•Имеет право только на {link:Political course|агрессивный политический курс}.
+•Имеет право только на {link:Political course|свободный политический курс}.
 
 <!-- keys: rules.content.settlements.types.exclaveCenter.courts.before + rules.content.terms.imperialLegalForceAccusative -->
 
@@ -1187,9 +1187,9 @@
 
 **3.2.1** Игроки могут быть убиты, где угодно, как угодно, когда угодно и кем угодно с учетом правил сервера, кроме своей территории, данной преимуществом. Исключением являются целенаправленные нон-стоп убийства игроков на нулевой координате и в радиусе сотни блоков от нее. Все выше описанное не действует в случаях состояния {link:Raid|набег} и {link:War|война} (в случаях воровства убийство допускается согласно правилам {link:P3_1|п.3.1}).
 
-<!-- keys: rules.content.actions.kills.p3_2_2.before + rules.content.terms.politicalCourseAggressiveInstrumental + rules.content.actions.kills.p3_2_2.mid1 + rules.content.actions.kills.aggressiveCourseLink -->
+<!-- keys: rules.content.actions.kills.p3_2_2.before + rules.content.terms.politicalCourseFreeInstrumental + rules.content.actions.kills.p3_2_2.mid1 + rules.content.actions.kills.freeCourseLink -->
 
-**3.2.2** Исключение: игроки имеют право убивать других игроков на территории селений с {link:Political course|агрессивным политическим курсом} согласно правилам {link:P3_4_5_3|п.3.4.5.3}.
+**3.2.2** Исключение: игроки имеют право убивать других игроков на территории селений с {link:Political course|свободным политическим курсом} согласно правилам {link:P3_4_5_3|п.3.4.5.3}.
 
 ### 3.3 Шпионаж
 
@@ -1336,49 +1336,49 @@
 • Запрещается инициировать {link:P3_1|воровство} своими руками, но разрешено проведение воровства "чужими руками" при наличии физического документа внутри игры - подписанного контракта заказчиком с реальными датой и временем [покупка услуг на стороне].
 
 <!-- anchor: P3_4_5_3 -->
-<!-- keys: rules.content.actions.diplomacy.aggressive.intro -->
+<!-- keys: rules.content.actions.diplomacy.free.intro -->
 
-**3.4.5.3** Агрессивный:
+**3.4.5.3** Свободный:
 
 <!-- keys: rules.content.actions.diplomacy.common.advantages -->
 
 Преимущества:
 
-<!-- keys: rules.content.actions.diplomacy.aggressive.adv1.before + rules.content.terms.raidGenitive + rules.content.actions.diplomacy.aggressive.adv1.mid1 + rules.content.terms.warGenitivePlural + rules.content.actions.diplomacy.aggressive.adv1.mid2 + rules.content.terms.theftGenitive + rules.content.actions.diplomacy.aggressive.adv1.after -->
+<!-- keys: rules.content.actions.diplomacy.free.adv1.before + rules.content.terms.raidGenitive + rules.content.actions.diplomacy.free.adv1.mid1 + rules.content.terms.warGenitivePlural + rules.content.actions.diplomacy.free.adv1.mid2 + rules.content.terms.theftGenitive + rules.content.actions.diplomacy.free.adv1.after -->
 
 • Разрешено инициирование {link:Raid|набега}, {link:War|войн} и {link:P3_1|воровства}, а так же участие в них на стороне союзников.
 
-<!-- keys: rules.content.actions.diplomacy.aggressive.adv2.before + rules.content.terms.theftAccusative + rules.content.actions.diplomacy.aggressive.adv2.after -->
+<!-- keys: rules.content.actions.diplomacy.free.adv2.before + rules.content.terms.theftAccusative + rules.content.actions.diplomacy.free.adv2.after -->
 
 • Разрешено совершать {link:P3_1|воровство} группой численностью до 3-х человек включительно.
 
-<!-- keys: rules.content.actions.diplomacy.aggressive.adv3.before + rules.content.terms.raidGenitive + rules.content.actions.diplomacy.aggressive.adv3.after -->
+<!-- keys: rules.content.actions.diplomacy.free.adv3.before + rules.content.terms.raidGenitive + rules.content.actions.diplomacy.free.adv3.after -->
 
-• При объявлении {link:Raid|набега} агрессивным селением, максимальное время длительности набега не более 4-х часов.
+• При объявлении {link:Raid|набега} свободным селением, максимальное время длительности набега не более 4-х часов.
 
 <!-- keys: rules.content.actions.diplomacy.common.restrictions -->
 
 Лишения:
 
-<!-- keys: rules.content.actions.diplomacy.aggressive.res1.before + rules.content.terms.raidGenitive + rules.content.actions.diplomacy.aggressive.res1.after -->
+<!-- keys: rules.content.actions.diplomacy.free.res1.before + rules.content.terms.raidGenitive + rules.content.actions.diplomacy.free.res1.after -->
 
-• При объявлении {link:Raid|набега} на агрессивное селение, минимальное время с момента объявления до начала боевых действий должно быть не менее 10 минут.
+• При объявлении {link:Raid|набега} на свободное селение, минимальное время с момента объявления до начала боевых действий должно быть не менее 10 минут.
 
-<!-- keys: rules.content.actions.diplomacy.aggressive.res2.before + rules.content.terms.theftPrepositional + rules.content.actions.diplomacy.aggressive.res2.after -->
+<!-- keys: rules.content.actions.diplomacy.free.res2.before + rules.content.terms.theftPrepositional + rules.content.actions.diplomacy.free.res2.after -->
 
-• Игрока агрессивного селения имеют право убить и собрать его труп на его же территории при любых обстоятельствах, в том числе при {link:P3_1|воровстве}.
+• Игрока свободного селения имеют право убить и собрать его труп на его же территории при любых обстоятельствах, в том числе при {link:P3_1|воровстве}.
 
-<!-- keys: rules.content.actions.diplomacy.aggressive.res3 -->
+<!-- keys: rules.content.actions.diplomacy.free.res3 -->
 
-• Убийство считается завершенным при выполнении одного из условий: покидание территории жертвы инициатором на расстояние 100+ блоков ИЛИ истечение 10 минут с момента первого убийства. После завершения убийства на селение инициатора накладывается откат в 2 часа, в данном агрессивном селении. За один раз на территории селения с агрессивным курсом допускается не более 3-х убийств различных игроков.
+• Убийство считается завершенным при выполнении одного из условий: покидание территории жертвы инициатором на расстояние 100+ блоков ИЛИ истечение 10 минут с момента первого убийства. После завершения убийства на селение инициатора накладывается откат в 2 часа, в данном свободном селении. За один раз на территории селения с свободным курсом допускается не более 3-х убийств различных игроков.
 
-<!-- keys: rules.content.actions.diplomacy.aggressive.res4 -->
+<!-- keys: rules.content.actions.diplomacy.free.res4 -->
 
 • Откат привязывается к селению инициатора и распространяется на всех его игроков.
 
-<!-- keys: rules.content.actions.diplomacy.aggressive.res5.before + rules.content.terms.raidGenitive + rules.content.actions.diplomacy.aggressive.res5.mid1 + rules.content.terms.monumentLower + rules.content.actions.diplomacy.aggressive.res5.after -->
+<!-- keys: rules.content.actions.diplomacy.free.res5.before + rules.content.terms.raidGenitive + rules.content.actions.diplomacy.free.res5.mid1 + rules.content.terms.monumentLower + rules.content.actions.diplomacy.free.res5.after -->
 
-• При объявлении {link:Raid|набега} на агрессивное селение, для начала грабежа ресурсов, нет необходимости уничтожать {link:Monument|монумент} селения.
+• При объявлении {link:Raid|набега} на свободное селение, для начала грабежа ресурсов, нет необходимости уничтожать {link:Monument|монумент} селения.
 
 <!-- keys: rules.content.actions.diplomacy.trade_peaceful.intro -->
 
@@ -1621,7 +1621,7 @@
 
 <!-- keys: rules.content.military.raid.p5_1_2.before + rules.content.terms.politicalCourseDative + rules.content.military.raid.p5_1_2.mid1 + rules.content.terms.homesteadAccusative + rules.content.military.raid.p5_1_2.mid2 + rules.content.terms.keyPointAccusative + rules.content.military.raid.p5_1_2.after -->
 
-**5.1.2** «Набег» должен быть объявлен заранее: на селение — за время, соответствующее {link:Political course|политическому курсу} селения цели [торогово-миролюбивый — 60 минут, миролюбивый — 40 минут, нейтральный — 20 минут, агрессивный — 10 минут]; на {link:Homestead|хутор} или {link:Key point|ключевую точку} — за 20 минут. Отсчёт ведётся с момента объявления в чате «Дипломатия» в Discord. После истечения указанного времени боевые действия должны быть начаты в течение 40 минут.
+**5.1.2** «Набег» должен быть объявлен заранее: на селение — за время, соответствующее {link:Political course|политическому курсу} селения цели [торогово-миролюбивый — 60 минут, миролюбивый — 40 минут, нейтральный — 20 минут, свободный — 10 минут]; на {link:Homestead|хутор} или {link:Key point|ключевую точку} — за 20 минут. Отсчёт ведётся с момента объявления в чате «Дипломатия» в Discord. После истечения указанного времени боевые действия должны быть начаты в течение 40 минут.
 
 <!-- keys: rules.content.military.raid.p5_1_3 -->
 

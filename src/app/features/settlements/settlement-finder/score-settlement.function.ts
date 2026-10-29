@@ -6,7 +6,7 @@ import { FinderAnswers, FinderSize, FinderStyle } from './settlement-finder.mode
 const DIPLOMACY_STYLE: Record<string, Exclude<FinderStyle, 'any'>> = {
     Миролюбивый: 'peace',
     Нейтральный: 'neutral',
-    Агрессивный: 'war',
+    Свободный: 'war',
 };
 
 /**

@@ -23,7 +23,7 @@ export const WORLD_MAP_I18N = {
             course: {
                 peace: 'миролюбивый курс',
                 neutral: 'нейтральный курс',
-                danger: 'агрессивный курс',
+                free: 'свободный курс',
             },
             direction: {
                 n: 'к северу',
@@ -97,7 +97,7 @@ export const WORLD_MAP_I18N = {
             course: {
                 peace: 'peaceful course',
                 neutral: 'neutral course',
-                danger: 'aggressive course',
+                free: 'free course',
             },
             direction: {
                 n: 'north',
