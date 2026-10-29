@@ -32,25 +32,25 @@ type SortField = 'default' | 'population' | 'online' | 'diplomacy';
 type SortDirection = 'asc' | 'desc';
 
 /**
- * Обогащённые данные селения для сортировки.
+ * Обогащённые данные надела для сортировки.
  */
 interface EnrichedSettlement extends ISettlement {
     membersCount: number;
     onlineCount: number;
 
     /**
-     * Профили лидера и участников селения, загруженные одним батчем на страницу.
+     * Профили лидера и участников надела, загруженные одним батчем на страницу.
      */
     players: IPlayer[];
 }
 
 /**
- * Имя селения, которое всегда отображается первым в списке.
+ * Имя надела, которое всегда отображается первым в списке.
  */
 const PINNED_SETTLEMENT_NAME = 'Поместье Эренхольд';
 
 /**
- * Отображаемый тип для закреплённого селения.
+ * Отображаемый тип для закреплённого надела.
  */
 const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
 
@@ -74,12 +74,12 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
 })
 export class SettlementsComponent {
     /**
-     * Имя селения, закреплённого в начале списка.
+     * Имя надела, закреплённого в начале списка.
      */
     protected readonly pinnedSettlementName = PINNED_SETTLEMENT_NAME;
 
     /**
-     * Отображаемый тип закреплённого селения.
+     * Отображаемый тип закреплённого надела.
      */
     protected readonly pinnedSettlementTypeLabel = PINNED_SETTLEMENT_TYPE_LABEL;
 
@@ -115,12 +115,12 @@ export class SettlementsComponent {
     private readonly route = inject(ActivatedRoute);
 
     /**
-     * Поисковая строка: название поселения или ник жителя.
+     * Поисковая строка: название надела или ник жителя.
      */
     protected readonly query = signal<string>(this.route.snapshot.queryParamMap.get('q') ?? '');
 
     /**
-     * Выбранный тип поселения (подпись типа) или null — все.
+     * Выбранный тип надела (подпись типа) или null — все.
      */
     protected readonly typeFilter = signal<string | null>(this.route.snapshot.queryParamMap.get('type'));
 
@@ -145,7 +145,7 @@ export class SettlementsComponent {
     protected readonly hasFilters = computed(() => !!this.query().trim() || !!this.typeFilter() || !!this.courseFilter());
 
     /**
-     * Поселения после сортировки и фильтров.
+     * Наделы после сортировки и фильтров.
      */
     protected readonly filteredSettlements = computed(() => {
         const query = this.query().trim().toLowerCase();
@@ -317,7 +317,7 @@ export class SettlementsComponent {
     }
 
     /**
-     * Группирует поселения по значению и считает их.
+     * Группирует надела по значению и считает их.
      *
      * @param pick Функция, извлекающая значение.
      */
@@ -340,12 +340,12 @@ export class SettlementsComponent {
     }
 
     /**
-     * Подбор поселения по ответам игрока.
+     * Подбор надела по ответам игрока.
      */
     private readonly finder = inject(SettlementFinderService);
 
     /**
-     * Открывает «Подбери поселение».
+     * Открывает «Подбери надел».
      */
     protected openFinder(): void {
         this.finder.open().subscribe();
@@ -392,20 +392,20 @@ export class SettlementsComponent {
     }
 
     /**
-     * Проверяет, является ли селение закреплённым.
+     * Проверяет, является ли надел закреплённым.
      *
-     * @param settlement Селение.
-     * @returns true, если селение — Поместье Эренхольд.
+     * @param settlement Надел.
+     * @returns true, если надел — Поместье Эренхольд.
      */
     protected isPinned(settlement: ISettlement): boolean {
         return getSettlementDisplayName(settlement) === PINNED_SETTLEMENT_NAME;
     }
 
     /**
-     * Возвращает отображаемый тип селения.
-     * Для закреплённого селения всегда возвращает "Поместье наместника".
+     * Возвращает отображаемый тип надела.
+     * Для закреплённого надела всегда возвращает "Поместье наместника".
      *
-     * @param settlement Селение.
+     * @param settlement Надел.
      * @returns Локализованное название типа.
      */
     protected getSettlementTypeLabel(settlement: EnrichedSettlement): string {

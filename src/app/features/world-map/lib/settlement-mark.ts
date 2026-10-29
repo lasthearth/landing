@@ -1,14 +1,14 @@
 import { WorldMapSettlementType } from '../model/world-map-point.interface';
 
 /**
- * Курс поселения: цвет акварельной заливки под знаком. У хутора курса нет.
+ * Курс надела: цвет акварельной заливки под знаком. У хутора курса нет.
  */
 export type WorldMapCourse = 'peace' | 'neutral' | 'free' | 'none';
 
 /**
  * Ранг типа: от хутора (0) до провинции (5).
  *
- * @param type Тип поселения.
+ * @param type Тип надела.
  * @returns Ранг.
  */
 export function settlementTier(type: WorldMapSettlementType): number {
@@ -32,10 +32,10 @@ export function settlementTier(type: WorldMapSettlementType): number {
 }
 
 /**
- * Радиус акварельной заливки под знаком: чем крупнее поселение, тем шире
+ * Радиус акварельной заливки под знаком: чем крупнее надел, тем шире
  * размыта краска — как на раскрашенных от руки картах.
  *
- * @param type Тип поселения.
+ * @param type Тип надела.
  * @returns Радиус, пиксели.
  */
 export function washRadius(type: WorldMapSettlementType): number {
@@ -45,7 +45,7 @@ export function washRadius(type: WorldMapSettlementType): number {
 /**
  * Курс по значению дипломатии из API.
  *
- * Значения те же, что у бейджа дипломатии в списке поселений: всё, что не
+ * Значения те же, что у бейджа дипломатии в списке наделов: всё, что не
  * «Миролюбивый» и не «Нейтральный», считается свободным. Без значения (хутор)
  * курса нет.
  *
@@ -67,13 +67,13 @@ export function settlementCourse(diplomacy: string | undefined): WorldMapCourse 
 }
 
 /**
- * Условный знак типа поселения — контур в квадрате 18×18 с центром в нуле,
+ * Условный знак типа надела — контур в квадрате 18×18 с центром в нуле,
  * в манере гравированных карт: хутор — кружок с точкой, лагерь — шатёр,
  * деревня — дом, посёлок — два дома, город — башня со стенами, провинция —
  * замок с флагом, ключевая точка — восьмиконечная звезда-веха с кольцом.
  * Рисуется с `fill-rule="evenodd"`: двери — вырезы.
  *
- * @param type Тип поселения.
+ * @param type Тип надела.
  * @returns Атрибут `d` для `<path>`.
  */
 export function settlementGlyph(type: WorldMapSettlementType): string {

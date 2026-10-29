@@ -229,7 +229,7 @@ export class PlayerLookService {
     }
 
     /**
-     * Один раз подгружает сохранённые виды, статистику игроков и поселения.
+     * Один раз подгружает сохранённые виды, статистику игроков и наделы.
      * Запрос уходит в микрозадаче: метод зовут из `computed`, где писать в сигналы нельзя.
      */
     private load(): void {
@@ -298,7 +298,7 @@ function toSaved(dto: AppearanceDto): SavedLook {
  * Статистика для оформления по каждому игроку.
  *
  * @param entries Таблица лидеров.
- * @param settlements Поселения.
+ * @param settlements Наделы.
  * @returns Статистика по идентификатору игрока.
  */
 function collectStats(entries: ILeaderBoard[], settlements: ISettlement[]): Map<string, StyleStats> {

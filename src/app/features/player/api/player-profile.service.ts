@@ -33,7 +33,7 @@ interface PlayerIdentity {
 
 /**
  * Собирает публичный профиль игрока из открытых данных: таблицы лидеров,
- * пользователей, поселений и «Голодных игр». Новых эндпоинтов не нужно.
+ * пользователей, наделов и «Голодных игр». Новых эндпоинтов не нужно.
  */
 @Injectable({ providedIn: 'root' })
 export class PlayerProfileService {
@@ -42,7 +42,7 @@ export class PlayerProfileService {
     private readonly hungerGames = inject(HungerGamesService);
 
     /**
-     * Все поселения (кэш на сессию: профили открывают подряд).
+     * Все наделы (кэш на сессию: профили открывают подряд).
      */
     private settlements$?: Observable<ISettlement[]>;
 
@@ -153,7 +153,7 @@ export class PlayerProfileService {
     }
 
     /**
-     * Поселение, где состоит игрок.
+     * Надел, где состоит игрок.
      */
     private settlementOf(userId: string): Observable<ISettlement | null> {
         this.settlements$ ??= this.settlements.getSettlements().pipe(

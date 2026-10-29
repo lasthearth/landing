@@ -7,7 +7,7 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { CONTACT_INFO_MAX_LENGTH } from '../../config/contact-info-max-length.constant';
 
 /**
- * Диалог редактирования контактной информации поселения.
+ * Диалог редактирования контактной информации наделы.
  *
  * Лимит 512 символов повторяет бэкенд. Символы `<` и `>` запрещены:
  * сервер хранит текст как есть и не экранирует его при выдаче.

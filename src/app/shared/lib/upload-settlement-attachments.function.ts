@@ -4,7 +4,7 @@ import { MediaService } from '@entities/media';
 import { compressImage } from './compress-image.function';
 
 /**
- * Загружает файлы формы поселения через MediaService и формирует attachments.
+ * Загружает файлы формы надела через MediaService и формирует attachments.
  *
  * Перед загрузкой каждый файл сжимается через canvas с сохранением пропорций
  * и перекодируется в WebP (или JPEG в браузерах без поддержки WebP).

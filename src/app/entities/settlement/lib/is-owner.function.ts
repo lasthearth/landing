@@ -2,9 +2,9 @@ import { ISettlement } from '../model/i-settlement';
 import { getOwnerIds } from './get-owner-ids.function';
 
 /**
- * Проверяет, является ли пользователь владельцем (owner) поселения.
+ * Проверяет, является ли пользователь владельцем (owner) надела.
  *
- * @param settlement Поселение.
+ * @param settlement Надел.
  * @param userId Идентификатор пользователя.
  * @returns true, если пользователь — owner.
  */

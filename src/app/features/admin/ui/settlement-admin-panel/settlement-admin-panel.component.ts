@@ -28,12 +28,12 @@ import { DIPLOMACY_OPTIONS } from '../../config/diplomacy-options.constant';
 import { DeleteSettlementDialogComponent } from '../delete-settlement-dialog/delete-settlement-dialog.component';
 
 /**
- * Панель администрирования поселений.
+ * Панель администрирования наделов.
  *
- * Позволяет искать поселение, включать и выключать систему ролей,
- * выдавать и снимать владельцев, менять дипломатию и удалять поселение.
- * Список поселений загружается один раз, поиск идёт по загруженным данным —
- * серверного поиска по поселениям в контракте нет.
+ * Позволяет искать надел, включать и выключать систему ролей,
+ * выдавать и снимать владельцев, менять дипломатию и удалять надел.
+ * Список наделов загружается один раз, поиск идёт по загруженным данным —
+ * серверного поиска по наделам в контракте нет.
  */
 @Component({
     selector: 'app-settlement-admin-panel',
@@ -52,7 +52,7 @@ import { DeleteSettlementDialogComponent } from '../delete-settlement-dialog/del
 })
 export class SettlementAdminPanelComponent {
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService = inject(SettlementService);
 
@@ -87,7 +87,7 @@ export class SettlementAdminPanelComponent {
     protected readonly diplomacyOptions = DIPLOMACY_OPTIONS;
 
     /**
-     * Поле поиска поселения по названию.
+     * Поле поиска надела по названию.
      */
     protected readonly searchControl = new FormControl<string>('', { nonNullable: true });
 
@@ -97,17 +97,17 @@ export class SettlementAdminPanelComponent {
     protected readonly ownerNameControl = new FormControl<string>('', { nonNullable: true });
 
     /**
-     * Загруженные поселения.
+     * Загруженные надела.
      */
     private readonly settlements = signal<ISettlement[]>([]);
 
     /**
-     * Идентификатор выбранного поселения.
+     * Идентификатор выбранного надела.
      */
     private readonly selectedId = signal<string | null>(null);
 
     /**
-     * Игровые имена участников выбранного поселения.
+     * Игровые имена участников выбранного надела.
      */
     private readonly memberNames = signal<Record<string, string>>({});
 
@@ -117,17 +117,17 @@ export class SettlementAdminPanelComponent {
     private readonly query = signal<string>('');
 
     /**
-     * Признак загрузки списка поселений.
+     * Признак загрузки списка наделов.
      */
     protected readonly loading = signal(true);
 
     /**
-     * Признак выполняющейся операции над поселением.
+     * Признак выполняющейся операции над наделом.
      */
     protected readonly busy = signal(false);
 
     /**
-     * Поселения, подходящие под строку поиска.
+     * Наделы, подходящие под строку поиска.
      */
     protected readonly filtered: Signal<ISettlement[]> = computed(() => {
         const query = this.query().trim().toLowerCase();
@@ -143,7 +143,7 @@ export class SettlementAdminPanelComponent {
     });
 
     /**
-     * Выбранное поселение.
+     * Выбранное надел.
      */
     protected readonly selected: Signal<ISettlement | null> = computed(() => {
         const id = this.selectedId();
@@ -152,7 +152,7 @@ export class SettlementAdminPanelComponent {
     });
 
     /**
-     * Владельцы выбранного поселения.
+     * Владельцы выбранного надела.
      */
     protected readonly owners: Signal<{ userId: string; name: string }[]> = computed(() => {
         const settlement = this.selected();
@@ -176,9 +176,9 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Возвращает отображаемое название поселения.
+     * Возвращает отображаемое название надела.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @returns Название без служебного маркера гильдии.
      */
     protected displayName(settlement: ISettlement): string {
@@ -186,9 +186,9 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Выбирает поселение для управления.
+     * Выбирает надел для управления.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected select(settlement: ISettlement): void {
         this.selectedId.set(settlement.id);
@@ -196,11 +196,11 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Включает или выключает систему ролей поселения.
+     * Включает или выключает систему ролей надела.
      *
-     * Ответ эндпоинта не содержит поселения, поэтому флаг обновляется локально.
+     * Ответ эндпоинта не содержит надела, поэтому флаг обновляется локально.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @param enabled Целевое состояние флага.
      */
     protected setRolesEnabled(settlement: ISettlement, enabled: boolean): void {
@@ -216,9 +216,9 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Меняет дипломатический курс поселения.
+     * Меняет дипломатический курс надела.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @param diplomacy Новый курс.
      */
     protected setDiplomacy(settlement: ISettlement, diplomacy: string): void {
@@ -237,7 +237,7 @@ export class SettlementAdminPanelComponent {
      * Эндпоинт принимает идентификатор пользователя, поэтому имя сначала
      * разрешается через поиск.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected addOwner(settlement: ISettlement): void {
         const name = this.ownerNameControl.value.trim();
@@ -283,7 +283,7 @@ export class SettlementAdminPanelComponent {
     /**
      * Снимает владение с игрока.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      * @param userId Идентификатор владельца.
      */
     protected removeOwner(settlement: ISettlement, userId: string): void {
@@ -297,12 +297,12 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Удаляет поселение после ввода его названия в диалоге подтверждения.
+     * Удаляет надел после ввода его названия в диалоге подтверждения.
      *
      * Удаление необратимо и стирает приглашения и заявки, поэтому одного
      * «Да» недостаточно: кнопка активируется только при точном вводе названия.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected deleteSettlement(settlement: ISettlement): void {
         this.dialogs
@@ -332,7 +332,7 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Загружает список поселений.
+     * Загружает список наделов.
      */
     private load(): void {
         this.loading.set(true);
@@ -348,9 +348,9 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Перечитывает поселение после операции, не возвращающей его состав.
+     * Перечитывает надел после операции, не возвращающей его состав.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      */
     private reloadSettlement(settlementId: string): void {
         this.settlementService
@@ -370,9 +370,9 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Загружает игровые имена участников поселения одним батчем.
+     * Загружает игровые имена участников надела одним батчем.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     private loadMemberNames(settlement: ISettlement): void {
         this.userService
@@ -389,9 +389,9 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Заменяет поселение в списке результатом преобразования.
+     * Заменяет надел в списке результатом преобразования.
      *
-     * @param settlementId Идентификатор поселения.
+     * @param settlementId Идентификатор надела.
      * @param update Функция преобразования.
      */
     private patch(settlementId: string, update: (current: ISettlement) => ISettlement): void {

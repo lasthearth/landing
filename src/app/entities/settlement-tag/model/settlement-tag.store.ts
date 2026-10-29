@@ -7,7 +7,7 @@ import { IColor } from './i-color';
 import { SettlementTagService } from '../api/settlement-tag.service';
 
 /**
- * Хранилище глобальных тегов поселений.
+ * Хранилище глобальных тегов наделов.
  *
  * Загружает теги один раз и кэширует их для всех потребителей.
  */
@@ -31,7 +31,7 @@ export class SettlementTagStore {
     public readonly loading = signal<boolean>(false);
 
     /**
-     * Сервис тегов поселений.
+     * Сервис тегов наделов.
      */
     private readonly tagService: SettlementTagService = inject(SettlementTagService);
 
@@ -125,9 +125,9 @@ export class SettlementTagStore {
     }
 
     /**
-     * Возвращает признак наличия системного тега у поселения.
+     * Возвращает признак наличия системного тега у надела.
      *
-     * @param settlementTags Список ссылок на теги поселения.
+     * @param settlementTags Список ссылок на теги наделы.
      * @param type Тип системного тега.
      * @returns true, если тег присутствует.
      */

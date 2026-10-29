@@ -1,5 +1,5 @@
 /**
- * Публичный API слайса «Заявка на вступление в поселение».
+ * Публичный API слайса «Заявка на вступление в надел».
  */
 
 export { JoinRequestButtonComponent } from './ui/join-request-button.component';

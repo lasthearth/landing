@@ -7,7 +7,7 @@ export interface PendingInvite {
      */
     code: string;
     /**
-     * Название поселения — для плашки в профиле.
+     * Название надела — для плашки в профиле.
      */
     settlementName: string;
     /**

@@ -50,7 +50,7 @@ export const routeSeoData: {
     home: {
         title: 'Last Hearth — ролевой сервер Vintage Story',
         description:
-            'Last Hearth — уникальный ролевой политико-экономический сервер Vintage Story. Развивайте поселения, ведите войны, заключайте союзы и участвуйте в жизни Империи. Хардкор, PvP, дипломатия и собственные моды.',
+            'Last Hearth — уникальный ролевой политико-экономический сервер Vintage Story. Развивайте надела, ведите войны, заключайте союзы и участвуйте в жизни Империи. Хардкор, PvP, дипломатия и собственные моды.',
         url: `${siteUrl}/`,
         type: 'website',
         locale: 'ru_RU',
@@ -61,7 +61,7 @@ export const routeSeoData: {
     rules: {
         title: 'Правила сервера Last Hearth',
         description:
-            'Полные правила игрового сервера Last Hearth: PvP, поселения, войны, торговля, наказания. Ознакомьтесь перед началом игры.',
+            'Полные правила игрового сервера Last Hearth: PvP, наделы, войны, торговля, наказания. Ознакомьтесь перед началом игры.',
         url: `${siteUrl}/rules`,
         type: 'article',
         locale: 'ru_RU',
@@ -92,15 +92,15 @@ export const routeSeoData: {
         imageAlt: 'Магазин привилегий Last Hearth',
     },
     settlements: {
-        title: 'Поселения Last Hearth',
+        title: 'Наделы Last Hearth',
         description:
-            'Список игровых поселений сервера Last Hearth: города, форты, замки, их жители, дипломатия и онлайн. Найдите союзников или создайте своё поселение.',
+            'Список игровых наделов сервера Last Hearth: города, форты, замки, их жители, дипломатия и онлайн. Найдите союзников или создайте своё надел.',
         url: `${siteUrl}/settlements`,
         type: 'website',
         locale: 'ru_RU',
         siteName,
         image: ogImage,
-        imageAlt: 'Поселения сервера Last Hearth',
+        imageAlt: 'Наделы сервера Last Hearth',
     },
     startGame: {
         title: 'Как начать играть на Last Hearth',
@@ -134,7 +134,7 @@ export const routeSeoData: {
     profile: {
         title: 'Личный кабинет Last Hearth',
         description:
-            'Личный кабинет игрока Last Hearth: профиль, статистика, поселение, баланс, верификация и магазин.',
+            'Личный кабинет игрока Last Hearth: профиль, статистика, надел, баланс, верификация и магазин.',
         url: `${siteUrl}/profile`,
         type: 'website',
         locale: 'ru_RU',
@@ -175,7 +175,7 @@ export const routeSeoData: {
     newsList: {
         title: 'Новости — Last Hearth',
         description:
-            'Все новости ролевого сервера Last Hearth: обновления, события, войны и жизнь поселений Vintage Story.',
+            'Все новости ролевого сервера Last Hearth: обновления, события, войны и жизнь наделов Vintage Story.',
         url: `${siteUrl}/news`,
         type: 'website',
         locale: 'ru_RU',
@@ -186,7 +186,7 @@ export const routeSeoData: {
     news: {
         title: 'Новости — Last Hearth',
         description:
-            'Новости ролевого сервера Last Hearth: обновления, события, войны и жизнь поселений Vintage Story.',
+            'Новости ролевого сервера Last Hearth: обновления, события, войны и жизнь наделов Vintage Story.',
         url: `${siteUrl}/home`,
         type: 'article',
         locale: 'ru_RU',
@@ -218,7 +218,7 @@ export const routeSeoData: {
     },
     player: {
         title: 'Игрок — Last Hearth',
-        description: 'Профиль игрока сервера Last Hearth: поселение, статистика и значки.',
+        description: 'Профиль игрока сервера Last Hearth: надел, статистика и значки.',
         url: `${siteUrl}/player`,
         type: 'profile',
         locale: 'ru_RU',
@@ -230,7 +230,7 @@ export const routeSeoData: {
     players: {
         title: 'Игроки — Last Hearth',
         description:
-            'Все игроки сервера Last Hearth: поиск по нику, кто был в игре недавно, поселения и описания.',
+            'Все игроки сервера Last Hearth: поиск по нику, кто был в игре недавно, наделы и описания.',
         url: `${siteUrl}/players`,
         type: 'website',
         locale: 'ru_RU',
@@ -252,7 +252,7 @@ export const routeSeoData: {
     wiki: {
         title: 'Вики — Last Hearth',
         description:
-            'Справочник по миру Last Hearth: механики, начало игры, поселения, войны, экономика и помощь новичку.',
+            'Справочник по миру Last Hearth: механики, начало игры, наделы, войны, экономика и помощь новичку.',
         url: `${siteUrl}/wiki`,
         type: 'website',
         locale: 'ru_RU',
@@ -274,7 +274,7 @@ export const routeSeoData: {
     worldMap: {
         title: 'Карта земель — Last Hearth',
         description:
-            'Карта поселений сервера Last Hearth: где стоят глашатаи поселений, как далеко они от Очага и какой у них курс.',
+            'Карта наделов сервера Last Hearth: где стоят глашатаи наделов, как далеко они от Очага и какой у них курс.',
         url: `${siteUrl}/map`,
         type: 'website',
         locale: 'ru_RU',
@@ -288,7 +288,7 @@ export const routeSeoData: {
     about: {
         title: 'О сервере Last Hearth',
         description:
-            'Last Hearth — русскоязычный ролевой сервер Vintage Story: поселения от лагеря до провинции, дипломатия и войны по правилам, экономика, собственные моды, вики и события.',
+            'Last Hearth — русскоязычный ролевой сервер Vintage Story: надела от лагеря до провинции, дипломатия и войны по правилам, экономика, собственные моды, вики и события.',
         url: `${siteUrl}/about`,
         type: 'website',
         locale: 'ru_RU',
@@ -309,7 +309,7 @@ export const routeSeoData: {
     },
     wikiSection: {
         title: 'Раздел вики — Last Hearth',
-        description: 'Раздел вики сервера Last Hearth: статьи по механике, поселениям, войнам и экономике.',
+        description: 'Раздел вики сервера Last Hearth: статьи по механике, наделым, войнам и экономике.',
         url: `${siteUrl}/wiki`,
         type: 'website',
         locale: 'ru_RU',
@@ -319,7 +319,7 @@ export const routeSeoData: {
     },
     wikiArticle: {
         title: 'Статья вики — Last Hearth',
-        description: 'Статья вики сервера Last Hearth: механики, поселения, войны и экономика.',
+        description: 'Статья вики сервера Last Hearth: механики, наделы, войны и экономика.',
         url: `${siteUrl}/wiki`,
         type: 'article',
         locale: 'ru_RU',
@@ -328,14 +328,14 @@ export const routeSeoData: {
         imageAlt: 'Статья вики Last Hearth',
     },
     join: {
-        title: 'Приглашение в поселение — Last Hearth',
-        description: 'Вас пригласили в поселение на сервере Last Hearth.',
+        title: 'Приглашение в надел — Last Hearth',
+        description: 'Вас пригласили в надел на сервере Last Hearth.',
         url: `${siteUrl}/join`,
         type: 'website',
         locale: 'ru_RU',
         siteName,
         image: ogImage,
-        imageAlt: 'Приглашение в поселение Last Hearth',
+        imageAlt: 'Приглашение в надел Last Hearth',
         robots: 'noindex, nofollow',
     },
 };

@@ -10,7 +10,7 @@ import { ISettlementTagDto } from '../model/i-settlement-tag-dto';
 import { SettlementTagMapper } from '../model/settlement-tag.mapper';
 
 /**
- * API-сервис для управления глобальными тегами поселений.
+ * API-сервис для управления глобальными тегами наделов.
  */
 @Injectable({
     providedIn: 'root',

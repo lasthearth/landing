@@ -66,9 +66,9 @@ export const MARKET_I18N = {
                 supportDescription:
                     'Средства от покупок в магазине идут на хостинг, доменное имя и работу команды. Моды и события команда разрабатывает самостоятельно.',
                 worldShotHouse: 'Дом у очага',
-                worldShotVillage: 'Поселение осенью',
+                worldShotVillage: 'Надел осенью',
                 worldShotSiege: 'Осада у моря',
-                worldShotMill: 'Мельница поселения',
+                worldShotMill: 'Мельница надела',
                 fundingHosting: {
                     title: 'Хостинг',
                     description: 'Сервер и доменное имя оплачиваются ежемесячно.',

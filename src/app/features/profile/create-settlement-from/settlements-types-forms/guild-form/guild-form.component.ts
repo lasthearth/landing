@@ -104,7 +104,7 @@ export class GuildFormComponent {
     private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
 

@@ -4,10 +4,10 @@ import { memberHasPermission } from './member-has-permission.function';
 import { OWNER_ROLE_ID } from './owner-role-id.constant';
 
 /**
- * Собирает поселение для проверок прав.
+ * Собирает надел для проверок прав.
  *
- * @param overrides Переопределяемые поля поселения.
- * @returns Поселение с минимально достаточным набором полей.
+ * @param overrides Переопределяемые поля надела.
+ * @returns Надел с минимально достаточным набором полей.
  */
 function makeSettlement(overrides: Partial<ISettlement>): ISettlement {
     return {
@@ -51,7 +51,7 @@ describe('memberHasPermission', () => {
         expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBeFalse();
     });
 
-    it('не выдаёт прав пользователю, который не состоит в поселении', () => {
+    it('не выдаёт прав пользователю, который не состоит в наделе', () => {
         const settlement = makeSettlement({
             members: [{ user_id: 'member-1', role_ids: ['r-1'] }],
             roles: [{ id: 'r-1', name: 'Дозорный', permissions: [Permission.InviteMember] }],

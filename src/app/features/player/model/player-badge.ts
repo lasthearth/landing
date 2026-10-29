@@ -1,5 +1,5 @@
 /**
- * Значок игрока: вычисляется из статистики и поселения, бэкенд не нужен.
+ * Значок игрока: вычисляется из статистики и наделы, бэкенд не нужен.
  */
 export interface PlayerBadge {
     /**
@@ -71,7 +71,7 @@ export interface PlayerBadgeInput {
     killsRank: number | null;
 
     /**
-     * Роль в поселении.
+     * Роль в наделе.
      */
     settlementRole: 'leader' | 'resident' | null;
 

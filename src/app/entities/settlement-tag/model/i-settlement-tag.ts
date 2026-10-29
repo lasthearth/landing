@@ -1,7 +1,7 @@
 import { IColor } from './i-color';
 
 /**
- * UI-модель тега поселения (camelCase).
+ * UI-модель тега надела (camelCase).
  */
 export interface ISettlementTag {
     /**

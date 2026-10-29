@@ -2,9 +2,9 @@ import { ISettlement } from '../model/i-settlement';
 import { GUILD_MARKER } from './guild-marker.constant';
 
 /**
- * Возвращает отображаемое название поселения без скрытого маркера гильдии.
+ * Возвращает отображаемое название надела без скрытого маркера гильдии.
  *
- * @param value Поселение или сырое название.
+ * @param value Надел или сырое название.
  * @returns Название, очищенное от маркера гильдии.
  */
 export function getSettlementDisplayName(value: ISettlement | string): string {

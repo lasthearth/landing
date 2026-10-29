@@ -1,5 +1,5 @@
 /**
- * Публичный API слайса «Роли поселения».
+ * Публичный API слайса «Роли наделы».
  */
 
 export { RolesMatrixComponent } from './ui/roles-matrix/roles-matrix.component';

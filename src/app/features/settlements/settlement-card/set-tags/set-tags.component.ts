@@ -21,16 +21,16 @@ import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { catchError, EMPTY, finalize, forkJoin, map, of } from 'rxjs';
 
 /**
- * Данные, передаваемые в диалог управления тегами поселения.
+ * Данные, передаваемые в диалог управления тегами наделы.
  */
 interface SetTagsDialogData {
     /**
-     * Идентификатор поселения.
+     * Идентификатор надела.
      */
     settlementId: string;
 
     /**
-     * Название поселения.
+     * Название надела.
      */
     settlementName: string;
 
@@ -45,13 +45,13 @@ interface SetTagsDialogData {
  */
 interface SetTagsDialogResult {
     /**
-     * Актуальный список идентификаторов тегов поселения.
+     * Актуальный список идентификаторов тегов надела.
      */
     tags: { id: string }[];
 }
 
 /**
- * Компонент диалога управления тегами поселения.
+ * Компонент диалога управления тегами наделы.
  *
  * Позволяет добавлять/удалять существующие теги,
  * создавать новые теги и удалять глобальные теги.
@@ -72,7 +72,7 @@ export class SetTagsComponent {
         inject<TuiDialogContext<SetTagsDialogResult, SetTagsDialogData>>(POLYMORPHEUS_CONTEXT);
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
 
@@ -197,7 +197,7 @@ export class SetTagsComponent {
     }
 
     /**
-     * Добавляет тег к поселению.
+     * Добавляет тег к наделу.
      *
      * @param tag Тег для добавления.
      */
@@ -206,7 +206,7 @@ export class SetTagsComponent {
     }
 
     /**
-     * Убирает тег из поселения.
+     * Убирает тег из надела.
      *
      * @param tag Тег для удаления.
      */
@@ -229,7 +229,7 @@ export class SetTagsComponent {
     }
 
     /**
-     * Создаёт новый глобальный тег и сразу назначает его поселению.
+     * Создаёт новый глобальный тег и сразу назначает его наделу.
      */
     protected createTag(): void {
         if (this.newTagForm.invalid) {
@@ -303,7 +303,7 @@ export class SetTagsComponent {
     }
 
     /**
-     * Сохраняет изменения: добавляет и удаляет теги поселения.
+     * Сохраняет изменения: добавляет и удаляет теги наделы.
      */
     protected saveTags(): void {
         const current = this.assignedIds();

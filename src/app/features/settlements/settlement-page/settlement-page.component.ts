@@ -40,21 +40,21 @@ import { MarkupPipe, newsMarkdownToPlain } from '@shared/lib/news-markdown';
 const SITE_URL = 'https://lasthearth.ru';
 
 /**
- * Поселение наместника: закреплено и подписывается особым типом.
+ * Надел наместника: закреплено и подписывается особым типом.
  */
 const PINNED_SETTLEMENT_NAME = 'Поместье Эренхольд';
 
 /**
- * Сколько других поселений показывать внизу.
+ * Сколько других наделов показывать внизу.
  */
 const OTHERS_COUNT = 3;
 
 /**
- * Публичная страница поселения: `/settlements/:id`.
+ * Публичная страница надела: `/settlements/:id`.
  *
- * Заменяет диалог «Подробнее»: у поселения появляется своя ссылка, которой
+ * Заменяет диалог «Подробнее»: у надела появляется своя ссылка, которой
  * глава может поделиться при наборе жителей, и страница для поисковиков.
- * Координаты поселения намеренно не выводятся.
+ * Координаты надела намеренно не выводятся.
  */
 @Component({
     standalone: true,
@@ -122,7 +122,7 @@ export class SettlementPageComponent {
     );
 
     /**
-     * Загруженное поселение или null.
+     * Загруженное надел или null.
      */
     protected readonly settlement = computed(() => {
         const state = this.state();
@@ -138,7 +138,7 @@ export class SettlementPageComponent {
     });
 
     /**
-     * Другие поселения.
+     * Другие наделы.
      */
     protected readonly others = computed(() => {
         const state = this.state();
@@ -146,7 +146,7 @@ export class SettlementPageComponent {
     });
 
     /**
-     * Главы поселения.
+     * Главы надела.
      */
     protected readonly leaders = computed(() => {
         const settlement = this.settlement();
@@ -169,7 +169,7 @@ export class SettlementPageComponent {
     protected readonly onlineCount = computed(() => this.players().filter((player) => player.is_online).length);
 
     /**
-     * Скриншоты поселения для просмотрщика.
+     * Скриншоты надела для просмотрщика.
      */
     protected readonly gallery = computed<ImageViewerItem[]>(() => {
         const settlement = this.settlement();
@@ -188,7 +188,7 @@ export class SettlementPageComponent {
     });
 
     /**
-     * Уровень поселения (0 — без шкалы).
+     * Уровень надела (0 — без шкалы).
      */
     protected readonly tier = computed(() => {
         const settlement = this.settlement();
@@ -196,9 +196,9 @@ export class SettlementPageComponent {
     });
 
     /**
-     * Подпись типа поселения.
+     * Подпись типа надела.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected typeLabel(settlement: ISettlement): string {
         if (this.isPinned(settlement)) {
@@ -215,7 +215,7 @@ export class SettlementPageComponent {
     /**
      * Тон бейджа типа.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected typeTone(settlement: ISettlement): SettlementBadgeTone {
         return this.isPinned(settlement) ? 'gold' : getSettlementTypeTone(settlement);
@@ -224,7 +224,7 @@ export class SettlementPageComponent {
     /**
      * Иконка типа.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected typeIcon(settlement: ISettlement): string {
         return this.isPinned(settlement) ? '@tui.castle' : getSettlementTypeIcon(settlement);
@@ -233,7 +233,7 @@ export class SettlementPageComponent {
     /**
      * Подпись дипломатического курса.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected diplomacyLabel(settlement: ISettlement): string {
         if (isGuildSettlement(settlement) && settlement.diplomacy === 'Миролюбивый') {
@@ -246,7 +246,7 @@ export class SettlementPageComponent {
     /**
      * Тон бейджа курса.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected diplomacyTone(settlement: ISettlement): SettlementBadgeTone {
         return getDiplomacyTone(settlement.diplomacy);
@@ -263,18 +263,18 @@ export class SettlementPageComponent {
     }
 
     /**
-     * Обложка поселения.
+     * Обложка надела.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     protected cover(settlement: ISettlement): string {
         return settlement.attachments?.[0]?.url || DEFAULT_SETTLEMENT_COVER;
     }
 
     /**
-     * Загружает поселение, профили жителей и список для блока «Другие поселения».
+     * Загружает надел, профили жителей и список для блока «Другие наделы».
      *
-     * @param id Идентификатор поселения.
+     * @param id Идентификатор надела.
      */
     private load(id: string): Observable<SettlementPageState> {
         return this.settlementService.getSettlementById(id, true).pipe(
@@ -346,9 +346,9 @@ export class SettlementPageComponent {
     }
 
     /**
-     * Поселение наместника.
+     * Надел наместника.
      *
-     * @param settlement Поселение.
+     * @param settlement Надел.
      */
     private isPinned(settlement: ISettlement): boolean {
         return getSettlementDisplayName(settlement) === PINNED_SETTLEMENT_NAME;

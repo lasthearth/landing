@@ -12,7 +12,7 @@ import {
 } from '../model/world-map-point.interface';
 
 /**
- * Типы поселений, которые знает карта.
+ * Типы наделов, которые знает карта.
  */
 const MAP_TYPES: readonly WorldMapSettlementType[] = ['CAMP', 'VILLAGE', 'TOWNSHIP', 'CITY', 'PROVINCE'];
 
@@ -20,10 +20,10 @@ const MAP_TYPES: readonly WorldMapSettlementType[] = ['CAMP', 'VILLAGE', 'TOWNSH
  * Источник данных карты земель.
  *
  * Два параллельных запроса: все стоящие глашатаи (`GET /settlements/notifiers`)
- * и список поселений (`GET /settlements`) — из него берутся название, тип, курс
+ * и список наделов (`GET /settlements`) — из него берутся название, тип, курс
  * и число жителей.
  *
- * - Глашатай с `settlement_id` — поселение. Если поселение не нашлось в списке
+ * - Глашатай с `settlement_id` — надел. Если надел не нашлось в списке
  *   (удалено, а блок в мире остался) или оказалось гильдией, на карту он не попадает.
  * - Глашатай без `settlement_id` — ключевая точка: на карте с названием с глашатая.
  *
@@ -37,7 +37,7 @@ export class WorldMapApiService {
     /**
      * Загружает точки карты.
      *
-     * @returns Поселения и ключевые точки с глашатаями и признак примера.
+     * @returns Наделы и ключевые точки с глашатаями и признак примера.
      */
     public load(): Observable<WorldMapData> {
         return forkJoin({
@@ -54,7 +54,7 @@ export class WorldMapApiService {
      * Превращает глашатаев в точки карты.
      *
      * @param placements Глашатаи.
-     * @param list Поселения с сайта.
+     * @param list Наделы с сайта.
      * @returns Точки карты.
      */
     private toPoints(placements: readonly INotifierPlacement[], list: readonly ISettlement[]): WorldMapPoint[] {
@@ -112,7 +112,7 @@ export class WorldMapApiService {
     /**
      * Пример для пустой карты.
      *
-     * @returns Выдуманные поселения с флагом `demo`.
+     * @returns Выдуманные надела с флагом `demo`.
      */
     private demo(): WorldMapData {
         return {

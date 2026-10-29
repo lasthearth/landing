@@ -3,7 +3,7 @@ import { colorToCss } from '../../lib/color-to-css.function';
 import { ISettlementTag } from '../../model/i-settlement-tag';
 
 /**
- * Бейдж тега поселения.
+ * Бейдж тега надела.
  *
  * Повторяет геометрию `app-settlement-badge`, но красится динамическим цветом тега.
  */

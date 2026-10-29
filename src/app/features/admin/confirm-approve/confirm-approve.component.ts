@@ -35,7 +35,7 @@ export class ConfirmApproveComponent {
     private readonly verificationService: VerificationService = inject(VerificationService);
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService: SettlementService = inject(SettlementService);
 

@@ -38,7 +38,7 @@ export const PLAYERS_I18N = {
             empty: 'Никого не нашли',
             emptyHint: 'Проверьте ник или выберите другой период.',
             noAbout: 'Пока ничего о себе не рассказал',
-            noSettlement: 'Без поселения',
+            noSettlement: 'Без надела',
             hours: '{{count}} ч в игре',
             loadError: 'Не удалось загрузить игроков',
         },

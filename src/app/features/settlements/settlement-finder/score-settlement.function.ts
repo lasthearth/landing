@@ -1,7 +1,7 @@
 import { FinderAnswers, FinderSize, FinderStyle } from './settlement-finder.model';
 
 /**
- * Дипломатия поселения как стиль игры.
+ * Дипломатия надела как стиль игры.
  */
 const DIPLOMACY_STYLE: Record<string, Exclude<FinderStyle, 'any'>> = {
     Миролюбивый: 'peace',
@@ -20,7 +20,7 @@ const STYLE_ORDER: Exclude<FinderStyle, 'any'>[] = ['peace', 'neutral', 'war'];
 const SIZE_ORDER: Exclude<FinderSize, 'any'>[] = ['small', 'medium', 'large'];
 
 /**
- * Размер поселения по числу жителей.
+ * Размер надела по числу жителей.
  *
  * @param members Жителей.
  * @returns Размер.
@@ -34,13 +34,13 @@ export function sizeOf(members: number): Exclude<FinderSize, 'any'> {
 }
 
 /**
- * Оценивает, насколько поселение подходит под ответы. Максимум — 100.
+ * Оценивает, насколько надел подходит под ответы. Максимум — 100.
  *
  * Стиль — 45 баллов, размер — 30, активность — 15, свежесть (обновлялось за неделю) — 10.
  * Соседние варианты (мирный ↔ нейтральный, маленькое ↔ среднее) дают половину.
  *
  * @param answers Ответы игрока.
- * @param settlement Данные поселения.
+ * @param settlement Данные надела.
  * @param now Текущий момент, мс.
  * @returns Баллы 0–100.
  */

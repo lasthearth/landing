@@ -6,10 +6,10 @@ import { TranslatePipe } from '@core/i18n';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 
 /**
- * Диалог подтверждения удаления поселения.
+ * Диалог подтверждения удаления надела.
  *
  * Удаление необратимо и стирает приглашения и заявки, поэтому одного «Да»
- * мало: кнопка активируется только после точного ввода названия поселения.
+ * мало: кнопка активируется только после точного ввода названия надела.
  */
 @Component({
     selector: 'app-delete-settlement-dialog',
@@ -21,13 +21,13 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 })
 export class DeleteSettlementDialogComponent {
     /**
-     * Контекст диалога: название удаляемого поселения.
+     * Контекст диалога: название удаляемого надела.
      */
     protected readonly context: TuiDialogContext<boolean, { name: string }> =
         inject<TuiDialogContext<boolean, { name: string }>>(POLYMORPHEUS_CONTEXT);
 
     /**
-     * Название удаляемого поселения.
+     * Название удаляемого надела.
      */
     protected readonly name: string = this.context.data.name;
 
@@ -42,7 +42,7 @@ export class DeleteSettlementDialogComponent {
     private readonly typed = signal<string>('');
 
     /**
-     * Признак совпадения ввода с названием поселения.
+     * Признак совпадения ввода с названием надела.
      */
     protected readonly matches: Signal<boolean> = computed(() => this.typed().trim() === this.name);
 

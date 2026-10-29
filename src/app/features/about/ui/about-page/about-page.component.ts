@@ -25,7 +25,7 @@ const SECTIONS = ['concept', 'settlements', 'diplomacy', 'economy', 'differences
  * Ступени лена по правилам сервера, от младшей к старшей.
  *
  * Названия лежат в словаре страницы (`about.levelList`), а не в словаре
- * поселений: там типы старой схемы бэкенда, и ключей для них нет.
+ * наделов: там типы старой схемы бэкенда, и ключей для них нет.
  */
 const LEVELS = ['manor', 'camp', 'patrimony', 'barony', 'county', 'margraviate'] as const;
 
@@ -34,7 +34,7 @@ const LEVELS = ['manor', 'camp', 'patrimony', 'barony', 'county', 'margraviate']
  *
  * Разделы идут фиксированным порядком, тексты лежат в словаре страницы
  * и написаны по правилам сервера.
- * Внизу — те же числа, что на главной: онлайн, поселения и игроки.
+ * Внизу — те же числа, что на главной: онлайн, наделы и игроки.
  */
 @Component({
     selector: 'app-about-page',
@@ -69,7 +69,7 @@ export class AboutPageComponent {
     );
 
     /**
-     * Количество поселений.
+     * Количество наделов.
      */
     protected readonly settlementsCount = toSignal(
         this.settlements.getSettlements().pipe(

@@ -22,7 +22,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
 
 /**
- * Панель заявок на вступление со стороны поселения.
+ * Панель заявок на вступление со стороны надела.
  *
  * Ники заявителей грузятся одним батчем, а не запросом на заявку.
  * Загрузка списка помечена `SKIP_ERROR_ALERT`: гейт по праву может отстать
@@ -38,7 +38,7 @@ import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
 })
 export class JoinRequestsPanelComponent {
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService = inject(SettlementService);
 
@@ -58,12 +58,12 @@ export class JoinRequestsPanelComponent {
     private readonly requestStatus = inject(RequestStatusService);
 
     /**
-     * Поселение, чьи заявки показываются.
+     * Надел, чьи заявки показываются.
      */
     public readonly settlement: InputSignal<ISettlement> = input.required();
 
     /**
-     * Сообщает, что состав поселения изменился и страницу нужно обновить.
+     * Сообщает, что состав надела изменился и страницу нужно обновить.
      */
     public readonly membersChanged: OutputEmitterRef<void> = output();
 

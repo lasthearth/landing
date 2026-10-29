@@ -18,7 +18,7 @@ import { AnalyticsService } from '@core/services/analytics.service';
  * (адрес и пароль копируются одной кнопкой), первые шаги на сервере — и
  * подсказки, если что-то не получилось.
  *
- * Третий шаг заодно показывает прогресс новичка (правила, поселение, Discord):
+ * Третий шаг заодно показывает прогресс новичка (правила, надел, Discord):
  * раньше это была отдельная карточка «Ваш путь на сервер», дублировавшая шаги.
  */
 @Component({
@@ -46,7 +46,7 @@ export class HowPlayComponent {
     private readonly userService = inject(UserService);
 
     /**
-     * Сервис поселений.
+     * Сервис наделов.
      */
     private readonly settlementService = inject(SettlementService);
 
@@ -76,7 +76,7 @@ export class HowPlayComponent {
     protected readonly discordDone = this.onboarding.discordOpened.asReadonly();
 
     /**
-     * Название поселения игрока (`null` — не состоит или ещё не загружено).
+     * Название надела игрока (`null` — не состоит или ещё не загружено).
      */
     protected readonly settlementName = toSignal(
         this.userService.authState$.pipe(
@@ -95,7 +95,7 @@ export class HowPlayComponent {
     );
 
     /**
-     * Сколько из трёх первых шагов (правила, поселение, Discord) пройдено.
+     * Сколько из трёх первых шагов (правила, надел, Discord) пройдено.
      */
     protected readonly doneCount = computed(
         () => Number(this.rulesDone()) + Number(!!this.settlementName()) + Number(this.discordDone())

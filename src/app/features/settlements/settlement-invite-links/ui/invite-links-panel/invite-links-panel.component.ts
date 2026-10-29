@@ -40,7 +40,7 @@ const USES_OPTIONS = [
 ] as const;
 
 /**
- * Ссылки-приглашения поселения: создать, скопировать, отозвать.
+ * Ссылки-приглашения надела: создать, скопировать, отозвать.
  *
  * Видна тем, кто может приглашать. Кто откроет ссылку и прошёл проверку
  * анкеты, сразу становится жителем.
@@ -216,9 +216,9 @@ export class InviteLinksPanelComponent {
     }
 
     /**
-     * Загружает ссылки поселения.
+     * Загружает ссылки наделы.
      *
-     * @param settlementId Поселение.
+     * @param settlementId Надел.
      */
     private load(settlementId: string): void {
         this.settlementService

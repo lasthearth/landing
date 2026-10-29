@@ -1,7 +1,7 @@
 import { IColor } from './i-color';
 
 /**
- * DTO тега поселения, приходящее с бэкенда (snake_case).
+ * DTO тега надела, приходящее с бэкенда (snake_case).
  */
 export interface ISettlementTagDto {
     /**
