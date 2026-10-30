@@ -28,7 +28,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 1,
             icon: '@tui.factory',
             requires: [],
-            cost: [{ resource: 'money', amount: 110 }],
+            cost: [
+                { resource: 'money', amount: 110 },
+                { resource: 'stone', amount: 168 },
+                { resource: 'brick', amount: 64 },
+                { resource: 'metal', amount: 32 },
+                { resource: 'nails', amount: 16 },
+            ],
         },
         {
             id: 'bloomery1',
@@ -37,7 +43,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.flame',
             requires: ['works'],
-            cost: [{ resource: 'money', amount: 60 }],
+            cost: [
+                { resource: 'money', amount: 60 },
+                { resource: 'stone', amount: 88 },
+                { resource: 'brick', amount: 36 },
+                { resource: 'metal', amount: 16 },
+                { resource: 'nails', amount: 8 },
+            ],
         },
         {
             id: 'bloomery2',
@@ -46,7 +58,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.flame',
             requires: ['bloomery1'],
-            cost: [{ resource: 'money', amount: 90 }],
+            cost: [
+                { resource: 'money', amount: 90 },
+                { resource: 'stone', amount: 96 },
+                { resource: 'brick', amount: 40 },
+                { resource: 'metal', amount: 20 },
+                { resource: 'nails', amount: 8 },
+            ],
         },
         {
             id: 'bloomery3',
@@ -55,7 +73,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.flame',
             requires: ['bloomery2'],
-            cost: [{ resource: 'money', amount: 120 }],
+            cost: [
+                { resource: 'money', amount: 120 },
+                { resource: 'stone', amount: 104 },
+                { resource: 'brick', amount: 40 },
+                { resource: 'metal', amount: 20 },
+                { resource: 'nails', amount: 12 },
+            ],
         },
         {
             id: 'anvilBronze',
@@ -64,7 +88,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.anvil',
             requires: ['works'],
-            cost: [{ resource: 'money', amount: 60 }],
+            cost: [
+                { resource: 'money', amount: 60 },
+                { resource: 'stone', amount: 120 },
+                { resource: 'brick', amount: 48 },
+                { resource: 'metal', amount: 24 },
+                { resource: 'nails', amount: 12 },
+            ],
         },
         {
             id: 'anvilIron',
@@ -73,7 +103,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.anvil',
             requires: ['anvilBronze'],
-            cost: [{ resource: 'money', amount: 250 }],
+            cost: [
+                { resource: 'money', amount: 250 },
+                { resource: 'stone', amount: 200 },
+                { resource: 'brick', amount: 80 },
+                { resource: 'metal', amount: 40 },
+                { resource: 'nails', amount: 20 },
+            ],
         },
         {
             id: 'beehive',
@@ -92,7 +128,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.brick-wall',
             requires: ['beehive'],
-            cost: [{ resource: 'money', amount: 96 }],
+            cost: [
+                { resource: 'money', amount: 96 },
+                { resource: 'stone', amount: 176 },
+                { resource: 'brick', amount: 72 },
+                { resource: 'metal', amount: 36 },
+                { resource: 'nails', amount: 16 },
+            ],
         },
         {
             id: 'beehiveFiring',
@@ -101,7 +143,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.flame-kindling',
             requires: ['beehiveBase'],
-            cost: [{ resource: 'money', amount: 240 }],
+            cost: [
+                { resource: 'money', amount: 240 },
+                { resource: 'stone', amount: 256 },
+                { resource: 'brick', amount: 104 },
+                { resource: 'metal', amount: 48 },
+                { resource: 'nails', amount: 24 },
+            ],
         },
         {
             id: 'beehiveSecond',
@@ -110,7 +158,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.heater',
             requires: ['beehiveFiring'],
-            cost: [{ resource: 'money', amount: 480 }],
+            cost: [
+                { resource: 'money', amount: 480 },
+                { resource: 'stone', amount: 384 },
+                { resource: 'brick', amount: 152 },
+                { resource: 'metal', amount: 80 },
+                { resource: 'nails', amount: 40 },
+            ],
         },
         {
             id: 'beehiveRepair',
@@ -119,7 +173,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 0,
             icon: '@tui.wrench',
             requires: ['beehive'],
-            cost: [{ resource: 'money', amount: 96 }],
+            cost: [
+                { resource: 'money', amount: 96 },
+                { resource: 'stone', amount: 176 },
+                { resource: 'brick', amount: 72 },
+                { resource: 'metal', amount: 36 },
+                { resource: 'nails', amount: 16 },
+            ],
         },
         {
             id: 'beehiveDiscount',
@@ -128,7 +188,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 0,
             icon: '@tui.badge-percent',
             requires: ['beehiveRepair'],
-            cost: [{ resource: 'money', amount: 144 }],
+            cost: [
+                { resource: 'money', amount: 144 },
+                { resource: 'stone', amount: 256 },
+                { resource: 'brick', amount: 104 },
+                { resource: 'metal', amount: 48 },
+                { resource: 'nails', amount: 24 },
+            ],
         },
         {
             id: 'steelworks',
@@ -147,7 +213,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 0,
             icon: '@tui.wrench',
             requires: ['steelworks'],
-            cost: [{ resource: 'money', amount: 144 }],
+            cost: [
+                { resource: 'money', amount: 144 },
+                { resource: 'stone', amount: 304 },
+                { resource: 'brick', amount: 120 },
+                { resource: 'metal', amount: 64 },
+                { resource: 'nails', amount: 32 },
+            ],
         },
         {
             id: 'steelDiscount',
@@ -156,7 +228,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 0,
             icon: '@tui.badge-percent',
             requires: ['steelRepair'],
-            cost: [{ resource: 'money', amount: 400 }],
+            cost: [
+                { resource: 'money', amount: 400 },
+                { resource: 'stone', amount: 624 },
+                { resource: 'brick', amount: 256 },
+                { resource: 'metal', amount: 128 },
+                { resource: 'nails', amount: 64 },
+            ],
         },
         {
             id: 'bricks1',
@@ -175,7 +253,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.shovel',
             requires: ['bricks1'],
-            cost: [{ resource: 'money', amount: 400 }],
+            cost: [
+                { resource: 'money', amount: 400 },
+                { resource: 'stone', amount: 624 },
+                { resource: 'brick', amount: 256 },
+                { resource: 'metal', amount: 128 },
+                { resource: 'nails', amount: 64 },
+            ],
         },
         {
             id: 'furnace1Stage2',
@@ -184,7 +268,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.brick-wall',
             requires: ['furnace1Stage1'],
-            cost: [{ resource: 'money', amount: 600 }],
+            cost: [
+                { resource: 'money', amount: 600 },
+                { resource: 'stone', amount: 960 },
+                { resource: 'brick', amount: 384 },
+                { resource: 'metal', amount: 192 },
+                { resource: 'nails', amount: 96 },
+            ],
         },
         {
             id: 'furnace1Stage3',
@@ -193,7 +283,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 2,
             icon: '@tui.construction',
             requires: ['furnace1Stage2'],
-            cost: [{ resource: 'money', amount: 800 }],
+            cost: [
+                { resource: 'money', amount: 800 },
+                { resource: 'stone', amount: 1408 },
+                { resource: 'brick', amount: 560 },
+                { resource: 'metal', amount: 288 },
+                { resource: 'nails', amount: 144 },
+            ],
         },
         {
             id: 'steel1',
@@ -222,7 +318,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.shovel',
             requires: ['bricks2'],
-            cost: [{ resource: 'money', amount: 520 }],
+            cost: [
+                { resource: 'money', amount: 520 },
+                { resource: 'stone', amount: 752 },
+                { resource: 'brick', amount: 304 },
+                { resource: 'metal', amount: 152 },
+                { resource: 'nails', amount: 72 },
+            ],
         },
         {
             id: 'furnace2Stage2',
@@ -231,7 +333,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.brick-wall',
             requires: ['furnace2Stage1'],
-            cost: [{ resource: 'money', amount: 720 }],
+            cost: [
+                { resource: 'money', amount: 720 },
+                { resource: 'stone', amount: 1120 },
+                { resource: 'brick', amount: 448 },
+                { resource: 'metal', amount: 224 },
+                { resource: 'nails', amount: 112 },
+            ],
         },
         {
             id: 'furnace2Stage3',
@@ -240,7 +348,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 3,
             icon: '@tui.construction',
             requires: ['furnace2Stage2'],
-            cost: [{ resource: 'money', amount: 920 }],
+            cost: [
+                { resource: 'money', amount: 920 },
+                { resource: 'stone', amount: 1568 },
+                { resource: 'brick', amount: 624 },
+                { resource: 'metal', amount: 320 },
+                { resource: 'nails', amount: 160 },
+            ],
         },
         {
             id: 'steel2',
@@ -269,7 +383,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.shovel',
             requires: ['bricks3'],
-            cost: [{ resource: 'money', amount: 640 }],
+            cost: [
+                { resource: 'money', amount: 640 },
+                { resource: 'stone', amount: 864 },
+                { resource: 'brick', amount: 352 },
+                { resource: 'metal', amount: 176 },
+                { resource: 'nails', amount: 88 },
+            ],
         },
         {
             id: 'furnace3Stage2',
@@ -278,7 +398,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.brick-wall',
             requires: ['furnace3Stage1'],
-            cost: [{ resource: 'money', amount: 840 }],
+            cost: [
+                { resource: 'money', amount: 840 },
+                { resource: 'stone', amount: 1248 },
+                { resource: 'brick', amount: 496 },
+                { resource: 'metal', amount: 256 },
+                { resource: 'nails', amount: 128 },
+            ],
         },
         {
             id: 'furnace3Stage3',
@@ -287,7 +413,13 @@ export const INDUSTRY_SCHEME: KeyPointScheme = {
             lane: 4,
             icon: '@tui.construction',
             requires: ['furnace3Stage2'],
-            cost: [{ resource: 'money', amount: 1040 }],
+            cost: [
+                { resource: 'money', amount: 1040 },
+                { resource: 'stone', amount: 1728 },
+                { resource: 'brick', amount: 688 },
+                { resource: 'metal', amount: 352 },
+                { resource: 'nails', amount: 176 },
+            ],
         },
         {
             id: 'steel3',
