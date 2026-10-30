@@ -22,8 +22,11 @@ export const MINE_SCHEME: KeyPointScheme = {
             icon: '@tui.shovel',
             requires: [],
             cost: [
-                { resource: 'coins', amount: 100 },
-                { resource: 'timber', amount: 64 },
+                { resource: 'money', amount: 100 },
+                { resource: 'frames', amount: 112 },
+                { resource: 'stone', amount: 80 },
+                { resource: 'metal', amount: 20 },
+                { resource: 'rope', amount: 16 },
             ],
         },
         {
@@ -34,8 +37,11 @@ export const MINE_SCHEME: KeyPointScheme = {
             icon: '@tui.fence',
             requires: ['adit'],
             cost: [
-                { resource: 'coins', amount: 60 },
-                { resource: 'timber', amount: 128 },
+                { resource: 'money', amount: 60 },
+                { resource: 'frames', amount: 72 },
+                { resource: 'stone', amount: 56 },
+                { resource: 'metal', amount: 16 },
+                { resource: 'rope', amount: 12 },
             ],
         },
         {
@@ -46,8 +52,11 @@ export const MINE_SCHEME: KeyPointScheme = {
             icon: '@tui.cable-car',
             requires: ['adit'],
             cost: [
-                { resource: 'coins', amount: 80 },
-                { resource: 'stone', amount: 96 },
+                { resource: 'money', amount: 80 },
+                { resource: 'frames', amount: 80 },
+                { resource: 'stone', amount: 64 },
+                { resource: 'metal', amount: 16 },
+                { resource: 'rope', amount: 12 },
             ],
         },
         {
@@ -58,9 +67,11 @@ export const MINE_SCHEME: KeyPointScheme = {
             icon: '@tui.pickaxe',
             requires: ['props', 'lift'],
             cost: [
-                { resource: 'coins', amount: 248 },
-                { resource: 'stone', amount: 256 },
-                { resource: 'labor', amount: 3 },
+                { resource: 'money', amount: 248 },
+                { resource: 'frames', amount: 336 },
+                { resource: 'stone', amount: 240 },
+                { resource: 'metal', amount: 64 },
+                { resource: 'rope', amount: 48 },
             ],
         },
         {
@@ -72,8 +83,11 @@ export const MINE_SCHEME: KeyPointScheme = {
             requires: ['mine2'],
             choiceGroup: 'spec',
             cost: [
-                { resource: 'coins', amount: 200 },
-                { resource: 'metal', amount: 48 },
+                { resource: 'money', amount: 200 },
+                { resource: 'frames', amount: 176 },
+                { resource: 'stone', amount: 136 },
+                { resource: 'metal', amount: 36 },
+                { resource: 'rope', amount: 28 },
             ],
         },
         {
@@ -85,8 +99,11 @@ export const MINE_SCHEME: KeyPointScheme = {
             requires: ['mine2'],
             choiceGroup: 'spec',
             cost: [
-                { resource: 'coins', amount: 200 },
-                { resource: 'metal', amount: 48 },
+                { resource: 'money', amount: 200 },
+                { resource: 'frames', amount: 176 },
+                { resource: 'stone', amount: 136 },
+                { resource: 'metal', amount: 36 },
+                { resource: 'rope', amount: 28 },
             ],
         },
         {
@@ -97,9 +114,11 @@ export const MINE_SCHEME: KeyPointScheme = {
             icon: '@tui.truck',
             requires: ['mine2'],
             cost: [
-                { resource: 'coins', amount: 152 },
-                { resource: 'timber', amount: 192 },
-                { resource: 'metal', amount: 24 },
+                { resource: 'money', amount: 152 },
+                { resource: 'frames', amount: 184 },
+                { resource: 'stone', amount: 136 },
+                { resource: 'metal', amount: 36 },
+                { resource: 'rope', amount: 28 },
             ],
         },
         {
@@ -111,10 +130,11 @@ export const MINE_SCHEME: KeyPointScheme = {
             requires: ['carts'],
             requiresAny: ['deep', 'sorting'],
             cost: [
-                { resource: 'coins', amount: 600 },
-                { resource: 'stone', amount: 512 },
-                { resource: 'metal', amount: 96 },
-                { resource: 'labor', amount: 5 },
+                { resource: 'money', amount: 600 },
+                { resource: 'frames', amount: 992 },
+                { resource: 'stone', amount: 752 },
+                { resource: 'metal', amount: 208 },
+                { resource: 'rope', amount: 152 },
             ],
         },
     ],

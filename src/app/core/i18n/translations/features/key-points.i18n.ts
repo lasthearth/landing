@@ -13,6 +13,8 @@ export const KEY_POINTS_I18N = {
             breadcrumb: 'Ключевые точки',
             intro: 'Ключевые точки — особые локации эксклава, которые дают выгоды селению-владельцу. Здесь видно, как прокачать каждый тип точки: какие улучшения открываются, сколько они стоят и какую специализацию выбрать.',
             draft: 'Схемы предварительные: уровни, стоимость и бонусы ещё уточняются и могут измениться.',
+            infoNote:
+                'Схема информационная: она ничего не строит и не прокачивает. Кнопка «Спланировать» только добавляет улучшение в ваш план и считает стоимость — игра об этих отметках не знает.',
             tabsLabel: 'Типы ключевых точек',
             howTo: 'Нажмите на улучшение, чтобы увидеть подробности, и отмечайте построенное — схема подскажет, что откроется дальше.',
             scheme: {
@@ -42,7 +44,7 @@ export const KEY_POINTS_I18N = {
                 choiceNote: 'На этой ступени можно выбрать только один вариант.',
                 free: 'Отдельно не оплачивается.',
                 action: {
-                    available: 'Отметить построенным',
+                    available: 'Спланировать',
                     built: 'Убрать из плана',
                     locked: 'Сначала постройте нужное',
                     excluded: 'Выбран другой вариант',
@@ -51,7 +53,7 @@ export const KEY_POINTS_I18N = {
             },
             plan: {
                 title: 'Ваш план',
-                empty: 'Отмечайте улучшения построенными — здесь сложится общая стоимость.',
+                empty: 'Спланируйте улучшения — здесь сложится общая стоимость.',
                 count: 'Отмечено {{count}} из {{total}}. Всего понадобится:',
                 reset: 'Сбросить',
             },
@@ -59,21 +61,54 @@ export const KEY_POINTS_I18N = {
                 ducats: { one: 'дукат', few: 'дуката', many: 'дукатов', other: 'дуката' },
                 silver: { one: 'серебряная', few: 'серебряные', many: 'серебряных', other: 'серебряной' },
                 copper: { one: 'медная', few: 'медные', many: 'медных', other: 'медной' },
-                coins: { one: 'монета', few: 'монеты', many: 'монет', other: 'монеты' },
-                timber: { one: 'бревно', few: 'бревна', many: 'брёвен', other: 'бревна' },
-                stone: { one: 'блок камня', few: 'блока камня', many: 'блоков камня', other: 'блока камня' },
-                metal: { one: 'слиток', few: 'слитка', many: 'слитков', other: 'слитка' },
-                labor: { one: 'рабочий', few: 'рабочих', many: 'рабочих', other: 'рабочего' },
+                frames: {
+                    one: 'сруб (любой породы)',
+                    few: 'сруба (любой породы)',
+                    many: 'срубов (любой породы)',
+                    other: 'сруба (любой породы)',
+                },
+                stone: {
+                    one: 'блок камня (любой породы)',
+                    few: 'блока камня (любой породы)',
+                    many: 'блоков камня (любой породы)',
+                    other: 'блока камня (любой породы)',
+                },
+                metal: { one: 'медный слиток', few: 'медных слитка', many: 'медных слитков', other: 'медных слитка' },
+                planks: {
+                    one: 'доска (любой породы)',
+                    few: 'доски (любой породы)',
+                    many: 'досок (любой породы)',
+                    other: 'доски (любой породы)',
+                },
+                beams: {
+                    one: 'балка (любой породы)',
+                    few: 'балки (любой породы)',
+                    many: 'балок (любой породы)',
+                    other: 'балки (любой породы)',
+                },
+                nails: { one: 'медный гвоздь', few: 'медных гвоздя', many: 'медных гвоздей', other: 'медных гвоздя' },
+                rope: { one: 'верёвка', few: 'верёвки', many: 'верёвок', other: 'верёвки' },
+                glass: { one: 'стекло', few: 'стекла', many: 'стёкол', other: 'стекла' },
+                brick: {
+                    one: 'обожжённый кирпич',
+                    few: 'обожжённых кирпича',
+                    many: 'обожжённых кирпичей',
+                    other: 'обожжённых кирпича',
+                },
             },
             short: {
                 ducats: 'зол.',
                 silver: 'сер.',
                 copper: 'мед.',
-                coins: 'мон.',
-                timber: 'бр.',
+                frames: 'сруб.',
                 stone: 'кам.',
-                metal: 'сл.',
-                labor: 'раб.',
+                metal: 'сл. мед.',
+                planks: 'дос.',
+                beams: 'балк.',
+                nails: 'гвозд.',
+                rope: 'вер.',
+                glass: 'стек.',
+                brick: 'кирп.',
             },
             moneyNote: 'Цены — в монетах сервера: 1 дукат (золотая) = 100 серебряных, 1 серебряная = 10 медных.',
             points: {
@@ -121,39 +156,63 @@ export const KEY_POINTS_I18N = {
                     name: 'Форт',
                     tagline: 'Оборона и контроль дорог',
                     description:
-                        'Укреплённая точка на перекрёстке земель. Даёт владельцу обзор, защиту соседних наделов и право держать гарнизон.',
+                        'Укреплённая точка на перекрёстке земель: пять уровней фортификации, мастерская болтов и баллисты, починка брони и оружия и монеты лена — чем крепче форт, тем чаще они приходят.',
                     nodes: {
                         outpost: {
                             title: 'Застава',
-                            effect: 'Флаг лена над точкой, оповещение о чужих у стен.',
+                            effect: 'Частокол, караул и флаг лена над точкой. В сундук точки падает 1 таллер (серебряная монета) раз в 7 игровых дней.',
                         },
-                        palisade: {
-                            title: 'Частокол',
-                            effect: 'Первая линия стен: время набега на точку +10 минут.',
+                        boltsWorkshop: {
+                            title: 'Мастерская болтов',
+                            effect: 'Мастерская льёт болты для баллист: пока форт стоит, есть чем стрелять.',
                         },
-                        watchtower: {
-                            title: 'Сторожевая башня',
-                            effect: 'Обзор округи: набег на соседние наделы виден заранее.',
+                        ballista: {
+                            title: 'Баллиста',
+                            effect: 'На стене встаёт баллиста: осаждающих встречают тяжёлыми болтами.',
                         },
-                        fort2: {
-                            title: 'Форт',
-                            effect: 'Уровень II: точка выдерживает осаду, монумент прочнее.',
+                        ostrog: {
+                            title: 'Острог',
+                            effect: 'Стены поднимаются выше, во дворе помещается гарнизон.',
                         },
-                        garrison: {
-                            title: 'Гарнизон',
-                            effect: 'Специализация: защитники точки получают бонус в бою.',
+                        roadWatch: {
+                            title: 'Дорожная стража',
+                            effect: 'Дозоры на дорогах собирают монеты: 1 таллер (серебряная монета) в сундук раз в 6 игровых дней.',
                         },
-                        walls: {
-                            title: 'Каменные стены',
-                            effect: 'Специализация: места пролома сокращаются вдвое.',
+                        ballista2: {
+                            title: 'Баллиста у ворот',
+                            effect: 'Вторая баллиста прикрывает ворота: подойти к стене в лоб труднее.',
+                        },
+                        detinets: {
+                            title: 'Детинец',
+                            effect: 'Внутри крепости встаёт детинец — последнее убежище защитников.',
+                        },
+                        tollYard: {
+                            title: 'Мытный двор',
+                            effect: 'Мыто собирают на месте: 1 таллер (серебряная монета) в сундук раз в 5 игровых дней.',
                         },
                         armory: {
                             title: 'Оружейная',
-                            effect: 'Хранилище снаряжения, починка оружия на месте.',
+                            effect: 'Починка брони и оружия: 1 единица за 90 игровых дней.',
+                        },
+                        monument2: {
+                            title: 'Второй монумент',
+                            effect: 'На точке помещается второй монумент.',
+                        },
+                        kreml: {
+                            title: 'Каменный кремль',
+                            effect: 'Стены и башни из камня: осада затягивается.',
+                        },
+                        treasury: {
+                            title: 'Ленная казна',
+                            effect: 'Счёт и казна рядом: 1 таллер (серебряная монета) в сундук раз в 4 игровых дня.',
+                        },
+                        armoryMaster: {
+                            title: 'Мастер-оружейник',
+                            effect: 'Починка брони и оружия идёт быстрее: 1 единица за 30 игровых дней.',
                         },
                         citadel: {
                             title: 'Цитадель',
-                            effect: 'Уровень III: форт прикрывает союзные наделы в радиусе.',
+                            effect: 'Цитадель держит осаду и прикрывает соседние наделы, монумент прочнее.',
                         },
                     },
                 },
@@ -471,6 +530,8 @@ export const KEY_POINTS_I18N = {
             breadcrumb: 'Key points',
             intro: 'Key points are special locations of the exclave that benefit the settlement holding them. Here you can see how to upgrade each type of point: which upgrades open up, what they cost and which specialization to pick.',
             draft: 'These schemes are preliminary: levels, costs and bonuses are still being worked out and may change.',
+            infoNote:
+                'This scheme is for reference only: it neither builds nor upgrades anything. “Add to plan” merely adds an upgrade to your plan and totals its cost — the game knows nothing about these marks.',
             tabsLabel: 'Key point types',
             howTo: 'Click an upgrade to see the details and mark what you have built — the scheme shows what opens next.',
             scheme: {
@@ -500,7 +561,7 @@ export const KEY_POINTS_I18N = {
                 choiceNote: 'Only one option can be chosen at this step.',
                 free: 'Not paid for separately.',
                 action: {
-                    available: 'Mark as built',
+                    available: 'Add to plan',
                     built: 'Remove from plan',
                     locked: 'Build the requirements first',
                     excluded: 'Another option chosen',
@@ -509,7 +570,7 @@ export const KEY_POINTS_I18N = {
             },
             plan: {
                 title: 'Your plan',
-                empty: 'Mark upgrades as built and the total cost will add up here.',
+                empty: 'Plan the upgrades — the total cost will add up here.',
                 count: '{{count}} of {{total}} marked. You will need:',
                 reset: 'Reset',
             },
@@ -517,21 +578,49 @@ export const KEY_POINTS_I18N = {
                 ducats: { one: 'ducat', few: 'ducats', many: 'ducats', other: 'ducats' },
                 silver: { one: 'silver', few: 'silver', many: 'silver', other: 'silver' },
                 copper: { one: 'copper', few: 'copper', many: 'copper', other: 'copper' },
-                coins: { one: 'coin', few: 'coins', many: 'coins', other: 'coins' },
-                timber: { one: 'log', few: 'logs', many: 'logs', other: 'logs' },
-                stone: { one: 'stone block', few: 'stone blocks', many: 'stone blocks', other: 'stone blocks' },
-                metal: { one: 'ingot', few: 'ingots', many: 'ingots', other: 'ingots' },
-                labor: { one: 'worker', few: 'workers', many: 'workers', other: 'workers' },
+                frames: {
+                    one: 'log frame (any wood)',
+                    few: 'log frames (any wood)',
+                    many: 'log frames (any wood)',
+                    other: 'log frames (any wood)',
+                },
+                stone: {
+                    one: 'stone block (any rock)',
+                    few: 'stone blocks (any rock)',
+                    many: 'stone blocks (any rock)',
+                    other: 'stone blocks (any rock)',
+                },
+                metal: { one: 'copper ingot', few: 'copper ingots', many: 'copper ingots', other: 'copper ingots' },
+                planks: {
+                    one: 'plank (any wood)',
+                    few: 'planks (any wood)',
+                    many: 'planks (any wood)',
+                    other: 'planks (any wood)',
+                },
+                beams: {
+                    one: 'beam (any wood)',
+                    few: 'beams (any wood)',
+                    many: 'beams (any wood)',
+                    other: 'beams (any wood)',
+                },
+                nails: { one: 'copper nail', few: 'copper nails', many: 'copper nails', other: 'copper nails' },
+                rope: { one: 'rope', few: 'ropes', many: 'ropes', other: 'ropes' },
+                glass: { one: 'glass pane', few: 'glass panes', many: 'glass panes', other: 'glass panes' },
+                brick: { one: 'fired brick', few: 'fired bricks', many: 'fired bricks', other: 'fired bricks' },
             },
             short: {
                 ducats: 'g',
                 silver: 's',
                 copper: 'c',
-                coins: 'coins',
-                timber: 'logs',
+                frames: 'frames',
                 stone: 'stone',
-                metal: 'ingots',
-                labor: 'workers',
+                metal: 'copper',
+                planks: 'planks',
+                beams: 'beams',
+                nails: 'nails',
+                rope: 'rope',
+                glass: 'glass',
+                brick: 'bricks',
             },
             moneyNote: 'Prices are in server coins: 1 ducat (gold) = 100 silver, 1 silver = 10 copper.',
             points: {
@@ -579,39 +668,63 @@ export const KEY_POINTS_I18N = {
                     name: 'Fort',
                     tagline: 'Defence and road control',
                     description:
-                        'A fortified point at a crossroads. Gives its holder a wide view, protection for nearby holdings and the right to keep a garrison.',
+                        'A fortified point at a crossroads: five levels of fortification, a bolt workshop and ballistas, gear repair and the fief’s coins — the stronger the fort, the more often they come.',
                     nodes: {
                         outpost: {
                             title: 'Outpost',
-                            effect: 'The fief’s banner over the point, alerts about strangers at the walls.',
+                            effect: 'A stockade, a watch and the fief’s banner over the point. 1 thaler (silver coin) drops into the point’s chest every 7 game days.',
                         },
-                        palisade: {
-                            title: 'Palisade',
-                            effect: 'First line of walls: raid time on the point +10 minutes.',
+                        boltsWorkshop: {
+                            title: 'Bolt workshop',
+                            effect: 'The workshop casts bolts for the ballistas: while the fort stands, there is something to shoot.',
                         },
-                        watchtower: {
-                            title: 'Watchtower',
-                            effect: 'A view of the area: raids on nearby holdings are visible in advance.',
+                        ballista: {
+                            title: 'Ballista',
+                            effect: 'A ballista takes its place on the wall: attackers are met with heavy bolts.',
                         },
-                        fort2: {
-                            title: 'Fort',
-                            effect: 'Level II: the point withstands a siege, the monument is sturdier.',
+                        ostrog: {
+                            title: 'Stockade',
+                            effect: 'The walls rise higher and the yard can hold a garrison.',
                         },
-                        garrison: {
-                            title: 'Garrison',
-                            effect: 'Specialization: the point’s defenders get a combat bonus.',
+                        roadWatch: {
+                            title: 'Road watch',
+                            effect: 'Patrols on the roads bring in coins: 1 thaler (silver coin) into the chest every 6 game days.',
                         },
-                        walls: {
-                            title: 'Stone walls',
-                            effect: 'Specialization: breach spots are halved.',
+                        ballista2: {
+                            title: 'Gate ballista',
+                            effect: 'A second ballista covers the gate: a head-on approach to the wall gets harder.',
+                        },
+                        detinets: {
+                            title: 'Inner keep',
+                            effect: 'A keep rises inside the fortress — the defenders’ last refuge.',
+                        },
+                        tollYard: {
+                            title: 'Toll yard',
+                            effect: 'Tolls are collected on the spot: 1 thaler (silver coin) into the chest every 5 game days.',
                         },
                         armory: {
                             title: 'Armory',
-                            effect: 'Gear storage and on-site weapon repair.',
+                            effect: 'Repair of armour and weapons: 1 item every 90 game days.',
+                        },
+                        monument2: {
+                            title: 'Second monument',
+                            effect: 'A second monument can be raised at the point.',
+                        },
+                        kreml: {
+                            title: 'Stone fortress',
+                            effect: 'Walls and towers of stone: a siege drags on.',
+                        },
+                        treasury: {
+                            title: 'Fief treasury',
+                            effect: 'The accounts and treasury are close at hand: 1 thaler (silver coin) into the chest every 4 game days.',
+                        },
+                        armoryMaster: {
+                            title: 'Master armourer',
+                            effect: 'Armour and weapons are repaired faster: 1 item every 30 game days.',
                         },
                         citadel: {
                             title: 'Citadel',
-                            effect: 'Level III: the fort shields allied holdings within its radius.',
+                            effect: 'The citadel withstands a siege and shields nearby holdings; the monument is sturdier.',
                         },
                     },
                 },

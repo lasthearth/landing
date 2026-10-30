@@ -93,7 +93,7 @@
         [disabled]="node().automatic || state() === 'locked' || state() === 'excluded'"
         (click)="toggle.emit()"
     >
-        <tui-icon [icon]="state() === 'built' ? '@tui.undo-2' : '@tui.hammer'" />
+        <tui-icon [icon]="state() === 'built' ? '@tui.undo-2' : '@tui.list-plus'" />
         {{ actionKey() | translate }}
     </button>
 </section>

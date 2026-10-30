@@ -48,6 +48,11 @@
         <div class="kp-panel__intro">
             <h2 class="kp-panel__title lh-display">{{ point + ".name" | translate }}</h2>
             <p class="kp-panel__text">{{ point + ".description" | translate }}</p>
+            <!-- Пояснение к схеме: она не строит и не прокачивает — только план и смета. -->
+            <p class="kp-note">
+                <tui-icon icon="@tui.book-open-text" />
+                {{ "keyPoints.infoNote" | translate }}
+            </p>
             <p class="kp-panel__hint">
                 <tui-icon icon="@tui.mouse-pointer-click" />
                 {{ "keyPoints.howTo" | translate }}
