@@ -5,19 +5,19 @@
     </div>
 
     @switch (context.data.level) {
-        @case (settlementsTypes.camp) {
+        @case (settlementType.camp) {
             <app-village-form (submitEvent)="context.$implicit.complete()" />
         }
-        @case (settlementsTypes.village) {
+        @case (settlementType.village) {
             <app-township-form (submitEvent)="context.$implicit.complete()" />
         }
-        @case (settlementsTypes.township) {
+        @case (settlementType.township) {
             <app-city-form (submitEvent)="context.$implicit.complete()" />
         }
-        @case (settlementsTypes.city) {
+        @case (settlementType.city) {
             <app-region-form (submitEvent)="context.$implicit.complete()" />
         }
-        @case (settlementsTypes.guild) {
+        @case (settlementType.guild) {
             <app-guild-form (submitEvent)="context.$implicit.complete()" />
         }
         @default {

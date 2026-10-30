@@ -1,6 +1,8 @@
 import { ISettlement } from '../model/i-settlement';
 import { SettlementBadgeTone } from '../model/settlement-badge-tone';
+import { getSettlementTypeValue } from './get-settlement-type-value.function';
 import { isGuildSettlement } from './is-guild-settlement.function';
+import { SETTLEMENT_TYPE } from './settlement-type.constant';
 
 /**
  * Возвращает тон бейджа типа селения.
@@ -16,21 +18,16 @@ export function getSettlementTypeTone(settlement: ISettlement): SettlementBadgeT
         return 'line';
     }
 
-    switch (settlement.type) {
-        case 'VILLAGE':
-        case 1:
+    switch (getSettlementTypeValue(settlement.type)) {
+        case SETTLEMENT_TYPE.village:
             return 'line';
-        case 'TOWNSHIP':
-        case 2:
+        case SETTLEMENT_TYPE.township:
             return 'iron';
-        case 'CITY':
-        case 3:
+        case SETTLEMENT_TYPE.city:
             return 'silver';
-        case 'PROVINCE':
-        case 4:
+        case SETTLEMENT_TYPE.province:
             return 'medal';
-        case 'CAMP':
-        case 0:
+        case SETTLEMENT_TYPE.camp:
         default:
             return 'leader';
     }

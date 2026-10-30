@@ -30,9 +30,9 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1017 | core, entities, features, layout, routes, shared |
+| src/app | 1023 | core, entities, features, layout, routes, shared |
 | core/ | 59 | config, guards, i18n, interceptors, services, types |
-| entities/ | 180 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
+| entities/ | 186 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
 | features/ | 625 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
 | layout/ | 19 | background-scene, footer, header |
 | routes/ | 5 | enums |
@@ -93,7 +93,7 @@
 | entities/referral | 5 | model, api | да | 4 |
 | entities/rule-question | 4 | model, api | да | 4 |
 | entities/server-mod | 9 | model, api, lib | да | 5 |
-| entities/settlement | 41 | ui, model, api, lib, config | да | 38 |
+| entities/settlement | 47 | ui, model, api, lib, config | да | 41 |
 | entities/settlement-tag | 13 | ui, model, api, lib | да | 10 |
 | entities/user | 32 | ui, model, api, lib, config | да | 23 |
 | entities/wiki | 6 | model, api, lib | да | 6 |
@@ -148,9 +148,9 @@
 | about | 11.8 | /about |
 | admin | 51.4 | /profile/admin |
 | analytics | 0.9 | — |
-| common | 1.0 | — |
+| common | 1.1 | — |
 | diplomacy | 1.7 | /diplomacy |
-| events | 7.8 | /profile, /events |
+| events | 8.0 | /profile, /events |
 | faq | 2.3 | /faq |
 | footer | 2.9 | — |
 | gallery | 1.3 | /gallery |
@@ -158,7 +158,7 @@
 | home | 10.8 | / |
 | key-points | 72.4 | /key-points |
 | legal | 68.7 | /privacy-policy, /public-offer |
-| lfg | 15.4 | /lfg |
+| lfg | 15.7 | /lfg |
 | market | 15.6 | /profile, /market |
 | mods | 10.9 | /profile/admin, /mods |
 | news | 10.5 | /news |
@@ -170,7 +170,7 @@
 | rules | 252.4 | /rules |
 | settlements | 55.2 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared | 27.1 | — |
-| videos | 2.0 | /videos |
+| videos | 2.1 | /videos |
 | wiki | 63.7 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |
 | world-map | 6.6 | /map |
 

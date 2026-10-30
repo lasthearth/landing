@@ -130,12 +130,14 @@ export class SettlementVerificationRequestComponent {
         TOWNSHIP: 'township',
         CITY: 'city',
         PROVINCE: 'province',
+        GUILD: 'guild',
     };
 
     /**
      * Возвращает локализованное название типа надела по ключу.
      *
-     * Для гильдий возвращает "Гильдия".
+     * Для гильдий возвращает "Гильдия". Тип `GUILD` приходит из API; маркер
+     * в названии остался у заявок, поданных до появления типа на бэкенде.
      *
      * @param request Данные заявки на надел.
      * @returns Локализованная строка.

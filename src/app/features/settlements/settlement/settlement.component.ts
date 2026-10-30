@@ -19,22 +19,24 @@ import {
     getDiplomacyTone,
     getMemberRoleNames,
     getOwnerIds,
-    getSettlementTypeByKey,
+    getSettlementTier,
     getSettlementTypeName,
     getSettlementTypeTone,
+    getSettlementTypeValue,
     IRole,
     isGuildSettlement,
     isOwner,
     ISettlement,
     ISettlementInvitation,
     IUpdateAttachment,
+    MAX_SETTLEMENT_TIER,
     memberHasPermission,
     Permission,
+    SETTLEMENT_TYPE,
     SettlementBadgeComponent,
     SettlementBadgeTone,
     SettlementDisplayNamePipe,
     SettlementService,
-    SettlementsTypes,
 } from '@entities/settlement';
 import { IPlayer, PlayerChipComponent, UserService } from '@entities/user';
 import { SettlementTagComponent, SettlementTagStore } from '@entities/settlement-tag';
@@ -363,16 +365,6 @@ export class SettlementComponent {
     }
 
     /**
-     * Проверяет, является ли надел гильдией.
-     *
-     * @param settlement Надел.
-     * @returns true, если надел содержит маркер гильдии.
-     */
-    protected isGuild(settlement: ISettlement): boolean {
-        return isGuildSettlement(settlement);
-    }
-
-    /**
      * Возвращает тег по идентификатору.
      *
      * @param tagId Идентификатор тега.
@@ -387,7 +379,7 @@ export class SettlementComponent {
     protected createSettlement(): void {
         this.dialogs
             .open(new PolymorpheusComponent(CreateSettlementFormComponent), {
-                data: { level: SettlementsTypes.initial },
+                data: { level: SETTLEMENT_TYPE.unspecified },
             })
             .subscribe();
     }
@@ -398,22 +390,39 @@ export class SettlementComponent {
     protected createGuild(): void {
         this.dialogs
             .open(new PolymorpheusComponent(CreateSettlementFormComponent), {
-                data: { level: SettlementsTypes.guild },
+                data: { level: SETTLEMENT_TYPE.guild },
             })
             .subscribe();
     }
 
     /**
+     * Показывает ли кнопку «Повысить уровень».
+     *
+     * Гильдия не растёт по ступеням, а региональная провинция — верхняя
+     * ступень шкалы: для них сервер повышения не делает, и формы следующей
+     * ступени не существует.
+     *
+     * @param settlement Надел.
+     * @returns true, если надел можно повысить.
+     */
+    protected canLevelUp(settlement: ISettlement): boolean {
+        if (isGuildSettlement(settlement)) {
+            return false;
+        }
+
+        return getSettlementTier(settlement) < MAX_SETTLEMENT_TIER;
+    }
+
+    /**
      * Открывает диалог повышения уровня надела.
      *
-     * @param currentType Текущий тип надела.
+     * @param currentType Текущий тип надела из ответа API (имя или число).
      */
     protected levelUp(currentType: string | number): void {
-        const type =
-            typeof currentType === 'number' ? currentType : this.getSettlementsTypeEnumByKey(currentType);
-
         this.dialogs
-            .open(new PolymorpheusComponent(CreateSettlementFormComponent), { data: { level: type } })
+            .open(new PolymorpheusComponent(CreateSettlementFormComponent), {
+                data: { level: getSettlementTypeValue(currentType) },
+            })
             .subscribe();
     }
 
@@ -886,28 +895,6 @@ export class SettlementComponent {
         const timestamp = Number(value);
 
         return Number.isNaN(timestamp) ? null : timestamp * 1000;
-    }
-
-    /**
-     * Возвращает элемент перечисления типов надела по ключу.
-     *
-     * @param key Ключ типа надела.
-     * @returns Элемент перечисления.
-     */
-    private getSettlementsTypeEnumByKey(key: string): SettlementsTypes {
-        switch (key) {
-            case 'VILLAGE':
-                return SettlementsTypes.village;
-            case 'TOWNSHIP':
-                return SettlementsTypes.township;
-            case 'CITY':
-                return SettlementsTypes.city;
-            case 'PROVINCE':
-                return SettlementsTypes.region;
-            case 'CAMP':
-            default:
-                return SettlementsTypes.camp;
-        }
     }
 
     /**
