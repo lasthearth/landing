@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } 
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function';
 import { uploadSettlementAttachments } from '@shared/lib/upload-settlement-attachments.function';
 import { SettlementService } from '@entities/settlement';
-import { ICreateSettlement } from '@entities/settlement';
+import { ICreateSettlement, SUBMIT_SETTLEMENT_TYPE } from '@entities/settlement';
 import { MediaService } from '@entities/media';
 import { fileFieldsRegion, FileKeyRegion } from './region-form.types';
 import { Subject, switchMap, Observable, map, finalize, timeout } from 'rxjs';
@@ -167,7 +167,7 @@ export class RegionFormComponent {
                     ).pipe(
                         map((attachments) => {
                             const request: ICreateSettlement = {
-                                type: 0,
+                                type: SUBMIT_SETTLEMENT_TYPE.camp,
                                 name: (values.name ?? '').trimEnd(),
                                 description: (values.description ?? '').trimEnd(),
                                 diplomacy: values.diplomacy ?? '',

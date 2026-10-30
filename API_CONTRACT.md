@@ -736,7 +736,14 @@ interface JoinRequest {
 interface Settlement {
     id: string;
     name: string;
-    type: number; // enum as int32 (0=CAMP, 1=CITY, 2=FORTRESS, 3=CAPITAL)
+    /**
+     * Имя перечисления `SettlementType` (gateway сериализует перечисления именами,
+     * `UseEnumNumbers` не включён): 'CAMP' | 'VILLAGE' | 'TOWNSHIP' | 'CITY' |
+     * 'PROVINCE' | 'GUILD'. Числа proto: CAMP = 1 … PROVINCE = 5, GUILD = 6,
+     * 0 = SETTLEMENT_TYPE_UNSPECIFIED. В DTO клиента поле держит `string | number`,
+     * приводит его `getSettlementTypeValue()` (`entities/settlement`).
+     */
+    type: string;
     description: string;
     diplomacy: string;
     /** @deprecated Лидеры вычисляются из members[].role_ids. См. раздел выше. */
@@ -776,6 +783,15 @@ interface SubmitAttachment {
     description: string;
 }
 interface SubmitRequest {
+    /**
+     * Перечисление `SubmitRequest.Type`, а не ступень надела: 1 = CAMP (надел),
+     * 2 = GUILD (гильдия). 0 = TYPE_UNSPECIFIED — сервер отвечает
+     * INVALID_ARGUMENT («invalid settlement type») до первого чтения базы.
+     * Ступень заявка не несёт: `type` выбирает род группы (надел или гильдия),
+     * а повышение уровня сервер делает сам (`SettlementVerification.LvlUp`) по
+     * текущей ступени одобренного надела. Поэтому все формы надела, включая
+     * формы повышения, шлют 1. Значения — `SUBMIT_SETTLEMENT_TYPE`.
+     */
     type: number;
     name: string;
     description: string;

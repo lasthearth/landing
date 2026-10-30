@@ -1,5 +1,7 @@
 import { ISettlement } from '../model/i-settlement';
+import { getSettlementTypeValue } from './get-settlement-type-value.function';
 import { isGuildSettlement } from './is-guild-settlement.function';
+import { SETTLEMENT_TYPE } from './settlement-type.constant';
 
 /**
  * Возвращает иконку Taiga UI для типа селения.
@@ -16,21 +18,16 @@ export function getSettlementTypeIcon(settlement: ISettlement): string {
         return '@tui.handshake';
     }
 
-    switch (settlement.type) {
-        case 'VILLAGE':
-        case 1:
+    switch (getSettlementTypeValue(settlement.type)) {
+        case SETTLEMENT_TYPE.village:
             return '@tui.house';
-        case 'TOWNSHIP':
-        case 2:
+        case SETTLEMENT_TYPE.township:
             return '@tui.building';
-        case 'CITY':
-        case 3:
+        case SETTLEMENT_TYPE.city:
             return '@tui.building-2';
-        case 'PROVINCE':
-        case 4:
+        case SETTLEMENT_TYPE.province:
             return '@tui.castle';
-        case 'CAMP':
-        case 0:
+        case SETTLEMENT_TYPE.camp:
         default:
             return '@tui.tent';
     }

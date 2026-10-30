@@ -16,15 +16,16 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import {
     DEFAULT_SETTLEMENT_COVER,
     ISettlement,
-    getSettlementTypeByKey,
     getSettlementTypeName,
     getSettlementDisplayName,
     getSettlementTypeTone,
     getSettlementTypeIcon,
     getSettlementTier,
+    getSettlementTypeValue,
     getDiplomacyTone,
     getOwnerIds,
     isGuildSettlement,
+    SETTLEMENT_TYPE,
     SettlementBadgeComponent,
     SettlementBadgeTone,
     SettlementDisplayNamePipe,
@@ -256,19 +257,6 @@ export class SettlementCardComponent {
         return getDiplomacyTone(diplomacy);
     }
 
-    /**
-     * Получает тип надела по ключу.
-     *
-     * @param key - уникальный идентификатор надела (может быть undefined)
-     * @returns Тип надела в виде строки:
-     * 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция'
-     */
-    protected getSettlementTypeByKey(
-        key: string | number | undefined
-    ): 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция' {
-        return getSettlementTypeByKey(key);
-    }
-
     protected openSetTagsDialog() {
         this.dialogs
             .open(new PolymorpheusComponent(SetTagsComponent), {
@@ -293,7 +281,7 @@ export class SettlementCardComponent {
     /**
      * Возвращает CSS-класс окантовки карточки в зависимости от типа надела.
      *
-     * @param type Тип надела (строка или число из enum).
+     * @param type Тип надела из ответа API (имя перечисления или его число).
      * @returns Класс окантовки: settlement-card--camp | --village | --township | --city | --region.
      */
     protected getBorderClass(type: string | number | undefined): string {
@@ -305,33 +293,18 @@ export class SettlementCardComponent {
             return 'settlement-card--guild';
         }
 
-        switch (type) {
-            case 'VILLAGE':
-            case 1:
+        switch (getSettlementTypeValue(type)) {
+            case SETTLEMENT_TYPE.village:
                 return 'settlement-card--village';
-            case 'TOWNSHIP':
-            case 2:
+            case SETTLEMENT_TYPE.township:
                 return 'settlement-card--township';
-            case 'CITY':
-            case 3:
+            case SETTLEMENT_TYPE.city:
                 return 'settlement-card--city';
-            case 'PROVINCE':
-            case 4:
+            case SETTLEMENT_TYPE.province:
                 return 'settlement-card--region';
-            case 'CAMP':
-            case 0:
+            case SETTLEMENT_TYPE.camp:
             default:
                 return 'settlement-card--camp';
         }
-    }
-
-    /**
-     * Определяет, является ли надел лагерем (без окантовки).
-     *
-     * @param type Тип надела.
-     * @returns true, если тип соответствует лагерю.
-     */
-    protected isCampType(type: string | number | undefined): boolean {
-        return type === 'CAMP' || type === 0 || type === undefined;
     }
 }

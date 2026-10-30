@@ -1,5 +1,9 @@
 export interface ICreateSettlement {
-    /** Тип надела: 0 = CAMP (стан). Бэкенд принимает int32. */
+    /**
+     * Тип заявки — значение `SUBMIT_SETTLEMENT_TYPE` (`entities/settlement`):
+     * `camp` (1) — надел, `guild` (2) — гильдия. Ноль сервер отвергает как
+     * TYPE_UNSPECIFIED. Ступень надела заявка не несёт: её повышает бэкенд.
+     */
     type?: number;
 
     name: string;

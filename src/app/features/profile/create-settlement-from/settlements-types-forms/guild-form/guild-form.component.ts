@@ -5,7 +5,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { RequestStatusService } from '@core/services/request-status.service';
-import { buildGuildName, ICreateSettlement, SettlementService } from '@entities/settlement';
+import { ICreateSettlement, SUBMIT_SETTLEMENT_TYPE, SettlementService } from '@entities/settlement';
 import { MediaService } from '@entities/media';
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function';
 import { uploadSettlementAttachments } from '@shared/lib/upload-settlement-attachments.function';
@@ -132,8 +132,11 @@ export class GuildFormComponent {
                     ).pipe(
                         map((attachments) => {
                             const request: ICreateSettlement = {
-                                type: 0,
-                                name: buildGuildName((values.name ?? '').trimEnd()),
+                                // Гильдия — свой род группы: тип `guild`, а не `camp`.
+                                // С типом `camp` сервер принял бы заявку за повышение
+                                // уровня надела заявителя и гильдию не создал.
+                                type: SUBMIT_SETTLEMENT_TYPE.guild,
+                                name: (values.name ?? '').trimEnd(),
                                 description: (values.description ?? '').trimEnd(),
                                 diplomacy: this.i18n.translate('settlements.diplomacy.peaceful'),
                                 coordinates: { x: 0, y: 0 },

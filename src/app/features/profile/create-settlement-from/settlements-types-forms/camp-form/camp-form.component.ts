@@ -6,7 +6,7 @@ import { NgFor, AsyncPipe, NgIf } from '@angular/common';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ICreateSettlement } from '@entities/settlement';
+import { ICreateSettlement, SUBMIT_SETTLEMENT_TYPE } from '@entities/settlement';
 import { SettlementService } from '@entities/settlement';
 import { MediaService } from '@entities/media';
 import { getFileStatuses } from '@shared/lib/get-file-statuses.function'; // Функция для работы со статусом файлов
@@ -137,7 +137,7 @@ export class CampFormComponent {
                     ).pipe(
                         map((attachments) => {
                             const request: ICreateSettlement = {
-                                type: 0,
+                                type: SUBMIT_SETTLEMENT_TYPE.camp,
                                 name: (values.name ?? '').trimEnd(),
                                 description: (values.description ?? '').trimEnd(),
                                 diplomacy: values.diplomacy ?? '',
