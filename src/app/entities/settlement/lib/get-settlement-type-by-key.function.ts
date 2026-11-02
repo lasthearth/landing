@@ -8,24 +8,29 @@ import { SETTLEMENT_TYPE } from './settlement-type.constant';
  * или его число (`SETTLEMENT_TYPE.camp`). Разбирает оба вида
  * {@link getSettlementTypeValue}, шкала одна — серверная.
  *
+ * Имена — по действующей редакции правил (§2.1 «Типы и статусы»): «Стан»
+ * (3+ игрока), «Вотчина», «Баронство», «Графство», «Маркграфство». Нижней
+ * ступени «Усадьба» (1–2 игрока) в перечислении нет: на сайте такие наделы
+ * не регистрируют, это только `HAMLET` на карте земель.
+ *
  * @param key Ключ-типа селения (строка или число из enum).
  */
 export function getSettlementTypeByKey(
     key: string | number | undefined
-): 'Лагерь' | 'Деревня' | 'Посёлок' | 'Город' | 'Региональная провинция' | 'Гильдия' {
+): 'Стан' | 'Вотчина' | 'Баронство' | 'Графство' | 'Маркграфство' | 'Гильдия' {
     switch (getSettlementTypeValue(key)) {
         case SETTLEMENT_TYPE.village:
-            return 'Деревня';
+            return 'Вотчина';
         case SETTLEMENT_TYPE.township:
-            return 'Посёлок';
+            return 'Баронство';
         case SETTLEMENT_TYPE.city:
-            return 'Город';
+            return 'Графство';
         case SETTLEMENT_TYPE.province:
-            return 'Региональная провинция';
+            return 'Маркграфство';
         case SETTLEMENT_TYPE.guild:
             return 'Гильдия';
         case SETTLEMENT_TYPE.camp:
         default:
-            return 'Лагерь';
+            return 'Стан';
     }
 }

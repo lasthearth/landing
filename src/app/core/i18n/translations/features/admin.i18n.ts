@@ -81,11 +81,11 @@ export const ADMIN_I18N = {
                 attachmentAlt: 'Вложение',
             },
             settlementTypes: {
-                camp: 'Лагерь',
-                village: 'Деревня',
-                township: 'Посёлок',
-                city: 'Город',
-                province: 'Региональная провинция',
+                camp: 'Стан',
+                village: 'Вотчина',
+                township: 'Баронство',
+                city: 'Графство',
+                province: 'Маркграфство',
                 guild: 'Гильдия',
             },
             questions: {
@@ -535,10 +535,10 @@ export const ADMIN_I18N = {
             },
             settlementTypes: {
                 camp: 'Camp',
-                village: 'Village',
-                township: 'Township',
-                city: 'City',
-                province: 'Regional province',
+                village: 'Patrimony',
+                township: 'Barony',
+                city: 'County',
+                province: 'Margraviate',
                 guild: 'Guild',
             },
             questions: {
