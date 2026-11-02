@@ -704,7 +704,7 @@ export const RULES_I18N = {
                             l15: 'Центра Имперского эксклава',
                             t16: ' - минимум 2 игрока в сети, для ',
                             l17: 'Ключевой точки',
-                            t18: ' - по типу надела ей владеющего]. Территориальное нахождение цели при проведении воровства не имеет значения.',
+                            t18: ' - по типу надела ей владеющего]. Территориальное нахождение цели при проведении воровства не имеет значения. Если вор ворует в своём же наделе, себя в требуемый онлайн он не засчитывает: в сети должны быть другие игроки.',
                         },
                         p3_1_3_5:
                             '• Вор имеет право доводить до конца уже начатый грабеж, если в процессе цель вышла из сети, но после выхода цели, вор не имеет права ломать абсолютно никакие блоки и объекты.',
@@ -1995,7 +1995,7 @@ export const RULES_I18N = {
                             l15: 'Center of the Imperial Exclave',
                             t16: ' - at least 2 players online, for a ',
                             l17: 'Key point',
-                            t18: ' - according to the type of the settlement that owns it]. Where the target is located during the theft does not matter.',
+                            t18: ' - according to the type of the settlement that owns it]. Where the target is located during the theft does not matter. If a thief steals in their own settlement, they do not count themselves towards the required online presence: other players must be online.',
                         },
                         p3_1_3_5:
                             '• A thief has the right to finish a robbery already in progress if the target goes offline during it, but after the target leaves, the thief has no right to break any blocks or objects whatsoever.',
