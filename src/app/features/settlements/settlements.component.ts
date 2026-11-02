@@ -15,7 +15,7 @@ import { SettlementCardComponent } from './settlement-card/settlement-card.compo
 import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
-import { of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
@@ -138,7 +138,9 @@ export class SettlementsComponent {
     /**
      * Курсы, которые есть в списке, с количеством.
      */
-    protected readonly courseOptions = computed(() => this.countBy((item) => item.diplomacy).filter((option) => option.value));
+    protected readonly courseOptions = computed(() =>
+        this.countBy((item) => (isGuildSettlement(item) ? '' : item.diplomacy)).filter((option) => option.value)
+    );
 
     /**
      * Включён ли хоть один фильтр.
@@ -158,7 +160,8 @@ export class SettlementsComponent {
                 return false;
             }
 
-            if (course && item.diplomacy !== course) {
+            // Политического курса у гильдии нет: фильтр курса её не касается.
+            if (course && !isGuildSettlement(item) && item.diplomacy !== course) {
                 return false;
             }
 
@@ -218,10 +221,12 @@ export class SettlementsComponent {
     protected loadSettlements(): void {
         this.loading.set(true);
         this.error.set(false);
-        this.settlementService
-            .getSettlements()
+        forkJoin({
+            settlements: this.settlementService.getSettlements(),
+            guilds: this.settlementService.getGuilds().pipe(catchError(() => of([] as ISettlement[]))),
+        })
             .pipe(
-                map((s) => (s === null ? [] : s)),
+                map(({ settlements, guilds }) => [...(settlements ?? []), ...guilds]),
                 switchMap((list) =>
                     this.userService
                         .getPlayersBatch$(

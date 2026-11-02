@@ -34,7 +34,9 @@
                         (click)="select(settlement)"
                     >
                         <span class="font-semibold text-ink">{{ displayName(settlement) }}</span>
-                        <span class="text-base text-ink-3">{{ settlement.diplomacy }}</span>
+                        @if (!isGuild(settlement)) {
+                            <span class="text-base text-ink-3">{{ settlement.diplomacy }}</span>
+                        }
                     </button>
                 </li>
             }
@@ -118,25 +120,27 @@
 
             <hr class="h-px border-0 bg-line" />
 
-            <!-- Дипломатия -->
-            <div class="flex flex-col gap-3">
-                <span class="text-lg font-semibold text-ink">
-                    {{ 'admin.settlementAdmin.diplomacyTitle' | translate }}
-                </span>
-                <div class="lh-chips">
-                    @for (option of diplomacyOptions; track option.value) {
-                        <button
-                            type="button"
-                            class="lh-chip"
-                            [attr.aria-pressed]="current.diplomacy === option.value"
-                            [disabled]="busy()"
-                            (click)="setDiplomacy(current, option.value)"
-                        >
-                            {{ option.labelKey | translate }}
-                        </button>
-                    }
+            <!-- Дипломатия: у гильдии политического статуса нет -->
+            @if (!isGuild(current)) {
+                <div class="flex flex-col gap-3">
+                    <span class="text-lg font-semibold text-ink">
+                        {{ 'admin.settlementAdmin.diplomacyTitle' | translate }}
+                    </span>
+                    <div class="lh-chips">
+                        @for (option of diplomacyOptions; track option.value) {
+                            <button
+                                type="button"
+                                class="lh-chip"
+                                [attr.aria-pressed]="current.diplomacy === option.value"
+                                [disabled]="busy()"
+                                (click)="setDiplomacy(current, option.value)"
+                            >
+                                {{ option.labelKey | translate }}
+                            </button>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
 
             <hr class="h-px border-0 bg-line" />
 

@@ -9,13 +9,14 @@ import {
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, finalize, Observable, of, tap } from 'rxjs';
+import { catchError, finalize, forkJoin, Observable, of, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import {
     getOwnerIds,
     getSettlementDisplayName,
+    isGuildSettlement,
     ISettlement,
     SettlementService,
 } from '@entities/settlement';
@@ -332,19 +333,38 @@ export class SettlementAdminPanelComponent {
     }
 
     /**
-     * Загружает список наделов.
+     * Загружает список групп: наделы и гильдии.
+     *
+     * `GET /settlements` без рода группы отдаёт только наделы, поэтому
+     * каталог гильдий запрашивается отдельно: без него гильдию нельзя
+     * ни найти, ни удалить из админки.
      */
     private load(): void {
         this.loading.set(true);
 
-        this.settlementService
-            .getSettlements()
+        forkJoin({
+            settlements: this.settlementService.getSettlements(),
+            guilds: this.settlementService.getGuilds(),
+        })
             .pipe(
-                catchError(() => of([] as ISettlement[])),
+                catchError(() => of({ settlements: [] as ISettlement[], guilds: [] as ISettlement[] })),
                 finalize(() => this.loading.set(false)),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe((list) => this.settlements.set(list ?? []));
+            .subscribe(({ settlements, guilds }) => this.settlements.set([...(settlements ?? []), ...guilds]));
+    }
+
+    /**
+     * Проверяет, что группа — гильдия.
+     *
+     * Политического статуса у гильдии нет: курс — свойство надела, поэтому
+     * бейдж дипломатии и редактор курса для неё не показываются.
+     *
+     * @param settlement Группа (надел или гильдия).
+     * @returns true, если это гильдия.
+     */
+    protected isGuild(settlement: ISettlement): boolean {
+        return isGuildSettlement(settlement);
     }
 
     /**
