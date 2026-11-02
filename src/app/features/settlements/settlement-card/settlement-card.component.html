@@ -70,9 +70,11 @@
                     >
                         {{ getSettlementTypeLabel(data()) }}
                     </app-settlement-badge>
-                    <app-settlement-badge [tone]="getDiplomacyTone(data().diplomacy)" [uppercase]="true">
-                        {{ getDiplomacyLabel(data()) }}
-                    </app-settlement-badge>
+                    @if (!isGuild(data())) {
+                        <app-settlement-badge [tone]="getDiplomacyTone(data().diplomacy)" [uppercase]="true">
+                            {{ getDiplomacyLabel(data()) }}
+                        </app-settlement-badge>
+                    }
                     @if (isAdmin()) {
                         <button
                             type="button"

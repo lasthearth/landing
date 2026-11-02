@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
 import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { catchError, EMPTY, Observable, of, tap } from 'rxjs';
-import { SettlementService, isSettlementMember } from '@entities/settlement';
+import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { I18nService } from '@core/i18n';
@@ -110,9 +110,9 @@ export class MyJoinRequestsStore {
         const context = new HttpContext().set(SKIP_ERROR_ALERT, true);
 
         this.settlementService
-            .getSettlementInfo(userId, context)
+            .getUserMemberships$(userId, context)
             .pipe(catchError(() => of(null)))
-            .subscribe((settlement) => this.hasSettlement.set(isSettlementMember(settlement, userId)));
+            .subscribe((memberships) => this.hasSettlement.set(!!memberships?.settlement));
 
         this.settlementService
             .getMyJoinRequests$(userId, context)

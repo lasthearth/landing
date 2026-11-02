@@ -76,9 +76,11 @@
                     <app-settlement-badge [tone]="getSettlementTypeTone(data)" [uppercase]="true">
                         {{ getSettlementType(data) }}
                     </app-settlement-badge>
-                    <app-settlement-badge [tone]="getDiplomacyTone(data.diplomacy)" [uppercase]="true">
-                        {{ getDiplomacyLabel(data) }}
-                    </app-settlement-badge>
+                    @if (!isGuild(data)) {
+                        <app-settlement-badge [tone]="getDiplomacyTone(data.diplomacy)" [uppercase]="true">
+                            {{ getDiplomacyLabel(data) }}
+                        </app-settlement-badge>
+                    }
                     @for (tag of data.tags; track tag.id) {
                         @if (getTag(tag.id); as tagData) {
                             <app-settlement-tag [tag]="tagData" />

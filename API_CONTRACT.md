@@ -619,7 +619,8 @@ interface WorldTimeResponse {
 
 | #   | Метод    | Путь                                                              | Описание                            | Auth           | Реализовано                        |
 | --- | -------- | ----------------------------------------------------------------- | ----------------------------------- | -------------- | ---------------------------------- |
-| 1   | `GET`    | `/settlements`                                                    | Список одобренных поселений         | —              | ✅ `getSettlements()`              |
+| 1   | `GET`    | `/settlements`                                                    | Список наделов (`kind` — род)       | —              | ✅ `getSettlements(kind?)`         |
+| 1b  | `GET`    | `/settlements?kind=GROUP_KIND_GUILD`                              | Каталог гильдий                     | —              | ✅ `getGuilds()`                   |
 | 1a  | `GET`    | `/settlements/notifiers`                                          | Позиции всех стоящих глашатаев      | —              | ✅ `getNotifierPositions$()`       |
 | 2   | `POST`   | `/settlements`                                                    | Подать/повысить заявку на поселение | ✅             | ✅ `postRequestSettlement$()`      |
 | 3   | `POST`   | `/settlements/invitations/{invitation_id}:accept`                 | Принять приглашение                 | ✅             | ✅ `inviteAccept()`                |
@@ -634,7 +635,8 @@ interface WorldTimeResponse {
 | 12  | `DELETE` | `/settlements/{settlement_id}/members/{user_id}`                  | Исключить участника (админ)         | ✅ + admin     | ✅ `settlementLeave$()`            |
 | 13  | `POST`   | `/settlements/{settlement_id}/tags`                               | Добавить тег (tags:manage)          | ✅ + privilege | ✅ `postSettlementTags()`          |
 | 14  | `DELETE` | `/settlements/{settlement_id}/tags/{tag_id}`                      | Удалить тег (tags:manage)           | ✅ + privilege | ❌                                 |
-| 15  | `GET`    | `/users/{user_id}/settlements`                                    | Поселение пользователя              | —              | ✅ `getSettlementInfo()`           |
+| 15  | `GET`    | `/users/{user_id}/settlements`                                    | Надел пользователя (без гильдий)    | —              | ✅ `getSettlementInfo()`           |
+| 15a | `GET`    | `/users/{user_id}/memberships`                                    | Обе группы: надел и гильдия         | —              | ✅ `getUserMemberships$()`         |
 | 16  | `GET`    | `/users/{user_id}/settlements/invitations`                        | Приглашения пользователя            | ✅ (self)      | ✅ `UserService.getInvitations$()` |
 | 17  | `GET`    | `/users/{user_id}/settlements/verification:status`                | Статус заявки пользователя          | —              | ✅ `getRequestSettlementStatus$()` |
 
@@ -647,6 +649,12 @@ interface WorldTimeResponse {
 > **Эндпоинтов `GET .../roles` и `GET .../members` НЕ СУЩЕСТВУЕТ.** Роли и
 > состав приходят только внутри `Settlement`, а все мутации ролей, владения и
 > контактов возвращают `{ settlement }` — UI перерисовывается из ответа.
+>
+> **Гильдия — отдельный род группы, а не надел.** `GET /settlements` без
+> `kind` отдаёт только наделы, гильдии — `?kind=GROUP_KIND_GUILD`. А
+> `GET /users/{user_id}/settlements` гильдию не отдаёт вовсе: обе группы
+> игрока (по одной каждого рода) приходят из `GET /users/{user_id}/memberships`
+> → `{ settlement?, guild? }`.
 
 | #   | Метод    | Путь                                                             | Описание                              | Auth                    | Реализовано                   |
 | --- | -------- | ---------------------------------------------------------------- | ------------------------------------- | ----------------------- | ----------------------------- |
@@ -923,15 +931,15 @@ interface CreateResponse {
 **Префикс:** `/v1/users`
 **Frontend:** `entities/user/api/user.service.ts`
 
-| #   | Метод  | Путь                        | Описание                                | Auth      | Реализовано                                                     |
-| --- | ------ | --------------------------- | --------------------------------------- | --------- | --------------------------------------------------------------- |
-| 1   | `GET`  | `/users/search?query=`      | Поиск пользователей                     | —         | ✅ `SettlementService.searchUser$()` ⚠️ _в `SettlementService`_ |
-| 2   | `GET`  | `/users/{user_id}`          | Профиль пользователя                    | —         | ✅ `getPlayer$()`                                               |
-| 2.1 | `GET`  | `/users:batchGet`           | Пакетное получение профилей (до 100 ID) | —         | ✅ `getPlayersBatch$()`                                         |
-| 3   | `POST` | `/users/{user_id}/avatar`   | Обновить аватар (self)                  | ✅ (self) | ✅ `setProfileImage$()`                                         |
-| 4   | `PUT`  | `/users/{user_id}/nickname` | Сменить ник (self, cooldown 6м)         | ✅ (self) | ✅ `changeUsername$()`                                          |
-| 5   | `PUT`  | `/admin/users/{user_id}/nickname` | Принудительно сменить ник (админ, скоуп `players:nickname:write`, кулдаун игнорируется) | ✅ + scope | ✅ `AdminNicknameApiService.changeNickname$()` |
-| 6   | `POST` | `/admin/users/{user_id}/nickname:grant` | Разрешить игроку сменить ник досрочно (админ, скоуп `players:nickname:grant`, снимает кулдаун) | ✅ + scope | ✅ `AdminNicknameApiService.grantNicknameChange$()` |
+| #   | Метод  | Путь                                    | Описание                                                                                       | Auth       | Реализовано                                                     |
+| --- | ------ | --------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------- |
+| 1   | `GET`  | `/users/search?query=`                  | Поиск пользователей                                                                            | —          | ✅ `SettlementService.searchUser$()` ⚠️ _в `SettlementService`_ |
+| 2   | `GET`  | `/users/{user_id}`                      | Профиль пользователя                                                                           | —          | ✅ `getPlayer$()`                                               |
+| 2.1 | `GET`  | `/users:batchGet`                       | Пакетное получение профилей (до 100 ID)                                                        | —          | ✅ `getPlayersBatch$()`                                         |
+| 3   | `POST` | `/users/{user_id}/avatar`               | Обновить аватар (self)                                                                         | ✅ (self)  | ✅ `setProfileImage$()`                                         |
+| 4   | `PUT`  | `/users/{user_id}/nickname`             | Сменить ник (self, cooldown 6м)                                                                | ✅ (self)  | ✅ `changeUsername$()`                                          |
+| 5   | `PUT`  | `/admin/users/{user_id}/nickname`       | Принудительно сменить ник (админ, скоуп `players:nickname:write`, кулдаун игнорируется)        | ✅ + scope | ✅ `AdminNicknameApiService.changeNickname$()`                  |
+| 6   | `POST` | `/admin/users/{user_id}/nickname:grant` | Разрешить игроку сменить ник досрочно (админ, скоуп `players:nickname:grant`, снимает кулдаун) | ✅ + scope | ✅ `AdminNicknameApiService.grantNicknameChange$()`             |
 
 #### DTO
 
