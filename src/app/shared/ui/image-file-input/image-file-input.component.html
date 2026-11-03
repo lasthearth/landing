@@ -1,0 +1,16 @@
+<label tuiInputFiles>
+    <input [attr.accept]="accept()" tuiInputFiles [formControl]="inner" class="border-lh-primary!" />
+
+    <ng-template tuiInputFilesContent>
+        @if (compressing()) {
+            <span class="inline-flex items-center gap-2 text-ink-3">
+                <tui-loader [showLoader]="true" />
+                {{ 'shared.imageFileInput.compressing' | translate }}
+            </span>
+        } @else {
+            <span class="text-ink-3">
+                {{ placeholder() || ('shared.imageFileInput.addImage' | translate) }}
+            </span>
+        }
+    </ng-template>
+</label>

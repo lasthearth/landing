@@ -49,6 +49,7 @@ import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { compressImage } from '@shared/lib/compress-image.function';
+import { IMAGE_MAX_SIZE_MB } from '@shared/lib/image-max-size.constant';
 import { CreateSettlementFormComponent } from '@app/features/profile/create-settlement-from/create-settlement-from.component';
 import { InviteLinksPanelComponent } from '../settlement-invite-links';
 import {
@@ -831,7 +832,12 @@ export class SettlementComponent {
         this.isImageUploading.set(true);
 
         try {
-            const compressed = await compressImage(file, { maxWidth: 1920, maxHeight: 1080, quality: 0.92 });
+            const compressed = await compressImage(file, {
+                maxWidth: 1920,
+                maxHeight: 1080,
+                quality: 0.92,
+                maxSizeBytes: IMAGE_MAX_SIZE_MB * 1024 * 1024,
+            });
             const url = await this.mediaService.uploadFile(compressed, 'UPLOAD_PURPOSE_SETTLEMENT');
             const currentAttachment = settlement.attachments[0];
             const updatedAttachments: IUpdateAttachment[] = [

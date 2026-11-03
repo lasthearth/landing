@@ -17,15 +17,18 @@ import { LocalStorageService } from '@core/services/local-storage.service';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
 import { TuiLoader, TuiError } from '@taiga-ui/core';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
+import { IMAGE_MAX_SIZE_MB } from '@shared/lib/image-max-size.constant';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { MarkupEditorComponent } from '@shared/ui/markup-editor';
+import { ImageFileInputComponent } from '@shared/ui/image-file-input';
 /**
  * Форма лагеря
  */
 @Component({
     selector: 'app-camp-form',
     imports: [MarkupEditorComponent, 
+        ImageFileInputComponent,
         LHInputComponent,
         FormsModule,
         ReactiveFormsModule,
@@ -70,13 +73,13 @@ export class CampFormComponent {
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
         diplomacy: new FormControl<string | null>(null, [Validators.required]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        passport: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        beds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        passport: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        monument: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        fireplace: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        beds: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        warehouse: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
     });
 
     /**
