@@ -8,6 +8,7 @@ export const NEWS_I18N = {
                 confirmDeleteText: 'Вы уверены, что хотите удалить новость «{{title}}»? Это действие нельзя отменить.',
                 newLabel: 'NEW',
                 readMore: 'Читать полностью',
+                views: 'Просмотров: {{count}}',
             },
             banner: {
                 label: 'Объявление',
@@ -37,6 +38,7 @@ export const NEWS_I18N = {
                 empty: 'Новостей пока нет',
                 emptyHint: 'Первая новость появится здесь, как только её опубликуют.',
                 showMore: 'Показать ещё',
+                feedHeading: 'Лента новостей',
             },
             create: {
                 title: 'Создание новостей',
@@ -111,6 +113,7 @@ export const NEWS_I18N = {
                 confirmDeleteText: 'Are you sure you want to delete the news "{{title}}"? This action cannot be undone.',
                 newLabel: 'NEW',
                 readMore: 'Read more',
+                views: 'Views: {{count}}',
             },
             banner: {
                 label: 'Announcement',
@@ -140,6 +143,7 @@ export const NEWS_I18N = {
                 empty: 'No news yet',
                 emptyHint: 'The first news will appear here once it is published.',
                 showMore: 'Show more',
+                feedHeading: 'News feed',
             },
             create: {
                 title: 'Create news',

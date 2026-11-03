@@ -1,36 +1,28 @@
-<div
-    class="relative w-full overflow-hidden rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.25)] bg-night-2/80"
->
-    <div
-        class="w-full flex"
-        [class]="compact() ? 'p-5 md:p-6 flex-col gap-5' : 'p-8 gap-12 items-center justify-between'"
-    >
-        <!-- Превью placeholder -->
-        @if (compact()) {
-            <div class="h-40 md:h-44 w-full rounded-xl bg-wood-2/40 animate-pulse shrink-0"></div>
-        } @else {
-            <div
-                class="hidden md:block xl:hidden 2xl:block size-72 rounded-xl bg-wood-2/40 animate-pulse shrink-0"
-            ></div>
-        }
+<!--
+    Скелетон повторяет геометрию карточки новости: та же двойная фаска,
+    та же обложка и тот же состав записи. Полосы набраны от токена чернил,
+    поэтому они читаются и на светлом пергаменте, и на тёмной теме.
+-->
+<div class="lh-panel lh-panel--bezel w-full">
+    <div class="lh-panel__core flex overflow-clip" [class]="compact() ? 'flex-col' : 'flex-col lg:flex-row'">
+        <div
+            class="aspect-video w-full shrink-0 animate-pulse bg-ink/10"
+            [class]="compact() ? '' : 'lg:aspect-auto lg:w-[42%] lg:min-w-72'"
+        ></div>
 
-        <!-- Контент placeholder -->
-        <div class="flex flex-col gap-6 w-full items-start">
-            <!-- Заголовок + теги placeholder -->
-            <div class="flex flex-col gap-2 items-start w-full">
-                <div class="h-10 w-3/4 rounded-lg bg-wood-2/40 animate-pulse"></div>
-                <div class="flex flex-wrap gap-2 items-center">
-                    <div class="h-6 w-24 rounded-2xl bg-wood-2/40 animate-pulse"></div>
-                    <div class="h-6 w-20 rounded-2xl bg-wood-2/40 animate-pulse"></div>
-                    <div class="h-6 w-16 rounded-2xl bg-wood-2/40 animate-pulse"></div>
-                </div>
+        <div class="flex flex-1 flex-col gap-3 p-5 md:p-6" [class.lg:p-8]="!compact()">
+            <div class="h-7 w-3/4 animate-pulse rounded-md bg-ink/10"></div>
+            <div class="h-4 w-2/5 animate-pulse rounded-md bg-ink/10"></div>
+
+            <div class="mt-1 flex flex-col gap-2">
+                <div class="h-4 w-full animate-pulse rounded-md bg-ink/10"></div>
+                <div class="h-4 w-5/6 animate-pulse rounded-md bg-ink/10"></div>
+                <div class="h-4 w-4/6 animate-pulse rounded-md bg-ink/10"></div>
             </div>
 
-            <!-- Описание placeholder -->
-            <div class="w-full flex flex-col gap-2">
-                <div class="h-5 w-full rounded-lg bg-wood-2/40 animate-pulse"></div>
-                <div class="h-5 w-5/6 rounded-lg bg-wood-2/40 animate-pulse"></div>
-                <div class="h-5 w-4/6 rounded-lg bg-wood-2/40 animate-pulse"></div>
+            <div class="mt-auto flex items-center justify-between gap-3 pt-2">
+                <div class="h-5 w-40 animate-pulse rounded-md bg-ink/10"></div>
+                <div class="h-8 w-24 animate-pulse rounded-full bg-ink/10"></div>
             </div>
         </div>
     </div>
