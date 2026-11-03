@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
-import { AmountPipe, I18nService, TranslatePipe } from '@core/i18n';
+import { I18nService, TranslatePipe } from '@core/i18n';
 import { SeoService } from '@core/services/seo.service';
 import { mapDtoToNews, News, NewsApiService } from '@entities/news';
 import { BreadcrumbsComponent } from '@shared/ui/breadcrumbs';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { PageHeaderComponent } from '@shared/ui/page-header';
-import { RelativeTimeComponent } from '@shared/ui/relative-time';
+import { NewsCardComponent } from '../news-card/news-card.component';
 import { catchError, map, of } from 'rxjs';
 
 /**
@@ -24,15 +23,7 @@ const SITE_URL = 'https://lasthearth.ru';
  */
 @Component({
     selector: 'app-news-list-page',
-    imports: [
-        AmountPipe,
-        RouterLink,
-        TranslatePipe,
-        BreadcrumbsComponent,
-        EmptyStateComponent,
-        PageHeaderComponent,
-        RelativeTimeComponent,
-    ],
+    imports: [TranslatePipe, BreadcrumbsComponent, EmptyStateComponent, PageHeaderComponent, NewsCardComponent],
     templateUrl: './news-list-page.component.html',
     styleUrl: './news-list-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
