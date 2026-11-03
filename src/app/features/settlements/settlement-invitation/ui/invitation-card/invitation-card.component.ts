@@ -150,6 +150,19 @@ export class InvitationCardComponent {
     }
 
     /**
+     * Проверяет, что группа — гильдия.
+     *
+     * Политического статуса у гильдии нет: курс — свойство надела, поэтому
+     * бейдж дипломатии и редактор курса для неё не показываются.
+     *
+     * @param settlement Группа (надел или гильдия).
+     * @returns true, если это гильдия.
+     */
+    protected isGuild(settlement: ISettlement): boolean {
+        return isGuildSettlement(settlement);
+    }
+
+    /**
      * Принимает приглашение и сообщает о необходимости обновить данные.
      */
     protected accept(): void {

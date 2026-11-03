@@ -5,6 +5,7 @@ import {
     inject,
     input,
     InputSignal,
+    OnInit,
     output,
     OutputEmitterRef,
     signal,
@@ -36,7 +37,7 @@ import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
     styleUrl: './join-requests-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JoinRequestsPanelComponent {
+export class JoinRequestsPanelComponent implements OnInit {
     /**
      * Сервис наделов.
      */
@@ -94,7 +95,15 @@ export class JoinRequestsPanelComponent {
         () => !this.loading() && this.requests().length === 0
     );
 
-    constructor() {
+    /**
+     * Загружает список заявок после инициализации входов.
+     *
+     * В конструкторе это невозможно: settlement — обязательный signal-input,
+     * а его значение появляется только после создания компонента (чтение
+     * неинициализированного обязательного входа бросает NG0950). Соседние
+     * панели обходят это queueMicrotask и effect, здесь — штатный хук.
+     */
+    public ngOnInit(): void {
         this.load();
     }
 

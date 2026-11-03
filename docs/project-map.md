@@ -30,9 +30,9 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1033 | core, entities, features, layout, routes, shared |
+| src/app | 1035 | core, entities, features, layout, routes, shared |
 | core/ | 59 | config, guards, i18n, interceptors, services, types |
-| entities/ | 189 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
+| entities/ | 191 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki |
 | features/ | 625 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
 | layout/ | 19 | background-scene, footer, header |
 | routes/ | 5 | enums |
@@ -93,7 +93,7 @@
 | entities/referral | 5 | model, api | да | 4 |
 | entities/rule-question | 4 | model, api | да | 4 |
 | entities/server-mod | 9 | model, api, lib | да | 5 |
-| entities/settlement | 47 | ui, model, api, lib, config | да | 41 |
+| entities/settlement | 49 | ui, model, api, lib, config | да | 44 |
 | entities/settlement-tag | 13 | ui, model, api, lib | да | 10 |
 | entities/user | 32 | ui, model, api, lib, config | да | 23 |
 | entities/wiki | 6 | model, api, lib | да | 6 |
@@ -156,18 +156,18 @@
 | gallery | 1.3 | /gallery |
 | header | 2.6 | — |
 | home | 10.8 | / |
-| key-points | 72.4 | /key-points |
+| key-points | 79.3 | /key-points |
 | legal | 68.7 | /privacy-policy, /public-offer |
 | lfg | 15.4 | /lfg |
 | market | 15.6 | /profile, /market |
 | mods | 10.9 | /profile/admin, /mods |
-| news | 10.5 | /news |
+| news | 10.7 | /news |
 | pagination | 0.7 | — |
 | player | 21.9 | /profile, /player/:nick |
 | players | 3.3 | /players |
 | profile | 23.1 | /profile |
 | referral | 1.5 | /profile/referral |
-| rules | 252.4 | /rules |
+| rules | 253.8 | /rules |
 | settlements | 55.2 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared | 27.5 | — |
 | videos | 2.0 | /videos |

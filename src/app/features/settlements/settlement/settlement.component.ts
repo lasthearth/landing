@@ -322,7 +322,7 @@ export class SettlementComponent {
 
     /**
      * Возвращает локализованный тип надела.
-     * Для гильдий — «Гильдия» вместо бэкенд-типа «Лагерь».
+     * Для гильдий — «Гильдия» вместо бэкенд-типа «Стан».
      *
      * @param settlement Надел.
      * @returns Название типа.
@@ -363,6 +363,19 @@ export class SettlementComponent {
      */
     protected getDiplomacyTone(diplomacy: string | undefined): SettlementBadgeTone {
         return getDiplomacyTone(diplomacy);
+    }
+
+    /**
+     * Проверяет, что группа — гильдия.
+     *
+     * Политического статуса у гильдии нет: курс — свойство надела, поэтому
+     * бейдж дипломатии и редактор курса для неё не показываются.
+     *
+     * @param settlement Группа (надел или гильдия).
+     * @returns true, если это гильдия.
+     */
+    protected isGuild(settlement: ISettlement): boolean {
+        return isGuildSettlement(settlement);
     }
 
     /**
@@ -904,10 +917,12 @@ export class SettlementComponent {
     }
 
     /**
-     * Загружает надел пользователя и профили участников.
+     * Загружает группу пользователя (надел или гильдию) и профили участников.
      *
-     * Отсутствие надела — штатный 404, поэтому запрос помечен
-     * `SKIP_ERROR_ALERT`.
+     * Обе группы приходят одним ответом `GET /users/{id}/memberships`:
+     * `GET .../settlements` гильдию не отдаёт по контракту, и её основатель
+     * видел там 404. Отсутствие групп — штатный пустой ответ, поэтому запрос
+     * помечен `SKIP_ERROR_ALERT`.
      */
     private loadSettlement(): void {
         if (!this.userId) {
@@ -917,12 +932,14 @@ export class SettlementComponent {
         }
 
         this.settlementService
-            .getSettlementInfo(this.userId, new HttpContext().set(SKIP_ERROR_ALERT, true))
+            .getUserMemberships$(this.userId, new HttpContext().set(SKIP_ERROR_ALERT, true))
             .pipe(
                 catchError(() => of(null)),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe((settlement) => {
+            .subscribe((memberships) => {
+                const settlement = memberships?.settlement ?? memberships?.guild;
+
                 if (!settlement) {
                     this.settlement.set(undefined);
                     this.loadRequestStatus();

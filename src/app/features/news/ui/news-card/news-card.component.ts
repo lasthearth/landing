@@ -14,7 +14,7 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { catchError, EMPTY, of, switchMap, take } from 'rxjs';
@@ -38,6 +38,9 @@ import { ReactionsComponent } from '@features/reactions';
  * на страницу новости `/news/:id` (если передан `id`).
  * При наличии прав доступа отображает кнопку удаления.
  * При появлении карточки в зоне видимости регистрирует просмотр авторизованным пользователем.
+ *
+ * Поверхность карточки — двойная фаска проекта (`.lh-panel--bezel` + `.lh-panel__core`),
+ * цвета берутся из токенов темы, поэтому светлая и тёмная темы не требуют отдельных правил.
  */
 @Component({
     standalone: true,
@@ -46,7 +49,6 @@ import { ReactionsComponent } from '@features/reactions';
         TuiIcon,
         ImageLoaderComponent,
         TranslatePipe,
-        NgTemplateOutlet,
         RouterLink,
         RelativeTimeComponent,
         ReactionsComponent,
@@ -161,6 +163,14 @@ export class NewsCardComponent {
      * Флаг, указывающий, нужно ли отслеживать просмотры при появлении в зоне видимости.
      */
     public readonly trackViews = input<boolean>(false);
+
+    /**
+     * Флаг, указывающий, показывать ли ряд реакций под текстом.
+     *
+     * Лента `/news` выключает его: на странице десятки карточек,
+     * и реакции там мешают просмотру списка.
+     */
+    public readonly showReactions = input<boolean>(true);
 
     /**
      * Событие удаления новости.

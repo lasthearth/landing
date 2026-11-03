@@ -13,8 +13,10 @@ import { ISettlement } from '../model/i-settlement';
 import { ISettlementInvitation } from '../model/i-settlement-invitation';
 import { IUpdateSettlementRequest } from '../model/i-update-settlement';
 import { IJoinRequest } from '../model/i-join-request';
+import { IUserMemberships } from '../model/i-user-memberships';
 import { INotifierPlacement } from '../model/i-notifier-placement';
 import { ICreateInviteLink, IInviteLink, IInviteLinkPreview } from '../model/i-invite-link';
+import { GROUP_KIND, GroupKind } from '../lib/group-kind.constant';
 import { Permission } from '../model/permission';
 /**
  * API-сервис для работы с наделами.
@@ -104,6 +106,21 @@ export class SettlementService {
     }
 
     /**
+     * Получает обе группы игрока: надел и гильдию.
+     *
+     * `GET /users/{user_id}/settlements` гильдию не отдаёт по контракту —
+     * основатель гильдии получает там 404, хотя группа у него есть.
+     * Один игрок держит не больше одной группы каждого рода.
+     *
+     * @param userId Идентификатор пользователя.
+     * @param context Опциональный HTTP-контекст (например, для SKIP_ERROR_ALERT).
+     * @returns Observable с наделом и гильдией игрока.
+     */
+    public getUserMemberships$(userId: string, context?: HttpContext): Observable<IUserMemberships> {
+        return this.http.get<IUserMemberships>(`${this.baseUrl}/users/${userId}/memberships`, { context });
+    }
+
+    /**
      * Получает список всех наделов.
      *
      * Вспомогательный запрос: при ошибке алерт не показывается
@@ -111,14 +128,29 @@ export class SettlementService {
      *
      * @returns Observable с массивом наделов.
      */
-    public getSettlements(): Observable<ISettlement[]> {
+    public getSettlements(kind?: GroupKind): Observable<ISettlement[]> {
+        const params = kind ? new HttpParams().set('kind', kind) : undefined;
+
         return this.http
             .get<{
                 settlements: ISettlement[];
             }>(`${this.baseUrl}/settlements`, {
                 context: new HttpContext().set(SKIP_ERROR_ALERT, true),
+                params,
             })
             .pipe(map((data) => data.settlements));
+    }
+
+    /**
+     * Возвращает каталог гильдий.
+     *
+     * `GET /settlements` без `kind` отдаёт только наделы: гильдия места на карте
+     * не занимает, поэтому её список запрашивается явным родом группы.
+     *
+     * @returns Observable с массивом гильдий.
+     */
+    public getGuilds(): Observable<ISettlement[]> {
+        return this.getSettlements(GROUP_KIND.guild);
     }
 
     /**
