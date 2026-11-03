@@ -9,30 +9,19 @@
 
 ---
 
-# PROJECT_MAP.md — Last Hearth Landing
-
-## 1. Общее
-
-- Фреймворк: Angular 20 (standalone components, signals).
-- Сборщик: `@angular/build:application` (Vite-based).
-- Стили: LESS + Tailwind CSS v4.
-- UI Kit: Taiga UI 4.x.
-- i18n: кастомный сервис `@core/i18n` с pipe `translate`.
-- Архитектура: миграция на FSD (Feature-Sliced Design).
-
-## 2. Слои FSD
-
-```text
-src/app/
-├── app.config.ts / app.component.* / app.routes.ts
-├── pages/        — страницы, lazy-loaded
-├── widgets/      — композиционные блоки
-├── features/     — бизнес-фичи
-├── entities/     — бизнес-сущности
-└── shared/       — переиспользуемый код
-```
-
 ## 3. Недавние крупные изменения
+
+### 3.-27 Сжатие картинок заявки — до валидатора
+
+> Скриншот FullHD (5,7 МБ) не доходил до сжатия: валидатор проверял сырой файл,
+> а `compressImage` звали только при отправке.
+
+- `shared/ui/image-file-input` — CVA-обёртка над `label[tuiInputFiles]`, наружу
+  уходит сжатый файл; подключена в 6 форм.
+- `compressImage` + `maxSizeBytes`: качество −0,1 до 0,5, затем кадр ×0,8, до 8
+  попыток; лимит и цель — `IMAGE_MAX_SIZE_MB`.
+- Формат проверяет компонент (`NG_VALIDATORS`); `MediaService` читает
+  `content-length-range` из `policy`: реально 1 байт..5 MiB.
 
 ### 3.-26 Карточка новости: лист пергамента вместо фото с текстом поверх
 

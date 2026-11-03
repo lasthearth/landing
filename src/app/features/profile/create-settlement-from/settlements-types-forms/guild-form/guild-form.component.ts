@@ -11,6 +11,7 @@ import { getFileStatuses } from '@shared/lib/get-file-statuses.function';
 import { uploadSettlementAttachments } from '@shared/lib/upload-settlement-attachments.function';
 import { setupSettlementDraft, clearSettlementDraft } from '@shared/lib/setup-settlement-draft.function';
 import { maxFileSizeValidator } from '@shared/lib/file-max-size-validator.function';
+import { IMAGE_MAX_SIZE_MB } from '@shared/lib/image-max-size.constant';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { LHHintComponent } from '@shared/ui/lh-hint/lh-hint.component/lh-hint.component';
 import { TuiError, TuiLoader } from '@taiga-ui/core';
@@ -18,6 +19,7 @@ import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
 import { Subject, switchMap, map, finalize, timeout } from 'rxjs';
 import { fileFields, FileKeyGuild } from './guild-form.types';
 import { MarkupEditorComponent } from '@shared/ui/markup-editor';
+import { ImageFileInputComponent } from '@shared/ui/image-file-input';
 
 /**
  * Форма гильдии.
@@ -29,6 +31,7 @@ import { MarkupEditorComponent } from '@shared/ui/markup-editor';
 @Component({
     selector: 'app-guild-form',
     imports: [MarkupEditorComponent, 
+        ImageFileInputComponent,
         LHInputComponent,
         FormsModule,
         ReactiveFormsModule,
@@ -79,17 +82,17 @@ export class GuildFormComponent {
         protected readonly form = new FormGroup({
         name: new FormControl<string | null>(null, [Validators.required, Validators.minLength(4)]),
         description: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
-        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        passport: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildLiberties: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildOffice: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildMinorOffice: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildBoard: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildSellMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildBuyMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildMinorSellMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
-        guildMinorBuyMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(2)]),
+        preview: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        map: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        passport: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        guildLiberties: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        guildOffice: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        guildMinorOffice: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        guildBoard: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        guildSellMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        guildBuyMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        guildMinorSellMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
+        guildMinorBuyMarket: new FormControl<File | null>(null, [Validators.required, maxFileSizeValidator(IMAGE_MAX_SIZE_MB)]),
     });
 
     /**

@@ -26,6 +26,29 @@ const DEFAULT_MIME_TYPE = 'image/webp';
 const FALLBACK_MIME_TYPE = 'image/jpeg';
 
 /**
+ * Сколько перекодирований разрешено при подгонке под `maxSizeBytes`.
+ *
+ * Восемь попыток покрывают четыре шага качества и четыре шага уменьшения кадра;
+ * на FullHD-скриншоте это доли секунды, на 4K — пара секунд.
+ */
+const MAX_FIT_ATTEMPTS = 8;
+
+/**
+ * Шаг снижения качества при подгонке под размер.
+ */
+const FIT_QUALITY_STEP = 0.1;
+
+/**
+ * Качество, ниже которого подгонка переходит к уменьшению кадра.
+ */
+const FIT_MIN_QUALITY = 0.5;
+
+/**
+ * Множитель уменьшения кадра, когда качество уже на полу.
+ */
+const FIT_SIZE_STEP = 0.8;
+
+/**
  * Загружает файл в HTMLImageElement.
  *
  * @param file Исходный файл изображения.
@@ -135,13 +158,67 @@ function canvasToFile(
 }
 
 /**
+ * Рисует изображение в новый canvas заданного размера и кодирует его в файл.
+ *
+ * @param image Декодированное исходное изображение.
+ * @param width Ширина результата.
+ * @param height Высота результата.
+ * @param mimeType MIME-тип результата.
+ * @param quality Качество кодирования.
+ * @param fileName Имя результирующего файла.
+ * @returns Promise с файлом либо null, если браузер не дал 2D-контекст.
+ */
+async function encodeFrame(
+    image: HTMLImageElement,
+    width: number,
+    height: number,
+    mimeType: string,
+    quality: number,
+    fileName: string
+): Promise<File | null> {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+
+    const context = canvas.getContext('2d');
+    if (!context) {
+        return null;
+    }
+
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
+    context.drawImage(image, 0, 0, width, height);
+
+    return canvasToFile(canvas, fileName, mimeType, quality);
+}
+
+/**
+ * Строит имя результирующего файла: имя исходного с расширением целевого формата.
+ *
+ * @param sourceName Имя исходного файла.
+ * @param mimeType Целевой MIME-тип.
+ * @returns Имя файла для результата.
+ */
+function buildFileName(sourceName: string, mimeType: string): string {
+    const extension = mimeType === 'image/webp' ? 'webp' : 'jpg';
+
+    return `${sourceName.replace(/\.[^/.]+$/, '')}.${extension}`;
+}
+
+/**
  * Сжимает изображение через canvas с сохранением соотношения сторон.
  *
  * Алгоритм:
  * 1. Масштабирует изображение до указанных максимальных размеров (по умолчанию 1920×1920),
  *    сохраняя пропорции.
  * 2. Перекодирует в WebP с качеством 0.92 (визуально без заметных потерь).
- * 3. Если сжатый файл оказался больше исходного, возвращает исходный файл.
+ * 3. Если задан `options.maxSizeBytes` и результат больше лимита, повторяет
+ *    кодирование: сначала снижает качество шагом 0.1 до 0.5, затем уменьшает кадр
+ *    множителем 0.8, не более восьми попыток.
+ * 4. Если сжатый файл оказался больше исходного, возвращает исходный файл.
+ *
+ * Файл, который браузер не смог декодировать (например HEIC в Chrome), возвращается
+ * как есть: вызывающий код увидит исходный размер и сам решит, годится ли файл.
  *
  * @param file Исходный файл изображения.
  * @param options Настройки сжатия.
@@ -157,33 +234,49 @@ export async function compressImage(
 
     const maxWidth = options?.maxWidth ?? DEFAULT_MAX_WIDTH;
     const maxHeight = options?.maxHeight ?? DEFAULT_MAX_HEIGHT;
-    const quality = options?.quality ?? DEFAULT_QUALITY;
+    const maxSizeBytes = options?.maxSizeBytes;
     const mimeType = resolveMimeType(options?.mimeType ?? DEFAULT_MIME_TYPE);
+    const fileName = buildFileName(file.name, mimeType);
 
     try {
         const image = await loadImage(file);
-        const { width, height } = calculateSize(image.width, image.height, maxWidth, maxHeight);
+        const initialSize = calculateSize(image.width, image.height, maxWidth, maxHeight);
 
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
+        let width = initialSize.width;
+        let height = initialSize.height;
+        let quality = options?.quality ?? DEFAULT_QUALITY;
 
-        const context = canvas.getContext('2d');
-        if (!context) {
+        let encoded = await encodeFrame(image, width, height, mimeType, quality, fileName);
+
+        if (!encoded) {
             return file;
         }
 
-        context.imageSmoothingEnabled = true;
-        context.imageSmoothingQuality = 'high';
-        context.drawImage(image, 0, 0, width, height);
+        for (
+            let attempt = 0;
+            maxSizeBytes !== undefined && encoded.size > maxSizeBytes && attempt < MAX_FIT_ATTEMPTS;
+            attempt++
+        ) {
+            if (quality > FIT_MIN_QUALITY) {
+                quality = Math.max(FIT_MIN_QUALITY, quality - FIT_QUALITY_STEP);
+            } else {
+                width = Math.max(1, Math.round(width * FIT_SIZE_STEP));
+                height = Math.max(1, Math.round(height * FIT_SIZE_STEP));
+            }
 
-        const extension = mimeType === 'image/webp' ? 'webp' : 'jpg';
-        const fileName = `${file.name.replace(/\.[^/.]+$/, '')}.${extension}`;
+            const retry = await encodeFrame(image, width, height, mimeType, quality, fileName);
 
-        const compressedFile = await canvasToFile(canvas, fileName, mimeType, quality);
+            if (!retry) {
+                break;
+            }
 
-        return compressedFile.size < file.size ? compressedFile : file;
+            encoded = retry;
+        }
+
+        return encoded.size < file.size ? encoded : file;
     } catch {
+        // Декодирование или кодирование не удалось (битый файл, HEIC, отказ canvas).
+        // Исходный файл лучше, чем потерянная загрузка: вызывающий код проверит размер.
         return file;
     }
 }

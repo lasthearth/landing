@@ -2,12 +2,15 @@ import { FormGroup } from '@angular/forms';
 import { Observable, from, map, of, switchMap, timeout } from 'rxjs';
 import { MediaService } from '@entities/media';
 import { compressImage } from './compress-image.function';
+import { IMAGE_MAX_SIZE_MB } from './image-max-size.constant';
 
 /**
  * Загружает файлы формы надела через MediaService и формирует attachments.
  *
  * Перед загрузкой каждый файл сжимается через canvas с сохранением пропорций
- * и перекодируется в WebP (или JPEG в браузерах без поддержки WebP).
+ * и перекодируется в WebP (или JPEG в браузерах без поддержки WebP) и подгоняется
+ * под лимит формы. Обычно файл уже сжат полем `app-image-file-input`, а этот
+ * проход страхует значения, попавшие в форму в обход поля (черновик в localStorage).
  *
  * @param fileFields Массив ключей файлов формы.
  * @param form FormGroup с файловыми полями.
@@ -31,7 +34,13 @@ export function uploadSettlementAttachments<T extends string>(
         return of([]);
     }
 
-    return from(Promise.all(fileEntries.map((entry) => compressImage(entry.file)))).pipe(
+    return from(
+        Promise.all(
+            fileEntries.map((entry) =>
+                compressImage(entry.file, { maxSizeBytes: IMAGE_MAX_SIZE_MB * 1024 * 1024 })
+            )
+        )
+    ).pipe(
         timeout(60_000),
         switchMap((compressedFiles) =>
             mediaService.uploadFiles$(compressedFiles, 'UPLOAD_PURPOSE_SETTLEMENT')

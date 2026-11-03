@@ -46,12 +46,7 @@
             <span class="text-lh-danger">*</span>
         </p>
 
-        <label *ngIf="!form.controls[key].value" tuiInputFiles>
-            <input accept="image/*" tuiInputFiles [formControl]="form.controls[key]" class="border-lh-primary!" />
-            <ng-template tuiInputFilesContent>
-                <span class="text-ink-3">{{ 'settlements.form.addImage' | translate }}</span>
-            </ng-template>
-        </label>
+        <app-image-file-input *ngIf="!form.controls[key].value" [formControl]="form.controls[key]" />
 
         <tui-files class="tui-space_top-1">
             <tui-file

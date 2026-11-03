@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { from, Observable, map } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
+import { getUploadSizeRange } from '../lib/upload-size-range.function';
 import {
     CreateUploadUrlsRequest,
     CreateUploadUrlsResponse,
@@ -160,8 +161,19 @@ export class MediaService {
      * @param file Файл для загрузки.
      * @param target Presigned-цель с `post_url`, `fields` и `public_url`.
      * @returns Promise, который разрешается после успешной загрузки.
+     * @throws Error, если размер файла вне диапазона `content-length-range` из политики цели.
      */
     private async executeUpload(file: File, target: UploadTarget): Promise<void> {
+        // Политика хранилища может ограничивать размер тела запроса условием content-length-range.
+        // Проверка до fetch даёт понятную ошибку вместо ответа 400 с XML от S3.
+        const sizeRange = getUploadSizeRange(target.fields);
+
+        if (sizeRange !== null && (file.size < sizeRange.min || file.size > sizeRange.max)) {
+            throw new Error(
+                `MediaService: размер файла "${file.name}" (${file.size} байт) вне диапазона политики хранилища: ${sizeRange.min}..${sizeRange.max} байт`
+            );
+        }
+
         const form = new FormData();
 
         for (const [key, value] of Object.entries(target.fields)) {
