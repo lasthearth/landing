@@ -1131,8 +1131,15 @@ interface CreateUploadUrlsResponse {
 
 #### Ограничения
 
-- Размер файла: **1..5 MiB** (зашито в policy).
-- `Content-Type` должен начинаться с `image/`.
+- Размер файла: `content-length-range` в POST-политике — **от 1 байта до лимита назначения**, а не «1..5 MiB».
+    - Источник: `vsservice/internal/pkg/storage/storage.go` → `policy.SetContentLengthRange(1, maxSize)`;
+      лимиты в `vsservice/internal/media/internal/service/app.go`.
+    - `UPLOAD_PURPOSE_SETTLEMENT` — 5 MiB (бакет `settlementsreq`); `NEWS` и `WIKI` — 5 MiB (бакет `news`);
+      `DONATE_SHOP` — 2 MiB (бакет `donate-shop`).
+    - Нижней границы в 1 MiB нет: сжатые клиентом картинки в сотни килобайт проходят.
+- `Content-Type` должен начинаться с `image/`. Если в запросе задан `content_type`, он обязан входить в список
+  назначения: `image/webp`, `image/png`, `image/jpeg`.
+- Presigned-цель живёт 15 минут (`presignExpiry`).
 - Поле `file` должно быть **строго последним** в теле запроса (требование S3).
 
 ---

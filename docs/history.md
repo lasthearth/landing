@@ -21,7 +21,7 @@
 - `compressImage` + `maxSizeBytes`: качество −0,1 до 0,5, затем кадр ×0,8, до 8
   попыток; лимит и цель — `IMAGE_MAX_SIZE_MB`.
 - Формат проверяет компонент (`NG_VALIDATORS`); `MediaService` читает
-  `content-length-range` из `policy`. Ловушка — в `docs/TRAPS.md`.
+  `content-length-range` из `policy`: реально 1 байт..5 MiB, не «1..5 MiB».
 
 ### 3.-25 Админка: управление ником игрока (смена и досрочный grant)
 
