@@ -8,10 +8,10 @@ import {
     inject,
     signal,
 } from '@angular/core';
-import { TuiProgress, TuiPulse } from '@taiga-ui/kit';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { AsyncPipe, DOCUMENT, NgClass, isPlatformBrowser } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { TuiPulse } from '@taiga-ui/kit';
 import { RouterLink, RouterLinkActive, NavigationEnd, Router } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { HEADER_MAIN_LINKS } from './config/header-main-links.constant';
@@ -27,6 +27,7 @@ import { SignOutConfirmComponent } from '@features/auth/ui/sign-out-confirm/sign
 import { I18nService, Language, TranslatePipe, AmountPipe } from '@core/i18n';
 import { ThemeService } from '@core/services/theme.service';
 import { formatServerTime } from './lib/format-server-time.function';
+import { occupancyShare } from './lib/occupancy-share.function';
 import { NewContentService } from '@features/new-content';
 import { NotificationBellComponent } from '@features/notifications';
 import { AnalyticsService } from '@core/services/analytics.service';
@@ -37,14 +38,14 @@ import { AnalyticsService } from '@core/services/analytics.service';
 @Component({
     standalone: true,
     selector: 'app-header',
-    imports: [AmountPipe, 
-        TuiProgress,
+    imports: [
+        AmountPipe,
         AsyncPipe,
-        TuiIcon,
         NgClass,
+        TuiIcon,
+        TuiPulse,
         RouterLink,
         RouterLinkActive,
-        TuiPulse,
         ImageLoaderComponent,
         TranslatePipe,
         NotificationBellComponent,
@@ -163,6 +164,11 @@ export class HeaderComponent {
             )
         )
     );
+
+    /**
+     * Доля занятых мест на сервере — длина линии занятости в шапке.
+     */
+    protected readonly occupancyShare = occupancyShare;
 
     /**
      * {@link Observable} Списка приглашений в селения.
