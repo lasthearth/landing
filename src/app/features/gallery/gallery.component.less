@@ -1,141 +1,385 @@
+/**
+ * Страница архива скриншотов.
+ *
+ * Язык страницы — оправа, как у остальных поверхностей сайта: рамка
+ * `.lh-panel--bezel` с ядром `.lh-panel__core`, радиус ядра считается
+ * из радиуса оправы за вычетом зазора, поэтому оба контура концентричны.
+ * Свежий кадр — самый крупный отпечаток, стена — остальные: шесть колонок
+ * на десктопе и цикл из десяти отпечатков, где обычный кадр занимает две
+ * колонки, крупный — три, пластина — четыре. Пропорция ядра у всех одна
+ * (16:9), поэтому ряды выровнены, а шаг «дальше» только дописывает ряды
+ * и ничего не переставляет. Кадр необычной формы показывается целиком
+ * на паспарту (`object-fit: contain`), а не обрезается.
+ *
+ * ДВА семейства цвета, и путать их нельзя:
+ * — текст на земле страницы, в том числе на планке оправы, — чернила темы
+ *   (`--lh-ink`, `--lh-ink-2`, `--lh-ink-3`), они переопределяются вместе
+ *   с темой;
+ * — текст на самой фотографии (полоса подписи отпечатка, заглушка мёртвого
+ *   кадра) — пергамент (`--lh-parchment*`), потому что вуаль и паспарту
+ *   тёмные в обеих темах.
+ * Страница была целиком покрашена пергаментом и в светлой теме давала
+ * чернила `#e2d7bb` на панели `#e2d7bb` — контраст 1:1, текст исчезал.
+ *
+ * Текста поверх фотографии на первом экране нет вовсе: подпись свежего кадра
+ * стоит на нижней планке оправы, как музейная табличка. Вуаль под текстом
+ * читалась на удачу — на светлом небе снимка она не спасала.
+ */
 :host {
     display: block;
 }
 
-.gallery-grid {
-    column-gap: 1rem;
-    row-gap: 0;
+/**
+ * Отступ между блоками страницы один и небольшой: заголовок, свежий кадр,
+ * стена и циферблат — три такта, и каждый отделён 32 px. Раньше это был
+ * `gap` в 96 px, и до первого отпечатка оставалось почти сто пикселей пустоты.
+ */
+.gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lh-space-8);
 }
 
-.gallery-item {
-    position: relative;
+.gallery-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lh-space-6);
+}
+
+/* ------------------------------------------------------------ первый экран */
+
+/**
+ * Свежий кадр в оправе. Оправа толще стенной: у главного отпечатка рамка
+ * читается как паспарту, а не как кант.
+ */
+.gallery-fold {
+    --lh-panel-radius: 1.5rem;
+    --lh-panel-gap: 0.5rem;
+
+    display: block;
+    margin: 0;
+}
+
+/**
+ * Ядро оправы — сам кадр. Предел по высоте держит нижнюю планку с подписью
+ * на первом экране: без него отпечаток 21:9 на экране в 900 px уводил
+ * подпись за сгиб.
+ */
+.gallery-fold__frame {
     display: block;
     width: 100%;
-    margin-bottom: 1rem;
-    break-inside: avoid;
-    border-radius: 1rem;
-    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    padding: 0;
+    border: 0;
+    background: var(--lh-night);
+    cursor: pointer;
 
-    &.gallery-item--skeleton {
-        background: linear-gradient(
-            110deg,
-            var(--lh-night) 8%,
-            var(--lh-night-2) 18%,
-            var(--lh-night) 33%
-        );
-        background-size: 200% 100%;
-        animation: skeleton-shimmer 1.5s linear infinite;
+    @media (min-width: 768px) {
+        aspect-ratio: 21 / 9;
+
+        /**
+         * Предел по высоте держит планку с подписью на первом экране. Счёт при
+         * окне 900: шапка сайта 210 px и начинается на 72, значит `main` с 282;
+         * контейнер 24 + h1 41 + отступ 32 → оправа с 380. Дальше 8 px поля,
+         * ядро, планка 42 и 8 px поля: в 50svh (450 px) оправа кончается на 888,
+         * запас 12 px. Без предела 21:9 дало бы 932. Шаг в 1svh — это 9 px,
+         * поэтому ниже 50 запас съедается, а выше кадр режется сильнее: в 50svh
+         * ядро 2.56:1 и от снимка 16:9 теряется 31% высоты.
+         */
+        max-height: 50svh;
     }
+}
 
-    @media (prefers-reduced-motion: reduce) {
-        &.gallery-item--skeleton {
-            animation: none;
+.gallery-fold__frame:focus-visible {
+    outline: 2px solid var(--lh-brand-ink);
+    outline-offset: 2px;
+}
+
+/**
+ * Единственное место страницы, где фотография движется сама: медленный наезд
+ * заменяет видеоряд, потому что архив состоит из неподвижных кадров.
+ */
+.gallery-fold__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: gallery-hero-drift 32s var(--lh-ease-smooth) infinite alternate;
+}
+
+.gallery-fold__img--contain {
+    object-fit: contain;
+}
+
+/**
+ * Подпись на нижней планке оправы: автор и возраст в одну строку, слова
+ * игрока — второй строкой. Планка лежит на пергаменте оправы, поэтому текст
+ * набран чернилами темы и переживает смену темы.
+ */
+.gallery-fold__label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem var(--lh-space-4);
+    padding: var(--lh-space-3) var(--lh-space-2) var(--lh-space-1);
+}
+
+.gallery-fold__author {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--lh-ink);
+}
+
+/**
+ * Вторые чернила, а не третьи: оправа подмешивает 7% чернил к земле страницы,
+ * и на этом фоне третий уровень даёт 4.3:1 вместо порога 4.5.
+ */
+.gallery-fold__time {
+    font-size: 0.875rem;
+    color: var(--lh-ink-2);
+}
+
+.gallery-fold__note {
+    flex-basis: 100%;
+    max-width: 80ch;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.45;
+    color: var(--lh-ink-2);
+}
+
+/* --------------------------------------------------------------- стена */
+.gallery-wall {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    /**
+     * Элементы ряда не растягиваются: высоту отпечатка задаёт пропорция его
+     * ядра, а растянутый по высоте ряда отпечаток оставлял в оправе полосу
+     * пустого паспарту под кадром.
+     */
+    align-items: start;
+    gap: var(--lh-space-6) var(--lh-space-4);
+
+    /**
+     * Планшет: четыре колонки, обычный отпечаток в полстроки, каждый третий —
+     * во всю ширину. Цикл из трёх плиток даёт два полных ряда, поэтому шаг
+     * «дальше» дописывает ряды и не двигает уже показанные кадры.
+     */
+    @media (min-width: 640px) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+
+        .gallery-wall__tile {
+            grid-column: span 2;
+        }
+
+        .gallery-wall__tile:nth-child(3n + 3) {
+            grid-column: span 4;
         }
     }
 
-    &.gallery-item--new {
-        border-color: var(--lh-brand);
+    /**
+     * Десктоп: шесть колонок и цикл из пяти отпечатков — ряд из трёх обычных
+     * (2+2+2) и ряд из двух крупных (3+3). Оба ряда дают ровно шесть колонок,
+     * поэтому дыр не бывает, плотная упаковка не нужна (`dense` переставлял бы
+     * уже показанные кадры на каждом шаге «дальше»), а в каждом ряду все
+     * отпечатки одной высоты.
+     *
+     * Сброс планшетного правила стоит первым: удельный вес у него такой же,
+     * и порядок решает, какой пролёт достанется отпечатку.
+     */
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: var(--lh-space-8) var(--lh-space-6);
+
+        .gallery-wall__tile {
+            grid-column: span 2;
+        }
+
+        .gallery-wall__tile:nth-child(3n + 3) {
+            grid-column: span 2;
+        }
+
+        .gallery-wall__tile:nth-child(5n + 4),
+        .gallery-wall__tile:nth-child(5n + 5) {
+            grid-column: span 3;
+        }
+    }
+}
+
+/**
+ * Отпечаток стены — тоже оправа, но тонкая: рамка в 4 px читается как кант
+ * паспарту, а не как второй объект. Кольцо наведения рисуется контуром,
+ * а не тенью: тень оправы занята внутренней фаской, и подмена `box-shadow`
+ * на ховере гасила бы саму рамку.
+ */
+.gallery-wall__tile.lh-panel--bezel {
+    --lh-panel-radius: 0.875rem;
+    --lh-panel-gap: 0.25rem;
+
+    display: block;
+    padding: var(--lh-panel-gap);
+    border: 0;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    cursor: pointer;
+    transition:
+        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
+        outline-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.gallery-wall__tile:hover {
+    transform: translateY(-2px);
+    outline-color: color-mix(in srgb, var(--lh-accent) 60%, transparent);
+}
+
+.gallery-wall__tile:focus-visible {
+    outline-color: var(--lh-brand-ink);
+    outline-offset: 2px;
+}
+
+/**
+ * Ядро отпечатка: пропорция одна на всю стену и тёмное паспарту в обеих
+ * темах — снимок на светлом паспарту сливается с бумагой страницы. Пока
+ * копия в пути, место отпечатка читается как рама, а не как дыра в стене.
+ */
+.gallery-wall__core {
+    display: block;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--lh-night);
+}
+
+.gallery-wall__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-wall__img--contain {
+    object-fit: contain;
+}
+
+/**
+ * Кадр, который не открылся ни копией, ни оригиналом. Заглушка называет
+ * это словами: пустой тёмный прямоугольник посетитель прочитал бы как
+ * часть снимка.
+ */
+.gallery-wall__gone {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--lh-space-2);
+    color: var(--lh-parchment-dim);
+    font-size: 0.8125rem;
+}
+
+.gallery-wall__gone-text {
+    max-width: 80%;
+    text-align: center;
+}
+
+/**
+ * Автор и возраст кадра. Выезжают из-под нижнего края на наведении и на
+ * фокусе, обрезаясь ядром оправы: текст живёт внутри кадра и на чужие ряды
+ * не попадает. На касании подписей нет — их заменяет просмотрщик, где автор,
+ * дата и слова игрока показаны постоянно.
+ *
+ * Полоса лежит на тёмной вуали поверх кадра, поэтому текст на ней
+ * пергаментный в обеих темах: чернила светлой темы на вуали не читаются.
+ */
+.gallery-wall__meta {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--lh-space-3);
+    padding: var(--lh-space-2) var(--lh-space-3);
+    background: color-mix(in srgb, var(--lh-night-deep) 88%, transparent);
+    font-size: 0.875rem;
+    text-align: left;
+    transform: translateY(110%);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.gallery-wall__tile:hover .gallery-wall__meta,
+.gallery-wall__tile:focus-visible .gallery-wall__meta {
+    transform: translateY(0);
+}
+
+.gallery-wall__author {
+    overflow: hidden;
+    color: var(--lh-parchment-2);
+    font-weight: 700;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.gallery-wall__time {
+    flex: none;
+    color: var(--lh-parchment-dim);
+}
+
+/* --------------------------------------------------------- циферблат */
+
+.gallery-dial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--lh-space-4);
+    padding-top: var(--lh-space-4);
+    text-align: center;
+}
+
+.gallery-dial__depth {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--lh-ink-3);
+}
+
+/* ----------------------------------------------------------- состояния */
+
+.gallery-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--lh-space-4);
+}
+
+.gallery-state__retry {
+    margin-bottom: var(--lh-space-6);
+}
+
+@keyframes gallery-hero-drift {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.06);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .gallery-item--new {
-        animation: none !important;
-    }
-}
-
-@keyframes skeleton-shimmer {
-    0% {
-        background-position: 200% 0;
+    .gallery-fold__img {
+        animation: none;
     }
 
-    100% {
-        background-position: -200% 0;
-    }
-}
-
-/* Свежий кадр — самый новый скриншот крупно */
-.gallery-featured {
-    position: relative;
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    max-height: 34rem;
-    overflow: hidden;
-    border: 2px solid color-mix(in srgb, var(--lh-parchment) 20%, transparent);
-    border-radius: 1.25rem;
-    background: var(--lh-night);
-    cursor: pointer;
-    text-align: left;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.3);
-    transition: border-color 0.3s ease;
-
-    &:hover,
-    &:focus-visible {
-        border-color: var(--lh-brand);
+    /**
+     * Отпечаток не поднимается: движение остаётся только в кольце наведения,
+     * которое цветом, а не смещением, показывает, что кадр открывается.
+     */
+    .gallery-wall__tile {
+        transition: outline-color var(--lh-dur-fast) var(--lh-ease-out-quart);
     }
 
-    &.gallery-item--skeleton {
-        cursor: default;
+    .gallery-wall__tile:hover {
+        transform: none;
     }
-}
-
-.gallery-featured__shade {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.1) 45%, transparent 70%);
-    pointer-events: none;
-}
-
-.gallery-featured__info {
-    position: absolute;
-    left: 1.5rem;
-    right: 4.5rem;
-    bottom: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    color: #fff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-.gallery-featured__label {
-    align-self: flex-start;
-    padding: 0.25rem 0.625rem;
-    border-radius: 0.4rem;
-    font-size: 0.8125rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, var(--lh-brand-deep-2), var(--lh-brand));
-    text-shadow: none;
-}
-
-.gallery-featured__author {
-    font-size: 1.375rem;
-    font-weight: 800;
-}
-
-.gallery-featured__time {
-    font-size: 1rem;
-    opacity: 0.85;
-}
-
-.gallery-featured__zoom {
-    position: absolute;
-    right: 1.25rem;
-    bottom: 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 999px;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.45);
-    transition: transform 0.2s ease;
-}
-
-.gallery-featured:hover .gallery-featured__zoom {
-    transform: scale(1.08);
 }

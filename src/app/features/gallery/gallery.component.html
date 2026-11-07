@@ -1,80 +1,172 @@
-<section class="flex flex-col gap-6 lh-page-container">
-    <app-page-header [title]="'gallery.title' | translate" [subtitle]="'gallery.description' | translate" />
+<div class="gallery lh-page-container">
+    <!--
+        Шапка общая со всем сайтом (`app-page-header`): заголовки
+        не должны расходиться по кеглю и отступам между страницами.
+        Подзаголовка нет: страница говорит кадрами, поясняющий текст
+        под заголовком убран по требованию оператора.
+    -->
+    <app-page-header [title]="'gallery.title' | translate" />
 
     @if (isLoading()) {
-        <div class="gallery-featured gallery-item gallery-item--skeleton"></div>
-        <div class="gallery-grid columns-1 sm:columns-2 md:columns-3 xl:columns-4">
-            @for (skeleton of skeletons; track skeleton) {
-                <div
-                    class="gallery-item gallery-item--skeleton relative block w-full rounded-2xl overflow-hidden border-2 border-parchment/10"
-                    [style.height.px]="getSkeletonHeight(skeleton)"
-                    [style.animation-delay.ms]="getSkeletonDelay(skeleton)"
-                ></div>
+        <!--
+            Скелетон повторяет геометрию настоящей страницы: та же оправа
+            свежего кадра, та же сетка стены. Число отпечатков фиксированное,
+            поэтому скелетон рисуется и в пререндере.
+        -->
+        <div class="gallery-fold lh-panel lh-panel--bezel" aria-hidden="true">
+            <div class="gallery-fold__frame lh-panel__core"></div>
+        </div>
+        <div class="gallery-wall" aria-hidden="true">
+            @for (index of skeletons; track index) {
+                <div class="gallery-wall__tile lh-panel lh-panel--bezel">
+                    <div class="gallery-wall__core lh-panel__core"></div>
+                </div>
             }
         </div>
-    } @else if (hasError()) {
-        <app-empty-state icon="@tui.triangle-alert" title="gallery.error" />
-    } @else if (!featured()) {
-        <app-empty-state icon="@tui.image-off" title="gallery.empty" />
+    } @else if (sorted().length === 0) {
+        <div class="gallery-state lh-panel">
+            <app-empty-state
+                [icon]="hasError() ? '@tui.triangle-alert' : '@tui.image-off'"
+                [title]="hasError() ? 'gallery.error' : 'gallery.empty'"
+            />
+            @if (hasError()) {
+                <button type="button" class="lh-cta gallery-state__retry" (click)="reload()">
+                    {{ "gallery.retry" | translate }}
+                </button>
+            }
+        </div>
     } @else {
-        @if (featured(); as image) {
-            <!-- Свежий кадр: самый новый скриншот крупно -->
-            <button
-                type="button"
-                class="gallery-featured group"
-                [attr.aria-label]="('gallery.featured' | translate) + ': ' + image.author"
-                (click)="open(image)"
-            >
-                <app-gallery-image [src]="image.proxyUrl" [alt]="image.alt || image.author" />
-                <span class="gallery-featured__shade"></span>
-                <span class="gallery-featured__info">
-                    <span class="gallery-featured__label">{{ "gallery.featured" | translate }}</span>
-                    <span class="gallery-featured__author">{{ image.author }}</span>
-                    <time class="gallery-featured__time" [appRelativeTime]="image.timestamp"></time>
-                </span>
-                <span class="gallery-featured__zoom" aria-hidden="true">
-                    <tui-icon icon="@tui.maximize-2" class="size-5!" />
-                </span>
-            </button>
+        <!--
+            Свежий кадр: самый новый скриншот архива, самый крупный отпечаток
+            страницы. Он в оправе, как всё на сайте: рамка даёт отпечатку вес,
+            а подпись стоит на нижней планке рамки, как музейная табличка.
+            Поверх кадра текста нет: он всегда читался бы на удачу.
+        -->
+        @if (heroTile(); as hero) {
+            <figure class="gallery-fold lh-panel lh-panel--bezel" appReveal>
+                <button type="button" class="gallery-fold__frame lh-panel__core" (click)="open(hero.image)">
+                    @if (hero.src; as src) {
+                        <img
+                            class="gallery-fold__img"
+                            [class.gallery-fold__img--contain]="hero.fit === 'contain'"
+                            [src]="src"
+                            [alt]="hero.alt"
+                            [width]="hero.image.width"
+                            [height]="hero.image.height"
+                            fetchpriority="high"
+                            decoding="sync"
+                            (error)="markShotFailed(hero.image.id)"
+                        />
+                    }
+                </button>
+
+                <figcaption class="gallery-fold__label">
+                    <bdi class="gallery-fold__author">{{ hero.image.author }}</bdi>
+                    <time class="gallery-fold__time" [appRelativeTime]="hero.image.timestamp"></time>
+                    @if (hero.note) {
+                        <span class="gallery-fold__note">{{ hero.note }}</span>
+                    }
+                </figcaption>
+            </figure>
         }
 
-        @if (visible().length > 0) {
-            <div class="gallery-grid columns-1 sm:columns-2 md:columns-3 xl:columns-4">
-                @for (image of visible(); track image.id) {
+        <!--
+            Стена: весь архив, каким его развернул посетитель. Заголовка и
+            пояснения у неё нет — раздел называет себя кадрами, а сколько их
+            и до какой даты, говорит циферблат под стеной.
+        -->
+        <section class="gallery-section">
+            <div class="gallery-wall">
+                @for (tile of tiles(); track tile.image.id) {
                     <button
                         type="button"
-                        (click)="open(image)"
-                        class="gallery-item group relative block w-full rounded-2xl overflow-hidden border-2 border-parchment/20 bg-night hover:border-brand transition duration-300 cursor-pointer text-left"
-                        [class.gallery-item--new]="isNew(image.timestamp)"
-                        [style.aspect-ratio]="getImageAspect(image)"
-                        [attr.aria-label]="image.alt || image.author"
+                        class="gallery-wall__tile lh-panel lh-panel--bezel"
+                        (click)="open(tile.image)"
                     >
-                        <app-gallery-image [src]="image.proxyUrl" [alt]="image.alt" />
+                        <span class="gallery-wall__core lh-panel__core">
+                            @if (tile.src; as src) {
+                                <img
+                                    class="gallery-wall__img"
+                                    [class.gallery-wall__img--contain]="tile.fit === 'contain'"
+                                    [src]="src"
+                                    [alt]="tile.alt"
+                                    [width]="tile.image.width"
+                                    [height]="tile.image.height"
+                                    [attr.loading]="tile.eager ? 'eager' : 'lazy'"
+                                    decoding="async"
+                                    (error)="markShotFailed(tile.image.id)"
+                                />
+                            } @else {
+                                <span class="gallery-wall__gone">
+                                    <tui-icon icon="@tui.image-off" class="size-6!" />
+                                    <span class="gallery-wall__gone-text">{{ "gallery.shot.gone" | translate }}</span>
+                                </span>
+                            }
 
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4"
-                        >
-                            <p class="text-white font-semibold text-sm truncate">
-                                {{ image.author }}
-                            </p>
-                            <time class="text-white/70 text-sm" [appRelativeTime]="image.timestamp"></time>
-                        </div>
+                            <!--
+                                Автор и возраст кадра выезжают из-под нижнего края
+                                на наведении и на фокусе. Полоса обрезается ядром
+                                оправы: в прошлой редакции её не обрезало ничто,
+                                и она ложилась поверх следующего ряда. Подпись
+                                игрока здесь не дублируется: на касании и в
+                                просмотрщике она показана постоянно.
+                            -->
+                            <span class="gallery-wall__meta">
+                                <bdi class="gallery-wall__author">{{ tile.image.author }}</bdi>
+                                <time class="gallery-wall__time" [appRelativeTime]="tile.image.timestamp"></time>
+                            </span>
+                        </span>
                     </button>
                 }
             </div>
-        }
 
-        @if (hiddenCount() > 0) {
-            <button type="button" class="lh-cta self-center" (click)="showMore()">
-                {{ "gallery.showMore" | translate }}
-                <span class="opacity-75 tabular-nums">({{ hiddenCount() }})</span>
-                <span class="lh-cta__icon">
-                    <tui-icon icon="@tui.chevron-down" class="size-4!" />
-                </span>
-            </button>
-        }
+            <!-- Циферблат архива: шаг назад называет дату, до которой дойдёт стена -->
+            <div class="gallery-dial" appReveal [appRevealThreshold]="0.3">
+                @switch (dialState()) {
+                    @case ("more") {
+                        <p class="gallery-dial__depth">
+                            @if (archiveComplete()) {
+                                {{
+                                    "gallery.dial.depth"
+                                        | translate
+                                            : { shown: shownCount(), total: facts().total, date: reachedDate() }
+                                }}
+                            } @else {
+                                {{
+                                    "gallery.dial.depthPartial" | translate: { shown: shownCount(), date: reachedDate() }
+                                }}
+                            }
+                        </p>
+                        <button type="button" class="lh-cta" (click)="showMore()">
+                            {{ "gallery.dial.more" | translate: { count: stepCount(), date: nextDate() } }}
+                            <span class="lh-cta__icon">
+                                <tui-icon icon="@tui.chevron-down" class="size-4!" />
+                            </span>
+                        </button>
+                    }
+                    @case ("loading") {
+                        <p class="gallery-dial__depth">{{ "gallery.dial.loading" | translate }}</p>
+                    }
+                    @case ("end") {
+                        <p class="gallery-dial__depth">{{ "gallery.dial.end" | translate: { date: firstDate() } }}</p>
+                    }
+                }
+
+                <!--
+                    Обрыв потока видно всегда, даже когда загруженных кадров хватает
+                    на шаг «дальше»: иначе стена молча кончилась бы на середине архива.
+                -->
+                @if (hasError() && !archiveComplete()) {
+                    <p class="gallery-dial__depth">{{ "gallery.dial.broken" | translate }}</p>
+                    <button type="button" class="lh-cta lh-cta--ghost" (click)="reload()">
+                        {{ "gallery.retry" | translate }}
+                    </button>
+                }
+            </div>
+        </section>
+
     }
-</section>
+</div>
 
 @if (viewerIndex() !== null) {
     <app-image-viewer

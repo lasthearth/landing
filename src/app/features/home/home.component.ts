@@ -13,7 +13,10 @@ import { environment } from '@core/config/environments/environment';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { SettlementService } from '@entities/settlement';
-import { DiscordGalleryService } from '@shared/lib/discord-gallery/discord-gallery.service';
+import { DiscordGalleryImage, DiscordGalleryService } from '@shared/lib/discord-gallery/discord-gallery.service';
+import { buildThumbUrl } from '@shared/lib/discord-gallery/discord-thumb-url.function';
+import { readShotCaption } from '@shared/lib/discord-gallery/read-shot-caption.function';
+import { formatShortDate } from '@shared/lib/relative-time';
 import { formatServerTime } from '@app/layout/header/lib/format-server-time.function';
 import { catchError, finalize, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,6 +26,45 @@ import { PulseStat } from './model/pulse-stat.interface';
 import { UpcomingEventComponent } from '@features/events';
 import { LfgTickerComponent } from '@features/lfg';
 import { ModsNoticeComponent } from '@shared/ui/mods-notice';
+
+/**
+ * Сколько скриншотов показывает лента на главной.
+ */
+const STRIP_COUNT = 4;
+
+/**
+ * Ширина копии для плитки ленты, px.
+ *
+ * Плитка квадратная и на десктопе занимает около 340 px, поэтому 640 px
+ * закрывают экраны с плотностью пикселей 2. Оригинал кадра весит 1.6 МБ,
+ * копия — около 45 КБ: без неё лента на главной тянула 6 МБ картинок.
+ */
+const STRIP_THUMB_WIDTH = 640;
+
+/**
+ * Плитка ленты скриншотов на главной.
+ */
+interface GalleryStripItem {
+    /**
+     * Ключ для `track`.
+     */
+    id: string;
+
+    /**
+     * Адрес уменьшенной копии.
+     */
+    thumb: string;
+
+    /**
+     * Имя автора.
+     */
+    author: string;
+
+    /**
+     * Доступное имя плитки: подпись игрока либо автор и дата.
+     */
+    label: string;
+}
 
 /**
  * Компонент главной страницы.
@@ -298,14 +340,39 @@ export class HomeComponent {
 
     /**
      * Последние скриншоты из галереи для ленты на главной.
+     *
+     * Берёт только первую страницу архива: ленте нужны четыре свежих кадра,
+     * а весь архив — это семь запросов подряд ради четырёх плиток.
      */
     protected readonly galleryStrip = toSignal(
-        this.galleryService.getAllImages$().pipe(
-            map((images) => images.slice(0, 4)),
-            catchError(() => of([]))
+        this.galleryService.getFirstPage$().pipe(
+            map((images) => images.slice(0, STRIP_COUNT).map((image) => this.toStripItem(image))),
+            catchError(() => of<GalleryStripItem[]>([]))
         ),
-        { initialValue: [] }
+        { initialValue: [] as GalleryStripItem[] }
     );
+
+    /**
+     * Собирает плитку ленты из кадра архива.
+     *
+     * @param image Кадр архива.
+     * @returns Плитка с уменьшенной копией и доступным именем.
+     */
+    private toStripItem(image: DiscordGalleryImage): GalleryStripItem {
+        const caption = readShotCaption(image.alt);
+
+        return {
+            id: image.id,
+            thumb: buildThumbUrl(image, STRIP_THUMB_WIDTH),
+            author: image.author,
+            label:
+                caption ??
+                this.i18n.translate('shared.screenshotAlt', {
+                    author: image.author,
+                    date: formatShortDate(image.timestamp, this.i18n.language()),
+                }),
+        };
+    }
 
     /**
      * Поток новостей из API.

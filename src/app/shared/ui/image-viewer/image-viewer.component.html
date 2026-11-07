@@ -1,10 +1,12 @@
 @if (current(); as image) {
     <div
+        #dialog
         class="image-viewer"
         role="dialog"
         aria-modal="true"
         [attr.aria-label]="image.alt || ('shared.imageViewer.title' | translate)"
         (click)="onBackdropClick($event)"
+        (keydown)="onTrapKeydown($event)"
     >
         <div class="image-viewer__top">
             @if (hasMany()) {
@@ -16,7 +18,7 @@
                 }
                 <a
                     class="image-viewer__action"
-                    [href]="image.src"
+                    [href]="image.originalSrc || image.src"
                     target="_blank"
                     rel="noopener noreferrer"
                     [attr.aria-label]="'shared.imageViewer.original' | translate"
@@ -65,13 +67,20 @@
             (pointerup)="onPointerUp($event)"
         />
 
-        @if (image.caption || image.date) {
+        @if (image.caption || image.date || image.note) {
             <div class="image-viewer__caption">
-                @if (image.caption) {
-                    <span class="image-viewer__caption-text">{{ image.caption }}</span>
+                @if (image.caption || image.date) {
+                    <div class="image-viewer__caption-row">
+                        @if (image.caption) {
+                            <bdi class="image-viewer__caption-text">{{ image.caption }}</bdi>
+                        }
+                        @if (image.date) {
+                            <time class="image-viewer__caption-time" [appRelativeTime]="image.date"></time>
+                        }
+                    </div>
                 }
-                @if (image.date) {
-                    <time class="image-viewer__caption-time" [appRelativeTime]="image.date"></time>
+                @if (image.note) {
+                    <p class="image-viewer__note">{{ image.note }}</p>
                 }
             </div>
         }

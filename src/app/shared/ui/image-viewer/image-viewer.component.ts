@@ -26,6 +26,15 @@ import { ImageViewerItem } from './image-viewer-item';
 const SWIPE_THRESHOLD = 50;
 
 /**
+ * Селектор элементов, которые умеют принимать фокус.
+ *
+ * Нужен ловушке фокуса: диалог объявлен `aria-modal`, а без ловушки Tab
+ * уводит фокус на страницу под ним, и вернуться обратно нельзя.
+ */
+const FOCUSABLE =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
  * Полноэкранный просмотрщик картинок.
  *
  * Стрелки ←/→ (кнопки, клавиатура, свайп) листают, Esc и клик по фону закрывают.
@@ -51,6 +60,11 @@ export class ImageViewerComponent {
      * Кнопка закрытия — получает фокус при открытии.
      */
     private readonly closeButton = viewChild<ElementRef<HTMLButtonElement>>('closeButton');
+
+    /**
+     * Корень диалога — в нём ищутся элементы для ловушки фокуса.
+     */
+    private readonly dialog = viewChild<ElementRef<HTMLElement>>('dialog');
 
     /**
      * Элемент, который был в фокусе до открытия.
@@ -195,6 +209,48 @@ export class ImageViewerComponent {
         } else if (event.key === 'ArrowLeft' && this.hasMany()) {
             event.preventDefault();
             this.prev();
+        }
+    }
+
+    /**
+     * Ловушка фокуса: Tab ходит только по элементам диалога.
+     *
+     * Невидимые элементы пропускаются: стрелки скрыты на узких экранах,
+     * и фокус на `display: none` молча не встал бы, оставив посетителя
+     * за пределами диалога.
+     *
+     * @param event Событие клавиатуры.
+     */
+    protected onTrapKeydown(event: KeyboardEvent): void {
+        if (event.key !== 'Tab') {
+            return;
+        }
+
+        const root = this.dialog()?.nativeElement;
+
+        if (!root) {
+            return;
+        }
+
+        const focusable = [...root.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+            (element) => element.getClientRects().length > 0
+        );
+
+        if (focusable.length === 0) {
+            return;
+        }
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = this.document.activeElement;
+        const inside = active instanceof HTMLElement && root.contains(active);
+
+        if (event.shiftKey && (!inside || active === first)) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && (!inside || active === last)) {
+            event.preventDefault();
+            first.focus();
         }
     }
 }

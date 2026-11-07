@@ -34,13 +34,15 @@
 .page-header__subtitle {
     max-width: 48rem;
     margin: 0;
-    font-size: 1rem;
+
+    /**
+     * 18 px на любом экране: подзаголовок — единственная строка, которая
+     * говорит, что это за страница, и на 16 px на телефоне она читалась
+     * как служебная подпись.
+     */
+    font-size: 1.125rem;
     line-height: 1.5;
     color: var(--lh-ink-2);
-
-    @media (min-width: 768px) {
-        font-size: 1.125rem;
-    }
 }
 
 .page-header__actions {

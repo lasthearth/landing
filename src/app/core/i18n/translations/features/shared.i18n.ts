@@ -213,6 +213,12 @@ export const SHARED_I18N = {
                 prev: 'Предыдущее изображение',
                 next: 'Следующее изображение',
             },
+            /**
+             * Доступное имя скриншота из Discord, когда игрок не подписал кадр
+             * и в `alt` лежит имя файла. Живёт в общем словаре: его читают
+             * и галерея, и лента скриншотов на главной.
+             */
+            screenshotAlt: 'Скриншот {{author}}, {{date}}',
             errorState: {
                 title: 'Не удалось загрузить данные',
                 description: 'Проверьте подключение к интернету и попробуйте снова.',
@@ -493,6 +499,7 @@ export const SHARED_I18N = {
                 prev: 'Previous image',
                 next: 'Next image',
             },
+            screenshotAlt: 'Screenshot by {{author}}, {{date}}',
             errorState: {
                 title: 'Failed to load data',
                 description: 'Check your internet connection and try again.',
