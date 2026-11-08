@@ -2,6 +2,7 @@
 @let userVerifications = userVerifications$ | async;
 @let settlementVerifications = settlementVerifications$ | async;
 @let isAuth = userService.authState$ | async;
+@let supportUnread = supportUnread$ | async;
 
 <div class="flex xl:flex-col gap-2 z-300!">
     <a
@@ -54,6 +55,18 @@
             <tui-icon icon="@tui.book-open" />
         </a>
         <a
+            [routerLink]="['/profile/support']"
+            routerLinkActive="nav-button--active"
+            class="relative nav-button size-11!"
+            [title]="'profile.nav.support' | translate"
+            [attr.aria-label]="'profile.nav.support' | translate"
+        >
+            <tui-icon icon="@tui.life-buoy" />
+            @if (supportUnread) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
+            }
+        </a>
+        <a
             [routerLink]="['/profile/referral']"
             routerLinkActive="nav-button--active"
             class="nav-button size-11!"
@@ -73,10 +86,7 @@
         >
             <tui-icon icon="@tui.shield" />
             @if (userVerifications?.length || settlementVerifications?.length) {
-                <tui-pulse
-                    tuiHintAppearance="floating"
-                    class="!absolute !top-0.5 !right-0.5 !scale-110"
-                />
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
             }
         </a>
     }

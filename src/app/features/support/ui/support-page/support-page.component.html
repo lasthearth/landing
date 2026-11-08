@@ -1,0 +1,82 @@
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <app-page-header
+        [level]="1"
+        [title]="'tickets.player.title' | translate"
+        [subtitle]="'tickets.player.subtitle' | translate"
+    >
+        @if (!creating()) {
+            <button
+                type="button"
+                class="lh-cta"
+                [disabled]="limitReached()"
+                [attr.title]="
+                    limitReached()
+                        ? ('tickets.player.limit' | translate: { count: active(), max: limits.activePerPlayer })
+                        : null
+                "
+                (click)="creating.set(true)"
+            >
+                <tui-icon icon="@tui.plus" class="size-4!" />
+                {{ "tickets.player.new" | translate }}
+            </button>
+        }
+    </app-page-header>
+
+    @if (limitReached()) {
+        <p class="support__limit">
+            {{ "tickets.player.limit" | translate: { count: active(), max: limits.activePerPlayer } }}
+        </p>
+    }
+
+    @if (creating()) {
+        <app-ticket-form (created)="onCreated($event)" (cancelled)="creating.set(false)" />
+    }
+
+    @if (failed()) {
+        <app-error-state (retry)="load()" />
+    } @else if (tickets() === null) {
+        <section class="support__list" [attr.aria-label]="'common.loading' | translate" role="status">
+            @for (row of skeletonRows; track row) {
+                <div class="support__card lh-panel">
+                    <app-skeleton width="1/3" height="4" />
+                    <app-skeleton width="2/3" height="6" />
+                </div>
+            }
+        </section>
+    } @else if (tickets()!.length === 0) {
+        @if (!creating()) {
+            <app-empty-state
+                icon="@tui.life-buoy"
+                [title]="'tickets.player.emptyTitle' | translate"
+                [description]="'tickets.player.emptyText' | translate"
+            />
+        }
+    } @else {
+        <section class="support__list">
+            @for (ticket of tickets(); track ticket.id) {
+                <a class="support__card lh-panel lh-card-glow" [routerLink]="['/profile/support', ticket.id]">
+                    <div class="support__top">
+                        <app-ticket-status [status]="ticket.status" viewer="author" />
+                        @if (ticket.unread) {
+                            <span class="support__unread">{{ "tickets.unread" | translate }}</span>
+                        }
+                        <time class="support__date" [appRelativeTime]="ticket.lastMessageAt"></time>
+                    </div>
+                    <!-- Тема от игрока: только интерполяция -->
+                    <b class="support__subject">{{ ticket.subject }}</b>
+                    <span class="support__meta">
+                        <tui-icon [icon]="categoryIcon(ticket)" class="size-4!" />
+                        {{ categoryKey(ticket) | translate }}
+                        · {{ "tickets.messages" | translate: { count: ticket.messageCount } }}
+                    </span>
+                </a>
+            }
+        </section>
+
+        @if (nextPageToken()) {
+            <button type="button" class="lh-cta lh-cta--ghost self-center" (click)="more()">
+                {{ "tickets.admin.more" | translate }}
+            </button>
+        }
+    }
+</div>

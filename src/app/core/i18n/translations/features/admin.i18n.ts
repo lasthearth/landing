@@ -17,6 +17,7 @@ export const ADMIN_I18N = {
                 settlements: 'Наделы',
                 wiki: 'Вики',
                 players: 'Игроки',
+                tickets: 'Обращения',
             },
             players: {
                 searchTitle: 'Поиск игрока',
@@ -470,6 +471,7 @@ export const ADMIN_I18N = {
                 settlements: 'Settlements',
                 wiki: 'Wiki',
                 players: 'Players',
+                tickets: 'Tickets',
             },
             players: {
                 searchTitle: 'Player search',

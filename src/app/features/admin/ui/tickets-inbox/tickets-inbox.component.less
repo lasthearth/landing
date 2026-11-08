@@ -1,0 +1,384 @@
+@import '../../../../shared/styles/field.mixins.less';
+
+:host {
+    display: block;
+}
+
+// Две колонки на широком экране: список фиксированной ширины и переписка.
+.inbox {
+    display: grid;
+    grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+
+    @media (max-width: 1023px) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+// На узком экране видна одна колонка: открытое обращение прячет список.
+@media (max-width: 1023px) {
+    .inbox--reading .inbox__list {
+        display: none;
+    }
+
+    .inbox:not(.inbox--reading) .inbox__detail {
+        display: none;
+    }
+}
+
+.inbox__list,
+.inbox__detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+// Список остаётся на месте, пока прокручивается длинная переписка.
+@media (min-width: 1024px) {
+    .inbox__list {
+        position: sticky;
+        top: 5rem;
+        max-height: calc(100vh - 6rem);
+        overflow-y: auto;
+        padding-right: 0.25rem;
+    }
+
+    .inbox__back {
+        display: none !important; // список виден рядом — кнопка «к списку» не нужна
+    }
+}
+
+.inbox__select {
+    .lh-field();
+    cursor: pointer;
+}
+
+.inbox__select--inline {
+    height: 2.25rem;
+    width: auto;
+    max-width: 100%;
+    font-size: 0.875rem;
+}
+
+.inbox__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.inbox__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border: 0;
+    border-radius: 0.875rem;
+    text-align: left;
+    font: inherit;
+    color: var(--lh-ink);
+    background: var(--lh-surface-2);
+    box-shadow: inset 0 0 0 1px var(--lh-border);
+    cursor: pointer;
+    transition: box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+
+    &:hover {
+        box-shadow: inset 0 0 0 1px var(--lh-border-strong);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.inbox__item--active {
+    background: color-mix(in srgb, var(--lh-brand) 10%, var(--lh-surface-2));
+    box-shadow: inset 0 0 0 2px var(--lh-brand);
+
+    &:hover {
+        box-shadow: inset 0 0 0 2px var(--lh-brand);
+    }
+}
+
+.inbox__item-top {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.inbox__dot {
+    flex: none;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--lh-brand);
+}
+
+.inbox__item-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.inbox__item-time {
+    margin-left: auto;
+    flex: none;
+    font-size: 0.75rem;
+    color: var(--lh-ink-3);
+}
+
+.inbox__item-subject {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    color: var(--lh-ink-2);
+}
+
+.inbox__item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.6rem;
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.inbox__item-assignee {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.inbox__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    align-self: flex-start;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--lh-ink-2);
+    cursor: pointer;
+}
+
+.inbox__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.inbox__head-top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.inbox__subject {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--lh-ink);
+    overflow-wrap: anywhere;
+}
+
+.inbox__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+
+    dt {
+        font-size: 0.75rem;
+        color: var(--lh-ink-3);
+    }
+
+    dd {
+        margin: 0;
+        color: var(--lh-ink);
+    }
+}
+
+.inbox__head-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.inbox__thread {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.inbox__composer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+// Пишется заметка: поле окрашено так же, как заметка в ленте, чтобы её не отправили игроку по ошибке.
+.inbox__composer--note {
+    background: color-mix(in srgb, var(--lh-warning-ink) 8%, var(--lh-surface));
+}
+
+.inbox__composer-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.inbox__counter {
+    margin-left: auto;
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.inbox__field {
+    .lh-field();
+}
+
+.inbox__field--area {
+    .lh-field-area();
+}
+
+.inbox__composer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.6rem;
+}
+
+.inbox__hotkey {
+    margin-right: auto;
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+
+    @media (max-width: 640px) {
+        display: none;
+    }
+}
+
+.inbox__replies {
+    position: relative;
+}
+
+.inbox__replies-menu {
+    position: absolute;
+    z-index: 20;
+    bottom: calc(100% + 0.5rem);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(26rem, 80vw);
+    max-height: 22rem;
+    overflow-y: auto;
+    background: var(--lh-surface);
+}
+
+.inbox__replies-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.inbox__reply {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border: 0;
+    border-radius: 0.6rem;
+    text-align: left;
+    font: inherit;
+    color: var(--lh-ink);
+    background: transparent;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--lh-surface-2);
+    }
+
+    span {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 0.8125rem;
+        color: var(--lh-ink-3);
+    }
+}
+
+.inbox__reply--static {
+    cursor: default;
+
+    &:hover {
+        background: transparent;
+    }
+}
+
+.inbox__link {
+    align-self: flex-start;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--lh-brand-ink);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.inbox__muted {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--lh-ink-3);
+}
+
+.inbox__manage {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.inbox__manage-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.inbox__manage-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.inbox__label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-weight: 600;
+    color: var(--lh-ink);
+}
+
+.inbox__manage-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}

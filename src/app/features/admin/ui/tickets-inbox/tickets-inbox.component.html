@@ -1,0 +1,370 @@
+<div class="inbox" [class.inbox--reading]="selectedId()">
+    <!-- Список -->
+    <section class="inbox__list" [attr.aria-label]="'tickets.admin.title' | translate">
+        <div class="lh-chips" role="group" [attr.aria-label]="'tickets.admin.filters.label' | translate">
+            @for (item of filters; track item) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-pressed]="filter() === item"
+                    (click)="selectFilter(item)"
+                >
+                    {{ "tickets.admin.filters." + item | translate }}
+                    @if (count(item) !== null) {
+                        <span class="lh-chip__count">{{ count(item) }}</span>
+                    }
+                </button>
+            }
+        </div>
+
+        <select
+            class="inbox__select"
+            [attr.aria-label]="'tickets.category.label' | translate"
+            [ngModel]="category() ?? ''"
+            (ngModelChange)="selectCategory($event)"
+        >
+            <option value="">{{ "tickets.admin.categoryAll" | translate }}</option>
+            @for (item of categories; track item.value) {
+                <option [value]="item.value">{{ "tickets.category." + item.key | translate }}</option>
+            }
+        </select>
+
+        @if (listFailed()) {
+            <app-error-state (retry)="loadList()" />
+        } @else if (tickets() === null) {
+            <app-admin-list-skeleton [count]="4" />
+        } @else if (tickets()!.length === 0) {
+            <app-empty-state
+                icon="@tui.inbox"
+                [title]="'tickets.admin.emptyTitle' | translate"
+                [description]="'tickets.admin.emptyText' | translate"
+            />
+        } @else {
+            <ul class="inbox__items">
+                @for (ticket of tickets(); track ticket.id) {
+                    <li>
+                        <button
+                            type="button"
+                            class="inbox__item"
+                            [class.inbox__item--active]="ticket.id === selectedId()"
+                            [attr.aria-current]="ticket.id === selectedId() ? 'true' : null"
+                            (click)="open(ticket.id)"
+                        >
+                            <span class="inbox__item-top">
+                                @if (ticket.unread) {
+                                    <span class="inbox__dot" [attr.aria-label]="'tickets.unread' | translate"></span>
+                                }
+                                <b class="inbox__item-name">{{ nameOf(ticket.authorId) || "…" }}</b>
+                                <time class="inbox__item-time" [appRelativeTime]="ticket.lastMessageAt"></time>
+                            </span>
+                            <!-- Тема от игрока: только интерполяция -->
+                            <span class="inbox__item-subject">{{ ticket.subject }}</span>
+                            <span class="inbox__item-meta">
+                                <app-ticket-status [status]="ticket.status" viewer="staff" />
+                                <span>{{ categoryKey(ticket.category) | translate }}</span>
+                                @if (ticket.assigneeId) {
+                                    <span class="inbox__item-assignee">
+                                        <tui-icon icon="@tui.user-check" class="size-3.5!" />
+                                        {{
+                                            ticket.assigneeId === me
+                                                ? ("tickets.admin.me" | translate)
+                                                : nameOf(ticket.assigneeId)
+                                        }}
+                                    </span>
+                                }
+                            </span>
+                        </button>
+                    </li>
+                }
+            </ul>
+            @if (nextPageToken()) {
+                <button type="button" class="lh-cta lh-cta--ghost self-center" (click)="more()">
+                    {{ "tickets.admin.more" | translate }}
+                </button>
+            }
+        }
+    </section>
+
+    <!-- Переписка -->
+    <section class="inbox__detail">
+        @if (!selectedId()) {
+            <app-empty-state
+                icon="@tui.message-square-text"
+                [title]="'tickets.admin.pickTitle' | translate"
+                [description]="'tickets.admin.pickText' | translate"
+            />
+        } @else if (selected(); as ticket) {
+            <button type="button" class="inbox__back" (click)="closeTicket()">
+                <tui-icon icon="@tui.arrow-left" class="size-4!" />
+                {{ "tickets.admin.back" | translate }}
+            </button>
+
+            <header class="inbox__head lh-panel">
+                <div class="inbox__head-top">
+                    <app-ticket-status [status]="ticket.status" viewer="staff" />
+                    <time class="inbox__item-time" [appRelativeTime]="ticket.createdAt"></time>
+                </div>
+                <!-- Тема от игрока: только интерполяция -->
+                <h3 class="inbox__subject">{{ ticket.subject }}</h3>
+
+                <dl class="inbox__facts">
+                    <div>
+                        <dt>{{ "tickets.admin.author" | translate }}</dt>
+                        <dd>
+                            @if (authorName()) {
+                                <a [routerLink]="['/player', authorName()]" target="_blank">{{ authorName() }}</a>
+                            } @else {
+                                …
+                            }
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>{{ "tickets.admin.assignee" | translate }}</dt>
+                        <dd>
+                            {{
+                                ticket.assigneeId === me
+                                    ? ("tickets.admin.me" | translate)
+                                    : nameOf(ticket.assigneeId) || ("tickets.admin.nobody" | translate)
+                            }}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>{{ "tickets.category.label" | translate }}</dt>
+                        <dd>
+                            <select
+                                class="inbox__select inbox__select--inline"
+                                [attr.aria-label]="'tickets.category.label' | translate"
+                                [ngModel]="ticket.category"
+                                (ngModelChange)="changeCategory($event)"
+                                [disabled]="busy()"
+                            >
+                                @for (item of categories; track item.value) {
+                                    <option [value]="item.value">
+                                        {{ "tickets.category." + item.key | translate }}
+                                    </option>
+                                }
+                            </select>
+                        </dd>
+                    </div>
+                </dl>
+
+                <div class="inbox__head-actions">
+                    <button type="button" class="lh-chip" [disabled]="busy()" (click)="toggleAssign()">
+                        <tui-icon [icon]="ticket.assigneeId === me ? '@tui.user-x' : '@tui.user-check'" />
+                        {{ (ticket.assigneeId === me ? "tickets.admin.release" : "tickets.admin.take") | translate }}
+                    </button>
+                    @if (ticket.status !== "TICKET_STATUS_OPEN") {
+                        <button type="button" class="lh-chip" [disabled]="busy()" (click)="reopen()">
+                            <tui-icon icon="@tui.refresh-cw" />
+                            {{ "tickets.admin.setOpen" | translate }}
+                        </button>
+                    }
+                    @if (ticket.status !== "TICKET_STATUS_CLOSED") {
+                        <button type="button" class="lh-chip" [disabled]="busy()" (click)="closeWithoutReply()">
+                            <tui-icon icon="@tui.lock" />
+                            {{ "tickets.admin.setClosed" | translate }}
+                        </button>
+                    }
+                </div>
+            </header>
+
+            <div class="inbox__thread lh-panel">
+                <app-ticket-thread [messages]="ticket.messages" [people]="people()" viewer="staff" />
+            </div>
+
+            <form
+                class="inbox__composer lh-panel"
+                [class.inbox__composer--note]="internal()"
+                (ngSubmit)="reply(false)"
+                novalidate
+            >
+                <div class="inbox__composer-bar">
+                    <div class="inbox__replies">
+                        <button
+                            type="button"
+                            class="lh-chip"
+                            [attr.aria-expanded]="repliesOpen()"
+                            aria-controls="inbox-replies"
+                            (click)="toggleReplies()"
+                        >
+                            <tui-icon icon="@tui.notebook-pen" />
+                            {{ "tickets.admin.replies.button" | translate }}
+                        </button>
+                        @if (repliesOpen()) {
+                            <div id="inbox-replies" class="inbox__replies-menu lh-panel">
+                                <input
+                                    type="search"
+                                    name="replySearch"
+                                    class="inbox__field"
+                                    [placeholder]="'tickets.admin.replies.search' | translate"
+                                    [ngModel]="replySearch()"
+                                    (ngModelChange)="replySearch.set($event)"
+                                />
+                                @if (replies() === null) {
+                                    <p class="inbox__muted">…</p>
+                                } @else if (foundReplies().length === 0) {
+                                    <p class="inbox__muted">{{ "tickets.admin.replies.empty" | translate }}</p>
+                                } @else {
+                                    <ul class="inbox__replies-list">
+                                        @for (item of foundReplies(); track item.id) {
+                                            <li>
+                                                <button type="button" class="inbox__reply" (click)="insertReply(item)">
+                                                    <b>{{ item.title }}</b>
+                                                    <span>{{ item.text }}</span>
+                                                </button>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                <button type="button" class="inbox__link" (click)="openManage()">
+                                    {{ "tickets.admin.replies.manage" | translate }}
+                                </button>
+                            </div>
+                        }
+                    </div>
+
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-pressed]="internal()"
+                        (click)="internal.set(!internal())"
+                    >
+                        <tui-icon icon="@tui.lock" />
+                        {{ "tickets.admin.composer.note" | translate }}
+                    </button>
+
+                    <span class="inbox__counter tabular-nums">{{ draft().length }} / {{ limits.textMax }}</span>
+                </div>
+
+                <textarea
+                    name="draft"
+                    rows="5"
+                    class="inbox__field inbox__field--area"
+                    [attr.aria-label]="'tickets.admin.composer.placeholder' | translate"
+                    [maxlength]="limits.textMax"
+                    [ngModel]="draft()"
+                    (ngModelChange)="draft.set($event)"
+                    (keydown)="onKeydown($event)"
+                    [placeholder]="
+                        (internal() ? 'tickets.admin.composer.notePlaceholder' : 'tickets.admin.composer.placeholder')
+                            | translate
+                    "
+                ></textarea>
+
+                <div class="inbox__composer-actions">
+                    <span class="inbox__hotkey">{{ "tickets.admin.composer.hotkey" | translate }}</span>
+                    @if (internal()) {
+                        <button type="submit" class="lh-cta" [disabled]="busy() || !draft().trim()">
+                            <tui-icon icon="@tui.sticky-note" class="size-4!" />
+                            {{ "tickets.admin.composer.addNote" | translate }}
+                        </button>
+                    } @else {
+                        <button
+                            type="button"
+                            class="lh-cta lh-cta--ghost"
+                            [disabled]="busy() || !draft().trim()"
+                            (click)="reply(true)"
+                        >
+                            <tui-icon icon="@tui.check" class="size-4!" />
+                            {{ "tickets.admin.composer.replyClose" | translate }}
+                        </button>
+                        <button type="submit" class="lh-cta" [disabled]="busy() || !draft().trim()">
+                            <tui-icon icon="@tui.send" class="size-4!" />
+                            {{ "tickets.admin.composer.reply" | translate }}
+                        </button>
+                    }
+                </div>
+            </form>
+        } @else {
+            <app-admin-list-skeleton [count]="2" />
+        }
+
+        @if (manageOpen()) {
+            <section class="inbox__manage lh-panel" [attr.aria-label]="'tickets.admin.replies.heading' | translate">
+                <header class="inbox__manage-head">
+                    <h3 class="inbox__subject">{{ "tickets.admin.replies.heading" | translate }}</h3>
+                    <button type="button" class="lh-chip" (click)="manageOpen.set(false); editingReply.set(null)">
+                        <tui-icon icon="@tui.x" />
+                        {{ "tickets.admin.replies.close" | translate }}
+                    </button>
+                </header>
+                <p class="inbox__muted">{{ "tickets.admin.replies.hint" | translate }}</p>
+
+                @if (editingReply() !== null) {
+                    <form class="inbox__manage-form" (ngSubmit)="saveReply()" novalidate>
+                        <label class="inbox__label">
+                            {{ "tickets.admin.replies.titleLabel" | translate }}
+                            <input
+                                type="text"
+                                name="replyTitle"
+                                class="inbox__field"
+                                [maxlength]="limits.replyTitleMax"
+                                [ngModel]="replyTitle()"
+                                (ngModelChange)="replyTitle.set($event)"
+                            />
+                        </label>
+                        <label class="inbox__label">
+                            {{ "tickets.admin.replies.textLabel" | translate }}
+                            <textarea
+                                name="replyText"
+                                rows="4"
+                                class="inbox__field inbox__field--area"
+                                [maxlength]="limits.textMax"
+                                [ngModel]="replyText()"
+                                (ngModelChange)="replyText.set($event)"
+                            ></textarea>
+                        </label>
+                        <div class="inbox__composer-actions">
+                            <button type="button" class="lh-cta lh-cta--ghost" (click)="editingReply.set(null)">
+                                {{ "tickets.player.form.cancel" | translate }}
+                            </button>
+                            <button
+                                type="submit"
+                                class="lh-cta"
+                                [disabled]="busy() || !replyTitle().trim() || !replyText().trim()"
+                            >
+                                {{ "tickets.admin.replies.save" | translate }}
+                            </button>
+                        </div>
+                    </form>
+                } @else {
+                    <button type="button" class="lh-cta self-start" (click)="editReply(null)">
+                        <tui-icon icon="@tui.plus" class="size-4!" />
+                        {{ "tickets.admin.replies.add" | translate }}
+                    </button>
+                }
+
+                <ul class="inbox__replies-list">
+                    @for (item of replies() ?? []; track item.id) {
+                        <li class="inbox__manage-row">
+                            <div class="inbox__reply inbox__reply--static">
+                                <b>{{ item.title }}</b>
+                                <span>{{ item.text }}</span>
+                            </div>
+                            <button
+                                type="button"
+                                class="nav-button size-9!"
+                                [title]="'tickets.admin.replies.edit' | translate"
+                                [attr.aria-label]="'tickets.admin.replies.edit' | translate"
+                                (click)="editReply(item)"
+                            >
+                                <tui-icon icon="@tui.pencil" />
+                            </button>
+                            <button
+                                type="button"
+                                class="nav-button size-9!"
+                                [title]="'tickets.admin.replies.delete' | translate"
+                                [attr.aria-label]="'tickets.admin.replies.delete' | translate"
+                                (click)="deleteReply(item)"
+                            >
+                                <tui-icon icon="@tui.trash-2" />
+                            </button>
+                        </li>
+                    } @empty {
+                        <li class="inbox__muted">{{ "tickets.admin.replies.empty" | translate }}</li>
+                    }
+                </ul>
+            </section>
+        }
+    </section>
+</div>

@@ -1,0 +1,68 @@
+<div class="lh-page-container flex flex-col gap-4 lg:gap-6">
+    <a class="support-ticket__back" [routerLink]="['/profile/support']">
+        <tui-icon icon="@tui.arrow-left" class="size-4!" />
+        {{ "tickets.player.back" | translate }}
+    </a>
+
+    @if (missing()) {
+        <app-error-state title="tickets.player.notFound" description="tickets.player.emptyText" />
+    } @else if (ticket(); as ticket) {
+        <header class="support-ticket__header">
+            <div class="support-ticket__chips">
+                <app-ticket-status [status]="ticket.status" viewer="author" />
+                <span class="support-ticket__category">{{ categoryKey(ticket) | translate }}</span>
+            </div>
+            <!-- Тема от игрока: только интерполяция -->
+            <h1 class="support-ticket__title lh-display">{{ ticket.subject }}</h1>
+        </header>
+
+        <section class="lh-panel">
+            <app-ticket-thread [messages]="ticket.messages" [people]="people()" viewer="author" />
+        </section>
+
+        @if (ticket.status === "TICKET_STATUS_CLOSED") {
+            <div class="support-ticket__closed lh-panel">
+                <p>{{ "tickets.player.closedNote" | translate }}</p>
+                <button type="button" class="lh-cta" [disabled]="busy()" (click)="reopen()">
+                    <tui-icon icon="@tui.lock-open" class="size-4!" />
+                    {{ "tickets.player.reopen" | translate }}
+                </button>
+            </div>
+        } @else {
+            <form class="support-ticket__composer lh-panel" (ngSubmit)="send()" novalidate>
+                <label class="support-ticket__label" for="ticket-reply">
+                    {{ "tickets.player.reply.label" | translate }}
+                    <span class="tabular-nums">{{ draft().length }} / {{ limits.textMax }}</span>
+                </label>
+                <textarea
+                    id="ticket-reply"
+                    name="reply"
+                    rows="4"
+                    class="support-ticket__input"
+                    [maxlength]="limits.textMax"
+                    [ngModel]="draft()"
+                    (ngModelChange)="draft.set($event)"
+                    (keydown)="onKeydown($event)"
+                    [placeholder]="'tickets.player.reply.placeholder' | translate"
+                ></textarea>
+                <div class="support-ticket__actions">
+                    <button type="button" class="lh-cta lh-cta--ghost" [disabled]="busy()" (click)="close()">
+                        <tui-icon icon="@tui.check" class="size-4!" />
+                        {{ "tickets.player.close" | translate }}
+                    </button>
+                    <span class="support-ticket__hotkey">{{ "tickets.player.reply.hotkey" | translate }}</span>
+                    <button type="submit" class="lh-cta" [disabled]="busy() || !draft().trim()">
+                        <tui-icon icon="@tui.send" class="size-4!" />
+                        {{ "tickets.player.reply.send" | translate }}
+                    </button>
+                </div>
+            </form>
+        }
+    } @else {
+        <div class="lh-panel flex flex-col gap-3" role="status" [attr.aria-label]="'common.loading' | translate">
+            <app-skeleton width="1/3" height="6" />
+            <app-skeleton height="16" />
+            <app-skeleton width="2/3" height="16" />
+        </div>
+    }
+</div>

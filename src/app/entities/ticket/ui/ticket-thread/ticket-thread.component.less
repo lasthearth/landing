@@ -1,0 +1,100 @@
+:host {
+    display: block;
+}
+
+.thread {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.thread__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    max-width: min(46rem, 100%);
+}
+
+// Администрация отвечает справа: так поток читается как переписка, а не лента.
+.thread__item--staff {
+    flex-direction: row-reverse;
+    align-self: flex-end;
+}
+
+.thread__avatar {
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--lh-surface-3);
+}
+
+.thread__avatar--crest {
+    display: grid;
+    place-items: center;
+    color: var(--lh-parchment);
+    background: var(--lh-brand-deep);
+}
+
+.thread__bubble {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.25rem 1rem 1rem;
+    background: var(--lh-surface-2);
+    box-shadow: inset 0 0 0 1px var(--lh-border);
+}
+
+.thread__item--staff .thread__bubble {
+    border-radius: 1rem 0.25rem 1rem 1rem;
+    background: color-mix(in srgb, var(--lh-brand) 12%, var(--lh-surface-2));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 35%, transparent);
+}
+
+// Заметку нельзя спутать с ответом: она «приколота» жёлтым и видна только администрации.
+.thread__item--note .thread__bubble {
+    background: color-mix(in srgb, var(--lh-warning-ink) 10%, var(--lh-surface));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-warning-ink) 45%, transparent);
+}
+
+.thread__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.thread__name {
+    color: var(--lh-ink);
+}
+
+.thread__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    color: var(--lh-warning-ink);
+    background: color-mix(in srgb, var(--lh-warning-ink) 12%, transparent);
+}
+
+.thread__badge--staff {
+    color: var(--lh-brand-ink);
+    background: color-mix(in srgb, var(--lh-brand) 14%, transparent);
+}
+
+.thread__text {
+    margin: 0;
+    color: var(--lh-ink);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}

@@ -35,6 +35,12 @@ export interface NotificationDto {
      * Когда создано (ISO 8601).
      */
     created_at?: string;
+
+    /**
+     * Адрес на сайте, куда ведёт уведомление (например `/profile/support/<id>`).
+     * Пусто у старых уведомлений — тогда адрес угадывается по заголовку.
+     */
+    link?: string;
 }
 
 /**

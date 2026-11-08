@@ -1,0 +1,71 @@
+<form class="ticket-form lh-panel" (ngSubmit)="submit()" novalidate>
+    <header class="ticket-form__header">
+        <h2 class="ticket-form__heading lh-display">{{ "tickets.player.form.heading" | translate }}</h2>
+        <p class="ticket-form__hint">{{ "tickets.player.form.hint" | translate }}</p>
+    </header>
+
+    <fieldset class="ticket-form__field">
+        <legend class="ticket-form__label">{{ "tickets.category.label" | translate }}</legend>
+        <div class="lh-chips">
+            @for (item of categories; track item.value) {
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-pressed]="category() === item.value"
+                    (click)="category.set(item.value)"
+                >
+                    <tui-icon [icon]="item.icon" />
+                    {{ "tickets.category." + item.key | translate }}
+                </button>
+            }
+        </div>
+    </fieldset>
+
+    <label class="ticket-form__field">
+        <span class="ticket-form__label">
+            {{ "tickets.player.form.subject" | translate }}
+            <span class="ticket-form__counter tabular-nums">{{ subject().length }} / {{ limits.subjectMax }}</span>
+        </span>
+        <input
+            type="text"
+            name="subject"
+            class="ticket-form__input"
+            [maxlength]="limits.subjectMax"
+            [ngModel]="subject()"
+            (ngModelChange)="subject.set($event)"
+            [placeholder]="'tickets.player.form.subjectPlaceholder' | translate"
+            [attr.aria-invalid]="touched() && subject().trim().length < limits.subjectMin"
+        />
+    </label>
+
+    <label class="ticket-form__field">
+        <span class="ticket-form__label">
+            {{ "tickets.player.form.text" | translate }}
+            <span class="ticket-form__counter tabular-nums">{{ text().length }} / {{ limits.textMax }}</span>
+        </span>
+        <textarea
+            name="text"
+            rows="6"
+            class="ticket-form__input ticket-form__textarea"
+            [maxlength]="limits.textMax"
+            [ngModel]="text()"
+            (ngModelChange)="text.set($event)"
+            [placeholder]="'tickets.player.form.textPlaceholder' | translate"
+            [attr.aria-invalid]="touched() && !text().trim()"
+        ></textarea>
+    </label>
+
+    @if (touched() && !valid()) {
+        <p class="ticket-form__error" role="alert">{{ "tickets.player.form.required" | translate }}</p>
+    }
+
+    <div class="ticket-form__actions">
+        <button type="button" class="lh-cta lh-cta--ghost" (click)="cancelled.emit()">
+            {{ "tickets.player.form.cancel" | translate }}
+        </button>
+        <button type="submit" class="lh-cta" [disabled]="sending()">
+            <tui-icon icon="@tui.send" class="size-4!" />
+            {{ "tickets.player.form.submit" | translate }}
+        </button>
+    </div>
+</form>

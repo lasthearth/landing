@@ -172,6 +172,34 @@ export const routes: Routes = [
                         data: { route_keys: RouteKeys.referral, seo: routeSeoData.profile },
                     },
                     {
+                        path: 'support',
+                        loadComponent: () =>
+                            loadPage(
+                                () => import('@features/support').then((m) => m.SupportPageComponent),
+                                [
+                                    () =>
+                                        import('@core/i18n/translations/features/tickets.i18n').then(
+                                            (m) => m.TICKETS_I18N
+                                        ),
+                                ]
+                            ),
+                        data: { route_keys: RouteKeys.support, seo: routeSeoData.profile },
+                    },
+                    {
+                        path: 'support/:id',
+                        loadComponent: () =>
+                            loadPage(
+                                () => import('@features/support').then((m) => m.SupportTicketPageComponent),
+                                [
+                                    () =>
+                                        import('@core/i18n/translations/features/tickets.i18n').then(
+                                            (m) => m.TICKETS_I18N
+                                        ),
+                                ]
+                            ),
+                        data: { route_keys: RouteKeys.support, seo: routeSeoData.profile },
+                    },
+                    {
                         path: 'admin',
                         loadComponent: () =>
                             loadPage(
@@ -181,6 +209,10 @@ export const routes: Routes = [
                                         import('@core/i18n/translations/features/admin.i18n').then((m) => m.ADMIN_I18N),
                                     () => import('@core/i18n/translations/features/wiki.i18n').then((m) => m.WIKI_I18N),
                                     () => import('@core/i18n/translations/features/mods.i18n').then((m) => m.MODS_I18N),
+                                    () =>
+                                        import('@core/i18n/translations/features/tickets.i18n').then(
+                                            (m) => m.TICKETS_I18N
+                                        ),
                                 ]
                             ),
                         canActivate: [adminGuard],
@@ -387,12 +419,7 @@ export const routes: Routes = [
                 loadComponent: () =>
                     loadPage(
                         () => import('@features/players').then((m) => m.PlayersPageComponent),
-                        [
-                            () =>
-                                import('@core/i18n/translations/features/players.i18n').then(
-                                    (m) => m.PLAYERS_I18N
-                                ),
-                        ]
+                        [() => import('@core/i18n/translations/features/players.i18n').then((m) => m.PLAYERS_I18N)]
                     ),
                 data: { route_keys: RouteKeys.players, seo: routeSeoData.players },
             },
