@@ -54,18 +54,23 @@
     } @else {
         <section class="support__list">
             @for (ticket of tickets(); track ticket.id) {
-                <a class="support__card lh-panel lh-card-glow" [routerLink]="['/profile/support', ticket.id]">
+                <a
+                    class="support__card lh-panel lh-card-glow"
+                    [class.support__card--unread]="ticket.unread"
+                    [routerLink]="['/profile/support', ticket.id]"
+                >
                     <div class="support__top">
                         <app-ticket-status [status]="ticket.status" viewer="author" />
-                        @if (ticket.unread) {
-                            <span class="support__unread">{{ "tickets.unread" | translate }}</span>
-                        }
                         <time class="support__date" [appRelativeTime]="ticket.lastMessageAt"></time>
                     </div>
                     <!-- Тема от игрока: только интерполяция -->
-                    <b class="support__subject">{{ ticket.subject }}</b>
+                    <b class="support__subject">
+                        @if (ticket.unread) {
+                            <span class="support__dot" [attr.aria-label]="'tickets.unread' | translate"></span>
+                        }
+                        {{ ticket.subject }}
+                    </b>
                     <span class="support__meta">
-                        <tui-icon [icon]="categoryIcon(ticket)" class="size-4!" />
                         {{ categoryKey(ticket) | translate }}
                         · {{ "tickets.messages" | translate: { count: ticket.messageCount } }}
                     </span>

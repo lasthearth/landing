@@ -4,11 +4,12 @@
     display: block;
 }
 
-// Две колонки на широком экране: список фиксированной ширины и переписка.
+// Две колонки на широком экране: узкий список и переписка. Колонки начинаются
+// на одной линии и не «липнут»: прилипающий список сползал относительно переписки.
 .inbox {
     display: grid;
-    grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
-    gap: 1rem;
+    grid-template-columns: minmax(17rem, 22rem) minmax(0, 1fr);
+    gap: 1.25rem;
     align-items: start;
 
     @media (max-width: 1023px) {
@@ -27,6 +28,12 @@
     }
 }
 
+@media (min-width: 1024px) {
+    .inbox__back {
+        display: none !important; // список виден рядом — кнопка «к списку» не нужна
+    }
+}
+
 .inbox__list,
 .inbox__detail {
     display: flex;
@@ -35,60 +42,48 @@
     min-width: 0;
 }
 
-// Список остаётся на месте, пока прокручивается длинная переписка.
-@media (min-width: 1024px) {
-    .inbox__list {
-        position: sticky;
-        top: 5rem;
-        max-height: calc(100vh - 6rem);
-        overflow-y: auto;
-        padding-right: 0.25rem;
-    }
-
-    .inbox__back {
-        display: none !important; // список виден рядом — кнопка «к списку» не нужна
-    }
+.inbox__filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
 }
 
 .inbox__select {
     .lh-field();
+    height: 2.5rem;
+    font-size: 0.9375rem;
     cursor: pointer;
 }
 
-.inbox__select--inline {
-    height: 2.25rem;
-    width: auto;
-    max-width: 100%;
-    font-size: 0.875rem;
-}
-
+// Список — одна колонка строк с тонкими разделителями, а не стопка карточек.
 .inbox__items {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
     margin: 0;
-    padding: 0;
+    padding: 0.25rem;
+    border-radius: 1rem;
     list-style: none;
+    background: var(--lh-surface-2);
 }
 
 .inbox__item {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.2rem;
     width: 100%;
-    padding: 0.7rem 0.85rem;
+    padding: 0.65rem 0.8rem 0.65rem 1rem;
     border: 0;
-    border-radius: 0.875rem;
+    border-radius: 0.75rem;
     text-align: left;
     font: inherit;
     color: var(--lh-ink);
-    background: var(--lh-surface-2);
-    box-shadow: inset 0 0 0 1px var(--lh-border);
+    background: transparent;
     cursor: pointer;
-    transition: box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 
     &:hover {
-        box-shadow: inset 0 0 0 1px var(--lh-border-strong);
+        background: color-mix(in srgb, var(--lh-ink) 5%, transparent);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -96,34 +91,43 @@
     }
 }
 
-.inbox__item--active {
-    background: color-mix(in srgb, var(--lh-brand) 10%, var(--lh-surface-2));
-    box-shadow: inset 0 0 0 2px var(--lh-brand);
+li + li .inbox__item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    right: 0.8rem;
+    height: 1px;
+    background: var(--lh-border);
+    opacity: 0.6;
+}
 
-    &:hover {
-        box-shadow: inset 0 0 0 2px var(--lh-brand);
-    }
+.inbox__item--active,
+.inbox__item--active:hover {
+    background: var(--lh-surface);
+    box-shadow: inset 3px 0 0 var(--lh-brand);
+}
+
+.inbox__item--unread .inbox__item-name,
+.inbox__item--unread .inbox__item-subject {
+    font-weight: 700;
+    color: var(--lh-ink);
 }
 
 .inbox__item-top {
     display: flex;
-    align-items: center;
-    gap: 0.4rem;
+    align-items: baseline;
+    gap: 0.5rem;
     min-width: 0;
-}
-
-.inbox__dot {
-    flex: none;
-    width: 0.55rem;
-    height: 0.55rem;
-    border-radius: 50%;
-    background: var(--lh-brand);
+    padding-right: 1rem;
 }
 
 .inbox__item-name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-weight: 600;
+    color: var(--lh-ink-2);
 }
 
 .inbox__item-time {
@@ -134,27 +138,56 @@
 }
 
 .inbox__item-subject {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     overflow: hidden;
-    overflow-wrap: anywhere;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: var(--lh-ink-2);
 }
 
 .inbox__item-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.35rem 0.6rem;
     font-size: 0.8125rem;
     color: var(--lh-ink-3);
 }
 
-.inbox__item-assignee {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.2rem;
+.inbox__dot {
+    position: absolute;
+    top: 1rem;
+    right: 0.8rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--lh-brand);
+}
+
+.inbox__more {
+    align-self: center;
+    padding: 0.25rem 0.5rem;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--lh-brand-ink);
+    cursor: pointer;
+}
+
+.inbox__placeholder {
+    padding: 3rem 0;
+}
+
+// Переписка: шапка, лента и ответ — одна панель с общими отступами.
+.inbox__conv {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+}
+
+.inbox__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem 1.25rem 0.875rem;
+    border-bottom: 1px solid var(--lh-border);
 }
 
 .inbox__back {
@@ -171,21 +204,18 @@
     cursor: pointer;
 }
 
-.inbox__head {
+.inbox__head-row {
     display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.inbox__head-top {
-    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
 }
 
 .inbox__subject {
     margin: 0;
-    font-size: 1.25rem;
+    min-width: 0;
+    font-size: 1.125rem;
     font-weight: 700;
     color: var(--lh-ink);
     overflow-wrap: anywhere;
@@ -194,79 +224,141 @@
 .inbox__facts {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
-    margin: 0;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    color: var(--lh-ink-3);
+}
 
-    dt {
-        font-size: 0.75rem;
-        color: var(--lh-ink-3);
-    }
+.inbox__author {
+    font-weight: 600;
+    color: var(--lh-brand-ink);
+    text-decoration: none;
 
-    dd {
-        margin: 0;
-        color: var(--lh-ink);
+    &:hover {
+        text-decoration: underline;
     }
 }
 
-.inbox__head-actions {
+// Категория меняется прямо в строке: выглядит как текст, раскрывается списком.
+.inbox__inline-select {
+    field-sizing: content; // по ширине выбранной категории, а не самой длинной
+    padding: 0.1rem 0.35rem;
+    border: 1px solid transparent;
+    border-radius: 0.4rem;
+    font: inherit;
+    color: var(--lh-ink-2);
+    background: transparent;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+        border-color: var(--lh-border);
+        background: var(--lh-surface);
+    }
+}
+
+.inbox__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.25rem;
+}
+
+// Второстепенные действия — текстом с иконкой, без рамки: в шапке их несколько,
+// и обведённые кнопки спорили с темой обращения.
+.inbox__action,
+.inbox__tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.6rem;
+    border: 0;
+    border-radius: 0.5rem;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--lh-ink-2);
+    background: transparent;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        color: var(--lh-ink);
+        background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+}
+
+.inbox__tool[aria-pressed='true'],
+.inbox__tool[aria-expanded='true'] {
+    color: var(--lh-ink);
+    background: color-mix(in srgb, var(--lh-ink) 9%, transparent);
 }
 
 .inbox__thread {
-    max-height: 60vh;
+    max-height: 58vh;
+    padding: 1.25rem;
     overflow-y: auto;
 }
 
 .inbox__composer {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-}
-
-// Пишется заметка: поле окрашено так же, как заметка в ленте, чтобы её не отправили игроку по ошибке.
-.inbox__composer--note {
-    background: color-mix(in srgb, var(--lh-warning-ink) 8%, var(--lh-surface));
-}
-
-.inbox__composer-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     gap: 0.5rem;
+    padding: 0.875rem 1.25rem 1rem;
+    border-top: 1px solid var(--lh-border);
+    transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
 }
 
-.inbox__counter {
-    margin-left: auto;
-    font-size: 0.8125rem;
-    color: var(--lh-ink-3);
+// Пишется заметка: поле окрашено как заметка в ленте, чтобы её не отправили игроку по ошибке.
+.inbox__composer--note {
+    background: color-mix(in srgb, var(--lh-warning-ink) 12%, transparent);
+
+    .inbox__field {
+        border-style: dashed;
+        border-color: var(--lh-warning-ink);
+    }
 }
 
 .inbox__field {
     .lh-field();
 }
 
-.inbox__field--area {
-    .lh-field-area();
+.inbox__field--sm {
+    height: 2.25rem;
+    font-size: 0.9375rem;
 }
 
-.inbox__composer-actions {
+.inbox__field--area {
+    .lh-field-area();
+    min-height: 5rem;
+}
+
+.inbox__composer-bar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end;
-    gap: 0.6rem;
+    gap: 0.25rem;
 }
 
-.inbox__hotkey {
-    margin-right: auto;
+.inbox__counter {
     font-size: 0.8125rem;
     color: var(--lh-ink-3);
+}
 
-    @media (max-width: 640px) {
-        display: none;
-    }
+.inbox__send {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
 }
 
 .inbox__replies {
@@ -281,16 +373,20 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    width: min(26rem, 80vw);
-    max-height: 22rem;
+    width: min(24rem, 80vw);
+    max-height: 20rem;
+    padding: 0.75rem;
     overflow-y: auto;
+    border-radius: 0.875rem;
     background: var(--lh-surface);
+    box-shadow:
+        0 0 0 1px var(--lh-border),
+        0 12px 32px -12px color-mix(in srgb, var(--lh-night) 45%, transparent);
 }
 
 .inbox__replies-list {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -299,11 +395,11 @@
 .inbox__reply {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.1rem;
     width: 100%;
-    padding: 0.45rem 0.6rem;
+    padding: 0.45rem 0.55rem;
     border: 0;
-    border-radius: 0.6rem;
+    border-radius: 0.5rem;
     text-align: left;
     font: inherit;
     color: var(--lh-ink);
@@ -315,20 +411,11 @@
     }
 
     span {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
         overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         font-size: 0.8125rem;
         color: var(--lh-ink-3);
-    }
-}
-
-.inbox__reply--static {
-    cursor: default;
-
-    &:hover {
-        background: transparent;
     }
 }
 
@@ -340,7 +427,6 @@
     font: inherit;
     font-size: 0.875rem;
     color: var(--lh-brand-ink);
-    text-decoration: underline;
     cursor: pointer;
 }
 
@@ -353,32 +439,72 @@
 .inbox__manage {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.875rem;
 }
 
 .inbox__manage-head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 0.5rem;
 }
 
-.inbox__manage-form {
+.inbox__manage-list {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-}
-
-.inbox__label {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    font-weight: 600;
-    color: var(--lh-ink);
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .inbox__manage-row {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.25rem;
+    padding: 0.5rem 0;
+
+    & + & {
+        border-top: 1px solid var(--lh-border);
+    }
+}
+
+.inbox__manage-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+
+    span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.8125rem;
+        color: var(--lh-ink-3);
+    }
+}
+
+.inbox__icon-btn {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 0.5rem;
+    color: var(--lh-ink-3);
+    background: transparent;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--lh-ink);
+        background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    }
+}
+
+.inbox__manage-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    background: var(--lh-surface-2);
 }

@@ -141,14 +141,4 @@ export class SupportPageComponent {
         const item = TICKET_CATEGORIES.find((c) => c.value === ticket.category);
         return `tickets.category.${item?.key ?? 'other'}`;
     }
-
-    /**
-     * Иконка категории.
-     *
-     * @param ticket Обращение.
-     * @returns Имя иконки.
-     */
-    protected categoryIcon(ticket: Ticket): string {
-        return TICKET_CATEGORIES.find((c) => c.value === ticket.category)?.icon ?? '@tui.message-square';
-    }
 }

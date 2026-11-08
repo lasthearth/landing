@@ -381,6 +381,16 @@ export class TicketsInboxComponent {
     }
 
     /**
+     * Ключ перевода статуса для администрации.
+     *
+     * @param status Статус.
+     * @returns Ключ `tickets.status.staff.*`.
+     */
+    protected statusKey(status: Ticket['status']): string {
+        return `tickets.status.staff.${status.replace('TICKET_STATUS_', '').toLowerCase()}`;
+    }
+
+    /**
      * Ник участника.
      *
      * @param id Пользователь.
