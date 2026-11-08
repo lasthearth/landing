@@ -1,0 +1,127 @@
+@import '../../../../shared/styles/field.mixins.less';
+
+:host {
+    display: block;
+}
+
+.support-ticket__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    align-self: flex-start;
+    font-size: 0.875rem;
+    color: var(--lh-ink-2);
+    text-decoration: none;
+
+    &:hover {
+        color: var(--lh-brand-ink);
+    }
+}
+
+// Шапка, лента и ответ — одна панель с общими отступами.
+.support-ticket {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+}
+
+.support-ticket__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--lh-border);
+}
+
+.support-ticket__head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+}
+
+.support-ticket__head-row--meta {
+    font-size: 0.875rem;
+    color: var(--lh-ink-3);
+}
+
+.support-ticket__title {
+    margin: 0;
+    min-width: 0;
+    font-size: 1.625rem;
+    color: var(--lh-ink);
+    overflow-wrap: anywhere;
+}
+
+// Закрыть обращение — тихое действие, а не вторая главная кнопка рядом с «Отправить».
+.support-ticket__quiet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.5rem;
+    border: 0;
+    border-radius: 0.5rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--lh-ink-2);
+    background: transparent;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        color: var(--lh-ink);
+        background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    }
+}
+
+.support-ticket__thread {
+    padding: 1.5rem;
+}
+
+.support-ticket__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: 1rem 1.5rem 1.25rem;
+    border-top: 1px solid var(--lh-border);
+}
+
+.support-ticket__footer--closed {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+        margin: 0;
+        color: var(--lh-ink-2);
+    }
+}
+
+.support-ticket__input {
+    .lh-field();
+    .lh-field-area();
+    min-height: 5rem;
+}
+
+.support-ticket__bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.support-ticket__counter {
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+@media (max-width: 640px) {
+    .support-ticket__head,
+    .support-ticket__thread,
+    .support-ticket__footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}

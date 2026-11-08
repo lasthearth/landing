@@ -70,6 +70,7 @@ function getConfig() {
             'offline_access',
             'wiki:write',
             'wiki:review',
+            'tickets:manage',
         ],
         resource: 'https://api.lasthearth.ru',
     });

@@ -28,22 +28,22 @@
 
 ## 2. Слои src/app
 
-| Слой      | Файлов | Внутри                                                                                                                                                                                                                                                                                                                                                                    |
-| --------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| src/app   | 1044   | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                                          |
-| core/     | 59     | config, guards, i18n, interceptors, services, types                                                                                                                                                                                                                                                                                                                       |
-| entities/ | 191    | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki                                                                                                                                                                                         |
-| features/ | 628    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
-| layout/   | 21     | background-scene, footer, header                                                                                                                                                                                                                                                                                                                                          |
-| routes/   | 5      | enums                                                                                                                                                                                                                                                                                                                                                                     |
-| shared/   | 135    | lib, styles, ui                                                                                                                                                                                                                                                                                                                                                           |
+| Слой      | Файлов | Внутри                                                                                                                                                                                                                                                                                                                                                                             |
+| --------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| src/app   | 1073   | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                                                   |
+| core/     | 60     | config, guards, i18n, interceptors, services, types                                                                                                                                                                                                                                                                                                                                |
+| entities/ | 203    | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki                                                                                                                                                                                          |
+| features/ | 643    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
+| layout/   | 21     | background-scene, footer, header                                                                                                                                                                                                                                                                                                                                                   |
+| routes/   | 5      | enums                                                                                                                                                                                                                                                                                                                                                                              |
+| shared/   | 136    | lib, styles, ui                                                                                                                                                                                                                                                                                                                                                                    |
 
 ## 3. Слайсы features / entities
 
 | Слайс                   | Файлов | Сегменты                    | index.ts | Строк экспорта |
 | ----------------------- | ------ | --------------------------- | -------- | -------------- |
 | features/about          | 4      | ui                          | да       | 1              |
-| features/admin          | 68     | ui, model, lib, config      | да       | 2              |
+| features/admin          | 71     | ui, model, lib, config      | да       | 2              |
 | features/analytics      | 4      | ui                          | да       | 1              |
 | features/announcement   | 7      | ui, model, api              | да       | 3              |
 | features/auth           | 4      | ui                          | да       | 1              |
@@ -74,6 +74,7 @@
 | features/rules          | 83     | ui, model, config           | да       | 1              |
 | features/settlements    | 70     | —                           | **нет**  | —              |
 | features/start-game     | 3      | —                           | **нет**  | —              |
+| features/support        | 12     | ui, api, lib                | да       | 3              |
 | features/verification   | 4      | model, api                  | да       | 4              |
 | features/videos         | 15     | ui, model, api, lib, config | да       | 1              |
 | features/welcome        | 3      | —                           | **нет**  | —              |
@@ -95,62 +96,65 @@
 | entities/server-mod     | 9      | model, api, lib             | да       | 5              |
 | entities/settlement     | 49     | ui, model, api, lib, config | да       | 44             |
 | entities/settlement-tag | 13     | ui, model, api, lib         | да       | 10             |
+| entities/ticket         | 12     | ui, model, api              | да       | 7              |
 | entities/user           | 32     | ui, model, api, lib, config | да       | 23             |
 | entities/wiki           | 6      | model, api, lib             | да       | 6              |
 
 ## 4. Роуты
 
-| Путь                    | Компонент                  | Гварды                          | Словари i18n                                 | Пререндер | SEO-ключ      |
-| ----------------------- | -------------------------- | ------------------------------- | -------------------------------------------- | --------- | ------------- |
-| `wiki/edit/:id`         | `—`                        | userGuard, wikiEditorLeaveGuard | wiki                                         | —         | wikiEditor    |
-| `/`                     | `HomeComponent`            | —                               | home                                         | да        | home          |
-| `/wiki`                 | `WikiListPageComponent`    | —                               | wiki                                         | да        | wiki          |
-| `/wiki/razdel/:section` | `WikiSectionPageComponent` | —                               | wiki                                         | —         | wiki          |
-| `/wiki/:slug`           | `WikiArticlePageComponent` | —                               | wiki                                         | —         | wiki          |
-| `/home`                 | `—`                        | —                               | —                                            | —         | —             |
-| `/rules`                | `RulesComponent`           | —                               | rules                                        | да        | rules         |
-| `/profile`              | `ProfileComponent`         | userGuard                       | profile, player, settlements, events, market | —         | profile       |
-| `/profile/stats`        | `—`                        | —                               | —                                            | —         | stats         |
-| `/profile/how-play`     | `HowPlayComponent`         | —                               | —                                            | —         | howPlay       |
-| `/profile/settlement`   | `—`                        | —                               | —                                            | —         | settlement    |
-| `/profile/style`        | `—`                        | —                               | —                                            | —         | profileStyle  |
-| `/profile/wiki`         | `MySuggestionsComponent`   | —                               | wiki                                         | —         | mySuggestions |
-| `/profile/referral`     | `ReferralWidgetComponent`  | —                               | referral                                     | —         | referral      |
-| `/profile/admin`        | `AdminComponent`           | adminGuard                      | admin, wiki, mods                            | —         | admin         |
-| `/start-game`           | `StartGameComponent`       | guestGuard                      | —                                            | да        | startGame     |
-| `/about`                | `AboutPageComponent`       | —                               | about, settlements                           | да        | about         |
-| `/mods`                 | `ModsPageComponent`        | —                               | mods                                         | —         | mods          |
-| `/key-points`           | `KeyPointsPageComponent`   | —                               | key-points                                   | да        | keyPoints     |
-| `/market`               | `MarketComponent`          | —                               | market                                       | да        | market        |
-| `/privacy-policy`       | `—`                        | —                               | legal                                        | да        | privacyPolicy |
-| `/public-offer`         | `—`                        | —                               | legal                                        | да        | publicOffer   |
-| `/faq`                  | `FaqComponent`             | —                               | faq                                          | да        | faq           |
-| `/settlements`          | `SettlementsComponent`     | —                               | settlements                                  | да        | settlements   |
-| `/map`                  | `WorldMapPageComponent`    | —                               | world-map                                    | —         | worldMap      |
-| `/gallery`              | `GalleryComponent`         | —                               | gallery                                      | да        | gallery       |
-| `/videos`               | `—`                        | —                               | videos                                       | да        | videos        |
-| `/diplomacy`            | `—`                        | —                               | diplomacy                                    | да        | diplomacy     |
-| `/events`               | `EventsPageComponent`      | —                               | events, settlements                          | да        | events        |
-| `/lfg`                  | `LfgPageComponent`         | —                               | lfg, settlements                             | да        | lfg           |
-| `/join/:code`           | `—`                        | —                               | settlements                                  | —         | join          |
-| `/players`              | `PlayersPageComponent`     | —                               | players                                      | да        | players       |
-| `/player/:nick`         | `—`                        | —                               | player, settlements                          | —         | player        |
-| `/settlements/:id`      | `—`                        | —                               | settlements                                  | —         | settlements   |
-| `/news`                 | `NewsListPageComponent`    | —                               | news                                         | да        | news          |
-| `/news/:id`             | `NewsPageComponent`        | —                               | —                                            | —         | news          |
-| `/unauthorized`         | `—`                        | —                               | —                                            | —         | —             |
-| `/**`                   | `NotFoundComponent`        | —                               | —                                            | —         | —             |
+| Путь                    | Компонент                    | Гварды                          | Словари i18n                                 | Пререндер | SEO-ключ      |
+| ----------------------- | ---------------------------- | ------------------------------- | -------------------------------------------- | --------- | ------------- |
+| `wiki/edit/:id`         | `—`                          | userGuard, wikiEditorLeaveGuard | wiki                                         | —         | wikiEditor    |
+| `/`                     | `HomeComponent`              | —                               | home                                         | да        | home          |
+| `/wiki`                 | `WikiListPageComponent`      | —                               | wiki                                         | да        | wiki          |
+| `/wiki/razdel/:section` | `WikiSectionPageComponent`   | —                               | wiki                                         | —         | wiki          |
+| `/wiki/:slug`           | `WikiArticlePageComponent`   | —                               | wiki                                         | —         | wiki          |
+| `/home`                 | `—`                          | —                               | —                                            | —         | —             |
+| `/rules`                | `RulesComponent`             | —                               | rules                                        | да        | rules         |
+| `/profile`              | `ProfileComponent`           | userGuard                       | profile, player, settlements, events, market | —         | profile       |
+| `/profile/stats`        | `—`                          | —                               | —                                            | —         | stats         |
+| `/profile/how-play`     | `HowPlayComponent`           | —                               | —                                            | —         | howPlay       |
+| `/profile/settlement`   | `—`                          | —                               | —                                            | —         | settlement    |
+| `/profile/style`        | `—`                          | —                               | —                                            | —         | profileStyle  |
+| `/profile/wiki`         | `MySuggestionsComponent`     | —                               | wiki                                         | —         | mySuggestions |
+| `/profile/referral`     | `ReferralWidgetComponent`    | —                               | referral                                     | —         | referral      |
+| `/profile/support`      | `SupportPageComponent`       | —                               | tickets                                      | —         | support       |
+| `/profile/support/:id`  | `SupportTicketPageComponent` | —                               | tickets                                      | —         | support       |
+| `/profile/admin`        | `AdminComponent`             | adminGuard                      | admin, wiki, mods, tickets                   | —         | admin         |
+| `/start-game`           | `StartGameComponent`         | guestGuard                      | —                                            | да        | startGame     |
+| `/about`                | `AboutPageComponent`         | —                               | about, settlements                           | да        | about         |
+| `/mods`                 | `ModsPageComponent`          | —                               | mods                                         | —         | mods          |
+| `/key-points`           | `KeyPointsPageComponent`     | —                               | key-points                                   | да        | keyPoints     |
+| `/market`               | `MarketComponent`            | —                               | market                                       | да        | market        |
+| `/privacy-policy`       | `—`                          | —                               | legal                                        | да        | privacyPolicy |
+| `/public-offer`         | `—`                          | —                               | legal                                        | да        | publicOffer   |
+| `/faq`                  | `FaqComponent`               | —                               | faq                                          | да        | faq           |
+| `/settlements`          | `SettlementsComponent`       | —                               | settlements                                  | да        | settlements   |
+| `/map`                  | `WorldMapPageComponent`      | —                               | world-map                                    | —         | worldMap      |
+| `/gallery`              | `GalleryComponent`           | —                               | gallery                                      | да        | gallery       |
+| `/videos`               | `—`                          | —                               | videos                                       | да        | videos        |
+| `/diplomacy`            | `—`                          | —                               | diplomacy                                    | да        | diplomacy     |
+| `/events`               | `EventsPageComponent`        | —                               | events, settlements                          | да        | events        |
+| `/lfg`                  | `LfgPageComponent`           | —                               | lfg, settlements                             | да        | lfg           |
+| `/join/:code`           | `—`                          | —                               | settlements                                  | —         | join          |
+| `/players`              | `PlayersPageComponent`       | —                               | players                                      | да        | players       |
+| `/player/:nick`         | `—`                          | —                               | player, settlements                          | —         | player        |
+| `/settlements/:id`      | `—`                          | —                               | settlements                                  | —         | settlements   |
+| `/news`                 | `NewsListPageComponent`      | —                               | news                                         | да        | news          |
+| `/news/:id`             | `NewsPageComponent`          | —                               | —                                            | —         | news          |
+| `/unauthorized`         | `—`                          | —                               | —                                            | —         | —             |
+| `/**`                   | `NotFoundComponent`          | —                               | —                                            | —         | —             |
 
 ## 5. Словари i18n (feature)
 
 | Словарь     | KB    | Грузится на                                                                                 |
 | ----------- | ----- | ------------------------------------------------------------------------------------------- |
 | about       | 11.8  | /about                                                                                      |
-| admin       | 51.4  | /profile/admin                                                                              |
+| admin       | 51.5  | /profile/admin                                                                              |
 | analytics   | 0.9   | —                                                                                           |
-| common      | 1.1   | —                                                                                           |
+| common      | 1.0   | —                                                                                           |
 | diplomacy   | 1.7   | /diplomacy                                                                                  |
-| events      | 8.0   | /profile, /events                                                                           |
+| events      | 7.8   | /profile, /events                                                                           |
 | faq         | 2.3   | /faq                                                                                        |
 | footer      | 2.9   | —                                                                                           |
 | gallery     | 2.6   | /gallery                                                                                    |
@@ -158,19 +162,20 @@
 | home        | 10.8  | /                                                                                           |
 | key-points  | 79.3  | /key-points                                                                                 |
 | legal       | 68.7  | /privacy-policy, /public-offer                                                              |
-| lfg         | 15.7  | /lfg                                                                                        |
+| lfg         | 15.4  | /lfg                                                                                        |
 | market      | 15.6  | /profile, /market                                                                           |
 | mods        | 10.9  | /profile/admin, /mods                                                                       |
 | news        | 10.7  | /news                                                                                       |
 | pagination  | 0.7   | —                                                                                           |
 | player      | 21.9  | /profile, /player/:nick                                                                     |
 | players     | 3.3   | /players                                                                                    |
-| profile     | 23.1  | /profile                                                                                    |
+| profile     | 23.2  | /profile                                                                                    |
 | referral    | 1.5   | /profile/referral                                                                           |
 | rules       | 253.8 | /rules                                                                                      |
 | settlements | 55.2  | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared      | 27.9  | —                                                                                           |
-| videos      | 2.1   | /videos                                                                                     |
+| tickets     | 13.6  | /profile/support, /profile/support/:id, /profile/admin                                      |
+| videos      | 2.0   | /videos                                                                                     |
 | wiki        | 63.7  | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin     |
 | world-map   | 6.6   | /map                                                                                        |
 

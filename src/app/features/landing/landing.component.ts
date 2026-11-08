@@ -32,20 +32,19 @@ export class LandingComponent {
      */
     private readonly currentRouteKey = toSignal<RouteKeys | undefined>(
         this.router.events.pipe(
-        filter((event) => event instanceof NavigationEnd),
-        startWith(null),
-        map(() => {
-            let route = this.activatedRoute;
+            filter((event) => event instanceof NavigationEnd),
+            startWith(null),
+            map(() => {
+                let route = this.activatedRoute;
 
-            while (route.firstChild) {
-                route = route.firstChild;
-            }
+                while (route.firstChild) {
+                    route = route.firstChild;
+                }
 
-            return route.snapshot?.data?.['route_keys'];
-        })
+                return route.snapshot?.data?.['route_keys'];
+            })
         )
     );
-
 
     /**
      * Проверяет, является ли данный ключ маршрута страницей профиля.
@@ -60,7 +59,8 @@ export class LandingComponent {
             RouteKeys.settlement,
             RouteKeys.referral,
             RouteKeys.profileStyle,
-            RouteKeys.mySuggestions
+            RouteKeys.mySuggestions,
+            RouteKeys.support,
         ].includes(routeKey);
     }
 

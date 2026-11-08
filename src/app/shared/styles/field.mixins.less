@@ -1,0 +1,36 @@
+// Текстовое поле в духе формы «Ищу компанию»: высота, рамка, фокус, ошибка.
+// Миксины, а не глобальный класс: подключает компонент, которому поле нужно.
+.lh-field() {
+    width: 100%;
+    height: 2.75rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--lh-border);
+    border-radius: 0.75rem;
+    background: var(--lh-surface);
+    color: var(--lh-ink);
+    font: inherit;
+    font-size: 1rem;
+    color-scheme: light dark;
+
+    &::placeholder {
+        color: var(--lh-ink-3);
+        opacity: 0.8;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 1px;
+    }
+
+    &[aria-invalid='true'] {
+        border-color: var(--lh-danger);
+    }
+}
+
+.lh-field-area() {
+    height: auto;
+    min-height: 6rem;
+    padding: 0.625rem 0.75rem;
+    line-height: 1.45;
+    resize: vertical;
+}

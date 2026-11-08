@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import { VerificationService } from '@features/verification';
 import { AsyncPipe } from '@angular/common';
-import { Observable, startWith, Subject, switchMap } from 'rxjs';
+import { catchError, Observable, of, startWith, Subject, switchMap } from 'rxjs';
 import { IVerifyRequest } from '@features/verification';
 import { SettlementService } from '@entities/settlement';
 import { NotificationService } from '@core/services/notification.service';
@@ -25,6 +27,13 @@ import { TranslatePipe } from '@core/i18n';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { WikiAdminPanelComponent } from '@features/wiki';
 import { ModsAdminPanelComponent } from '@features/mods';
+import { TicketApiService } from '@entities/ticket';
+import { TicketsInboxComponent } from './ui/tickets-inbox/tickets-inbox.component';
+
+/**
+ * Номер вкладки «Обращения» в `@switch` шаблона.
+ */
+const TICKETS_TAB = 14;
 
 /**
  * Компонент страницы администратора.
@@ -32,7 +41,8 @@ import { ModsAdminPanelComponent } from '@features/mods';
 @Component({
     standalone: true,
     selector: 'app-admin',
-    imports: [PageHeaderComponent, 
+    imports: [
+        PageHeaderComponent,
         PlayerVerifyRequestComponent,
         AsyncPipe,
         SettlementVerificationRequestComponent,
@@ -53,6 +63,7 @@ import { ModsAdminPanelComponent } from '@features/mods';
         TranslatePipe,
         WikiAdminPanelComponent,
         ModsAdminPanelComponent,
+        TicketsInboxComponent,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.less',
@@ -107,6 +118,35 @@ export class AdminComponent {
      * Индекс открытой вкладки.
      */
     protected activeItemIndex: number = 0;
+
+    protected readonly ticketsTab = TICKETS_TAB;
+
+    /**
+     * Обращение, которое открыть во входящих (из ссылки уведомления).
+     */
+    protected readonly ticketParam = signal<string | null>(null);
+
+    /**
+     * Сколько обращений ждут ответа администрации — для точки на вкладке.
+     */
+    protected readonly openTickets$ = inject(TicketApiService)
+        .adminCounters()
+        .pipe(catchError(() => of(null)));
+
+    public constructor() {
+        const cdr = inject(ChangeDetectorRef);
+        // `?tab=tickets&ticket=<id>` открывает входящие и обращение. Подписка, а не
+        // снимок: клик по уведомлению на уже открытой админке меняет только адрес.
+        inject(ActivatedRoute)
+            .queryParamMap.pipe(takeUntilDestroyed(inject(DestroyRef)))
+            .subscribe((params) => {
+                if (params.get('tab') === 'tickets') {
+                    this.activeItemIndex = TICKETS_TAB;
+                    this.ticketParam.set(params.get('ticket'));
+                    cdr.markForCheck();
+                }
+            });
+    }
 
     /**
      * Обновляет данные анкет и уведомлений.
