@@ -85,7 +85,9 @@
                 @for (tile of tiles(); track tile.image.id) {
                     <button
                         type="button"
-                        class="gallery-wall__tile lh-panel lh-panel--bezel"
+                        class="gallery-wall__tile lh-panel lh-panel--bezel lh-reveal--scale"
+                        appReveal
+                        [appRevealDelay]="$index * 40"
                         (click)="open(tile.image)"
                     >
                         <span class="gallery-wall__core lh-panel__core">

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, signal } from '@an
 import { inject } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
+import { RevealDirective } from '@shared/lib/directives';
 import { ScrollService } from '../../services/scroll.service';
 import { RulesSearchResult } from './rules-search-result';
 
@@ -50,7 +51,7 @@ function normalize(value: string): string {
 @Component({
     selector: 'app-rules-search',
     standalone: true,
-    imports: [TuiIcon, TranslatePipe],
+    imports: [TuiIcon, TranslatePipe, RevealDirective],
     templateUrl: './rules-search.component.html',
     styleUrl: './rules-search.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

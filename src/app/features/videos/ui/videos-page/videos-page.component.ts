@@ -13,6 +13,7 @@ import { VideoKindState } from '../../model/video-kind-state';
 import { YoutubeVideo } from '../../model/youtube-video';
 import { VideoCardComponent } from '../video-card/video-card.component';
 import { SafeUrlPipe } from '../../lib/safe-url.pipe';
+import { RevealDirective } from '@shared/lib/directives';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 
 /**
@@ -50,7 +51,7 @@ const EMPTY_STATE: VideoKindState = {
 @Component({
     selector: 'app-videos-page',
     standalone: true,
-    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, VideoCardComponent, SafeUrlPipe],
+    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, VideoCardComponent, SafeUrlPipe, RevealDirective],
     templateUrl: './videos-page.component.html',
     styleUrl: './videos-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

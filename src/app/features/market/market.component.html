@@ -82,16 +82,17 @@
 
         <div class="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3">
             @for (shot of worldShots; track shot.image) {
-                <img
-                    [src]="shot.image"
-                    [alt]="shot.altKey | translate"
-                    class="aspect-video w-full min-w-0 rounded-xl object-cover"
-                    decoding="async"
-                    width="1152"
-                    height="648"
-                    appReveal
-                    [appRevealDelay]="120 + $index * 45"
-                />
+                <!-- Появление на обёртке, а не на <img>: reveal пишет transform. -->
+                <div class="min-w-0 lh-reveal--scale" appReveal [appRevealDelay]="120 + $index * 45">
+                    <img
+                        [src]="shot.image"
+                        [alt]="shot.altKey | translate"
+                        class="aspect-video w-full rounded-xl object-cover"
+                        decoding="async"
+                        width="1152"
+                        height="648"
+                    />
+                </div>
             }
         </div>
 

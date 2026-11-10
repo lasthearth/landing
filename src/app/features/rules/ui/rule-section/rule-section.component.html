@@ -1,6 +1,7 @@
 <div class="flex flex-col cursor-pointer" [attr.sectionid]="sectionId()" [class.mt-4]="needsMarginTop()">
     <!-- Кнопка, а не div с (click): раздел должен открываться и с клавиатуры -->
     <button
+        appReveal
         type="button"
         class="flex w-full justify-between gap-3 cursor-pointer transition duration-300 hover:opacity-80 items-center text-left bg-transparent border-0 p-0"
         [attr.aria-expanded]="isExpanded()"
@@ -35,7 +36,7 @@
     </button>
 
     <tui-expand [expanded]="isExpanded()">
-        <div [class]="contentClass()" class="mt-4">
+        <div appReveal [appRevealThreshold]="0.01" [class]="contentClass()" class="mt-4">
             <ng-content />
         </div>
     </tui-expand>

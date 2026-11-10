@@ -8,7 +8,7 @@
         <app-error-state title="tickets.player.notFound" description="tickets.player.emptyText" />
     } @else if (ticket(); as ticket) {
         <article class="support-ticket lh-panel">
-            <header class="support-ticket__head">
+            <header class="support-ticket__head" appReveal>
                 <div class="support-ticket__head-row">
                     <!-- Тема от игрока: только интерполяция -->
                     <h1 class="support-ticket__title lh-display">{{ ticket.subject }}</h1>
@@ -26,7 +26,13 @@
             </header>
 
             <div class="support-ticket__thread">
-                <app-ticket-thread [messages]="ticket.messages" [people]="people()" viewer="author" />
+                <app-ticket-thread
+                    appReveal
+                    class="lh-reveal--soft"
+                    [messages]="ticket.messages"
+                    [people]="people()"
+                    viewer="author"
+                />
             </div>
 
             @if (ticket.status === "TICKET_STATUS_CLOSED") {

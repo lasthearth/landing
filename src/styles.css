@@ -1483,20 +1483,42 @@ html.lh-has-session .lh-guest-only {
  * поэтому не заменяют его, но и не должны с ним сочетаться на одном
  * элементе — сложатся две прозрачности.
  */
+/*
+ * Появление при входе во вьюпорт (RevealDirective — единственный механизм).
+ * `will-change` намеренно не задан: элементов с появлением на странице
+ * десятки, постоянный слой на каждый стоил бы памяти и композитинга на
+ * слабых машинах, а браузер и так продвигает элемент в слой на время
+ * перехода. Расстояние настраивается через `--lh-reveal-dy`.
+ */
 .lh-reveal {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(var(--lh-reveal-dy, 28px));
     transition:
         opacity var(--lh-dur-slow) var(--lh-ease-out-quart),
         transform var(--lh-dur-slow) var(--lh-ease-out-quart);
     transition-delay: var(--lh-reveal-delay, 0ms);
-    will-change: opacity, transform;
 }
 
 .lh-reveal.is-visible {
     opacity: 1;
-    transform: translateY(0);
-    will-change: auto;
+    transform: none;
+}
+
+/*
+ * Только прозрачность: для плотных списков, строк таблиц и длинного текста.
+ * Сдвиг десятка соседних строк читается как дрожание списка.
+ */
+.lh-reveal.lh-reveal--soft {
+    transform: none;
+    transition: opacity var(--lh-dur-slow) var(--lh-ease-out-quart);
+}
+
+/*
+ * Лёгкий масштаб вместо сдвига: для карточек и медиаплиток в сетках.
+ * 0.97, а не 0 — ничего не растёт из нуля.
+ */
+.lh-reveal.lh-reveal--scale {
+    transform: scale(0.97);
 }
 
 @media (prefers-reduced-motion: reduce) {

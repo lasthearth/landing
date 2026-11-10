@@ -32,7 +32,6 @@ import { occupancyShare } from './lib/occupancy-share.function';
 import { NewContentService } from '@features/new-content';
 import { NotificationBellComponent } from '@features/notifications';
 import { AnalyticsService } from '@core/services/analytics.service';
-import { MotionBlurDirective } from '@shared/lib/directives';
 
 /**
  * Выпадающие меню шапки с анимацией ухода.
@@ -57,7 +56,6 @@ type DropdownName = 'mobile' | 'media' | 'lang';
         TranslatePipe,
         NotificationBellComponent,
         PlayerAvatarComponent,
-        MotionBlurDirective,
     ],
     templateUrl: './header.component.html',
     styleUrl: './header.component.less',

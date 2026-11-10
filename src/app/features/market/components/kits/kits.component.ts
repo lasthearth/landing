@@ -3,6 +3,7 @@ import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { DonateService } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
+import { RevealDirective } from '@shared/lib/directives';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
@@ -34,6 +35,7 @@ import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant'
         ImageLoaderComponent,
         EmptyStateComponent,
         ErrorStateComponent,
+        RevealDirective,
         TranslatePipe,
     ],
     templateUrl: './kits.component.html',

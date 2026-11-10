@@ -9,6 +9,7 @@ import {
     signal,
 } from '@angular/core';
 import { TranslatePipe } from '@core/i18n';
+import { RevealDirective } from '@shared/lib/directives';
 import { RulesTocItem } from '../../model/rules-toc-item.interface';
 
 /**
@@ -28,7 +29,7 @@ const CLICK_LOCK_MS = 1500;
     selector: 'app-rules-toc',
     templateUrl: './rules-toc.component.html',
     styleUrl: './rules-toc.component.less',
-    imports: [TranslatePipe],
+    imports: [TranslatePipe, RevealDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RulesTocComponent {

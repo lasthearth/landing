@@ -1,6 +1,6 @@
 <div class="lh-page-container flex flex-col gap-6">
     <div class="flex flex-col gap-4">
-        <app-page-header [title]="'settlements.list.title' | translate">
+        <app-page-header appReveal [title]="'settlements.list.title' | translate">
             <a routerLink="/map" class="lh-cta lh-cta--ghost">
                 <tui-icon icon="@tui.map" class="size-4!" />
                 {{ 'settlements.list.map' | translate }}
@@ -120,6 +120,9 @@
         <div class="settlements-grid">
             @for (item of filteredSettlements(); track item.id) {
                 <app-settlement-card
+                    appReveal
+                    class="lh-reveal--scale"
+                    [appRevealDelay]="$index * 45"
                     [data]="item"
                     [players]="item.players"
                     (tagsChanged)="loadSettlements()"

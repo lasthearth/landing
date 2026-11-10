@@ -19,6 +19,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ShareButtonComponent } from '@shared/ui/share-button';
+import { MotionBlurDirective } from '@shared/lib/directives';
 import { ImageViewerItem } from './image-viewer-item';
 
 /**
@@ -46,7 +47,7 @@ const FOCUSABLE =
 @Component({
     standalone: true,
     selector: 'app-image-viewer',
-    imports: [TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent],
+    imports: [TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, MotionBlurDirective],
     templateUrl: './image-viewer.component.html',
     styleUrl: './image-viewer.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

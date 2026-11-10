@@ -7,6 +7,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import { SeoService } from '@core/services/seo.service';
 import { BreadcrumbsComponent } from '@shared/ui/breadcrumbs';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
 import { KEY_POINT_SCHEMES } from '../../config/key-point-schemes.constant';
 import { KeyPointPlannerStore } from '../../model/key-point-planner.store';
 import { resolveVariant } from '../../lib/resolve-variant.function';
@@ -27,7 +28,14 @@ const SITE_URL = 'https://lasthearth.ru';
  */
 @Component({
     selector: 'app-key-points-page',
-    imports: [TranslatePipe, TuiIcon, BreadcrumbsComponent, PageHeaderComponent, UpgradeSchemeComponent],
+    imports: [
+        TranslatePipe,
+        TuiIcon,
+        BreadcrumbsComponent,
+        PageHeaderComponent,
+        UpgradeSchemeComponent,
+        RevealDirective,
+    ],
     templateUrl: './key-points-page.component.html',
     styleUrl: './key-points-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

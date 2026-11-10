@@ -1,12 +1,14 @@
 <section class="how-play" aria-labelledby="how-play-title">
     <header class="how-play__head">
-        <h2 id="how-play-title" class="how-play__title lh-display">{{ "profile.howToPlay.title" | translate }}</h2>
+        <h2 id="how-play-title" class="how-play__title lh-display" appReveal>
+            {{ "profile.howToPlay.title" | translate }}
+        </h2>
         <p class="how-play__intro">{{ "profile.howToPlay.intro" | translate }}</p>
     </header>
 
     <ol class="how-play__steps">
         <!-- 1. Игра -->
-        <li class="how-step">
+        <li class="how-step lh-reveal--soft" appReveal>
             <span class="how-step__num" aria-hidden="true">1</span>
             <div class="how-step__card lh-panel">
                 <h3 class="how-step__title">
@@ -47,7 +49,7 @@
         </li>
 
         <!-- 2. Сервер -->
-        <li class="how-step">
+        <li class="how-step lh-reveal--soft" appReveal>
             <span class="how-step__num" aria-hidden="true">2</span>
             <div class="how-step__card lh-panel">
                 <h3 class="how-step__title">{{ "profile.howToPlay.step2Title" | translate }}</h3>
@@ -114,7 +116,7 @@
             раньше он жил отдельной карточкой «Ваш путь на сервер» над этим блоком
             и повторял те же ссылки. Анкета и вход для вошедшего игрока уже пройдены.
         -->
-        <li class="how-step">
+        <li class="how-step lh-reveal--soft" appReveal>
             <span class="how-step__num" aria-hidden="true">3</span>
             <div class="how-step__card lh-panel">
                 <div class="how-step__head">
@@ -220,7 +222,7 @@
     </ol>
 
     <!-- Если не получается -->
-    <aside class="how-help" aria-labelledby="how-help-title">
+    <aside class="how-help lh-reveal--soft" appReveal aria-labelledby="how-help-title">
         <h3 id="how-help-title" class="how-help__title">
             <tui-icon icon="@tui.life-buoy" class="size-5!" />
             {{ "profile.howToPlay.helpTitle" | translate }}

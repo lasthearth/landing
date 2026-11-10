@@ -10,6 +10,7 @@ import { environment } from '@core/config/environments/environment';
 import { ServerInformationService } from '@core/services/server-information.service';
 import { NewcomerPathComponent } from '@features/onboarding';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Приглашение в Discord сервера.
@@ -25,7 +26,15 @@ const DISCORD_INVITE = environment.discordInviteUrl;
 @Component({
     standalone: true,
     selector: 'app-start-game',
-    imports: [PageHeaderComponent, RouterLink, TuiIcon, TranslatePipe, NewcomerPathComponent, ModsNoticeComponent],
+    imports: [
+        PageHeaderComponent,
+        RevealDirective,
+        RouterLink,
+        TuiIcon,
+        TranslatePipe,
+        NewcomerPathComponent,
+        ModsNoticeComponent,
+    ],
     templateUrl: './start-game.component.html',
     styleUrl: './start-game.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

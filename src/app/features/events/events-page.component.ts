@@ -6,6 +6,7 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { CalendarEvent, EventApiService } from '@entities/event';
 import { IPlayer, UserService } from '@entities/user';
+import { RevealDirective } from '@shared/lib/directives';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { TuiIcon } from '@taiga-ui/core';
 import { catchError, filter, of, switchMap } from 'rxjs';
@@ -28,7 +29,7 @@ import { ErrorStateComponent } from '@shared/ui/error-state';
     selector: 'app-events-page',
     templateUrl: './events-page.component.html',
     styleUrl: './events-page.component.less',
-    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, EventCardComponent, EventFormComponent, EmptyStateComponent, ErrorStateComponent],
+    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, EventCardComponent, EventFormComponent, EmptyStateComponent, ErrorStateComponent, RevealDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventsPageComponent {

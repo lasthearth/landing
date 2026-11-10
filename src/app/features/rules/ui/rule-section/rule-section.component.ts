@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
 import { TranslatePipe } from '@core/i18n';
+import { RevealDirective } from '@shared/lib/directives';
 import { BaseExpandableSection } from '../../abstracts/base-expandable-section';
 import { SECTION_ID } from '../../tokens/section-id.token';
 
@@ -20,7 +21,7 @@ export const SECTION_ID_PROVIDER: Provider = {
 @Component({
     selector: 'app-rule-section',
     standalone: true,
-    imports: [CommonModule, TuiIcon, TuiExpand, TranslatePipe],
+    imports: [CommonModule, TuiIcon, TuiExpand, TranslatePipe, RevealDirective],
     templateUrl: './rule-section.component.html',
     styleUrls: ['../../styles/rules.less'],
     providers: [SECTION_ID_PROVIDER],
@@ -94,7 +95,9 @@ export class RuleSectionComponent extends BaseExpandableSection {
      * Возвращает CSS класс для контента в зависимости от уровня.
      */
     protected readonly contentClass = computed(() => {
-        return this.level() === 0 ? 'rule-content' : 'flex flex-col gap-3';
+        return this.level() === 0
+            ? 'rule-content lh-reveal--soft'
+            : 'flex flex-col gap-3 lh-reveal--soft';
     });
 
     /**

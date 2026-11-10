@@ -12,6 +12,7 @@ import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { OnboardingService } from '@features/onboarding';
 import { AnalyticsService } from '@core/services/analytics.service';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * «Как начать играть»: три шага — купить игру нужной версии, добавить сервер
@@ -26,7 +27,7 @@ import { AnalyticsService } from '@core/services/analytics.service';
     selector: 'app-how-play',
     templateUrl: './how-play.component.html',
     styleUrl: './how-play.component.less',
-    imports: [RouterLink, TuiIcon, TranslatePipe, ModsNoticeComponent],
+    imports: [RouterLink, TuiIcon, TranslatePipe, ModsNoticeComponent, RevealDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HowPlayComponent {

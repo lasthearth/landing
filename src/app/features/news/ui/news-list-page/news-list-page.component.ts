@@ -8,6 +8,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { NewsCardComponent } from '../news-card/news-card.component';
 import { catchError, map, of } from 'rxjs';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Адрес сайта для канонических ссылок.
@@ -23,7 +24,14 @@ const SITE_URL = 'https://lasthearth.ru';
  */
 @Component({
     selector: 'app-news-list-page',
-    imports: [TranslatePipe, BreadcrumbsComponent, EmptyStateComponent, PageHeaderComponent, NewsCardComponent],
+    imports: [
+        TranslatePipe,
+        BreadcrumbsComponent,
+        EmptyStateComponent,
+        PageHeaderComponent,
+        NewsCardComponent,
+        RevealDirective,
+    ],
     templateUrl: './news-list-page.component.html',
     styleUrl: './news-list-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -106,9 +106,32 @@
         }
     }
 
-    &__image {
+    /*
+     * Носитель вылета: прозрачный, несёт только transform, картинка с тенью —
+     * на слое-потомке. Дальность 12vh подобрана под шлейф: Echo не рисует
+     * при пути меньше ~1.5px за кадр, а 12vh ≈ 108px за 150ms ≈ 12px за кадр
+     * → streak ~6px → 4 копии.
+     */
+    &__fly {
+        display: flex;
         max-width: 100%;
         max-height: 100%;
+        transition: transform var(--lh-dur-exit) var(--lh-ease-out-quart);
+
+        &--leave {
+            transform: translateY(12vh) scale(0.94);
+        }
+    }
+
+    &__image {
+        /*
+         * Пределы в единицах вьюпорта, а не в процентах: внутри `__fly`
+         * процент высоты не разрешается — высота родителя определяется
+         * содержимым. 11rem — сумма вертикальных отступов диалога
+         * (4.5rem + 6.5rem), 2rem — горизонтальных.
+         */
+        max-width: calc(100vw - 2rem);
+        max-height: calc(100vh - 11rem);
         object-fit: contain;
         user-select: none;
         touch-action: pan-y;

@@ -1,4 +1,4 @@
-<nav class="rules-toc" [attr.aria-label]="'rules.toc.title' | translate">
+<nav appReveal class="rules-toc lh-reveal--soft" [attr.aria-label]="'rules.toc.title' | translate">
     <p class="rules-toc__title">{{ "rules.toc.title" | translate }}</p>
     <ol class="rules-toc__list">
         @for (item of items(); track item.sectionId) {

@@ -7,6 +7,7 @@ import { WikiSuggestion, WikiSuggestionStatus } from '@entities/wiki';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { SkeletonComponent } from '@shared/ui/skeletons';
 import { WikiStoreService } from '../../api/wiki-store.service';
@@ -42,6 +43,7 @@ const PENDING_LIMIT = 5;
         PageHeaderComponent,
         RelativeTimeComponent,
         SkeletonComponent,
+        RevealDirective,
     ],
     templateUrl: './my-suggestions.component.html',
     styleUrl: './my-suggestions.component.less',

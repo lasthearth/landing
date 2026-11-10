@@ -13,6 +13,13 @@ import { Directive, ElementRef, OnDestroy, OnInit, inject, numberAttribute, inpu
  *
  * Использование: `<section appReveal>` или `<div appReveal [appRevealDelay]="150">`.
  */
+/**
+ * Потолок задержки появления, мс. Каскад различим примерно до восьмого
+ * элемента; всё, что дальше, появляется одновременно, иначе хвост длинного
+ * списка ждал бы секунды.
+ */
+const MAX_REVEAL_DELAY = 400;
+
 @Directive({
     selector: '[appReveal]',
     standalone: true,
@@ -24,7 +31,9 @@ export class RevealDirective implements OnInit, OnDestroy {
     /**
      * Задержка появления в миллисекундах.
      * Нужна для каскада внутри одной секции: элементы получают разный
-     * `transition-delay`, а не разные анимации.
+     * `transition-delay`, а не разные анимации. Значение ограничено
+     * сверху `MAX_REVEAL_DELAY`: в длинных списках `$index * шаг`
+     * уехал бы на секунды, а хвост списка обязан появляться вместе.
      */
     public readonly appRevealDelay = input(0, { transform: numberAttribute });
 
@@ -42,7 +51,10 @@ export class RevealDirective implements OnInit, OnDestroy {
     public ngOnInit(): void {
         const element = this.elementRef.nativeElement;
 
-        element.style.setProperty('--lh-reveal-delay', `${this.appRevealDelay()}ms`);
+        element.style.setProperty(
+            '--lh-reveal-delay',
+            `${Math.min(this.appRevealDelay(), MAX_REVEAL_DELAY)}ms`,
+        );
 
         // На сервере IntersectionObserver отсутствует. Пререндер обязан
         // отдавать видимый контент: иначе страница без JS остаётся пустой.

@@ -1,5 +1,5 @@
 <section class="mods">
-    <app-page-header [level]="1" [title]="'mods.title' | translate" [subtitle]="'mods.subtitle' | translate" />
+    <app-page-header appReveal [level]="1" [title]="'mods.title' | translate" [subtitle]="'mods.subtitle' | translate" />
 
     @switch (state().status) {
         @case ("loading") {
@@ -97,7 +97,11 @@
                 @if (visible().length) {
                     <ul class="mods__grid" role="list">
                         @for (card of visible(); track card.mod.id) {
-                            <li class="mods__card lh-panel">
+                            <li
+                                appReveal
+                                class="mods__card lh-panel lh-reveal--scale"
+                                [appRevealDelay]="$index * 45"
+                            >
                                 <div class="mods__card-head">
                                     @if (card.mod.logoUrl) {
                                         <img class="mods__logo" [src]="card.mod.logoUrl" alt="" loading="lazy" width="64" height="64" />

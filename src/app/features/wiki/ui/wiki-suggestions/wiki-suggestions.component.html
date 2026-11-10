@@ -1,5 +1,5 @@
 <div class="wiki-review">
-    <div class="lh-chips" role="group" [attr.aria-label]="'wiki.admin.review.title' | translate">
+    <div appReveal class="lh-chips lh-reveal--soft" role="group" [attr.aria-label]="'wiki.admin.review.title' | translate">
         <span class="lh-chips__label">{{ "wiki.admin.review.title" | translate }}</span>
         @for (item of filters; track item) {
             <button type="button" class="lh-chip" [attr.aria-pressed]="filter() === item" (click)="filter.set(item)">

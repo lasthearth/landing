@@ -8,7 +8,8 @@
         <article class="settlement-page__article lh-panel">
             <button
                 type="button"
-                class="settlement-page__cover"
+                appReveal
+                class="settlement-page__cover lh-reveal--scale"
                 [attr.aria-label]="'settlements.page.openPhoto' | translate"
                 [disabled]="gallery().length === 0"
                 (click)="viewerIndex.set(0)"
@@ -18,7 +19,7 @@
 
             <header class="flex flex-col gap-4">
                 <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-                    <h1 class="settlement-page__title lh-display font-bold text-ink uppercase">
+                    <h1 appReveal class="settlement-page__title lh-display font-bold text-ink uppercase">
                         {{ item | settlementDisplayName }}
                     </h1>
                     @if (tier() > 0) {
@@ -74,7 +75,11 @@
             </header>
 
             @if (item.description) {
-                <div class="settlement-page__text lh-rich-text text-ink" [innerHTML]="item.description | markup"></div>
+                <div
+                    appReveal
+                    class="settlement-page__text lh-rich-text text-ink lh-reveal--soft"
+                    [innerHTML]="item.description | markup"
+                ></div>
             }
 
             @if (item.contact_info) {
@@ -86,7 +91,7 @@
             }
 
             <section class="flex flex-col gap-3" aria-labelledby="settlement-population">
-                <h2 id="settlement-population" class="text-xl font-bold text-ink">
+                <h2 appReveal id="settlement-population" class="text-xl font-bold text-ink">
                     {{ "settlements.detailed.population" | translate }}
                 </h2>
                 <div class="flex flex-wrap gap-2">
@@ -101,12 +106,19 @@
 
             @if (gallery().length > 1) {
                 <section class="flex flex-col gap-3" aria-labelledby="settlement-photos">
-                    <h2 id="settlement-photos" class="text-xl font-bold text-ink">
+                    <h2 appReveal id="settlement-photos" class="text-xl font-bold text-ink">
                         {{ "settlements.page.photos" | translate }}
                     </h2>
                     <div class="settlement-page__photos">
                         @for (photo of gallery(); track $index) {
-                            <button type="button" class="settlement-page__photo" [attr.aria-label]="photo.alt" (click)="viewerIndex.set($index)">
+                            <button
+                                type="button"
+                                appReveal
+                                class="settlement-page__photo lh-reveal--scale"
+                                [appRevealDelay]="$index * 45"
+                                [attr.aria-label]="photo.alt"
+                                (click)="viewerIndex.set($index)"
+                            >
                                 <img [src]="photo.src" [alt]="photo.alt" loading="lazy" />
                             </button>
                         }
@@ -117,7 +129,11 @@
 
         @if (others().length > 0) {
             <section class="flex flex-col gap-4" aria-labelledby="settlement-others">
-                <h2 id="settlement-others" class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
+                <h2
+                    appReveal
+                    id="settlement-others"
+                    class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink"
+                >
                     {{ "settlements.page.others" | translate }}
                 </h2>
                 <div class="settlement-page__others">

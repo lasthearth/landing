@@ -2,11 +2,11 @@
     <app-breadcrumbs [items]="crumbs()" />
 
     @if (section(); as place) {
-        <app-page-header [level]="1" [title]="name()" [subtitle]="description()" />
+        <app-page-header appReveal [level]="1" [title]="name()" [subtitle]="description()" />
 
         <section class="wiki-section__articles" [attr.aria-label]="'wiki.section.articles' | translate">
             @if (articles().length) {
-                <div class="wiki-section__grid">
+                <div appReveal class="wiki-section__grid lh-reveal--scale">
                     @for (article of articles(); track article.slug) {
                         <a class="wiki-section__card lh-panel" [routerLink]="['/wiki', article.slug]">
                             <span class="wiki-section__card-title lh-display">{{ article.title }}</span>

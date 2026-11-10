@@ -1,5 +1,5 @@
 <section class="wap lh-panel">
-    <div class="wap__head">
+    <div appReveal class="wap__head">
         <div>
             <h2 class="wap__title lh-display">{{ "wiki.admin.title" | translate }}</h2>
             <p class="wap__sub">{{ "wiki.admin.subtitle" | translate: { count: counts().all } }}</p>
@@ -48,7 +48,7 @@
             </a>
         }
 
-        <div class="wap__filters">
+        <div appReveal class="wap__filters lh-reveal--soft">
             <label class="wap__search">
                 <tui-icon icon="@tui.search" />
                 <input

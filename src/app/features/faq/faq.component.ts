@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
 import { TranslatePipe } from '@core/i18n';
+import { RevealDirective } from '@shared/lib/directives';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { environment } from '@core/config/environments/environment';
 
@@ -12,7 +13,7 @@ import { environment } from '@core/config/environments/environment';
  */
 @Component({
     selector: 'app-faq',
-    imports: [PageHeaderComponent, RouterLink, TuiExpand, TuiIcon, CommonModule, TranslatePipe],
+    imports: [PageHeaderComponent, RouterLink, TuiExpand, TuiIcon, CommonModule, TranslatePipe, RevealDirective],
     templateUrl: './faq.component.html',
     styleUrl: './faq.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -16,6 +16,7 @@ import { NewsCardComponent } from '../news-card/news-card.component';
 import { NewsSkeletonComponent } from '../news-skeleton/news-skeleton.component';
 import { NewsPageState } from '../../model/news-page-state';
 import { ReactionsComponent } from '@features/reactions';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Адрес сайта для канонических ссылок.
@@ -48,6 +49,7 @@ const OTHER_NEWS_COUNT = 2;
         RelativeTimeComponent,
         ShareButtonComponent,
         ReactionsComponent,
+        RevealDirective,
     ],
     templateUrl: './news-page.component.html',
     styleUrl: './news-page.component.less',

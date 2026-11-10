@@ -110,13 +110,12 @@
                 </button>
 
                 <!--
-                    Хост меню прозрачен и несёт позиционирование и анимацию
-                    (требование appMotionBlur): фон, рамка и тень — на слое-потомке.
-                    `dropdownLeaving` держит панель в DOM, пока доигрывает уход.
+                    Хост меню несёт позиционирование и анимацию входа/ухода,
+                    слой-потомок — фон, рамку и тень. `dropdownLeaving` держит
+                    панель в DOM, пока доигрывает уход.
                 -->
                 @if (showMobileMenu() || dropdownLeaving() === 'mobile') {
                     <div
-                        appMotionBlur
                         class="dropdown-enter dropdown-enter--left absolute top-full left-0 mt-1.5 z-50 min-w-[180px]"
                         [class.dropdown-leave]="dropdownLeaving() === 'mobile'"
                         (animationend)="onDropdownAnimationEnd($event, 'mobile')"
@@ -247,7 +246,6 @@
 
                     @if (showMediaMenu() || dropdownLeaving() === 'media') {
                         <div
-                            appMotionBlur
                             class="dropdown-enter dropdown-enter--left absolute top-full left-0 mt-1.5 z-50 min-w-[180px]"
                             [class.dropdown-leave]="dropdownLeaving() === 'media'"
                             (animationend)="onDropdownAnimationEnd($event, 'media')"
@@ -314,7 +312,6 @@
 
                 @if (showLangMenu() || dropdownLeaving() === 'lang') {
                     <div
-                        appMotionBlur
                         class="dropdown-enter dropdown-enter--right absolute top-full right-0 mt-1.5 z-50 min-w-[130px]"
                         [class.dropdown-leave]="dropdownLeaving() === 'lang'"
                         (animationend)="onDropdownAnimationEnd($event, 'lang')"

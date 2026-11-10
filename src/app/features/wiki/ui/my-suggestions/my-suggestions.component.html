@@ -1,5 +1,6 @@
 <div class="lh-page-container flex flex-col gap-4 lg:gap-6">
     <app-page-header
+        appReveal
         [level]="1"
         [title]="'wiki.mine.title' | translate"
         [subtitle]="'wiki.mine.pending' | translate: { count: pending() }"
@@ -52,7 +53,11 @@
         @if (visible().length) {
             <section class="wiki-mine__list">
                 @for (item of visible(); track item.id) {
-                    <article class="wiki-mine__card lh-panel">
+                    <article
+                        appReveal
+                        class="wiki-mine__card lh-panel lh-reveal--scale"
+                        [appRevealDelay]="$index * 45"
+                    >
                         <div class="wiki-mine__top">
                             <span class="lh-chip cursor-default" [attr.data-status]="item.status">
                                 {{ statusLabel(item.status) }}

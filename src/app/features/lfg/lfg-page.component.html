@@ -1,5 +1,5 @@
 <section class="lfg-page lh-page-container">
-    <app-page-header [title]="'lfg.title' | translate" [subtitle]="'lfg.subtitle' | translate">
+    <app-page-header appReveal [title]="'lfg.title' | translate" [subtitle]="'lfg.subtitle' | translate">
         @if (!creating() && !hasOwnMatePost() && (!viewer().userId || viewer().verified)) {
             <button type="button" class="lh-cta lfg-page__create" (click)="create()">
                 <tui-icon icon="@tui.plus" class="size-4!" />
@@ -104,6 +104,9 @@
             @for (post of shown(); track post.id) {
                 @if (post.kind === "POST_KIND_TEAMMATE") {
                     <app-lfg-teammate-card
+                        appReveal
+                        class="lh-reveal--scale"
+                        [appRevealDelay]="$index * 45"
                         [post]="post"
                         [viewer]="viewer()"
                         [players]="players()"
@@ -116,6 +119,9 @@
                     />
                 } @else {
                     <app-lfg-post-card
+                        appReveal
+                        class="lh-reveal--scale"
+                        [appRevealDelay]="$index * 45"
                         [post]="post"
                         [viewer]="viewer()"
                         [players]="players()"

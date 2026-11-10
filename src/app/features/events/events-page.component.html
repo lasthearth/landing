@@ -1,5 +1,5 @@
 <section class="events-page lh-page-container">
-    <app-page-header [title]="'events.title' | translate" [subtitle]="'events.subtitle' | translate">
+    <app-page-header appReveal [title]="'events.title' | translate" [subtitle]="'events.subtitle' | translate">
         @if (canManage() && editing() === null) {
             <button type="button" class="lh-cta events-page__create" (click)="create()">
                 <tui-icon icon="@tui.plus" class="size-4!" />
@@ -18,7 +18,7 @@
         </div>
     }
 
-    <div class="lh-chips" role="tablist">
+    <div class="lh-chips" role="tablist" appReveal>
         <button
             type="button"
             role="tab"
@@ -59,6 +59,9 @@
             <div class="events-page__list">
                 @for (event of events(); track event.id) {
                     <app-event-card
+                        appReveal
+                        class="lh-reveal--scale"
+                        [appRevealDelay]="$index * 45"
                         [event]="event"
                         [highlighted]="event.id === targetId()"
                         [canManage]="canManage()"

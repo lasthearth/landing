@@ -22,7 +22,9 @@
                 <button
                     type="button"
                     (click)="selectPrivilege(title)"
-                    class="shrink-0 w-auto lg:w-full text-left px-3 py-2 lg:px-4 lg:py-3 rounded-xl font-bold text-base lg:text-2xl leading-tight transition duration-300 hover:lg:translate-x-1 cursor-pointer relative overflow-hidden"
+                    class="shrink-0 w-auto lg:w-full text-left px-3 py-2 lg:px-4 lg:py-3 rounded-xl font-bold text-base lg:text-2xl leading-tight transition duration-300 hover:lg:translate-x-1 cursor-pointer relative overflow-hidden lh-reveal--scale"
+                    appReveal
+                    [appRevealDelay]="$index * 45"
                     [class.bg-night-2]="title === selectedPrivilege"
                     [class.text-parchment-3]="title === selectedPrivilege"
                     [class.bg-surface-3]="title !== selectedPrivilege"

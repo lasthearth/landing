@@ -56,6 +56,7 @@ import {
 } from '@entities/settlement';
 import { PlayerBadgesComponent, PlayerProfile, PlayerProfileService } from '@features/player';
 import { ShareButtonComponent } from '@shared/ui/share-button/share-button.component';
+import { RevealDirective } from '@shared/lib/directives';
 import { PendingInviteBannerComponent } from '@features/settlements/join-by-invite';
 import { MyEventsComponent } from '@features/events';
 import { ApplicationCardComponent, ApplicationState } from './ui/application-card/application-card.component';
@@ -84,6 +85,7 @@ import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComp
         ShareButtonComponent,
         PendingInviteBannerComponent,
         MyEventsComponent,
+        RevealDirective,
     ],
     selector: 'app-profile',
     templateUrl: './profile.component.html',

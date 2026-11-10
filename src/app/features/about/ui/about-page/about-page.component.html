@@ -5,16 +5,22 @@
 
     @for (key of sections; track key) {
         <section class="lh-panel about__section">
-            <h2 class="about__section-title lh-display">{{ "about.sections." + key + ".title" | translate }}</h2>
-            <p class="about__text">{{ "about.sections." + key + ".text" | translate }}</p>
+            <h2 class="about__section-title lh-display" appReveal>
+                {{ "about.sections." + key + ".title" | translate }}
+            </h2>
+            <p class="about__text lh-reveal--soft" appReveal>{{ "about.sections." + key + ".text" | translate }}</p>
 
             @if (key === "settlements") {
                 <div class="about__levels">
                     <p class="about__levels-title">{{ "about.levels" | translate }}</p>
-                    <p class="about__text">{{ "about.levelsHint" | translate }}</p>
+                    <p class="about__text lh-reveal--soft" appReveal>{{ "about.levelsHint" | translate }}</p>
                     <ul class="about__levels-list">
                         @for (level of levels; track level) {
-                            <li class="lh-chip cursor-default">
+                            <li
+                                class="lh-chip cursor-default lh-reveal--scale"
+                                appReveal
+                                [appRevealDelay]="$index * 45"
+                            >
                                 <tui-icon icon="@tui.castle" class="size-4!" />
                                 {{ "about.levelList." + level | translate }}
                             </li>
@@ -33,19 +39,19 @@
     }
 
     <section class="lh-panel about__pulse" [attr.aria-label]="'about.pulse.title' | translate">
-        <h2 class="about__section-title lh-display">{{ "about.pulse.title" | translate }}</h2>
+        <h2 class="about__section-title lh-display" appReveal>{{ "about.pulse.title" | translate }}</h2>
         <div class="about__pulse-grid">
-            <div class="about__pulse-item">
+            <div class="about__pulse-item lh-reveal--scale" appReveal [appRevealDelay]="0">
                 <tui-icon icon="@tui.users" class="size-5!" />
                 <span class="about__pulse-value">{{ online()?.online ?? "—" | amount }}</span>
                 <span class="about__pulse-label">{{ "about.pulse.online" | translate }}</span>
             </div>
-            <div class="about__pulse-item">
+            <div class="about__pulse-item lh-reveal--scale" appReveal [appRevealDelay]="45">
                 <tui-icon icon="@tui.castle" class="size-5!" />
                 <span class="about__pulse-value">{{ settlementsCount() ?? "—" }}</span>
                 <span class="about__pulse-label">{{ "about.pulse.settlements" | translate }}</span>
             </div>
-            <div class="about__pulse-item">
+            <div class="about__pulse-item lh-reveal--scale" appReveal [appRevealDelay]="90">
                 <tui-icon icon="@tui.swords" class="size-5!" />
                 <span class="about__pulse-value">{{ playersCount() ?? "—" }}</span>
                 <span class="about__pulse-label">{{ "about.pulse.players" | translate }}</span>

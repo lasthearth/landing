@@ -8,6 +8,7 @@ import { ServerResponseService } from '@core/services/server-response.service';
 import { BreadcrumbsComponent } from '@shared/ui/breadcrumbs';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
 import { SkeletonComponent } from '@shared/ui/skeletons';
 import { map } from 'rxjs';
 import { WikiStoreService } from '../../../api/wiki-store.service';
@@ -34,6 +35,7 @@ const SITE_URL = 'https://lasthearth.ru';
         EmptyStateComponent,
         PageHeaderComponent,
         SkeletonComponent,
+        RevealDirective,
     ],
     templateUrl: './wiki-section-page.component.html',
     styleUrl: './wiki-section-page.component.less',

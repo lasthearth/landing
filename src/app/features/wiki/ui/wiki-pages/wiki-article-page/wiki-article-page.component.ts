@@ -26,6 +26,7 @@ import { renderWikiMarkdown } from '../../../lib/render-wiki-markdown.function';
 import { WIKI_SECTIONS } from '../../../lib/wiki-sections.constant';
 import { WikiArticle, WikiAuthorNameService, WikiDraft } from '@entities/wiki';
 import { SkeletonComponent } from '@shared/ui/skeletons';
+import { RevealDirective } from '@shared/lib/directives';
 import { WikiArticleViewComponent } from '../../wiki-article-view/wiki-article-view.component';
 
 /**
@@ -58,7 +59,15 @@ const TITLE_LIMIT = 65;
  */
 @Component({
     selector: 'app-wiki-article-page',
-    imports: [WikiArticleViewComponent, EmptyStateComponent, TuiIcon, TranslatePipe, SkeletonComponent, RouterLink],
+    imports: [
+        WikiArticleViewComponent,
+        EmptyStateComponent,
+        TuiIcon,
+        TranslatePipe,
+        SkeletonComponent,
+        RouterLink,
+        RevealDirective,
+    ],
     templateUrl: './wiki-article-page.component.html',
     // Стили ряда кнопок и его отступов: без этого файла страница брала только
     // базовые классы, и кнопка «Редактировать» оставалась большой.

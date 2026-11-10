@@ -194,7 +194,7 @@
             <!-- Показатели: баланс и игровая статистика — плитки одной высоты -->
             @if (verified && !compactHeader()) {
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    <div class="profile-metric profile-metric--balance">
+                    <div class="profile-metric profile-metric--balance lh-reveal--scale" appReveal [appRevealDelay]="0">
                         <img
                             src="/splinter-of-spark.webp"
                             [alt]="'profile.currency.shardAlt' | translate"
@@ -207,14 +207,14 @@
                             {{ "profile.currency.topUp" | translate }}
                         </button>
                     </div>
-                    <div class="profile-metric">
+                    <div class="profile-metric lh-reveal--scale" appReveal [appRevealDelay]="45">
                         <tui-icon icon="@tui.skull" class="size-5! text-danger-soft" />
                         <span class="profile-metric__label">
                             {{ "profile.stats.deaths" | translate }}
                         </span>
                         <span class="profile-metric__value">{{ (stats?.deaths | amount) || "—" }}</span>
                     </div>
-                    <div class="profile-metric">
+                    <div class="profile-metric lh-reveal--scale" appReveal [appRevealDelay]="90">
                         <tui-icon icon="@tui.swords" class="size-5! text-parchment-dim" />
                         <span class="profile-metric__label">
                             {{ "profile.stats.kills" | translate }}
@@ -226,7 +226,7 @@
                             </span>
                         }
                     </div>
-                    <div class="profile-metric">
+                    <div class="profile-metric lh-reveal--scale" appReveal [appRevealDelay]="135">
                         <tui-icon icon="@tui.clock" class="size-5! text-leader-soft" />
                         <span class="profile-metric__label">
                             {{ "profile.stats.hours" | translate }}
@@ -275,7 +275,7 @@
                 <router-outlet />
             </div>
         } @else {
-            <app-profile-waiting />
+            <app-profile-waiting class="lh-reveal--soft" appReveal />
         }
     </div>
 }

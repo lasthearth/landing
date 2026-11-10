@@ -34,6 +34,7 @@ import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { JoinRequestButtonComponent, MyJoinRequestsStore } from '../join-request';
 import { SettlementPageState } from './settlement-page-state';
 import { MarkupPipe, newsMarkdownToPlain } from '@shared/lib/news-markdown';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Адрес сайта для канонических ссылок.
@@ -74,6 +75,7 @@ const OTHERS_COUNT = 3;
         ImageViewerComponent,
         SettlementDetailSkeletonComponent,
         JoinRequestButtonComponent,
+        RevealDirective,
     ],
     templateUrl: './settlement-page.component.html',
     styleUrl: './settlement-page.component.less',

@@ -20,6 +20,7 @@ import { renderNewsMarkdown } from '@shared/lib/news-markdown';
 import { stripDiscordTokens } from '@shared/lib/discord-markup';
 import { DiplomacyStatement } from './model/diplomacy-statement';
 import { DiplomacyCardComponent } from './ui/diplomacy-card/diplomacy-card.component';
+import { RevealDirective } from '@shared/lib/directives';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
@@ -65,7 +66,7 @@ function sortMessagesByTimeDesc(messages: GameChatMessage[]): GameChatMessage[] 
 @Component({
     selector: 'app-diplomacy-page',
     standalone: true,
-    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, DiplomacyCardComponent, EmptyStateComponent, ErrorStateComponent],
+    imports: [PageHeaderComponent, TuiIcon, TranslatePipe, DiplomacyCardComponent, EmptyStateComponent, ErrorStateComponent, RevealDirective],
     templateUrl: './diplomacy-page.component.html',
     styleUrl: './diplomacy-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

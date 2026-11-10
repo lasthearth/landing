@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ElementRef, inject, signal } from '
 import { Router } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
-import { MotionBlurDirective } from '@shared/lib/directives';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { NotificationsFeedService } from '../../api/notifications-feed.service';
 import { FeedNotification, NOTIFICATION_CATEGORIES } from '../../model/feed-notification';
@@ -13,7 +12,7 @@ import { FeedNotification, NOTIFICATION_CATEGORIES } from '../../model/feed-noti
 @Component({
     selector: 'app-notification-bell',
     standalone: true,
-    imports: [TuiIcon, TranslatePipe, RelativeTimeComponent, MotionBlurDirective],
+    imports: [TuiIcon, TranslatePipe, RelativeTimeComponent],
     templateUrl: './notification-bell.component.html',
     styleUrl: './notification-bell.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

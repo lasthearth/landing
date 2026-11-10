@@ -5,6 +5,7 @@ import { TranslatePipe } from '@core/i18n';
 import { Ticket, TICKET_CATEGORIES, TICKET_LIMITS, TicketApiService, TicketStatusComponent } from '@entities/ticket';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
+import { RevealDirective } from '@shared/lib/directives';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { SkeletonComponent } from '@shared/ui/skeletons';
@@ -30,6 +31,7 @@ import { TicketFormComponent } from '../ticket-form/ticket-form.component';
         RelativeTimeComponent,
         TicketStatusComponent,
         TicketFormComponent,
+        RevealDirective,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
