@@ -1345,22 +1345,64 @@ button:disabled,
 }
 
 /**
- * Появление контента при смене вкладок: действие пользователя, поэтому
- * fast, а не mid — 450ms дольше допустимых 300ms для запущенного
- * пользователем движения.
+ * Смена вкладок магазина: контент въезжает со стороны перехода, уходящая
+ * панель лежит поверх входящей и уезжает в противоположную сторону.
+ * Движение запущено пользователем, поэтому вход 200ms (`--lh-dur-fast`),
+ * уход короче — 150ms (`--lh-dur-exit`); панели живут одновременно,
+ * суммарно 200ms. Направление ставит компонент в `data-direction` сцены.
+ * Принято по варианту B прототипа `tabs-motion-prototype` (ветка
+ * dsh-a4de1614-f58b), сам прототип удалён после выбора.
  */
-.market-tab-content {
-    animation: market-tab-fade-in var(--lh-dur-fast) var(--lh-ease-out-quart) both;
+.market-tab-stage {
+    position: relative;
 }
 
-@keyframes market-tab-fade-in {
-    0% {
+.market-tab-content {
+    animation: market-tab-in-right var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.market-tab-stage[data-direction='-1'] .market-tab-content {
+    animation-name: market-tab-in-left;
+}
+
+.market-tab-content--exit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    pointer-events: none;
+    animation: market-tab-out-left var(--lh-dur-exit) var(--lh-ease-out-quart) forwards;
+}
+
+.market-tab-stage[data-direction='-1'] .market-tab-content--exit {
+    animation-name: market-tab-out-right;
+}
+
+@keyframes market-tab-in-right {
+    from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateX(28px);
     }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
+}
+
+@keyframes market-tab-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-28px);
+    }
+}
+
+@keyframes market-tab-out-left {
+    to {
+        opacity: 0;
+        transform: translateX(-28px);
+    }
+}
+
+@keyframes market-tab-out-right {
+    to {
+        opacity: 0;
+        transform: translateX(28px);
     }
 }
 

@@ -1,8 +1,7 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
@@ -12,14 +11,8 @@ import { TitlesComponent } from './components/titles/titles.component';
 import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
 import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
-import {
-    TABS_MOTION_VARIANTS,
-    TabsMotionPrototypeComponent,
-    type TabsMotionVariant,
-} from './components/tabs-motion-prototype/tabs-motion-prototype.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { RevealDirective } from '@shared/lib/directives';
-import { environment } from '@core/config/environments/environment';
 import { FUNDING_TARGETS } from './lib/funding-targets.constant';
 import { WORLD_SHOTS } from './lib/world-shots.constant';
 
@@ -28,7 +21,7 @@ import { WORLD_SHOTS } from './lib/world-shots.constant';
  */
 @Component({
     selector: 'app-market',
-    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective, TabsMotionPrototypeComponent],
+    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, NgTemplateOutlet, RevealDirective],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -42,28 +35,6 @@ export class MarketComponent {
      * Сервис навигации — для записи вкладки в адрес.
      */
     private readonly router = inject(Router);
-
-    /**
-     * ПРОТОТИП, НЕ ПРОДАКШН: ключ варианта движения вкладок из `?variant=`.
-     * Живёт только в dev-сборке: гейт по `environment.production`, а не по
-     * isDevMode, который на сервере dev-сборки возвращает false и не давал
-     * прототипу доехать до пререндера. В проде адрес игнорируется и страница
-     * рисуется как обычно. Удалить вместе с `tabs-motion-prototype`.
-     */
-    protected readonly motionPrototype = toSignal(
-        this.route.queryParamMap.pipe(
-            map((params) => {
-                const variant = params.get('variant');
-
-                if (environment.production || !(TABS_MOTION_VARIANTS as readonly string[]).includes(variant ?? '')) {
-                    return null;
-                }
-
-                return variant as TabsMotionVariant;
-            }),
-        ),
-        { initialValue: null },
-    );
 
     /**
      * Ключи вкладок в адресе (`?tab=`), в порядке `tabs`.
@@ -83,7 +54,31 @@ export class MarketComponent {
      *
      * @param index Индекс вкладки.
      */
+    /**
+     * Индекс панели, доезжающей уход, или null, когда уходящих нет.
+     * Держит уходящую панель в DOM на время её 150ms анимации.
+     */
+    protected readonly leavingTab = signal<number | null>(null);
+
+    /**
+     * Направление перехода: 1 — вправо по списку вкладок, -1 — влево.
+     * Из него сцена берёт, с какой стороны въезжает контент.
+     */
+    protected readonly tabDirection = signal(1);
+
+    /**
+     * Открывает вкладку: направление и уходящая панель для выхода,
+     * ключ вкладки в адрес для ссылки.
+     *
+     * @param index Индекс вкладки в `tabs`.
+     */
     protected selectTab(index: number): void {
+        if (index === this.activeItemIndex()) {
+            return;
+        }
+
+        this.tabDirection.set(index > this.activeItemIndex() ? 1 : -1);
+        this.leavingTab.set(this.activeItemIndex());
         this.activeItemIndex.set(index);
         void this.router.navigate([], {
             relativeTo: this.route,
@@ -91,6 +86,13 @@ export class MarketComponent {
             queryParamsHandling: 'merge',
             replaceUrl: true,
         });
+    }
+
+    /**
+     * Снимает уходящую панель, когда её анимация доиграла.
+     */
+    protected onTabLeaveEnd(): void {
+        this.leavingTab.set(null);
     }
 
     /**

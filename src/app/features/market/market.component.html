@@ -26,10 +26,6 @@
         </div>
     </app-page-header>
 
-    <!-- ПРОТОТИП, НЕ ПРОДАКШН: варианты движения вкладок (?variant=). -->
-    @if (motionPrototype(); as variantKey) {
-        <app-market-tabs-motion-prototype [variant]="variantKey" />
-    } @else {
     <!-- Вкладки: ключи сохраняются в адресе (?tab=), ссылка ведёт сразу на группу -->
     <div class="lh-chips" role="tablist" [attr.aria-label]="'market.marketPage.title' | translate">
         @for (tab of tabs; track tab; let index = $index) {
@@ -45,24 +41,43 @@
         }
     </div>
 
-    @switch (activeItemIndex()) {
-        @case (0) {
-            <div class="market-tab-content">
+    <!--
+        Сцена смены вкладок: уходящая панель лежит поверх входящей absolute
+        и снимается по animationend, входящая пересоздаётся @switch, чтобы
+        входная анимация играла на каждую смену.
+    -->
+    <div class="market-tab-stage" [attr.data-direction]="tabDirection()">
+        @if (leavingTab() !== null; as gone) {
+            <div class="market-tab-content market-tab-content--exit" (animationend)="onTabLeaveEnd()">
+                <ng-container *ngTemplateOutlet="tabPanel; context: { index: gone }" />
+            </div>
+        }
+        @switch (activeItemIndex()) {
+            @case (0) {
+                <div class="market-tab-content"><app-titles /></div>
+            }
+            @case (1) {
+                <div class="market-tab-content"><app-kits /></div>
+            }
+            @case (2) {
+                <div class="market-tab-content"><app-special /></div>
+            }
+        }
+    </div>
+
+    <ng-template #tabPanel let-index="index">
+        @switch (index) {
+            @case (0) {
                 <app-titles />
-            </div>
-        }
-        @case (1) {
-            <div class="market-tab-content">
+            }
+            @case (1) {
                 <app-kits />
-            </div>
-        }
-        @case (2) {
-            <div class="market-tab-content">
+            }
+            @case (2) {
                 <app-special />
-            </div>
+            }
         }
-    }
-    }
+    </ng-template>
 
     <!--
         Раздел «На что идут деньги»: компактное тёмное поле, три полосы —
