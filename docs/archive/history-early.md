@@ -1,4 +1,4 @@
-# Ранние записи летописи (3.0—3.10)
+# Ранние записи летописи (3.0—3.-2)
 
 > Перенесено из `docs/history.md` без правок: летопись упёрлась в бюджет 120 kB.
 > Живые решения и причины — по-прежнему в `docs/history.md`, здесь только старые записи.
@@ -236,3 +236,42 @@
   на `.wiki-card` (правка по продакшен-кадру: 1.5rem читался слишком круглым).
   Пластина наследует ту же переменную, концентричность не ломается.
 - Файлы: те же, что в §3.9, плюс `WikiCard.tags` и `LEAD_TAG_LIMIT` в компоненте.
+
+---
+
+### 3.-2 Чип игрока + тултип со статистикой в списках населения
+
+> Три дублировавшихся блока плашек жителей (карточка селения, диалог деталей, страница управления) заменены единым компонентом `app-player-chip`. При наведении — тултип с ленивой статистикой игрока.
+
+- Файлы:
+    - `src/app/entities/user/ui/player-chip/player-chip.component.{ts,html,less}` — `app-player-chip`, входы `player`, `isLeader`, `removable`; выход `remove`. Экспортируется из `@entities/user`.
+    - `src/app/entities/user/model/i-player-stats.ts` — `IPlayerStats` (ответ `GET /{name}/stats`, StatsService).
+    - `UserService.getPlayerStats$(name)` — статистика игрока; при 404 возвращает `null`.
+- Дизайн чипа: нейтральная плашка для всех, аватар x48 как ведущий элемент, точка статуса (зелёная/серая), лидер помечен короной `@tui.crown` (не другим фоном). Кнопка кика `@tui.user-round-x` — только на странице управления (`removable`).
+- Тултип (`tuiHint`, floating): аватар + имя + статус, ниже — часы/убийства/смерти. Статистика грузится ЛЕНИВО при первом показе тултипа (`tuiHintVisible`), один раз (флаг `statsRequested`), поэтому наведение на 20 чипов не даёт 20 запросов сразу. Игроки вне сервера статистики → «Статистика недоступна».
+- Потребители переведены на компонент: `settlement-card`, `settlement-detailed`, `features/settlements/settlement`. Удалены дубли `tui-pulse.online/.offline` + имя из трёх шаблонов.
+- Переводы: ветка `settlements.player.*` (ru/en) в `settlements.i18n.ts`.
+
+### 3.-1 Роли, owner-модель и заявки на вступление в поселения
+
+> `Settlement.leader` deprecated. Лидеры теперь — члены с `role_ids`, содержащими `"owner"` (их может быть несколько). Добавлены роли, права, заявки на вступление, передача владения, контакты.
+
+- Модель (`entities/settlement/model/`):
+    - `permission.ts` — enum `Permission` (`PERMISSION_INVITE_MEMBER`, `PERMISSION_REVIEW_JOIN_REQUEST`).
+    - `i-role.ts` — `IRole { id, name, permissions[] }`.
+    - `i-join-request.ts` — `IJoinRequest`.
+    - `i-member.ts` — добавлено `role_ids?: string[]`.
+    - `i-settlement.ts` — добавлены `roles?`, `roles_enabled?`, `contact_info?`; `leader?` помечен `@deprecated`.
+- Хелперы (`entities/settlement/lib/`):
+    - `owner-role-id.constant.ts` — `OWNER_ROLE_ID = 'owner'`.
+    - `get-owner-ids.function.ts` — `getOwnerIds(settlement)`.
+    - `is-owner.function.ts` — `isOwner(settlement, userId)`.
+    - `member-has-permission.function.ts` — `memberHasPermission(settlement, userId, permission)` (owner = все права; при `roles_enabled=false` только owner).
+- API (`entities/settlement/api/settlement.service.ts`): `createJoinRequest$`, `cancelJoinRequest$`, `getMyJoinRequests$`, `getJoinRequests$`, `approveJoinRequest$`, `rejectJoinRequest$`, `createRole$`, `updateRole$`, `deleteRole$`, `assignMemberRole$`, `removeMemberRole$`, `transferOwnership$`, `leaveSettlement$`, `updateContactInfo$`, `adminAddOwner$`, `adminRemoveOwner$`, `adminSetRolesEnabled$`, `adminDeleteSettlement$`.
+- Конфиг (`entities/settlement/config/`):
+    - `default-settlement-cover.constant.ts` — `DEFAULT_SETTLEMENT_COVER = '/landing-carousel/1.webp'`.
+- UI-потребители переведены с `.leader` на owner-модель: `settlements.component`, `settlement-card`, `settlement-detailed`, `features/settlements/settlement`, `features/profile`.
+    - Кнопки гейтятся: инвайты по `canInvite` (`PERMISSION_INVITE_MEMBER`/owner), уровень/редактирование/картинка — по `isOwner`, выход — не-owner.
+    - Бейджи ролей члена — `getMemberRoleNames`, скрыты при `roles_enabled=false`.
+    - `contact_info` и `role.name` выводятся ТОЛЬКО интерполяцией `{{ }}` (XSS: сервер не экранирует).
+    - Счётчики жителей: `members.length` (owner теперь внутри `members`, не `+1`).
