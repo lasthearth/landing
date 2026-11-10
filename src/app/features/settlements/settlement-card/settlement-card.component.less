@@ -26,9 +26,7 @@
         inset 0 1px 1px rgba(255, 255, 255, 0.14),
         inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 45%, transparent),
         var(--lh-shadow-soft);
-    transition:
-        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 /**
@@ -89,7 +87,7 @@
     display: block;
     height: 100%;
     width: 100%;
-    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .settlement-card:hover .settlement-card__media app-image-loader {

@@ -95,7 +95,7 @@
             <div class="relative md:hidden">
                 <button
                     type="button"
-                    (click)="showMobileMenu.set(!showMobileMenu())"
+                    (click)="toggleMobileMenu()"
                     [ngClass]="{ 'nav-button--active': showMobileMenu() }"
                     class="nav-button relative"
                     [attr.aria-label]="'header.mainMenu' | translate"
@@ -109,71 +109,83 @@
                     }
                 </button>
 
-                @if (showMobileMenu()) {
+                <!--
+                    Хост меню прозрачен и несёт позиционирование и анимацию
+                    (требование appMotionBlur): фон, рамка и тень — на слое-потомке.
+                    `dropdownLeaving` держит панель в DOM, пока доигрывает уход.
+                -->
+                @if (showMobileMenu() || dropdownLeaving() === 'mobile') {
                     <div
-                        class="dropdown-enter absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[180px]"
+                        appMotionBlur
+                        class="dropdown-enter dropdown-enter--left absolute top-full left-0 mt-1.5 z-50 min-w-[180px]"
+                        [class.dropdown-leave]="dropdownLeaving() === 'mobile'"
+                        (animationend)="onDropdownAnimationEnd($event, 'mobile')"
                     >
-                        @for (link of mainLinks; track link.route) {
-                            @if (!link.guestOnly || !isAuth) {
-                                <a
-                                    [routerLink]="link.route"
-                                    (click)="showMobileMenu.set(false)"
-                                    routerLinkActive="bg-lh-accent text-white!"
-                                    class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
-                                >
-                                    <tui-icon [icon]="link.icon" class="size-4!" />
-                                    {{ link.labelKey | translate }}
-                                </a>
-                            }
-                        }
-
-                        <!-- Мобильное подменю «Сообщество» -->
-                        <button
-                            type="button"
-                            (click)="toggleMobileMediaMenu()"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': isCommunityActive(),
-                                'text-lh-primary hover:bg-surface-3': !isCommunityActive(),
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center justify-between"
-                            [attr.aria-expanded]="showMobileMediaMenu()"
+                        <div
+                            class="flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)]"
                         >
-                            <span class="flex items-center gap-2">
-                                <tui-icon icon="@tui.users-round" class="size-4!" />
-                                {{ "header.nav.community" | translate }}
-                                @if (isCommunityFresh()) {
-                                    <span class="nav-dot nav-dot--inline">
-                                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
-                                    </span>
-                                }
-                            </span>
-                            <tui-icon
-                                icon="@tui.chevron-down"
-                                class="size-4! transition-transform"
-                                [class.rotate-180!]="showMobileMediaMenu()"
-                            />
-                        </button>
-
-                        @if (showMobileMediaMenu()) {
-                            <div class="dropdown-enter flex flex-col gap-1 pl-2 border-l-2 border-brand/30 ml-2">
-                                @for (link of communityLinks; track link.route) {
+                            @for (link of mainLinks; track link.route) {
+                                @if (!link.guestOnly || !isAuth) {
                                     <a
                                         [routerLink]="link.route"
-                                        (click)="showMobileMenu.set(false)"
+                                        (click)="closeMobileMenu()"
                                         routerLinkActive="bg-lh-accent text-white!"
-                                        class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
+                                        class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left cursor-pointer flex items-center gap-2"
                                     >
                                         <tui-icon [icon]="link.icon" class="size-4!" />
                                         {{ link.labelKey | translate }}
-                                        @if (link.freshSection && newContent.isFresh(link.freshSection)) {
-                                            <span class="nav-dot nav-dot--inline">
-                                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
-                                            </span>
-                                        }
                                     </a>
                                 }
-                            </div>
-                        }
+                            }
+
+                            <!-- Мобильное подменю «Сообщество» -->
+                            <button
+                                type="button"
+                                (click)="toggleMobileMediaMenu()"
+                                [ngClass]="{
+                                    'bg-lh-accent text-white': isCommunityActive(),
+                                    'text-lh-primary hover:bg-surface-3': !isCommunityActive(),
+                                }"
+                                class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center justify-between"
+                                [attr.aria-expanded]="showMobileMediaMenu()"
+                            >
+                                <span class="flex items-center gap-2">
+                                    <tui-icon icon="@tui.users-round" class="size-4!" />
+                                    {{ "header.nav.community" | translate }}
+                                    @if (isCommunityFresh()) {
+                                        <span class="nav-dot nav-dot--inline">
+                                            <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                        </span>
+                                    }
+                                </span>
+                                <tui-icon
+                                    icon="@tui.chevron-down"
+                                    class="size-4! transition-transform"
+                                    [class.rotate-180!]="showMobileMediaMenu()"
+                                />
+                            </button>
+
+                            @if (showMobileMediaMenu()) {
+                                <div class="dropdown-enter flex flex-col gap-1 pl-2 border-l-2 border-brand/30 ml-2">
+                                    @for (link of communityLinks; track link.route) {
+                                        <a
+                                            [routerLink]="link.route"
+                                            (click)="closeMobileMenu()"
+                                            routerLinkActive="bg-lh-accent text-white!"
+                                            class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left cursor-pointer flex items-center gap-2"
+                                        >
+                                            <tui-icon [icon]="link.icon" class="size-4!" />
+                                            {{ link.labelKey | translate }}
+                                            @if (link.freshSection && newContent.isFresh(link.freshSection)) {
+                                                <span class="nav-dot nav-dot--inline">
+                                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                                </span>
+                                            }
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        </div>
                     </div>
                 }
             </div>
@@ -233,26 +245,33 @@
                         />
                     </button>
 
-                    @if (showMediaMenu()) {
+                    @if (showMediaMenu() || dropdownLeaving() === 'media') {
                         <div
-                            class="dropdown-enter absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[180px]"
+                            appMotionBlur
+                            class="dropdown-enter dropdown-enter--left absolute top-full left-0 mt-1.5 z-50 min-w-[180px]"
+                            [class.dropdown-leave]="dropdownLeaving() === 'media'"
+                            (animationend)="onDropdownAnimationEnd($event, 'media')"
                         >
-                            @for (link of communityLinks; track link.route) {
-                                <a
-                                    [routerLink]="link.route"
-                                    (click)="showMediaMenu.set(false)"
-                                    routerLinkActive="bg-lh-accent text-white!"
-                                    class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
-                                >
-                                    <tui-icon [icon]="link.icon" class="size-4!" />
-                                    {{ link.labelKey | translate }}
-                                    @if (link.freshSection && newContent.isFresh(link.freshSection)) {
-                                        <span class="nav-dot nav-dot--inline">
-                                            <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
-                                        </span>
-                                    }
-                                </a>
-                            }
+                            <div
+                                class="flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)]"
+                            >
+                                @for (link of communityLinks; track link.route) {
+                                    <a
+                                        [routerLink]="link.route"
+                                        (click)="closeMediaMenu()"
+                                        routerLinkActive="bg-lh-accent text-white!"
+                                        class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left cursor-pointer flex items-center gap-2"
+                                    >
+                                        <tui-icon [icon]="link.icon" class="size-4!" />
+                                        {{ link.labelKey | translate }}
+                                        @if (link.freshSection && newContent.isFresh(link.freshSection)) {
+                                            <span class="nav-dot nav-dot--inline">
+                                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                            </span>
+                                        }
+                                    </a>
+                                }
+                            </div>
                         </div>
                     }
                 </div>
@@ -265,13 +284,25 @@
                 class="nav-button !px-2.5"
                 [attr.aria-label]="'header.theme.toggle' | translate"
             >
-                <tui-icon [icon]="themeService.theme() === 'dark' ? '@tui.sun' : '@tui.moon'" class="size-4!" />
+                <!-- Солнце и луна всегда в DOM и кросс-фейдятся (.lh-icon-swap из styles.css) -->
+                <span class="lh-icon-swap">
+                    <tui-icon
+                        icon="@tui.sun"
+                        class="lh-icon-swap__icon size-4!"
+                        [class.lh-icon-swap__icon--hidden]="themeService.theme() !== 'dark'"
+                    />
+                    <tui-icon
+                        icon="@tui.moon"
+                        class="lh-icon-swap__icon size-4!"
+                        [class.lh-icon-swap__icon--hidden]="themeService.theme() === 'dark'"
+                    />
+                </span>
             </button>
 
             <div class="relative">
                 <button
                     type="button"
-                    (click)="showLangMenu.set(!showLangMenu())"
+                    (click)="toggleLangMenu()"
                     [ngClass]="{ 'nav-button--active': showLangMenu() }"
                     class="nav-button !px-2.5 gap-1.5"
                     [attr.aria-label]="'header.language.select' | translate"
@@ -281,32 +312,39 @@
                     <span class="text-sm font-bold hidden md:inline">{{ language() === "ru" ? "RU" : "EN" }}</span>
                 </button>
 
-                @if (showLangMenu()) {
+                @if (showLangMenu() || dropdownLeaving() === 'lang') {
                     <div
-                        class="dropdown-enter absolute top-full right-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[130px]"
+                        appMotionBlur
+                        class="dropdown-enter dropdown-enter--right absolute top-full right-0 mt-1.5 z-50 min-w-[130px]"
+                        [class.dropdown-leave]="dropdownLeaving() === 'lang'"
+                        (animationend)="onDropdownAnimationEnd($event, 'lang')"
                     >
-                        <button
-                            type="button"
-                            (click)="selectLanguage('ru')"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': language() === 'ru',
-                                'text-lh-primary hover:bg-surface-3': language() !== 'ru',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
+                        <div
+                            class="flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)]"
                         >
-                            Русский
-                        </button>
-                        <button
-                            type="button"
-                            (click)="selectLanguage('en')"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': language() === 'en',
-                                'text-lh-primary hover:bg-surface-3': language() !== 'en',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
-                        >
-                            English
-                        </button>
+                            <button
+                                type="button"
+                                (click)="selectLanguage('ru')"
+                                [ngClass]="{
+                                    'bg-lh-accent text-white': language() === 'ru',
+                                    'text-lh-primary hover:bg-surface-3': language() !== 'ru',
+                                }"
+                                class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
+                            >
+                                Русский
+                            </button>
+                            <button
+                                type="button"
+                                (click)="selectLanguage('en')"
+                                [ngClass]="{
+                                    'bg-lh-accent text-white': language() === 'en',
+                                    'text-lh-primary hover:bg-surface-3': language() !== 'en',
+                                }"
+                                class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
+                            >
+                                English
+                            </button>
+                        </div>
                     </div>
                 }
             </div>
@@ -343,7 +381,7 @@
             @if (isAuth) {
                 <button
                     (click)="signOut()"
-                    class="relative nav-button !text-brand-ink hover:!text-white hover:bg-brand-strong !rounded-l-none !p-1 w-8! transition duration-300"
+                    class="relative nav-button !text-brand-ink hover:!text-white hover:bg-brand-strong !rounded-l-none !p-1 w-8!"
                     [attr.aria-label]="'header.nav.signOut' | translate"
                 >
                     <tui-icon icon="@tui.log-out" />

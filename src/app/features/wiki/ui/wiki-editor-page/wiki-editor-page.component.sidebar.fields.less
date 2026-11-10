@@ -111,12 +111,27 @@
 /* ———————— Поля ———————— */
 
 .we-field {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.375rem;
     padding: 0.125rem;
     border-radius: 0.75rem;
-    transition: box-shadow 0.3s ease;
+}
+
+/*
+ * Вспышка ошибки на псевдоэлементе: анимируется только прозрачность,
+ * а не сама тень, поэтому кадры не уходят на перерисовку рамки.
+ */
+.we-field::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-brand) 45%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .we-field__label {
@@ -170,8 +185,8 @@
     box-shadow: inset 0 0 0 1.5px color-mix(in srgb, #c0392b 65%, transparent);
 }
 
-.we-field.we-field--flash {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-brand) 45%, transparent);
+.we-field.we-field--flash::after {
+    opacity: 1;
 }
 
 .we-input {

@@ -16,7 +16,7 @@
                 >
                     @for (user of users; track user.user_id) {
                         <div
-                            class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-lh-primary-2/30 transition-colors"
+                            class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-lh-primary-2/30"
                             (click)="selectPlayer(user)"
                         >
                             <app-image-loader
@@ -61,7 +61,7 @@
                 <button
                     type="button"
                     (click)="clearPlayer()"
-                    class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors"
+                    class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary"
                     [attr.aria-label]="'admin.players.clearPlayer' | translate"
                 >
                     <tui-icon icon="@tui.x" />

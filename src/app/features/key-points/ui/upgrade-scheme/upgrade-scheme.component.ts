@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 import { buildSchemeEdges } from '../../lib/build-scheme-edges.function';
 import { collectAncestors } from '../../lib/collect-ancestors.function';
 import { collectDescendants } from '../../lib/collect-descendants.function';
@@ -115,7 +116,7 @@ interface ChoiceMark {
  */
 @Component({
     selector: 'app-upgrade-scheme',
-    imports: [TranslatePipe, TuiIcon, UpgradeNodeDetailsComponent],
+    imports: [TranslatePipe, TuiIcon, UpgradeNodeDetailsComponent, PauseOffscreenDirective],
     templateUrl: './upgrade-scheme.component.html',
     styleUrl: './upgrade-scheme.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

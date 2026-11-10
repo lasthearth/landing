@@ -1,5 +1,10 @@
 /* ———————————————— Просмотр картинок ———————————————— */
 
+/*
+ * Оверлей без `backdrop-filter`: под 88-процентным чёрным размытие всё равно
+ * не читается, а каждый кадр входного/выходного затухания пересчитывало
+ * полноэкранную выборку — на слабых машинах это просадка.
+ */
 .wiki-lightbox {
     position: fixed;
     inset: 0;
@@ -9,12 +14,42 @@
     justify-content: center;
     padding: 3rem 4.5rem;
     background: rgba(14, 10, 8, 0.88);
-    backdrop-filter: blur(6px);
-    animation: wiki-fade 0.18s ease-out;
+    animation: wiki-fade 0.18s var(--lh-ease-out-quart);
+    transition: opacity 0.14s var(--lh-ease-out-quart);
 
     @media (max-width: 640px) {
         padding: 3rem 0.75rem;
     }
+}
+
+.wiki-lightbox--leaving {
+    opacity: 0;
+}
+
+/* На вылете управление уже недоступно: клики по стрелкам не листают уходящий кадр. */
+.wiki-lightbox--leaving .wiki-lightbox__nav,
+.wiki-lightbox--leaving .wiki-lightbox__close {
+    pointer-events: none;
+}
+
+/*
+ * Носитель летающего кадра: сам прозрачен и без рамок, тень и картинка —
+ * на слое-потомке (правила пакета @web-kits/motion-blur). Вход — оседание
+ * снизу, выход — вылет вниз, шлейф рисует директива appMotionBlur.
+ */
+.wiki-lightbox__fly {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    transition:
+        transform 0.14s var(--lh-ease-out-quart),
+        opacity 0.14s var(--lh-ease-out-quart);
+    animation: wiki-figure-in 0.18s var(--lh-ease-out-quart);
+}
+
+.wiki-lightbox--leaving .wiki-lightbox__fly {
+    transform: translateY(2.5rem) scale(0.96);
+    opacity: 0;
 }
 
 .wiki-lightbox__figure {
@@ -24,7 +59,6 @@
     gap: 0.75rem;
     max-width: 100%;
     max-height: 100%;
-    margin: 0;
 
     img {
         max-width: 100%;
@@ -83,6 +117,13 @@
 @keyframes wiki-fade {
     from {
         opacity: 0;
+    }
+}
+
+@keyframes wiki-figure-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem) scale(0.98);
     }
 }
 

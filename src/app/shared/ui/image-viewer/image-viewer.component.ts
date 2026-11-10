@@ -11,6 +11,7 @@ import {
     input,
     model,
     output,
+    signal,
     viewChild,
     DOCUMENT,
 } from '@angular/core';
@@ -92,6 +93,15 @@ export class ImageViewerComponent {
     public readonly closed = output<void>();
 
     /**
+     * Просмотрщик доигрывает анимацию ухода.
+     *
+     * Пока сигнал поднят, корень держит класс `image-viewer--leave`:
+     * оверлей гаснет 150ms, и только по `animationend` родителю
+     * отдаётся событие `closed` — раньше диалог исчезал скачком.
+     */
+    protected readonly leaving = signal(false);
+
+    /**
      * Текущая картинка.
      */
     protected readonly current = computed(() => this.images()[this.index()] ?? null);
@@ -145,9 +155,27 @@ export class ImageViewerComponent {
     }
 
     /**
-     * Закрывает просмотрщик.
+     * Закрывает просмотрщик: запускает анимацию ухода, событие
+     * `closed` родитель получит по её окончанию.
      */
     protected close(): void {
+        if (this.leaving()) {
+            return;
+        }
+
+        this.leaving.set(true);
+    }
+
+    /**
+     * Отдаёт событие закрытия после анимации ухода.
+     *
+     * @param event Событие конца анимации на корне диалога.
+     */
+    protected onAnimationEnd(event: AnimationEvent): void {
+        if (event.animationName !== 'image-viewer-leave' || event.target !== event.currentTarget) {
+            return;
+        }
+
         this.closed.emit();
     }
 

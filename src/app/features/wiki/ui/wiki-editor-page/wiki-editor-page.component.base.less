@@ -61,9 +61,7 @@
     color: var(--lh-ink);
     background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
     cursor: pointer;
-    transition:
-        background-color 0.15s ease,
-        transform 0.15s ease;
+    transition: transform 0.15s var(--lh-ease-spring);
 
     tui-icon {
         font-size: 1rem;
@@ -111,7 +109,7 @@
     }
 
     &--shake {
-        animation: we-shake 0.4s ease;
+        animation: we-shake 0.3s var(--lh-ease-out-quart);
     }
 
     &--sm {
@@ -147,7 +145,6 @@
     border-radius: 0.75rem;
     color: var(--lh-ink-2);
     cursor: pointer;
-    transition: background-color 0.15s ease;
 
     tui-icon {
         font-size: 1.125rem;
@@ -299,9 +296,6 @@
         font-size: 0.875rem;
         color: var(--lh-ink-2);
         cursor: pointer;
-        transition:
-            background-color 0.15s ease,
-            color 0.15s ease;
 
         tui-icon {
             font-size: 1rem;
@@ -357,7 +351,7 @@
     box-shadow:
         0 0 0 1px var(--we-line),
         0 18px 40px -16px rgba(26, 17, 13, 0.5);
-    animation: we-pop 0.14s ease-out;
+    animation: we-menu-pop 0.14s var(--lh-ease-out-quart);
 
     button {
         display: flex;
@@ -474,7 +468,7 @@
     font-variant-numeric: tabular-nums;
     color: var(--lh-ink-3);
     opacity: 0;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.15s var(--lh-ease-out-quart);
 }
 
 .we__title-wrap:focus-within .we__title-count {
@@ -540,7 +534,7 @@
     box-shadow:
         inset 0 0 0 1px var(--we-line),
         0 20px 50px -30px rgba(26, 17, 13, 0.55);
-    transition: max-width 0.25s ease;
+    transition: max-width var(--lh-dur-fast) var(--lh-ease-out-quart);
 
     &--mobile {
         max-width: 24.375rem;

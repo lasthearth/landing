@@ -17,6 +17,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { WikiAuthorNameService } from '@entities/wiki';
 import { WikiDraft, WikiHeading, WikiImage } from '@entities/wiki';
+import { MotionBlurDirective } from '@shared/lib/directives';
 import { WIKI_SECTIONS } from '../../lib/wiki-sections.constant';
 
 /**
@@ -38,7 +39,7 @@ const LICENSE_URL = 'https://creativecommons.org/licenses/by-sa/4.0/deed.ru';
 @Component({
     standalone: true,
     selector: 'app-wiki-article-view',
-    imports: [TuiIcon, TranslatePipe],
+    imports: [TuiIcon, TranslatePipe, MotionBlurDirective],
     templateUrl: './wiki-article-view.component.html',
     styleUrls: [
         './wiki-article-view.component.head.less',
@@ -163,7 +164,43 @@ export class WikiArticleViewComponent {
      */
     protected readonly lightbox = signal<number | null>(null);
 
+    /**
+     * Просмотр закрывается: оверлей гаснет, кадр улетает вниз со шлейфом.
+     * Сигнал держит элемент в DOM, пока не кончится выходной переход.
+     */
+    protected readonly lightboxLeaving = signal(false);
+
     protected readonly tocOpen = signal(true);
+
+    /**
+     * Закрывает просмотр картинок: запускает вылет, повторный вызов
+     * закрывает сразу (например, Escape во время входной анимации).
+     */
+    protected closeLightbox(): void {
+        if (this.lightbox() === null) {
+            return;
+        }
+
+        if (this.lightboxLeaving()) {
+            this.lightbox.set(null);
+            this.lightboxLeaving.set(false);
+            return;
+        }
+
+        this.lightboxLeaving.set(true);
+    }
+
+    /**
+     * Убирает просмотр из DOM, когда оверлей закончил гаснуть.
+     *
+     * @param event Событие конца перехода (всплывает от потомков).
+     */
+    protected onLightboxTransitionEnd(event: TransitionEvent): void {
+        if (event.target === event.currentTarget) {
+            this.lightbox.set(null);
+            this.lightboxLeaving.set(false);
+        }
+    }
 
     /**
      * Клики внутри статьи: картинки, код, видео, якоря и ссылки.
@@ -266,7 +303,7 @@ export class WikiArticleViewComponent {
         }
 
         if (event.key === 'Escape') {
-            this.lightbox.set(null);
+            this.closeLightbox();
         } else if (event.key === 'ArrowRight') {
             this.step(1);
         } else if (event.key === 'ArrowLeft') {

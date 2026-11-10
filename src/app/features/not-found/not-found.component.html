@@ -3,9 +3,11 @@
     Тёмный фон одинаков в обеих темах (токены --lh-night-*), поверх него
     тлеющие угли и мерцающее пламя. Свет факела (`.not-found__torch`)
     следует за курсором через переменные --torch-x/--torch-y.
+    [appPauseOffscreen] ставит угли и пламя на паузу, когда сцена ушла
+    из вьюпорта (например, при прокрутке к подвалу).
     aria-hidden на всём декоре: скринридеру важны только заголовок и ссылки.
 -->
-<section class="not-found" aria-labelledby="not-found-title">
+<section class="not-found" appPauseOffscreen aria-labelledby="not-found-title">
     <!-- Слой свечения факела: идёт за курсором, «освещая» сцену. -->
     <div class="not-found__torch" aria-hidden="true"></div>
 

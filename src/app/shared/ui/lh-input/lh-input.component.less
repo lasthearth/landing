@@ -32,9 +32,10 @@
     color: var(--lh-ink);
     background-color: color-mix(in srgb, var(--lh-surface) 55%, transparent);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    /* Подсветка фокуса — смена состояния, а не ховер: 200ms по токенам. */
     transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
+        border-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .flexible-input:focus-within {
@@ -139,19 +140,25 @@
     z-index: 10;
     overflow-y: auto;
     max-height: 240px;
+    transform-origin: top center;
 
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(0.97);
     pointer-events: none;
+    /* Базовый переход играет при закрытии — он короче входа
+       (закрытие быстрее открытия, motion-close-faster). */
     transition:
-        opacity 0.2s ease,
-        transform 0.2s ease;
+        opacity var(--lh-dur-exit) var(--lh-ease-out-quart),
+        transform var(--lh-dur-exit) var(--lh-ease-smooth);
 }
 
 .flexible-input .dropdown.dropdown--open {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     pointer-events: auto;
+    transition:
+        opacity var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
 .flexible-input .dropdown-option {
@@ -167,7 +174,8 @@
     font-size: 1.125rem;
     color: var(--lh-ink);
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    /* Ховер подложки пункта — мгновенный (motion-instant-hover-color);
+       прежний transition стоял на запрещённой ease-кривой. */
 }
 
 .flexible-input .dropdown-option:hover {

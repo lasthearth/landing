@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, Component, input, InputSignal, signal } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 
 /**
  * Компонент загрузки изображения с плейсхолдером.
  *
  * Показывает анимированный скелетон, пока картинка загружается,
- * и плавно проявляет изображение после загрузки.
+ * и плавно проявляет изображение после загрузки. Блик скелетона
+ * ставится на паузу вне экрана (hostDirectives): ленивые картинки
+ * грузятся пачками, и бегущий градиент за сгибом тикал стилем зря.
  */
 @Component({
     selector: 'app-image-loader',
     imports: [NgClass],
+    hostDirectives: [PauseOffscreenDirective],
     templateUrl: './image-loader.component.html',
     styleUrl: './image-loader.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

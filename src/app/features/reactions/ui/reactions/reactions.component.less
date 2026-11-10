@@ -28,10 +28,7 @@
     font-weight: 700;
     line-height: 1;
     cursor: pointer;
-    transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        transform 0.15s ease;
+    transition: transform 0.15s var(--lh-ease-spring);
 
     &:hover {
         border-color: rgba(232, 216, 184, 0.35);
@@ -39,7 +36,7 @@
     }
 
     &:active {
-        transform: scale(0.94);
+        transform: scale(0.95);
     }
 
     &:focus-visible {
@@ -104,7 +101,7 @@
     background: rgba(24, 17, 12, 0.97);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     color: var(--color-parchment-2, #e8d8b8);
-    animation: reactions-picker-enter 0.14s ease-out;
+    animation: reactions-picker-enter 0.14s var(--lh-ease-out-quart);
 }
 
 .reactions__tabs {
@@ -125,9 +122,6 @@
     font-size: 1rem;
     opacity: 0.6;
     cursor: pointer;
-    transition:
-        background-color 0.12s ease,
-        opacity 0.12s ease;
 
     &:hover {
         opacity: 1;
@@ -177,13 +171,11 @@
     border-radius: 0.6rem;
     font-size: 1.2rem;
     cursor: pointer;
-    transition:
-        background-color 0.12s ease,
-        transform 0.12s ease;
+    transition: transform 0.12s var(--lh-ease-spring);
 
     &:hover {
         background: rgba(232, 216, 184, 0.12);
-        transform: translateY(-2px) scale(1.12);
+        transform: translateY(-2px) scale(1.05);
     }
 
     &:focus-visible {

@@ -35,15 +35,19 @@
 
 /**
  * Контейнер истории покупок с плавным раскрытием/сворачиванием.
+ * Анимируется только вертикальная ось (grid-template-rows), переход
+ * ретаргетится на середине полёта. Сворачивание (базовое правило) — 150мс,
+ * раскрытие — 200мс: закрытие всегда короче открытия.
  */
 .purchases-list {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows var(--lh-dur-mid) var(--lh-ease-out-quart);
+    transition: grid-template-rows 150ms var(--lh-ease-out-quart);
 }
 
 .purchases-list--expanded {
     grid-template-rows: 1fr;
+    transition-duration: var(--lh-dur-fast);
 }
 
 .purchases-list__inner {
@@ -52,38 +56,36 @@
     flex-direction: column;
 }
 
-/* Покупки внутри карточки разделены линией, а не отдельными плашками */
+/* Часть покупок скрыта линией, а не отдельными плашками */
 .purchase-row--divided {
     border-top: 1px solid var(--lh-border);
 }
 
 /**
- * Плавное появление элементов при раскрытии списка.
+ * Появление строк при раскрытии: переход на переключаемом классе
+ * (ретаргет при повторном сворачивании), каскад — по 40мс на строку.
  */
+.purchases-list__inner > * {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+        opacity var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
 .purchases-list--expanded .purchases-list__inner > * {
-    animation: purchaseItemFadeIn var(--lh-dur-fast) var(--lh-ease-out-quart) both;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.purchases-list--expanded .purchases-list__inner > *:nth-child(1) { animation-delay: 0ms; }
-.purchases-list--expanded .purchases-list__inner > *:nth-child(2) { animation-delay: 40ms; }
-.purchases-list--expanded .purchases-list__inner > *:nth-child(3) { animation-delay: 80ms; }
-.purchases-list--expanded .purchases-list__inner > *:nth-child(4) { animation-delay: 120ms; }
-.purchases-list--expanded .purchases-list__inner > *:nth-child(5) { animation-delay: 160ms; }
-
-@keyframes purchaseItemFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* Задержка только на раскрытии: сворачивание идёт без каскада. */
+.purchases-list--expanded .purchases-list__inner > *:nth-child(2) { transition-delay: 40ms; }
+.purchases-list--expanded .purchases-list__inner > *:nth-child(3) { transition-delay: 80ms; }
+.purchases-list--expanded .purchases-list__inner > *:nth-child(4) { transition-delay: 120ms; }
+.purchases-list--expanded .purchases-list__inner > *:nth-child(5) { transition-delay: 160ms; }
 
 .purchases-toggle-icon {
-    transition: transform var(--lh-dur-mid) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .purchases-toggle-icon--expanded {
@@ -92,10 +94,13 @@
 
 @media (prefers-reduced-motion: reduce) {
     .purchases-list,
-    .purchases-list--expanded .purchases-list__inner > *,
+    .purchases-list__inner > *,
     .purchases-toggle-icon {
         transition: none;
         animation: none;
+        /* Мгновенное конечное состояние: строки не должны застревать скрытыми. */
+        opacity: 1;
+        transform: none;
     }
 }
 

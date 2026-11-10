@@ -274,7 +274,7 @@
                                 <!-- Скрытая запись дополнительно приглушена:
                                      состояние читается и по бейджу, и по виду карточки. -->
                                 <div
-                                    class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30 transition-colors"
+                                    class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30"
                                     [class.opacity-50]="!item.isAvailable"
                                 >
                                     @if (item.imageUrl) {
@@ -344,7 +344,7 @@
                                         type="button"
                                         (click)="startEdit(item)"
                                         [disabled]="busyItemId() === item.id"
-                                        class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base transition-colors flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="flex-1 py-2.5 rounded-xl bg-lh-primary-2/10 hover:bg-lh-primary-2/30 text-lh-primary font-bold uppercase text-base flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <tui-icon icon="@tui.pencil" class="size-4!" />
                                         {{ "admin.shop.edit" | translate }}
@@ -367,7 +367,7 @@
                                             ': ' +
                                             item.name
                                         "
-                                        class="py-2.5 px-3 rounded-xl bg-surface-3 border border-line text-ink transition-colors hover:bg-surface-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="py-2.5 px-3 rounded-xl bg-surface-3 border border-line text-ink hover:bg-surface-4 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         @if (busyItemId() === item.id) {
                                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -383,7 +383,7 @@
                                         (click)="deleteItem(item)"
                                         [disabled]="busyItemId() === item.id"
                                         [attr.aria-label]="('admin.common.delete' | translate) + ': ' + item.name"
-                                        class="py-2.5 px-3 rounded-xl bg-lh-danger/10 hover:bg-lh-danger/30 text-lh-danger transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="py-2.5 px-3 rounded-xl bg-lh-danger/10 hover:bg-lh-danger/30 text-lh-danger disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <tui-icon icon="@tui.trash-2" class="size-4!" />
                                     </button>
@@ -454,7 +454,7 @@
                             <button
                                 type="button"
                                 (click)="reloadKits()"
-                                class="self-start rounded-lg border border-line bg-surface-3 px-3 py-1.5 text-base font-semibold text-ink transition-colors hover:bg-surface-4"
+                                class="self-start rounded-lg border border-line bg-surface-3 px-3 py-1.5 text-base font-semibold text-ink hover:bg-surface-4"
                             >
                                 {{ "admin.shop.codeRetry" | translate }}
                             </button>
@@ -619,7 +619,7 @@
                                         <button
                                             type="button"
                                             cdkDragHandle
-                                            class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors cursor-grab active:cursor-grabbing"
+                                            class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary cursor-grab active:cursor-grabbing"
                                             [title]="'admin.shop.dragTitle' | translate"
                                             [attr.aria-label]="'admin.shop.dragAria' | translate"
                                         >
@@ -628,7 +628,7 @@
                                         <button
                                             type="button"
                                             (click)="removeEntry(i)"
-                                            class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
+                                            class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger"
                                         >
                                             <tui-icon icon="@tui.trash-2" class="size-5!" />
                                         </button>
@@ -721,7 +721,7 @@
                         <button
                             type="button"
                             (click)="addAbility()"
-                            class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase transition-colors flex items-center gap-2"
+                            class="px-4 py-2 rounded-xl bg-lh-accent hover:bg-brand-hover text-white text-lg font-bold uppercase flex items-center gap-2"
                         >
                             <tui-icon icon="@tui.plus" class="size-5!" />
                             {{ "admin.common.add" | translate }}
@@ -748,7 +748,7 @@
                                 <button
                                     type="button"
                                     (click)="removeAbility(i)"
-                                    class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
+                                    class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger"
                                 >
                                     <tui-icon icon="@tui.trash-2" class="size-5!" />
                                 </button>
@@ -768,14 +768,14 @@
                     <button
                         type="button"
                         (click)="backToList()"
-                        class="px-6 py-3.5 rounded-xl border border-lh-primary-2 text-lh-primary font-bold uppercase text-lg hover:bg-lh-primary-2/10 transition"
+                        class="px-6 py-3.5 rounded-xl border border-lh-primary-2 text-lh-primary font-bold uppercase text-lg hover:bg-lh-primary-2/10"
                     >
                         {{ "admin.common.cancel" | translate }}
                     </button>
                     <button
                         type="submit"
                         [disabled]="form.invalid || isLoading()"
-                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-brand-hover text-white font-bold uppercase text-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                        class="flex-1 py-3.5 px-4 rounded-xl bg-lh-accent hover:bg-brand-hover text-white font-bold uppercase text-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
                     >
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -804,7 +804,7 @@
                     }
 
                     <div
-                        class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30 transition-colors"
+                        class="w-full aspect-square rounded-xl overflow-hidden bg-lh-primary-2/5 border border-lh-primary-2/10 group-hover:border-lh-accent/30"
                     >
                         @if (previewItem().imageUrl) {
                             <app-image-loader [src]="previewItem().imageUrl" [alt]="previewItem().name" />
@@ -868,7 +868,7 @@
 
                     <button
                         type="button"
-                        class="w-full text-white uppercase transition duration-300 font-bold cursor-pointer bg-lh-accent hover:bg-brand-hover rounded-xl py-3 text-lg"
+                        class="w-full text-white uppercase font-bold cursor-pointer bg-lh-accent hover:bg-brand-hover rounded-xl py-3 text-lg"
                     >
                         {{ "admin.shop.buy" | translate }}
                     </button>
@@ -913,7 +913,7 @@
                                         [tuiHint]="entryHint"
                                         tuiHintDirection="top"
                                         [attr.aria-label]="entry.name"
-                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 transition duration-150 hover:scale-110 hover:rotate-2 hover:border-lh-accent group/item cursor-grab active:cursor-grabbing"
+                                        class="relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 border-line-strong bg-surface-3 transition-transform duration-150 ease-[var(--lh-ease-spring)] hover:scale-110 hover:rotate-2 hover:border-lh-accent group/item cursor-grab active:cursor-grabbing"
                                     >
                                         @if (entry.imageUrl) {
                                             <app-image-loader

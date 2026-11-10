@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { ServerResponseService } from '@core/services/server-response.service';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 
 /**
  * Страница "Не найдено" (404).
@@ -24,7 +25,7 @@ import { ServerResponseService } from '@core/services/server-response.service';
 @Component({
     standalone: true,
     selector: 'app-not-found',
-    imports: [RouterLink, TranslatePipe, TuiIcon],
+    imports: [RouterLink, TranslatePipe, TuiIcon, PauseOffscreenDirective],
     templateUrl: './not-found.component.html',
     styleUrl: './not-found.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

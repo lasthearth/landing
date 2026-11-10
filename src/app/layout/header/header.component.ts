@@ -4,6 +4,7 @@ import {
     ElementRef,
     HostListener,
     PLATFORM_ID,
+    WritableSignal,
     computed,
     inject,
     signal,
@@ -31,6 +32,12 @@ import { occupancyShare } from './lib/occupancy-share.function';
 import { NewContentService } from '@features/new-content';
 import { NotificationBellComponent } from '@features/notifications';
 import { AnalyticsService } from '@core/services/analytics.service';
+import { MotionBlurDirective } from '@shared/lib/directives';
+
+/**
+ * Выпадающие меню шапки с анимацией ухода.
+ */
+type DropdownName = 'mobile' | 'media' | 'lang';
 
 /**
  * Компонент заголовка.
@@ -50,6 +57,7 @@ import { AnalyticsService } from '@core/services/analytics.service';
         TranslatePipe,
         NotificationBellComponent,
         PlayerAvatarComponent,
+        MotionBlurDirective,
     ],
     templateUrl: './header.component.html',
     styleUrl: './header.component.less',
@@ -229,12 +237,12 @@ export class HeaderComponent {
     }
 
     /**
-     * Закрывает все выпадающие меню шапки.
+     * Закрывает все выпадающие меню шапки с анимацией ухода.
      */
     private closeMenus(): void {
-        this.showMediaMenu.set(false);
-        this.showLangMenu.set(false);
-        this.showMobileMenu.set(false);
+        this.closeDropdown('mobile');
+        this.closeDropdown('media');
+        this.closeDropdown('lang');
         this.showMobileMediaMenu.set(false);
     }
 
@@ -265,17 +273,6 @@ export class HeaderComponent {
         trigger?.focus();
     }
 
-    protected toggleMediaMenu(): void {
-        this.showMediaMenu.update((value) => !value);
-    }
-
-    /**
-     * Переключает видимость мобильного подменю раздела Медиа.
-     */
-    protected toggleMobileMediaMenu(): void {
-        this.showMobileMediaMenu.update((value) => !value);
-    }
-
     protected readonly showLangMenu = signal(false);
 
     /**
@@ -292,6 +289,119 @@ export class HeaderComponent {
      * Признак открытого дропдауна раздела Медиа.
      */
     protected readonly showMediaMenu = signal(false);
+
+    /**
+     * Сигналы видимости меню, к которым применяется анимация ухода.
+     */
+    private readonly dropdowns: Record<DropdownName, WritableSignal<boolean>> = {
+        mobile: this.showMobileMenu,
+        media: this.showMediaMenu,
+        lang: this.showLangMenu,
+    };
+
+    /**
+     * Какое меню сейчас доигрывает анимацию ухода.
+     *
+     * Пока имя не сброшено, панель остаётся в DOM под классом
+     * `dropdown-leave`; сбрасывает обработчик `animationend`.
+     */
+    protected readonly dropdownLeaving = signal<DropdownName | null>(null);
+
+    /**
+     * Открывает меню; открытие в середине ухода перезапускает вход.
+     *
+     * @param name Меню шапки.
+     */
+    private openDropdown(name: DropdownName): void {
+        if (this.dropdownLeaving() === name) {
+            this.dropdownLeaving.set(null);
+        }
+
+        this.dropdowns[name].set(true);
+    }
+
+    /**
+     * Закрывает меню с анимацией ухода: панель остаётся в DOM до
+     * `animationend`, чтобы успеть уехать, а не исчезать скачком.
+     *
+     * @param name Меню шапки.
+     */
+    private closeDropdown(name: DropdownName): void {
+        if (this.dropdowns[name]()) {
+            this.dropdownLeaving.set(name);
+            this.dropdowns[name].set(false);
+        }
+    }
+
+    /**
+     * Снимает меню с DOM после анимации ухода.
+     *
+     * @param event Событие конца анимации на хосте меню.
+     * @param name Меню шапки.
+     */
+    protected onDropdownAnimationEnd(event: AnimationEvent, name: DropdownName): void {
+        if (event.animationName !== 'dropdown-leave' || event.target !== event.currentTarget) {
+            return;
+        }
+
+        if (this.dropdownLeaving() === name) {
+            this.dropdownLeaving.set(null);
+        }
+    }
+
+    /**
+     * Переключает дропдаун раздела «Сообщество».
+     */
+    protected toggleMediaMenu(): void {
+        if (this.showMediaMenu()) {
+            this.closeDropdown('media');
+        } else {
+            this.openDropdown('media');
+        }
+    }
+
+    /**
+     * Закрывает дропдаун раздела «Сообщество» с анимацией ухода.
+     */
+    protected closeMediaMenu(): void {
+        this.closeDropdown('media');
+    }
+
+    /**
+     * Переключает мобильное меню навигации.
+     */
+    protected toggleMobileMenu(): void {
+        if (this.showMobileMenu()) {
+            this.closeDropdown('mobile');
+        } else {
+            this.openDropdown('mobile');
+        }
+    }
+
+    /**
+     * Закрывает мобильное меню с анимацией ухода (клик по пункту).
+     */
+    protected closeMobileMenu(): void {
+        this.closeDropdown('mobile');
+    }
+
+    /**
+     * Переключает меню выбора языка.
+     */
+    protected toggleLangMenu(): void {
+        if (this.showLangMenu()) {
+            this.closeDropdown('lang');
+        } else {
+            this.openDropdown('lang');
+        }
+    }
+
+    /**
+     * Переключает видимость мобильного подменю раздела Медиа.
+     */
+    protected toggleMobileMediaMenu(): void {
+        this.showMobileMediaMenu.update((value) => !value);
+    }
 
     /**
      * Основные разделы меню.
@@ -321,13 +431,13 @@ export class HeaderComponent {
     );
 
     /**
-     * Переключает язык интерфейса и закрывает дропдаун.
+     * Переключает язык интерфейса и закрывает дропдаун с анимацией ухода.
      *
      * @param language Целевой язык.
      */
     protected selectLanguage(language: Language): void {
         this.i18n.setLanguage(language);
-        this.showLangMenu.set(false);
+        this.closeDropdown('lang');
     }
 
     /**

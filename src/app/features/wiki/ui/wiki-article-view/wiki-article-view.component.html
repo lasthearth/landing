@@ -153,17 +153,30 @@
 </article>
 
 @if (lightbox() !== null && images()[lightbox()!]; as image) {
-    <div class="wiki-lightbox" role="dialog" aria-modal="true" (click)="lightbox.set(null)">
-        <figure class="wiki-lightbox__figure" (click)="$event.stopPropagation()">
-            <img [src]="image.url" [alt]="image.caption" />
-            @if (image.caption || images().length > 1) {
-                <figcaption>
-                    @if (images().length > 1) {
-                        <span class="wiki-lightbox__count">{{ lightbox()! + 1 }} / {{ images().length }}</span>
-                    }
-                    {{ image.caption }}
-                </figcaption>
-            }
+    <div
+        class="wiki-lightbox"
+        role="dialog"
+        aria-modal="true"
+        [class.wiki-lightbox--leaving]="lightboxLeaving()"
+        (click)="closeLightbox()"
+        (transitionend)="onLightboxTransitionEnd($event)"
+    >
+        <!--
+            Прозрачный «носитель» с шлейфом движения: улетает при закрытии,
+            вся картинка — на слое-потомке (правила appMotionBlur).
+        -->
+        <figure class="wiki-lightbox__fly" appMotionBlur (click)="$event.stopPropagation()">
+            <div class="wiki-lightbox__figure">
+                <img [src]="image.url" [alt]="image.caption" />
+                @if (image.caption || images().length > 1) {
+                    <figcaption>
+                        @if (images().length > 1) {
+                            <span class="wiki-lightbox__count">{{ lightbox()! + 1 }} / {{ images().length }}</span>
+                        }
+                        {{ image.caption }}
+                    </figcaption>
+                }
+            </div>
         </figure>
         @if (images().length > 1) {
             <button
@@ -187,7 +200,7 @@
             type="button"
             class="wiki-lightbox__close"
             [attr.aria-label]="'wiki.view.close' | translate"
-            (click)="lightbox.set(null)"
+            (click)="closeLightbox()"
         >
             <tui-icon icon="@tui.x" />
         </button>

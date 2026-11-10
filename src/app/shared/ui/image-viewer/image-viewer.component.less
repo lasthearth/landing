@@ -16,6 +16,13 @@
     color: var(--lh-parchment-2);
     animation: image-viewer-in var(--lh-dur-fast) var(--lh-ease-out-quart);
 
+    /* Уход быстрее входа (200ms вход / 150ms выход); forwards держит
+       прозрачность до снятия с DOM по animationend. */
+    &--leave {
+        animation: image-viewer-leave var(--lh-dur-exit) var(--lh-ease-out-quart) forwards;
+        pointer-events: none;
+    }
+
     &__top {
         position: absolute;
         top: 0;
@@ -49,7 +56,7 @@
         color: inherit;
         background: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
         cursor: pointer;
-        transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер подложки — мгновенный (motion-instant-hover-color). */
 
         &:hover {
             background: color-mix(in srgb, var(--lh-parchment) 22%, transparent);
@@ -159,8 +166,21 @@
     }
 }
 
+@keyframes image-viewer-leave {
+    to {
+        opacity: 0;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .image-viewer {
         animation: none;
+    }
+
+    /* Уход не выключается: обработчик закрытия ждёт animationend, чтобы
+       отдать родителю событие `closed`. Глобальный kill-switch сжимает
+       анимацию до 0.01ms — она завершается мгновенно. */
+    .image-viewer--leave {
+        animation: image-viewer-leave 0.01ms var(--lh-ease-out-quart) forwards;
     }
 }

@@ -10,7 +10,7 @@
             type="button"
             (click)="reload()"
             [disabled]="denied() || loading()"
-            class="flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface-3 px-4 py-2 text-base font-bold uppercase text-ink transition-colors hover:bg-surface-4 disabled:cursor-not-allowed disabled:opacity-50"
+            class="flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface-3 px-4 py-2 text-base font-bold uppercase text-ink hover:bg-surface-4 disabled:cursor-not-allowed disabled:opacity-50"
         >
             @if (loading()) {
                 <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -185,7 +185,7 @@
                                                 type="button"
                                                 (click)="saveKit(kit)"
                                                 [disabled]="!canSave(kit) || busyCode() === kit.code"
-                                                class="flex items-center justify-center gap-2 rounded-xl border border-line bg-surface-3 px-5 py-3 text-base font-bold uppercase text-ink transition-colors hover:bg-surface-4 disabled:cursor-not-allowed disabled:opacity-50"
+                                                class="flex items-center justify-center gap-2 rounded-xl border border-line bg-surface-3 px-5 py-3 text-base font-bold uppercase text-ink hover:bg-surface-4 disabled:cursor-not-allowed disabled:opacity-50"
                                             >
                                                 @if (busyCode() === kit.code) {
                                                     <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -281,7 +281,7 @@
                                                                     ': ' +
                                                                     item.gameCode
                                                                 "
-                                                                class="rounded-lg p-2 text-lh-danger transition-colors hover:bg-lh-danger/15 disabled:cursor-not-allowed disabled:opacity-50"
+                                                                class="rounded-lg p-2 text-lh-danger hover:bg-lh-danger/15 disabled:cursor-not-allowed disabled:opacity-50"
                                                             >
                                                                 <tui-icon icon="@tui.trash-2" class="size-5!" />
                                                             </button>

@@ -8,6 +8,7 @@ import {
     ElementRef,
     inject,
     PLATFORM_ID,
+    signal,
     viewChild,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -16,6 +17,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { ConsentService } from '@core/services/consent.service';
+import { MotionBlurDirective } from '@shared/lib/directives';
 
 /**
  * Класс на body, пока полоса видна: по нему страница получает отступ снизу,
@@ -39,7 +41,7 @@ const HEIGHT_VAR = '--lh-consent-h';
 @Component({
     standalone: true,
     selector: 'app-consent-banner',
-    imports: [RouterLink, TranslatePipe, TuiIcon],
+    imports: [RouterLink, TranslatePipe, TuiIcon, MotionBlurDirective],
     templateUrl: './consent-banner.component.html',
     styleUrl: './consent-banner.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +61,14 @@ export class ConsentBannerComponent {
      * Плашка нужна только пока пользователь не ответил.
      */
     protected readonly visible = computed(() => this.consent.analytics() === null);
+
+    /**
+     * Полоса уезжает вниз после ответа и демонтируется по `animationend`:
+     * выход — часть ответа, он должен доиграть, а не исчезнуть скачком.
+     * При отключённом движении анимации нет и события не будет, поэтому
+     * полоса снимается сразу (см. {@link startExit}).
+     */
+    protected readonly leaving = signal(false);
 
     /**
      * Сама полоса — чтобы мерить её высоту.
@@ -105,6 +115,7 @@ export class ConsentBannerComponent {
      */
     protected allow(): void {
         this.consent.setAnalytics(true);
+        this.startExit();
     }
 
     /**
@@ -112,6 +123,36 @@ export class ConsentBannerComponent {
      */
     protected deny(): void {
         this.consent.setAnalytics(false);
+        this.startExit();
+    }
+
+    /**
+     * Снимает полосу после конца анимации ухода.
+     *
+     * @param event Событие конца анимации на полосе.
+     */
+    protected onBarAnimationEnd(event: AnimationEvent): void {
+        if (event.animationName === 'consent-drop') {
+            this.leaving.set(false);
+        }
+    }
+
+    /**
+     * Запускает уход полосы вниз. Вызывается только из клика, то есть
+     * в браузере, поэтому обращение к `window` здесь безопасно.
+     */
+    private startExit(): void {
+        if (this.leaving()) {
+            return;
+        }
+
+        this.leaving.set(true);
+
+        // Без анимации (prefers-reduced-motion) `animationend` не наступит —
+        // снимаем полосу сразу, иначе она зависнет с классом на body.
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            this.leaving.set(false);
+        }
     }
 
     /**

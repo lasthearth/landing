@@ -5,8 +5,10 @@
         role="dialog"
         aria-modal="true"
         [attr.aria-label]="image.alt || ('shared.imageViewer.title' | translate)"
+        [class.image-viewer--leave]="leaving()"
         (click)="onBackdropClick($event)"
         (keydown)="onTrapKeydown($event)"
+        (animationend)="onAnimationEnd($event)"
     >
         <div class="image-viewer__top">
             @if (hasMany()) {

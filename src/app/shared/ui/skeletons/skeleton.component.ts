@@ -1,13 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 
 /**
  * Универсальный скелетон-заглушка.
  *
  * Отображает пульсирующий прямоугольник заданного размера и формы.
+ * Пульс ставится на паузу вне экрана (hostDirectives): в списках скелетоны
+ * уходят за сгиб, а animate-pulse продолжал тикать стиль каждый кадр.
  */
 @Component({
     selector: 'app-skeleton',
     standalone: true,
+    hostDirectives: [PauseOffscreenDirective],
     template: `<div [class]="classes()"></div>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

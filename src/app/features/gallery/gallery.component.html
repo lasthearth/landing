@@ -44,7 +44,12 @@
         -->
         @if (heroTile(); as hero) {
             <figure class="gallery-fold lh-panel lh-panel--bezel" appReveal>
-                <button type="button" class="gallery-fold__frame lh-panel__core" (click)="open(hero.image)">
+                <button
+                    type="button"
+                    class="gallery-fold__frame lh-panel__core"
+                    appPauseOffscreen
+                    (click)="open(hero.image)"
+                >
                     @if (hero.src; as src) {
                         <img
                             class="gallery-fold__img"

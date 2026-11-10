@@ -17,9 +17,7 @@
         background-color: var(--lh-surface);
         color: var(--lh-ink);
         cursor: pointer;
-        transition:
-            color var(--lh-dur-fast) var(--lh-ease-out-quart),
-            border-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер цвета — мгновенный (motion-instant-hover-color). */
 
         &:hover:not(:disabled) {
             border-color: var(--lh-brand);
@@ -52,9 +50,7 @@
         font: inherit;
         font-variant-numeric: tabular-nums;
         cursor: pointer;
-        transition:
-            color var(--lh-dur-fast) var(--lh-ease-out-quart),
-            background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер и смена текущей страницы — мгновенно (частое действие). */
 
         &:hover {
             color: var(--lh-brand-ink);

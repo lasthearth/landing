@@ -5,18 +5,33 @@
 /**
  * Блок вопроса в виде свитка: пергаментный фон
  * и сургучная кромка слева.
+ * Ховер: подъём — пружиной на transform, тень — прозрачностью
+ * псевдоэлемента (переход box-shadow перерисовывал свиток каждый кадр).
  */
 .faq-scroll {
+    position: relative;
     background: linear-gradient(160deg, var(--lh-surface-2) 0%, var(--lh-surface) 100%);
     border-left: 4px solid color-mix(in srgb, var(--lh-danger-ink) 55%, transparent);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
+}
+
+.faq-scroll::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: 0 6px 16px rgba(45, 32, 26, 0.1);
+    transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .faq-scroll:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(45, 32, 26, 0.1);
+}
+
+.faq-scroll:hover::after {
+    opacity: 1;
 }
 
 /**
@@ -28,7 +43,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .faq-scroll {
+    .faq-scroll,
+    .faq-scroll::after {
         transition: none;
     }
 

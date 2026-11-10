@@ -60,7 +60,7 @@
             >
                 <!-- Image -->
                 <div
-                    class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-2 group-hover:bg-surface-3 transition-colors"
+                    class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-2 group-hover:bg-surface-3"
                 >
                     @if (item.imageUrl) {
                         <div
@@ -138,7 +138,7 @@
                 <button
                     type="button"
                     (click)="openPurchaseDialog(item)"
-                    class="w-full text-parchment-3 uppercase transition-colors duration-300 font-bold cursor-pointer bg-brand-strong hover:bg-brand rounded-xl py-2 lg:py-2.5 text-sm lg:text-base"
+                    class="w-full text-parchment-3 uppercase font-bold cursor-pointer bg-brand-strong hover:bg-brand rounded-xl py-2 lg:py-2.5 text-sm lg:text-base"
                 >
                     {{ 'market.common.buyButton' | translate }}
                 </button>

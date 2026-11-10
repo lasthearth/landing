@@ -39,6 +39,7 @@
 }
 
 .kp-tab {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -51,15 +52,29 @@
     text-align: left;
     cursor: pointer;
     box-shadow: var(--lh-shadow-soft);
-    transition:
-        transform var(--lh-dur-fast) var(--lh-ease-spring),
-        border-color var(--lh-dur-fast) var(--lh-ease-smooth),
-        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth);
+    /* Ховер: цвет рамки меняется мгновенно, подъём — пружиной, тень —
+     * прозрачностью псевдоэлемента (переход box-shadow перерисовывал
+     * вкладку каждый кадр). */
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        box-shadow: var(--lh-shadow-lift);
+        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
 
     &:hover {
         border-color: var(--kp-accent);
         transform: translateY(-2px);
-        box-shadow: var(--lh-shadow-lift);
+    }
+
+    &:hover::before {
+        opacity: 1;
     }
 
     &:active {
@@ -150,7 +165,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .kp-tab {
+    .kp-tab,
+    .kp-tab::before {
         transition: none;
     }
 

@@ -1,19 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 import { SkeletonComponent } from './skeleton.component';
 
 /**
  * Скелетон списка карточек для админ-панелей.
  *
  * Имитирует карточки заявок с аватаром, заголовком, текстом и кнопками действий.
+ * Пульс каждой карточки ставится на паузу вне экрана: список длинный, и
+ * карточки за сгибом продолжали пульсировать.
  */
 @Component({
     selector: 'app-admin-list-skeleton',
     standalone: true,
-    imports: [SkeletonComponent],
+    imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div class="flex flex-col gap-4">
             @for (_ of itemsArray(); track $index) {
                 <div
+                    appPauseOffscreen
                     class="bg-surface border-2 border-line/40 shadow-md rounded-2xl p-5 flex flex-col gap-4 animate-pulse"
                 >
                     <div class="flex items-center gap-3 pb-3 border-b border-lh-primary-2/20">

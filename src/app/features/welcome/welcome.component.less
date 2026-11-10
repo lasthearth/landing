@@ -71,7 +71,10 @@
 }
 
 /**
- * Подсказка прокрутки: стеклянная плашка с мягким подскоком.
+ * Подсказка прокрутки: стеклянная плашка.
+ * Ховер — только движение цвета и свечение: цвет меняется мгновенно,
+ * а тень-свечение живёт на псевдоэлементе и проявляется прозрачностью,
+ * чтобы не перерисовывать тень каждый кадр.
  * Подскок сдвигает элемент, поэтому центрирование по X держится
  * внутри самих ключевых кадров, а не утилитой -translate-x-1/2.
  */
@@ -81,24 +84,35 @@
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
         inset 0 0 0 1px rgba(240, 230, 210, 0.28);
-    transition:
-        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart),
-        color var(--lh-dur-mid) var(--lh-ease-out-quart);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.14),
+            inset 0 0 0 1px rgba(255, 170, 92, 0.7),
+            0 12px 32px -10px rgba(255, 121, 32, 0.4);
+        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
 }
 
 .welcome-scroll-hint:hover {
     color: #ffffff;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        inset 0 0 0 1px rgba(255, 170, 92, 0.7),
-        0 12px 32px -10px rgba(255, 121, 32, 0.4);
+}
+
+.welcome-scroll-hint:hover::before {
+    opacity: 1;
 }
 
 /**
  * Каскадное проявление содержимого карточки при открытии экрана.
  * Здесь анимация по таймеру, а не appReveal: экран приветствия
  * всегда открывается целиком во вьюпорте, наблюдать за пересечением
- * нечего — все элементы видны сразу.
+ * нечего — все элементы видны сразу. Шаг каскада — 100мс, хвост 520мс.
  */
 .welcome-stagger {
     opacity: 0;
@@ -119,11 +133,11 @@
 }
 
 .welcome-stagger:nth-child(4) {
-    animation-delay: 440ms;
+    animation-delay: 420ms;
 }
 
 .welcome-stagger:nth-child(5) {
-    animation-delay: 560ms;
+    animation-delay: 520ms;
 }
 
 @keyframes welcome-reveal {

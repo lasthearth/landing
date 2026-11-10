@@ -35,9 +35,7 @@
     height: 0.6rem;
     border-radius: 50%;
     background: color-mix(in srgb, var(--lh-ink) 15%, transparent);
-    transition:
-        background-color 0.2s ease,
-        transform 0.2s ease;
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .finder__dot--done {
@@ -73,10 +71,7 @@
     font: inherit;
     text-align: left;
     cursor: pointer;
-    transition:
-        border-color 0.15s ease,
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
+    transition: transform 0.15s var(--lh-ease-spring);
 
     &:hover {
         border-color: var(--lh-brand);

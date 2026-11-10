@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 import { SkeletonComponent } from './skeleton.component';
 
 /**
  * Скелетон страницы рейтинга игроков.
+ *
+ * Пульс строк рейтинга ставится на паузу вне экрана.
  */
 @Component({
     selector: 'app-statistics-skeleton',
     standalone: true,
-    imports: [SkeletonComponent],
+    imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div class="flex flex-col gap-8">
             <app-skeleton width="64" height="10" rounded="xl" />
@@ -32,7 +35,7 @@ import { SkeletonComponent } from './skeleton.component';
 
             <div class="flex flex-col gap-6">
                 @for (_ of rows; track $index) {
-                    <div class="h-24 rounded-2xl bg-lh-primary-2/30 animate-pulse"></div>
+                    <div appPauseOffscreen class="h-24 rounded-2xl bg-lh-primary-2/30 animate-pulse"></div>
                 }
             </div>
         </div>

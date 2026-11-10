@@ -63,7 +63,8 @@
     letter-spacing: -0.01em;
     line-height: 1.15;
     text-decoration: none;
-    transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+    /* Ховер-подложка меняется мгновенно: цвет на ховере не анимируется
+       (motion-instant-hover-color). */
 }
 
 .hud__brand:hover {
@@ -169,7 +170,7 @@
     border-radius: 0.5rem;
     color: var(--lh-ink);
     text-decoration: none;
-    transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+    /* Ховер-подложка меняется мгновенно (motion-instant-hover-color). */
 }
 
 .hud__me:hover {
@@ -278,13 +279,37 @@
 }
 
 /**
- * Появление выпадающих меню ряда навигации.
- * Меню «вылетает» сверху по smooth-кривой; пункты внутри не анимируются
- * отдельно — каскад на 8 пунктах читался дольше самого открытия меню.
+ * Появление и уход выпадающих меню ряда навигации.
+ *
+ * Вход: меню «вылетает» сверху по smooth-кривой от края триггера
+ * (scale 0.97 — не из нуля); пункты внутри не анимируются отдельно —
+ * каскад на 8 пунктах читался дольше самого открытия меню.
+ *
+ * Уход: класс `dropdown-leave` вешает шаблон при закрытии, меню уезжает
+ * быстрее, чем въезжало (150ms против 200ms), и снимается с DOM по
+ * `animationend` — хост обработчика в шаблоне шапки. Повторное открытие
+ * в середине ухода снимает класс и перезапускает вход.
+ *
+ * Хост меню прозрачен и несёт только позиционирование и анимацию:
+ * фон, рамка и тень лежат на первом потомке (слое). Это требование
+ * директивы appMotionBlur, которая рисует шлейф по трансформу хоста.
  */
 .dropdown-enter {
     animation: dropdown-enter var(--lh-dur-fast) var(--lh-ease-smooth);
     transform-origin: top center;
+}
+
+.dropdown-enter--left {
+    transform-origin: top left;
+}
+
+.dropdown-enter--right {
+    transform-origin: top right;
+}
+
+.dropdown-leave {
+    animation: dropdown-leave var(--lh-dur-exit) var(--lh-ease-out-quart) forwards;
+    pointer-events: none;
 }
 
 @keyframes dropdown-enter {
@@ -296,6 +321,13 @@
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes dropdown-leave {
+    to {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.97);
     }
 }
 
@@ -330,5 +362,13 @@
 
     .dropdown-enter {
         animation: none;
+    }
+
+    /* Уход не выключается: обработчик закрытия ждёт animationend, чтобы
+       снять меню с DOM. Объявление перебивает `animation: none` входа,
+       а глобальный kill-switch сжимает его до 0.01ms — меню исчезает
+       мгновенно, событие всё равно приходит. */
+    .dropdown-leave {
+        animation: dropdown-leave 0.01ms var(--lh-ease-out-quart) forwards;
     }
 }

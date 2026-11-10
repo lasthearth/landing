@@ -158,9 +158,23 @@
     box-shadow: var(--lh-shadow-soft);
     transition:
         transform var(--lh-dur-fast) var(--lh-ease-spring),
-        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth),
         background-color var(--lh-dur-fast) var(--lh-ease-smooth),
         border-color var(--lh-dur-fast) var(--lh-ease-smooth);
+
+    /*
+     * Ховер-подъём тени: на псевдоэлементе с прозрачностью, а не переходом
+     * box-shadow — переход тени перерисовывал медальон каждый кадр.
+     */
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+        box-shadow: var(--lh-shadow-lift);
+        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
 }
 
 .scheme-node__icon {
@@ -171,7 +185,10 @@
 
 .scheme-node:hover .scheme-node__medal {
     transform: translateY(-2px) scale(1.04);
-    box-shadow: var(--lh-shadow-lift);
+}
+
+.scheme-node:hover .scheme-node__medal::before {
+    opacity: 1;
 }
 
 .scheme-node:active .scheme-node__medal {
@@ -190,6 +207,32 @@
 .scheme-node--available .scheme-node__medal {
     border-color: var(--kp-accent);
     color: var(--lh-ink);
+}
+
+/*
+ * Дыхание доступного узла: кольцо-ореол за медальоном. Лежит на ::after
+ * самой кнопки с z-index: -1 — кнопка (position: absolute, z-index: 2)
+ * образует stacking-контекст, поэтому ореол рисуется за медальоном, но
+ * над линиями схемы, как прежний box-shadow. Анимируются только transform
+ * и opacity: старое дыхание меняло box-shadow и перерисовывало каждый
+ * доступный узел каждый кадр.
+ */
+.scheme-node::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--kp-size) / 2);
+    left: 50%;
+    z-index: -1;
+    width: calc(var(--kp-size) + 0.75rem);
+    height: calc(var(--kp-size) + 0.75rem);
+    border-radius: 50%;
+    pointer-events: none;
+    background: color-mix(in srgb, var(--kp-accent) 28%, transparent);
+    transform: translate(-50%, -50%) scale(0.85);
+    opacity: 0;
+}
+
+.scheme-node--available::after {
     animation: scheme-node-breath 2.4s ease-in-out infinite;
 }
 
@@ -405,15 +448,13 @@
 @keyframes scheme-node-breath {
     0%,
     100% {
-        box-shadow:
-            0 0 0 0 color-mix(in srgb, var(--kp-accent) 0%, transparent),
-            var(--lh-shadow-soft);
+        transform: translate(-50%, -50%) scale(0.85);
+        opacity: 0;
     }
 
     50% {
-        box-shadow:
-            0 0 0 6px color-mix(in srgb, var(--kp-accent) 28%, transparent),
-            var(--lh-shadow-soft);
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
     }
 }
 
@@ -513,11 +554,13 @@
 @media (prefers-reduced-motion: reduce) {
     .scheme__line,
     .scheme-node,
-    .scheme-node__medal {
+    .scheme-node__medal,
+    .scheme-node__medal::before,
+    .scheme-node::after {
         transition: none;
     }
 
-    .scheme-node--available .scheme-node__medal,
+    .scheme-node--available::after,
     .scheme-tip {
         animation: none;
     }

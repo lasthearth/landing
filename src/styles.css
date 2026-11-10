@@ -236,8 +236,13 @@
     --lh-z-overlay: 200;
     --lh-z-modal: 1000;
 
-    /** Шкала длительностей: отклик / переход / появление. */
+    /**
+     * Шкала длительностей: отклик / переход / появление.
+     * `exit` — уход (закрытие) поверхностей: всегда короче `fast`,
+     * чтобы закрытие не догоняло открытие по скорости.
+     */
     --lh-dur-fast: 200ms;
+    --lh-dur-exit: 150ms;
     --lh-dur-mid: 450ms;
     --lh-dur-slow: 800ms;
 
@@ -466,7 +471,8 @@ html body {
         color: var(--lh-link);
         --tw-font-weight: var(--font-weight-bold);
         font-weight: var(--font-weight-bold);
-        transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер цвета ссылки — мгновенный: уходящие цвета на ховере
+           запрещены motion-скиллом (motion-instant-hover-color). */
     }
 
     a:hover {
@@ -542,9 +548,9 @@ tui-hint {
     padding-block: calc(var(--spacing) * 1.5);
     padding-inline: calc(var(--spacing) * 2.5);
     margin-top: calc(var(--spacing) * 2);
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-spring);
+    /* Анимируется только трансформ нажатия: цвета на ховере меняются
+       мгновенно (motion-instant-hover-color). */
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     &:disabled {
         background-color: var(--lh-success-disabled);
         pointer-events: none;
@@ -565,9 +571,7 @@ tui-hint {
     padding-block: calc(var(--spacing) * 1.5);
     padding-inline: calc(var(--spacing) * 2.5);
     margin-top: calc(var(--spacing) * 2);
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-spring);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     &:hover {
         background-color: var(--color-lh-danger-hover);
     }
@@ -588,11 +592,9 @@ tui-hint {
     border-radius: var(--radius-xl);
     font-weight: var(--font-weight-bold);
     cursor: pointer;
-    transition:
-        border-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-spring);
+    /* Анимируется только трансформ нажатия: цвета и рамка на ховере
+       меняются мгновенно (motion-instant-hover-color). */
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .lh-secondary-button:hover:not(:disabled) {
@@ -688,6 +690,7 @@ tui-pulse.offline {
      * с укороченной длительностью — отклик должен успевать за пальцем.
      */
     .nav-button {
+        position: relative;
         font-size: 0.875rem;
         display: flex;
         align-items: center;
@@ -706,11 +709,9 @@ tui-pulse.offline {
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.08),
             0 1px 2px rgba(26, 17, 13, 0.12);
-        transition:
-            background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-            color var(--lh-dur-fast) var(--lh-ease-out-quart),
-            transform var(--lh-dur-fast) var(--lh-ease-spring),
-            box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+        /* Анимируется только трансформ: цвета на ховере меняются мгновенно
+           (motion-instant-hover-color), тень ховера живёт на ::after. */
+        transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
     /**
@@ -720,13 +721,30 @@ tui-pulse.offline {
         font-size: 1rem;
     }
 
+    /**
+     * Тень ховера на псевдоэлементе: анимация box-shadow перерисовывала
+     * кнопку каждый кадр, а переход opacity композитит слой. Блик внутри
+     * и контактная тень остаются на самой кнопке.
+     */
+    .nav-button::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: 0 6px 16px -6px rgba(26, 17, 13, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
+
+    .nav-button:not(.nav-button--active):hover::after {
+        opacity: 1;
+    }
+
     .nav-button:hover {
         background-color: var(--color-lh-primary);
         background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
         transform: translateY(-1px);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.1),
-            0 6px 16px -6px rgba(26, 17, 13, 0.35);
     }
 
     .nav-button:active {
@@ -799,9 +817,10 @@ tui-pulse.offline {
             inset 0 -1px 0 rgba(45, 32, 26, 0.3),
             0 0 0 1px color-mix(in srgb, var(--lh-brand) 35%, transparent),
             0 8px 24px -8px color-mix(in srgb, var(--lh-brand) 35%, transparent);
-        transition:
-            transform var(--lh-dur-fast) var(--lh-ease-spring),
-            box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+        /* Анимируется только подъём: усиление свечения на ховере
+           переключается мгновенно — анимация box-shadow перерисовывала
+           кнопку каждый кадр. */
+        transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
     .lh-cta:hover {
@@ -934,11 +953,9 @@ tui-pulse.offline {
         line-height: 1;
         white-space: nowrap;
         cursor: pointer;
-        transition:
-            color var(--lh-dur-fast) ease,
-            border-color var(--lh-dur-fast) ease,
-            background-color var(--lh-dur-fast) ease,
-            box-shadow var(--lh-dur-fast) ease;
+        /* Чипы — частые переключатели фильтров: состояние меняется
+           мгновенно, без анимации (motion-no-motion-on-repeat).
+           Прежний transition с ease-кривой анимировал box-shadow. */
     }
 
     .lh-chip tui-icon {
@@ -1049,7 +1066,7 @@ tui-pulse.offline {
         color: var(--color-ink);
         background-color: var(--color-surface-3);
         box-shadow: var(--lh-shadow-soft);
-        transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер цвета — мгновенный (motion-instant-hover-color). */
     }
 
     .lh-scroll-top:hover {
@@ -1171,10 +1188,9 @@ button:disabled,
     font-size: 1.125rem;
     font-weight: 700;
     cursor: pointer;
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        filter var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-spring);
+    /* Без transition: hover меняет заливку и brightness мгновенно —
+       переход filter перерисовывал кнопку каждый кадр, а цвет на ховере
+       не анимируется (motion-instant-hover-color). */
 }
 
 /**
@@ -1312,10 +1328,12 @@ button:disabled,
 }
 
 /**
- * Плавное появление контента при смене вкладок.
+ * Появление контента при смене вкладок: действие пользователя, поэтому
+ * fast, а не mid — 450ms дольше допустимых 300ms для запущенного
+ * пользователем движения.
  */
 .market-tab-content {
-    animation: market-tab-fade-in var(--lh-dur-mid) var(--lh-ease-out-quart) both;
+    animation: market-tab-fade-in var(--lh-dur-fast) var(--lh-ease-out-quart) both;
 }
 
 @keyframes market-tab-fade-in {
@@ -1331,12 +1349,18 @@ button:disabled,
 
 /**
  * Свечение рамки карточки при наведении.
+ *
+ * Свойство translate покрывает лифт `hover:-translate-y-*` из Tailwind v4
+ * (утилиты пишут независимое свойство translate, а не transform), поэтому
+ * подъём карточки действительно анимируется. Длительность fast: ховер
+ * длиннее 300ms запрещён.
  */
 .lh-card-glow {
     transition:
-        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart),
-        transform var(--lh-dur-mid) var(--lh-ease-spring),
-        border-color var(--lh-dur-mid) var(--lh-ease-out-quart);
+        translate var(--lh-dur-fast) var(--lh-ease-spring),
+        transform var(--lh-dur-fast) var(--lh-ease-spring),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart),
+        border-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .lh-card-glow:hover {
@@ -1366,6 +1390,37 @@ html.lh-has-session .lh-guest-only {
 }
 
 /**
+ * Кросс-фейд иконки, меняющей состояние (копирование, смена режима, темы).
+ *
+ * Обе иконки всегда в DOM и сложены в одну ячейку grid; скрытая держит
+ * scale(0.25) + blur(4px) + opacity 0, видимая приходит в норму.
+ * Размытие мелкой иконки 16px дёшево — в отличие от больших блоков,
+ * где blur в появлениях запрещён.
+ */
+.lh-icon-swap {
+    position: relative;
+    display: grid;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    place-items: center;
+}
+
+.lh-icon-swap__icon {
+    grid-area: 1 / 1;
+    transition:
+        opacity var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-spring),
+        filter var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.lh-icon-swap__icon--hidden {
+    opacity: 0;
+    transform: scale(0.25);
+    filter: blur(4px);
+}
+
+/**
  * Статичное тёплое свечение иконки осколка (валюта).
  * Раньше мерцало бесконечной анимацией; свечение оставлено, движение убрано.
  */
@@ -1374,25 +1429,29 @@ html.lh-has-session .lh-guest-only {
 }
 
 /**
- * Плавное появление элементов списка с задержкой.
- * Применяется к родителю списка.
+ * Появление элементов списка с задержкой.
+ * Применяется к родителю списка. Шаг 40ms — меньше порога 50ms на элемент.
  */
 .lh-stagger-list > * {
     opacity: 0;
     transform: translateY(12px);
     animation: lh-stagger-fade-in var(--lh-dur-mid) var(--lh-ease-out-quart) forwards;
+    /* Строки за пределами десятой каскад не продолжают, но и не
+       обгоняют его: базовая задержка равна шагу 11-й строки,
+       nth-child(1..10) ниже перебивают её меньшими значениями. */
+    animation-delay: 400ms;
 }
 
 .lh-stagger-list > *:nth-child(1) { animation-delay: 0ms; }
-.lh-stagger-list > *:nth-child(2) { animation-delay: 60ms; }
-.lh-stagger-list > *:nth-child(3) { animation-delay: 120ms; }
-.lh-stagger-list > *:nth-child(4) { animation-delay: 180ms; }
-.lh-stagger-list > *:nth-child(5) { animation-delay: 240ms; }
-.lh-stagger-list > *:nth-child(6) { animation-delay: 300ms; }
-.lh-stagger-list > *:nth-child(7) { animation-delay: 360ms; }
-.lh-stagger-list > *:nth-child(8) { animation-delay: 420ms; }
-.lh-stagger-list > *:nth-child(9) { animation-delay: 480ms; }
-.lh-stagger-list > *:nth-child(10) { animation-delay: 540ms; }
+.lh-stagger-list > *:nth-child(2) { animation-delay: 40ms; }
+.lh-stagger-list > *:nth-child(3) { animation-delay: 80ms; }
+.lh-stagger-list > *:nth-child(4) { animation-delay: 120ms; }
+.lh-stagger-list > *:nth-child(5) { animation-delay: 160ms; }
+.lh-stagger-list > *:nth-child(6) { animation-delay: 200ms; }
+.lh-stagger-list > *:nth-child(7) { animation-delay: 240ms; }
+.lh-stagger-list > *:nth-child(8) { animation-delay: 280ms; }
+.lh-stagger-list > *:nth-child(9) { animation-delay: 320ms; }
+.lh-stagger-list > *:nth-child(10) { animation-delay: 360ms; }
 
 @keyframes lh-stagger-fade-in {
     0% {
@@ -1855,7 +1914,9 @@ html[data-theme='dark'] {
     background: color-mix(in srgb, currentColor 14%, transparent);
 }
 
-/* Спойлер в стиле Discord: текст скрыт заливкой до наведения или фокуса (тап на телефоне) */
+/* Спойлер в стиле Discord: текст скрыт заливкой до наведения или фокуса (тап на телефоне).
+   Заливка уходит мгновенно: цвет на ховере не анимируется (motion-instant-hover-color),
+   прежний transition стоял на запрещённой ease-кривой. */
 .lh-rich-text .lh-spoiler {
     position: relative;
     z-index: 2;
@@ -1863,7 +1924,6 @@ html[data-theme='dark'] {
     border-radius: 0.25em;
     cursor: pointer;
     background: currentColor;
-    transition: background-color 0.2s ease;
 }
 
 .lh-rich-text .lh-spoiler:hover,

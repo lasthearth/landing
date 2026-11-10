@@ -21,18 +21,28 @@
     font-family: 'LH Dash', 'Advent Pro Variable', serif;
 }
 
+/*
+ * `.consent-bar` — прозрачный хост [appMotionBlur]: на нём только вход и уход
+ * (transform + opacity). Видимые слои (фон, кромка, тень) — на первом потомке
+ * `.consent-bar__panel`, по нему пакет рисует шлейф движения. `backdrop-filter`
+ * со слоя снят: фон непрозрачен на 97%, а blur под копиями шлейфа Echo
+ * стоил бы кадра на слабых машинах.
+ */
 .consent-bar {
+    animation: consent-rise var(--lh-dur-fast) var(--lh-ease-smooth) both;
+
+    // Уход короче входа (120мс против 200мс): ответ закрыл вопрос — не мешаем.
+    &--leaving {
+        animation: consent-drop 120ms var(--lh-ease-out-quart) forwards;
+    }
+}
+
+.consent-bar__panel {
     color: var(--lh-parchment-2);
     background-color: color-mix(in srgb, var(--lh-night-2) 97%, transparent);
     box-shadow:
         inset 0 2px 0 0 color-mix(in srgb, var(--lh-brand) 75%, transparent),
         0 -12px 32px -12px rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(8px);
-    animation: consent-rise var(--lh-dur-mid) var(--lh-ease-out-quart) both;
-
-    @media (prefers-reduced-motion: reduce) {
-        animation: none;
-    }
 }
 
 .consent-bar__inner {
@@ -131,5 +141,25 @@
     from {
         opacity: 0;
         transform: translateY(100%);
+    }
+}
+
+/* Уход: полоса уезжает вниз за край, откуда приехала. */
+@keyframes consent-drop {
+    to {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+}
+
+/*
+ * Отключённое движение: полоса появляется и уходит без анимаций.
+ * `animation: none` означает, что `animationend` не наступит, — компонент
+ * снимает полосу с экрана сразу по ответу пользователя.
+ */
+@media (prefers-reduced-motion: reduce) {
+    .consent-bar,
+    .consent-bar--leaving {
+        animation: none;
     }
 }

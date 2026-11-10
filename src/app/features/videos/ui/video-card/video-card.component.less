@@ -12,7 +12,7 @@
     border-radius: 1rem;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    transition: transform 0.15s var(--lh-ease-spring);
     text-align: left;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.45),
@@ -38,7 +38,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: transform 0.15s var(--lh-ease-spring);
     }
 
     &::after {
@@ -47,7 +47,6 @@
         inset: 0;
         background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 40%);
         opacity: 0.6;
-        transition: opacity 0.3s ease;
     }
 
     .video-card:hover & img {
@@ -68,7 +67,7 @@
     justify-content: center;
     color: var(--lh-parchment-2);
     opacity: 0.85;
-    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.15s var(--lh-ease-spring);
 
     &::before {
         content: '';
@@ -78,7 +77,7 @@
         border-radius: 50%;
         background: color-mix(in srgb, var(--lh-brand) 90%, transparent);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease;
+        transition: transform 0.15s var(--lh-ease-spring);
     }
 
     tui-icon {

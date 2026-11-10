@@ -18,7 +18,12 @@
         [attr.aria-valuemax]="steps().length"
         [attr.aria-label]="'shared.onboarding.title' | translate"
     >
-        <span class="newcomer-path__bar-fill" [style.width.%]="(doneCount() / steps().length) * 100"></span>
+        <!-- Заполнение через scaleX, а не width: рост полосы работает на
+             композиторе и не пересчитывает раскладку каждый кадр. -->
+        <span
+            class="newcomer-path__bar-fill"
+            [style.transform]="'scaleX(' + doneCount() / steps().length + ')'"
+        ></span>
     </div>
 
     <ol class="newcomer-path__steps">

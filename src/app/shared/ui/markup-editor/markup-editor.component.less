@@ -51,7 +51,9 @@
         border-radius: 0.5rem;
         color: var(--color-ink, currentColor);
         cursor: pointer;
-        transition: background-color 0.15s ease;
+        /* Ховер подсветки — мгновенный: кнопки панели формата нажимают
+           часто, и цвет на ховере не анимируется; прежний transition
+           стоял на запрещённой ease-кривой. */
 
         &:hover:not(:disabled) {
             background: color-mix(in srgb, currentColor 10%, transparent);

@@ -19,7 +19,7 @@ import { formatShortDate } from '@shared/lib/relative-time';
 import { ImageViewerComponent, ImageViewerItem } from '@shared/ui/image-viewer';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { PageHeaderComponent } from '@shared/ui/page-header';
-import { RevealDirective } from '@shared/lib/directives';
+import { PauseOffscreenDirective, RevealDirective } from '@shared/lib/directives';
 import {
     DiscordGalleryImage,
     DiscordGalleryService,
@@ -174,6 +174,7 @@ const SKELETON_COUNT = 10;
         RelativeTimeComponent,
         ImageViewerComponent,
         RevealDirective,
+        PauseOffscreenDirective,
     ],
     templateUrl: './gallery.component.html',
     styleUrl: './gallery.component.less',
