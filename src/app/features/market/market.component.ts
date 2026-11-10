@@ -1,5 +1,5 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { Component, ChangeDetectionStrategy, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, ChangeDetectionStrategy, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
@@ -77,15 +77,48 @@ export class MarketComponent {
         }
 
         this.tabDirection.set(index > this.activeItemIndex() ? 1 : -1);
-        this.spawnExitGhost();
-        this.activeItemIndex.set(index);
-        void this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { tab: index === 0 ? null : this.tabKeys[index] },
-            queryParamsHandling: 'merge',
-            replaceUrl: true,
+
+        // Отклик в тот же кадр: плашка стартует до тяжёлой смены панелей.
+        const button = this.elementRef.nativeElement.querySelectorAll<HTMLElement>('[role="tab"]')[index];
+
+        if (button) {
+            this.tabsPill()?.flyToButton(button);
+        }
+
+        // Смена панелей — следующим кадром: её раскладка и первая
+        // отрисовка не задерживают первый кадр полёта плашки.
+        requestAnimationFrame(() => {
+            this.activeItemIndex.set(index);
+            void this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: { tab: index === 0 ? null : this.tabKeys[index] },
+                queryParamsHandling: 'merge',
+                replaceUrl: true,
+            });
         });
     }
+
+    /**
+     * Прогревает картинки скрытых панелей в простое браузера: ленивая
+     * загрузка не стартует внутри display:none, и первое раскрытие
+     * вкладки платило декодированием всех её картинок в клике.
+     */
+    private readonly warmHiddenImages = afterNextRender(() => {
+        if (typeof requestIdleCallback === 'undefined') {
+            return;
+        }
+
+        requestIdleCallback(
+            () => {
+                for (const image of Array.from(
+                    this.elementRef.nativeElement.querySelectorAll<HTMLImageElement>('img'),
+                )) {
+                    void image.decode().catch(() => undefined);
+                }
+            },
+            { timeout: 4000 },
+        );
+    });
 
     /**
      * Клонирует уходящую панель в статичный DOM-призрак поверх входящей.
@@ -149,6 +182,13 @@ export class MarketComponent {
         'market.marketPage.tabKits',
         'market.marketPage.tabSpecial',
     ] as const;
+
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /**
+     * Директива летающей плашки на ряде вкладок.
+     */
+    private readonly tabsPill = viewChild(TabsPillDirective);
 
     private readonly dialogs = inject(TuiDialogService);
 

@@ -133,6 +133,23 @@ export class TabsPillDirective implements OnDestroy {
     }
 
     /**
+     * Немедленно отправляет плашку к указанной кнопке, не дожидаясь
+     * смены `aria-selected`. Нужно, чтобы визуальный отклик на клик
+     * ушёл в первый же кадр: тяжёлая смена панелей выполняется позже,
+     * и без этого первый кадр полёта задерживался бы её раскладкой.
+     *
+     * @param button Кнопка вкладки, к которой лететь.
+     */
+    public flyToButton(button: HTMLElement): void {
+        if (!this.pill) {
+            return;
+        }
+
+        this.commit(this.measure(button));
+        this.elementRef.nativeElement.classList.add('is-ready');
+    }
+
+    /**
      * Ставит плашку на активную вкладку: переходом или мгновенно.
      *
      * @param animate Ехать переходом; иначе перенести без движения.
