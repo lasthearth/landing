@@ -70,7 +70,7 @@
                     <app-share-button class="settlement-page__share" [url]="'/settlements/' + item.id" [title]="item | settlementDisplayName" />
                 </div>
 
-                <app-join-request-button [settlementId]="item.id" />
+                <app-join-request-button [settlementId]="item.id" [isGuild]="isGuild(item)" />
             </header>
 
             @if (item.description) {

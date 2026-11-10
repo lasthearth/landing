@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal, Signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { catchError, EMPTY, Observable, of, tap } from 'rxjs';
 import { SettlementService } from '@entities/settlement';
@@ -8,9 +8,17 @@ import { I18nService } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 
 /**
+ * Род группы, в которую подаётся заявка.
+ *
+ * Игрок держит не больше одной группы каждого рода, поэтому членство
+ * проверяется отдельно для надела и для гильдии.
+ */
+export type JoinTargetKind = 'settlement' | 'guild';
+
+/**
  * Хранилище собственных заявок игрока на вступление в надела.
  *
- * Список заявок и признак «уже состою в наделе» загружаются один раз на
+ * Список заявок и оба членства (надел и гильдия) загружаются один раз на
  * страницу списка селений, а не на каждую карточку. Карточка и диалог
  * «Подробнее» читают одно и то же состояние, поэтому не расходятся после
  * отправки или отзыва заявки.
@@ -52,6 +60,12 @@ export class MyJoinRequestsStore {
     private readonly hasSettlement: WritableSignal<boolean | null> = signal(null);
 
     /**
+     * Признак того, что игрок уже состоит в какой-либо гильдии.
+     * Пока значение не загружено — `null`, кнопка в этот момент не показывается.
+     */
+    private readonly hasGuild: WritableSignal<boolean | null> = signal(null);
+
+    /**
      * Наделы, по которым идёт запрос (подача или отзыв заявки).
      */
     private readonly pending: WritableSignal<Record<string, boolean>> = signal({});
@@ -74,25 +88,39 @@ export class MyJoinRequestsStore {
     private readonly authorized: WritableSignal<boolean> = signal(false);
 
     /**
-     * Можно ли в принципе подавать заявки: игрок авторизован, верифицирован
-     * и не состоит ни в одном наделе.
-     */
-    public readonly canApply: Signal<boolean> = computed(
-        () => this.authorized() && this.verified() && this.hasSettlement() === false
-    );
-
-    /**
-     * Показывать ли подсказку о верификации вместо кнопки.
-     */
-    public readonly needsVerification: Signal<boolean> = computed(
-        () => this.authorized() && !this.verified() && this.hasSettlement() === false
-    );
-
-    /**
-     * Загружает состояние заявок и членства игрока.
+     * Можно ли подать заявку в группу указанного рода: игрок авторизован,
+     * верифицирован и не состоит в группе того же рода.
      *
-     * Оба запроса помечены `SKIP_ERROR_ALERT`: отсутствие надела — штатный
-     * 404, а не ошибка, и показывать по нему попап нельзя.
+     * Надел и гильдия — независимые членства: игрок в наделе может подать
+     * заявку в гильдию, и наоборот.
+     *
+     * @param kind Род группы: надел или гильдия.
+     * @returns true, если заявку подать можно.
+     */
+    public canApplyTo(kind: JoinTargetKind): boolean {
+        const free = kind === 'guild' ? this.hasGuild() : this.hasSettlement();
+
+        return this.authorized() && this.verified() && free === false;
+    }
+
+    /**
+     * Показывать ли подсказку о верификации вместо кнопки для группы
+     * указанного рода.
+     *
+     * @param kind Род группы: надел или гильдия.
+     * @returns true, если игроку нужна верификация.
+     */
+    public needsVerificationFor(kind: JoinTargetKind): boolean {
+        const free = kind === 'guild' ? this.hasGuild() : this.hasSettlement();
+
+        return this.authorized() && !this.verified() && free === false;
+    }
+
+    /**
+     * Загружает состояние заявок и оба членства игрока (надел и гильдия).
+     *
+     * Оба запроса помечены `SKIP_ERROR_ALERT`: отсутствие группы — штатный
+     * ответ, а не ошибка, и показывать по нему попап нельзя.
      */
     public load(): void {
         const userId = this.userService.userId;
@@ -112,7 +140,10 @@ export class MyJoinRequestsStore {
         this.settlementService
             .getUserMemberships$(userId, context)
             .pipe(catchError(() => of(null)))
-            .subscribe((memberships) => this.hasSettlement.set(!!memberships?.settlement));
+            .subscribe((memberships) => {
+                this.hasSettlement.set(!!memberships?.settlement);
+                this.hasGuild.set(!!memberships?.guild);
+            });
 
         this.settlementService
             .getMyJoinRequests$(userId, context)

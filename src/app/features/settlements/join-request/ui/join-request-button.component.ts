@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, InputSignal, Signal } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
-import { MyJoinRequestsStore } from '../model/my-join-requests.store';
+import { JoinTargetKind, MyJoinRequestsStore } from '../model/my-join-requests.store';
 
 /**
- * Кнопка подачи и отзыва заявки на вступление в надел.
+ * Кнопка подачи и отзыва заявки на вступление в надел или гильдию.
  *
  * Тихий элемент: штатный ghost-CTA без собственного визуального языка —
  * заявка не должна конкурировать по весу с содержимым карточки надела.
  * Показывает одно из трёх состояний: «Подать заявку», «Заявка отправлена»
  * с отзывом или подсказку о верификации. Ничего не рисует, если игрок
- * не авторизован или уже состоит в наделе.
+ * не авторизован или уже состоит в группе того же рода.
  */
 @Component({
     selector: 'app-join-request-button',
@@ -27,12 +27,27 @@ export class JoinRequestButtonComponent {
     private readonly store = inject(MyJoinRequestsStore);
 
     /**
-     * Идентификатор надела, в которое подаётся заявка.
+     * Идентификатор группы, в которую подаётся заявка.
      */
     public readonly settlementId: InputSignal<string> = input.required();
 
     /**
-     * Признак отправленной заявки в это надел.
+     * Цель заявки — гильдия, а не надел.
+     *
+     * Членство проверяется по роду группы: игрок в наделе может подать
+     * заявку в гильдию, и наоборот.
+     */
+    public readonly isGuild: InputSignal<boolean> = input(false);
+
+    /**
+     * Род группы, в которую подаётся заявка.
+     */
+    protected readonly targetKind: Signal<JoinTargetKind> = computed(() =>
+        this.isGuild() ? 'guild' : 'settlement'
+    );
+
+    /**
+     * Признак отправленной заявки в эту группу.
      */
     protected readonly sent: Signal<boolean> = computed(() => this.store.hasRequest(this.settlementId()));
 
@@ -42,14 +57,16 @@ export class JoinRequestButtonComponent {
     protected readonly busy: Signal<boolean> = computed(() => this.store.isPending(this.settlementId()));
 
     /**
-     * Признак возможности подать заявку.
+     * Признак возможности подать заявку в группу этого рода.
      */
-    protected readonly canApply: Signal<boolean> = this.store.canApply;
+    protected readonly canApply: Signal<boolean> = computed(() => this.store.canApplyTo(this.targetKind()));
 
     /**
      * Признак необходимости пройти верификацию.
      */
-    protected readonly needsVerification: Signal<boolean> = this.store.needsVerification;
+    protected readonly needsVerification: Signal<boolean> = computed(() =>
+        this.store.needsVerificationFor(this.targetKind())
+    );
 
     /**
      * Отправляет заявку на вступление.

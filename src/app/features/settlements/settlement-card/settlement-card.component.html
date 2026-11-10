@@ -124,7 +124,7 @@
             <div class="flex flex-col gap-2">
                 <hr class="h-px bg-surface-4/30 w-full rounded-full border-0" />
                 <div class="flex flex-wrap items-center justify-between gap-3">
-                    <app-join-request-button [settlementId]="data().id" />
+                    <app-join-request-button [settlementId]="data().id" [isGuild]="isGuild(data())" />
 
                     <a
                         [routerLink]="['/settlements', data().id]"
