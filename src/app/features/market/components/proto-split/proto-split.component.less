@@ -1,0 +1,456 @@
+/**
+ * Раскладка варианта «Сплит».
+ *
+ * На широком экране — две колонки: витрина и липкая панель 20rem.
+ * Ниже lg панель поднимается над витриной и становится верхней полосой.
+ */
+.split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--lh-space-4);
+    align-items: start;
+}
+
+.split__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lh-space-4);
+    min-width: 0;
+}
+
+.split__head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--lh-space-3);
+}
+
+.split__chips {
+    gap: var(--lh-space-1_5);
+}
+
+.split__chip-count {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    opacity: 0.7;
+}
+
+/* Сетка карточек: 2 колонки на телефоне, 3 на планшете, 4 на широком экране. */
+.split__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--lh-space-3);
+}
+
+/**
+ * Появление карточки — 450ms по токену: глобальный `.lh-reveal` держит 800ms,
+ * а этот вариант живёт на средней длительности. Задержку каскада сохраняем.
+ */
+.split__cell {
+    min-width: 0;
+    transition:
+        opacity var(--lh-dur-mid) var(--lh-ease-out-quart),
+        transform var(--lh-dur-mid) var(--lh-ease-out-quart);
+    transition-delay: var(--lh-reveal-delay, 0ms);
+}
+
+/**
+ * Карточка товара.
+ * Подъём — 150ms пружиной; тень живёт в ::after и меняет только opacity,
+ * поэтому box-shadow не анимируется.
+ */
+.split__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--lh-space-2);
+    height: 100%;
+    padding: var(--lh-space-3);
+    border-radius: var(--lh-radius-lg);
+    background-color: color-mix(in srgb, var(--lh-surface-2) 72%, transparent);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
+        var(--lh-shadow-soft);
+    transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
+}
+
+.split__card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--lh-shadow-lift);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--lh-dur-exit) var(--lh-ease-out-quart);
+}
+
+.split__card:hover {
+    transform: translateY(-2px);
+}
+
+.split__card:hover::after {
+    opacity: 1;
+}
+
+/* Недоступный товар приглушён и не поднимается: покупать его нельзя. */
+.split__card--off {
+    opacity: 0.55;
+}
+
+.split__card--off:hover {
+    transform: none;
+}
+
+.split__card--off:hover::after {
+    opacity: 0;
+}
+
+.split__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--lh-radius-md);
+    background-color: color-mix(in srgb, var(--lh-surface-3) 55%, transparent);
+}
+
+.split__media-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.split__media-empty {
+    width: 2rem;
+    height: 2rem;
+    color: var(--lh-ink-3);
+}
+
+.split__name {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    min-height: 2.5em;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--lh-ink);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+/* Цена слева, кнопка справа: одна строка, цена не прячется. */
+.split__buy-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lh-space-1_5);
+    margin-top: auto;
+}
+
+.split__price {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lh-space-1);
+    min-width: 0;
+}
+
+.split__price-shard {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.split__price-amount {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--lh-primary);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.split__buy {
+    flex-shrink: 0;
+    padding: var(--lh-space-1) var(--lh-space-2);
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: var(--lh-brand-strong);
+    color: var(--lh-parchment-3);
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+/* Цвет наведения меняется мгновенно, без перехода. */
+.split__buy:hover:not(:disabled) {
+    background-color: var(--lh-brand);
+}
+
+.split__buy:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/**
+ * Панель: на телефоне — верхняя полоса с двумя колонками,
+ * на широком экране — вертикальный стек.
+ */
+.split__rail {
+    order: -1;
+    min-width: 0;
+}
+
+.split__panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--lh-space-3);
+    padding: var(--lh-space-4);
+}
+
+.split__balance {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lh-space-1);
+    min-width: 0;
+}
+
+.split__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lh-ink-3);
+}
+
+.split__balance-value {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-2);
+    min-width: 0;
+}
+
+.split__shard {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.split__balance-amount {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--lh-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.split__topup {
+    width: 100%;
+    gap: var(--lh-space-1_5);
+    justify-content: center;
+    padding: var(--lh-space-2) var(--lh-space-3);
+    font-size: 0.8125rem;
+}
+
+/* Подборки: строки без подписей, вторая группа отделена волоском. */
+.split__picks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lh-space-0_5);
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.split__picks + .split__picks {
+    padding-top: var(--lh-space-2);
+    border-top: 1px solid color-mix(in srgb, var(--lh-ink) 12%, transparent);
+}
+
+.split__pick {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-2);
+    min-width: 0;
+    padding: var(--lh-space-0_5) 0;
+}
+
+.split__pick-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-size: 0.875rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--lh-ink-2);
+}
+
+.split__pick-price {
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--lh-ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.split__pick-buy {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 1px solid var(--lh-border);
+    border-radius: var(--lh-radius-full);
+    background-color: transparent;
+    color: var(--lh-brand-ink);
+    cursor: pointer;
+}
+
+.split__pick-buy tui-icon {
+    width: 0.75rem;
+    height: 0.75rem;
+    font-size: 0.75rem;
+}
+
+/* Заливка наведения мгновенная. */
+.split__pick-buy:hover:not(:disabled) {
+    border-color: transparent;
+    background-color: var(--lh-brand);
+    color: #ffffff;
+}
+
+.split__pick-buy:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Разделы: тихий вертикальный список, на телефоне — одна прокручиваемая строка. */
+.split__sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lh-space-0_5);
+    grid-column: 1 / -1;
+    padding-top: var(--lh-space-2);
+    border-top: 1px solid color-mix(in srgb, var(--lh-ink) 12%, transparent);
+}
+
+.split__section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lh-space-3);
+    width: 100%;
+    padding: var(--lh-space-1) var(--lh-space-2);
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--lh-ink-2);
+    font-size: 0.875rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.split__section:hover {
+    color: var(--lh-brand-ink);
+    background-color: color-mix(in srgb, var(--lh-brand) 7%, transparent);
+}
+
+.split__section[aria-pressed='true'] {
+    color: var(--lh-brand-ink);
+    background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+    font-weight: 700;
+}
+
+.split__section-count {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: var(--lh-ink-3);
+    font-variant-numeric: tabular-nums;
+}
+
+.split__section[aria-pressed='true'] .split__section-count {
+    color: inherit;
+}
+
+.split__buy:focus-visible,
+.split__pick-buy:focus-visible,
+.split__section:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 2px;
+}
+
+/* Очень узкий телефон: баланс и кнопка встают друг под друга, текст не жмётся. */
+@media (max-width: 399px) {
+    .split__panel {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (min-width: 640px) {
+    .split__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1023px) {
+    .split__sections {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: var(--lh-space-3);
+        overflow-x: auto;
+        padding-bottom: var(--lh-space-1);
+        scrollbar-width: thin;
+    }
+
+    .split__section {
+        width: auto;
+        padding: var(--lh-space-1) 0;
+        white-space: nowrap;
+    }
+}
+
+@media (min-width: 1024px) {
+    .split {
+        grid-template-columns: minmax(0, 1fr) 20rem;
+        gap: var(--lh-space-6);
+    }
+
+    .split__rail {
+        order: 0;
+        position: sticky;
+        top: 1rem;
+    }
+
+    .split__panel {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--lh-space-4);
+        max-height: calc(100vh - 2rem);
+        padding: var(--lh-space-5);
+        overflow-y: auto;
+    }
+
+    .split__picks,
+    .split__sections {
+        grid-column: auto;
+    }
+}
+
+@media (min-width: 1280px) {
+    .split__grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}

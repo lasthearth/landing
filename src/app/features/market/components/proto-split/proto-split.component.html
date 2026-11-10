@@ -1,0 +1,166 @@
+<div class="split">
+    <!-- Слева: заголовок, разделы и сетка товаров -->
+    <section class="split__content">
+        <header class="split__head">
+            <h1 class="lh-display text-2xl text-ink lg:text-3xl">
+                {{ 'market.marketPage.title' | translate }}
+            </h1>
+
+            <!-- Разделы: одиночный выбор, тот же ключ фильтрует список в панели -->
+            <div
+                class="lh-chips split__chips"
+                role="group"
+                [attr.aria-label]="'market.marketPage.title' | translate"
+            >
+                <button
+                    type="button"
+                    class="lh-chip"
+                    [attr.aria-pressed]="isSectionActive('')"
+                    (click)="selectSection('')"
+                >
+                    <tui-icon icon="@tui.layout-grid" />
+                    <span>{{ 'market.sections.all' | translate }}</span>
+                    <span class="split__chip-count">{{ items().length }}</span>
+                </button>
+
+                @for (section of sections; track section.key) {
+                    <button
+                        type="button"
+                        class="lh-chip"
+                        [attr.aria-pressed]="isSectionActive(section.key)"
+                        (click)="selectSection(section.key)"
+                    >
+                        <tui-icon [icon]="section.icon" />
+                        <span>{{ section.labelKey | translate }}</span>
+                        <span class="split__chip-count">{{ countFor(section.key) }}</span>
+                    </button>
+                }
+            </div>
+        </header>
+
+        <!-- Карточки: цена и кнопка покупки в одной нижней строке -->
+        <div class="split__grid">
+            @for (item of visibleItems(); track item.id; let index = $index) {
+                <!-- Появление на обёртке: карточка внутри отыгрывает свой подъём -->
+                <div class="split__cell lh-reveal--scale" appReveal [appRevealDelay]="index * 45">
+                    <article class="split__card" [class.split__card--off]="!item.isAvailable">
+                        <div class="split__media">
+                            @if (item.imageUrl) {
+                                <app-image-loader class="split__media-img" [src]="item.imageUrl" [alt]="item.name" />
+                            } @else {
+                                <tui-icon icon="@tui.image" class="split__media-empty" />
+                            }
+                        </div>
+
+                        <h2 class="split__name">{{ item.name }}</h2>
+
+                        <div class="split__buy-row">
+                            <span class="split__price">
+                                <img
+                                    src="/splinter-of-spark.webp"
+                                    [alt]="'market.common.shardAlt' | translate"
+                                    class="split__price-shard"
+                                />
+                                <span class="split__price-amount">{{ item.price | amount }}</span>
+                            </span>
+
+                            <button
+                                type="button"
+                                class="split__buy"
+                                [disabled]="!item.isAvailable"
+                                (click)="buy(item)"
+                            >
+                                {{ 'market.common.buyButton' | translate }}
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Справа: липкая панель. На узком экране она поднимается над витриной и не липнет -->
+    <aside class="split__rail">
+        <div class="lh-panel split__panel">
+            <!-- Баланс -->
+            <div class="split__balance">
+                <span class="split__eyebrow">{{ 'market.marketPage.balanceLabel' | translate }}</span>
+                <div class="split__balance-value">
+                    <img
+                        src="/splinter-of-spark.webp"
+                        [alt]="'market.common.shardAlt' | translate"
+                        class="split__shard"
+                    />
+                    <span class="split__balance-amount">{{ (balance() ?? '—') | amount }}</span>
+                </div>
+            </div>
+
+            <button type="button" class="lh-cta split__topup" (click)="topUp()">
+                <tui-icon icon="@tui.plus" />
+                {{ 'market.marketPage.topUp' | translate }}
+            </button>
+
+            <!-- Быстрые подборки: три самых дешёвых и три самых новых -->
+            <ul class="split__picks">
+                @for (item of cheapestItems(); track item.id) {
+                    <li class="split__pick">
+                        <span class="split__pick-name" [title]="item.name">{{ item.name }}</span>
+                        <span class="split__pick-price">{{ item.price | amount }}</span>
+                        <button
+                            type="button"
+                            class="split__pick-buy"
+                            [disabled]="!item.isAvailable"
+                            [attr.aria-label]="('market.common.buyButton' | translate) + ' ' + item.name"
+                            (click)="buy(item)"
+                        >
+                            <tui-icon icon="@tui.plus" />
+                        </button>
+                    </li>
+                }
+            </ul>
+
+            <ul class="split__picks">
+                @for (item of newestItems(); track item.id) {
+                    <li class="split__pick">
+                        <span class="split__pick-name" [title]="item.name">{{ item.name }}</span>
+                        <span class="split__pick-price">{{ item.price | amount }}</span>
+                        <button
+                            type="button"
+                            class="split__pick-buy"
+                            [disabled]="!item.isAvailable"
+                            [attr.aria-label]="('market.common.buyButton' | translate) + ' ' + item.name"
+                            (click)="buy(item)"
+                        >
+                            <tui-icon icon="@tui.plus" />
+                        </button>
+                    </li>
+                }
+            </ul>
+
+            <!-- Разделы: тот же одиночный выбор, что и чипы -->
+            <nav class="split__sections" [attr.aria-label]="'market.marketPage.title' | translate">
+                <button
+                    type="button"
+                    class="split__section"
+                    [attr.aria-pressed]="isSectionActive('')"
+                    (click)="selectSection('')"
+                >
+                    <span class="split__section-name">{{ 'market.sections.all' | translate }}</span>
+                    <span class="split__section-count">{{ items().length }}</span>
+                </button>
+
+                @for (section of sections; track section.key) {
+                    <button
+                        type="button"
+                        class="split__section"
+                        [attr.aria-pressed]="isSectionActive(section.key)"
+                        (click)="selectSection(section.key)"
+                    >
+                        <span class="split__section-name">{{ section.labelKey | translate }}</span>
+                        <span class="split__section-count">{{ countFor(section.key) }}</span>
+                    </button>
+                }
+            </nav>
+        </div>
+    </aside>
+</div>

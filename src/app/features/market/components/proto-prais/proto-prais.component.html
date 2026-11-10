@@ -1,0 +1,101 @@
+<!-- ПРОТОТИП «Прайс»: весь магазин одной лентой строк, без вкладок и фильтров. -->
+<div class="prais" id="prais-top">
+    <!-- Липкая компактная шапка: заголовок, баланс и пополнение. Высота 3.5rem. -->
+    <header class="prais__bar">
+        <h1 class="prais__title">{{ 'market.marketPage.title' | translate }}</h1>
+
+        <div class="prais__wallet">
+            <div class="prais__balance">
+                <img
+                    src="/splinter-of-spark.webp"
+                    [alt]="'market.common.shardAlt' | translate"
+                    class="h-4 w-4 object-contain"
+                />
+                @if (balance$ | async; as balance) {
+                    <span>{{ balance | amount }}</span>
+                } @else {
+                    <span>—</span>
+                }
+            </div>
+
+            <!-- ПРОТОТИП: пополнение не подключено -->
+            <button type="button" class="prais__topup">
+                {{ 'market.marketPage.topUp' | translate }}
+            </button>
+        </div>
+    </header>
+
+    <!-- Якоря разделов: ведут к блоку раздела, а не фильтруют список. -->
+    <nav class="prais__anchors">
+        <button type="button" class="lh-chip prais__anchor" (click)="scrollToSection('')">
+            {{ 'market.sections.all' | translate }}
+        </button>
+        @for (group of groups(); track group.section.key) {
+            <button type="button" class="lh-chip prais__anchor" (click)="scrollToSection(group.section.key)">
+                {{ group.section.labelKey | translate }}
+            </button>
+        }
+    </nav>
+
+    @if (loading()) {
+        <!-- Скелетоны держат плотность первого экрана до ответа API. -->
+        <div class="prais__list">
+            @for (row of [1, 2, 3, 4, 5, 6]; track row) {
+                <div class="prais__row prais__row--skeleton">
+                    <span class="prais__skeleton prais__thumb"></span>
+                    <span class="prais__skeleton prais__skeleton--line"></span>
+                    <span class="prais__skeleton prais__skeleton--price"></span>
+                </div>
+            }
+        </div>
+    } @else {
+        @for (group of groups(); track group.section.key) {
+            <section class="prais__section lh-reveal--soft" [id]="'prais-section-' + group.section.key" appReveal>
+                <h2 class="prais__heading">
+                    <tui-icon [icon]="group.section.icon" class="size-3.5!" />
+                    <span>{{ group.section.labelKey | translate }}</span>
+                    <span class="prais__count">{{ group.items.length }}</span>
+                </h2>
+
+                <ul class="prais__list">
+                    @for (item of group.items; track item.id; let index = $index) {
+                        <li
+                            class="prais__row lh-reveal--soft"
+                            [class.prais__row--off]="!item.isAvailable"
+                            appReveal
+                            [appRevealDelay]="index * 45"
+                        >
+                            <div class="prais__thumb">
+                                <app-image-loader
+                                    class="block h-full w-full"
+                                    [src]="item.imageUrl"
+                                    [alt]="item.name"
+                                    objectFit="contain"
+                                />
+                            </div>
+
+                            <div class="prais__text">
+                                <span class="prais__name truncate">{{ item.name }}</span>
+                                <span class="prais__desc truncate">{{ item.description }}</span>
+                            </div>
+
+                            <div class="prais__price">
+                                <img
+                                    src="/splinter-of-spark.webp"
+                                    [alt]="'market.common.shardAlt' | translate"
+                                    class="h-3.5 w-3.5 object-contain"
+                                />
+                                <span>{{ item.price | amount }}</span>
+                            </div>
+
+                            <!-- ПРОТОТИП: покупка не подключена -->
+                            <button type="button" class="prais__buy" [disabled]="!item.isAvailable">
+                                {{ 'market.common.buyButton' | translate }}
+                            </button>
+                        </li>
+                    }
+                </ul>
+            </section>
+        }
+    }
+</div>

@@ -1,0 +1,128 @@
+<!-- ПРОТОТИП «Витрина»: компактная шапка, один ряд чипов, сетка карточек. -->
+<div class="flex flex-col gap-4 lg:gap-5">
+    <!--
+        Шапка в одну строку: слева название страницы, справа баланс и пополнение.
+        Высокого героя нет намеренно: витрина должна начинаться в первом экране.
+    -->
+    <header class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <h1 class="lh-display text-2xl leading-tight text-ink sm:text-3xl">
+            {{ 'market.marketPage.title' | translate }}
+        </h1>
+
+        <div class="flex flex-wrap items-center gap-2">
+            @if (balance$ | async; as balance) {
+                <div class="vitrina__balance" [attr.title]="'market.marketPage.balanceLabel' | translate">
+                    <img
+                        src="/splinter-of-spark.webp"
+                        [alt]="'market.common.shardAlt' | translate"
+                        class="h-5 w-5 object-contain"
+                        width="40"
+                        height="40"
+                    />
+                    <span>{{ balance.coins | amount }}</span>
+                    <span class="sr-only">{{ 'market.marketPage.balanceLabel' | translate }}</span>
+                </div>
+            }
+
+            <button type="button" class="lh-cta" (click)="topUp()">
+                {{ 'market.marketPage.topUp' | translate }}
+            </button>
+        </div>
+    </header>
+
+    <!--
+        Единственный фильтр: ряд чипов «Все» + разделы, одиночный выбор.
+        Счётчик в чипе берётся из полного списка, поэтому ноль виден сразу.
+    -->
+    <div
+        class="vitrina__chips lh-chips"
+        role="group"
+        [attr.aria-label]="'market.marketPage.title' | translate"
+    >
+        <button
+            type="button"
+            class="lh-chip vitrina__chip"
+            [attr.aria-pressed]="isSectionSelected('')"
+            (click)="selectSection('')"
+        >
+            {{ 'market.sections.all' | translate }}
+            <span class="lh-chip__count">{{ items().length }}</span>
+        </button>
+
+        @for (section of sections; track section.key) {
+            <button
+                type="button"
+                class="lh-chip vitrina__chip"
+                [attr.aria-pressed]="isSectionSelected(section.key)"
+                (click)="selectSection(section.key)"
+            >
+                {{ section.labelKey | translate }}
+                <span class="lh-chip__count">{{ sectionCounts().get(section.key) ?? 0 }}</span>
+            </button>
+        }
+    </div>
+
+    @if (loading()) {
+        <app-market-grid-skeleton />
+    } @else if (visibleItems().length === 0) {
+        <!-- Пустой раздел — тихая строка, а не панель на весь экран. -->
+        <p class="vitrina__empty">{{ 'market.special.emptyTitle' | translate }}</p>
+    } @else {
+        <!--
+            Смена раздела пересобирает ячейки: track включает выбранный раздел.
+            Появление при прокрутке отдано appReveal на ячейке, анимация
+            смены фильтра — keyframes на карточке; в состоянии --switched
+            секунды reveal обнулены, поэтому два механизма не складываются.
+        -->
+        <div
+            class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 lg:gap-4"
+            [class.vitrina__grid--switched]="hasSwitched()"
+        >
+            @for (item of visibleItems(); track item.id + ':' + selectedSection(); let index = $index) {
+                <div class="vitrina__cell lh-reveal--scale" appReveal [appRevealDelay]="index * 45">
+                    <article
+                        class="vitrina__card"
+                        [class.vitrina__card--off]="!item.isAvailable"
+                        [attr.title]="item.description"
+                    >
+                        <!-- Изображение держит цену поверх себя; описание — только в title. -->
+                        <div class="vitrina__media">
+                            <div class="vitrina__zoom">
+                                <app-image-loader
+                                    class="block h-full w-full"
+                                    containerClass="h-full w-full"
+                                    [src]="item.imageUrl"
+                                    [alt]="item.name"
+                                    [eager]="index < 5"
+                                />
+                            </div>
+
+                            <span class="vitrina__price">
+                                <img
+                                    src="/splinter-of-spark.webp"
+                                    [alt]="'market.common.shardAlt' | translate"
+                                    class="h-3.5 w-3.5 object-contain"
+                                    width="28"
+                                    height="28"
+                                />
+                                <span>{{ item.price | amount }}</span>
+                            </span>
+                        </div>
+
+                        <h2 class="vitrina__name">{{ item.name }}</h2>
+
+                        <!-- ПРОТОТИП: покупка не подключена. -->
+                        <button
+                            type="button"
+                            class="lh-cta vitrina__buy"
+                            [disabled]="!item.isAvailable"
+                            (click)="buy()"
+                        >
+                            {{ 'market.common.buyButton' | translate }}
+                        </button>
+                    </article>
+                </div>
+            }
+        </div>
+    }
+</div>

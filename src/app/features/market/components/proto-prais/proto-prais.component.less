@@ -1,0 +1,264 @@
+/**
+ * Прототип «Прайс»: плотные строки-позиции с ценой и кнопкой у каждой.
+ *
+ * Ховер двигает только transform, глубина тени живёт в ::after и меняет
+ * лишь opacity: box-shadow в переходе перерисовывал бы всю строку.
+ */
+
+:host {
+    display: block;
+}
+
+.prais {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Липкая шапка. Поверхность сплошная, без backdrop-размытия. */
+.prais__bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    height: 3.5rem;
+    padding: 0 0.5rem 0 0.875rem;
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    background-color: var(--color-surface-2);
+}
+
+.prais__title {
+    font-size: 1.0625rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.prais__wallet {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.prais__balance {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 2rem;
+    padding: 0 0.625rem;
+    border-radius: 0.625rem;
+    background-color: var(--color-surface-3);
+    color: var(--color-ink);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Нажатие — единственное движение кнопки; ховер меняет цвет мгновенно. */
+.prais__topup {
+    height: 2rem;
+    padding: 0 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: var(--lh-brand-deep);
+    cursor: pointer;
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
+}
+
+.prais__topup:active {
+    transform: scale(0.95);
+}
+
+/* Якоря разделов: горизонтальная лента, не фильтр. */
+.prais__anchors {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+}
+
+.prais__anchor {
+    flex-shrink: 0;
+    height: 1.875rem;
+    padding: 0 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.prais__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* Отступ под липкую шапку: якорь не прячет заголовок раздела. */
+    scroll-margin-top: 4.25rem;
+}
+
+.prais__heading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.25rem 0;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+}
+
+.prais__count {
+    padding: 0 0.375rem;
+    border-radius: 999px;
+    background-color: var(--color-surface-3);
+    font-variant-numeric: tabular-nums;
+}
+
+.prais__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Строка ~4rem: миниатюра 44px, текст, цена, кнопка. */
+.prais__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 4rem;
+    padding: 0.5rem 0.625rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background-color: var(--color-surface-2);
+    transition: transform var(--lh-dur-exit) var(--lh-ease-move);
+}
+
+.prais__row::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: 0 10px 24px -12px rgba(45, 32, 26, 0.45);
+    transition: opacity var(--lh-dur-exit) var(--lh-ease-out-quart);
+}
+
+.prais__row:hover {
+    transform: translateY(-2px);
+}
+
+.prais__row:hover::after {
+    opacity: 1;
+}
+
+/* Недоступный товар приглушён и не поднимается на ховере. */
+.prais__row--off {
+    opacity: 0.55;
+}
+
+.prais__row--off:hover {
+    transform: none;
+}
+
+.prais__row--off:hover::after {
+    opacity: 0;
+}
+
+.prais__thumb {
+    display: block;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background-color: var(--color-surface-3);
+}
+
+.prais__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.prais__name {
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-ink);
+}
+
+.prais__desc {
+    font-size: 0.8125rem;
+    line-height: 1.3;
+    color: var(--color-ink-3);
+}
+
+.prais__price {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-surface-3);
+    color: var(--lh-brand-ink);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Кнопка магазина: только нажатие, без ховер-движения. */
+.prais__buy {
+    flex-shrink: 0;
+    height: 2rem;
+    padding: 0 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: #ffffff;
+    background-image: linear-gradient(150deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
+    cursor: pointer;
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
+}
+
+.prais__buy:active:not(:disabled) {
+    transform: scale(0.94);
+}
+
+.prais__buy:disabled {
+    cursor: not-allowed;
+}
+
+/* Скелетоны загрузки: статичные, без бесконечного мерцания. */
+.prais__row--skeleton {
+    pointer-events: none;
+}
+
+.prais__skeleton {
+    background-color: var(--color-surface-3);
+    border-radius: 0.5rem;
+}
+
+.prais__skeleton--line {
+    width: 55%;
+    height: 0.875rem;
+}
+
+.prais__skeleton--price {
+    width: 4rem;
+    height: 2rem;
+    flex-shrink: 0;
+}

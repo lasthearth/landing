@@ -2,9 +2,11 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { afterNextRender, Component, ChangeDetectionStrategy, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
+import { environment } from '@core/config/environments/environment';
 import { DonateService } from '@entities/donate';
 import { UserService } from '@entities/user/api/user.service';
 import { TitlesComponent } from './components/titles/titles.component';
@@ -12,7 +14,11 @@ import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
 import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { PrototypeSwitcherComponent } from '@shared/ui/prototype-switcher';
 import { RevealDirective, TabsPillDirective } from '@shared/lib/directives';
+import { ProtoPraisComponent } from './components/proto-prais/proto-prais.component';
+import { ProtoSplitComponent } from './components/proto-split/proto-split.component';
+import { ProtoVitrinaComponent } from './components/proto-vitrina/proto-vitrina.component';
 import { FUNDING_TARGETS } from './lib/funding-targets.constant';
 import { WORLD_SHOTS } from './lib/world-shots.constant';
 
@@ -21,7 +27,7 @@ import { WORLD_SHOTS } from './lib/world-shots.constant';
  */
 @Component({
     selector: 'app-market',
-    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective, TabsPillDirective],
+    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective, TabsPillDirective, PrototypeSwitcherComponent, ProtoPraisComponent, ProtoSplitComponent, ProtoVitrinaComponent],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -35,6 +41,40 @@ export class MarketComponent {
      * Сервис навигации — для записи вкладки в адрес.
      */
     private readonly router = inject(Router);
+
+    /**
+     * ПРОТОТИП РЕДИЗАЙНА, НЕ ПРОДАКШН: ключ варианта страницы из
+     * `?variant=`. Только dev-сборка; в проде адрес игнорируется.
+     * Удалить вместе с папками proto-* после выбора варианта.
+     */
+    protected readonly marketProto = toSignal(
+        this.route.queryParamMap.pipe(
+            map((params) => {
+                const variant = params.get('variant');
+
+                if (environment.production || !['prais', 'vitrina', 'split'].includes(variant ?? '')) {
+                    return null;
+                }
+
+                return variant;
+            }),
+        ),
+        { initialValue: null },
+    );
+
+    /**
+     * Ключи вариантов для панели переключения.
+     */
+    protected readonly protoVariants = ['prais', 'vitrina', 'split'];
+
+    /**
+     * Имена вариантов для панели переключения.
+     */
+    protected readonly protoNames: Record<string, string> = {
+        prais: 'прайс строками, без вкладок',
+        vitrina: 'витрина карточек, цена на картинке',
+        split: 'сетка + липкая боковая панель',
+    };
 
     /**
      * Ключи вкладок в адресе (`?tab=`), в порядке `tabs`.
