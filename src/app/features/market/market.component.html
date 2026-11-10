@@ -47,12 +47,7 @@
         и снимается по animationend, входящая пересоздаётся @switch, чтобы
         входная анимация играла на каждую смену.
     -->
-    <div class="market-tab-stage" [attr.data-direction]="tabDirection()">
-        @if (leavingTab() !== null; as gone) {
-            <div class="market-tab-content market-tab-content--exit" (animationend)="onTabLeaveEnd()">
-                <ng-container *ngTemplateOutlet="tabPanel; context: { index: gone }" />
-            </div>
-        }
+    <div #tabStage class="market-tab-stage" [attr.data-direction]="tabDirection()">
         @switch (activeItemIndex()) {
             @case (0) {
                 <div class="market-tab-content"><app-titles /></div>
@@ -66,19 +61,6 @@
         }
     </div>
 
-    <ng-template #tabPanel let-index="index">
-        @switch (index) {
-            @case (0) {
-                <app-titles />
-            }
-            @case (1) {
-                <app-kits />
-            }
-            @case (2) {
-                <app-special />
-            }
-        }
-    </ng-template>
 
     <!--
         Раздел «На что идут деньги»: компактное тёмное поле, три полосы —

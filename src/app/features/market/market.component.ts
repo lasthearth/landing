@@ -1,7 +1,7 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
@@ -21,7 +21,7 @@ import { WORLD_SHOTS } from './lib/world-shots.constant';
  */
 @Component({
     selector: 'app-market',
-    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, NgTemplateOutlet, RevealDirective, TabsPillDirective],
+    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective, TabsPillDirective],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -55,10 +55,9 @@ export class MarketComponent {
      * @param index Индекс вкладки.
      */
     /**
-     * Индекс панели, доезжающей уход, или null, когда уходящих нет.
-     * Держит уходящую панель в DOM на время её 150ms анимации.
+     * Сцена смены вкладок: в неё клонируется уходящая панель.
      */
-    protected readonly leavingTab = signal<number | null>(null);
+    private readonly tabStage = viewChild.required<ElementRef<HTMLElement>>('tabStage');
 
     /**
      * Направление перехода: 1 — вправо по списку вкладок, -1 — влево.
@@ -78,7 +77,7 @@ export class MarketComponent {
         }
 
         this.tabDirection.set(index > this.activeItemIndex() ? 1 : -1);
-        this.leavingTab.set(this.activeItemIndex());
+        this.spawnExitGhost();
         this.activeItemIndex.set(index);
         void this.router.navigate([], {
             relativeTo: this.route,
@@ -89,11 +88,56 @@ export class MarketComponent {
     }
 
     /**
-     * Снимает уходящую панель, когда её анимация доиграла.
+     * Клонирует уходящую панель в статичный DOM-призрак поверх входящей.
+     *
+     * Раньше уходящая панель была второй Angular-инстанцией через
+     * `ngTemplateOutlet`: каждый клик собирал вкладку дважды — с DI,
+     * подписками и сервисами, — и на тяжёлой вкладке «Особое» это
+     * роняло кадры в момент старта полёта плашки. Клон — голые узлы:
+     * слушателей у него нет, картинки бьются в кэш, живёт он 150ms
+     * и снимает себя по `animationend`.
      */
-    protected onTabLeaveEnd(): void {
-        this.leavingTab.set(null);
+    private spawnExitGhost(): void {
+        // Вне зоны: призрак не участвует в change detection.
+        this.zone.runOutsideAngular(() => {
+            const stage = this.tabStage().nativeElement;
+            const current = stage.querySelector<HTMLElement>('.market-tab-content:not(.market-tab-content--exit)');
+
+            // Быстрый повторный клик: прежний призрак долетает — снимаем.
+            for (const stale of Array.from(stage.querySelectorAll<HTMLElement>('.market-tab-content--exit'))) {
+                stale.remove();
+            }
+
+            if (!current) {
+                return;
+            }
+
+            const ghost = current.cloneNode(true) as HTMLElement;
+
+            // Идентификаторы снимаются: дубль id в DOM ломает якоря.
+            for (const node of Array.from([ghost, ...ghost.querySelectorAll<HTMLElement>('[id]')])) {
+                node.removeAttribute('id');
+            }
+
+            ghost.classList.add('market-tab-content--exit');
+            ghost.addEventListener(
+                'animationend',
+                (event) => {
+                    if (event.target === ghost && event.animationName.startsWith('market-tab-out-')) {
+                        ghost.remove();
+                    }
+                },
+                { once: true },
+            );
+
+            stage.appendChild(ghost);
+        });
     }
+
+    /**
+     * Зона Angular: призрак уходящей панели живёт вне change detection.
+     */
+    private readonly zone = inject(NgZone);
 
     /**
      * Подписи вкладок магазина (ключи переводов) в порядке `activeItemIndex`.
