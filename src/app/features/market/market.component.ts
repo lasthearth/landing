@@ -101,7 +101,9 @@ export class MarketComponent {
         // Вне зоны: призрак не участвует в change detection.
         this.zone.runOutsideAngular(() => {
             const stage = this.tabStage().nativeElement;
-            const current = stage.querySelector<HTMLElement>('.market-tab-content:not(.market-tab-content--exit)');
+            const current = stage.querySelector<HTMLElement>(
+                '.market-tab-content:not(.market-tab-content--exit):not(.market-tab-content--hidden)',
+            );
 
             // Быстрый повторный клик: прежний призрак долетает — снимаем.
             for (const stale of Array.from(stage.querySelectorAll<HTMLElement>('.market-tab-content--exit'))) {

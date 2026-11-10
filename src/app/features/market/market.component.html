@@ -47,18 +47,24 @@
         и снимается по animationend, входящая пересоздаётся @switch, чтобы
         входная анимация играла на каждую смену.
     -->
+    <!--
+        Панели живут постоянно, переключение прячет/показывает (display):
+        ремоунт на каждый клик перезапускал скелетоны всех картинок,
+        stagger сетки и подписки загрузчиков (профайл: 1581 маркер
+        анимации скелетонов и 604 lh-stagger-fade-in за 23 с замера).
+        CSS-анимация входа перезапускается сама — смена display:none
+        на block заново проигрывает keyframes. Уход остаётся за призраком.
+    -->
     <div #tabStage class="market-tab-stage" [attr.data-direction]="tabDirection()">
-        @switch (activeItemIndex()) {
-            @case (0) {
-                <div class="market-tab-content"><app-titles /></div>
-            }
-            @case (1) {
-                <div class="market-tab-content"><app-kits /></div>
-            }
-            @case (2) {
-                <div class="market-tab-content"><app-special /></div>
-            }
-        }
+        <div class="market-tab-content" [class.market-tab-content--hidden]="activeItemIndex() !== 0">
+            <app-titles />
+        </div>
+        <div class="market-tab-content" [class.market-tab-content--hidden]="activeItemIndex() !== 1">
+            <app-kits />
+        </div>
+        <div class="market-tab-content" [class.market-tab-content--hidden]="activeItemIndex() !== 2">
+            <app-special />
+        </div>
     </div>
 
 

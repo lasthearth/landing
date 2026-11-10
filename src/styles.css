@@ -1413,6 +1413,14 @@ button:disabled,
     animation: market-tab-in-right var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
+/* Панели вкладок живут постоянно: скрытая не рендерится и не анимируется,
+   а при показе заново проигрывает вход (смена display перезапускает
+   keyframes). Ремоунт на каждый клик перезапускал скелетоны картинок
+   и stagger сетки — см. docs/history.md 3.-35. */
+.market-tab-content--hidden {
+    display: none;
+}
+
 .market-tab-stage[data-direction='-1'] .market-tab-content {
     animation-name: market-tab-in-left;
 }
