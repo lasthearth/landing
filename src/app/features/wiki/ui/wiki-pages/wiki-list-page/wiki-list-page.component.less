@@ -15,6 +15,20 @@
     flex: none;
 }
 
+/**
+ * Сортировка — эксклюзивный переключатель без `role="tablist"`: одна из трёх
+ * кнопок активна (`aria-current`), поэтому неактивная подаётся на 3px к курсору
+ * тем же движением, что и вкладки. Только transform, 150ms пружиной; активную
+ * исключаем, чтобы она стояла на месте.
+ */
+.wiki-list__sort .lh-chip {
+    transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
+}
+
+.wiki-list__sort .lh-chip:hover:not([aria-current='true']) {
+    transform: translateX(3px);
+}
+
 .wiki-list__search {
     display: flex;
     align-items: center;

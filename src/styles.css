@@ -1025,6 +1025,23 @@ tui-pulse.offline {
         box-shadow: var(--lh-shadow-soft);
     }
 
+    /**
+     * Микровзаимодействие рядов вкладок: неактивная вкладка подаётся на 3px
+     * в сторону курсора, активная стоит на месте. Движение — 150ms пружиной,
+     * только transform. Правила лежат в `@layer components`, а стили
+     * компонентов — вне слоёв, поэтому компонент всегда перебивает их собой:
+     * ряд со своим ховер-трансформом или транзишеном задаёт своё движение
+     * целиком, а не «чинит» эти правила. Вертикальные ряды переопределяют
+     * ось там же, в стилях компонента.
+     */
+    [role='tablist'] > * {
+        transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
+    }
+
+    [role='tablist'] > :hover:not([aria-selected='true']) {
+        transform: translateX(3px);
+    }
+
     .lh-chip__count {
         font-size: 0.875rem;
         font-variant-numeric: tabular-nums;

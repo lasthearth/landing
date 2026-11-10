@@ -52,10 +52,9 @@
     text-align: left;
     cursor: pointer;
     box-shadow: var(--lh-shadow-soft);
-    /* Ховер: цвет рамки меняется мгновенно, подъём — пружиной, тень —
-     * прозрачностью псевдоэлемента (переход box-shadow перерисовывал
-     * вкладку каждый кадр). */
-    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
+    /* Ховер: цвет рамки меняется мгновенно, сдвиг вкладки задаёт общее
+     * правило ряда вкладок, тень — прозрачностью псевдоэлемента (переход
+     * box-shadow перерисовывал вкладку каждый кадр). */
 
     &::before {
         content: '';
@@ -70,7 +69,6 @@
 
     &:hover {
         border-color: var(--kp-accent);
-        transform: translateY(-2px);
     }
 
     &:hover::before {
@@ -165,12 +163,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .kp-tab,
     .kp-tab::before {
         transition: none;
     }
 
-    .kp-tab:hover,
+    /* Сдвиг вкладки на 3px объявлен правилом ряда, поэтому его гасит
+     * только селектор не ниже по специфичности. */
+    .kp-tabs .kp-tab:hover {
+        transform: none;
+    }
+
     .kp-tab:active {
         transform: none;
     }
