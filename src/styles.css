@@ -1042,6 +1042,53 @@ tui-pulse.offline {
         transform: translateX(3px);
     }
 
+    /**
+     * Летающая плашка активной вкладки (TabsPillDirective, [appTabsPill]).
+     * Носитель — прозрачный абсолют в паддинг-боксе ряда, transform и ширину
+     * ему пишет директива (WAAPI): разгон с растяжением, приземление
+     * пружиной, шлейф движения рисует Echo. Визуал — на слое-потомке,
+     * как требует пакет. Селекторы здесь выше специфичностью правил ряда
+     * выше и гасят глобальный transition на потомках ряда.
+     */
+    [role='tablist'].lh-tabs-pill {
+        position: relative;
+    }
+
+    [role='tablist'].lh-tabs-pill > .lh-chip {
+        position: relative;
+    }
+
+    .lh-tabs-pill .lh-tabs-pill__el {
+        position: absolute;
+        top: 0.25rem;
+        bottom: 0.25rem;
+        left: 0;
+        pointer-events: none;
+        /* Движение плашки задаёт директива через WAAPI; глобальный
+         * transition ряда вкладок не должен участвовать. */
+        transition: none;
+    }
+
+    .lh-tabs-pill .lh-tabs-pill__face {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 0.625rem;
+        background-color: var(--color-surface-2);
+        box-shadow: var(--lh-shadow-soft);
+    }
+
+    /**
+     * Плашка взяла подсветку активной вкладки на себя — заливка кнопки
+     * гаснет, чтобы не рисовать два слоя. До готовности плашки (SSR, нет
+     * JS) кнопка подсвечивается собой глобальным правилом ряда.
+     */
+    [role='tablist'].lh-tabs-pill.is-ready > .lh-chip[aria-selected='true'],
+    [role='tablist'].lh-tabs-pill.is-ready > .lh-chip[aria-selected='true']:hover:not(:disabled) {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
     .lh-chip__count {
         font-size: 0.875rem;
         font-variant-numeric: tabular-nums;

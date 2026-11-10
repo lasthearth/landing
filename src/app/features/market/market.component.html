@@ -26,8 +26,9 @@
         </div>
     </app-page-header>
 
-    <!-- Вкладки: ключи сохраняются в адресе (?tab=), ссылка ведёт сразу на группу -->
-    <div class="lh-chips" role="tablist" [attr.aria-label]="'market.marketPage.title' | translate">
+    <!-- Вкладки: ключи сохраняются в адресе (?tab=), ссылка ведёт сразу на группу.
+        appTabsPill — летающая плашка активной вкладки со шлейфом движения. -->
+    <div class="lh-chips" role="tablist" appTabsPill [attr.aria-label]="'market.marketPage.title' | translate">
         @for (tab of tabs; track tab; let index = $index) {
             <button
                 type="button"

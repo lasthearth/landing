@@ -12,7 +12,7 @@ import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
 import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
-import { RevealDirective } from '@shared/lib/directives';
+import { RevealDirective, TabsPillDirective } from '@shared/lib/directives';
 import { FUNDING_TARGETS } from './lib/funding-targets.constant';
 import { WORLD_SHOTS } from './lib/world-shots.constant';
 
@@ -21,7 +21,7 @@ import { WORLD_SHOTS } from './lib/world-shots.constant';
  */
 @Component({
     selector: 'app-market',
-    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, NgTemplateOutlet, RevealDirective],
+    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, NgTemplateOutlet, RevealDirective, TabsPillDirective],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
