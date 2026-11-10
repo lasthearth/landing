@@ -46,6 +46,25 @@
         }
     }
 
+    &__topbar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    /* Кнопка у «Все наделы»: видна только на телефоне, на широких экранах
+       «Поделиться» живёт на строке заголовка. */
+    &__topbar-share {
+        margin-left: auto;
+        display: none;
+    }
+
+    @media (max-width: 639px) {
+        &__topbar-share {
+            display: inline-flex;
+        }
+    }
+
     &__back:hover {
         color: var(--lh-brand-hover);
 
@@ -488,16 +507,10 @@
         }
     }
 
-    /* Телефон: «Поделиться» без подписи (иначе кнопка отбирает ширину у
-       заголовка), ряд фактов — компактнее. ::ng-deep — локальное исключение:
-       кнопка — чужой компонент без входа под брейкпоинт. */
+    /* Телефон: «Поделиться» уходит из строки заголовка к «Все наделы»,
+       ряд фактов — компактнее. */
     @media (max-width: 639px) {
-        &__share ::ng-deep .share-button {
-            width: 2rem;
-            padding: 0;
-        }
-
-        &__share ::ng-deep .share-button > span {
+        &__share {
             display: none;
         }
 

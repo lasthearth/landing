@@ -1,8 +1,19 @@
 <div class="settlement-page lh-page-container flex flex-col gap-6 md:gap-8">
-    <a routerLink="/settlements" class="settlement-page__back">
-        <tui-icon icon="@tui.arrow-left" class="size-4!" />
-        {{ "settlements.page.back" | translate }}
-    </a>
+    <div class="settlement-page__topbar">
+        <a routerLink="/settlements" class="settlement-page__back">
+            <tui-icon icon="@tui.arrow-left" class="size-4!" />
+            {{ "settlements.page.back" | translate }}
+        </a>
+        <!-- Телефон: «Поделиться» стоит здесь, а не у заголовка — имя надела
+             занимает строку целиком и не переносится по слову. -->
+        @if (settlement(); as item) {
+            <app-share-button
+                class="settlement-page__topbar-share"
+                [url]="'/settlements/' + item.id"
+                [title]="item | settlementDisplayName"
+            />
+        }
+    </div>
 
     @if (settlement(); as item) {
         <!--
