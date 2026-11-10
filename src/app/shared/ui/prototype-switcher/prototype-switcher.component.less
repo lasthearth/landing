@@ -1,0 +1,42 @@
+/*
+ * ПРОТОТИП, НЕ ПРОДАКШН. Панель нарочно чужая странице: чёрная пилюля
+ * с белым текстом, чтобы её нельзя было принять за часть дизайна.
+ */
+.proto-switcher {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+    transform: translateX(-50%);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.proto-switcher__arrow {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    color: inherit;
+    background: rgb(255 255 255 / 0.12);
+    cursor: pointer;
+
+    &:hover {
+        background: rgb(255 255 255 / 0.24);
+    }
+}
+
+.proto-switcher__label {
+    min-width: 16rem;
+    text-align: center;
+    white-space: nowrap;
+}
