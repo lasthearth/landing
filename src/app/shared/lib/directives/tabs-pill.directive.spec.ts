@@ -98,7 +98,12 @@ const PILL_CSS = `
     bottom: 4px;
     left: 0;
     pointer-events: none;
-    transition: none;
+}
+
+.lh-tabs-pill .lh-tabs-pill__el.is-placed {
+    transition:
+        transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
+        width 200ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .lh-tabs-pill .lh-tabs-pill__face {
     display: block;
@@ -241,6 +246,26 @@ describe('TabsPillDirective', () => {
         expect(Math.abs(pillRect.width - secondRect.width))
             .withContext('ширина плашки подстроилась под вторую вкладку')
             .toBeLessThanOrEqual(1);
+    });
+
+    it('не дрейфует после серии переключений: посадка ровно на вкладку', async () => {
+        const sequence = [2, 0, 1, 2, 0, 1, 0, 2];
+
+        for (const index of sequence) {
+            buttons()[index].click();
+            fixture.detectChanges();
+            await settle(420);
+
+            const button = buttons()[index];
+            const pillRect = pill()!.getBoundingClientRect();
+            const buttonRect = button.getBoundingClientRect();
+            expect(Math.abs(pillRect.left - buttonRect.left))
+                .withContext(`шаг ${index}: плашка на кнопке (левый край)`)
+                .toBeLessThanOrEqual(1);
+            expect(Math.abs(pillRect.width - buttonRect.width))
+                .withContext(`шаг ${index}: ширина плашки`)
+                .toBeLessThanOrEqual(1);
+        }
     });
 
     it('перехватывает полёт без скачка назад', async () => {

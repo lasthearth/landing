@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Directive, ElementRef, NgZone, OnDestroy, afterNextRender, inject, PLATFORM_ID } from '@angular/core';
-import { motionBlur, type MotionBlur } from '@web-kits/motion-blur';
+import { Directive, ElementRef, OnDestroy, afterNextRender, inject, PLATFORM_ID, NgZone } from '@angular/core';
 
 /**
  * Позиция и размер плашки: отступ слева в системе координат паддинг-бокса
@@ -16,12 +15,19 @@ interface PillBox {
  *
  * Вставляет в ряд прозрачный элемент-носитель с визуальным слоем-потомком
  * (требования `@web-kits/motion-blur`) и держит его на вкладке с
- * `aria-selected='true'`. При смене вкладки плашка перелетает на новое
- * место одним непрерывным движением: 200ms (`--lh-dur-fast`), кривая
- * `--lh-ease-spring` с перелётом у цели и посадкой. Полёт длинный
- * и быстрый (~10px за кадр), поэтому шлейф движения (Echo) реально
- * рисуется — это первое место в проекте, где blur проходит порог
- * заметности.
+ * `aria-selected='true'`. При смене вкладки директива пишет новую позицию
+ * в inline-стиль, а полёт делает CSS-переход на самой плашке:
+ * 200ms (`--lh-dur-fast`) по кривой `--lh-ease-smooth` (вход панелей —
+ * быстрый старт без рывка и длинное торможение). Перехват посреди
+ * полёта браузер берёт на себя: переходы переносят цель с текущей
+ * визуальной позиции, без событий и без стека анимаций.
+ *
+ * Шлейф движения здесь НЕ ставится — и это осознанно: blur положен
+ * движению, которое глаз не успевает отследить (закрытие лайтбокса),
+ * а за плашкой вкладки глаз идёт напрямую. Проба с Echo на летящей
+ * плашке дала ровно то, что запрещает skill: на пропущенных кадрах
+ * копии экстраполировались за края ряда, несли устаревшую ширину
+ * и дёргали визуальный слой — «прыжки» и фантомные размеры.
  *
  * Подсветку активной кнопки плашка берёт на себя: класс `is-ready` на ряду
  * гасит заливку самой кнопки в глобальных стилях. До готовности (SSR,
@@ -29,7 +35,15 @@ interface PillBox {
  *
  * Смена отслеживается через `aria-selected`, поэтому работает при любом
  * способе выбора: клик, клавиатура, программно. `prefers-reduced-motion`
- * выключает полёт: плашка переносится мгновенно, шлейф пакет снимает сам.
+ * переносит плашку мгновенно (глобальный kill-switch сжимает переход),
+ * шлейф пакет снимает сам.
+ *
+ * Первый вариант полёта был на WAAPI с fill:'forwards' и полагался на
+ * событие finish: у части полётов оно не приходило (inline оставался
+ * устаревшим), часы анимации замерзали на перелёте пружины, а закрытые
+ * fill-анимации копились в стеке — плашка дрейфовала. Переход не имеет
+ * жизненного цикла, который можно сломать: что написано в inline,
+ * то и видно.
  *
  * Использование: `<div class="lh-chips" role="tablist" appTabsPill>`.
  */
@@ -56,41 +70,16 @@ export class TabsPillDirective implements OnDestroy {
         : null;
 
     /**
-     * Зона Angular: полёт и шлейф выполняются вне зоны — иначе rAF пакета
-     * и слушатели анимации дёргали бы change detection каждый кадр полёта.
+     * Зона Angular: плашка, её переходы и шлейф живут вне зоны — иначе
+     * каждый кадр полёта дёргал бы change detection всего приложения.
      */
     private readonly zone = inject(NgZone);
 
     /**
-     * Прозрачный носитель плашки: несёт transform полёта, шлейф
-     * рисуется по нему.
+     * Носитель плашки: абсолют в паддинг-боксе ряда, несёт transform
+     * и ширину полёта в inline-стилях.
      */
     private pill?: HTMLElement;
-
-    /**
-     * Экземпляр шлейфа движения для носителя.
-     */
-    private blur?: MotionBlur;
-
-    /**
-     * Текущий полёт плашки, если идёт.
-     */
-    private flight?: Animation;
-
-    /**
-     * Последняя позиция плашки, px.
-     */
-    private current: PillBox = { x: 0, w: 0 };
-
-    /**
-     * Длительность полёта, ms, из токена `--lh-dur-fast`.
-     */
-    private durationMs = 200;
-
-    /**
-     * Кривая приземления, из токена `--lh-ease-spring`.
-     */
-    private easeSpring = 'cubic-bezier(0.34, 1.4, 0.64, 1)';
 
     /**
      * Наблюдатель смены активной вкладки (атрибут `aria-selected`).
@@ -123,8 +112,6 @@ export class TabsPillDirective implements OnDestroy {
 
             host.prepend(pill);
             this.pill = pill;
-            this.blur = motionBlur(pill);
-            this.readTokens();
 
             this.selection = new MutationObserver(() => this.syncSelection(true));
             this.selection.observe(host, { attributeFilter: ['aria-selected'], subtree: true });
@@ -140,17 +127,15 @@ export class TabsPillDirective implements OnDestroy {
      * @inheritdoc
      */
     public ngOnDestroy(): void {
-        this.flight?.cancel();
         this.selection?.disconnect();
         this.resize?.disconnect();
-        this.blur?.destroy();
         this.pill?.remove();
     }
 
     /**
-     * Ставит плашку на активную вкладку: с полётом или мгновенно.
+     * Ставит плашку на активную вкладку: переходом или мгновенно.
      *
-     * @param animate Запустить полёт; иначе перенести без движения.
+     * @param animate Ехать переходом; иначе перенести без движения.
      */
     private syncSelection(animate: boolean): void {
         const host = this.elementRef.nativeElement;
@@ -164,122 +149,73 @@ export class TabsPillDirective implements OnDestroy {
 
         const target = this.measure(active);
 
+        // Мгновенно: первый показ, ресайз ряда, отключённое движение.
         if (!animate || this.reducedMotion?.matches) {
-            this.commit(target);
+            this.commit(target, true);
             host.classList.add('is-ready');
-            this.current = target;
 
             return;
         }
 
-        this.flyTo(target);
+        this.commit(target);
         host.classList.add('is-ready');
     }
 
     /**
-     * Измеряет кнопку в координатах паддинг-бокса ряда — той же системы,
-     * в которой живёт абсолютно позиционированная плашка.
+     * Измеряет кнопку в координатах раскладки ряда — той же системы,
+     * в которой живёт inline-стиль плашки.
+     *
+     * Только offsetLeft/offsetWidth: getBoundingClientRect возвращает
+     * масштабированные зумом страницы пиксели, и запись их в inline-стиль
+     * сдвигала плашку на (зум − 1) × путь при каждой посадке — на зуме
+     * ≠ 100% она дрейфовала на кнопку за несколько переключений.
+     * offsetLeft заодно не видит ховер-надж кнопки: transform не влияет
+     * на раскладку, вычитать его не нужно. Разность с offsetLeft плашки
+     * отсекает начало координат ряда: оба — потомки одного offsetParent.
      *
      * @param button Кнопка активной вкладки.
-     * @returns Позиция и ширина, px.
+     * @returns Позиция и ширина, px раскладки.
      */
     private measure(button: HTMLElement): PillBox {
-        const host = this.elementRef.nativeElement;
-        const hostRect = host.getBoundingClientRect();
-        const buttonRect = button.getBoundingClientRect();
+        const pill = this.pill;
+
+        if (!pill) {
+            return { x: 0, w: 0 };
+        }
 
         return {
-            x: buttonRect.left - hostRect.left - host.clientLeft,
-            w: buttonRect.width,
+            x: button.offsetLeft - pill.offsetLeft,
+            w: button.offsetWidth,
         };
     }
 
     /**
-     * Запускает полёт плашки к цели одним непрерывным движением: пружина
-     * разгоняет, даёт лёгкий перелёт у цели и посадку обратно.
-     * Промежуточных кейфреймов нет: любая «середина» с собственной кривой
-     * гасила скорость до нуля ровно на центральной вкладке ряда — плашка
-     * замирала на ней и заново разгонялась. Прерванный полёт продолжается
-     * из текущей позиции — считается вычисленным стилем.
-     *
-     * @param target Позиция и ширина активной вкладки.
-     */
-    private flyTo(target: PillBox): void {
-        const pill = this.pill;
-
-        if (!pill) {
-            return;
-        }
-
-        // Позиция читается до cancel: после него вычисленный стиль
-        // откатывается к inline, и перехват полёта сработал бы со скачком.
-        const from = this.readBox();
-
-        this.flight?.cancel();
-
-        this.flight = pill.animate(
-            [
-                {
-                    transform: `translateX(${from.x}px)`,
-                    width: `${from.w}px`,
-                },
-                {
-                    transform: `translateX(${target.x}px)`,
-                    width: `${target.w}px`,
-                },
-            ],
-            { duration: this.durationMs, easing: this.easeSpring, fill: 'forwards' },
-        );
-
-        this.current = target;
-        this.flight.addEventListener('finish', () => this.commit(target));
-    }
-
-    /**
-     * Читает текущее визуальное положение плашки из вычисленного стиля:
-     * во время полёта — из WAAPI, после — из inline-стилей.
-     *
-     * @returns Позиция и ширина, px.
-     */
-    private readBox(): PillBox {
-        const pill = this.pill;
-
-        if (!pill) {
-            return this.current;
-        }
-
-        const style = getComputedStyle(pill);
-        const matrix = new DOMMatrixReadOnly(style.transform === 'none' ? undefined : style.transform);
-
-        return { x: matrix.m41, w: parseFloat(style.width) };
-    }
-
-    /**
-     * Фиксирует плашку на позиции inline-стилем — видимое состояние
-     * без полёта.
+     * Фиксирует плашку на позиции inline-стилем. С классом `is-placed`
+     * изменение едет CSS-переходом (кривая и длительность — в стилях),
+     * без него встаёт сразу: первая установка не должна прокатываться
+     * от левого края ряда.
      *
      * @param box Позиция и ширина, px.
+     * @param immediate Встать без перехода.
      */
-    private commit(box: PillBox): void {
-        if (!this.pill) {
+    private commit(box: PillBox, immediate = false): void {
+        const pill = this.pill;
+
+        if (!pill) {
             return;
         }
 
-        this.pill.style.transform = `translateX(${box.x}px)`;
-        this.pill.style.width = `${box.w}px`;
-    }
+        if (immediate) {
+            pill.classList.remove('is-placed');
+        }
 
-    /**
-     * Читает длительность и кривые полёта из токенов дизайн-системы,
-     * чтобы движение осталось управляемым из одного места.
-     */
-    private readTokens(): void {
-        const style = getComputedStyle(this.elementRef.nativeElement);
-        const rawDuration = style.getPropertyValue('--lh-dur-fast').trim() || '200ms';
-        const parsed = Number.parseFloat(rawDuration);
-        const seconds = rawDuration.includes('s') && !rawDuration.includes('ms');
+        pill.style.transform = `translateX(${box.x}px)`;
+        pill.style.width = `${box.w}px`;
 
-        this.durationMs = (Number.isNaN(parsed) ? 200 : seconds ? parsed * 1000 : parsed);
-        this.easeSpring = style.getPropertyValue('--lh-ease-spring').trim() || this.easeSpring;
+        if (immediate) {
+            // Класс возвращается после кадра установки: иначе первая
+            // позиция прокатилась бы переходом от левого края ряда.
+            requestAnimationFrame(() => pill.classList.add('is-placed'));
+        }
     }
 }
