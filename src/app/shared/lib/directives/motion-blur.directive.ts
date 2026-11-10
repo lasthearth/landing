@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Directive, ElementRef, OnDestroy, inject, input, numberAttribute, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, NgZone, OnDestroy, inject, input, numberAttribute, PLATFORM_ID } from '@angular/core';
 import { motionBlur, type MotionBlur } from '@web-kits/motion-blur';
 
 /**
@@ -46,6 +46,12 @@ export class MotionBlurDirective implements AfterViewInit, OnDestroy {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     /**
+     * Зона Angular: пакет тикает rAF на каждый кадр движения — в зоне
+     * это дёргало бы change detection всё время полёта. Выносим наружу.
+     */
+    private readonly zone = inject(NgZone);
+
+    /**
      * Экземпляр blur, создаётся в `ngAfterViewInit` после появления потомков.
      */
     private blur?: MotionBlur;
@@ -63,8 +69,10 @@ export class MotionBlurDirective implements AfterViewInit, OnDestroy {
         // поэтому статичные потомки хоста к этому моменту существуют.
         // Динамические (*ngIf) потомки требуют слоя к моменту первого
         // движения — такие разметки здесь не используются.
-        this.blur = motionBlur(this.elementRef.nativeElement, {
-            shutter: this.appMotionBlurShutter(),
+        this.zone.runOutsideAngular(() => {
+            this.blur = motionBlur(this.elementRef.nativeElement, {
+                shutter: this.appMotionBlurShutter(),
+            });
         });
     }
 

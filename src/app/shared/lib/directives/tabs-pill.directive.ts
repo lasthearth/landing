@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Directive, ElementRef, OnDestroy, afterNextRender, inject, PLATFORM_ID } from '@angular/core';
+import { Directive, ElementRef, NgZone, OnDestroy, afterNextRender, inject, PLATFORM_ID } from '@angular/core';
 import { motionBlur, type MotionBlur } from '@web-kits/motion-blur';
 
 /**
@@ -56,6 +56,12 @@ export class TabsPillDirective implements OnDestroy {
         : null;
 
     /**
+     * Зона Angular: полёт и шлейф выполняются вне зоны — иначе rAF пакета
+     * и слушатели анимации дёргали бы change detection каждый кадр полёта.
+     */
+    private readonly zone = inject(NgZone);
+
+    /**
      * Прозрачный носитель плашки: несёт transform полёта, шлейф
      * рисуется по нему.
      */
@@ -106,32 +112,34 @@ export class TabsPillDirective implements OnDestroy {
      * Создаёт плашку и наблюдателей после первой отрисовки ряда:
      * к этому моменту кнопки уже имеют реальные размеры.
      */
-    private readonly mount = afterNextRender(() => {
-        const host = this.elementRef.nativeElement;
+    private readonly mount = afterNextRender(() =>
+        this.zone.runOutsideAngular(() => {
+            const host = this.elementRef.nativeElement;
 
-        host.classList.add('lh-tabs-pill');
+            host.classList.add('lh-tabs-pill');
 
-        const pill = document.createElement('span');
-        pill.className = 'lh-tabs-pill__el';
-        pill.setAttribute('aria-hidden', 'true');
+            const pill = document.createElement('span');
+            pill.className = 'lh-tabs-pill__el';
+            pill.setAttribute('aria-hidden', 'true');
 
-        const face = document.createElement('span');
-        face.className = 'lh-tabs-pill__face';
-        pill.appendChild(face);
+            const face = document.createElement('span');
+            face.className = 'lh-tabs-pill__face';
+            pill.appendChild(face);
 
-        host.prepend(pill);
-        this.pill = pill;
-        this.blur = motionBlur(pill);
-        this.readTokens();
+            host.prepend(pill);
+            this.pill = pill;
+            this.blur = motionBlur(pill);
+            this.readTokens();
 
-        this.selection = new MutationObserver(() => this.syncSelection(true));
-        this.selection.observe(host, { attributeFilter: ['aria-selected'], subtree: true });
+            this.selection = new MutationObserver(() => this.syncSelection(true));
+            this.selection.observe(host, { attributeFilter: ['aria-selected'], subtree: true });
 
-        this.resize = new ResizeObserver(() => this.syncSelection(false));
-        this.resize.observe(host);
+            this.resize = new ResizeObserver(() => this.syncSelection(false));
+            this.resize.observe(host);
 
-        this.syncSelection(false);
-    });
+            this.syncSelection(false);
+        }),
+    );
 
     /**
      * @inheritdoc

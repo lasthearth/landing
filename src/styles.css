@@ -1064,18 +1064,23 @@ tui-pulse.offline {
         bottom: 0.25rem;
         left: 0;
         pointer-events: none;
-        /* Движение плашки задаёт директива через WAAPI; глобальный
-         * transition ряда вкладок не должен участвовать. */
+        /* transition выключен: движение задаёт WAAPI в директиве. */
         transition: none;
+        /* Единственное намеренное will-change в проекте: элемент один на
+         * ряд и летает при каждом переключении — постоянный композитный
+         * слой дешевле, чем промоушен на каждый полёт. */
+        will-change: transform;
     }
 
+    /* Слой без box-shadow: Echo клонирует слой целиком, и 5–8 клонов
+     * с многослойной тенью и plus-lighter-блендингом роняли кадры
+     * на слабых GPU. Глубину ряду даёт его собственная подложка. */
     .lh-tabs-pill .lh-tabs-pill__face {
         display: block;
         width: 100%;
         height: 100%;
         border-radius: 0.625rem;
         background-color: var(--color-surface-2);
-        box-shadow: var(--lh-shadow-soft);
     }
 
     /**
