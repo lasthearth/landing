@@ -17,11 +17,11 @@ interface PillBox {
  * Вставляет в ряд прозрачный элемент-носитель с визуальным слоем-потомком
  * (требования `@web-kits/motion-blur`) и держит его на вкладке с
  * `aria-selected='true'`. При смене вкладки плашка перелетает на новое
- * место: 200ms (`--lh-dur-fast`), растяжение по направлению полёта
- * (scaleX до 1.3), разгон по `--lh-ease-out-quart` и приземление
- * пружиной `--lh-ease-spring`. Полёт длинный и быстрый (~10px за кадр),
- * поэтому шлейф движения (Echo) реально рисуется — это первое место
- * в проекте, где blur проходит порог заметности.
+ * место одним непрерывным движением: 200ms (`--lh-dur-fast`), кривая
+ * `--lh-ease-spring` с перелётом у цели и посадкой. Полёт длинный
+ * и быстрый (~10px за кадр), поэтому шлейф движения (Echo) реально
+ * рисуется — это первое место в проекте, где blur проходит порог
+ * заметности.
  *
  * Подсветку активной кнопки плашка берёт на себя: класс `is-ready` на ряду
  * гасит заливку самой кнопки в глобальных стилях. До готовности (SSR,
@@ -86,11 +86,6 @@ export class TabsPillDirective implements OnDestroy {
      * Длительность полёта, ms, из токена `--lh-dur-fast`.
      */
     private durationMs = 200;
-
-    /**
-     * Кривая разгона со старта, из токена `--lh-ease-out-quart`.
-     */
-    private easeOut = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
     /**
      * Кривая приземления, из токена `--lh-ease-spring`.
@@ -200,8 +195,11 @@ export class TabsPillDirective implements OnDestroy {
     }
 
     /**
-     * Запускает полёт плашки к цели: разгон с растяжением по направлению
-     * движения и приземление пружиной. Прерванный полёт продолжается
+     * Запускает полёт плашки к цели одним непрерывным движением: пружина
+     * разгоняет, даёт лёгкий перелёт у цели и посадку обратно.
+     * Промежуточных кейфреймов нет: любая «середина» с собственной кривой
+     * гасила скорость до нуля ровно на центральной вкладке ряда — плашка
+     * замирала на ней и заново разгонялась. Прерванный полёт продолжается
      * из текущей позиции — считается вычисленным стилем.
      *
      * @param target Позиция и ширина активной вкладки.
@@ -219,32 +217,18 @@ export class TabsPillDirective implements OnDestroy {
 
         this.flight?.cancel();
 
-        const originSide = target.x >= from.x ? 'left center' : 'right center';
-        const stretch = Math.min(1.3, 1 + Math.abs(target.x - from.x) / 400);
-        const mid: PillBox = { x: (from.x + target.x) / 2, w: (from.w + target.w) / 2 };
-
         this.flight = pill.animate(
             [
                 {
-                    transformOrigin: originSide,
-                    transform: `translateX(${from.x}px) scaleX(1)`,
+                    transform: `translateX(${from.x}px)`,
                     width: `${from.w}px`,
-                    easing: this.easeOut,
                 },
                 {
-                    transformOrigin: originSide,
-                    transform: `translateX(${mid.x}px) scaleX(${stretch})`,
-                    width: `${mid.w}px`,
-                    offset: 0.5,
-                    easing: this.easeSpring,
-                },
-                {
-                    transformOrigin: originSide,
-                    transform: `translateX(${target.x}px) scaleX(1)`,
+                    transform: `translateX(${target.x}px)`,
                     width: `${target.w}px`,
                 },
             ],
-            { duration: this.durationMs, fill: 'forwards' },
+            { duration: this.durationMs, easing: this.easeSpring, fill: 'forwards' },
         );
 
         this.current = target;
@@ -296,7 +280,6 @@ export class TabsPillDirective implements OnDestroy {
         const seconds = rawDuration.includes('s') && !rawDuration.includes('ms');
 
         this.durationMs = (Number.isNaN(parsed) ? 200 : seconds ? parsed * 1000 : parsed);
-        this.easeOut = style.getPropertyValue('--lh-ease-out-quart').trim() || this.easeOut;
         this.easeSpring = style.getPropertyValue('--lh-ease-spring').trim() || this.easeSpring;
     }
 }
