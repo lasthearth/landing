@@ -69,12 +69,6 @@
         letter-spacing: 0.04em;
     }
 
-    &__tier {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
     &__pips {
         display: inline-flex;
         gap: 0.25rem;
@@ -91,8 +85,8 @@
         background: var(--lh-brand);
     }
 
-    &__tier-label {
-        font-size: 0.8125rem;
+    &__tier-value {
+        font-size: 0.9375rem;
         font-weight: 600;
         color: var(--color-ink-2);
         font-variant-numeric: tabular-nums;
@@ -385,9 +379,15 @@
         border-top: 1px solid var(--lh-border);
     }
 
-    @media (min-width: 640px) {
+    @media (min-width: 640px) and (max-width: 1023px) {
         &__stats {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @media (min-width: 1024px) {
+        &__stats {
+            grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
         }
     }
 
@@ -420,6 +420,14 @@
 
     &__stat-value--online {
         color: var(--lh-online);
+    }
+
+    &__stat-value--tier {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        padding-top: 0.5rem;
     }
 
     &__actions {

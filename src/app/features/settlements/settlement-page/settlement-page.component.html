@@ -16,20 +16,6 @@
                     <h1 id="settlement-title" class="settlement-page__title lh-display font-bold text-ink uppercase">
                         {{ item | settlementDisplayName }}
                     </h1>
-                    @if (tier() > 0) {
-                        <span
-                            class="settlement-page__tier"
-                            role="img"
-                            [attr.aria-label]="'settlements.card.tier' | translate: { tier: tier() }"
-                        >
-                            <span class="settlement-page__pips">
-                                @for (pip of tierScale; track pip) {
-                                    <span class="settlement-page__pip" [class.settlement-page__pip--filled]="pip <= tier()"></span>
-                                }
-                            </span>
-                            <span class="settlement-page__tier-label">{{ tier() }}/5</span>
-                        </span>
-                    }
                     <app-share-button
                         class="settlement-hero__share"
                         [url]="'/settlements/' + item.id"
@@ -54,6 +40,24 @@
                 </div>
 
                 <dl class="settlement-hero__stats">
+                    @if (tier() > 0) {
+                        <div class="settlement-hero__stat">
+                            <dt class="settlement-hero__stat-label">{{ "settlements.page.tier" | translate }}</dt>
+                            <dd class="settlement-hero__stat-value settlement-hero__stat-value--tier">
+                                <span class="settlement-page__pips" aria-hidden="true">
+                                    @for (pip of tierScale; track pip) {
+                                        <span
+                                            class="settlement-page__pip"
+                                            [class.settlement-page__pip--filled]="pip <= tier()"
+                                        ></span>
+                                    }
+                                </span>
+                                <span class="settlement-page__tier-value">
+                                    {{ "settlements.page.tierOf" | translate: { tier: tier(), max: tierScale.length } }}
+                                </span>
+                            </dd>
+                        </div>
+                    }
                     <div class="settlement-hero__stat">
                         <dt class="settlement-hero__stat-label">
                             <tui-icon icon="@tui.users" class="size-4!" />
