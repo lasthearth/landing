@@ -5,9 +5,11 @@ import {
     DestroyRef,
     effect,
     inject,
+    PLATFORM_ID,
     signal,
     untracked,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { I18nService } from '@core/i18n';
 import { ServerResponseService } from '@core/services/server-response.service';
@@ -72,6 +74,11 @@ export class WikiArticlePageComponent {
     private readonly serverResponse = inject(ServerResponseService);
     private readonly i18n = inject(I18nService);
     private readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Страница работает и на сервере: `window` там нет.
+     */
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     /**
      * Адрес статьи из маршрута. Меняется вместе с адресом, без пересоздания
@@ -271,7 +278,7 @@ export class WikiArticlePageComponent {
 
         this.state.set(article ? 'ready' : 'not-found');
 
-        if (article && !this.route.snapshot.fragment) {
+        if (article && !this.route.snapshot.fragment && this.isBrowser) {
             window.scrollTo({ top: 0 });
         }
     }
@@ -279,11 +286,14 @@ export class WikiArticlePageComponent {
     /**
      * Название статьи по адресу — для карточек «См. также».
      *
+     * Стрелочная функция, а не метод: страница передаёт её входом
+     * `[resolveTitle]` в `WikiArticleViewComponent`, а ссылка на метод
+     * теряет `this` — на сервере это роняло рендер блока «См. также».
+     *
      * @param slug Адрес статьи.
      */
-    protected resolveTitle(slug: string): string | null {
-        return this.store.bySlug(slug)?.title ?? null;
-    }
+    protected readonly resolveTitle = (slug: string): string | null =>
+        this.store.bySlug(slug)?.title ?? null;
 }
 
 /**

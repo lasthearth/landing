@@ -290,8 +290,12 @@
 
         img {
             display: block;
-            width: 100%;
+            // Картинка не растягивается сильнее своего размера: мелкие
+            // скриншоты остаются резкими, крупные ужимаются до 34rem и
+            // встают по центру. Полную ширину дают модификаторы wide/left/right.
+            max-width: min(100%, 34rem);
             height: auto;
+            margin-inline: auto;
             border-radius: 0.875rem;
             cursor: zoom-in;
             box-shadow: 0 10px 24px -16px rgba(26, 17, 13, 0.6);
@@ -317,6 +321,10 @@
         width: min(40%, 20rem);
         margin-top: 0.25em;
         margin-bottom: 0.75em;
+
+        img {
+            width: 100%;
+        }
     }
 
     .wiki-fig--left {
@@ -358,6 +366,7 @@
         margin-right: -1.5rem;
 
         img {
+            width: 100%;
             border-radius: 0;
         }
     }
@@ -372,6 +381,7 @@
         }
 
         img {
+            width: 100%;
             aspect-ratio: 4 / 3;
             object-fit: cover;
         }
