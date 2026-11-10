@@ -108,7 +108,7 @@ export class PlayersApiService {
                 item.avatar?.original || item.avatar?.x96 || item.avatar?.x48 || '/default-avatar.webp',
             isOnline: !!item.is_online,
             lastOnline: item.last_online || null,
-            hours: this.toNumber(item.hours_played, 0),
+            hours: Math.round(this.toNumber(item.hours_played, 0)),
             about: item.about ?? '',
         };
     }
