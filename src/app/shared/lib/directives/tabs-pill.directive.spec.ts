@@ -102,8 +102,8 @@ const PILL_CSS = `
 
 .lh-tabs-pill .lh-tabs-pill__el.is-placed {
     transition:
-        transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
-        width 200ms cubic-bezier(0.32, 0.72, 0, 1);
+        transform 200ms cubic-bezier(0.77, 0, 0.175, 1),
+        width 200ms cubic-bezier(0.77, 0, 0.175, 1);
 }
 .lh-tabs-pill .lh-tabs-pill__face {
     display: block;
@@ -172,7 +172,9 @@ describe('TabsPillDirective', () => {
         host = fixture.componentInstance;
         fixture.detectChanges();
         await fixture.whenStable();
-        await settle(80);
+        // Ждём дольше перехода: тест проверяет итоговую посадку, а не
+        // мгновенность первой установки.
+        await settle(300);
     });
 
     it('создаёт плашку и делает её абсолютной в ряду', () => {
