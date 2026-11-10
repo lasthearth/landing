@@ -30,6 +30,11 @@
                             <span class="settlement-page__tier-label">{{ tier() }}/5</span>
                         </span>
                     }
+                    <app-share-button
+                        class="settlement-hero__share"
+                        [url]="'/settlements/' + item.id"
+                        [title]="item | settlementDisplayName"
+                    />
                 </div>
 
                 <div class="settlement-hero__badges">
@@ -91,28 +96,8 @@
 
                 <div class="settlement-hero__actions">
                     <app-join-request-button [settlementId]="item.id" [isGuild]="isGuild(item)" />
-                    <app-share-button [url]="'/settlements/' + item.id" [title]="item | settlementDisplayName" />
                 </div>
-            </div>
 
-            <button
-                type="button"
-                class="settlement-hero__photo"
-                [attr.aria-label]="'settlements.page.openPhoto' | translate"
-                [disabled]="gallery().length === 0"
-                (click)="viewerIndex.set(0)"
-            >
-                <app-image-loader
-                    [src]="cover(item)"
-                    [alt]="item | settlementDisplayName"
-                    [eager]="true"
-                    class="block size-full"
-                />
-            </button>
-        </section>
-
-        <div class="settlement-page__columns">
-            <div class="settlement-page__main">
                 @if (item.description) {
                     <section class="settlement-page__about" aria-labelledby="settlement-about">
                         <h2 id="settlement-about" class="settlement-page__h2 lh-display uppercase text-ink">
@@ -131,7 +116,22 @@
                 }
             </div>
 
-            <aside class="settlement-page__aside">
+            <div class="settlement-hero__side">
+                <button
+                    type="button"
+                    class="settlement-hero__photo"
+                    [attr.aria-label]="'settlements.page.openPhoto' | translate"
+                    [disabled]="gallery().length === 0"
+                    (click)="viewerIndex.set(0)"
+                >
+                    <app-image-loader
+                        [src]="cover(item)"
+                        [alt]="item | settlementDisplayName"
+                        [eager]="true"
+                        class="block size-full"
+                    />
+                </button>
+
                 <section class="settlement-page__population lh-panel" aria-labelledby="settlement-population">
                     <h2 id="settlement-population" class="settlement-page__h2 lh-display uppercase text-ink">
                         {{ "settlements.detailed.population" | translate }}
@@ -146,8 +146,8 @@
                         }
                     </div>
                 </section>
-            </aside>
-        </div>
+            </div>
+        </section>
 
         @if (gallery().length > 1) {
             <section class="settlement-page__gallery" aria-labelledby="settlement-photos">

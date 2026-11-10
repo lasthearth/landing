@@ -109,31 +109,6 @@
         background: var(--lh-online);
     }
 
-    &__columns {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 2rem;
-        align-items: start;
-    }
-
-    @media (min-width: 1024px) {
-        &__columns {
-            grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-            gap: 2.5rem;
-        }
-    }
-
-    &__aside {
-        min-width: 0;
-    }
-
-    @media (min-width: 1024px) {
-        &__aside {
-            position: sticky;
-            top: 1.5rem;
-        }
-    }
-
     &__text {
         max-width: 68ch;
         font-size: 1.0625rem;
@@ -144,7 +119,7 @@
         display: flex;
         align-items: flex-start;
         gap: 0.625rem;
-        margin: 1.5rem 0 0;
+        margin: 0;
         padding: 0.875rem 1rem;
         border: 1px solid var(--lh-border);
         border-radius: var(--lh-radius-md);
@@ -161,6 +136,13 @@
     &__population {
         padding: 1.25rem 1.25rem 1.5rem;
         border-radius: var(--lh-radius-lg);
+    }
+
+    @media (min-width: 1024px) {
+        &__population {
+            position: sticky;
+            top: 1.5rem;
+        }
     }
 
     &__count {
@@ -327,7 +309,6 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 2rem;
-    align-items: center;
 
     @media (min-width: 1024px) {
         grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
@@ -357,11 +338,36 @@
         animation-delay: 210ms;
     }
 
+    &__identity > *:nth-child(5) {
+        animation-delay: 280ms;
+    }
+
+    &__identity > *:nth-child(6) {
+        animation-delay: 350ms;
+    }
+
+    &__side {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        min-width: 0;
+    }
+
     &__namerow {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 0.75rem 1rem;
+    }
+
+    /* Действие страницы живёт на строке заголовка, а не болтается отдельным рядом. */
+    &__share {
+        margin-left: auto;
+    }
+
+    /* Пустой ряд действия (гость без права заявки) не оставляет дыру в каскаде. */
+    &__actions:has(> app-join-request-button:empty) {
+        display: none;
     }
 
     &__badges {
