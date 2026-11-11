@@ -20,29 +20,3 @@
     transform-origin: center center;
 }
 
-
-/*
- * Морфинг смены набора (View Transitions API, запуск — crossfadeUpdate):
- * имена получают только элементы, которые меняют содержимое, — картинка
- * в рамке, заголовок, колонка цен, состав и кнопка покупки. Старый и
- * новый снимки перетекают друг в друга; панель и рамка не мигают.
- */
-.kits-detail-image {
-    view-transition-name: kits-image;
-}
-
-.kits-detail-title {
-    view-transition-name: kits-title;
-}
-
-.kits-detail-prices {
-    view-transition-name: kits-prices;
-}
-
-.kits-detail-content {
-    view-transition-name: kits-content;
-}
-
-.kits-detail-buy {
-    view-transition-name: kits-buy;
-}

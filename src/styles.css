@@ -1485,32 +1485,36 @@ button:disabled,
     }
 }
 
-/*
- * Морфинг смены товара на витрине магазина (View Transitions API).
- * Запуск — crossfadeUpdate в features/market; имена элементов заданы
- * в LESS компонентов (kits-detail-*, titles-detail-*). Здесь глобальные
- * правила снапшотов: корень не снимается (страница не мигает целиком),
- * длительность и кривая — из токенов движения.
- */
-:root {
-    view-transition-name: none;
+/* Кроссфейд карточки товара ([appSwapFade]): клон старого состояния
+   растворяется поверх нового, живой узел входит масштабом 0.985→1.
+   Только opacity и transform — без раскладки на кадр. */
+.lh-swap-host {
+    position: relative;
 }
 
-::view-transition-group(*),
-::view-transition-image-pair(*),
-::view-transition-old(*),
-::view-transition-new(*) {
-    animation-duration: var(--lh-dur-fast);
-    animation-timing-function: var(--lh-ease-smooth);
+.lh-swap-host.lh-swap-enter {
+    animation: lh-swap-in var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
-/* Тот же kill-switch, что у остального движения: снимки не анимируются. */
-@media (prefers-reduced-motion: reduce) {
-    ::view-transition-group(*),
-    ::view-transition-image-pair(*),
-    ::view-transition-old(*),
-    ::view-transition-new(*) {
-        animation-duration: 0.01ms;
+.lh-swap-ghost {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+    animation: lh-swap-out var(--lh-dur-exit) var(--lh-ease-smooth) forwards;
+}
+
+@keyframes lh-swap-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes lh-swap-in {
+    from {
+        opacity: 0;
+        transform: scale(0.985);
     }
 }
 
