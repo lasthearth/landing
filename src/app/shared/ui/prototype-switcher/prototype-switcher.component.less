@@ -20,6 +20,11 @@
     font-weight: 700;
 }
 
+/* Пока видна полоса согласия, пилюля поднимается над ней, как остальные плавающие кнопки. */
+body.lh-has-consent .proto-switcher {
+    bottom: calc(var(--lh-consent-h, 0px) + 1rem);
+}
+
 .proto-switcher__arrow {
     display: grid;
     place-items: center;

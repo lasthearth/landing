@@ -203,6 +203,11 @@
  * Панель: на телефоне — верхняя полоса с двумя колонками,
  * на широком экране — вертикальный стек.
  */
+/*
+ * На телефоне рельса стоит первой, но показывает только баланс и пополнение:
+ * быстрые подборки и список разделов дублируют чипы и отжимали витрину
+ * за сгиб — им место с lg, где рельса становится боковой колонкой.
+ */
 .split__rail {
     order: -1;
     min-width: 0;
@@ -405,19 +410,10 @@
 }
 
 @media (max-width: 1023px) {
+    /* Подборки и список разделов дублируют чипы и отжимают витрину за сгиб. */
+    .split__picks,
     .split__sections {
-        flex-direction: row;
-        flex-wrap: nowrap;
-        gap: var(--lh-space-3);
-        overflow-x: auto;
-        padding-bottom: var(--lh-space-1);
-        scrollbar-width: thin;
-    }
-
-    .split__section {
-        width: auto;
-        padding: var(--lh-space-1) 0;
-        white-space: nowrap;
+        display: none;
     }
 }
 
@@ -432,6 +428,7 @@
         position: sticky;
         top: 1rem;
     }
+
 
     .split__panel {
         display: flex;
