@@ -4,6 +4,9 @@
         <div class="sky__stars"></div>
         <div class="sky__stars sky__stars--far"></div>
 
+        <!-- Падающая звезда: видна короткую долю четырёхсекундного цикла. -->
+        <span class="sky__shoot" aria-hidden="true"></span>
+
         <!-- Луна: растровый слой лежит поверх CSS-круга, круг остаётся фолбэком. -->
         <div class="sky__moon" aria-hidden="true">
             <div class="sky__moon-art" aria-hidden="true"></div>
@@ -11,7 +14,7 @@
 
         <!-- Дальний слой: еловый лес, верхушки выше деревни и стены. -->
         <div class="sky__layer sky__layer--firs">
-            <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <svg viewBox="0 0 1200 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
                 <g fill="currentColor">
                     <polygon points="-4,200 30,80 64,200" />
                     <polygon points="61,200 95,50 129,200" />
@@ -41,7 +44,7 @@
 
         <!-- Средний слой: деревня, крыши выглядывают из-за стены. -->
         <div class="sky__layer sky__layer--village">
-            <svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
                 <g fill="currentColor">
                     <rect x="40" y="70" width="70" height="50" />
                     <polygon points="40,70 75,42 110,70" />
@@ -85,7 +88,7 @@
 
         <!-- Ближний слой: стена с воротами, за которыми свет очага. -->
         <div class="sky__layer sky__layer--wall">
-            <svg viewBox="0 0 1200 78" xmlns="http://www.w3.org/2000/svg" focusable="false">
+            <svg viewBox="0 0 1200 78" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
                 <g fill="currentColor">
                     <rect x="0" y="38" width="1200" height="40" />
                     <rect x="0" y="16" width="44" height="22" />

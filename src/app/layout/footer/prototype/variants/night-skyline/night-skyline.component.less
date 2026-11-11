@@ -22,47 +22,69 @@
     --sky-tile-border: color-mix(in srgb, var(--lh-parchment-dim) 28%, transparent);
 }
 
+/**
+ * Небо как сцена: высота полосы держит луну, звёзды и два слоя силуэтов.
+ * Высоту по брейкпоинтам задают медиазапросы ниже.
+ */
 .sky__band {
     position: relative;
-    height: clamp(9rem, 19vw, 16rem);
+    height: clamp(30rem, 42vw, 34rem);
     overflow: hidden;
-    background: linear-gradient(180deg, var(--lh-night) 0%, var(--lh-night-grad-1) 55%, var(--lh-night-grad-3) 118%);
+    background: linear-gradient(180deg, var(--lh-night) 0%, var(--lh-night-grad-1) 58%, var(--lh-night-grad-3) 118%);
 }
 
-/** Тёплое зарево очагов у горизонта, поверх неба. */
-.sky__band::after {
+/**
+ * Янтарное свечение у линии силуэтов: лежит за слоями (псевдоэлемент
+ * `::before` рисуется первым), поэтому деревня и стена читаются тёмными,
+ * а небо светится у горизонта.
+ */
+.sky__band::before {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 55%;
+    height: 74%;
     pointer-events: none;
-    background: radial-gradient(
-        ellipse 70% 100% at 50% 118%,
-        color-mix(in srgb, var(--lh-accent) 26%, transparent) 0%,
-        transparent 72%
-    );
+    background:
+        radial-gradient(
+            ellipse 82% 100% at 50% 112%,
+            color-mix(in srgb, var(--lh-brand) 46%, transparent) 0%,
+            color-mix(in srgb, var(--lh-accent) 24%, transparent) 38%,
+            transparent 76%
+        ),
+        linear-gradient(0deg, color-mix(in srgb, var(--lh-accent) 26%, transparent) 0%, transparent 18%);
 }
 
+/** Первый слой звёзд: крупнее и ярче, цикл 2.8s. */
 .sky__stars {
     position: absolute;
     inset: 0;
     background-image:
-        radial-gradient(circle 1px at 8% 22%, var(--lh-parchment-3) 99%, transparent 100%),
-        radial-gradient(circle 1.5px at 17% 12%, var(--lh-parchment-2) 99%, transparent 100%),
-        radial-gradient(circle 1px at 26% 34%, var(--lh-parchment-3) 99%, transparent 100%),
-        radial-gradient(circle 1px at 34% 8%, var(--lh-parchment-2) 99%, transparent 100%),
-        radial-gradient(circle 1.5px at 43% 26%, var(--lh-parchment-3) 99%, transparent 100%),
-        radial-gradient(circle 1px at 52% 15%, var(--lh-parchment-2) 99%, transparent 100%),
-        radial-gradient(circle 1px at 61% 31%, var(--lh-parchment-3) 99%, transparent 100%),
-        radial-gradient(circle 1.5px at 70% 10%, var(--lh-parchment-2) 99%, transparent 100%),
-        radial-gradient(circle 1px at 79% 24%, var(--lh-parchment-3) 99%, transparent 100%),
-        radial-gradient(circle 1px at 88% 14%, var(--lh-parchment-2) 99%, transparent 100%),
-        radial-gradient(circle 1.5px at 95% 30%, var(--lh-parchment-3) 99%, transparent 100%);
-    animation: sky-twinkle 3.2s var(--lh-ease-smooth) infinite alternate;
+        radial-gradient(circle 1.5px at 8% 22%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 2px at 17% 12%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 26% 34%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 34% 8%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 2px at 43% 26%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 52% 15%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 61% 31%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 2px at 70% 10%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 79% 24%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 88% 14%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 2px at 95% 30%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 5% 48%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 2px at 14% 56%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 30% 46%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 47% 52%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 2px at 58% 44%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 66% 58%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 76% 40%, var(--lh-parchment-2) 99%, transparent 100%),
+        radial-gradient(circle 2px at 84% 52%, var(--lh-parchment-3) 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 91% 46%, var(--lh-parchment-2) 99%, transparent 100%);
+    animation: sky-twinkle 2.8s var(--lh-ease-smooth) infinite alternate;
 }
 
+/** Второй слой звёзд: мельче и реже, свой цикл 3.6s и сдвиг фазы. */
 .sky__stars--far {
     background-image:
         radial-gradient(circle 1px at 12% 40%, var(--lh-parchment-dim) 99%, transparent 100%),
@@ -73,20 +95,68 @@
         radial-gradient(circle 1px at 66% 20%, var(--lh-parchment-dim) 99%, transparent 100%),
         radial-gradient(circle 1px at 75% 44%, var(--lh-parchment-dim) 99%, transparent 100%),
         radial-gradient(circle 1px at 84% 8%, var(--lh-parchment-dim) 99%, transparent 100%),
-        radial-gradient(circle 1px at 92% 40%, var(--lh-parchment-dim) 99%, transparent 100%);
-    animation: sky-twinkle 4s var(--lh-ease-smooth) -1.4s infinite alternate;
+        radial-gradient(circle 1px at 92% 40%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 3% 34%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 19% 46%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 29% 24%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 41% 60%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 52% 30%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 63% 54%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 72% 28%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 80% 62%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 88% 56%, var(--lh-parchment-dim) 99%, transparent 100%),
+        radial-gradient(circle 1px at 97% 20%, var(--lh-parchment-dim) 99%, transparent 100%);
+    animation:
+        sky-twinkle 3.6s var(--lh-ease-smooth) -1.4s infinite alternate,
+        sky-drift 90s linear infinite alternate;
 }
 
+/** Медленный дрейф мелких звёзд: параллакс неба на длинном цикле. */
+@keyframes sky-drift {
+    from {
+        transform: translate3d(-10px, 0, 0);
+    }
+
+    to {
+        transform: translate3d(10px, 0, 0);
+    }
+}
+
+/**
+ * Падающая звезда: короткий диагональный пролёт в первой половине цикла,
+ * остальные ~3.4s звезда не видна.
+ */
+.sky__shoot {
+    position: absolute;
+    top: 10%;
+    left: 6%;
+    width: 7rem;
+    height: 2px;
+    border-radius: var(--lh-radius-full);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--lh-parchment-3) 55%, transparent) 55%,
+        var(--lh-parchment-3) 100%
+    );
+    opacity: 0;
+    pointer-events: none;
+    animation: sky-shoot 4s var(--lh-ease-out-quart) infinite;
+}
+
+/** Луна: крупный диск над силуэтами, ореол дышит вместе с диском. */
 .sky__moon {
     position: absolute;
-    top: 14%;
+    top: 13%;
     right: 16%;
-    width: clamp(2.25rem, 5vw, 3.5rem);
+    width: clamp(3.5rem, 6.2vw, 5.75rem);
     aspect-ratio: 1;
     border-radius: var(--lh-radius-full);
     background: radial-gradient(circle at 38% 35%, var(--lh-parchment-3) 0 62%, var(--lh-parchment-dim) 100%);
-    box-shadow: 0 0 2.5rem color-mix(in srgb, var(--lh-accent-soft) 40%, transparent);
-    animation: sky-breathe 3.6s var(--lh-ease-smooth) infinite alternate;
+    box-shadow:
+        0 0 2.5rem 0.5rem color-mix(in srgb, var(--lh-accent-soft) 36%, transparent),
+        0 0 7rem 2rem color-mix(in srgb, var(--lh-accent) 24%, transparent);
+    animation: sky-moon 3.6s var(--lh-ease-smooth) infinite alternate;
 }
 
 /**
@@ -95,10 +165,13 @@
  * который пишет скрипт при прокрутке.
  */
 .sky__layer {
+    --sky-layer-h: 42%;
+
     position: absolute;
     left: 0;
     right: 0;
     bottom: -1px;
+    height: var(--sky-layer-h);
     pointer-events: none;
     transform: translateY(calc((1 - var(--sky-settle, 1)) * var(--sky-lift)));
     will-change: transform;
@@ -107,21 +180,24 @@
 .sky__layer svg {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 
 .sky__layer--firs {
-    --sky-lift: 18px;
+    --sky-lift: 30px;
+    --sky-layer-h: 42%;
     color: color-mix(in srgb, var(--lh-night-2) 45%, var(--lh-night-grad-3));
 }
 
 .sky__layer--village {
-    --sky-lift: 34px;
+    --sky-lift: 56px;
+    --sky-layer-h: 27%;
     color: color-mix(in srgb, var(--lh-night-2) 78%, var(--lh-night-grad-1));
 }
 
 .sky__layer--wall {
-    --sky-lift: 56px;
+    --sky-lift: 90px;
+    --sky-layer-h: 17%;
     color: var(--lh-night-deep);
 }
 
@@ -137,7 +213,6 @@
 
 .sky--has-art .sky__moon {
     background: none;
-    box-shadow: none;
 }
 
 /**
@@ -153,17 +228,9 @@
     background-position: center bottom;
 
     /* Арт не бесшовный, поэтому повтор выключен. Один кадр тянется на всю
-       ширину подвала; высота остаётся равной высоте силуэта, чтобы небо не
-       срезалось на высоком экране. */
+       ширину подвала и на всю высоту слоя: высоту слоя задаёт переменная
+       --sky-layer-h, поэтому силуэты занимают нижнюю треть сцены. */
     background-size: 100% 100%;
-}
-
-/* Широкий экран: фон держит исходную высоту, а не растягивается дальше.
-   Иначе силуэт города уходит вверх и перестаёт закрывать нижний край кадра. */
-@media (min-width: 1600px) {
-    .sky__asset {
-        background-size: auto 100%;
-    }
 }
 
 .sky__asset--firs {
@@ -374,11 +441,50 @@
 
 @keyframes sky-twinkle {
     from {
-        opacity: 0.35;
+        opacity: 0.38;
     }
 
     to {
+        opacity: 1;
+    }
+}
+
+/** Дыхание луны: диск и ореол растут и гаснут в бесконечном цикле 3.6s. */
+@keyframes sky-moon {
+    from {
+        opacity: 0.72;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.06);
+    }
+}
+
+/**
+ * Падающая звезда: 0–52% цикла невидима, 52–67% (0.6s из 4s) пролетает
+ * по диагонали и гаснет, остаток цикла снова невидима.
+ */
+@keyframes sky-shoot {
+    0%,
+    52% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) rotate(27deg) scaleX(0.4);
+    }
+
+    55% {
         opacity: 0.95;
+    }
+
+    67% {
+        opacity: 0;
+        transform: translate3d(15rem, 7.5rem, 0) rotate(27deg) scaleX(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(15rem, 7.5rem, 0) rotate(27deg) scaleX(1);
     }
 }
 
@@ -402,17 +508,21 @@
     }
 }
 
-@media (max-width: 1023px) {
+/** Планшет: сцена ниже, слои те же по долям полосы. */
+@media (max-width: 1279px) {
     .sky__band {
-        height: clamp(7rem, 26vw, 10rem);
+        height: 24rem;
     }
+}
 
-    /** На узком экране слои крупнее: края обрезаются, силуэты читаются. */
-    .sky__layer svg {
-        width: 150%;
-        margin-left: -25%;
+/** Телефон: сцена в 18rem, силуэты всё ещё в нижней трети. */
+@media (max-width: 767px) {
+    .sky__band {
+        height: 18rem;
     }
+}
 
+@media (max-width: 1023px) {
     .sky__body {
         grid-template-columns: minmax(0, 1fr);
         gap: var(--lh-space-6);
@@ -432,6 +542,7 @@
     .sky__stars,
     .sky__stars--far,
     .sky__moon,
+    .sky__shoot,
     .sky__window--flicker,
     .sky__gate {
         animation: none;
@@ -439,6 +550,20 @@
 
     .sky__stars {
         opacity: 0.8;
+    }
+
+    .sky__stars--far {
+        opacity: 0.7;
+    }
+
+    .sky__shoot {
+        opacity: 0;
+        transform: none;
+    }
+
+    .sky__moon {
+        opacity: 1;
+        transform: none;
     }
 
     .sky__layer {
