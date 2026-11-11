@@ -33,13 +33,12 @@ export class FooterPrototypeState {
             url: environment.discordInviteUrl,
             icon: '/images/discord.svg',
             labelKey: 'footer.social.discord',
-            isSmallIcon: true,
+            isPaddedGlyph: true,
         },
         {
             url: 'https://www.youtube.com/@LISOVCORP',
             icon: '/images/youtube.svg',
             labelKey: 'footer.social.youtube',
-            isSmallIcon: true,
         },
     ]);
 

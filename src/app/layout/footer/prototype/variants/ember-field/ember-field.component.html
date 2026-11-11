@@ -35,7 +35,7 @@
                         [attr.aria-label]="social.labelKey | translate"
                         [title]="social.labelKey | translate"
                     >
-                        <img [src]="social.icon" alt="" [class.ember__icon--small]="social.isSmallIcon === true" />
+                        <img [src]="social.icon" alt="" [class.ember__icon--padded]="social.isPaddedGlyph === true" />
                     </a>
                 }
             </div>
@@ -48,7 +48,12 @@
                 <a class="ember__link ember__link--legal" [routerLink]="['/public-offer']">
                     {{ "footer.publicOffer" | translate }}
                 </a>
-                <a class="ember__link ember__link--legal" [href]="state.docsUrl()" target="_blank" rel="noopener noreferrer">
+                <a
+                    class="ember__link ember__link--legal"
+                    [href]="state.docsUrl()"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     {{ "footer.version" | translate: { version: state.siteVersion(), date: state.siteVersionDate() } }}
                 </a>
             </div>

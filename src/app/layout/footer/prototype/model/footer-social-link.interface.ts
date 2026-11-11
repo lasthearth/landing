@@ -11,6 +11,6 @@ export interface FooterSocialLink {
     /** Ключ словаря с подписью канала. */
     readonly labelKey: string;
 
-    /** Признак иконки, которую боевой подвал рисует уменьшенной (`size-6`), а не во всю плитку. */
-    readonly isSmallIcon?: boolean;
+    /** Признак знака с полями внутри viewBox: коробка иконки на 4px больше, чтобы оптика ряда была ровной. */
+    readonly isPaddedGlyph?: boolean;
 }

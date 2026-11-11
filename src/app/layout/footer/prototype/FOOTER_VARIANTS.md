@@ -8,14 +8,14 @@
 
 ## 1. Управление
 
-| Что                          | Как                                                                                        |
-| ---------------------------- | ------------------------------------------------------------------------------------------ |
-| Открыть вариант              | `http://127.0.0.1:4310/?fvariant=ember-field`                                               |
-| Значения параметра           | `ember-field` · `hearth-gate` · `night-skyline`                                             |
-| Переключение                 | Плавающая пилюля внизу экрана: стрелки, клавиши `←` `→`, закрытие — `×` или `Esc`          |
-| Клавиши в полях ввода        | Не перехватываются: `input`, `textarea`, `select`, `contenteditable` получают их как обычно |
-| Production                   | Пилюля не рендерится; вариант остаётся доступен только по параметру адреса                  |
-| Гидратация                   | Начальный рендер на сервере — боевой подвал; вариант подставляется после `afterNextRender`  |
+| Что                   | Как                                                                                         |
+| --------------------- | ------------------------------------------------------------------------------------------- |
+| Открыть вариант       | `http://127.0.0.1:4310/?fvariant=ember-field`                                               |
+| Значения параметра    | `ember-field` · `hearth-gate` · `night-skyline`                                             |
+| Переключение          | Плавающая пилюля внизу экрана: стрелки, клавиши `←` `→`, закрытие — `×` или `Esc`           |
+| Клавиши в полях ввода | Не перехватываются: `input`, `textarea`, `select`, `contenteditable` получают их как обычно |
+| Production            | Пилюля не рендерится; вариант остаётся доступен только по параметру адреса                  |
+| Гидратация            | Начальный рендер на сервере — боевой подвал; вариант подставляется после `afterNextRender`  |
 
 Параметр адреса обновляется через `router.navigate(..., { queryParamsHandling: 'merge', replaceUrl: true })`,
 поэтому внутренние переходы по ссылкам подвала вариант не сбрасывают.
@@ -25,16 +25,16 @@
 Единственный источник — `FooterPrototypeState` (сигналы), объявленный
 в провайдерах хоста `FooterPrototypeComponent`.
 
-| Данные              | Значение                                                              | Источник                                  |
-| ------------------- | --------------------------------------------------------------------- | ----------------------------------------- |
-| `navLinks`          | 16 разделов сайта с `route` и i18n-ключом                             | `../config/footer-nav-links.constant.ts`  |
-| `socialLinks`       | Boosty, DonationAlerts, Discord, YouTube: адрес, иконка, i18n-ключ    | повторяют боевой подвал                   |
-| `discordInviteUrl`  | `environment.discordInviteUrl`                                        | `@core/config/environments/environment`   |
-| `siteVersion`       | `environment.siteVersion`                                             | там же                                    |
-| `siteVersionDate`   | `environment.siteVersionDate`                                         | там же                                    |
-| `docsUrl`           | `https://docs.lasthearth.ru/` — адрес за строкой версии               | повторяет боевой подвал                   |
-| `logoSrc`           | `/images/logo.webp`                                                   | повторяет боевой подвал                   |
-| `copyright`         | `© lasthearth.ru 2025-2026` — литерал, как в боевом подвале           | литерал                                   |
+| Данные             | Значение                                                           | Источник                                 |
+| ------------------ | ------------------------------------------------------------------ | ---------------------------------------- |
+| `navLinks`         | 16 разделов сайта с `route` и i18n-ключом                          | `../config/footer-nav-links.constant.ts` |
+| `socialLinks`      | Boosty, DonationAlerts, Discord, YouTube: адрес, иконка, i18n-ключ | повторяют боевой подвал                  |
+| `discordInviteUrl` | `environment.discordInviteUrl`                                     | `@core/config/environments/environment`  |
+| `siteVersion`      | `environment.siteVersion`                                          | там же                                   |
+| `siteVersionDate`  | `environment.siteVersionDate`                                      | там же                                   |
+| `docsUrl`          | `https://docs.lasthearth.ru/` — адрес за строкой версии            | повторяет боевой подвал                  |
+| `logoSrc`          | `/images/logo.webp`                                                | повторяет боевой подвал                  |
+| `copyright`        | `© lasthearth.ru 2025-2026` — литерал, как в боевом подвале       | литерал                                  |
 
 Каждый вариант обязан вывести: логотип, копирайт, `footer.rights`,
 все 16 пунктов `navLinks`, ссылки `footer.faq` / `footer.privacyPolicy` /
@@ -101,18 +101,18 @@ JSDoc на русском у публичных элементов, без `any`
 
 Все пути — от `src/app/layout/footer/prototype/`.
 
-| Файл                                                       | Класс / имя                  | Селектор                       | Назначение                                    |
-| ---------------------------------------------------------- | ---------------------------- | ------------------------------ | --------------------------------------------- |
-| `FOOTER_VARIANTS.md`                                       | —                            | —                              | этот контракт                                 |
-| `footer-prototype.component.ts\|html\|less`                | `FooterPrototypeComponent`   | `app-footer-prototype`         | хост: читает `?fvariant=`, рисует вариант или `app-footer`, держит провайдер данных |
-| `footer-prototype-switcher.component.ts\|html\|less`       | `FooterPrototypeSwitcherComponent` | `app-footer-prototype-switcher` | плавающая пилюля: стрелки, клавиши, подпись, закрытие |
-| `footer-prototype-state.service.ts`                        | `FooterPrototypeState`       | —                              | данные подвала сигналами                      |
-| `config/footer-prototype-variants.constant.ts`             | `FOOTER_PROTOTYPE_VARIANTS`  | —                              | порядок вариантов и подписи пилюли            |
-| `model/footer-variant.model.ts`                            | `FooterVariantId`, `FooterVariantOption` | —                  | тип идентификатора и опции                    |
-| `model/footer-social-link.interface.ts`                    | `FooterSocialLink`           | —                              | адрес, иконка, ключ подписи соцсети           |
-| `variants/ember-field/ember-field.component.ts\|html\|less` | `EmberFieldComponent`       | `app-footer-ember-field`       | вариант «Угольки»                             |
-| `variants/hearth-gate/hearth-gate.component.ts\|html\|less` | `HearthGateComponent`       | `app-footer-hearth-gate`       | вариант «Врата очага»                         |
-| `variants/night-skyline/night-skyline.component.ts\|html\|less` | `NightSkylineComponent` | `app-footer-night-skyline`     | вариант «Ночной силуэт»                       |
+| Файл                                                            | Класс / имя                              | Селектор                        | Назначение                                                                          |
+| --------------------------------------------------------------- | ---------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------- |
+| `FOOTER_VARIANTS.md`                                            | —                                        | —                               | этот контракт                                                                       |
+| `footer-prototype.component.ts\|html\|less`                     | `FooterPrototypeComponent`               | `app-footer-prototype`          | хост: читает `?fvariant=`, рисует вариант или `app-footer`, держит провайдер данных |
+| `footer-prototype-switcher.component.ts\|html\|less`            | `FooterPrototypeSwitcherComponent`       | `app-footer-prototype-switcher` | плавающая пилюля: стрелки, клавиши, подпись, закрытие                               |
+| `footer-prototype-state.service.ts`                             | `FooterPrototypeState`                   | —                               | данные подвала сигналами                                                            |
+| `config/footer-prototype-variants.constant.ts`                  | `FOOTER_PROTOTYPE_VARIANTS`              | —                               | порядок вариантов и подписи пилюли                                                  |
+| `model/footer-variant.model.ts`                                 | `FooterVariantId`, `FooterVariantOption` | —                               | тип идентификатора и опции                                                          |
+| `model/footer-social-link.interface.ts`                         | `FooterSocialLink`                       | —                               | адрес, иконка, ключ подписи соцсети                                                 |
+| `variants/ember-field/ember-field.component.ts\|html\|less`     | `EmberFieldComponent`                    | `app-footer-ember-field`        | вариант «Угольки»                                                                   |
+| `variants/hearth-gate/hearth-gate.component.ts\|html\|less`     | `HearthGateComponent`                    | `app-footer-hearth-gate`        | вариант «Врата очага»                                                               |
+| `variants/night-skyline/night-skyline.component.ts\|html\|less` | `NightSkylineComponent`                  | `app-footer-night-skyline`      | вариант «Ночной силуэт»                                                             |
 
 Общая вау-идея — огонь и очаг, но структура у вариантов разная: частицы,
 край пергамента, ночной силуэт. Локальные переменные варианта объявляются
@@ -120,11 +120,11 @@ JSDoc на русском у публичных элементов, без `any`
 
 ## 5. Направления вариантов
 
-| Вариант        | Идея                                                                                                                                                                              | Движение                                                                                                  |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `ember-field`  | Canvas 2D: угольки поднимаются от верхней кромки подвала; над кромкой ASCII-строка огня из мерцающих символов; указатель подмешивает лёгкий ветер                                 | Частицы — rAF, пауза вне вьюпорта; ASCII-строка перерисовывается каждые ~110ms; `reduced-motion` — статичный кадр |
-| `hearth-gate`  | Верхняя кромка подвала — рваный обгоревший край пергамента (`clip-path` + маска); при входе во вьюпорт по кромке пробегает янтарная линия, контент раскрывается каскадом; крупный вензель «LAST HEARTH» проявляется маской снизу вверх один раз | Каскад — `[appReveal]` с задержкой 80ms на группу; линия — 400ms; вензель — 400ms один раз |
-| `night-skyline`| Слоёные параллакс-силуэты (деревня, ели, стена) оседают при прокрутке в подвал, звёзды мерцают, луна светит; CTA «В Discord» с магнитным ховером                                     | Слои — сдвиг от прогресса прокрутки; звёзды и луна — бесконечные циклы 3.2–4s; магнит — 200ms `--lh-ease-spring`      |
+| Вариант         | Идея                                                                                                                                                                                                                                            | Движение                                                                                                          |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `ember-field`   | Canvas 2D: угольки поднимаются от верхней кромки подвала; над кромкой ASCII-строка огня из мерцающих символов; указатель подмешивает лёгкий ветер                                                                                               | Частицы — rAF, пауза вне вьюпорта; ASCII-строка перерисовывается каждые ~110ms; `reduced-motion` — статичный кадр |
+| `hearth-gate`   | Верхняя кромка подвала — рваный обгоревший край пергамента (`clip-path` + маска); при входе во вьюпорт по кромке пробегает янтарная линия, контент раскрывается каскадом; крупный вензель «LAST HEARTH» проявляется маской снизу вверх один раз | Каскад — `[appReveal]` с задержкой 80ms на группу; линия — 400ms; вензель — 400ms один раз                        |
+| `night-skyline` | Слоёные параллакс-силуэты (деревня, ели, стена) оседают при прокрутке в подвал, звёзды мерцают, луна светит; CTA «В Discord» с магнитным ховером                                                                                                | Слои — сдвиг от прогресса прокрутки; звёзды и луна — бесконечные циклы 3.2–4s; магнит — 200ms `--lh-ease-spring`  |
 
 ## 6. Что проверяется перед сдачей
 

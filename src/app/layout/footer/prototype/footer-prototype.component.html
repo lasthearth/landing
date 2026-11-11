@@ -1,11 +1,11 @@
 @switch (activeVariantId()) {
-    @case ('ember-field') {
+    @case ("ember-field") {
         <app-footer-ember-field />
     }
-    @case ('hearth-gate') {
+    @case ("hearth-gate") {
         <app-footer-hearth-gate />
     }
-    @case ('night-skyline') {
+    @case ("night-skyline") {
         <app-footer-night-skyline />
     }
     @default {
@@ -14,5 +14,9 @@
 }
 
 @if (isSwitcherVisible()) {
-    <app-footer-prototype-switcher [variants]="variants" [activeId]="activeVariantId()" (pick)="selectVariant($event)" />
+    <app-footer-prototype-switcher
+        [variants]="variants"
+        [activeId]="activeVariantId()"
+        (pick)="selectVariant($event)"
+    />
 }

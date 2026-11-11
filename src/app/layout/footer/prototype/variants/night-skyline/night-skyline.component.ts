@@ -70,7 +70,11 @@ export class NightSkylineComponent {
      * пришли. Любая ошибка оставляет сигнал ложным: остаются SVG-фолбэки.
      */
     private preloadArt(): void {
-        const sources = ['/footer-assets/skyline-far.png', '/footer-assets/skyline-village.png', '/footer-assets/skyline-wall.png'];
+        const sources = [
+            '/footer-assets/skyline-far.png',
+            '/footer-assets/skyline-village.png',
+            '/footer-assets/skyline-wall.png',
+        ];
         let left = sources.length;
 
         for (const src of sources) {
