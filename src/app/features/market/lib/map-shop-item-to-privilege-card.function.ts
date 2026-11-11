@@ -31,6 +31,5 @@ export function mapShopItemToPrivilegeCard(item: IShopItem): PrivilegeCard {
         privileges: item.privileges ?? [],
         currency: 'coins',
         discountPercent: item.discountPercent,
-        createdAt: item.createdAt,
     };
 }

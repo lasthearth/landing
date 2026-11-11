@@ -1,11 +1,10 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { afterNextRender, Component, ChangeDetectionStrategy, computed, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, ChangeDetectionStrategy, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
-import { AnalyticsService } from '@core/services/analytics.service';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { environment } from '@core/config/environments/environment';
 import { DonateService } from '@entities/donate';
@@ -21,8 +20,6 @@ import { ProtoPraisComponent } from './components/proto-prais/proto-prais.compon
 import { ProtoSplitComponent } from './components/proto-split/proto-split.component';
 import { ProtoVitrinaComponent } from './components/proto-vitrina/proto-vitrina.component';
 import { FUNDING_TARGETS } from './lib/funding-targets.constant';
-import { MarketSortKey, MARKET_SORT_OPTIONS } from './lib/market-sort-key.type';
-import { MarketSearchResultsComponent } from './components/search-results/search-results.component';
 import { WORLD_SHOTS } from './lib/world-shots.constant';
 
 /**
@@ -30,9 +27,8 @@ import { WORLD_SHOTS } from './lib/world-shots.constant';
  */
 @Component({
     selector: 'app-market',
-    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective, TabsPillDirective, PrototypeSwitcherComponent, ProtoPraisComponent, ProtoSplitComponent, ProtoVitrinaComponent, MarketSearchResultsComponent],
+    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective, TabsPillDirective, PrototypeSwitcherComponent, ProtoPraisComponent, ProtoSplitComponent, ProtoVitrinaComponent],
     templateUrl: './market.component.html',
-    styleUrl: './market.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketComponent {
@@ -272,69 +268,9 @@ export class MarketComponent {
     );
 
     /**
-     * Сервис аналитики: цели поиска, сортировки и пополнения.
-     */
-    private readonly analytics = inject(AnalyticsService);
-
-    /**
-     * Запрос поиска по названию товара, пустая строка выключает поиск.
-     */
-    protected readonly searchQuery = signal('');
-
-    /**
-     * Ключ сортировки витрины, по умолчанию — дешёвые сначала.
-     */
-    protected readonly sortKey = signal<MarketSortKey>('price-asc');
-
-    /**
-     * Кнопки сортировки в порядке `MARKET_SORT_OPTIONS`.
-     */
-    protected readonly sortOptions = MARKET_SORT_OPTIONS;
-
-    /**
-     * Признак активного поиска: сцену вкладок заменяют результаты.
-     */
-    protected readonly isSearching = computed(() => this.searchQuery().trim().length > 0);
-
-    /**
-     * Пишет запрос поиска из поля панели.
-     *
-     * @param event Событие ввода поля поиска.
-     */
-    protected onSearchInput(event: Event): void {
-        this.searchQuery.set((event.target as HTMLInputElement).value);
-    }
-
-    /**
-     * Отправляет цель аналитики на поиск по Enter.
-     */
-    protected onSearchSubmit(): void {
-        const query = this.searchQuery().trim();
-
-        if (query) {
-            this.analytics.goal('market_search', { query });
-        }
-    }
-
-    /**
-     * Меняет сортировку витрины и отправляет цель аналитики.
-     *
-     * @param key Новый ключ сортировки.
-     */
-    protected setSort(key: MarketSortKey): void {
-        if (this.sortKey() === key) {
-            return;
-        }
-
-        this.sortKey.set(key);
-        this.analytics.goal('market_sort', { key });
-    }
-
-    /**
      * Открывает диалог пополнения осколков.
      */
     protected howToBuy() {
-        this.analytics.goal('market_topup_click');
         this.dialogs.open(new PolymorpheusComponent(HowToBuyComponent), { size: 'auto' }).subscribe();
     }
 }

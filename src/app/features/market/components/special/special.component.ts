@@ -7,15 +7,13 @@ import {
     OnDestroy,
     signal,
     TemplateRef,
-    ViewChild, Input,
+    ViewChild,
 } from '@angular/core';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
 import { DonateService, IKitEntry, IShopItem, IShopSection, SHOP_SECTIONS } from '@entities/donate';
-import { MarketSortKey } from '../../lib/market-sort-key.type';
-import { sortShopItemsByKey } from '../../lib/sort-shop-items-by-key.function';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
@@ -119,26 +117,11 @@ export class SpecialComponent implements OnDestroy {
     });
 
     /**
-     * Ключ сортировки витрины из панели магазина.
-     */
-    private readonly sort = signal<MarketSortKey>('price-asc');
-
-    /**
-     * Ключ сортировки витрины из панели магазина.
-     */
-    @Input()
-    public set sortKey(value: MarketSortKey) {
-        this.sort.set(value);
-    }
-
-    /**
-     * Товары выбранного раздела в порядке сортировки витрины,
-     * для «Все» — все товары.
+     * Товары выбранного раздела, для «Все» — все товары.
      */
     protected readonly visibleItems = computed<IShopItem[]>(() => {
         const key = this.selectedSection();
-        const filtered = key ? this.items().filter((item) => item.section === key) : this.items();
-        return sortShopItemsByKey(filtered, this.sort());
+        return key ? this.items().filter((item) => item.section === key) : this.items();
     });
 
     /**

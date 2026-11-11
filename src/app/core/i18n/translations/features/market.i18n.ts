@@ -53,20 +53,6 @@ export const MARKET_I18N = {
                 privilege: 'Привилегия',
                 special: 'Особое',
             },
-            toolbar: {
-                searchPlaceholder: 'Название набора или товара',
-                sortAria: 'Сортировка витрины',
-            },
-            sort: {
-                priceAsc: 'Дешёвые сначала',
-                priceDesc: 'Дорогие сначала',
-                discount: 'Со скидкой',
-                newest: 'Новинки',
-            },
-            search: {
-                emptyTitle: 'Ничего не нашлось',
-                emptyDescription: 'Попробуйте другое название или сбросьте поиск',
-            },
             marketPage: {
                 title: 'Магазин очага',
                 subtitle:
@@ -211,20 +197,6 @@ export const MARKET_I18N = {
                 kit: 'Kit',
                 privilege: 'Privilege',
                 special: 'Special',
-            },
-            toolbar: {
-                searchPlaceholder: 'Set or item name',
-                sortAria: 'Showcase sorting',
-            },
-            sort: {
-                priceAsc: 'Cheapest first',
-                priceDesc: 'Priciest first',
-                discount: 'On sale',
-                newest: 'Newest',
-            },
-            search: {
-                emptyTitle: 'Nothing found',
-                emptyDescription: 'Try another name or clear the search',
             },
             marketPage: {
                 title: 'Hearth Shop',

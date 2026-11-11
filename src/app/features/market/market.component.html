@@ -11,61 +11,34 @@
 } @else {
 <div class="lh-page-container flex flex-col gap-6 lg:gap-8">
     <!-- Шапка: заголовок, баланс и быстрый доступ к пополнению -->
-    <app-page-header [title]="'market.marketPage.title' | translate" [subtitle]="'market.marketPage.subtitle' | translate" />
-
-    <!--
-        Липкая панель конверсии: поиск, сортировка, баланс и пополнение
-        всегда на экране во время выбора товара. Шапка страницы выше
-        уходит при прокрутке, панель остаётся.
-    -->
-    <div class="market-toolbar">
-        <input
-            type="search"
-            class="market-toolbar__search"
-            [placeholder]="'market.toolbar.searchPlaceholder' | translate"
-            [attr.aria-label]="'market.toolbar.searchPlaceholder' | translate"
-            [value]="searchQuery()"
-            (input)="onSearchInput($event)"
-            (keyup.enter)="onSearchSubmit()"
-        />
-
-        <div class="market-toolbar__sort" role="group" [attr.aria-label]="'market.toolbar.sortAria' | translate">
-            @for (option of sortOptions; track option.key) {
-                <button
-                    type="button"
-                    class="lh-chip"
-                    [class.lh-chip--active]="sortKey() === option.key"
-                    [attr.aria-pressed]="sortKey() === option.key"
-                    (click)="setSort(option.key)"
-                >
-                    {{ option.labelKey | translate }}
-                </button>
-            }
-        </div>
-
-        <div class="market-toolbar__wallet">
+    <app-page-header [title]="'market.marketPage.title' | translate" [subtitle]="'market.marketPage.subtitle' | translate">
+        <div class="flex flex-wrap items-center gap-3">
             @if (balance$ | async; as balance) {
-                <div class="market-toolbar__balance">
+                <div class="flex items-center gap-2 rounded-xl bg-surface-3 px-4 py-2.5">
+                    <span class="text-sm font-bold text-ink-2">
+                        {{ 'market.marketPage.balanceLabel' | translate }}
+                    </span>
                     <img
                         src="/splinter-of-spark.webp"
                         [alt]="'market.common.shardAlt' | translate"
-                        class="h-5 w-5 object-contain"
+                        class="h-6 w-6 object-contain"
                     />
-                    <span class="text-lg font-extrabold text-lh-primary">{{ balance | amount }}</span>
+                    <span class="text-xl font-extrabold text-lh-primary">{{ balance | amount }}</span>
                 </div>
             }
-            <button type="button" (click)="howToBuy()" class="lh-cta">
+            <button
+                type="button"
+                (click)="howToBuy()"
+                class="lh-cta"
+            >
                 <tui-icon icon="@tui.plus" class="size-5!" />
                 {{ 'market.marketPage.topUp' | translate }}
             </button>
         </div>
-    </div>
+    </app-page-header>
 
     <!-- Вкладки: ключи сохраняются в адресе (?tab=), ссылка ведёт сразу на группу.
         appTabsPill — летающая плашка активной вкладки со шлейфом движения. -->
-    @if (isSearching()) {
-        <app-market-search-results [query]="searchQuery()" [sortKey]="sortKey()" />
-    } @else {
     <div class="lh-chips" role="tablist" appTabsPill [attr.aria-label]="'market.marketPage.title' | translate">
         @for (tab of tabs; track tab; let index = $index) {
             <button
@@ -104,7 +77,6 @@
             <app-special />
         </div>
     </div>
-    }
 
 
     <!--
