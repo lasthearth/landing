@@ -39,6 +39,7 @@
     right: 0;
     height: 2.75rem;
     pointer-events: none;
+    animation: gate-char-breathe 3.4s var(--lh-ease-smooth) infinite alternate;
     background: linear-gradient(
         180deg,
         var(--lh-night-deep) 0%,
@@ -85,6 +86,7 @@
 .gate__burn--deep {
     height: 4.5rem;
     opacity: 0.8;
+    animation-name: gate-char-breathe-deep;
     background: linear-gradient(
         180deg,
         color-mix(in srgb, var(--lh-wood-2) 30%, transparent) 0%,
@@ -138,6 +140,151 @@
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 100% 100%;
+    /* Растр лежит поверх слоёв `clip-path`: дышит он, иначе движение не видно. */
+    animation: gate-char-breathe 3.4s var(--lh-ease-smooth) infinite alternate;
+}
+
+/**
+ * Ореол вдоль линии разрыва. Лежит поверх char-слоя и не перекрыт маской,
+ * поэтому это главный источник света в подвале: дышит по яркости и вверх.
+ */
+.gate__edge-glow {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    right: 0;
+    height: 2.5rem;
+    pointer-events: none;
+    background-image:
+        radial-gradient(16% 90% at 6% 88%, color-mix(in srgb, var(--lh-accent) 62%, transparent), transparent 72%),
+        radial-gradient(13% 76% at 17% 92%, color-mix(in srgb, var(--lh-accent-soft) 58%, transparent), transparent 70%),
+        radial-gradient(15% 84% at 29% 84%, color-mix(in srgb, var(--lh-accent) 66%, transparent), transparent 74%),
+        radial-gradient(12% 72% at 41% 94%, color-mix(in srgb, var(--lh-accent-soft) 54%, transparent), transparent 70%),
+        radial-gradient(16% 88% at 53% 86%, color-mix(in srgb, var(--lh-accent) 60%, transparent), transparent 72%),
+        radial-gradient(13% 78% at 64% 92%, color-mix(in srgb, var(--lh-accent-soft) 56%, transparent), transparent 70%),
+        radial-gradient(15% 84% at 76% 86%, color-mix(in srgb, var(--lh-accent) 64%, transparent), transparent 74%),
+        radial-gradient(12% 72% at 87% 94%, color-mix(in srgb, var(--lh-accent-soft) 52%, transparent), transparent 70%),
+        radial-gradient(15% 80% at 96% 88%, color-mix(in srgb, var(--lh-accent) 58%, transparent), transparent 72%);
+    filter: blur(7px);
+    transform-origin: 50% 100%;
+    opacity: 0.55;
+    animation: gate-glow-breathe 3s ease-in-out infinite alternate;
+}
+
+/**
+ * Языки пламени на разрыве: узкие градиентные полоски, растут вверх от линии
+ * и опадают. Основа видимого движения, поэтому их восемь и они разные.
+ */
+.gate__flames {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4rem;
+    pointer-events: none;
+}
+
+.gate__flame {
+    position: absolute;
+    bottom: 2.1rem;
+    width: 14px;
+    height: 26px;
+    border-radius: 50% 50% 38% 38%;
+    background-image: linear-gradient(
+        to top,
+        color-mix(in srgb, var(--lh-accent-soft) 88%, transparent),
+        color-mix(in srgb, var(--lh-accent) 48%, transparent) 46%,
+        transparent
+    );
+    filter: blur(2px);
+    transform-origin: 50% 100%;
+    opacity: 0.6;
+    animation: gate-flame-lick 3s var(--lh-ease-smooth) infinite alternate;
+}
+
+.gate__flame:nth-child(1) {
+    left: 5%;
+    height: 30px;
+    animation-duration: 2.7s;
+    animation-delay: -400ms;
+}
+
+.gate__flame:nth-child(2) {
+    left: 16%;
+    width: 10px;
+    height: 20px;
+    animation-duration: 3.5s;
+    animation-delay: -1.7s;
+}
+
+.gate__flame:nth-child(3) {
+    left: 31%;
+    width: 22px;
+    height: 38px;
+    animation-duration: 3.1s;
+    animation-delay: -2.4s;
+}
+
+.gate__flame:nth-child(4) {
+    left: 45%;
+    width: 12px;
+    height: 24px;
+    animation-duration: 3.8s;
+    animation-delay: -600ms;
+}
+
+.gate__flame:nth-child(5) {
+    left: 58%;
+    width: 20px;
+    height: 34px;
+    animation-duration: 2.9s;
+    animation-delay: -2s;
+}
+
+.gate__flame:nth-child(6) {
+    left: 71%;
+    width: 11px;
+    height: 22px;
+    animation-duration: 3.3s;
+    animation-delay: -1s;
+}
+
+.gate__flame:nth-child(7) {
+    left: 84%;
+    width: 24px;
+    height: 40px;
+    animation-duration: 3.6s;
+    animation-delay: -2.8s;
+}
+
+.gate__flame:nth-child(8) {
+    left: 94%;
+    width: 15px;
+    height: 28px;
+    animation-duration: 2.6s;
+    animation-delay: -1.4s;
+}
+
+/** Тепловое марево: полупрозрачный слой сползает по X, воздух над кромкой течёт. */
+.gate__heat {
+    position: absolute;
+    top: 0.3rem;
+    left: 0;
+    right: 0;
+    height: 3.4rem;
+    pointer-events: none;
+    opacity: 0.16;
+    background-image: repeating-linear-gradient(
+        100deg,
+        transparent 0,
+        color-mix(in srgb, var(--lh-accent) 34%, transparent) 34px,
+        transparent 68px,
+        color-mix(in srgb, var(--lh-parchment-2) 26%, transparent) 104px,
+        transparent 140px
+    );
+    background-size: 200% 100%;
+    filter: blur(6px);
+    animation: gate-heat-drift 4s var(--lh-ease-smooth) infinite;
 }
 
 /** Остаточная янтарная нить вдоль кромки после пробега. */
@@ -159,6 +306,237 @@
     opacity: 0;
 }
 
+/**
+ * Угольки над рваной кромкой: слой декоративный, размеры частиц и траектории
+ * заданы ниже. Слой стоит на кромке, но выше неё по `z` не поднимается.
+ */
+.gate__embers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* 9rem: частица поднимается до 120px и не выходит за пределы слоя. */
+    height: 9rem;
+    pointer-events: none;
+}
+
+/**
+ * Одна угольная частица: 3–8px, поднимается от кромки на 60–120px, гаснет
+ * у верхней границы слоя. Каждая третья — крупная медленная искра.
+ */
+.gate__ember {
+    position: absolute;
+    top: 7rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--lh-accent-soft);
+    box-shadow: 0 0 9px 1px color-mix(in srgb, var(--lh-accent) 78%, transparent);
+    opacity: 0;
+    animation: gate-ember-rise 3s var(--lh-ease-smooth) infinite;
+}
+
+.gate__ember:nth-child(1) {
+    left: 2%;
+    --gate-ember-rise: -78px;
+    --gate-ember-drift: 9px;
+    animation-delay: -200ms;
+}
+
+.gate__ember:nth-child(2) {
+    left: 6%;
+    --gate-ember-rise: -66px;
+    --gate-ember-drift: -11px;
+    animation-delay: -1.3s;
+}
+
+.gate__ember:nth-child(3) {
+    left: 9%;
+    --gate-ember-rise: -112px;
+    --gate-ember-drift: 12px;
+    animation-delay: -2.5s;
+}
+
+.gate__ember:nth-child(4) {
+    left: 13%;
+    --gate-ember-rise: -84px;
+    --gate-ember-drift: -7px;
+    animation-delay: -700ms;
+}
+
+.gate__ember:nth-child(5) {
+    left: 17%;
+    --gate-ember-rise: -62px;
+    --gate-ember-drift: 13px;
+    animation-delay: -1.9s;
+}
+
+.gate__ember:nth-child(6) {
+    left: 20%;
+    --gate-ember-rise: -104px;
+    --gate-ember-drift: -10px;
+    animation-delay: -3.1s;
+}
+
+.gate__ember:nth-child(7) {
+    left: 24%;
+    --gate-ember-rise: -72px;
+    --gate-ember-drift: 8px;
+    animation-delay: -400ms;
+}
+
+.gate__ember:nth-child(8) {
+    left: 28%;
+    --gate-ember-rise: -96px;
+    --gate-ember-drift: -13px;
+    animation-delay: -2.2s;
+}
+
+.gate__ember:nth-child(9) {
+    left: 32%;
+    --gate-ember-rise: -118px;
+    --gate-ember-drift: 11px;
+    animation-delay: -900ms;
+}
+
+.gate__ember:nth-child(10) {
+    left: 35%;
+    --gate-ember-rise: -68px;
+    --gate-ember-drift: -9px;
+    animation-delay: -1.6s;
+}
+
+.gate__ember:nth-child(11) {
+    left: 39%;
+    --gate-ember-rise: -88px;
+    --gate-ember-drift: 14px;
+    animation-delay: -2.8s;
+}
+
+.gate__ember:nth-child(12) {
+    left: 43%;
+    --gate-ember-rise: -110px;
+    --gate-ember-drift: -8px;
+    animation-delay: -600ms;
+}
+
+.gate__ember:nth-child(13) {
+    left: 47%;
+    --gate-ember-rise: -76px;
+    --gate-ember-drift: 10px;
+    animation-delay: -1.1s;
+}
+
+.gate__ember:nth-child(14) {
+    left: 50%;
+    --gate-ember-rise: -64px;
+    --gate-ember-drift: -12px;
+    animation-delay: -2.4s;
+}
+
+.gate__ember:nth-child(15) {
+    left: 54%;
+    --gate-ember-rise: -114px;
+    --gate-ember-drift: 13px;
+    animation-delay: -3.4s;
+}
+
+.gate__ember:nth-child(16) {
+    left: 58%;
+    --gate-ember-rise: -82px;
+    --gate-ember-drift: -6px;
+    animation-delay: -100ms;
+}
+
+.gate__ember:nth-child(17) {
+    left: 61%;
+    --gate-ember-rise: -94px;
+    --gate-ember-drift: 12px;
+    animation-delay: -1.8s;
+}
+
+.gate__ember:nth-child(18) {
+    left: 65%;
+    --gate-ember-rise: -70px;
+    --gate-ember-drift: -14px;
+    animation-delay: -2.9s;
+}
+
+.gate__ember:nth-child(19) {
+    left: 69%;
+    --gate-ember-rise: -108px;
+    --gate-ember-drift: 7px;
+    animation-delay: -500ms;
+}
+
+.gate__ember:nth-child(20) {
+    left: 72%;
+    --gate-ember-rise: -66px;
+    --gate-ember-drift: -10px;
+    animation-delay: -1.4s;
+}
+
+.gate__ember:nth-child(21) {
+    left: 76%;
+    --gate-ember-rise: -116px;
+    --gate-ember-drift: 14px;
+    animation-delay: -2.6s;
+}
+
+.gate__ember:nth-child(22) {
+    left: 80%;
+    --gate-ember-rise: -86px;
+    --gate-ember-drift: -8px;
+    animation-delay: -800ms;
+}
+
+.gate__ember:nth-child(23) {
+    left: 83%;
+    --gate-ember-rise: -98px;
+    --gate-ember-drift: 11px;
+    animation-delay: -2s;
+}
+
+.gate__ember:nth-child(24) {
+    left: 87%;
+    --gate-ember-rise: -74px;
+    --gate-ember-drift: -13px;
+    animation-delay: -3.2s;
+}
+
+.gate__ember:nth-child(25) {
+    left: 91%;
+    --gate-ember-rise: -106px;
+    --gate-ember-drift: 9px;
+    animation-delay: -300ms;
+}
+
+.gate__ember:nth-child(26) {
+    left: 96%;
+    --gate-ember-rise: -90px;
+    --gate-ember-drift: -7px;
+    animation-delay: -1.5s;
+}
+
+/* Каждая третья — крупная медленная искра, остальные мельче и шустрее. */
+.gate__ember:nth-child(3n) {
+    width: 7px;
+    height: 7px;
+    animation-duration: 3.8s;
+    box-shadow: 0 0 12px 2px color-mix(in srgb, var(--lh-accent) 82%, transparent);
+}
+
+.gate__ember:nth-child(3n+1) {
+    width: 3px;
+    height: 3px;
+    animation-duration: 2.6s;
+}
+
+.gate__ember:nth-child(3n+2) {
+    width: 5px;
+    height: 5px;
+    animation-duration: 3.2s;
+}
 /** Янтарная линия пробегает кромку один раз, когда подвал во вьюпорте. */
 .gate__spark {
     position: absolute;
@@ -187,9 +565,13 @@
     animation: gate-run 400ms var(--lh-ease-out-quart) 1 both;
 }
 
+/**
+ * Остаточная нить живая: после пробега свечение кромки мерцает бесконечно.
+ */
 .gate--lit .gate__edge-line {
     opacity: 1;
     transition: opacity 280ms var(--lh-ease-out-quart);
+    animation: gate-edge-flicker 3s ease-in-out infinite;
 }
 
 /**
@@ -293,19 +675,26 @@
     border-radius: var(--lh-radius-sm);
 }
 
+/**
+ * Нижний ряд: правовые ссылки одной горизонтальной строкой, соцсети
+ * прижаты вправо на той же линии.
+ */
 .gate__foot {
     grid-column: 1 / -1;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
-    gap: var(--lh-space-6);
+    gap: var(--lh-space-4) var(--lh-space-6);
     padding-top: var(--lh-space-4);
     border-top: 1px solid var(--gate-divider);
 }
 
 .gate__legal {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--lh-space-4);
 }
 
 .gate__link--legal {
@@ -315,6 +704,7 @@
 .gate__social {
     display: flex;
     gap: var(--lh-space-2);
+    margin-left: auto;
 }
 
 .gate__social-link {
@@ -357,11 +747,125 @@
     }
 }
 
+/** Уголёк поднимается, сносится по X, разгорается и гаснет. */
+@keyframes gate-ember-rise {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) scale(0.6);
+    }
+
+    18% {
+        opacity: 0.9;
+    }
+
+    68% {
+        opacity: 0.55;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(var(--gate-ember-drift, 0), var(--gate-ember-rise, -46px), 0) scale(1);
+    }
+}
+
+/** Свечение кромки дышит от 0.7 до 1. */
+@keyframes gate-edge-flicker {
+    from {
+        opacity: 0.7;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/** Обгоревшая масса чуть светлеет и темнеет. */
+@keyframes gate-char-breathe {
+    from {
+        opacity: 0.85;
+        filter: brightness(0.94);
+    }
+
+    to {
+        opacity: 1;
+        filter: brightness(1);
+    }
+}
+
+/** Подгар дышит в своих пределах: базовая непрозрачность 0.8. */
+@keyframes gate-char-breathe-deep {
+    from {
+        opacity: 0.68;
+        filter: brightness(0.94);
+    }
+
+    to {
+        opacity: 0.8;
+        filter: brightness(1);
+    }
+}
+
+/** Ореол дышит: яркость и лёгкий подъём от линии разрыва. */
+@keyframes gate-glow-breathe {
+    from {
+        opacity: 0.55;
+        transform: scaleY(1);
+    }
+
+    to {
+        opacity: 1;
+        transform: scaleY(1.15);
+    }
+}
+
+/** Язык пламени тянется вверх от линии и опадает. */
+@keyframes gate-flame-lick {
+    from {
+        opacity: 0.35;
+        transform: scaleY(0.4);
+    }
+
+    to {
+        opacity: 0.95;
+        transform: scaleY(1.1);
+    }
+}
+
+/** Марево сползает по X на полную ширину слоя. */
+@keyframes gate-heat-drift {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 200% 0;
+    }
+}
+
 @media (max-width: 1023px) {
     .gate__body {
         grid-template-columns: minmax(0, 1fr);
         gap: var(--lh-space-6);
         padding-bottom: var(--lh-space-16);
+    }
+}
+
+/** Узкий экран: правовой ряд и соцсети идут колонкой, соцсети слева. */
+@media (max-width: 767px) {
+    .gate__foot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--lh-space-4);
+    }
+
+    .gate__legal {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+    }
+
+    .gate__social {
+        margin-left: 0;
     }
 }
 
@@ -379,6 +883,51 @@
     .gate--lit .gate__edge-line {
         opacity: 1;
         transition: none;
+        animation: none;
+    }
+
+    /** Свет стоит на полной яркости, пламя и марево замерли. */
+    .gate__edge-glow,
+    .gate__flame,
+    .gate__heat {
+        animation: none;
+    }
+
+    .gate__edge-glow {
+        opacity: 0.85;
+        transform: none;
+    }
+
+    .gate__flame {
+        opacity: 0.8;
+        transform: scaleY(0.85);
+    }
+
+    .gate__heat {
+        opacity: 0.14;
+        background-position: 40% 0;
+    }
+
+    /** Частицы стоят на месте и видны: поток читается статичным слоем. */
+    .gate__embers,
+    .gate__ember {
+        animation: none;
+    }
+
+    .gate__ember {
+        opacity: 0.8;
+        transform: translate3d(0, -3rem, 0);
+    }
+
+    /** Обгоревшая масса держит среднюю яркость. */
+    .gate__burn {
+        animation: none;
+        opacity: 1;
+        filter: none;
+    }
+
+    .gate__burn--deep {
+        opacity: 0.8;
     }
 
     .gate--armed .gate__sigil {
