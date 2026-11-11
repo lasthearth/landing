@@ -20,3 +20,37 @@
     transform-origin: center center;
 }
 
+
+/*
+ * Морфинг смены привилегии (View Transitions API, запуск — crossfadeUpdate):
+ * имена получают только элементы, которые меняют содержимое. Секции
+ * возможностей и ежедневного набора условные: их группы появляются
+ * и исчезают с той же анимацией снапшотов.
+ */
+.titles-detail-image {
+    view-transition-name: titles-image;
+}
+
+.titles-detail-title {
+    view-transition-name: titles-title;
+}
+
+.titles-detail-prices {
+    view-transition-name: titles-prices;
+}
+
+.titles-detail-abilities {
+    view-transition-name: titles-abilities;
+}
+
+.titles-detail-kit {
+    view-transition-name: titles-kit;
+}
+
+.titles-detail-daily {
+    view-transition-name: titles-daily;
+}
+
+.titles-detail-buy {
+    view-transition-name: titles-buy;
+}

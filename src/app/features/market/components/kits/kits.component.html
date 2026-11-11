@@ -43,10 +43,10 @@
         </div>
 
         <!-- Карточка выбранного набора -->
-        <div appSwapFade class="lh-panel flex-1 flex flex-col gap-4 lg:gap-5 p-4 lg:p-6">
+        <div class="lh-panel flex-1 flex flex-col gap-4 lg:gap-5 p-4 lg:p-6">
             <!-- Название выбранного набора и его категория -->
             <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                <h2 class="lh-display text-2xl lg:text-3xl text-lh-primary">{{ selectedPrivilege!.title }}</h2>
+                <h2 class="kits-detail-title lh-display text-2xl lg:text-3xl text-lh-primary">{{ selectedPrivilege!.title }}</h2>
                 <span
                     class="inline-flex shrink-0 items-center rounded-full bg-surface-3 px-3 py-1 text-sm font-semibold text-ink-2"
                 >
@@ -58,17 +58,17 @@
             <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch">
                 <!-- Изображение в рамке редкости -->
                 <div
-                    [class]="'w-full max-w-[16rem] lg:max-w-none lg:w-56 lg:h-56 shrink-0 rounded-2xl overflow-hidden border-2 bg-surface-2 mx-auto lg:mx-0 transition-colors duration-300 ' + getRarityFrameClass(selectedPrivilege!.monthPrice)"
+                    [class]="'kits-detail-image w-full max-w-[16rem] lg:max-w-none lg:w-56 lg:h-56 shrink-0 rounded-2xl overflow-hidden border-2 bg-surface-2 mx-auto lg:mx-0 transition-colors duration-300 ' + getRarityFrameClass(selectedPrivilege!.monthPrice)"
                 >
                     <app-image-loader [src]="selectedPrivilege!.image" [alt]="selectedPrivilege!.title" />
                 </div>
 
                 <!-- Колонка цен -->
-                <div class="flex flex-col gap-3 flex-1 w-full justify-center">
+                <div class="kits-detail-prices flex flex-col gap-3 flex-1 w-full justify-center">
                     <!-- Цена за набор -->
                     <button
                         type="button"
-                        (click)="selectedTerm.set('month')"
+                        (click)="selectTerm('month')"
                         class="price-block relative rounded-xl px-5 py-4 flex items-center justify-between overflow-hidden cursor-pointer transition-colors duration-200"
                         [class.bg-brand-strong]="selectedTerm() === 'month'"
                         [class.text-parchment-3]="selectedTerm() === 'month'"
@@ -113,7 +113,7 @@
                     @if (selectedPrivilege!.seasonPrice) {
                         <button
                             type="button"
-                            (click)="selectedTerm.set('season')"
+                            (click)="selectTerm('season')"
                             class="price-block relative rounded-xl px-5 py-4 flex items-center justify-between overflow-hidden cursor-pointer transition-colors duration-200"
                             [class.bg-brand-strong]="selectedTerm() === 'season'"
                             [class.text-parchment-3]="selectedTerm() === 'season'"
@@ -158,7 +158,7 @@
             </div>
 
             <!-- Состав набора -->
-            <div class="flex flex-col gap-3">
+            <div class="kits-detail-content flex flex-col gap-3">
                 <h3 class="text-lg lg:text-xl font-bold text-ink">
                     {{ 'market.kits.kitTitle' | translate:{ title: selectedPrivilege!.title } }}
                 </h3>
@@ -173,7 +173,7 @@
             <button
                 type="button"
                 (click)="openPurchaseDialog()"
-                class="self-stretch text-parchment-3 font-bold cursor-pointer bg-brand hover:bg-brand-hover rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-xl lg:text-2xl flex items-center justify-center gap-3 mt-2"
+                class="kits-detail-buy self-stretch text-parchment-3 font-bold cursor-pointer bg-brand hover:bg-brand-hover rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-xl lg:text-2xl flex items-center justify-center gap-3 mt-2"
             >
                 <tui-icon icon="@tui.shopping-cart" class="size-6!" />
                 <span>{{ 'market.common.buyFor' | translate }}</span>

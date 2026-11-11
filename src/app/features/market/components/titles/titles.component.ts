@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, NgZone, OnDestroy, signal } from '@angular/core';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { DonateService } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
-import { SwapFadeDirective } from '@shared/lib/directives';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
@@ -16,6 +15,7 @@ import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege
 import { sortPrivilegeCardsByPrice } from '../../lib/sort-privilege-cards-by-price.function';
 import { getRarityByPrice } from '../../lib/get-rarity-by-price.function';
 import { createShopItemsLoader, ShopItemsLoader } from '../../lib/create-shop-items-loader.function';
+import { crossfadeUpdate } from '../../lib/crossfade-transition.function';
 import { selectShopItemsByCategory } from '../../lib/select-shop-items-by-category.function';
 import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant';
 
@@ -30,7 +30,6 @@ import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant'
     selector: 'app-titles',
     imports: [
         AmountPipe,
-        SwapFadeDirective,
         AbilityTagComponent,
         KitItemComponent,
         TuiIcon,
@@ -71,6 +70,7 @@ export class TitlesComponent implements OnDestroy {
                 selectShopItemsByCategory(items, 'privilege').map(mapShopItemToPrivilegeCard)
             );
             this.selectedPrivilege = this.titles[0] ?? null;
+            this.warmImages();
         }
     );
 
@@ -128,23 +128,64 @@ export class TitlesComponent implements OnDestroy {
     }
 
     /**
-     * Выбирает привилегию из бокового списка.
+     * Зона Angular: колбэк view transition выполняется браузером вне зоны.
+     */
+    private readonly zone = inject(NgZone);
+
+    /**
+     * Выбирает привилегию с морфингом элементов карточки: view transition
+     * перетекает старые картинку, заголовок, цены, способности и составы
+     * в новые, панель целиком не мигает.
      *
      * @param privilege Выбранная привилегия.
      */
-    /**
-     * Директива кроссфейда карточки товара: вход и призрак выхода.
-     */
-    protected readonly swapFade = viewChild(SwapFadeDirective);
-
     protected selectPrivilege(privilege: PrivilegeCard): void {
         if (privilege === this.selectedPrivilege) {
             return;
         }
 
-        // Клон старой привилегии дорастворяется поверх новой: кроссфейд.
-        this.swapFade()?.swap();
-        this.selectedPrivilege = privilege;
+        crossfadeUpdate(this.zone, () => {
+            this.selectedPrivilege = privilege;
+            this.changeDetectorRef.detectChanges();
+        });
+    }
+
+    /**
+     * Переключает срок подписки с морфингом блока цен.
+     *
+     * @param term Выбранный срок.
+     */
+    protected selectTerm(term: 'month' | 'season'): void {
+        if (this.selectedTerm() === term) {
+            return;
+        }
+
+        crossfadeUpdate(this.zone, () => {
+            this.selectedTerm.set(term);
+            this.changeDetectorRef.detectChanges();
+        });
+    }
+
+    /**
+     * Прогревает картинки всех привилегий в простое браузера: смена выбора
+     * внутри view transition морфит уже декодированные картинки, а не
+     * пустые кадры загрузки.
+     */
+    private warmImages(): void {
+        if (typeof requestIdleCallback === 'undefined') {
+            return;
+        }
+
+        requestIdleCallback(
+            () => {
+                for (const title of this.titles) {
+                    const image = new Image();
+                    image.src = title.image;
+                    void image.decode().catch(() => undefined);
+                }
+            },
+            { timeout: 4000 },
+        );
     }
 
     /**
