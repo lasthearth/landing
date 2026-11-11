@@ -1,72 +1,8 @@
-<div
-    class="gate"
-    [class.gate--armed]="isArmed()"
-    [class.gate--lit]="isLit()"
-    aria-label="Подвал lasthearth.ru, прототип «Врата очага»"
->
-    <!-- Обгоревшая кромка: два слоя рваного края, декорация. -->
-    <div class="gate__burn gate__burn--deep" aria-hidden="true"></div>
-    <div class="gate__burn" aria-hidden="true"></div>
-
-    <!-- Слот растра обгоревшей кромки: без файла виден слой clip-path ниже. -->
-    <div class="gate__burn-asset" aria-hidden="true"></div>
-
-    <!-- Ореол вдоль линии разрыва: главный источник света, дышит бесконечно. -->
-    <div class="gate__edge-glow" aria-hidden="true"></div>
-
-    <!-- Языки пламени на разрыве: восемь полосок, растут и опадают. -->
-    <div class="gate__flames" aria-hidden="true">
-        <span class="gate__flame"></span>
-        <span class="gate__flame"></span>
-        <span class="gate__flame"></span>
-        <span class="gate__flame"></span>
-        <span class="gate__flame"></span>
-        <span class="gate__flame"></span>
-        <span class="gate__flame"></span>
-        <span class="gate__flame"></span>
-    </div>
-
-    <!-- Тепловое марево: слой сползает по X, воздух над кромкой течёт. -->
-    <div class="gate__heat" aria-hidden="true"></div>
-
-    <!-- Янтарная линия пробегает по кромке один раз. -->
-    <div class="gate__spark" aria-hidden="true"></div>
-    <div class="gate__edge-line" aria-hidden="true"></div>
-
-    <!-- Угольки над кромкой: 26 частиц, подъём 60–120px, треть — крупные искры. -->
-    <div class="gate__embers" aria-hidden="true">
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-        <span class="gate__ember"></span>
-    </div>
-
-    <div class="gate__sigil lh-display" aria-hidden="true">LAST HEARTH</div>
-
+<div class="gate" [class.gate--armed]="isArmed()" aria-label="Подвал lasthearth.ru, прототип «Врата очага»">
     <div class="gate__body">
-        <div class="gate__brand" appReveal>
+        <p class="gate__word lh-display" appReveal>Last Hearth</p>
+
+        <div class="gate__brand" appReveal [appRevealDelay]="80">
             <app-image-loader [src]="state.logoSrc()" [alt]="'footer.logoAlt' | translate" class="gate__logo" />
 
             <div>
@@ -75,13 +11,13 @@
             </div>
         </div>
 
-        <nav class="gate__nav" [attr.aria-label]="'footer.nav.title' | translate" appReveal [appRevealDelay]="80">
+        <nav class="gate__nav" [attr.aria-label]="'footer.nav.title' | translate" appReveal [appRevealDelay]="160">
             @for (link of state.navLinks(); track link.route) {
                 <a class="gate__link" [routerLink]="link.route">{{ link.key | translate }}</a>
             }
         </nav>
 
-        <div class="gate__foot" appReveal [appRevealDelay]="160">
+        <div class="gate__foot" appReveal [appRevealDelay]="240">
             <div class="gate__legal">
                 <a class="gate__link gate__link--legal" [routerLink]="['/faq']">{{ "footer.faq" | translate }}</a>
                 <a class="gate__link gate__link--legal" [routerLink]="['/privacy-policy']">
@@ -110,10 +46,30 @@
                         [attr.aria-label]="social.labelKey | translate"
                         [title]="social.labelKey | translate"
                     >
-                        <img [src]="social.icon" alt="" [class.gate__icon--small]="social.isSmallIcon === true" />
+                        <img [src]="social.icon" alt="" [class.gate__icon--padded]="social.isPaddedGlyph === true" />
                     </a>
                 }
             </div>
         </div>
+    </div>
+
+    <!-- Целый лист пергамента: закрывает подвал, пока фронт горения не прошёл. -->
+    <div class="gate__sheet" aria-hidden="true"></div>
+
+    <!-- Фронт горения: светящаяся линия с обжигом ниже, идёт сверху вниз один раз. -->
+    <div class="gate__front" aria-hidden="true"></div>
+
+    <!-- Угольная кромка внизу: рваный верх с тлением по линии разрыва. -->
+    <div class="gate__char" aria-hidden="true"></div>
+
+    <!-- Редкие мелкие угольки на линии разрыва: тлеют на месте, без пучков. -->
+    <div class="gate__embers" aria-hidden="true">
+        <span class="gate__ember"></span>
+        <span class="gate__ember"></span>
+        <span class="gate__ember"></span>
+        <span class="gate__ember"></span>
+        <span class="gate__ember"></span>
+        <span class="gate__ember"></span>
+        <span class="gate__ember"></span>
     </div>
 </div>
