@@ -1,0 +1,219 @@
+/**
+ * Вариант «Угольки»: canvas-поле частиц над кромкой, ASCII-строка огня
+ * и тёплое свечение у кромки подвала.
+ *
+ * Локальные переменные переопределяются в тёмной теме одной подменой
+ * значений — селекторы тёмного вида не заводятся.
+ */
+:host {
+    --ember-tile-bg: color-mix(in srgb, var(--lh-primary-2) 8%, transparent);
+    --ember-tile-border: color-mix(in srgb, var(--lh-border) 70%, transparent);
+    --ember-ascii: color-mix(in srgb, var(--lh-brand) 88%, transparent);
+
+    display: block;
+    position: relative;
+    border-radius: inherit;
+}
+
+:host-context(html[data-theme='dark']) {
+    --ember-tile-bg: color-mix(in srgb, var(--lh-parchment-2) 8%, transparent);
+    --ember-tile-border: color-mix(in srgb, var(--lh-parchment-dim) 22%, transparent);
+    --ember-ascii: var(--lh-accent-soft);
+}
+
+.ember {
+    position: relative;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--lh-accent) 7%, transparent) 0%, transparent 12rem);
+}
+
+/** Свечение очага над верхней кромкой: половина полосы снаружи панели. */
+.ember::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -2rem;
+    height: 4rem;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse 65% 100% at 50% 100%,
+        color-mix(in srgb, var(--lh-accent) 22%, transparent) 0%,
+        transparent 70%
+    );
+}
+
+.ember__canvas {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    width: 100%;
+    height: 9rem;
+    pointer-events: none;
+}
+
+.ember__ascii {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.75rem;
+    overflow: hidden;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--ember-ascii);
+    user-select: none;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+}
+
+.ember__ascii-char {
+    animation: ember-breathe 2.8s var(--lh-ease-smooth) infinite alternate;
+}
+
+.ember__ascii-char:nth-child(3n) {
+    animation-duration: 3.4s;
+    animation-delay: -0.9s;
+}
+
+.ember__ascii-char:nth-child(4n) {
+    animation-duration: 2.6s;
+    animation-delay: -1.7s;
+}
+
+.ember__body {
+    display: grid;
+    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr) auto;
+    gap: var(--lh-space-8) var(--lh-space-10);
+    align-items: start;
+    padding: var(--lh-space-2) var(--lh-space-6) var(--lh-space-16);
+}
+
+.ember__brand {
+    display: flex;
+    gap: var(--lh-space-4);
+    align-items: center;
+}
+
+.ember__logo {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+}
+
+.ember__copyright {
+    font-weight: 600;
+    color: var(--lh-ink);
+}
+
+.ember__rights {
+    margin-top: var(--lh-space-1);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--lh-ink-3);
+}
+
+.ember__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--lh-space-4);
+}
+
+.ember__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: 0.875rem;
+    color: var(--lh-ink-2);
+    text-decoration: none;
+}
+
+/** Ховер цвета — мгновенный: переход не объявлен намеренно. */
+.ember__link:hover {
+    color: var(--lh-brand-ink);
+}
+
+.ember__link:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 2px;
+    border-radius: var(--lh-radius-sm);
+}
+
+.ember__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lh-space-4);
+    align-items: flex-start;
+}
+
+.ember__social {
+    display: flex;
+    gap: var(--lh-space-2);
+}
+
+.ember__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background-color: var(--ember-tile-bg);
+    border: 1px solid var(--ember-tile-border);
+    border-radius: var(--lh-radius-md);
+}
+
+.ember__social-link:hover {
+    border-color: var(--lh-brand);
+}
+
+.ember__social-link:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 2px;
+}
+
+.ember__social-link img {
+    width: 100%;
+    height: 100%;
+}
+
+.ember__icon--small {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+}
+
+.ember__legal {
+    display: flex;
+    flex-direction: column;
+}
+
+.ember__link--legal {
+    font-size: 0.8125rem;
+}
+
+@keyframes ember-breathe {
+    from {
+        opacity: 0.45;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 1023px) {
+    .ember__body {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--lh-space-6);
+    }
+
+    .ember__canvas {
+        height: 6rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ember__ascii-char {
+        animation: none;
+        opacity: 1;
+    }
+}

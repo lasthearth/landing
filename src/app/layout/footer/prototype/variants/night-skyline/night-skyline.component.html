@@ -1,0 +1,179 @@
+<div class="sky" [class.sky--has-art]="hasArt()" aria-label="Подвал lasthearth.ru, прототип «Ночной силуэт»">
+    <!-- Ночное небо целиком декоративно: скрыто от читалок. -->
+    <div #skyBand class="sky__band" aria-hidden="true">
+        <div class="sky__stars"></div>
+        <div class="sky__stars sky__stars--far"></div>
+
+        <!-- Луна: растровый слой лежит поверх CSS-круга, круг остаётся фолбэком. -->
+        <div class="sky__moon" aria-hidden="true">
+            <div class="sky__moon-art" aria-hidden="true"></div>
+        </div>
+
+        <!-- Дальний слой: еловый лес, верхушки выше деревни и стены. -->
+        <div class="sky__layer sky__layer--firs">
+            <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                <g fill="currentColor">
+                    <polygon points="-4,200 30,80 64,200" />
+                    <polygon points="61,200 95,50 129,200" />
+                    <polygon points="126,200 160,100 194,200" />
+                    <polygon points="191,200 225,62 259,200" />
+                    <polygon points="256,200 290,88 324,200" />
+                    <polygon points="321,200 355,40 389,200" />
+                    <polygon points="386,200 420,68 454,200" />
+                    <polygon points="451,200 485,96 519,200" />
+                    <polygon points="516,200 550,52 584,200" />
+                    <polygon points="581,200 615,84 649,200" />
+                    <polygon points="646,200 680,42 714,200" />
+                    <polygon points="711,200 745,98 779,200" />
+                    <polygon points="776,200 810,64 844,200" />
+                    <polygon points="841,200 875,90 909,200" />
+                    <polygon points="906,200 940,48 974,200" />
+                    <polygon points="971,200 1005,104 1039,200" />
+                    <polygon points="1036,200 1070,70 1104,200" />
+                    <polygon points="1101,200 1135,56 1169,200" />
+                    <polygon points="1156,200 1190,92 1224,200" />
+                </g>
+            </svg>
+
+            <!-- Слот растра: без файла фон не рисуется, остаётся SVG-силуэт. -->
+            <div class="sky__asset sky__asset--firs" aria-hidden="true"></div>
+        </div>
+
+        <!-- Средний слой: деревня, крыши выглядывают из-за стены. -->
+        <div class="sky__layer sky__layer--village">
+            <svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                <g fill="currentColor">
+                    <rect x="40" y="70" width="70" height="50" />
+                    <polygon points="40,70 75,42 110,70" />
+                    <rect x="180" y="40" width="34" height="80" />
+                    <polygon points="180,40 197,16 214,40" />
+                    <rect x="280" y="78" width="90" height="42" />
+                    <polygon points="280,78 325,52 370,78" />
+                    <rect x="430" y="66" width="60" height="54" />
+                    <polygon points="430,66 460,40 490,66" />
+                    <rect x="560" y="82" width="110" height="38" />
+                    <polygon points="560,82 615,58 670,82" />
+                    <rect x="740" y="50" width="26" height="70" />
+                    <polygon points="740,50 753,28 766,50" />
+                    <rect x="820" y="74" width="80" height="46" />
+                    <polygon points="820,74 860,48 900,74" />
+                    <rect x="960" y="64" width="70" height="56" />
+                    <polygon points="960,64 995,38 1030,64" />
+                    <rect x="1090" y="78" width="80" height="42" />
+                    <polygon points="1090,78 1130,54 1170,78" />
+                </g>
+                <g class="sky__window">
+                    <rect x="66" y="86" width="10" height="14" />
+                    <rect x="191" y="58" width="8" height="12" />
+                    <rect x="316" y="92" width="10" height="12" />
+                    <rect x="452" y="82" width="9" height="13" />
+                    <rect x="606" y="94" width="10" height="12" />
+                    <rect x="748" y="66" width="7" height="11" />
+                    <rect x="850" y="88" width="10" height="13" />
+                    <rect x="986" y="80" width="10" height="14" />
+                    <rect x="1120" y="92" width="10" height="12" />
+                </g>
+                <g class="sky__window sky__window--flicker">
+                    <rect x="470" y="82" width="9" height="13" />
+                    <rect x="1004" y="80" width="10" height="14" />
+                </g>
+            </svg>
+
+            <!-- Слот растра: без файла фон не рисуется, остаётся SVG-силуэт. -->
+            <div class="sky__asset sky__asset--village" aria-hidden="true"></div>
+        </div>
+
+        <!-- Ближний слой: стена с воротами, за которыми свет очага. -->
+        <div class="sky__layer sky__layer--wall">
+            <svg viewBox="0 0 1200 78" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                <g fill="currentColor">
+                    <rect x="0" y="38" width="1200" height="40" />
+                    <rect x="0" y="16" width="44" height="22" />
+                    <rect x="88" y="16" width="44" height="22" />
+                    <rect x="176" y="16" width="44" height="22" />
+                    <rect x="264" y="16" width="44" height="22" />
+                    <rect x="352" y="16" width="44" height="22" />
+                    <rect x="440" y="16" width="44" height="22" />
+                    <rect x="704" y="16" width="44" height="22" />
+                    <rect x="792" y="16" width="44" height="22" />
+                    <rect x="880" y="16" width="44" height="22" />
+                    <rect x="968" y="16" width="44" height="22" />
+                    <rect x="1056" y="16" width="44" height="22" />
+                    <rect x="1144" y="16" width="44" height="22" />
+                    <rect x="520" y="10" width="160" height="68" />
+                    <rect x="524" y="0" width="24" height="12" />
+                    <rect x="556" y="0" width="24" height="12" />
+                    <rect x="588" y="0" width="24" height="12" />
+                    <rect x="620" y="0" width="24" height="12" />
+                    <rect x="652" y="0" width="24" height="12" />
+                </g>
+                <path class="sky__gate" d="M575,78 v-20 a25,25 0 0 1 50,0 v20 z" />
+            </svg>
+
+            <!-- Слот растра: без файла фон не рисуется, остаётся SVG-силуэт. -->
+            <div class="sky__asset sky__asset--wall" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <div class="sky__body">
+        <div class="sky__brand">
+            <app-image-loader [src]="state.logoSrc()" [alt]="'footer.logoAlt' | translate" class="sky__logo" />
+
+            <div>
+                <p class="sky__copyright">{{ state.copyright() }}</p>
+                <p class="sky__rights">{{ "footer.rights" | translate }}</p>
+            </div>
+        </div>
+
+        <nav class="sky__nav" [attr.aria-label]="'footer.nav.title' | translate">
+            @for (link of state.navLinks(); track link.route) {
+                <a class="sky__link" [routerLink]="link.route">{{ link.key | translate }}</a>
+            }
+        </nav>
+
+        <div class="sky__action">
+            <a
+                class="sky-cta"
+                [href]="state.discordInviteUrl()"
+                target="_blank"
+                rel="noopener noreferrer"
+                [title]="'footer.social.discord' | translate"
+                (mousemove)="onCtaMove($event)"
+                (mouseleave)="onCtaLeave($event)"
+            >
+                <span class="sky-cta__icon">
+                    <img [src]="state.discordIcon()" alt="" />
+                </span>
+                <span>{{ "footer.social.discord" | translate }}</span>
+            </a>
+
+            <div class="sky__social">
+                @for (social of state.socialLinks(); track social.url) {
+                    <a
+                        class="sky__social-link"
+                        [href]="social.url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        [attr.aria-label]="social.labelKey | translate"
+                        [title]="social.labelKey | translate"
+                    >
+                        <img [src]="social.icon" alt="" [class.sky__icon--small]="social.isSmallIcon === true" />
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="sky__foot">
+            <a class="sky__link sky__link--legal" [routerLink]="['/faq']">{{ "footer.faq" | translate }}</a>
+            <a class="sky__link sky__link--legal" [routerLink]="['/privacy-policy']">
+                {{ "footer.privacyPolicy" | translate }}
+            </a>
+            <a class="sky__link sky__link--legal" [routerLink]="['/public-offer']">
+                {{ "footer.publicOffer" | translate }}
+            </a>
+            <a class="sky__link sky__link--legal" [href]="state.docsUrl()" target="_blank" rel="noopener noreferrer">
+                {{ "footer.version" | translate: { version: state.siteVersion(), date: state.siteVersionDate() } }}
+            </a>
+        </div>
+    </div>
+</div>

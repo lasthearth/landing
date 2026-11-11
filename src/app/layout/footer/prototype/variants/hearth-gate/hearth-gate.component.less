@@ -1,0 +1,389 @@
+/**
+ * Вариант «Врата очага»: обгоревшая кромка пергамента, янтарная линия
+ * и вензель, проявляющийся маской снизу вверх.
+ *
+ * Локальные переменные переопределяются в тёмной теме одной подменой
+ * значений — селекторы тёмного вида не заводятся.
+ */
+:host {
+    --gate-sigil: color-mix(in srgb, var(--lh-brand-strong) 22%, transparent);
+    --gate-divider: color-mix(in srgb, var(--lh-border-strong) 35%, transparent);
+    --gate-tile-bg: color-mix(in srgb, var(--lh-primary-2) 8%, transparent);
+    --gate-tile-border: color-mix(in srgb, var(--lh-border) 70%, transparent);
+
+    display: block;
+    position: relative;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+:host-context(html[data-theme='dark']) {
+    --gate-sigil: color-mix(in srgb, var(--lh-brand-hover) 26%, transparent);
+    --gate-divider: color-mix(in srgb, var(--lh-parchment-dim) 18%, transparent);
+    --gate-tile-bg: color-mix(in srgb, var(--lh-parchment-2) 8%, transparent);
+    --gate-tile-border: color-mix(in srgb, var(--lh-parchment-dim) 22%, transparent);
+}
+
+.gate {
+    position: relative;
+}
+
+/**
+ * Рваный обгоревший край: тёмный слой у самой кромки. Неровный низ
+ * вырезан `clip-path`, поэтому край читается как порванный пергамент.
+ */
+.gate__burn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.75rem;
+    pointer-events: none;
+    background: linear-gradient(
+        180deg,
+        var(--lh-night-deep) 0%,
+        var(--lh-wood) 62%,
+        color-mix(in srgb, var(--lh-wood) 20%, transparent) 92%
+    );
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 46%,
+        96.5% 58%,
+        93% 44%,
+        89.5% 63%,
+        86% 49%,
+        82.5% 67%,
+        79% 51%,
+        75.5% 70%,
+        72% 54%,
+        68.5% 73%,
+        65% 56%,
+        61.5% 76%,
+        58% 57%,
+        54.5% 79%,
+        51% 60%,
+        47.5% 74%,
+        44% 55%,
+        40.5% 70%,
+        37% 50%,
+        33.5% 66%,
+        30% 47%,
+        26.5% 61%,
+        23% 43%,
+        19.5% 57%,
+        16% 40%,
+        12.5% 54%,
+        9% 38%,
+        5.5% 51%,
+        2% 36%,
+        0 47%
+    );
+}
+
+/** Глубокий подгар: рвань шире и прозрачнее основного слоя. */
+.gate__burn--deep {
+    height: 4.5rem;
+    opacity: 0.8;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--lh-wood-2) 30%, transparent) 0%,
+        color-mix(in srgb, var(--lh-wood) 45%, transparent) 55%,
+        transparent 90%
+    );
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 62%,
+        95% 74%,
+        90% 58%,
+        85% 78%,
+        80% 62%,
+        75% 82%,
+        70% 64%,
+        65% 86%,
+        60% 66%,
+        55% 88%,
+        50% 68%,
+        45% 90%,
+        40% 66%,
+        35% 84%,
+        30% 62%,
+        25% 80%,
+        20% 56%,
+        15% 74%,
+        10% 52%,
+        5% 68%,
+        0 50%
+    );
+}
+
+/**
+ * Слот растровой обгоревшей кромки поверх слоёв `clip-path`. Файла нет —
+ * фон не рисуется, край остаётся прежним. Слой декоративный: контент
+ * поднят над ним `position: relative`, кромка его не перекрывает.
+ */
+.gate__burn-asset {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* 8rem, а не 9: ниже кромка гаснет маской и не ложится на сигил. */
+    height: 8rem;
+    pointer-events: none;
+    background-image: url('/footer-assets/burnt-edge.png');
+    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%);
+    /* Кромка не бесшовная: один кадр на всю ширину, стык негде появиться. */
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 100% 100%;
+}
+
+/** Остаточная янтарная нить вдоль кромки после пробега. */
+.gate__edge-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--lh-brand) 55%, transparent) 18%,
+        color-mix(in srgb, var(--lh-accent-soft) 75%, transparent) 50%,
+        color-mix(in srgb, var(--lh-brand) 55%, transparent) 82%,
+        transparent
+    );
+    opacity: 0;
+}
+
+/** Янтарная линия пробегает кромку один раз, когда подвал во вьюпорте. */
+.gate__spark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 34%;
+    height: 3px;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--lh-accent-soft) 40%,
+        var(--lh-parchment-3) 50%,
+        var(--lh-accent-soft) 60%,
+        transparent
+    );
+    opacity: 0;
+}
+
+.gate--armed .gate__spark {
+    opacity: 1;
+    transform: translateX(-140%);
+}
+
+.gate--armed.gate--lit .gate__spark {
+    animation: gate-run 400ms var(--lh-ease-out-quart) 1 both;
+}
+
+.gate--lit .gate__edge-line {
+    opacity: 1;
+    transition: opacity 280ms var(--lh-ease-out-quart);
+}
+
+/**
+ * Вензель: крупный водяной знак по центру кромки. Проявляется маской
+ * снизу вверх один раз — переход по `mask-position`.
+ */
+.gate__sigil {
+    position: relative;
+    margin: var(--lh-space-6) auto 0;
+    text-align: center;
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    letter-spacing: 0.12em;
+    color: var(--gate-sigil);
+    line-height: 1;
+    user-select: none;
+}
+
+.gate--armed .gate__sigil {
+    mask-image: linear-gradient(to bottom, transparent 42%, #000 58%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 42%, #000 58%);
+    mask-size: 100% 260%;
+    -webkit-mask-size: 100% 260%;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: 0 0;
+    -webkit-mask-position: 0 0;
+    transition: mask-position 400ms var(--lh-ease-out-quart) 120ms;
+}
+
+.gate--armed.gate--lit .gate__sigil {
+    mask-position: 0 100%;
+    -webkit-mask-position: 0 100%;
+}
+
+.gate__body {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: var(--lh-space-8) var(--lh-space-10);
+    padding: var(--lh-space-8) var(--lh-space-6) var(--lh-space-12);
+}
+
+/**
+ * Каскад появления контента: общий механизм `.lh-reveal`, локально ускоренный
+ * до 280ms, чтобы каскад укладывался в бюджет появления панели.
+ */
+.gate__body .lh-reveal {
+    transition:
+        opacity 280ms var(--lh-ease-out-quart),
+        transform 280ms var(--lh-ease-out-quart);
+    transition-delay: var(--lh-reveal-delay, 0ms);
+}
+
+.gate__brand {
+    display: flex;
+    gap: var(--lh-space-4);
+    align-items: center;
+}
+
+.gate__logo {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+}
+
+.gate__copyright {
+    font-weight: 600;
+    color: var(--lh-ink);
+}
+
+.gate__rights {
+    margin-top: var(--lh-space-1);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--lh-ink-3);
+}
+
+.gate__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--lh-space-4);
+}
+
+.gate__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: 0.875rem;
+    color: var(--lh-ink-2);
+    text-decoration: none;
+}
+
+/** Ховер цвета — мгновенный: переход не объявлен намеренно. */
+.gate__link:hover {
+    color: var(--lh-brand-ink);
+}
+
+.gate__link:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 2px;
+    border-radius: var(--lh-radius-sm);
+}
+
+.gate__foot {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--lh-space-6);
+    padding-top: var(--lh-space-4);
+    border-top: 1px solid var(--gate-divider);
+}
+
+.gate__legal {
+    display: flex;
+    flex-direction: column;
+}
+
+.gate__link--legal {
+    font-size: 0.8125rem;
+}
+
+.gate__social {
+    display: flex;
+    gap: var(--lh-space-2);
+}
+
+.gate__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background-color: var(--gate-tile-bg);
+    border: 1px solid var(--gate-tile-border);
+    border-radius: var(--lh-radius-md);
+}
+
+.gate__social-link:hover {
+    border-color: var(--lh-brand);
+}
+
+.gate__social-link:focus-visible {
+    outline: 2px solid var(--lh-brand);
+    outline-offset: 2px;
+}
+
+.gate__social-link img {
+    width: 100%;
+    height: 100%;
+}
+
+.gate__icon--small {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+}
+
+@keyframes gate-run {
+    from {
+        transform: translateX(-140%);
+    }
+
+    to {
+        transform: translateX(430%);
+    }
+}
+
+@media (max-width: 1023px) {
+    .gate__body {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--lh-space-6);
+        padding-bottom: var(--lh-space-16);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gate__spark {
+        opacity: 0;
+    }
+
+    .gate--armed .gate__spark,
+    .gate--armed.gate--lit .gate__spark {
+        animation: none;
+        transform: translateX(-140%);
+    }
+
+    .gate--lit .gate__edge-line {
+        opacity: 1;
+        transition: none;
+    }
+
+    .gate--armed .gate__sigil {
+        mask-image: none;
+        -webkit-mask-image: none;
+        transition: none;
+    }
+}
