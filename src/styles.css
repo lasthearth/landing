@@ -372,10 +372,6 @@
 
     --color-lh-leader: var(--lh-leader);
 
-    --color-lh-base-01: var(--lh-base-01);
-    --color-lh-base-02: var(--lh-base-02);
-    --color-lh-base-03: var(--lh-base-03);
-
     --color-surface-card: #332c261a;
     --color-surface-card-hover: #332c2626;
     --color-subtle: #332c2633;

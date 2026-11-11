@@ -79,6 +79,8 @@ export const SETTLEMENTS_I18N = {
                 others: 'Другие наделы',
                 notFoundTitle: 'Надел не найдено',
                 notFoundText: 'Возможно, его распустили или ссылка неверна.',
+                tier: 'Уровень надела',
+                tierOf: '{{tier}} из {{max}}',
             },
             card: {
                 pinned: 'Закреплённое надел',
@@ -576,6 +578,8 @@ export const SETTLEMENTS_I18N = {
                 others: 'Other settlements',
                 notFoundTitle: 'Settlement not found',
                 notFoundText: 'It may have been disbanded or the link is wrong.',
+                tier: 'Settlement tier',
+                tierOf: '{{tier}} of {{max}}',
             },
             card: {
                 pinned: 'Pinned settlement',

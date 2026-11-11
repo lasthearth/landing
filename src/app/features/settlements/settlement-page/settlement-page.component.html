@@ -1,37 +1,40 @@
-<div class="settlement-page lh-page-container flex flex-col gap-6">
-    <a routerLink="/settlements" class="settlement-page__back">
-        <tui-icon icon="@tui.arrow-left" class="size-4!" />
-        {{ "settlements.page.back" | translate }}
-    </a>
+<div class="settlement-page lh-page-container flex flex-col gap-6 md:gap-8">
+    <div class="settlement-page__topbar">
+        <a routerLink="/settlements" class="settlement-page__back">
+            <tui-icon icon="@tui.arrow-left" class="size-4!" />
+            {{ "settlements.page.back" | translate }}
+        </a>
+        <!-- Телефон: «Поделиться» стоит здесь, а не у заголовка — имя надела
+             занимает строку целиком и не переносится по слову. -->
+        @if (settlement(); as item) {
+            <app-share-button
+                class="settlement-page__topbar-share"
+                [url]="'/settlements/' + item.id"
+                [title]="item | settlementDisplayName"
+            />
+        }
+    </div>
 
     @if (settlement(); as item) {
-        <article class="settlement-page__article lh-panel">
-            <button
-                type="button"
-                appReveal
-                class="settlement-page__cover lh-reveal--scale"
-                [attr.aria-label]="'settlements.page.openPhoto' | translate"
-                [disabled]="gallery().length === 0"
-                (click)="viewerIndex.set(0)"
-            >
-                <app-image-loader [src]="cover(item)" [alt]="item | settlementDisplayName" [eager]="true" class="block size-full" />
-            </button>
-
-            <header class="flex flex-col gap-4">
-                <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-                    <h1 appReveal class="settlement-page__title lh-display font-bold text-ink uppercase">
+        <!--
+            Герой — разворот: слева паспорт надела (название, ступень, курс, факты,
+            действие), справа обложка в раме. Обложка больше не занимает пол-экрана:
+            первый экран отдаён данным.
+        -->
+        <section class="settlement-hero" aria-labelledby="settlement-title">
+            <div class="settlement-hero__identity">
+                <div class="settlement-hero__namerow">
+                    <h1 appReveal id="settlement-title" class="settlement-page__title lh-display font-bold text-ink uppercase">
                         {{ item | settlementDisplayName }}
                     </h1>
-                    @if (tier() > 0) {
-                        <span class="settlement-page__tier" role="img" [attr.aria-label]="'settlements.card.tier' | translate: { tier: tier() }">
-                            @for (pip of tierScale; track pip) {
-                                <span class="settlement-page__pip" [class.settlement-page__pip--filled]="pip <= tier()"></span>
-                            }
-                        </span>
-                    }
+                    <app-share-button
+                        class="settlement-hero__share"
+                        [url]="'/settlements/' + item.id"
+                        [title]="item | settlementDisplayName"
+                    />
                 </div>
 
-                <div class="flex flex-wrap gap-1.5">
+                <div class="settlement-hero__badges">
                     <app-settlement-badge [tone]="typeTone(item)" [icon]="typeIcon(item)" [uppercase]="true">
                         {{ typeLabel(item) }}
                     </app-settlement-badge>
@@ -47,93 +50,146 @@
                     }
                 </div>
 
-                <div class="settlement-page__meta">
-                    <span class="inline-flex items-center gap-1.5">
-                        <tui-icon icon="@tui.users" class="size-4!" />
-                        {{ item.members.length }} {{ "settlements.card.residentsShort" | translate }}
-                    </span>
-                    <span class="inline-flex items-center gap-1.5" [class.text-peace]="onlineCount() > 0">
-                        <span class="settlement-page__dot" [class.settlement-page__dot--online]="onlineCount() > 0"></span>
-                        {{ onlineCount() }} {{ "settlements.card.onlineShort" | translate }}
-                    </span>
+                <dl class="settlement-hero__stats">
+                    @if (tier() > 0) {
+                        <div class="settlement-hero__stat">
+                            <dt class="settlement-hero__stat-label">{{ "settlements.page.tier" | translate }}</dt>
+                            <dd class="settlement-hero__stat-value settlement-hero__stat-value--tier">
+                                <span class="settlement-page__pips" aria-hidden="true">
+                                    @for (pip of tierScale; track pip) {
+                                        <span
+                                            class="settlement-page__pip"
+                                            [class.settlement-page__pip--filled]="pip <= tier()"
+                                        ></span>
+                                    }
+                                </span>
+                                <span class="settlement-page__tier-value">
+                                    {{ "settlements.page.tierOf" | translate: { tier: tier(), max: tierScale.length } }}
+                                </span>
+                            </dd>
+                        </div>
+                    }
+                    <div class="settlement-hero__stat">
+                        <dt class="settlement-hero__stat-label">
+                            <tui-icon icon="@tui.users" class="size-4!" />
+                            {{ "settlements.card.residentsShort" | translate }}
+                        </dt>
+                        <dd class="settlement-hero__stat-value">{{ item.members.length }}</dd>
+                    </div>
+                    <div class="settlement-hero__stat">
+                        <dt class="settlement-hero__stat-label">
+                            <span
+                                class="settlement-page__dot"
+                                [class.settlement-page__dot--online]="onlineCount() > 0"
+                            ></span>
+                            {{ "settlements.card.onlineShort" | translate }}
+                        </dt>
+                        <dd
+                            class="settlement-hero__stat-value"
+                            [class.settlement-hero__stat-value--online]="onlineCount() > 0"
+                        >
+                            {{ onlineCount() }}
+                        </dd>
+                    </div>
                     @if (toMs(item.created_at); as created) {
-                        <span>
-                            {{ "settlements.page.founded" | translate }}
-                            <time [appRelativeTime]="created"></time>
-                        </span>
+                        <div class="settlement-hero__stat">
+                            <dt class="settlement-hero__stat-label">{{ "settlements.page.founded" | translate }}</dt>
+                            <dd class="settlement-hero__stat-value settlement-hero__stat-value--time">
+                                <time [appRelativeTime]="created"></time>
+                            </dd>
+                        </div>
                     }
                     @if (toMs(item.updated_at); as updated) {
-                        <span>
-                            {{ "settlements.page.updated" | translate }}
-                            <time [appRelativeTime]="updated"></time>
-                        </span>
+                        <div class="settlement-hero__stat">
+                            <dt class="settlement-hero__stat-label">{{ "settlements.page.updated" | translate }}</dt>
+                            <dd class="settlement-hero__stat-value settlement-hero__stat-value--time">
+                                <time [appRelativeTime]="updated"></time>
+                            </dd>
+                        </div>
                     }
-                    <app-share-button class="settlement-page__share" [url]="'/settlements/' + item.id" [title]="item | settlementDisplayName" />
+                </dl>
+
+                <div class="settlement-hero__actions">
+                    <app-join-request-button [settlementId]="item.id" [isGuild]="isGuild(item)" />
                 </div>
 
-                <app-join-request-button [settlementId]="item.id" [isGuild]="isGuild(item)" />
-            </header>
+                @if (item.description) {
+                    <section class="settlement-page__about" aria-labelledby="settlement-about">
+                        <h2 appReveal id="settlement-about" class="settlement-page__h2 lh-display uppercase text-ink">
+                            {{ "settlements.settlement.about" | translate }}
+                        </h2>
+                        <div appReveal class="settlement-page__text lh-rich-text text-ink lh-reveal--soft" [innerHTML]="item.description | markup"></div>
+                    </section>
+                }
 
-            @if (item.description) {
-                <div
+                @if (item.contact_info) {
+                    <p class="settlement-page__contacts">
+                        <tui-icon icon="@tui.contact-round" class="size-5! shrink-0" />
+                        <!-- Только интерполяция: сервер не экранирует контакты -->
+                        <span>{{ item.contact_info }}</span>
+                    </p>
+                }
+            </div>
+
+            <div class="settlement-hero__side">
+                <button
+                    type="button"
                     appReveal
-                    class="settlement-page__text lh-rich-text text-ink lh-reveal--soft"
-                    [innerHTML]="item.description | markup"
-                ></div>
-            }
+                    class="settlement-hero__photo lh-reveal--scale"
+                    [attr.aria-label]="'settlements.page.openPhoto' | translate"
+                    [disabled]="gallery().length === 0"
+                    (click)="viewerIndex.set(0)"
+                >
+                    <app-image-loader
+                        [src]="cover(item)"
+                        [alt]="item | settlementDisplayName"
+                        [eager]="true"
+                        class="block size-full"
+                    />
+                </button>
 
-            @if (item.contact_info) {
-                <p class="settlement-page__contacts">
-                    <tui-icon icon="@tui.contact-round" class="size-5! shrink-0" />
-                    <!-- Только интерполяция: сервер не экранирует контакты -->
-                    <span>{{ item.contact_info }}</span>
-                </p>
-            }
-
-            <section class="flex flex-col gap-3" aria-labelledby="settlement-population">
-                <h2 appReveal id="settlement-population" class="text-xl font-bold text-ink">
-                    {{ "settlements.detailed.population" | translate }}
-                </h2>
-                <div class="flex flex-wrap gap-2">
-                    @for (leader of leaders(); track leader.user_id) {
-                        <app-player-chip [player]="leader" [isLeader]="true" [settlement]="item" />
-                    }
-                    @for (resident of residents(); track resident.user_id) {
-                        <app-player-chip [player]="resident" [settlement]="item" />
-                    }
-                </div>
-            </section>
-
-            @if (gallery().length > 1) {
-                <section class="flex flex-col gap-3" aria-labelledby="settlement-photos">
-                    <h2 appReveal id="settlement-photos" class="text-xl font-bold text-ink">
-                        {{ "settlements.page.photos" | translate }}
+                <section class="settlement-page__population lh-panel" aria-labelledby="settlement-population">
+                    <h2 appReveal id="settlement-population" class="settlement-page__h2 lh-display uppercase text-ink">
+                        {{ "settlements.detailed.population" | translate }}
+                        <span class="settlement-page__count">{{ item.members.length }}</span>
                     </h2>
-                    <div class="settlement-page__photos">
-                        @for (photo of gallery(); track $index) {
-                            <button
-                                type="button"
-                                appReveal
-                                class="settlement-page__photo lh-reveal--scale"
-                                [appRevealDelay]="$index * 45"
-                                [attr.aria-label]="photo.alt"
-                                (click)="viewerIndex.set($index)"
-                            >
-                                <img [src]="photo.src" [alt]="photo.alt" loading="lazy" />
-                            </button>
+                    <div class="settlement-page__chips">
+                        @for (leader of leaders(); track leader.user_id) {
+                            <app-player-chip [player]="leader" [isLeader]="true" [settlement]="item" />
+                        }
+                        @for (resident of residents(); track resident.user_id) {
+                            <app-player-chip [player]="resident" [settlement]="item" />
                         }
                     </div>
                 </section>
-            }
-        </article>
+            </div>
+        </section>
+
+        @if (gallery().length > 1) {
+            <section class="settlement-page__gallery" aria-labelledby="settlement-photos">
+                <h2 appReveal id="settlement-photos" class="settlement-page__h2 lh-display uppercase text-ink">
+                    {{ "settlements.page.photos" | translate }}
+                </h2>
+                <div class="settlement-page__photos">
+                    @for (photo of galleryRest(); track $index) {
+                        <button
+                            type="button"
+                            appReveal
+                            class="settlement-page__photo lh-reveal--scale"
+                            [attr.aria-label]="photo.alt"
+                            (click)="viewerIndex.set($index + 1)"
+                        >
+                            <img [src]="photo.src" [alt]="photo.alt" loading="lazy" />
+                            <tui-icon icon="@tui.zoom-in" class="settlement-page__photo-zoom size-5!" />
+                        </button>
+                    }
+                </div>
+            </section>
+        }
 
         @if (others().length > 0) {
-            <section class="flex flex-col gap-4" aria-labelledby="settlement-others">
-                <h2
-                    appReveal
-                    id="settlement-others"
-                    class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink"
-                >
+            <section class="settlement-page__others-section" aria-labelledby="settlement-others">
+                <h2 appReveal id="settlement-others" class="settlement-page__h2 lh-display uppercase text-ink">
                     {{ "settlements.page.others" | translate }}
                 </h2>
                 <div class="settlement-page__others">
@@ -145,7 +201,8 @@
                             <span class="settlement-page__other-body">
                                 <span class="settlement-page__other-name">{{ other | settlementDisplayName }}</span>
                                 <span class="settlement-page__other-meta">
-                                    {{ typeLabel(other) }} · {{ other.members.length }} {{ "settlements.card.residentsShort" | translate }}
+                                    {{ typeLabel(other) }} · {{ other.members.length }}
+                                    {{ "settlements.card.residentsShort" | translate }}
                                 </span>
                             </span>
                         </a>
@@ -155,7 +212,12 @@
         }
 
         @if (viewerIndex() !== null) {
-            <app-image-viewer [images]="gallery()" [index]="viewerIndex()!" (indexChange)="viewerIndex.set($event)" (closed)="viewerIndex.set(null)" />
+            <app-image-viewer
+                [images]="gallery()"
+                [index]="viewerIndex()!"
+                (indexChange)="viewerIndex.set($event)"
+                (closed)="viewerIndex.set(null)"
+            />
         }
     } @else if (state().status === "not-found") {
         <div class="lh-panel flex flex-col items-start gap-4">

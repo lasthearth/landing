@@ -72,6 +72,7 @@ const steps = [
     { name: 'Границы FSD', args: ['scripts/check-architecture.mjs'] },
     { name: 'Паритет локалей', args: ['scripts/i18n-tool.mjs', 'check'] },
     { name: 'Контраст токенов', args: ['scripts/check-contrast.mjs'] },
+    { name: 'Объявление токенов', args: ['scripts/check-design-tokens.mjs'] },
     { name: 'Типы', args: ['node_modules/typescript/bin/tsc', '-p', 'tsconfig.app.json', '--noEmit'] },
 ];
 

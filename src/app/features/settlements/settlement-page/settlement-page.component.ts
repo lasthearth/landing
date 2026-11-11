@@ -191,6 +191,12 @@ export class SettlementPageComponent {
     });
 
     /**
+     * Скриншоты без обложки: обложка показана в герое, поэтому мозаика
+     * «Фотографии» не дублирует её и не повторяет один кадр дважды.
+     */
+    protected readonly galleryRest = computed<ImageViewerItem[]>(() => this.gallery().slice(1));
+
+    /**
      * Уровень надела (0 — без шкалы).
      */
     protected readonly tier = computed(() => {
