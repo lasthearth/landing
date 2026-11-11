@@ -1485,6 +1485,39 @@ button:disabled,
     }
 }
 
+/* Кроссфейд карточки товара ([appSwapFade]): клон старого состояния
+   растворяется поверх нового, живой узел входит масштабом 0.985→1.
+   Только opacity и transform — без раскладки на кадр. */
+.lh-swap-host {
+    position: relative;
+}
+
+.lh-swap-host.lh-swap-enter {
+    animation: lh-swap-in var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.lh-swap-ghost {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+    animation: lh-swap-out var(--lh-dur-exit) var(--lh-ease-smooth) forwards;
+}
+
+@keyframes lh-swap-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes lh-swap-in {
+    from {
+        opacity: 0;
+        transform: scale(0.985);
+    }
+}
+
 /**
  * Свечение рамки карточки при наведении.
  *

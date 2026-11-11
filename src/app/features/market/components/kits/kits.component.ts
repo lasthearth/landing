@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { DonateService } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
+import { SwapFadeDirective } from '@shared/lib/directives';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
@@ -28,6 +29,7 @@ import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant'
     selector: 'app-kits',
     imports: [
         AmountPipe,
+        SwapFadeDirective,
         KitItemComponent,
         TuiIcon,
         MarketGridSkeletonComponent,
@@ -128,7 +130,18 @@ export class KitsComponent implements OnDestroy {
      *
      * @param kit Выбранный набор.
      */
+    /**
+     * Директива кроссфейда карточки товара: вход и призрак выхода.
+     */
+    protected readonly swapFade = viewChild(SwapFadeDirective);
+
     protected selectKit(kit: PrivilegeCard): void {
+        if (kit === this.selectedPrivilege) {
+            return;
+        }
+
+        // Клон старого набора дорастворяется поверх нового: кроссфейд.
+        this.swapFade()?.swap();
         this.selectedPrivilege = kit;
     }
 
