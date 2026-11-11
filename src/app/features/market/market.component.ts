@@ -1,5 +1,5 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { afterNextRender, Component, ChangeDetectionStrategy, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, ChangeDetectionStrategy, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -97,13 +97,17 @@ export class MarketComponent {
     /**
      * Сцена смены вкладок: в неё клонируется уходящая панель.
      */
-    private readonly tabStage = viewChild.required<ElementRef<HTMLElement>>('tabStage');
-
     /**
      * Направление перехода: 1 — вправо по списку вкладок, -1 — влево.
      * Из него сцена берёт, с какой стороны въезжает контент.
      */
     protected readonly tabDirection = signal(1);
+
+    /**
+     * Индекс панели, которая дорастворяется поверх входящей (кроссфейд).
+     * `null`, когда выход доиграл и панель скрыта.
+     */
+    protected readonly leavingIndex = signal<number | null>(null);
 
     /**
      * Открывает вкладку: направление и уходящая панель для выхода,
@@ -128,6 +132,9 @@ export class MarketComponent {
         // Смена панелей — следующим кадром: её раскладка и первая
         // отрисовка не задерживают первый кадр полёта плашки.
         requestAnimationFrame(() => {
+            // Уходящая панель остаётся в DOM абсолютом и растворяется
+            // 150ms поверх входящей: картинки морфят, а не мигают.
+            this.leavingIndex.set(this.activeItemIndex());
             this.activeItemIndex.set(index);
             void this.router.navigate([], {
                 relativeTo: this.route,
@@ -161,58 +168,22 @@ export class MarketComponent {
     });
 
     /**
-     * Клонирует уходящую панель в статичный DOM-призрак поверх входящей.
+     * Скрывает уходящую панель, когда её выход доиграл.
+     * Чужие `animationend` из глубины сетки и вход входящей панели
+     * отбрасываются по имени keyframes и источнику события.
      *
-     * Раньше уходящая панель была второй Angular-инстанцией через
-     * `ngTemplateOutlet`: каждый клик собирал вкладку дважды — с DI,
-     * подписками и сервисами, — и на тяжёлой вкладке «Особое» это
-     * роняло кадры в момент старта полёта плашки. Клон — голые узлы:
-     * слушателей у него нет, картинки бьются в кэш, живёт он 150ms
-     * и снимает себя по `animationend`.
+     * @param event Событие конца анимации с панели.
+     * @param index Индекс панели в `tabs`.
      */
-    private spawnExitGhost(): void {
-        // Вне зоны: призрак не участвует в change detection.
-        this.zone.runOutsideAngular(() => {
-            const stage = this.tabStage().nativeElement;
-            const current = stage.querySelector<HTMLElement>(
-                '.market-tab-content:not(.market-tab-content--exit):not(.market-tab-content--hidden)',
-            );
-
-            // Быстрый повторный клик: прежний призрак долетает — снимаем.
-            for (const stale of Array.from(stage.querySelectorAll<HTMLElement>('.market-tab-content--exit'))) {
-                stale.remove();
-            }
-
-            if (!current) {
-                return;
-            }
-
-            const ghost = current.cloneNode(true) as HTMLElement;
-
-            // Идентификаторы снимаются: дубль id в DOM ломает якоря.
-            for (const node of Array.from([ghost, ...ghost.querySelectorAll<HTMLElement>('[id]')])) {
-                node.removeAttribute('id');
-            }
-
-            ghost.classList.add('market-tab-content--exit');
-            ghost.addEventListener(
-                'animationend',
-                (event) => {
-                    if (event.target === ghost && event.animationName.startsWith('market-tab-out-')) {
-                        ghost.remove();
-                    }
-                },
-                { once: true },
-            );
-
-            stage.appendChild(ghost);
-        });
+    protected onTabLeaveEnd(event: AnimationEvent, index: number): void {
+        if (
+            this.leavingIndex() === index &&
+            event.target === event.currentTarget &&
+            event.animationName.startsWith('market-tab-out-')
+        ) {
+            this.leavingIndex.set(null);
+        }
     }
-
-    /**
-     * Зона Angular: призрак уходящей панели живёт вне change detection.
-     */
-    private readonly zone = inject(NgZone);
 
     /**
      * Подписи вкладок магазина (ключи переводов) в порядке `activeItemIndex`.

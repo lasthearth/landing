@@ -64,16 +64,32 @@
         stagger сетки и подписки загрузчиков (профайл: 1581 маркер
         анимации скелетонов и 604 lh-stagger-fade-in за 23 с замера).
         CSS-анимация входа перезапускается сама — смена display:none
-        на block заново проигрывает keyframes. Уход остаётся за призраком.
+        на block заново проигрывает keyframes. Уход — кроссфейд живой панели:
+         она растворяется 150ms поверх входящей и скрывается по animationend.
     -->
-    <div #tabStage class="market-tab-stage" [attr.data-direction]="tabDirection()">
-        <div class="market-tab-content" [class.market-tab-content--hidden]="activeItemIndex() !== 0">
+    <div class="market-tab-stage" [attr.data-direction]="tabDirection()">
+        <div
+            class="market-tab-content"
+            [class.market-tab-content--hidden]="activeItemIndex() !== 0 && leavingIndex() !== 0"
+            [class.market-tab-content--exit]="leavingIndex() === 0"
+            (animationend)="onTabLeaveEnd($event, 0)"
+        >
             <app-titles />
         </div>
-        <div class="market-tab-content" [class.market-tab-content--hidden]="activeItemIndex() !== 1">
+        <div
+            class="market-tab-content"
+            [class.market-tab-content--hidden]="activeItemIndex() !== 1 && leavingIndex() !== 1"
+            [class.market-tab-content--exit]="leavingIndex() === 1"
+            (animationend)="onTabLeaveEnd($event, 1)"
+        >
             <app-kits />
         </div>
-        <div class="market-tab-content" [class.market-tab-content--hidden]="activeItemIndex() !== 2">
+        <div
+            class="market-tab-content"
+            [class.market-tab-content--hidden]="activeItemIndex() !== 2 && leavingIndex() !== 2"
+            [class.market-tab-content--exit]="leavingIndex() === 2"
+            (animationend)="onTabLeaveEnd($event, 2)"
+        >
             <app-special />
         </div>
     </div>

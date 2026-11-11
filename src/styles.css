@@ -1444,11 +1444,15 @@ button:disabled,
     animation-name: market-tab-in-left;
 }
 
+/* Уходящая панель растворяется поверх входящей: живой кроссфейд вместо
+   исчезновения за один кадр. Абсолют и z-index выводят её из потока,
+   не трогая раскладку входящей. */
 .market-tab-content--exit {
     position: absolute;
     top: 0;
     right: 0;
     left: 0;
+    z-index: 2;
     pointer-events: none;
     animation: market-tab-out-left var(--lh-dur-exit) var(--lh-ease-out-quart) forwards;
 }
