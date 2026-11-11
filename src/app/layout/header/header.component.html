@@ -1,354 +1,309 @@
-@let online = online$ | async;
-@let time = time$ | async;
-@let isAuth = userService.authState$ | async;
-@let invitations = invitations$ | async;
-@let userVerifications = userVerifications$ | async;
-@let settlementVerifications = settlementVerifications$ | async;
+@let online = state.online();
+@let isAuth = state.isAuth();
 
-<div class="flex flex-col xl:gap-10 gap-8">
+<div class="crown">
     <!--
-        Верхняя полоса: одна пластина вместо трёх стеклянных карточек.
-        Внутри один ряд — знак сервера, табло онлайна и карточка игрока.
-        Ряд навигации ниже не менялся.
+        Ярус 1. Тонкая строка телеметрии и управления: онлайн с линией занятости
+        и игровым временем слева, тема, язык, колокольчик и карточка игрока
+        справа. Без ответа сервера числа становятся прочерком, а зона не меняет
+        размер.
     -->
-    <div class="px-4 sm:px-0">
-        <div class="hud lh-panel mt-8">
-            <div class="hud__bar">
-                <!-- Знак сервера: эмблема и название, ссылка на главную -->
-                <a class="hud__brand" [routerLink]="['/']">
-                    <app-image-loader src="/images/logo.webp" alt="" class="hud__mark" />
-                    <span class="hud__name">Last Hearth</span>
+    <div class="crown__strip">
+        <div class="crown__telemetry">
+            <span class="crown__live" [class.crown__live--off]="!online" aria-hidden="true"></span>
+
+            <p class="crown__count">
+                <span class="crown__count-now">{{ online?.online ?? "—" }}</span>
+                <span class="crown__count-max">/ {{ online?.max_online ?? "—" }}</span>
+            </p>
+
+            <span class="crown__telemetry-label">{{ "header.players" | translate }}</span>
+
+            <span
+                class="crown__gauge"
+                role="img"
+                [attr.aria-label]="
+                    online
+                        ? ('header.players' | translate) + ': ' + online.online + ' / ' + online.max_online
+                        : ('header.players' | translate)
+                "
+                [style.--crown-fill]="state.occupancy()"
+            >
+                <span class="crown__gauge-fill"></span>
+            </span>
+
+            <span class="crown__clock">{{ state.time() ?? "—" }}</span>
+        </div>
+
+        <div class="crown__controls">
+            <button
+                type="button"
+                class="crown__icon"
+                (click)="state.toggleTheme()"
+                [attr.aria-label]="'header.theme.toggle' | translate"
+                [title]="'header.theme.toggle' | translate"
+            >
+                <tui-icon [icon]="state.dark() ? '@tui.sun' : '@tui.moon'" />
+            </button>
+
+            <button
+                type="button"
+                class="crown__icon"
+                (click)="toggleLanguage()"
+                [attr.aria-label]="'header.language.select' | translate"
+                [title]="'header.language.select' | translate"
+            >
+                <tui-icon icon="@tui.globe" />
+                <span class="crown__lang">{{ state.language() === "ru" ? "RU" : "EN" }}</span>
+            </button>
+
+            @if (isAuth) {
+                <app-notification-bell class="crown__bell" />
+
+                <a class="crown__player" [routerLink]="['/profile']">
+                    <span class="crown__avatar">
+                        @if (state.userImage()) {
+                            <app-player-avatar
+                                class="crown__avatar-img"
+                                [userId]="state.userId()"
+                                [src]="state.userImage()"
+                                [alt]="'header.avatarAlt' | translate"
+                                [animated]="false"
+                            />
+                        } @else {
+                            <tui-icon icon="@tui.square-user-round" class="crown__avatar-fallback" />
+                        }
+
+                        @if (state.attention()) {
+                            <span class="crown__dot">
+                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                            </span>
+                        }
+                    </span>
+
+                    <span class="crown__player-text">
+                        <span class="crown__player-name">{{ state.userName() }}</span>
+                        <span class="crown__coins">
+                            <img src="/splinter-of-spark.webp" alt="" class="crown__spark" />
+                            <span>{{ state.coins() | amount }}</span>
+                        </span>
+                    </span>
                 </a>
 
-                <!--
-                    Счётчик и игровое время. Без ответа сервера показываем прочерк,
-                    а не прячем зону: полоса не должна менять высоту и ширину от того,
-                    ответил бэкенд или нет.
-                -->
-                <div class="hud__server">
-                    <p class="hud__count">
-                        <!-- Без условия на truthy: 0 игроков — это число, а не «нет данных» -->
-                        <span>{{ online?.online ?? "—" }}</span>
-                        <span class="hud__count-of">/ {{ online?.max_online ?? "—" }}</span>
-                    </p>
-                    <p class="hud__server-note">
-                        <span class="hud__server-label">{{ "header.players" | translate }}</span>
-                        @if (time) {
-                            <span class="hud__server-clock">{{ time }}</span>
-                        }
-                    </p>
-                    <div
-                        class="hud__gauge"
-                        role="img"
-                        [attr.aria-label]="
-                            online
-                                ? ('header.players' | translate) + ': ' + online.online + ' / ' + online.max_online
-                                : ('header.players' | translate)
-                        "
-                        [style.--hud-fill]="occupancyShare(online)"
-                    >
-                        <span class="hud__gauge-fill"></span>
-                    </div>
-                </div>
-
-                <!-- Табло информации о пользователе -->
-                @if (isAuth) {
-                    <a class="hud__me" [routerLink]="['/profile']">
-                        <span class="hud__me-text">
-                            <span class="hud__me-name">{{ userService.userName }}</span>
-                            <span class="hud__me-coins">
-                                <img src="/splinter-of-spark.webp" alt="" class="hud__spark" />
-                                <span>{{ (balance$ | async) | amount }}</span>
-                            </span>
-                        </span>
-                        <span class="hud__avatar">
-                            @if (userService.userImage) {
-                                <app-player-avatar
-                                    class="hud__avatar-img"
-                                    [userId]="userService.userId"
-                                    [src]="userService.userImage"
-                                    [alt]="'header.avatarAlt' | translate"
-                                    [animated]="false"
-                                />
-                            } @else {
-                                <tui-icon icon="@tui.square-user-round" class="hud__avatar-fallback" />
-                            }
-                        </span>
-                    </a>
-                }
-            </div>
+                <button
+                    type="button"
+                    class="crown__icon"
+                    (click)="state.signOut()"
+                    [attr.aria-label]="'header.nav.signOut' | translate"
+                    [title]="'header.nav.signOut' | translate"
+                >
+                    <tui-icon icon="@tui.log-out" />
+                </button>
+            } @else {
+                <button type="button" class="crown__signin" (click)="state.signIn()">
+                    <tui-icon icon="@tui.log-in" />
+                    <span>{{ "header.nav.signIn" | translate }}</span>
+                </button>
+            }
         </div>
     </div>
 
-    <!-- Блок навигации -->
-    <nav
-        [attr.aria-label]="'header.mainMenu' | translate"
-        class="flex gap-1 items-start justify-center xl:justify-between w-full mb-4"
-    >
-        <div class="flex flex-wrap gap-1 justify-center xl:justify-start">
-            <!--
-                Состав меню задаётся списками HEADER_MAIN_LINKS и HEADER_COMMUNITY_LINKS:
-                мобильное выпадающее меню и десктопная панель рисуются из них же.
-            -->
+    <!--
+        Ярус 2. Вензель: эмблема и крупное название сервера по центру колонки,
+        по бокам — волосяные линейки до краёв, за знаком — янтарное сияние,
+        которое один раз «дышит» на входе.
+    -->
+    <div class="crown__crest">
+        <span class="crown__aura" aria-hidden="true"></span>
 
-            <!-- Мобильное меню навигации -->
-            <div class="relative md:hidden">
-                <button
-                    type="button"
-                    (click)="showMobileMenu.set(!showMobileMenu())"
-                    [ngClass]="{ 'nav-button--active': showMobileMenu() }"
-                    class="nav-button relative"
-                    [attr.aria-label]="'header.mainMenu' | translate"
-                    [attr.aria-expanded]="showMobileMenu()"
-                >
-                    <tui-icon icon="@tui.align-justify" />
-                    @if (isCommunityFresh()) {
-                        <span class="nav-dot">
-                            <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
-                        </span>
-                    }
-                </button>
+        <div class="crown__crest-line">
+            <span class="crown__rule" aria-hidden="true"></span>
 
-                @if (showMobileMenu()) {
-                    <div
-                        class="dropdown-enter absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[180px]"
-                    >
-                        @for (link of mainLinks; track link.route) {
-                            @if (!link.guestOnly || !isAuth) {
-                                <a
-                                    [routerLink]="link.route"
-                                    (click)="showMobileMenu.set(false)"
-                                    routerLinkActive="bg-lh-accent text-white!"
-                                    class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
-                                >
-                                    <tui-icon [icon]="link.icon" class="size-4!" />
-                                    {{ link.labelKey | translate }}
-                                </a>
-                            }
-                        }
+            <a class="crown__brand" [routerLink]="['/']">
+                <app-image-loader src="/images/logo.webp" alt="" class="crown__mark" />
+                <span class="crown__name lh-display">Last Hearth</span>
+            </a>
 
-                        <!-- Мобильное подменю «Сообщество» -->
-                        <button
-                            type="button"
-                            (click)="toggleMobileMediaMenu()"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': isCommunityActive(),
-                                'text-lh-primary hover:bg-surface-3': !isCommunityActive(),
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center justify-between"
-                            [attr.aria-expanded]="showMobileMediaMenu()"
-                        >
-                            <span class="flex items-center gap-2">
-                                <tui-icon icon="@tui.users-round" class="size-4!" />
-                                {{ "header.nav.community" | translate }}
-                                @if (isCommunityFresh()) {
-                                    <span class="nav-dot nav-dot--inline">
-                                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
-                                    </span>
-                                }
-                            </span>
-                            <tui-icon
-                                icon="@tui.chevron-down"
-                                class="size-4! transition-transform"
-                                [class.rotate-180!]="showMobileMediaMenu()"
-                            />
-                        </button>
+            <span class="crown__rule crown__rule--flip" aria-hidden="true"></span>
+        </div>
+    </div>
 
-                        @if (showMobileMediaMenu()) {
-                            <div class="dropdown-enter flex flex-col gap-1 pl-2 border-l-2 border-brand/30 ml-2">
-                                @for (link of communityLinks; track link.route) {
-                                    <a
-                                        [routerLink]="link.route"
-                                        (click)="showMobileMenu.set(false)"
-                                        routerLinkActive="bg-lh-accent text-white!"
-                                        class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
-                                    >
-                                        <tui-icon [icon]="link.icon" class="size-4!" />
-                                        {{ link.labelKey | translate }}
-                                        @if (link.freshSection && newContent.isFresh(link.freshSection)) {
-                                            <span class="nav-dot nav-dot--inline">
-                                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
-                                            </span>
-                                        }
-                                    </a>
-                                }
-                            </div>
-                        }
-                    </div>
-                }
-            </div>
-
+    <!--
+        Ярус 3. Один центрированный ряд ссылок: главная знаком, разделы текстом
+        с янтарным подчёркиванием, «Сообщество» открывает мега-панель.
+        Ниже 768px ряд заменяется одной кнопкой-меню.
+    -->
+    <nav class="crown__nav" [attr.aria-label]="'header.mainMenu' | translate">
+        <div class="crown__row">
             <a
+                class="crown__link crown__link--home"
                 [routerLink]="['/']"
-                routerLinkActive="nav-button--active"
+                routerLinkActive="crown__link--active"
                 [routerLinkActiveOptions]="{ exact: true }"
-                class="nav-button relative"
                 [attr.aria-label]="'header.nav.home' | translate"
                 [title]="'header.nav.home' | translate"
             >
                 <tui-icon icon="@tui.house" />
-                @if (newContent.isFresh("news")) {
-                    <span class="nav-dot">
+                @if (state.isFresh("news")) {
+                    <span class="crown__dot">
                         <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
                     </span>
                 }
             </a>
 
-            <!-- Десктопная навигация -->
-            <div class="hidden md:contents">
-                @for (link of mainLinks; track link.route) {
-                    @if (!link.guestOnly || !isAuth) {
-                        <a
-                            [routerLink]="link.route"
-                            routerLinkActive="nav-button--active"
-                            class="nav-button relative md:w-auto px-3 gap-1.5"
-                            [class.lh-guest-only]="link.guestOnly"
-                        >
-                            <tui-icon [icon]="link.icon" class="size-4!" />
-                            <span>{{ link.labelKey | translate }}</span>
-                        </a>
-                    }
-                }
-
-                <!-- Десктопный выпадающий раздел «Сообщество» -->
-                <div class="relative">
-                    <button
-                        type="button"
-                        (click)="toggleMediaMenu()"
-                        [ngClass]="{ 'nav-button--active': isCommunityActive() || showMediaMenu() }"
-                        class="nav-button relative md:w-auto px-3 gap-1.5"
-                        [attr.aria-expanded]="showMediaMenu()"
-                    >
-                        @if (isCommunityFresh()) {
-                            <span class="nav-dot">
+            @for (link of state.mainLinks; track link.route) {
+                @if (!link.guestOnly || !isAuth) {
+                    <a class="crown__link" [routerLink]="link.route" routerLinkActive="crown__link--active">
+                        <span>{{ link.labelKey | translate }}</span>
+                        @if (link.freshSection && state.isFresh(link.freshSection)) {
+                            <span class="crown__dot crown__dot--inline">
                                 <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
                             </span>
                         }
-                        <tui-icon icon="@tui.users-round" class="size-4!" />
-                        <span>{{ "header.nav.community" | translate }}</span>
-                        <tui-icon
-                            icon="@tui.chevron-down"
-                            class="size-4! transition-transform"
-                            [class.rotate-180!]="showMediaMenu()"
-                        />
-                    </button>
+                    </a>
+                }
+            }
 
-                    @if (showMediaMenu()) {
-                        <div
-                            class="dropdown-enter absolute top-full left-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[180px]"
+            <button
+                type="button"
+                class="crown__link crown__link--trigger"
+                (click)="toggleSheet()"
+                [class.crown__link--active]="state.communityActive() || sheetOpen()"
+                [attr.aria-expanded]="sheetOpen()"
+            >
+                <span>{{ "header.nav.community" | translate }}</span>
+                @if (state.communityFresh()) {
+                    <span class="crown__dot crown__dot--inline">
+                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                    </span>
+                }
+                <tui-icon icon="@tui.chevron-down" class="crown__chev" [class.crown__chev--up]="sheetOpen()" />
+            </button>
+        </div>
+
+        <button
+            type="button"
+            class="crown__menu"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="menuOpen()"
+            [attr.aria-label]="'header.mainMenu' | translate"
+        >
+            <tui-icon [icon]="menuOpen() ? '@tui.x' : '@tui.align-justify'" />
+            <span>{{ "header.mainMenu" | translate }}</span>
+            @if (state.communityFresh()) {
+                <span class="crown__dot crown__dot--inline">
+                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                </span>
+            }
+        </button>
+    </nav>
+
+    <!--
+        Ярус 4. Мега-панель «Сообщества» на всю ширину колонки: шторка от
+        верхнего края, плитки входят каскадом по 30ms.
+    -->
+    <div class="crown__sheet" [class.crown__sheet--open]="sheetOpen()" [attr.inert]="sheetOpen() ? null : ''">
+        <div class="crown__sheet-clip">
+            <div class="crown__sheet-body lh-panel">
+                <span class="crown__group">{{ "header.nav.community" | translate }}</span>
+
+                <div class="crown__grid">
+                    @for (link of state.communityLinks; track link.route; let i = $index) {
+                        <a
+                            class="crown__tile"
+                            [routerLink]="link.route"
+                            routerLinkActive="crown__tile--active"
+                            (click)="closeAll()"
+                            [style.--crown-i]="i"
                         >
-                            @for (link of communityLinks; track link.route) {
-                                <a
-                                    [routerLink]="link.route"
-                                    (click)="showMediaMenu.set(false)"
-                                    routerLinkActive="bg-lh-accent text-white!"
-                                    class="text-lh-primary hover:bg-surface-3 w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer flex items-center gap-2"
-                                >
-                                    <tui-icon [icon]="link.icon" class="size-4!" />
-                                    {{ link.labelKey | translate }}
-                                    @if (link.freshSection && newContent.isFresh(link.freshSection)) {
-                                        <span class="nav-dot nav-dot--inline">
-                                            <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
-                                        </span>
-                                    }
-                                </a>
+                            <span class="crown__tile-icon">
+                                <tui-icon [icon]="link.icon" />
+                            </span>
+                            <span class="crown__tile-label">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="crown__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
                             }
-                        </div>
+                            <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
+                        </a>
                     }
                 </div>
             </div>
         </div>
-        <div class="flex flex-row gap-1">
-            <button
-                type="button"
-                (click)="themeService.toggle()"
-                class="nav-button !px-2.5"
-                [attr.aria-label]="'header.theme.toggle' | translate"
-            >
-                <tui-icon [icon]="themeService.theme() === 'dark' ? '@tui.sun' : '@tui.moon'" class="size-4!" />
-            </button>
+    </div>
 
-            <div class="relative">
-                <button
-                    type="button"
-                    (click)="showLangMenu.set(!showLangMenu())"
-                    [ngClass]="{ 'nav-button--active': showLangMenu() }"
-                    class="nav-button !px-2.5 gap-1.5"
-                    [attr.aria-label]="'header.language.select' | translate"
-                    [attr.aria-expanded]="showLangMenu()"
-                >
-                    <tui-icon icon="@tui.globe" class="size-4!" />
-                    <span class="text-sm font-bold hidden md:inline">{{ language() === "ru" ? "RU" : "EN" }}</span>
-                </button>
-
-                @if (showLangMenu()) {
-                    <div
-                        class="dropdown-enter absolute top-full right-0 mt-1.5 flex flex-col gap-1 p-1.5 rounded-xl bg-surface border border-line shadow-[0_4px_16px_rgba(0,0,0,0.15)] z-50 min-w-[130px]"
+    <!--
+        Ярус 5. Мобильная шторка: вся навигация за одной кнопкой — главная и
+        разделы плитками, ниже группа «Сообщества».
+    -->
+    <div
+        class="crown__sheet crown__sheet--menu"
+        [class.crown__sheet--open]="menuOpen()"
+        [attr.inert]="menuOpen() ? null : ''"
+    >
+        <div class="crown__sheet-clip">
+            <div class="crown__sheet-body lh-panel">
+                <div class="crown__grid crown__grid--menu">
+                    <a
+                        class="crown__tile"
+                        [routerLink]="['/']"
+                        routerLinkActive="crown__tile--active"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        (click)="closeAll()"
+                        [style.--crown-i]="0"
                     >
-                        <button
-                            type="button"
-                            (click)="selectLanguage('ru')"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': language() === 'ru',
-                                'text-lh-primary hover:bg-surface-3': language() !== 'ru',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
-                        >
-                            Русский
-                        </button>
-                        <button
-                            type="button"
-                            (click)="selectLanguage('en')"
-                            [ngClass]="{
-                                'bg-lh-accent text-white': language() === 'en',
-                                'text-lh-primary hover:bg-surface-3': language() !== 'en',
-                            }"
-                            class="w-full px-3 py-2 rounded-lg text-sm font-semibold text-left transition-colors cursor-pointer"
-                        >
-                            English
-                        </button>
-                    </div>
-                }
-            </div>
+                        <span class="crown__tile-icon">
+                            <tui-icon icon="@tui.house" />
+                        </span>
+                        <span class="crown__tile-label">{{ "header.nav.home" | translate }}</span>
+                        <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
+                    </a>
 
-            @if (isAuth) {
-                <app-notification-bell />
-            }
-
-            @if (isAuth) {
-                <a
-                    [routerLink]="['/profile']"
-                    routerLinkActive="nav-button--active"
-                    class="relative nav-button p-2.5 !rounded-r-none"
-                    [attr.aria-label]="'header.nav.profile' | translate"
-                >
-                    <tui-icon icon="@tui.user" />
-                    @if (
-                        invitations?.length ||
-                        ((settlementVerifications?.length || userVerifications?.length) && isAdmin())
-                    ) {
-                        <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
+                    @for (link of state.mainLinks; track link.route; let i = $index) {
+                        @if (!link.guestOnly || !isAuth) {
+                            <a
+                                class="crown__tile"
+                                [routerLink]="link.route"
+                                routerLinkActive="crown__tile--active"
+                                (click)="closeAll()"
+                                [style.--crown-i]="i + 1"
+                            >
+                                <span class="crown__tile-icon">
+                                    <tui-icon [icon]="link.icon" />
+                                </span>
+                                <span class="crown__tile-label">{{ link.labelKey | translate }}</span>
+                                <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
+                            </a>
+                        }
                     }
-                </a>
-            } @else {
-                <button
-                    type="button"
-                    (click)="signIn()"
-                    class="relative nav-button p-2.5 !rounded-lg"
-                    [attr.aria-label]="'header.nav.signIn' | translate"
-                >
-                    <tui-icon icon="@tui.log-in" />
-                </button>
-            }
-            @if (isAuth) {
-                <button
-                    (click)="signOut()"
-                    class="relative nav-button !text-brand-ink hover:!text-white hover:bg-brand-strong !rounded-l-none !p-1 w-8! transition duration-300"
-                    [attr.aria-label]="'header.nav.signOut' | translate"
-                >
-                    <tui-icon icon="@tui.log-out" />
-                </button>
-            }
+                </div>
+
+                <span class="crown__group crown__group--next">{{ "header.nav.community" | translate }}</span>
+
+                <div class="crown__grid crown__grid--menu">
+                    @for (link of state.communityLinks; track link.route; let i = $index) {
+                        <a
+                            class="crown__tile"
+                            [routerLink]="link.route"
+                            routerLinkActive="crown__tile--active"
+                            (click)="closeAll()"
+                            [style.--crown-i]="i + 8"
+                        >
+                            <span class="crown__tile-icon">
+                                <tui-icon [icon]="link.icon" />
+                            </span>
+                            <span class="crown__tile-label">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="crown__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                            <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
+                        </a>
+                    }
+                </div>
+            </div>
         </div>
-    </nav>
+    </div>
 </div>

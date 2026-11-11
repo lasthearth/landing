@@ -14,7 +14,7 @@ import { UserService } from '@entities/user';
 import { map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WelcomeComponent } from '@app/features/welcome/welcome.component';
-import { FooterComponent } from './footer/footer.component';
+import { FooterPrototypeComponent } from './footer/prototype/footer-prototype.component';
 import { HeaderComponent } from './header/header.component';
 import { GameChatWidgetComponent } from '@features/game-chat/ui/game-chat-widget/game-chat-widget.component';
 import { BackgroundSceneComponent } from './background-scene/background-scene.component';
@@ -34,7 +34,7 @@ import { TranslatePipe } from '@core/i18n';
     imports: [
         RouterOutlet,
         HeaderComponent,
-        FooterComponent,
+        FooterPrototypeComponent,
         AsyncPipe,
         TranslatePipe,
         WelcomeComponent,
