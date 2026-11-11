@@ -12,4 +12,8 @@ export type AnalyticsGoal =
     | 'server_ip_copy'
     | 'discord_click'
     | 'wiki_suggest_submit'
-    | 'event_join';
+    | 'event_join'
+    | 'market_search'
+    | 'market_sort'
+    | 'market_buy_click'
+    | 'market_topup_click';

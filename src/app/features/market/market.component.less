@@ -1,0 +1,84 @@
+/*
+ * Липкая панель конверсии магазина: поиск, сортировка, баланс, пополнение.
+ * Держится у верхнего края при прокрутке витрины, чтобы покупатель
+ * всегда видел баланс и кнопку пополнения во время выбора товара.
+ */
+.market-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lh-space-2);
+    padding: var(--lh-space-2) 0;
+    background: color-mix(in srgb, var(--lh-surface-2) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--lh-border);
+}
+
+.market-toolbar__search {
+    flex: 1 1 12rem;
+    min-width: 0;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--lh-border);
+    border-radius: var(--lh-radius-md);
+    background: var(--lh-surface-3);
+    color: var(--lh-ink);
+    font: inherit;
+    font-size: 0.9rem;
+    transition: border-color var(--lh-dur-fast) var(--lh-ease-smooth);
+
+    &::placeholder {
+        color: var(--lh-ink-3);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 1px;
+    }
+}
+
+.market-toolbar__sort {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lh-space-1);
+}
+
+.market-toolbar__wallet {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-2);
+    margin-left: auto;
+}
+
+.market-toolbar__balance {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-1);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--lh-radius-md);
+    background: var(--lh-surface-3);
+}
+
+/*
+ * На телефоне панель в две строки: поиск с кошельком, ниже — прокручиваемый
+ * ряд сортировки. Три строки съедали четверть экрана (замер: 199px).
+ */
+@media (max-width: 640px) {
+    .market-toolbar__sort {
+        order: 3;
+        width: 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .market-toolbar__sort::-webkit-scrollbar {
+        display: none;
+    }
+
+    .market-toolbar__wallet {
+        margin-left: auto;
+    }
+}

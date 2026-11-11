@@ -76,4 +76,9 @@ export interface PrivilegeCard {
      * Может отсутствовать, если скидки нет.
      */
     discountPercent?: number;
+
+    /**
+     * Дата создания товара в магазине: для сортировки «новинки».
+     */
+    createdAt: Date | null;
 }

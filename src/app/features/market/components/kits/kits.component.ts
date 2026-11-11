@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, signal } from '@angular/core';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { DonateService } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
@@ -9,9 +8,10 @@ import { KitItemComponent } from '../../ui/kit-item/kit-item.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
-import { PurchaseDialogComponent, PurchaseDialogData } from '../purchase-dialog/purchase-dialog.component';
 import { mapShopItemToPrivilegeCard } from '../../lib/map-shop-item-to-privilege-card.function';
-import { sortPrivilegeCardsByPrice } from '../../lib/sort-privilege-cards-by-price.function';
+import { sortPrivilegeCardsByKey } from '../../lib/sort-privilege-cards-by-key.function';
+import { MarketSortKey } from '../../lib/market-sort-key.type';
+import { openPurchaseDialog } from '../purchase-dialog/open-purchase-dialog.function';
 import { getRarityByPrice } from '../../lib/get-rarity-by-price.function';
 import { createShopItemsLoader, ShopItemsLoader } from '../../lib/create-shop-items-loader.function';
 import { selectShopItemsByCategory } from '../../lib/select-shop-items-by-category.function';
@@ -63,10 +63,8 @@ export class KitsComponent implements OnDestroy {
         this.donateService,
         this.changeDetectorRef,
         (items) => {
-            this.kits = sortPrivilegeCardsByPrice(
-                selectShopItemsByCategory(items, 'kit').map(mapShopItemToPrivilegeCard)
-            );
-            this.selectedPrivilege = this.kits[0] ?? null;
+            this.baseCards = selectShopItemsByCategory(items, 'kit').map(mapShopItemToPrivilegeCard);
+            this.applySort();
         }
     );
 
@@ -84,6 +82,16 @@ export class KitsComponent implements OnDestroy {
      * Признак ошибки загрузки товаров.
      */
     protected readonly error = this.loader.error;
+
+    /**
+     * Все наборы категории до сортировки витрины.
+     */
+    private baseCards: PrivilegeCard[] = [];
+
+    /**
+     * Текущий ключ сортировки витрины.
+     */
+    private sort: MarketSortKey = 'price-asc';
 
     /**
      * Список наборов.
@@ -207,27 +215,31 @@ export class KitsComponent implements OnDestroy {
     }
 
     /**
+     * Ключ сортировки витрины из панели магазина.
+     */
+    @Input()
+    public set sortKey(value: MarketSortKey) {
+        this.sort = value;
+        this.applySort();
+    }
+
+    /**
+     * Пересобирает список наборов по ключу сортировки и чинит выбор:
+     * если выбранный набор не исчез из списка, выбор сохраняется.
+     */
+    private applySort(): void {
+        this.kits = sortPrivilegeCardsByKey(this.baseCards, this.sort);
+        const current = this.selectedPrivilege;
+        this.selectedPrivilege = current && this.kits.includes(current) ? current : (this.kits[0] ?? null);
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /**
      * Открывает диалог покупки выбранного набора.
      */
     protected openPurchaseDialog(): void {
-        const p = this.selectedPrivilege;
-        if (!p || !p.id) {
-            return;
+        if (this.selectedPrivilege) {
+            openPurchaseDialog(this.dialogs, this.selectedPrivilege, this.selectedTerm());
         }
-
-        const term = this.selectedTerm();
-        const data: PurchaseDialogData = {
-            itemId: p.id,
-            title: p.title,
-            image: p.image,
-            monthPrice: p.monthPrice,
-            seasonPrice: p.seasonPrice,
-            currency: p.currency ?? 'coins',
-            initialTerm: term,
-            description: p.description,
-            kitItems: p.kitItems,
-        };
-
-        this.dialogs.open(new PolymorpheusComponent(PurchaseDialogComponent), { size: 'auto', data }).subscribe();
     }
 }
