@@ -1,0 +1,1194 @@
+/**
+ * Вариант шапки «Врата очага»: шапка — тёмный зал портала. Нижняя кромка —
+ * прямая линия жара в 2px; над ней в зал поднимается широкое пятно тепла,
+ * под ней в страницу расходится неровный ореол, из линии в ореол опускаются
+ * угли и гаснут в нём, по линии скользит импульс жара. Движение — циклы CSS
+ * ореола, пятна, линии и углей; при `prefers-reduced-motion` циклы стоят
+ * в видимом состоянии, ничего не спрятано.
+ *
+ * Зал держит свои цвета: одинаков в обеих темах страницы, поэтому локальные
+ * `--gate-*` не переопределяются в тёмной теме. Текст на зале — `--gate-ink*`,
+ * размеры, радиусы, тени и время движения — токены `--lh-*`.
+ * Шапка не липкая: боевая шапка тоже не липкая, поэтому `position: relative`.
+ */
+
+:host {
+    --gate-bg-1: #1b120a;
+    --gate-bg-2: #120c07;
+    --gate-ink: #efe4cf;
+    --gate-ink-2: color-mix(in srgb, #efe4cf 78%, transparent);
+    --gate-ink-3: color-mix(in srgb, #efe4cf 62%, transparent);
+    --gate-ember: #ff8c2e;
+    --gate-ember-hot: #ffd27a;
+    --gate-divider: color-mix(in srgb, #efe4cf 12%, transparent);
+    --gate-tile-bg: color-mix(in srgb, #efe4cf 5%, transparent);
+    --gate-tile-border: color-mix(in srgb, #efe4cf 13%, transparent);
+
+    /* Высота полосы под кромкой: в ней живут и ореол, и угли. */
+    --gate-sky: 3rem;
+
+    display: block;
+    position: relative;
+}
+
+.gate {
+    position: relative;
+    /* Свет тепла ближе к кромке: зал темнее сверху и теплее снизу. */
+    background: linear-gradient(180deg, var(--gate-bg-2) 0, var(--gate-bg-1) 100%);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #efe4cf 7%, transparent);
+}
+
+/** Слои жара: пятно внутри зала, ниже кромки — ореол, линия и угли. */
+.gate__hearth {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/** Тепло зала: пятно поднимается от линии внутрь шапки и гаснет до её середины. */
+.gate__hall {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 6.5rem;
+    background: radial-gradient(
+        46% 100% at 50% 100%,
+        color-mix(in srgb, var(--gate-ember) 16%, transparent) 0,
+        color-mix(in srgb, var(--gate-ember) 6%, transparent) 50%,
+        transparent 78%
+    );
+    animation: gate-hall 3.4s ease-in-out infinite alternate;
+}
+
+/**
+ * Ореол под кромкой: неровные пятна тепла встают под линией в четырёх местах,
+ * между ними свет слабее — линия не выглядит ровной лампой.
+ */
+.gate__haze {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 100%;
+    height: var(--gate-sky);
+    background:
+        radial-gradient(
+            5.5rem 100% at 13% 0,
+            color-mix(in srgb, var(--gate-ember) 46%, transparent) 0,
+            transparent 78%
+        ),
+        radial-gradient(4rem 92% at 32% 0, color-mix(in srgb, var(--gate-ember) 32%, transparent) 0, transparent 80%),
+        radial-gradient(
+            6.5rem 100% at 57% 0,
+            color-mix(in srgb, var(--gate-ember) 38%, transparent) 0,
+            transparent 76%
+        ),
+        radial-gradient(3.5rem 84% at 78% 0, color-mix(in srgb, var(--gate-ember) 28%, transparent) 0, transparent 82%),
+        linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--gate-ember) 14%, transparent) 0,
+            color-mix(in srgb, var(--gate-ember) 4%, transparent) 45%,
+            transparent 92%
+        );
+    filter: blur(5px);
+    animation: gate-haze 3.4s ease-in-out infinite alternate;
+}
+
+/** Линия жара: нижняя кромка в 2px, ярче над пятнами тепла и слабее между ними. */
+.gate__line {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--gate-ember) 40%, transparent) 0,
+        var(--gate-ember-hot) 13%,
+        color-mix(in srgb, var(--gate-ember) 70%, transparent) 22%,
+        var(--gate-ember-hot) 32%,
+        color-mix(in srgb, var(--gate-ember) 62%, transparent) 44%,
+        #fff3d6 57%,
+        color-mix(in srgb, var(--gate-ember) 66%, transparent) 68%,
+        var(--gate-ember-hot) 78%,
+        color-mix(in srgb, var(--gate-ember) 50%, transparent) 90%,
+        color-mix(in srgb, var(--gate-ember) 30%, transparent) 100%
+    );
+    box-shadow:
+        0 0 0.75rem 1px color-mix(in srgb, var(--gate-ember) 50%, transparent),
+        0 -0.125rem 0.5rem color-mix(in srgb, var(--gate-ember) 32%, transparent);
+    animation: gate-line 2.8s ease-in-out infinite alternate;
+}
+
+/** Импульс жара: светлое ядро скользит по линии и возвращается. */
+.gate__line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0,
+        color-mix(in srgb, var(--gate-ember-hot) 70%, transparent) 42%,
+        #fff3d6 50%,
+        color-mix(in srgb, var(--gate-ember-hot) 70%, transparent) 58%,
+        transparent 100%
+    );
+    background-size: 46% 100%;
+    background-repeat: no-repeat;
+    background-position: 33% 0;
+    animation: gate-line-run 4.6s ease-in-out infinite alternate;
+}
+
+/** Угли: сходят с линии вниз и гаснут внутри ореола тепла. */
+.gate__embers {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 100%;
+    height: var(--gate-sky);
+    overflow: hidden;
+    mask-image: linear-gradient(180deg, #000 0, color-mix(in srgb, #000 72%, transparent) 42%, transparent 90%);
+}
+
+.gate__ember {
+    position: absolute;
+    top: -1px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: var(--gate-ember-hot);
+    box-shadow: 0 0 7px 1px color-mix(in srgb, var(--gate-ember) 65%, transparent);
+    opacity: 0;
+    animation: gate-ember 3.6s linear infinite;
+}
+
+/** Угли стоят группами под пятнами тепла, а не ровным рядом. */
+.gate__ember:nth-child(1) {
+    left: 11%;
+    animation-delay: -600ms;
+}
+
+.gate__ember:nth-child(2) {
+    left: 14.5%;
+    animation-duration: 3.2s;
+    animation-delay: -2.1s;
+    --gate-ember-drift: -7px;
+}
+
+.gate__ember:nth-child(3) {
+    left: 30%;
+    animation-duration: 4s;
+    animation-delay: -3s;
+    --gate-ember-drift: 8px;
+}
+
+.gate__ember:nth-child(4) {
+    left: 33.5%;
+    animation-duration: 3.4s;
+    animation-delay: -1.3s;
+    --gate-ember-drift: -5px;
+}
+
+.gate__ember:nth-child(5) {
+    left: 55%;
+    animation-duration: 3.8s;
+    animation-delay: -2.6s;
+    --gate-ember-drift: 6px;
+}
+
+.gate__ember:nth-child(6) {
+    left: 58.5%;
+    animation-duration: 3.3s;
+    animation-delay: -900ms;
+    --gate-ember-drift: -8px;
+}
+
+.gate__ember:nth-child(7) {
+    left: 61%;
+    animation-duration: 3.7s;
+    animation-delay: -1.8s;
+}
+
+.gate__ember:nth-child(8) {
+    left: 76.5%;
+    animation-duration: 3.9s;
+    animation-delay: -2.9s;
+    --gate-ember-drift: 5px;
+}
+
+.gate__ember:nth-child(9) {
+    left: 79.5%;
+    animation-duration: 3.5s;
+    animation-delay: -1.1s;
+    --gate-ember-drift: -6px;
+}
+
+.gate__ember:nth-child(10) {
+    left: 12.5%;
+    animation-duration: 4.1s;
+    animation-delay: -3.4s;
+    --gate-ember-drift: 7px;
+}
+
+.gate__ember:nth-child(11) {
+    left: 56.5%;
+    animation-duration: 3.1s;
+    animation-delay: -0.4s;
+    --gate-ember-drift: -4px;
+}
+
+.gate__ember:nth-child(12) {
+    left: 78%;
+    animation-duration: 3.8s;
+    animation-delay: -2.2s;
+    --gate-ember-drift: 3px;
+}
+
+.gate__body {
+    position: relative;
+    z-index: 1;
+    padding: 0.5rem 1rem 0.625rem;
+}
+
+/* ---- Ярус 1: знак проекта, живые числа, управление ---- */
+
+.gate__top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    min-height: 2.75rem;
+}
+
+.gate__brand {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    padding: 0.25rem 0.5rem 0.25rem 0;
+    border-radius: var(--lh-radius-md);
+    color: var(--gate-ink);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.gate__brand:active {
+    scale: 0.98;
+}
+
+.gate__brand:focus-visible {
+    outline: 2px solid var(--gate-ember);
+    outline-offset: 2px;
+}
+
+.gate__mark {
+    display: block;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+}
+
+/* Название проекта: антиква капителью, свет очага под буквами. Ховер цвета
+   мгновенный: переход объявлен только на масштаб. */
+.gate__name {
+    color: var(--gate-ink);
+    font-size: 1.3125rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    line-height: 1;
+    text-transform: uppercase;
+    text-shadow: 0 0 1.75rem color-mix(in srgb, var(--gate-ember) 38%, transparent);
+    white-space: nowrap;
+}
+
+.gate__brand:hover .gate__name {
+    color: var(--gate-ember-hot);
+}
+
+/* Числа сервера стоят справа от знака, перед управлением: сначала состояние,
+   потом действия. Без ответа сервера зона держит размер — прочерк не сдвигает
+   строку. */
+.gate__live {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    margin-left: auto;
+}
+
+/* Точка жизни сервера: зелёная при ответе, гаснет без ответа вместе с прочерками. */
+.gate__pulse {
+    flex: none;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-online);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-online) 22%, transparent);
+}
+
+.gate__pulse--off {
+    background-color: var(--lh-offline);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-offline) 30%, transparent);
+}
+
+.gate__count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    margin: 0;
+    min-width: 4.25rem;
+    color: var(--gate-ink);
+    font-size: 1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.gate__count-max {
+    color: var(--gate-ink-3);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.gate__live-label {
+    color: var(--gate-ink-3);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Линия занятости: дорожка видна и при нуле, длина равна настоящей доле. */
+.gate__gauge {
+    flex: none;
+    width: 3.5rem;
+    height: 2px;
+    border-radius: 1px;
+    background-color: color-mix(in srgb, #efe4cf 18%, transparent);
+}
+
+.gate__gauge-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--gate-ember);
+    transform: scaleX(var(--gate-fill, 0));
+    transform-origin: left center;
+    transition: transform 240ms var(--lh-ease-out-quart);
+}
+
+.gate__clock {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--gate-ink-3);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gate__clock::before {
+    content: '·';
+    margin-right: 0.5rem;
+    color: color-mix(in srgb, #efe4cf 40%, transparent);
+}
+
+/* Ряд управления отделён волосяной чертой: состояние слева, действия справа. */
+.gate__controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.25rem;
+    padding-left: 1rem;
+}
+
+.gate__controls::before {
+    content: '';
+    flex: none;
+    width: 1px;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+    background-color: var(--gate-divider);
+}
+
+/* Прозрачные кнопки управления: отклик на нажатие через `scale`, ховер цвета
+   мгновенный (color и background-color в переход не входят). */
+.gate__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--gate-ink-2);
+    font-size: 1rem;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.gate__icon:hover {
+    background-color: color-mix(in srgb, #efe4cf 10%, transparent);
+    color: var(--gate-ink);
+}
+
+.gate__icon:active {
+    scale: 0.98;
+}
+
+.gate__icon:focus-visible {
+    outline: 2px solid var(--gate-ember);
+    outline-offset: 2px;
+}
+
+.gate__lang {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+/* Колокольчик рисует глобальную залитую пилюлю `.nav-button`; в этом варианте
+   ряд управления прозрачный, поэтому пилюля локально приведена к его виду. */
+.gate__bell ::ng-deep .nav-button {
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+    color: var(--gate-ink-2);
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.gate__bell ::ng-deep .nav-button:hover {
+    background-color: color-mix(in srgb, #efe4cf 10%, transparent);
+    background-image: none;
+    box-shadow: none;
+    color: var(--gate-ink);
+    transform: none;
+}
+
+.gate__bell ::ng-deep .nav-button:active {
+    transform: none;
+    scale: 0.98;
+}
+
+.gate__bell ::ng-deep .nav-button--active,
+.gate__bell ::ng-deep .nav-button--active:hover {
+    background-color: color-mix(in srgb, #efe4cf 14%, transparent);
+    background-image: none;
+    box-shadow: none;
+    color: var(--gate-ember-hot);
+}
+
+/* Карточка игрока: аватар, имя и баланс янтарём на тёмном зале. */
+.gate__player {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+    border-radius: var(--lh-radius-sm);
+    background-color: var(--gate-tile-bg);
+    box-shadow: inset 0 0 0 1px var(--gate-tile-border);
+    color: var(--gate-ink-2);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.gate__player:hover {
+    background-color: color-mix(in srgb, #efe4cf 10%, transparent);
+    color: var(--gate-ink);
+}
+
+.gate__player:active {
+    scale: 0.98;
+}
+
+.gate__player:focus-visible {
+    outline: 2px solid var(--gate-ember);
+    outline-offset: 2px;
+}
+
+.gate__avatar {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+
+    /* Точка внимания обводится кольцом зала, чтобы не сливаться с картинкой. */
+    .gate__dot {
+        box-shadow: 0 0 0 2px var(--gate-bg-1);
+    }
+}
+
+.gate__avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.gate__avatar-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: var(--gate-ink-3);
+    font-size: 2.25rem;
+}
+
+.gate__player-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.gate__player-name {
+    max-width: 9rem;
+    overflow: hidden;
+    color: var(--gate-ink);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gate__coins {
+    display: flex;
+    align-items: center;
+    gap: 0.3125rem;
+    color: var(--gate-ember-hot);
+    font-size: 0.9375rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+}
+
+/* Осколок — вытянутый спрайт, высоту держим свою. */
+.gate__spark {
+    flex: none;
+    width: auto;
+    height: 1.125rem;
+    object-fit: contain;
+}
+
+/* Вход гостя — единственное залитое действие в шапке: тёплый янтарь очага. */
+.gate__signin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: var(--gate-ember);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gate-ember-hot) 45%, transparent);
+    color: var(--gate-bg-2);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.gate__signin:hover {
+    background-color: var(--gate-ember-hot);
+    color: var(--gate-bg-2);
+}
+
+.gate__signin:active {
+    scale: 0.98;
+}
+
+.gate__signin:focus-visible {
+    outline: 2px solid var(--gate-ink);
+    outline-offset: 2px;
+}
+
+/* Точка «есть новое»: абсолютная на знаках и плитках, строчная в ссылках. */
+.gate__dot {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--gate-ember-hot);
+    pointer-events: none;
+}
+
+.gate__dot--inline {
+    position: static;
+    flex: none;
+    width: 0.4375rem;
+    height: 0.4375rem;
+}
+
+/* ---- Ярус 2: ряд ссылок ---- */
+
+.gate__nav {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.25rem;
+}
+
+.gate__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0 0.25rem;
+}
+
+.gate__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    padding: 0 0.75rem;
+    border: 0;
+    background-color: transparent;
+    color: var(--gate-ink-2);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+/* Янтарное подчёркивание рисуется слева направо от своего края. */
+.gate__link::after {
+    content: '';
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.375rem;
+    left: 0.75rem;
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--gate-ember);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 160ms var(--lh-ease-out-quart);
+}
+
+.gate__link:hover {
+    color: var(--gate-ink);
+}
+
+.gate__link:hover::after {
+    transform: scaleX(1);
+}
+
+.gate__link:active {
+    scale: 0.98;
+}
+
+.gate__link:focus-visible {
+    outline: 2px solid var(--gate-ember);
+    outline-offset: 2px;
+    border-radius: var(--lh-radius-sm);
+}
+
+.gate__link--active {
+    color: var(--gate-ember-hot);
+}
+
+.gate__link--active::after {
+    transform: scaleX(1);
+}
+
+.gate__link--home {
+    padding: 0 0.625rem;
+    font-size: 1rem;
+}
+
+.gate__link--home .gate__dot {
+    top: 0.5rem;
+    right: 0.375rem;
+}
+
+.gate__chev {
+    font-size: 0.875rem;
+    transition: rotate 200ms var(--lh-ease-smooth);
+}
+
+.gate__chev--up {
+    rotate: 180deg;
+}
+
+/* Кнопка-меню узких экранов: вся навигация за одной целью. */
+.gate__menu {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, #efe4cf 24%, transparent);
+    color: var(--gate-ink-2);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.gate__menu:hover {
+    background-color: color-mix(in srgb, #efe4cf 10%, transparent);
+    color: var(--gate-ink);
+}
+
+.gate__menu:active {
+    scale: 0.98;
+}
+
+.gate__menu:focus-visible {
+    outline: 2px solid var(--gate-ember);
+    outline-offset: 2px;
+}
+
+/* ---- Ярусы 3 и 4: шторки ---- */
+
+/* Шторка растёт от верхнего края строкой грида: открытие 260ms, закрытие
+   короче — 160ms, без задержки. */
+.gate__sheet {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 160ms var(--lh-ease-smooth);
+}
+
+.gate__sheet--open {
+    grid-template-rows: 1fr;
+    transition-duration: 260ms;
+}
+
+/* Мобильная шторка живёт только ниже 768px: выше неё ряд ссылок виден целиком. */
+.gate__sheet--menu {
+    display: none;
+}
+
+.gate__sheet-clip {
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Ниша шторки — тот же зал, только на шаг темнее: плитка внутри читается
+   как ниша в стене, а не как пергаментная вставка чужой темы. */
+.gate__sheet-body {
+    margin-top: 0.25rem;
+    padding: 1rem;
+    border-radius: var(--lh-radius-md);
+    background-color: color-mix(in srgb, var(--gate-bg-2) 88%, transparent);
+    box-shadow: inset 0 0 0 1px var(--gate-divider);
+}
+
+.gate__group {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: var(--gate-ink-3);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.gate__group--next {
+    margin-top: 1.25rem;
+}
+
+.gate__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.gate__grid--menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gate__tile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--lh-radius-md);
+    background-color: var(--gate-tile-bg);
+    box-shadow: inset 0 0 0 1px var(--gate-tile-border);
+    color: var(--gate-ink);
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(0.375rem) scale(0.98);
+    transition:
+        opacity 200ms var(--lh-ease-out-quart),
+        transform 200ms var(--lh-ease-out-quart),
+        translate 140ms var(--lh-ease-spring),
+        box-shadow 140ms var(--lh-ease-spring);
+}
+
+.gate__tile:focus-visible {
+    outline: 2px solid var(--gate-ember);
+    outline-offset: 2px;
+}
+
+.gate__tile--active {
+    background-color: color-mix(in srgb, var(--gate-ember) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gate-ember) 55%, transparent);
+}
+
+/* Каскад плиток: 30ms на плитку, но не дольше шести шагов — иначе хвост
+   каскада жил бы дольше самого раскрытия шторки. Задержки стоят только у
+   opacity и transform, поэтому ховер плитки не ждёт своей очереди. */
+.gate__sheet--open .gate__tile {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(min(var(--gate-i, 0), 6) * 30ms), calc(min(var(--gate-i, 0), 6) * 30ms), 0ms, 0ms;
+}
+
+.gate__tile:hover {
+    translate: 0 -2px;
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--gate-ember) 45%, transparent),
+        var(--lh-shadow-lift);
+}
+
+.gate__tile:active {
+    translate: 0 0;
+    scale: 0.98;
+}
+
+.gate__tile-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--lh-radius-sm);
+    background-color: color-mix(in srgb, var(--gate-ember) 14%, transparent);
+    color: var(--gate-ember-hot);
+    font-size: 1.125rem;
+}
+
+.gate__tile-label {
+    min-width: 0;
+    color: var(--gate-ink);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.gate__tile-arrow {
+    margin-left: auto;
+    color: var(--gate-ink-3);
+    font-size: 1rem;
+    transition: translate 140ms var(--lh-ease-spring);
+}
+
+.gate__tile:hover .gate__tile-arrow {
+    translate: 2px 0;
+    color: var(--gate-ember-hot);
+}
+
+/* ---- Раскладка по ширинам ---- */
+
+@media (max-width: 1279px) {
+    .gate__link {
+        padding: 0 0.5rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+    }
+
+    .gate__link::after {
+        right: 0.5rem;
+        left: 0.5rem;
+    }
+
+    .gate__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1023px) {
+    .gate__name {
+        font-size: 1.125rem;
+        letter-spacing: 0.14em;
+    }
+
+    .gate__mark {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .gate__live-label {
+        display: none;
+    }
+}
+
+/* Ниже 768px ряд ссылок уходит за одну кнопку; числа сервера получают свою
+   строку под знаком и управлением. */
+@media (max-width: 767px) {
+    .gate__top {
+        flex-wrap: wrap;
+        row-gap: 0.25rem;
+    }
+
+    .gate__brand {
+        order: 1;
+    }
+
+    .gate__controls {
+        order: 2;
+        margin-left: auto;
+        padding-left: 0;
+    }
+
+    .gate__controls::before {
+        display: none;
+    }
+
+    .gate__live {
+        order: 3;
+        flex-basis: 100%;
+        margin-left: 0;
+        padding-left: 0.125rem;
+    }
+
+    .gate__row {
+        display: none;
+    }
+
+    .gate__menu {
+        display: inline-flex;
+    }
+
+    .gate__sheet {
+        display: none;
+    }
+
+    .gate__sheet--menu {
+        display: grid;
+    }
+
+    .gate__nav {
+        padding-top: 0.5rem;
+    }
+}
+
+@media (max-width: 639px) {
+    .gate__name {
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+    }
+
+    .gate__player-text {
+        display: none;
+    }
+
+    .gate__sheet-body {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 479px) {
+    .gate__name {
+        font-size: 0.9375rem;
+        letter-spacing: 0.1em;
+    }
+
+    .gate__signin {
+        padding: 0 0.75rem;
+        letter-spacing: 0.04em;
+    }
+
+    .gate__grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .gate__grid--menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Колонка шире xl: боковые поля держит обёртка страницы, внутренние не нужны. */
+@media (min-width: 1280px) {
+    .gate__body {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
+/* ---- Движение снимается, содержимое остаётся видимым ---- */
+
+@media (prefers-reduced-motion: reduce) {
+    .gate__hall,
+    .gate__haze,
+    .gate__line,
+    .gate__line::after,
+    .gate__ember {
+        animation: none;
+    }
+
+    .gate__hall {
+        opacity: 0.85;
+    }
+
+    .gate__haze {
+        opacity: 0.8;
+    }
+
+    .gate__line {
+        opacity: 1;
+    }
+
+    .gate__line::after {
+        background-position: 50% 0;
+    }
+
+    /* Угли стоят на разной высоте в ореоле: ни одного скрытого. */
+    .gate__ember {
+        opacity: 0.45;
+    }
+
+    .gate__ember:nth-child(1) {
+        transform: translate3d(0, 0.6rem, 0);
+    }
+
+    .gate__ember:nth-child(2) {
+        transform: translate3d(-3px, 1.3rem, 0);
+    }
+
+    .gate__ember:nth-child(3) {
+        transform: translate3d(4px, 1.8rem, 0);
+    }
+
+    .gate__ember:nth-child(4) {
+        transform: translate3d(-2px, 0.9rem, 0);
+    }
+
+    .gate__ember:nth-child(5) {
+        transform: translate3d(3px, 1.5rem, 0);
+    }
+
+    .gate__ember:nth-child(6) {
+        transform: translate3d(-4px, 0.7rem, 0);
+    }
+
+    .gate__ember:nth-child(7) {
+        transform: translate3d(0, 1.9rem, 0);
+    }
+
+    .gate__ember:nth-child(8) {
+        transform: translate3d(2px, 1.1rem, 0);
+    }
+
+    .gate__ember:nth-child(9) {
+        transform: translate3d(-3px, 0.5rem, 0);
+    }
+
+    .gate__ember:nth-child(10) {
+        transform: translate3d(3px, 1.6rem, 0);
+    }
+
+    .gate__ember:nth-child(11) {
+        transform: translate3d(-2px, 1.2rem, 0);
+    }
+
+    .gate__ember:nth-child(12) {
+        transform: translate3d(1px, 0.8rem, 0);
+    }
+
+    .gate__brand,
+    .gate__chev,
+    .gate__gauge-fill,
+    .gate__icon,
+    .gate__link,
+    .gate__link::after,
+    .gate__menu,
+    .gate__player,
+    .gate__sheet,
+    .gate__signin,
+    .gate__tile,
+    .gate__tile-arrow {
+        transition: none;
+    }
+
+    .gate__tile {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/** Пятно тепла дышит: яркость поднимается от кромки и возвращается. */
+@keyframes gate-hall {
+    from {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes gate-haze {
+    from {
+        opacity: 0.45;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes gate-line {
+    from {
+        opacity: 0.82;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/** Импульс жара: ядро идёт от левого края линии к правому и обратно. */
+@keyframes gate-line-run {
+    from {
+        background-position: 0% 0;
+    }
+
+    to {
+        background-position: 100% 0;
+    }
+}
+
+/** Уголь: спуск на 2.4rem под линию, угасание в нижней части ореола. */
+@keyframes gate-ember {
+    0% {
+        transform: translate3d(0, 0, 0);
+        opacity: 0;
+    }
+
+    12% {
+        opacity: 0.9;
+    }
+
+    70% {
+        opacity: 0.55;
+    }
+
+    100% {
+        transform: translate3d(var(--gate-ember-drift, 4px), 2.4rem, 0);
+        opacity: 0;
+    }
+}

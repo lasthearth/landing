@@ -1,0 +1,1115 @@
+/**
+ * Вариант шапки «Военный стол»: угловатая боевая пластина.
+ *
+ * Пластина держит свои цвета: одинакова в обеих темах страницы, поэтому
+ * локальные `--hud-*` в тёмной теме только приглушают внешнюю кромку и тень
+ * (`:host-context` ниже). Текст на пластине — пергаментные токены, янтарь —
+ * `--lh-accent`, размеры, радиусы и время движения — токены `--lh-*`.
+ *
+ * Кромка, срез углов и лицо пластины нарисованы отдельным слоем `.hud__shell`
+ * с `clip-path`: слой абсолютный, поэтому контент, шторки и кольцо фокуса не
+ * обрезаются. Единственный бесконечный цикл — блик-пробежка раз в 3s; при
+ * `prefers-reduced-motion` он снят, тики и шторки остаются в видимом состоянии.
+ * Шапка не липкая: боевая шапка тоже не липкая, поэтому `position: relative`.
+ */
+
+:host {
+    /* Срез угла пластины; то же значение читает полигон `.hud-clip()`. */
+    --hud-cut: 14px;
+
+    /* Кромка, волоски и подложки ячеек: пергамент на ночной поверхности. */
+    --hud-edge: color-mix(in srgb, var(--lh-parchment-dim) 34%, transparent);
+    --hud-hairline: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+    --hud-cell: color-mix(in srgb, var(--lh-parchment) 4%, transparent);
+    --hud-cell-hover: color-mix(in srgb, var(--lh-parchment) 9%, transparent);
+    --hud-cell-on: color-mix(in srgb, var(--lh-brand) 26%, var(--lh-night));
+
+    /* Лицо пластины: ночь с тёплым наклоном, как стол совета у очага. */
+    --hud-face: linear-gradient(158deg, var(--lh-night-2) 0%, var(--lh-night) 52%, var(--lh-night-deep) 100%);
+    --hud-face-drop: linear-gradient(165deg, var(--lh-night-2) 0%, var(--lh-night) 100%);
+    --hud-face-cart: linear-gradient(
+        150deg,
+        color-mix(in srgb, var(--lh-wood) 72%, var(--lh-night)) 0%,
+        var(--lh-night-2) 100%
+    );
+
+    /* Текст и янтарь пластины. */
+    --hud-ink: var(--lh-parchment-2);
+    --hud-ink-2: var(--lh-parchment);
+    --hud-ink-3: var(--lh-parchment-dim);
+    --hud-amber: var(--lh-accent);
+    --hud-amber-hot: var(--lh-accent-soft);
+
+    /* Тень пластины: цвет из чернил пергамента, как у токенов проекта. */
+    --hud-shadow: drop-shadow(0 14px 34px rgba(26, 17, 13, 0.38));
+
+    display: block;
+    position: relative;
+}
+
+/* Тёмная тема — подмена значений токенов: на тёмной странице кромка тише,
+   тень короче, чтобы пластина не «светилась» по контуру. */
+:host-context(html[data-theme='dark']) {
+    --hud-edge: color-mix(in srgb, var(--lh-parchment-dim) 20%, transparent);
+    --hud-shadow: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.5));
+}
+
+/**
+ * Восьмиугольник со срезанными углами. Миксин, чтобы кромка пластины,
+ * блик и «патрон» резались одинаково.
+ */
+.hud-clip() {
+    clip-path: polygon(
+        var(--hud-cut) 0,
+        calc(100% - var(--hud-cut)) 0,
+        100% var(--hud-cut),
+        100% calc(100% - var(--hud-cut)),
+        calc(100% - var(--hud-cut)) 100%,
+        var(--hud-cut) 100%,
+        0 calc(100% - var(--hud-cut)),
+        0 var(--hud-cut)
+    );
+}
+
+/* Обёртка: поля по бокам только на телефоне, как у боевой шапки. */
+.hud {
+    position: relative;
+    margin: 2rem 1rem 1rem;
+}
+
+.hud__plate {
+    position: relative;
+}
+
+/**
+ * Кромка: внешний слой цвета пергамента, поверх него лицо с отступом 1px.
+ * Тень висит на слое, поэтому повторяет срез, а не прямоугольник.
+ */
+.hud__shell {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-color: var(--hud-edge);
+    .hud-clip();
+}
+
+.hud__shell::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background: var(--hud-face);
+    clip-path: polygon(
+        calc(var(--hud-cut) - 2px) 0,
+        calc(100% - var(--hud-cut) + 2px) 0,
+        100% calc(var(--hud-cut) - 2px),
+        100% calc(100% - var(--hud-cut) + 2px),
+        calc(100% - var(--hud-cut) + 2px) 100%,
+        calc(var(--hud-cut) - 2px) 100%,
+        0 calc(100% - var(--hud-cut) + 2px),
+        0 calc(var(--hud-cut) - 2px)
+    );
+}
+
+.hud__shell--plate {
+    filter: var(--hud-shadow);
+}
+
+.hud__shell--cart {
+    --hud-cut: 10px;
+}
+
+.hud__shell--cart::after {
+    background: var(--hud-face-cart);
+}
+
+.hud__shell--drop {
+    --hud-cut: 10px;
+}
+
+.hud__shell--drop::after {
+    background: var(--hud-face-drop);
+}
+
+/* Уголки-скобки: тонкие янтарные уголки внутри пластины. */
+.hud__bracket {
+    position: absolute;
+    z-index: 1;
+    width: 12px;
+    height: 12px;
+    border: 0 solid color-mix(in srgb, var(--hud-amber) 55%, transparent);
+    pointer-events: none;
+}
+
+.hud__bracket--tl {
+    top: 9px;
+    left: 9px;
+    border-top-width: 2px;
+    border-left-width: 2px;
+}
+
+.hud__bracket--tr {
+    top: 9px;
+    right: 9px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+}
+
+.hud__bracket--bl {
+    bottom: 9px;
+    left: 9px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+.hud__bracket--br {
+    bottom: 9px;
+    right: 9px;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+}
+
+/* Блик-пробежка: единственный бесконечный цикл — полоса идёт по пластине
+   раз в 3s и гаснет. */
+.hud__sweep {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    overflow: hidden;
+    pointer-events: none;
+    .hud-clip();
+}
+
+.hud__sweep-band {
+    position: absolute;
+    top: -25%;
+    left: 0;
+    width: 20%;
+    height: 150%;
+    background-image: linear-gradient(
+        100deg,
+        transparent 0%,
+        color-mix(in srgb, var(--lh-parchment-2) 8%, transparent) 42%,
+        color-mix(in srgb, var(--hud-amber-hot) 10%, transparent) 52%,
+        transparent 100%
+    );
+    opacity: 0;
+    transform: translateX(-120%) skewX(-14deg);
+    animation: hud-sweep 3s var(--lh-ease-smooth) infinite;
+}
+
+@keyframes hud-sweep {
+    0% {
+        opacity: 0;
+        transform: translateX(-120%) skewX(-14deg);
+    }
+
+    4% {
+        opacity: 1;
+    }
+
+    22%,
+    100% {
+        opacity: 0;
+        transform: translateX(620%) skewX(-14deg);
+    }
+}
+
+/* Контент стоит над кромкой и под бликом. */
+.hud__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem 0.625rem;
+}
+
+.hud__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--hud-hairline);
+}
+
+/* ---- Знак проекта ---- */
+
+.hud__brand {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.25rem 0.5rem;
+    color: var(--hud-ink);
+    text-decoration: none;
+    transition: transform 150ms var(--lh-ease-spring);
+}
+
+.hud__brand:hover {
+    background-color: var(--hud-cell-hover);
+    color: var(--hud-ink);
+    transform: translateY(-1px);
+}
+
+.hud__brand:active {
+    transform: scale(0.98);
+}
+
+/* Хост `app-image-loader` размера не задаёт: размер даёт вызывающий. */
+.hud__mark {
+    display: block;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+/* Название — трафаретный капс, а не вензель: у стола своя графика. */
+.hud__name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* ---- Телеметрия ---- */
+
+.hud__live {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    margin-left: 0.5rem;
+}
+
+.hud__count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+    margin: 0;
+    color: var(--hud-ink);
+    font-size: 1.375rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.hud__count-max {
+    color: var(--hud-ink-3);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.hud__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.375rem;
+    margin: 0;
+    color: var(--hud-ink-3);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+
+/* Разделитель рисует стиль: без времени в строке висячей точки не остаётся. */
+.hud__clock::before {
+    content: '·';
+    margin-right: 0.375rem;
+}
+
+/* ---- Управление: тема, язык ---- */
+
+.hud__controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.375rem;
+    margin-left: auto;
+}
+
+.hud__btn {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0 0.625rem;
+    border: none;
+    background-color: var(--hud-cell);
+    color: var(--hud-ink);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 150ms var(--lh-ease-spring);
+}
+
+.hud__btn:hover {
+    background-color: var(--hud-cell-hover);
+    transform: translateY(-1px);
+}
+
+.hud__btn:active {
+    transform: scale(0.98);
+}
+
+.hud__btn tui-icon {
+    font-size: 1.125rem;
+}
+
+/* Кнопка меню нужна только там, где ряд ячеек не влезает. */
+.hud__menu {
+    display: none;
+}
+
+/* Язык — сегмент RU|EN, а не дропдаун: состояние видно без клика. */
+.hud__lang {
+    display: flex;
+    flex: none;
+    height: 2.75rem;
+    background-color: var(--hud-cell);
+}
+
+.hud__lang-opt {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 0.625rem;
+    border: none;
+    background-color: transparent;
+    color: var(--hud-ink-3);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: transform 150ms var(--lh-ease-spring);
+}
+
+.hud__lang-opt + .hud__lang-opt {
+    border-left: 1px solid var(--hud-hairline);
+}
+
+.hud__lang-opt:hover {
+    background-color: var(--hud-cell-hover);
+    color: var(--hud-ink);
+}
+
+.hud__lang-opt:active {
+    transform: scale(0.98);
+}
+
+/**
+ * Выбранный язык. Белый, а не пергамент: пергамент-3 на `brand-deep`
+ * даёт 4.34:1, ниже порога AA для текста 13px.
+ */
+.hud__lang-opt--on,
+.hud__lang-opt--on:hover {
+    background-color: var(--lh-brand-deep);
+    color: #ffffff;
+}
+
+/* ---- «Патрон» игрока ---- */
+
+.hud__cart {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.375rem;
+}
+
+/* Контент «патрона» над его кромкой; сам слой кромки не трогаем. */
+.hud__cart > *:not(.hud__shell) {
+    position: relative;
+}
+
+.hud__cart-id {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.25rem 0.5rem;
+    color: var(--hud-ink);
+    text-decoration: none;
+    transition: transform 150ms var(--lh-ease-spring);
+}
+
+.hud__cart-id:hover {
+    background-color: color-mix(in srgb, var(--lh-parchment) 8%, transparent);
+    transform: translateY(-1px);
+}
+
+.hud__cart-id:active {
+    transform: scale(0.98);
+}
+
+/* Хост `app-player-avatar` своего размера не имеет: бокс задаёт вызывающий. */
+.hud__avatar {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.hud__avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.hud__avatar-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: var(--hud-ink-3);
+    font-size: 2.5rem;
+}
+
+.hud__cart-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.hud__cart-name {
+    max-width: 9rem;
+    overflow: hidden;
+    color: var(--hud-ink);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hud__coins {
+    display: flex;
+    align-items: center;
+    gap: 0.3125rem;
+    color: var(--hud-amber-hot);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* Осколок — вытянутый спрайт: высоту держим свою, ширину отдаём пропорции. */
+.hud__spark {
+    flex: none;
+    width: auto;
+    height: 1.125rem;
+    object-fit: contain;
+}
+
+/* Колокольчик — общий компонент в облике боевой кнопки: углы прямые,
+   подложка из той же шкалы ячеек. */
+.hud__bell ::ng-deep .nav-button {
+    height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0 0.625rem;
+    border-radius: 0;
+    background-color: var(--hud-cell);
+    background-image: none;
+    box-shadow: none;
+    color: var(--hud-ink);
+    transition: transform 150ms var(--lh-ease-spring);
+}
+
+.hud__bell ::ng-deep .nav-button:hover {
+    background-color: var(--hud-cell-hover);
+    background-image: none;
+    box-shadow: none;
+    color: var(--hud-ink);
+    transform: translateY(-1px);
+}
+
+.hud__bell ::ng-deep .nav-button:active {
+    transform: scale(0.98);
+}
+
+.hud__bell ::ng-deep .nav-button--active,
+.hud__bell ::ng-deep .nav-button--active:hover {
+    background-color: var(--hud-cell-on);
+    background-image: none;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hud-amber) 55%, transparent);
+    color: var(--hud-ink);
+    transform: none;
+}
+
+.hud__exit {
+    border-left: 1px solid var(--hud-hairline);
+    color: var(--hud-ink-3);
+}
+
+.hud__exit:hover {
+    background-color: color-mix(in srgb, var(--lh-danger-strong) 45%, transparent);
+    color: var(--hud-ink);
+}
+
+/* Вход для гостя: единственное действие с брендовой заливкой. Скос нарисован
+   на псевдоэлементе, поэтому кольцо фокуса не срезается. */
+.hud__signin {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 1.25rem;
+    border: none;
+    background-color: transparent;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    isolation: isolate;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 150ms var(--lh-ease-spring);
+}
+
+.hud__signin::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        linear-gradient(180deg, color-mix(in srgb, var(--lh-parchment-2) 16%, transparent) 0%, transparent 44%),
+        linear-gradient(150deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: filter 150ms var(--lh-ease-out-quart);
+}
+
+.hud__signin:hover {
+    transform: translateY(-1px);
+}
+
+.hud__signin:hover::before {
+    filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--lh-brand) 55%, transparent));
+}
+
+.hud__signin:active {
+    transform: scale(0.98);
+}
+
+.hud__signin tui-icon {
+    font-size: 1.125rem;
+}
+
+/* ---- Ячейки разделов ---- */
+
+.hud__nav {
+    display: flex;
+    gap: 2px;
+    counter-reset: hud-cell;
+}
+
+.hud__cell {
+    position: relative;
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    height: 2.75rem;
+    min-width: 0;
+    padding: 0 0.5rem;
+    border: none;
+    background-color: var(--hud-cell);
+    color: var(--hud-ink-2);
+    counter-increment: hud-cell;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 150ms var(--lh-ease-spring);
+}
+
+/* Номер ячейки: 01, 02, 03… — их рисует счётчик, а не шаблон. */
+.hud__cell::before {
+    flex: none;
+    color: var(--hud-amber);
+    content: counter(hud-cell, decimal-leading-zero);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Иконка видна только в планшетной раскладке, см. медиа-запрос ниже. */
+.hud__cell-icon {
+    display: none;
+    flex: none;
+    font-size: 1.125rem;
+}
+
+.hud__cell-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hud__cell:hover {
+    background-color: var(--hud-cell-hover);
+    color: var(--hud-ink);
+    transform: translateY(-1px);
+}
+
+.hud__cell:active {
+    transform: scale(0.98);
+}
+
+.hud__cell--on,
+.hud__cell--on:hover {
+    background-color: var(--hud-cell-on);
+    box-shadow: inset 0 2px 0 var(--hud-amber);
+    color: var(--hud-ink);
+}
+
+.hud__cell--on::before {
+    color: var(--hud-amber-hot);
+}
+
+.hud__cell-box {
+    position: relative;
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.hud__chev {
+    flex: none;
+    font-size: 0.875rem;
+    transition: transform var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.hud__chev--up {
+    transform: rotate(180deg);
+}
+
+/* Точка «есть новое с прошлого визита». */
+.hud__dot {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 7px;
+    height: 7px;
+    background-color: var(--hud-amber);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--hud-amber) 60%, transparent);
+    pointer-events: none;
+}
+
+.hud__dot--inline {
+    position: static;
+    flex: none;
+    width: 7px;
+    height: 7px;
+    margin-left: auto;
+}
+
+/* ---- Дропдаун «Сообщества» ---- */
+
+/* Раскрытие строкой грида: закрытие короче открытия, без задержки. */
+.hud__drop {
+    position: absolute;
+    top: calc(100% + 0.375rem);
+    left: 0;
+    z-index: var(--lh-z-dropdown);
+    display: grid;
+    grid-template-rows: 0fr;
+    min-width: 15rem;
+    transition: grid-template-rows 160ms var(--lh-ease-smooth);
+}
+
+.hud__drop--open {
+    grid-template-rows: 1fr;
+    transition-duration: 260ms;
+}
+
+.hud__drop-clip {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.hud__drop-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0.375rem;
+}
+
+.hud__drop-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding: 0 0.625rem;
+    color: var(--hud-ink-2);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(0.375rem);
+    transition:
+        opacity 180ms var(--lh-ease-out-quart),
+        transform 180ms var(--lh-ease-out-quart);
+}
+
+/* Каскад пунктов: 25ms на пункт, не дольше шести шагов — хвост не живёт
+   дольше самого раскрытия. */
+.hud__drop--open .hud__drop-item {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(min(var(--hud-i, 0), 6) * 25ms);
+}
+
+.hud__drop-item tui-icon {
+    flex: none;
+    color: var(--hud-amber);
+    font-size: 1rem;
+}
+
+.hud__drop-item:hover {
+    background-color: var(--hud-cell-hover);
+    color: var(--hud-ink);
+}
+
+.hud__drop-item:active {
+    transform: scale(0.98);
+}
+
+.hud__drop-item--on {
+    background-color: var(--hud-cell-on);
+    box-shadow: inset 2px 0 0 var(--hud-amber);
+    color: var(--hud-ink);
+}
+
+/* ---- Шкала занятости ---- */
+
+/**
+ * 40 тиков во всю ширину пластины. Заполнение зажигается один раз каскадом
+ * 25ms на тик, когда пришли данные сервера. Дорожка видна и при нуле:
+ * пустая шкала честнее прочерка.
+ */
+.hud__gauge {
+    display: flex;
+    gap: 2px;
+    height: 8px;
+}
+
+.hud__tick {
+    flex: 1 1 0;
+    min-width: 0;
+    background-color: color-mix(in srgb, var(--lh-parchment) 13%, transparent);
+    transition:
+        background-color 120ms var(--lh-ease-out-quart),
+        box-shadow 120ms var(--lh-ease-out-quart);
+}
+
+.hud__tick--lit {
+    background-color: var(--hud-amber);
+    box-shadow: 0 0 5px color-mix(in srgb, var(--hud-amber) 50%, transparent);
+    transition:
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart) calc(var(--hud-tick, 0) * 25ms),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart) calc(var(--hud-tick, 0) * 25ms);
+}
+
+/* ---- Мобильная шторка ---- */
+
+.hud__sheet {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    left: 0;
+    z-index: var(--lh-z-dropdown);
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 160ms var(--lh-ease-smooth);
+}
+
+.hud__sheet--open {
+    grid-template-rows: 1fr;
+    transition-duration: 260ms;
+}
+
+.hud__sheet-clip {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.hud__sheet-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    counter-reset: hud-row;
+}
+
+/* Строки шторки над кромкой панели; сам слой кромки не трогаем. */
+.hud__sheet-body > *:not(.hud__shell) {
+    position: relative;
+}
+
+.hud__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    height: 2.75rem;
+    padding: 0 0.75rem;
+    color: var(--hud-ink-2);
+    counter-increment: hud-row;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(0.375rem);
+    transition:
+        opacity 180ms var(--lh-ease-out-quart),
+        transform 180ms var(--lh-ease-out-quart);
+}
+
+.hud__row::before {
+    flex: none;
+    width: 1.375rem;
+    color: var(--hud-amber);
+    content: counter(hud-row, decimal-leading-zero);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+.hud__sheet--open .hud__row {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(min(var(--hud-i, 0), 6) * 25ms);
+}
+
+.hud__row tui-icon {
+    flex: none;
+    color: var(--hud-ink-3);
+    font-size: 1.125rem;
+}
+
+.hud__row:hover {
+    background-color: var(--hud-cell-hover);
+    color: var(--hud-ink);
+}
+
+.hud__row:active {
+    transform: scale(0.98);
+}
+
+.hud__row--on {
+    background-color: var(--hud-cell-on);
+    box-shadow: inset 2px 0 0 var(--hud-amber);
+    color: var(--hud-ink);
+}
+
+.hud__row--on::before {
+    color: var(--hud-amber-hot);
+}
+
+.hud__group {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0.75rem 0 0.25rem;
+    padding: 0 0.75rem;
+    border-top: 1px solid var(--hud-hairline);
+    color: var(--hud-ink-3);
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    line-height: 2.5rem;
+    text-transform: uppercase;
+}
+
+/* ---- Раскладка по ширинам ---- */
+
+/* Десктоп: девять ячеек в один ряд, подписи мельче, чтобы влезли с номером
+   и шевроном. */
+@media (min-width: 1280px) {
+    .hud__cell {
+        gap: 0.3125rem;
+        padding: 0 0.375rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.03em;
+    }
+
+    .hud__cell::before {
+        font-size: 0.625rem;
+    }
+}
+
+/* Планшет: ячейки становятся клавишами — иконка над подписью, номер в углу. */
+@media (max-width: 1279px) {
+    .hud__cell {
+        flex-direction: column;
+        gap: 0.125rem;
+        height: 3.5rem;
+        padding: 0.375rem 0.25rem;
+        font-size: 0.625rem;
+        letter-spacing: 0.03em;
+    }
+
+    .hud__cell::before {
+        position: absolute;
+        top: 3px;
+        left: 5px;
+        font-size: 0.5625rem;
+    }
+
+    .hud__cell-icon {
+        display: block;
+        color: var(--hud-amber);
+    }
+
+    .hud__chev {
+        display: none;
+    }
+
+    .hud__name {
+        font-size: 1.125rem;
+    }
+
+    .hud__cart-name {
+        max-width: 7rem;
+    }
+}
+
+/* Ниже 768px ряд ячеек уходит за одну кнопку; шторка живёт только здесь. */
+@media (max-width: 767px) {
+    .hud__nav {
+        display: none;
+    }
+
+    .hud__menu {
+        display: inline-flex;
+    }
+}
+
+/* Телефон: телеметрия и «патрон» получают свои строки. */
+@media (max-width: 639px) {
+    .hud__content {
+        padding: 0.625rem 0.75rem 0.5rem;
+    }
+
+    .hud__bar {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        min-height: 0;
+    }
+
+    .hud__mark {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .hud__name {
+        font-size: 1rem;
+    }
+
+    .hud__live {
+        order: 4;
+        flex-basis: 100%;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-left: 0;
+    }
+
+    .hud__cart,
+    .hud__signin {
+        order: 5;
+        flex-basis: 100%;
+    }
+
+    .hud__cart {
+        justify-content: space-between;
+        padding: 0.375rem 0.5rem;
+    }
+
+    .hud__signin {
+        justify-content: center;
+    }
+
+    .hud__cart-name {
+        max-width: 9rem;
+    }
+}
+
+@media (max-width: 479px) {
+    .hud__name {
+        font-size: 0.9375rem;
+        letter-spacing: 0.06em;
+    }
+
+    .hud__signin {
+        padding: 0 0.75rem;
+        letter-spacing: 0.04em;
+    }
+}
+
+/* Шире телефона пластина стоит по краям колонки, как боевая шапка. */
+@media (min-width: 640px) {
+    .hud {
+        margin-right: 0;
+        margin-left: 0;
+    }
+}
+
+/* ---- Движение снимается, содержимое остаётся видимым ---- */
+
+@media (prefers-reduced-motion: reduce) {
+    /* Блик гаснет: цикл снят, пластина остаётся целой. */
+    .hud__sweep-band {
+        animation: none;
+        opacity: 0;
+    }
+
+    /* Тики горят сразу, без каскада. */
+    .hud__tick,
+    .hud__tick--lit {
+        transition: none;
+    }
+
+    /* Шторки раскрываются мгновенно; пункты в них видимы, ничего не спрятано. */
+    .hud__drop,
+    .hud__sheet {
+        transition: none;
+    }
+
+    .hud__drop-item,
+    .hud__row {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .hud__bell ::ng-deep .nav-button,
+    .hud__brand,
+    .hud__btn,
+    .hud__cart-id,
+    .hud__cell,
+    .hud__chev,
+    .hud__lang-opt,
+    .hud__signin,
+    .hud__signin::before {
+        transition: none;
+    }
+}

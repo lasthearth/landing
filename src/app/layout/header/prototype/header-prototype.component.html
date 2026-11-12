@@ -1,0 +1,31 @@
+@switch (activeVariantId()) {
+    @case ("hearth-gate") {
+        <app-header-hearth-gate />
+    }
+    @case ("rail") {
+        <app-header-rail />
+    }
+    @case ("hud") {
+        <app-header-hud />
+    }
+    @case ("crown") {
+        <app-header-crown />
+    }
+    @case ("deck") {
+        <app-header-deck />
+    }
+    @case ("morph") {
+        <app-header-morph />
+    }
+    @default {
+        <app-header />
+    }
+}
+
+@if (isSwitcherVisible()) {
+    <app-header-prototype-switcher
+        [variants]="variants"
+        [activeId]="activeVariantId()"
+        (pick)="selectVariant($event)"
+    />
+}

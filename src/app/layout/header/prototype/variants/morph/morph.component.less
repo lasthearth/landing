@@ -1,0 +1,849 @@
+/**
+ * Вариант шапки «Живая капсула».
+ *
+ * Светлая пластина-стадион плывёт над тёмным фоном страницы; янтарный ореол
+ * под ней медленно дышит (3.2s, единственный фоновый эффект движения).
+ * Капсульный мотив повторён внутри: телеметрия — пилюля, навигация — утопленная
+ * дорожка-пилюля, игрок — чип-пилюля, мега-панель и мобильная шторка —
+ * отдельные отсеки ниже капсулы (сама пластина высоту не меняет).
+ *
+ * Цвет — токены --lh-*; тёмная тема подменяет только локальные --cap-*.
+ * При `prefers-reduced-motion` ореол стоит в видимом состоянии, переходы
+ * сняты, содержимое шторок видимо — ничего не спрятано.
+ * Шапка не липкая: position relative, как у боевой шапки.
+ */
+
+:host {
+    display: block;
+    position: relative;
+    padding: 1.5rem 0 1.25rem;
+
+    /* Янтарь линий и иконок: на светлой капсуле brand (3.1:1),
+       на тёмной — brand-hover (4.4:1): линия 3px читается в обеих темах. */
+    --cap-ember: var(--lh-brand);
+
+    /* Ореол под капсулой: тёплое дыхание на тёмном фоне страницы. */
+    --cap-halo: color-mix(in srgb, var(--lh-brand) 30%, transparent);
+}
+
+/* Тёмная тема — только подмена токенов. */
+:host-context(html[data-theme='dark']) {
+    --cap-ember: var(--lh-brand-hover);
+    --cap-halo: color-mix(in srgb, var(--lh-brand) 34%, transparent);
+}
+
+.cap {
+    position: relative;
+}
+
+/* Пластина капсулы: непрозрачный пергамент, форма стадиона. */
+.cap__plate {
+    position: relative;
+    padding: 1.25rem 2.5rem 1rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-surface-2);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 9%, transparent),
+        var(--lh-shadow-soft);
+}
+
+/**
+ * Дышащий ореол — «живая» подпись варианта: мягкое янтарное кольцо вокруг
+ * капсулы набирает и гасит яркость, цикл 3.2s. z-index: -1 уводит его за
+ * непрозрачную пластину — видимой остаётся только кайма свечения.
+ */
+.cap__plate::before {
+    content: '';
+    position: absolute;
+    inset: -1rem -1.25rem -1.25rem;
+    z-index: -1;
+    border-radius: inherit;
+    /* Цвет держится до самой кромки пластины и гаснет в кайме: градиент,
+       который тает раньше кромки, не оставил бы ореола вовсе. */
+    background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--cap-halo) 0%, var(--cap-halo) 82%, transparent 100%);
+    opacity: 0.35;
+    animation: cap-breathe 3.2s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes cap-breathe {
+    from {
+        opacity: 0.35;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ---- Ярус 1: знак, телеметрия, управление ---- */
+
+.cap__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+}
+
+.cap__brand {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.875rem;
+    min-height: 2.75rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+    border-radius: var(--lh-radius-full);
+    color: var(--lh-ink);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.cap__brand:hover {
+    color: var(--lh-ink);
+    background-color: color-mix(in srgb, var(--lh-brand) 8%, transparent);
+}
+
+.cap__brand:active {
+    scale: 0.98;
+}
+
+/* Медальон: круглая рамка капсульного мотива держит знак проекта. */
+.cap__medal {
+    display: block;
+    flex: none;
+    overflow: hidden;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-surface-3);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 12%, transparent),
+        0 0 0 3px color-mix(in srgb, var(--cap-ember) 16%, transparent);
+}
+
+/* Хост app-image-loader своего размера не имеет — задаём здесь. */
+.cap__mark {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.cap__name {
+    color: var(--lh-ink);
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.05;
+    white-space: nowrap;
+}
+
+/* Телеметрия — пилюля: состояние сервера слева, время справа. */
+.cap__telem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    min-height: 2.75rem;
+    margin-left: auto;
+    padding: 0.375rem 1rem;
+    border-radius: var(--lh-radius-full);
+    background-color: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 7%, transparent);
+}
+
+/* Точка жизни сервера: зелёная при ответе, серая без ответа. */
+.cap__live {
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-online);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-online) 22%, transparent);
+}
+
+.cap__live--off {
+    background-color: var(--lh-offline);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-offline) 30%, transparent);
+}
+
+.cap__count {
+    display: flex;
+    flex: none;
+    align-items: baseline;
+    gap: 0.25rem;
+    min-width: 4.25rem;
+    margin: 0;
+    color: var(--lh-ink);
+    font-size: 1.125rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.cap__count-max {
+    color: var(--lh-ink-3);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.cap__telem-label {
+    flex: none;
+    color: var(--lh-ink-3);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Линия занятости: дорожка видна и при нуле, длина равна настоящей доле. */
+.cap__gauge {
+    flex: none;
+    width: 4rem;
+    height: 3px;
+    border-radius: 2px;
+    background-color: color-mix(in srgb, var(--lh-ink) 14%, transparent);
+}
+
+.cap__gauge-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--cap-ember);
+    transform: scaleX(var(--cap-fill, 0));
+    transform-origin: left center;
+    transition: transform 240ms var(--lh-ease-out-quart);
+}
+
+.cap__clock {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--lh-ink-3);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cap__clock::before {
+    content: '·';
+    margin-right: 0.5rem;
+    color: color-mix(in srgb, var(--lh-ink-3) 70%, transparent);
+}
+
+/* Управление: круглые тёмные кнопки проекта; колокольчик приведён к кругу. */
+.cap__controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.cap__ctl {
+    border-radius: var(--lh-radius-full);
+    padding-inline: 0.625rem;
+}
+
+.cap__bell {
+    align-self: center;
+}
+
+.cap__bell ::ng-deep .nav-button {
+    border-radius: var(--lh-radius-full);
+}
+
+.cap__lang {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+/* Чип игрока — пилюля: аватар, имя, баланс. */
+.cap__chip {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0.25rem 0.875rem 0.25rem 0.25rem;
+    border-radius: var(--lh-radius-full);
+    background-color: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    color: var(--lh-ink);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.cap__chip:hover {
+    background-color: color-mix(in srgb, var(--lh-brand) 9%, transparent);
+    color: var(--lh-ink);
+}
+
+.cap__chip:active {
+    scale: 0.98;
+}
+
+.cap__avatar {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+.cap__avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.cap__avatar-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: var(--lh-ink-3);
+    font-size: 2.25rem;
+}
+
+.cap__chip-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.cap__chip-name {
+    max-width: 9rem;
+    overflow: hidden;
+    color: var(--lh-ink);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Баланс — единственное цветное число капсулы. */
+.cap__coins {
+    display: flex;
+    align-items: center;
+    gap: 0.3125rem;
+    color: var(--lh-brand-ink);
+    font-size: 0.9375rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+}
+
+/* Осколок — вытянутый спрайт, высоту держим свою. */
+.cap__spark {
+    flex: none;
+    width: auto;
+    height: 1.125rem;
+    object-fit: contain;
+}
+
+/* Вход гостя — единственное залитое действие: брендовый градиент проекта. */
+.cap__signin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    border: 0;
+    border-radius: var(--lh-radius-full);
+    background-image: linear-gradient(150deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--lh-parchment-3) 24%, transparent),
+        0 6px 18px -6px color-mix(in srgb, var(--lh-brand) 55%, transparent);
+    color: var(--lh-parchment-3);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.cap__signin:hover {
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--lh-parchment-3) 24%, transparent),
+        0 8px 22px -6px color-mix(in srgb, var(--lh-brand) 65%, transparent);
+    color: var(--lh-parchment-3);
+}
+
+.cap__signin:active {
+    scale: 0.98;
+}
+
+/* Точка «есть новое»: абсолютная на знаках, строчная в ссылках. */
+.cap__dot {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-brand);
+    box-shadow: 0 0 0 2px var(--lh-surface-2);
+    pointer-events: none;
+}
+
+.cap__dot--inline {
+    position: static;
+    flex: none;
+    width: 0.4375rem;
+    height: 0.4375rem;
+    box-shadow: none;
+}
+
+/* ---- Ярус 2: дорожка навигации ---- */
+
+.cap__nav {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;
+}
+
+/* Утопленная пилюля-дорожка: ссылки внутри мягкого жёлоба. */
+.cap__track {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.125rem;
+    padding: 0.25rem;
+    border-radius: var(--lh-radius-full);
+    background-color: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+    box-shadow: inset 0 1px 3px color-mix(in srgb, var(--lh-ink) 7%, transparent);
+}
+
+.cap__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    padding: 0 0.875rem;
+    border: 0;
+    border-radius: var(--lh-radius-full);
+    background-color: transparent;
+    color: var(--lh-ink-2);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+/* Ховер цвета мгновенный: в переходе только масштаб и подчёркивание. */
+.cap__link:hover {
+    color: var(--lh-ink);
+    background-color: color-mix(in srgb, var(--lh-brand) 8%, transparent);
+}
+
+.cap__link:active {
+    scale: 0.98;
+}
+
+/* Янтарное подчёркивание рисуется слева направо от своего края. */
+.cap__link::after {
+    content: '';
+    position: absolute;
+    right: 0.875rem;
+    bottom: 0.5rem;
+    left: 0.875rem;
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--cap-ember);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 160ms var(--lh-ease-out-quart);
+}
+
+.cap__link:hover::after,
+.cap__link--active::after {
+    transform: scaleX(1);
+}
+
+.cap__link--active {
+    color: var(--lh-ink);
+}
+
+.cap__link--home {
+    padding: 0 0.75rem;
+    font-size: 1.0625rem;
+}
+
+.cap__chev {
+    font-size: 0.875rem;
+    transition: rotate 200ms var(--lh-ease-smooth);
+}
+
+.cap__chev--up {
+    rotate: 180deg;
+}
+
+/* Кнопка-меню узких экранов: тёмная пилюля во всю ширину дорожки. */
+.cap__burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    border: 0;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-primary-2);
+    color: var(--lh-parchment-2);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.cap__burger:hover {
+    background-color: var(--lh-primary);
+    color: var(--lh-parchment-2);
+}
+
+.cap__burger:active {
+    scale: 0.98;
+}
+
+/* Точка на тёмной пилюле обводится её фоном. */
+.cap__burger .cap__dot--inline {
+    box-shadow: 0 0 0 2px var(--lh-primary-2);
+}
+
+/* ---- Отсеки ниже капсулы: мега-панель и мобильная шторка ---- */
+
+/* Шторка растёт строкой грида: открытие 260ms, закрытие короче — 160ms. */
+.cap__panel,
+.cap__sheet {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 160ms var(--lh-ease-smooth);
+}
+
+.cap__panel--open,
+.cap__sheet--open {
+    grid-template-rows: 1fr;
+    transition-duration: 260ms;
+}
+
+.cap__panel-clip {
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Отсек — та же пергаментная капсула, что и пластина: один материал. */
+.cap__panel-body {
+    margin-top: 0.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1.75rem;
+    background-color: var(--lh-surface-2);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 9%, transparent),
+        var(--lh-shadow-soft);
+}
+
+.cap__group {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: var(--lh-ink-3);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.cap__group--next {
+    margin-top: 1.25rem;
+}
+
+/* Мега-панель: разделы — пилюли в один свободный ряд. */
+.cap__rack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.cap__pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0.375rem 1.125rem 0.375rem 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    color: var(--lh-ink);
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(0.375rem) scale(0.98);
+    transition:
+        opacity 200ms var(--lh-ease-out-quart),
+        transform 200ms var(--lh-ease-out-quart),
+        background-color 150ms var(--lh-ease-out-quart),
+        box-shadow 150ms var(--lh-ease-out-quart);
+}
+
+/* Каскад пилюль: 30ms, не дольше шести шагов; задержки только у входа,
+   поэтому ховер не ждёт своей очереди. */
+.cap__panel--open .cap__pill {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(min(var(--cap-i, 0), 6) * 30ms), calc(min(var(--cap-i, 0), 6) * 30ms), 0ms, 0ms;
+}
+
+.cap__pill:hover {
+    background-color: color-mix(in srgb, var(--lh-brand) 9%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cap-ember) 40%, transparent);
+}
+
+.cap__pill:active {
+    scale: 0.98;
+}
+
+.cap__pill--active {
+    background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cap-ember) 55%, transparent);
+}
+
+.cap__pill-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--lh-radius-full);
+    background-color: color-mix(in srgb, var(--cap-ember) 14%, transparent);
+    color: var(--cap-ember);
+    font-size: 1.0625rem;
+}
+
+.cap__pill-label {
+    min-width: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+/* Мобильная шторка: разделы строками-пилюлями. */
+.cap__sheet {
+    display: none;
+}
+
+.cap__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.cap__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border-radius: var(--lh-radius-full);
+    color: var(--lh-ink-2);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(0.375rem);
+    transition:
+        opacity 200ms var(--lh-ease-out-quart),
+        transform 200ms var(--lh-ease-out-quart),
+        background-color 150ms var(--lh-ease-out-quart);
+}
+
+.cap__sheet--open .cap__row {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(min(var(--cap-i, 0), 6) * 30ms), calc(min(var(--cap-i, 0), 6) * 30ms), 0ms;
+}
+
+.cap__row:hover {
+    color: var(--lh-ink);
+    background-color: color-mix(in srgb, var(--lh-brand) 8%, transparent);
+}
+
+.cap__row--active {
+    color: var(--lh-ink);
+    background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cap-ember) 45%, transparent);
+}
+
+.cap__row-icon {
+    flex: none;
+    color: var(--cap-ember);
+    font-size: 1.0625rem;
+}
+
+/* ---- Раскладка по ширинам ---- */
+
+@media (max-width: 1279px) {
+    :host {
+        padding: 1.25rem 0.75rem 1rem;
+    }
+
+    .cap__plate {
+        padding: 1.125rem 2rem 0.875rem;
+    }
+
+    .cap__plate::before {
+        inset: -0.875rem -0.75rem -1.125rem;
+    }
+
+    .cap__link {
+        padding: 0 0.625rem;
+        font-size: 0.8125rem;
+    }
+
+    .cap__link::after {
+        right: 0.625rem;
+        left: 0.625rem;
+    }
+
+    .cap__chip-name {
+        max-width: 6rem;
+    }
+}
+
+@media (max-width: 1023px) {
+    .cap__medal {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    .cap__name {
+        font-size: 1.25rem;
+    }
+
+    .cap__telem-label {
+        display: none;
+    }
+
+    /* Чип сжимается до аватара: имя и баланс ждут широких экранов. */
+    .cap__chip-text {
+        display: none;
+    }
+
+    .cap__chip {
+        padding-right: 0.25rem;
+    }
+}
+
+/* Ниже 768px дорожка ссылок уходит за одну кнопку; телеметрия получает
+   свою строку, управление встаёт справа от знака. */
+@media (max-width: 767px) {
+    :host {
+        padding: 1rem 1rem 0.75rem;
+    }
+
+    .cap__plate {
+        padding: 0.875rem 1.125rem;
+        border-radius: 2rem;
+    }
+
+    .cap__plate::before {
+        inset: -0.75rem -0.375rem -1rem;
+    }
+
+    .cap__brand {
+        order: 1;
+    }
+
+    .cap__controls {
+        order: 2;
+        margin-left: auto;
+    }
+
+    .cap__telem {
+        order: 3;
+        flex-basis: 100%;
+        justify-content: space-between;
+        margin-left: 0;
+    }
+
+    .cap__track {
+        display: none;
+    }
+
+    .cap__burger {
+        display: inline-flex;
+    }
+
+    .cap__panel {
+        display: none;
+    }
+
+    .cap__sheet {
+        display: grid;
+    }
+}
+
+@media (max-width: 639px) {
+    .cap__name {
+        font-size: 1.125rem;
+    }
+
+    .cap__count {
+        font-size: 1rem;
+    }
+
+    .cap__signin {
+        padding: 0 0.875rem;
+    }
+
+    .cap__panel-body {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 479px) {
+    .cap__gauge {
+        width: 2.5rem;
+    }
+
+    .cap__clock {
+        max-width: 5.5rem;
+    }
+}
+
+/* ---- Движение снимается, содержимое остаётся видимым ---- */
+
+@media (prefers-reduced-motion: reduce) {
+    .cap__plate::before {
+        animation: none;
+        opacity: 0.75;
+    }
+
+    .cap__brand,
+    .cap__burger,
+    .cap__chev,
+    .cap__chip,
+    .cap__gauge-fill,
+    .cap__link,
+    .cap__link::after,
+    .cap__panel,
+    .cap__pill,
+    .cap__row,
+    .cap__sheet,
+    .cap__signin {
+        transition: none;
+    }
+
+    .cap__pill,
+    .cap__row {
+        opacity: 1;
+        transform: none;
+    }
+}

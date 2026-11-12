@@ -1,0 +1,33 @@
+<div class="switcher" role="group" aria-label="Переключатель вариантов шапки">
+    <button
+        type="button"
+        class="switcher__arrow"
+        (click)="step(-1)"
+        aria-label="Предыдущий вариант"
+        title="Предыдущий вариант (←)"
+    >
+        ←
+    </button>
+
+    <span class="switcher__label">{{ label() }}</span>
+
+    <button
+        type="button"
+        class="switcher__arrow"
+        (click)="step(1)"
+        aria-label="Следующий вариант"
+        title="Следующий вариант (→)"
+    >
+        →
+    </button>
+
+    <button
+        type="button"
+        class="switcher__close"
+        (click)="close()"
+        aria-label="Вернуть боевую шапку"
+        title="Боевая шапка (Esc)"
+    >
+        ×
+    </button>
+</div>

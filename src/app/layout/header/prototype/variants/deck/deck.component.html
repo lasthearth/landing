@@ -1,0 +1,340 @@
+@let online = state.online();
+@let isAuth = state.isAuth();
+@let section = currentSection();
+
+<div class="deck" aria-label="Шапка lasthearth.ru, прототип «Две палубы»">
+    <div class="deck__card">
+        <!--
+            Ярус 1. Верхняя палуба — тёмная приборная строка: точка жизни
+            с радарным бликом, счётчик онлайна, линия занятости, игровое время
+            и имя текущего раздела. Без ответа сервера числа становятся
+            прочерком, а зона не меняет размер.
+        -->
+        <div class="deck__strip">
+            <div class="deck__telemetry">
+                <span class="deck__live" [class.deck__live--off]="!online" aria-hidden="true">
+                    <span class="deck__live-ping"></span>
+                </span>
+
+                <p class="deck__count">
+                    <span class="deck__count-now">{{ online?.online ?? "—" }}</span>
+                    <span class="deck__count-max">/ {{ online?.max_online ?? "—" }}</span>
+                </p>
+
+                <span class="deck__telemetry-label">{{ "header.players" | translate }}</span>
+
+                <span
+                    class="deck__gauge"
+                    role="img"
+                    [attr.aria-label]="
+                        online
+                            ? ('header.players' | translate) + ': ' + online.online + ' / ' + online.max_online
+                            : ('header.players' | translate)
+                    "
+                    [style.--deck-fill]="state.occupancy()"
+                >
+                    <span class="deck__gauge-fill"></span>
+                </span>
+            </div>
+
+            <div class="deck__course">
+                <span class="deck__clock" [title]="state.time() ?? undefined">{{ state.time() ?? "—" }}</span>
+
+                @if (section) {
+                    <span class="deck__section">
+                        <tui-icon [icon]="section.icon" class="deck__section-icon" />
+                        <span class="deck__section-name">{{ section.labelKey | translate }}</span>
+                    </span>
+                }
+            </div>
+        </div>
+
+        <!--
+            Ярус 2. Нижняя палуба — светлая: знак проекта слева, навигация
+            со скользящей пилюлей в центре, управление справа. Ниже 1024px
+            навигация уходит за кнопку-меню.
+        -->
+        <div class="deck__board">
+            <a class="deck__brand" [routerLink]="['/']">
+                <app-image-loader src="/images/logo.webp" alt="" class="deck__mark" />
+                <span class="deck__name">Last Hearth</span>
+            </a>
+
+            <nav class="deck__nav" [attr.aria-label]="'header.mainMenu' | translate">
+                <div
+                    #navList
+                    class="deck__nav-list"
+                    (mouseleave)="onListLeave()"
+                    (focusin)="onListFocusIn($event)"
+                    (focusout)="onListFocusOut($event)"
+                >
+                    <span
+                        class="deck__pill"
+                        [class.deck__pill--on]="pillOn()"
+                        [class.deck__pill--rest]="pillResting()"
+                        [style.--pill-x]="pillX() + 'px'"
+                        [style.--pill-w]="pillW() + 'px'"
+                        aria-hidden="true"
+                    ></span>
+
+                    <a
+                        class="deck__item deck__item--home"
+                        [routerLink]="['/']"
+                        data-pill-key="home"
+                        [class.deck__item--active]="activeKey() === 'home'"
+                        [attr.aria-current]="activeKey() === 'home' ? 'page' : null"
+                        [attr.aria-label]="'header.nav.home' | translate"
+                        [title]="'header.nav.home' | translate"
+                        (mouseenter)="onItemEnter('home')"
+                    >
+                        <tui-icon icon="@tui.house" />
+                        @if (state.isFresh("news")) {
+                            <span class="deck__dot">
+                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                            </span>
+                        }
+                    </a>
+
+                    @for (link of state.mainLinks; track link.route) {
+                        @if (!link.guestOnly || !isAuth) {
+                            <a
+                                class="deck__item"
+                                [class.deck__item--active]="activeKey() === link.route"
+                                [class.lh-guest-only]="link.guestOnly"
+                                [routerLink]="link.route"
+                                [attr.data-pill-key]="link.route"
+                                [attr.aria-current]="activeKey() === link.route ? 'page' : null"
+                                (mouseenter)="onItemEnter(link.route)"
+                            >
+                                <span>{{ link.labelKey | translate }}</span>
+                                @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                    <span class="deck__dot deck__dot--inline">
+                                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                    </span>
+                                }
+                            </a>
+                        }
+                    }
+
+                    <div class="deck__item-wrap" data-pill-key="community" (mouseenter)="onItemEnter('community')">
+                        <button
+                            type="button"
+                            class="deck__item"
+                            [class.deck__item--active]="activeKey() === 'community'"
+                            (click)="toggleSheet()"
+                            [attr.aria-expanded]="sheetOpen()"
+                        >
+                            <span>{{ "header.nav.community" | translate }}</span>
+                            @if (state.communityFresh()) {
+                                <span class="deck__dot deck__dot--inline">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                            <tui-icon
+                                icon="@tui.chevron-down"
+                                class="deck__chev"
+                                [class.deck__chev--up]="sheetOpen()"
+                            />
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="deck__controls">
+                <button
+                    type="button"
+                    class="deck__icon"
+                    (click)="state.toggleTheme()"
+                    [attr.aria-label]="'header.theme.toggle' | translate"
+                    [title]="'header.theme.toggle' | translate"
+                >
+                    <tui-icon [icon]="state.dark() ? '@tui.sun' : '@tui.moon'" />
+                </button>
+
+                <button
+                    type="button"
+                    class="deck__icon"
+                    (click)="toggleLanguage()"
+                    [attr.aria-label]="'header.language.select' | translate"
+                    [title]="'header.language.select' | translate"
+                >
+                    <tui-icon icon="@tui.globe" />
+                    <span class="deck__lang">{{ state.language() === "ru" ? "RU" : "EN" }}</span>
+                </button>
+
+                @if (isAuth) {
+                    <app-notification-bell class="deck__bell" />
+
+                    <a class="deck__player" [routerLink]="['/profile']">
+                        <span class="deck__avatar">
+                            @if (state.userImage()) {
+                                <app-player-avatar
+                                    class="deck__avatar-img"
+                                    [userId]="state.userId()"
+                                    [src]="state.userImage()"
+                                    [alt]="'header.avatarAlt' | translate"
+                                    [animated]="false"
+                                />
+                            } @else {
+                                <tui-icon icon="@tui.square-user-round" class="deck__avatar-fallback" />
+                            }
+
+                            @if (state.attention()) {
+                                <span class="deck__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                        </span>
+
+                        <span class="deck__player-text">
+                            <span class="deck__player-name">{{ state.userName() }}</span>
+                            <span class="deck__coins">
+                                <img src="/splinter-of-spark.webp" alt="" class="deck__spark" />
+                                <span>{{ state.coins() | amount }}</span>
+                            </span>
+                        </span>
+                    </a>
+
+                    <button
+                        type="button"
+                        class="deck__icon"
+                        (click)="state.signOut()"
+                        [attr.aria-label]="'header.nav.signOut' | translate"
+                        [title]="'header.nav.signOut' | translate"
+                    >
+                        <tui-icon icon="@tui.log-out" />
+                    </button>
+                } @else {
+                    <button type="button" class="deck__signin" (click)="state.signIn()">
+                        <tui-icon icon="@tui.log-in" />
+                        <span>{{ "header.nav.signIn" | translate }}</span>
+                    </button>
+                }
+
+                <button
+                    type="button"
+                    class="deck__menu"
+                    (click)="toggleMenu()"
+                    [attr.aria-expanded]="menuOpen()"
+                    [attr.aria-label]="'header.mainMenu' | translate"
+                >
+                    <tui-icon [icon]="menuOpen() ? '@tui.x' : '@tui.align-justify'" />
+                    <span class="deck__menu-label">{{ "header.mainMenu" | translate }}</span>
+                    @if (state.communityFresh()) {
+                        <span class="deck__dot deck__dot--inline">
+                            <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                        </span>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!--
+        Ярус 3. Манифест «Сообщества»: шторка на всю ширину колонки,
+        ячейки разделов входят каскадом по 30ms (не дольше шести шагов).
+    -->
+    <div class="deck__sheet" [class.deck__sheet--open]="sheetOpen()" [attr.inert]="sheetOpen() ? null : ''">
+        <div class="deck__sheet-clip">
+            <div class="deck__sheet-body">
+                <span class="deck__group">{{ "header.nav.community" | translate }}</span>
+
+                <div class="deck__grid">
+                    @for (link of state.communityLinks; track link.route; let i = $index) {
+                        <a
+                            class="deck__cell"
+                            [routerLink]="link.route"
+                            routerLinkActive="deck__cell--active"
+                            (click)="closeAll()"
+                            [style.--deck-i]="i"
+                        >
+                            <tui-icon [icon]="link.icon" class="deck__cell-icon" />
+                            <span class="deck__cell-label">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="deck__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+        Ярус 4. Мобильная шторка: вся навигация за одной кнопкой — главная
+        и разделы ячейками, ниже группа «Сообщества».
+    -->
+    <div
+        class="deck__sheet deck__sheet--menu"
+        [class.deck__sheet--open]="menuOpen()"
+        [attr.inert]="menuOpen() ? null : ''"
+    >
+        <div class="deck__sheet-clip">
+            <div class="deck__sheet-body">
+                <div class="deck__grid deck__grid--menu">
+                    <a
+                        class="deck__cell"
+                        [routerLink]="['/']"
+                        routerLinkActive="deck__cell--active"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        (click)="closeAll()"
+                        [style.--deck-i]="0"
+                    >
+                        <tui-icon icon="@tui.house" class="deck__cell-icon" />
+                        <span class="deck__cell-label">{{ "header.nav.home" | translate }}</span>
+                        @if (state.isFresh("news")) {
+                            <span class="deck__dot">
+                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                            </span>
+                        }
+                    </a>
+
+                    @for (link of state.mainLinks; track link.route; let i = $index) {
+                        @if (!link.guestOnly || !isAuth) {
+                            <a
+                                class="deck__cell"
+                                [class.lh-guest-only]="link.guestOnly"
+                                [routerLink]="link.route"
+                                routerLinkActive="deck__cell--active"
+                                (click)="closeAll()"
+                                [style.--deck-i]="i + 1"
+                            >
+                                <tui-icon [icon]="link.icon" class="deck__cell-icon" />
+                                <span class="deck__cell-label">{{ link.labelKey | translate }}</span>
+                                @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                    <span class="deck__dot">
+                                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                    </span>
+                                }
+                            </a>
+                        }
+                    }
+                </div>
+
+                <span class="deck__group deck__group--next">{{ "header.nav.community" | translate }}</span>
+
+                <div class="deck__grid deck__grid--menu">
+                    @for (link of state.communityLinks; track link.route; let i = $index) {
+                        <a
+                            class="deck__cell"
+                            [routerLink]="link.route"
+                            routerLinkActive="deck__cell--active"
+                            (click)="closeAll()"
+                            [style.--deck-i]="i + 8"
+                        >
+                            <tui-icon [icon]="link.icon" class="deck__cell-icon" />
+                            <span class="deck__cell-label">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="deck__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

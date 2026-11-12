@@ -1,0 +1,269 @@
+@let online = state.online();
+@let isAuth = state.isAuth();
+
+<div class="rail">
+    <!--
+        Один ряд: знак проекта, ряд разделов, показания сервера, управление.
+        Отсеки разделены волосяными линейками — пластина читается как прибор,
+        а не как набор кнопок.
+    -->
+    <div class="rail__bar">
+        <a class="rail__brand" [routerLink]="['/']">
+            <app-image-loader src="/images/logo.webp" alt="" class="rail__mark" />
+            <span class="rail__name">Last Hearth</span>
+        </a>
+
+        <nav class="rail__nav" [attr.aria-label]="'header.mainMenu' | translate">
+            <div class="rail__row">
+                @for (link of state.mainLinks; track link.route) {
+                    @if (!link.guestOnly || !isAuth) {
+                        <a class="rail__link" [routerLink]="link.route" routerLinkActive="rail__link--on">
+                            <span class="rail__link-text">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="rail__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                        </a>
+                    }
+                }
+
+                <button
+                    type="button"
+                    class="rail__link rail__link--trigger"
+                    (click)="toggleSheet()"
+                    [class.rail__link--on]="state.communityActive() || sheetOpen()"
+                    [attr.aria-expanded]="sheetOpen()"
+                >
+                    <span class="rail__link-text">{{ "header.nav.community" | translate }}</span>
+                    @if (state.communityFresh()) {
+                        <span class="rail__dot">
+                            <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                        </span>
+                    }
+                    <tui-icon icon="@tui.chevron-down" class="rail__chev" [class.rail__chev--up]="sheetOpen()" />
+                </button>
+            </div>
+
+            <button
+                type="button"
+                class="rail__menu"
+                (click)="toggleMenu()"
+                [attr.aria-expanded]="menuOpen()"
+                [attr.aria-label]="'header.mainMenu' | translate"
+                [title]="'header.mainMenu' | translate"
+            >
+                <tui-icon [icon]="menuOpen() ? '@tui.x' : '@tui.align-justify'" />
+                @if (state.communityFresh()) {
+                    <span class="rail__dot rail__dot--corner">
+                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                    </span>
+                }
+            </button>
+        </nav>
+
+        <!--
+            Показания сервера. Без ответа — прочерк, а не пустота: зона держит
+            минимальную ширину, поэтому приход данных не двигает соседей.
+            Длину загрузки рисует угольный рельс под рядом, своей шкалы здесь нет.
+        -->
+        <div class="rail__live">
+            <span class="rail__live-top">
+                <span class="rail__live-label">{{ "header.players" | translate }}</span>
+                <span class="rail__count">
+                    <span class="rail__count-now">{{ online?.online ?? "—" }}</span>
+                    <span class="rail__count-max">/ {{ online?.max_online ?? "—" }}</span>
+                </span>
+            </span>
+            <span class="rail__clock">{{ state.time() ?? "—" }}</span>
+        </div>
+
+        <div class="rail__controls">
+            <button
+                type="button"
+                class="rail__icon"
+                (click)="state.toggleTheme()"
+                [attr.aria-label]="'header.theme.toggle' | translate"
+                [title]="'header.theme.toggle' | translate"
+            >
+                <tui-icon [icon]="state.dark() ? '@tui.sun' : '@tui.moon'" />
+            </button>
+
+            <button
+                type="button"
+                class="rail__icon"
+                (click)="toggleLanguage()"
+                [attr.aria-label]="'header.language.select' | translate"
+                [title]="'header.language.select' | translate"
+            >
+                <tui-icon icon="@tui.globe" />
+                <span class="rail__lang">{{ state.language() === "ru" ? "RU" : "EN" }}</span>
+            </button>
+
+            @if (isAuth) {
+                <app-notification-bell class="rail__bell" />
+
+                <a class="rail__player" [routerLink]="['/profile']">
+                    <span class="rail__avatar">
+                        @if (state.userImage()) {
+                            <app-player-avatar
+                                class="rail__avatar-img"
+                                [userId]="state.userId()"
+                                [src]="state.userImage()"
+                                [alt]="'header.avatarAlt' | translate"
+                                [animated]="false"
+                            />
+                        } @else {
+                            <tui-icon icon="@tui.square-user-round" class="rail__avatar-fallback" />
+                        }
+
+                        @if (state.attention()) {
+                            <span class="rail__dot rail__dot--corner">
+                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                            </span>
+                        }
+                    </span>
+
+                    <span class="rail__player-text">
+                        <span class="rail__player-name">{{ state.userName() }}</span>
+                        <span class="rail__coins">
+                            <img src="/splinter-of-spark.webp" alt="" class="rail__spark" />
+                            <span>{{ state.coins() | amount }}</span>
+                        </span>
+                    </span>
+                </a>
+
+                <button
+                    type="button"
+                    class="rail__icon"
+                    (click)="state.signOut()"
+                    [attr.aria-label]="'header.nav.signOut' | translate"
+                    [title]="'header.nav.signOut' | translate"
+                >
+                    <tui-icon icon="@tui.log-out" />
+                </button>
+            } @else {
+                <button type="button" class="rail__signin" (click)="state.signIn()">
+                    <tui-icon icon="@tui.log-in" />
+                    <span>{{ "header.nav.signIn" | translate }}</span>
+                </button>
+            }
+        </div>
+
+        <!--
+            Угольный рельс. Дорожка лежит вдоль нижнего края пластины,
+            заполнение равно доле занятых мест, а отметка на живом конце дышит —
+            это единственный постоянный эффект варианта. Живёт внутри пластины:
+            её низ — точка отсчёта, шторки ниже на положение дорожки не влияют.
+        -->
+        <div
+            class="rail__track"
+            role="img"
+            [attr.aria-label]="
+                online
+                    ? ('header.players' | translate) + ': ' + online.online + ' / ' + online.max_online
+                    : ('header.players' | translate)
+            "
+            [style.--rail-fill]="state.occupancy()"
+        >
+            <span class="rail__load" aria-hidden="true"></span>
+            <span class="rail__tip" [class.rail__tip--off]="!online" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <!--
+        Индекс «Сообщества»: шторка во всю ширину колонки, разделы парами
+        в две колонки, номер рисует CSS-счётчик.
+    -->
+    <div class="rail__sheet" [class.rail__sheet--open]="sheetOpen()" [attr.inert]="sheetOpen() ? null : ''">
+        <div class="rail__clip">
+            <div class="rail__sheet-body">
+                <span class="rail__group">{{ "header.nav.community" | translate }}</span>
+
+                <div class="rail__index">
+                    @for (link of state.communityLinks; track link.route) {
+                        <a
+                            class="rail__entry"
+                            [routerLink]="link.route"
+                            routerLinkActive="rail__entry--on"
+                            (click)="closeAll()"
+                        >
+                            <span class="rail__entry-label">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="rail__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+        Шторка меню: вся навигация за одной кнопкой — главная и разделы,
+        ниже тем же индексом «Сообщество».
+    -->
+    <div
+        class="rail__sheet rail__sheet--menu"
+        [class.rail__sheet--open]="menuOpen()"
+        [attr.inert]="menuOpen() ? null : ''"
+    >
+        <div class="rail__clip">
+            <div class="rail__sheet-body">
+                <span class="rail__group">{{ "header.mainMenu" | translate }}</span>
+
+                <div class="rail__index rail__index--single">
+                    <a
+                        class="rail__entry"
+                        [routerLink]="['/']"
+                        routerLinkActive="rail__entry--on"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        (click)="closeAll()"
+                    >
+                        <span class="rail__entry-label">{{ "header.nav.home" | translate }}</span>
+                    </a>
+
+                    @for (link of state.mainLinks; track link.route) {
+                        @if (!link.guestOnly || !isAuth) {
+                            <a
+                                class="rail__entry"
+                                [routerLink]="link.route"
+                                routerLinkActive="rail__entry--on"
+                                (click)="closeAll()"
+                            >
+                                <span class="rail__entry-label">{{ link.labelKey | translate }}</span>
+                                @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                    <span class="rail__dot">
+                                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                    </span>
+                                }
+                            </a>
+                        }
+                    }
+                </div>
+
+                <span class="rail__group rail__group--next">{{ "header.nav.community" | translate }}</span>
+
+                <div class="rail__index rail__index--single">
+                    @for (link of state.communityLinks; track link.route) {
+                        <a
+                            class="rail__entry"
+                            [routerLink]="link.route"
+                            routerLinkActive="rail__entry--on"
+                            (click)="closeAll()"
+                        >
+                            <span class="rail__entry-label">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="rail__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,914 @@
+/**
+ * Вариант шапки «Две палубы».
+ *
+ * Одна карточка из двух ярусов:
+ * - `.deck__strip` — верхняя палуба, тонкая приборная строка телеметрии.
+ *   Тёмная в обеих темах (токены `--lh-night*` и `--lh-parchment*` от темы
+ *   не зависят), поэтому текст на ней всегда пергаментный. Единственный
+ *   циклический эффект варианта — радарный блик на точке жизни сервера (3s).
+ * - `.deck__board` — нижняя палуба, светлая: знак, навигация и управление
+ *   в одном ряду. Поверхности и текст темы — токены `--lh-surface*`/`--lh-ink*`.
+ *
+ * Янтарная пилюля `.deck__pill` одна на всю навигацию: координату и ширину
+ * задают CSS-переменные `--pill-x`/`--pill-w` из компонента (замер от
+ * контейнера навигации), движение — `transform` + `width`, 200ms
+ * `--lh-ease-out-quart`. У активного раздела жало пилюли длиннее и плотнее
+ * (`--rest`), под наведённым пунктом — короче и мягче.
+ *
+ * Ховер цвета мгновенный: переходы объявлены только на transform/scale,
+ * геометрию пилюли, opacity появления и шторки. Тёмная тема переопределяет
+ * лишь значения локальных `--deck-*` через `:host-context`.
+ * Шапка не липкая: `position: relative`, как у боевой шапки.
+ */
+
+:host {
+    /* Роли янтаря на светлой палубе. */
+    --deck-pill-wash: color-mix(in srgb, var(--lh-brand) 13%, transparent);
+    --deck-pill-ring: color-mix(in srgb, var(--lh-brand) 30%, transparent);
+    --deck-pill-bar: var(--lh-brand);
+    --deck-hover: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+
+    display: block;
+    position: relative;
+}
+
+:host-context(html[data-theme='dark']) {
+    --deck-pill-wash: color-mix(in srgb, var(--lh-brand) 22%, transparent);
+    --deck-pill-ring: color-mix(in srgb, var(--lh-brand) 45%, transparent);
+    --deck-pill-bar: var(--lh-brand-hover);
+}
+
+/* Обёртка: поля как у боевой шапки, колонка шире xl сама даёт отступы. */
+.deck {
+    position: relative;
+    padding: 0.5rem 1rem 1rem;
+}
+
+/* Карточка обеих палуб. Рамка — border, а не внутренняя тень: палубы
+   непрозрачные и закрыли бы inset-кольцо целиком. */
+.deck__card {
+    border: 1px solid color-mix(in srgb, var(--lh-ink) 12%, transparent);
+    border-radius: var(--lh-radius-lg);
+    background-color: var(--lh-surface-2);
+    box-shadow: var(--lh-shadow-soft);
+}
+
+/* ---- Ярус 1: приборная строка ---- */
+
+.deck__strip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    min-height: 2.5rem;
+    padding: 0.375rem 1rem;
+    border-radius: calc(var(--lh-radius-lg) - 1px) calc(var(--lh-radius-lg) - 1px) 0 0;
+    color: var(--lh-parchment-2);
+    /* Приборный металл: чуть светлее у левого края, без тёплых пятен. */
+    background-image: linear-gradient(90deg, var(--lh-night-2) 0, var(--lh-night) 45%);
+    box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--lh-parchment) 14%, transparent);
+}
+
+.deck__telemetry {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+/* Точка жизни сервера с радарным бликом — единственный цикл варианта (3s). */
+.deck__live {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-online);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-online) 22%, transparent);
+}
+
+.deck__live-ping {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-online);
+    animation: deck-ping 3s ease-in-out infinite;
+}
+
+.deck__live--off {
+    background-color: var(--lh-offline);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-offline) 30%, transparent);
+}
+
+.deck__live--off .deck__live-ping {
+    animation: none;
+    opacity: 0;
+}
+
+/* Прочерк «—» и числа живут в зоне фиксированной ширины: строка
+   не дёргается, ответил сервер или нет. */
+.deck__count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    min-width: 4.25rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.deck__count-max {
+    color: var(--lh-parchment-dim);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.deck__telemetry-label {
+    color: var(--lh-parchment-dim);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Линия занятости: дорожка видна и при нуле, длина равна настоящей доле. */
+.deck__gauge {
+    display: block;
+    flex: none;
+    width: 4.5rem;
+    height: 3px;
+    border-radius: 2px;
+    background-color: color-mix(in srgb, var(--lh-parchment) 16%, transparent);
+}
+
+.deck__gauge-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background-image: linear-gradient(90deg, var(--lh-brand), var(--lh-accent-soft));
+    transform: scaleX(var(--deck-fill, 0));
+    transform-origin: left center;
+    transition: transform 240ms var(--lh-ease-out-quart);
+}
+
+.deck__course {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    margin-left: auto;
+}
+
+.deck__clock {
+    overflow: hidden;
+    max-width: 13rem;
+    color: var(--lh-parchment-dim);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Имя текущего раздела: янтарная скоба слева отличает его от телеметрии. */
+.deck__section {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.1875rem 0.625rem;
+    border-left: 2px solid var(--lh-accent-soft);
+    border-radius: var(--lh-radius-sm);
+    background-color: color-mix(in srgb, var(--lh-parchment) 8%, transparent);
+}
+
+.deck__section-icon {
+    color: var(--lh-accent-soft);
+    font-size: 0.75rem;
+}
+
+.deck__section-name {
+    overflow: hidden;
+    max-width: 10rem;
+    color: var(--lh-parchment-2);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ---- Ярус 2: светлая палуба ---- */
+
+.deck__board {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3.75rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.deck__brand {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.625rem;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+    border-radius: var(--lh-radius-md);
+    color: var(--lh-ink);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.deck__brand:hover {
+    background-color: var(--deck-hover);
+    color: var(--lh-ink);
+}
+
+.deck__brand:active {
+    scale: 0.98;
+}
+
+/* Хост `app-image-loader` своего размера не имеет — задаём здесь. */
+.deck__mark {
+    display: block;
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.deck__name {
+    color: var(--lh-ink);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+
+/* ---- Навигация и пилюля ---- */
+
+.deck__nav {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+}
+
+.deck__nav-list {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+/* Пункт — прозрачная текстовая цель 44px; цвет меняет мгновенно (ховер цвета
+   без перехода), обратную связь даёт пилюля под ним. */
+.deck__item {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    padding: 0 0.625rem;
+    border: 0;
+    border-radius: var(--lh-radius-full);
+    background-color: transparent;
+    color: var(--lh-ink-2);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.deck__item:hover {
+    color: var(--lh-brand-ink);
+}
+
+.deck__item:active {
+    scale: 0.98;
+}
+
+.deck__item--active {
+    color: var(--lh-ink);
+    font-weight: 700;
+}
+
+.deck__item--home {
+    width: 2.75rem;
+    padding: 0;
+}
+
+.deck__item--home tui-icon {
+    font-size: 1.125rem;
+}
+
+.deck__item-wrap {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+}
+
+.deck__chev {
+    font-size: 0.875rem;
+    transition: rotate 200ms var(--lh-ease-smooth);
+}
+
+.deck__chev--up {
+    rotate: 180deg;
+}
+
+/* Пилюля-индикатор: координата и ширина — CSS-переменные из компонента. */
+.deck__pill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 0;
+    height: 2.75rem;
+    width: var(--pill-w, 0px);
+    border-radius: var(--lh-radius-full);
+    background-color: var(--deck-pill-wash);
+    box-shadow: inset 0 0 0 1px var(--deck-pill-ring);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(var(--pill-x, 0px), -50%);
+    transition:
+        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
+        width var(--lh-dur-fast) var(--lh-ease-out-quart),
+        opacity 180ms var(--lh-ease-out-quart),
+        background-color 220ms var(--lh-ease-out-quart),
+        box-shadow 220ms var(--lh-ease-out-quart);
+}
+
+.deck__pill--on {
+    opacity: 1;
+}
+
+/* Янтарное жало внизу пилюли: в покое длинное и плотное, под наведённым
+   пунктом — короче и мягче. */
+.deck__pill::after {
+    content: '';
+    position: absolute;
+    right: 30%;
+    bottom: 5px;
+    left: 30%;
+    height: 3px;
+    border-radius: 2px;
+    background-color: color-mix(in srgb, var(--deck-pill-bar) 45%, transparent);
+    transition:
+        left var(--lh-dur-fast) var(--lh-ease-out-quart),
+        right var(--lh-dur-fast) var(--lh-ease-out-quart),
+        background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.deck__pill--rest::after {
+    right: 18%;
+    left: 18%;
+    background-color: var(--deck-pill-bar);
+}
+
+/* Точка «есть новое»: абсолютная на знаках и ячейках, строчная в ссылках. */
+.deck__dot {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-brand);
+    box-shadow: 0 0 0 2px var(--lh-surface-2);
+    pointer-events: none;
+}
+
+.deck__dot--inline {
+    position: static;
+    flex: none;
+    width: 0.4375rem;
+    height: 0.4375rem;
+    box-shadow: none;
+}
+
+/* ---- Управление справа ---- */
+
+.deck__controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+}
+
+/* Прозрачные кнопки управления: отклик на нажатие через `scale`,
+   ховер цвета мгновенный. */
+.deck__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--lh-ink-2);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.deck__icon:hover {
+    background-color: var(--deck-hover);
+    color: var(--lh-ink);
+}
+
+.deck__icon:active {
+    scale: 0.98;
+}
+
+.deck__lang {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+/* Колокольчик рисует глобальную залитую пилюлю `.nav-button`; на светлой
+   палубе ряд управления прозрачный, поэтому пилюля локально приведена к нему. */
+.deck__bell ::ng-deep .nav-button {
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-ink-2);
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.deck__bell ::ng-deep .nav-button:hover {
+    background-color: var(--deck-hover);
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-ink);
+    transform: none;
+}
+
+.deck__bell ::ng-deep .nav-button:active {
+    transform: none;
+    scale: 0.98;
+}
+
+.deck__bell ::ng-deep .nav-button--active,
+.deck__bell ::ng-deep .nav-button--active:hover {
+    background-color: var(--deck-pill-wash);
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-brand-ink);
+}
+
+/* Карточка игрока: аватар, имя и баланс. Целиком ссылка на профиль. */
+.deck__player {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0.25rem 0.625rem 0.25rem 0.25rem;
+    border-radius: var(--lh-radius-md);
+    color: var(--lh-ink);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.deck__player:hover {
+    background-color: var(--deck-hover);
+    color: var(--lh-ink);
+}
+
+.deck__player:active {
+    scale: 0.98;
+}
+
+/* Бокс аватара: хост `app-player-avatar` размера не имеет, ширину и высоту
+   обязан задать вызывающий (иначе рамка схлопывается). */
+.deck__avatar {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+.deck__avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.deck__avatar-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: var(--lh-ink-3);
+    font-size: 2.25rem;
+}
+
+.deck__player-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.deck__player-name {
+    overflow: hidden;
+    max-width: 8rem;
+    color: var(--lh-ink);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Баланс — единственное цветное число палубы. */
+.deck__coins {
+    display: flex;
+    align-items: center;
+    gap: 0.3125rem;
+    color: var(--lh-brand-ink);
+    font-size: 0.875rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+}
+
+/* Осколок — вытянутый спрайт, высоту держим свою. */
+.deck__spark {
+    flex: none;
+    width: auto;
+    height: 1.125rem;
+    object-fit: contain;
+}
+
+/* Вход гостя — единственное залитое действие палубы. Подпись пергаментная
+   на тёмном конце брендовой шкалы: `--lh-parchment-3` на `--lh-brand-deep-2`
+   даёт 5.9:1, на `--lh-wood` — 8:1. */
+.deck__signin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.125rem;
+    border: 0;
+    border-radius: var(--lh-radius-full);
+    background-image: linear-gradient(150deg, var(--lh-brand-deep-2) 0, var(--lh-wood) 100%);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--lh-parchment-3) 22%, transparent),
+        0 6px 16px -8px color-mix(in srgb, var(--lh-brand) 55%, transparent);
+    color: var(--lh-parchment-3);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    transition:
+        scale 120ms var(--lh-ease-spring),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.deck__signin:hover {
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--lh-parchment-3) 22%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+        0 10px 24px -8px color-mix(in srgb, var(--lh-brand) 60%, transparent);
+}
+
+.deck__signin:active {
+    scale: 0.98;
+}
+
+/* Кнопка-меню узких экранов: вся навигация за одной целью. */
+.deck__menu {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 0.875rem;
+    border: 0;
+    border-radius: var(--lh-radius-md);
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 18%, transparent);
+    color: var(--lh-ink-2);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.deck__menu:hover {
+    background-color: var(--deck-hover);
+    color: var(--lh-ink);
+}
+
+.deck__menu:active {
+    scale: 0.98;
+}
+
+/* ---- Ярусы 3 и 4: шторки ---- */
+
+/* Шторка растёт от верхнего края строкой грида: открытие 260ms,
+   закрытие короче — 160ms, без задержки. */
+.deck__sheet {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 160ms var(--lh-ease-smooth);
+}
+
+.deck__sheet--open {
+    grid-template-rows: 1fr;
+    transition-duration: 260ms;
+}
+
+/* Мобильная шторка живёт только ниже 1024px: выше неё навигация видна целиком. */
+.deck__sheet--menu {
+    display: none;
+}
+
+.deck__sheet-clip {
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Тело шторки: ватерлиния янтарём сверху — продолжение палубы. */
+.deck__sheet-body {
+    margin-top: 0.5rem;
+    padding: 0.875rem 1rem 1rem;
+    border-top: 2px solid color-mix(in srgb, var(--lh-brand) 40%, transparent);
+    border-radius: var(--lh-radius-md);
+    background-color: var(--lh-surface);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent);
+}
+
+.deck__group {
+    display: block;
+    margin-bottom: 0.625rem;
+    color: var(--lh-ink-3);
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.deck__group--next {
+    margin-top: 1.25rem;
+}
+
+/* Манифест «Сообщества»: один ряд из шести ячеек на широкой колонке. */
+.deck__grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.deck__grid--menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.deck__cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 3rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--lh-radius-sm);
+    background-color: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+    color: var(--lh-ink);
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(0.375rem) scale(0.98);
+    transition:
+        opacity 200ms var(--lh-ease-out-quart),
+        transform 200ms var(--lh-ease-out-quart),
+        scale 120ms var(--lh-ease-spring);
+}
+
+.deck__cell--active {
+    background-color: var(--deck-pill-wash);
+    box-shadow: inset 0 0 0 1px var(--deck-pill-ring);
+}
+
+/* Каскад ячеек: 30ms на ячейку, не дольше шести шагов. Задержки стоят только
+   у opacity и transform, поэтому ховер ячейки не ждёт своей очереди. */
+.deck__sheet--open .deck__cell {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(min(var(--deck-i, 0), 6) * 30ms), calc(min(var(--deck-i, 0), 6) * 30ms), 0ms;
+}
+
+.deck__cell:hover {
+    background-color: var(--deck-pill-wash);
+    color: var(--lh-brand-ink);
+}
+
+.deck__cell:active {
+    scale: 0.98;
+}
+
+.deck__cell-icon {
+    flex: none;
+    color: var(--lh-brand-ink);
+    font-size: 1.25rem;
+}
+
+.deck__cell-label {
+    min-width: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+/* ---- Раскладка по ширинам ---- */
+
+@media (max-width: 1279px) {
+    .deck__board {
+        gap: 0.25rem;
+    }
+
+    .deck__item {
+        padding: 0 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .deck__name {
+        font-size: 0.9375rem;
+    }
+
+    .deck__mark {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .deck__player-name {
+        max-width: 6rem;
+    }
+
+    .deck__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Ниже 1024px навигация целиком уходит за кнопку-меню. */
+@media (max-width: 1023px) {
+    .deck__nav {
+        display: none;
+    }
+
+    .deck__menu {
+        display: inline-flex;
+    }
+
+    .deck__lang {
+        display: none;
+    }
+
+    .deck__section {
+        display: none;
+    }
+
+    .deck__sheet {
+        display: none;
+    }
+
+    .deck__sheet--menu {
+        display: grid;
+    }
+}
+
+@media (max-width: 639px) {
+    .deck__telemetry-label {
+        display: none;
+    }
+
+    .deck__player-text {
+        display: none;
+    }
+
+    .deck__clock {
+        max-width: 7.5rem;
+    }
+
+    .deck__sheet-body {
+        padding: 0.75rem;
+    }
+}
+
+/* 390px: название сворачивается к эмблеме, кнопка-меню остаётся знаком,
+   ряд управления уплотняется. */
+@media (max-width: 479px) {
+    .deck {
+        padding-inline: 0.75rem;
+    }
+
+    .deck__name {
+        display: none;
+    }
+
+    .deck__board {
+        gap: 0.125rem;
+        padding: 0.375rem 0.5rem;
+    }
+
+    .deck__controls {
+        gap: 0.125rem;
+    }
+
+    .deck__icon {
+        padding: 0 0.375rem;
+    }
+
+    .deck__strip {
+        padding-inline: 0.75rem;
+    }
+
+    .deck__clock {
+        max-width: 5.5rem;
+    }
+
+    .deck__signin {
+        padding: 0 0.875rem;
+    }
+
+    /* Кнопка-меню остаётся целью 44px: прячется только подпись. */
+    .deck__menu-label {
+        display: none;
+    }
+
+    .deck__menu {
+        justify-content: center;
+        min-width: 2.75rem;
+        padding: 0;
+    }
+}
+
+/* Колонка шире xl: боковые поля держит обёртка страницы, внутренние не нужны. */
+@media (min-width: 1280px) {
+    .deck {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
+/* ---- Движение снимается, содержимое остаётся видимым ---- */
+
+@media (prefers-reduced-motion: reduce) {
+    /* Блик застывает расширенным кольцом — точка жизни остаётся видимой. */
+    .deck__live-ping {
+        animation: none;
+        opacity: 0.25;
+        transform: scale(1.8);
+    }
+
+    .deck__gauge-fill,
+    .deck__pill,
+    .deck__pill::after,
+    .deck__chev,
+    .deck__brand,
+    .deck__item,
+    .deck__icon,
+    .deck__player,
+    .deck__signin,
+    .deck__menu,
+    .deck__sheet,
+    .deck__cell {
+        transition: none;
+    }
+
+    .deck__cell {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/** Радарный блик: кольцо расходится от точки жизни и гаснет. */
+@keyframes deck-ping {
+    0% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    70% {
+        opacity: 0;
+        transform: scale(2.8);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(2.8);
+    }
+}

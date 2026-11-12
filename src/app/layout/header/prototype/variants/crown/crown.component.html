@@ -1,0 +1,311 @@
+@let online = state.online();
+@let isAuth = state.isAuth();
+
+<div class="crown">
+    <!--
+        Ярус 1. Тонкая строка телеметрии и управления на ночном фоне: точка
+        жизни сервера, счётчик онлайна с линией занятости и игровым временем
+        слева; тема, язык, колокольчик и карточка игрока либо вход справа.
+        Без ответа сервера числа становятся прочерком, а зона не меняет
+        размер.
+    -->
+    <div class="crown__strip">
+        <div class="crown__telemetry">
+            <span class="crown__live" [class.crown__live--off]="!online" aria-hidden="true"></span>
+
+            <p class="crown__count">
+                <span class="crown__count-now">{{ online?.online ?? "—" }}</span>
+                <span class="crown__count-max">/ {{ online?.max_online ?? "—" }}</span>
+            </p>
+
+            <span class="crown__telemetry-label">{{ "header.players" | translate }}</span>
+
+            <span
+                class="crown__gauge"
+                role="img"
+                [attr.aria-label]="
+                    online
+                        ? ('header.players' | translate) + ': ' + online.online + ' / ' + online.max_online
+                        : ('header.players' | translate)
+                "
+                [style.--crown-fill]="state.occupancy()"
+            >
+                <span class="crown__gauge-fill"></span>
+            </span>
+
+            <span class="crown__clock">{{ state.time() ?? "—" }}</span>
+        </div>
+
+        <div class="crown__controls">
+            <button
+                type="button"
+                class="crown__icon"
+                (click)="state.toggleTheme()"
+                [attr.aria-label]="'header.theme.toggle' | translate"
+                [title]="'header.theme.toggle' | translate"
+            >
+                <tui-icon [icon]="state.dark() ? '@tui.sun' : '@tui.moon'" />
+            </button>
+
+            <button
+                type="button"
+                class="crown__icon"
+                (click)="toggleLanguage()"
+                [attr.aria-label]="'header.language.select' | translate"
+                [title]="'header.language.select' | translate"
+            >
+                <tui-icon icon="@tui.globe" />
+                <span class="crown__lang">{{ state.language() === "ru" ? "RU" : "EN" }}</span>
+            </button>
+
+            @if (isAuth) {
+                <app-notification-bell class="crown__bell" />
+
+                <a class="crown__player" [routerLink]="['/profile']">
+                    <span class="crown__avatar">
+                        @if (state.userImage()) {
+                            <app-player-avatar
+                                class="crown__avatar-img"
+                                [userId]="state.userId()"
+                                [src]="state.userImage()"
+                                [alt]="'header.avatarAlt' | translate"
+                                [animated]="false"
+                            />
+                        } @else {
+                            <tui-icon icon="@tui.square-user-round" class="crown__avatar-fallback" />
+                        }
+
+                        @if (state.attention()) {
+                            <span class="crown__dot">
+                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                            </span>
+                        }
+                    </span>
+
+                    <span class="crown__player-text">
+                        <span class="crown__player-name">{{ state.userName() }}</span>
+                        <span class="crown__coins">
+                            <img src="/splinter-of-spark.webp" alt="" class="crown__spark" />
+                            <span>{{ state.coins() | amount }}</span>
+                        </span>
+                    </span>
+                </a>
+
+                <button
+                    type="button"
+                    class="crown__icon"
+                    (click)="state.signOut()"
+                    [attr.aria-label]="'header.nav.signOut' | translate"
+                    [title]="'header.nav.signOut' | translate"
+                >
+                    <tui-icon icon="@tui.log-out" />
+                </button>
+            } @else {
+                <button type="button" class="crown__signin" (click)="state.signIn()">
+                    <tui-icon icon="@tui.log-in" />
+                    <span>{{ "header.nav.signIn" | translate }}</span>
+                </button>
+            }
+        </div>
+    </div>
+
+    <!--
+        Ярус 2. Вензель: эмблема и крупное название сервера по центру колонки,
+        по бокам — волосяные линейки до краёв, за знаком — янтарное сияние.
+        Дыхание сияния — единственный циклический эффект варианта.
+    -->
+    <div class="crown__crest">
+        <span class="crown__aura" aria-hidden="true"></span>
+
+        <div class="crown__crest-line">
+            <span class="crown__rule" aria-hidden="true"></span>
+
+            <a class="crown__brand" [routerLink]="['/']">
+                <app-image-loader src="/images/logo.webp" alt="" class="crown__mark" />
+                <span class="crown__name lh-display">Last Hearth</span>
+            </a>
+
+            <span class="crown__rule crown__rule--flip" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <!--
+        Ярус 3. Один центрированный ряд ссылок: главная знаком, разделы
+        капителью с янтарным подчёркиванием, «Сообщество» открывает
+        мега-панель. Ниже 768px ряд заменяется одной кнопкой-меню.
+    -->
+    <nav class="crown__nav" [attr.aria-label]="'header.mainMenu' | translate">
+        <div class="crown__row">
+            <a
+                class="crown__link crown__link--home"
+                [routerLink]="['/']"
+                routerLinkActive="crown__link--active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                [attr.aria-label]="'header.nav.home' | translate"
+                [title]="'header.nav.home' | translate"
+            >
+                <tui-icon icon="@tui.house" />
+                @if (state.isFresh("news")) {
+                    <span class="crown__dot">
+                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                    </span>
+                }
+            </a>
+
+            @for (link of state.mainLinks; track link.route) {
+                @if (!link.guestOnly || !isAuth) {
+                    <a class="crown__link" [routerLink]="link.route" routerLinkActive="crown__link--active">
+                        <span>{{ link.labelKey | translate }}</span>
+                        @if (link.freshSection && state.isFresh(link.freshSection)) {
+                            <span class="crown__dot crown__dot--inline">
+                                <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                            </span>
+                        }
+                    </a>
+                }
+            }
+
+            <button
+                type="button"
+                class="crown__link crown__link--trigger"
+                (click)="toggleSheet()"
+                [class.crown__link--active]="state.communityActive() || sheetOpen()"
+                [attr.aria-expanded]="sheetOpen()"
+            >
+                <span>{{ "header.nav.community" | translate }}</span>
+                @if (state.communityFresh()) {
+                    <span class="crown__dot crown__dot--inline">
+                        <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                    </span>
+                }
+                <tui-icon icon="@tui.chevron-down" class="crown__chev" [class.crown__chev--up]="sheetOpen()" />
+            </button>
+        </div>
+
+        <button
+            type="button"
+            class="crown__menu"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="menuOpen()"
+            [attr.aria-label]="'header.mainMenu' | translate"
+        >
+            <tui-icon [icon]="menuOpen() ? '@tui.x' : '@tui.align-justify'" />
+            <span>{{ "header.mainMenu" | translate }}</span>
+            @if (state.communityFresh()) {
+                <span class="crown__dot crown__dot--inline">
+                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                </span>
+            }
+        </button>
+    </nav>
+
+    <!--
+        Ярус 4. Мега-панель «Сообщества» на всю ширину колонки: шторка
+        раскрывается строкой грида от верхнего края, плитки входят каскадом
+        по 30ms.
+    -->
+    <div class="crown__sheet" [class.crown__sheet--open]="sheetOpen()" [attr.inert]="sheetOpen() ? null : ''">
+        <div class="crown__sheet-clip">
+            <div class="crown__sheet-body lh-panel">
+                <span class="crown__group">{{ "header.nav.community" | translate }}</span>
+
+                <div class="crown__grid">
+                    @for (link of state.communityLinks; track link.route; let i = $index) {
+                        <a
+                            class="crown__tile"
+                            [routerLink]="link.route"
+                            routerLinkActive="crown__tile--active"
+                            (click)="closeAll()"
+                            [style.--crown-i]="i"
+                        >
+                            <span class="crown__tile-icon">
+                                <tui-icon [icon]="link.icon" />
+                            </span>
+                            <span class="crown__tile-label">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="crown__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                            <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+        Ярус 5. Мобильная шторка: вся навигация за одной кнопкой — главная и
+        разделы плитками, ниже группа «Сообщества».
+    -->
+    <div
+        class="crown__sheet crown__sheet--menu"
+        [class.crown__sheet--open]="menuOpen()"
+        [attr.inert]="menuOpen() ? null : ''"
+    >
+        <div class="crown__sheet-clip">
+            <div class="crown__sheet-body lh-panel">
+                <div class="crown__grid crown__grid--menu">
+                    <a
+                        class="crown__tile"
+                        [routerLink]="['/']"
+                        routerLinkActive="crown__tile--active"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        (click)="closeAll()"
+                        [style.--crown-i]="0"
+                    >
+                        <span class="crown__tile-icon">
+                            <tui-icon icon="@tui.house" />
+                        </span>
+                        <span class="crown__tile-label">{{ "header.nav.home" | translate }}</span>
+                        <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
+                    </a>
+
+                    @for (link of state.mainLinks; track link.route; let i = $index) {
+                        @if (!link.guestOnly || !isAuth) {
+                            <a
+                                class="crown__tile"
+                                [routerLink]="link.route"
+                                routerLinkActive="crown__tile--active"
+                                (click)="closeAll()"
+                                [style.--crown-i]="i + 1"
+                            >
+                                <span class="crown__tile-icon">
+                                    <tui-icon [icon]="link.icon" />
+                                </span>
+                                <span class="crown__tile-label">{{ link.labelKey | translate }}</span>
+                                <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
+                            </a>
+                        }
+                    }
+                </div>
+
+                <span class="crown__group crown__group--next">{{ "header.nav.community" | translate }}</span>
+
+                <div class="crown__grid crown__grid--menu">
+                    @for (link of state.communityLinks; track link.route; let i = $index) {
+                        <a
+                            class="crown__tile"
+                            [routerLink]="link.route"
+                            routerLinkActive="crown__tile--active"
+                            (click)="closeAll()"
+                            [style.--crown-i]="i + 8"
+                        >
+                            <span class="crown__tile-icon">
+                                <tui-icon [icon]="link.icon" />
+                            </span>
+                            <span class="crown__tile-label">{{ link.labelKey | translate }}</span>
+                            @if (link.freshSection && state.isFresh(link.freshSection)) {
+                                <span class="crown__dot">
+                                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                                </span>
+                            }
+                            <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

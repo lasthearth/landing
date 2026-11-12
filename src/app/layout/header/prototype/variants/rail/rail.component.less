@@ -1,0 +1,771 @@
+/**
+ * Стили варианта шапки «Угольный рельс».
+ *
+ * Пластина светлая и низкая: один ряд отсеков, разделённых волосяными
+ * линейками, и угольный рельс вдоль нижнего края. Заполнение рельса равно доле
+ * занятых мест, поэтому загрузка сервера читается длиной линии, а не цифрой в
+ * углу. На живом конце заполнения дышит янтарная отметка — единственный
+ * постоянный эффект варианта (цикл 3.2s).
+ *
+ * Активный раздел — чернильная плашка-вагон: на светлой пластине она тёмная,
+ * в тёмной теме `--lh-ink` сам становится пергаментным, поэтому правило одно.
+ *
+ * Цвет и движение — токены `--lh-*`; тёмная тема переопределяет только
+ * значения локальных переменных в `:host-context(html[data-theme='dark'])`.
+ * При `prefers-reduced-motion` отметка стоит видимой, переходы сняты,
+ * шторки открываются сразу — спрятанного содержимого нет.
+ */
+
+:host {
+    /* Уголь на пергаменте: заполнение рельса почти чёрное, дорожка — тёплый
+       серый след. В тёмной теме меняются оба, иначе угля на угле не видно. */
+    --rail-load: var(--lh-night-2);
+    --rail-track: color-mix(in srgb, var(--lh-ink) 16%, transparent);
+
+    /* Янтарь — только отметка и активный номер индекса: линия в 2px должна
+       читаться на обеих поверхностях, а один конец шкалы так не умеет. */
+    --rail-ember: var(--lh-brand);
+
+    /* Волосяные линейки между отсеками. */
+    --rail-rule: color-mix(in srgb, var(--lh-ink) 12%, transparent);
+
+    display: block;
+    position: relative;
+}
+
+:host-context(html[data-theme='dark']) {
+    --rail-load: var(--lh-parchment-dim);
+    --rail-track: color-mix(in srgb, var(--lh-ink) 18%, transparent);
+    --rail-ember: var(--lh-brand-ink);
+    --rail-rule: color-mix(in srgb, var(--lh-ink) 16%, transparent);
+}
+
+/* ---------- Пластина ---------- */
+
+.rail__bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-2);
+    min-height: 4.5rem;
+    padding: var(--lh-space-2) var(--lh-space-4) var(--lh-space-4);
+    border-radius: var(--lh-radius-md);
+    background-color: var(--lh-surface-2);
+    box-shadow:
+        inset 0 0 0 1px var(--rail-rule),
+        var(--lh-shadow-soft);
+}
+
+/* ---------- Отсек 1. Знак проекта ---------- */
+
+.rail__brand {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--lh-space-2);
+    min-height: 2.75rem;
+    padding-inline: var(--lh-space-1);
+    border-radius: var(--lh-radius-sm);
+    color: var(--lh-ink);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.rail__brand:hover .rail__name {
+    color: var(--rail-ember);
+}
+
+.rail__brand:active {
+    scale: 0.98;
+}
+
+/* Хост `app-image-loader` не задаёт `display`, поэтому размер задаём здесь. */
+.rail__mark {
+    display: block;
+    flex: none;
+    width: 1.875rem;
+    height: 1.875rem;
+}
+
+.rail__name {
+    color: var(--lh-ink);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* ---------- Отсек 2. Навигация ---------- */
+
+/* Свободное место пластины уходит в поля `auto`, поэтому ряд разделов встает
+   по центру между знаком и показаниями. */
+.rail__nav {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+}
+
+.rail__row {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-0_5);
+    min-width: 0;
+}
+
+.rail__link {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-1);
+    min-height: 2.75rem;
+    padding-inline: var(--lh-space-1_5);
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--lh-ink-2);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.rail__link:hover {
+    background-color: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    color: var(--lh-ink);
+}
+
+.rail__link:active {
+    scale: 0.98;
+}
+
+/* Вагон активного раздела. Ховер не перекрашивает плашку: состояние «вы здесь»
+   обязано читаться и под указателем. */
+.rail__link--on,
+.rail__link--on:hover {
+    background-color: var(--lh-ink);
+    color: var(--lh-surface-2);
+    font-weight: 700;
+}
+
+/* Подпись пункта ужимается многоточием, а не выезжает на показания: если ряд
+   не влез, пластина теряет буквы, но не раскладку. */
+.rail__link-text {
+    min-width: 0;
+    overflow: hidden;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rail__chev {
+    flex: none;
+    font-size: 0.875rem;
+    transition: rotate 160ms var(--lh-ease-out-quart);
+}
+
+.rail__chev--up {
+    rotate: 180deg;
+}
+
+/* Кнопка-меню нужна только там, где ряд разделов в пластину не помещается. */
+.rail__menu {
+    position: relative;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--lh-ink-2);
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.rail__menu:hover {
+    background-color: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    color: var(--lh-ink);
+}
+
+.rail__menu:active {
+    scale: 0.98;
+}
+
+/* ---------- Отсек 3. Показания сервера ---------- */
+
+.rail__live {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: var(--lh-space-0_5);
+    min-width: 8.5rem;
+    padding-inline-start: var(--lh-space-3);
+    border-inline-start: 1px solid var(--rail-rule);
+}
+
+.rail__live-top {
+    display: flex;
+    align-items: baseline;
+    gap: var(--lh-space-1_5);
+}
+
+.rail__live-label {
+    color: var(--lh-ink-3);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.rail__count {
+    display: flex;
+    align-items: baseline;
+    gap: var(--lh-space-1);
+    color: var(--lh-ink);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.rail__count-max {
+    color: var(--lh-ink-3);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.rail__clock {
+    color: var(--lh-ink-2);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* ---------- Отсек 4. Управление ---------- */
+
+.rail__controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--lh-space-1);
+    padding-inline-start: var(--lh-space-3);
+    border-inline-start: 1px solid var(--rail-rule);
+}
+
+/* Прозрачные кнопки управления: отклик на нажатие через `scale`, ховер цвета
+   мгновенный — `color` и `background-color` в переход не входят. */
+.rail__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--lh-space-1_5);
+    min-width: 2.5rem;
+    min-height: 2.75rem;
+    padding-inline: var(--lh-space-1_5);
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--lh-ink-2);
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.rail__icon:hover {
+    background-color: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    color: var(--lh-ink);
+}
+
+.rail__icon:active {
+    scale: 0.98;
+}
+
+.rail__lang {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+/* Колокольчик рисует глобальную залитую пилюлю `.nav-button`; ряд управления
+   здесь прозрачный, поэтому пилюля локально приведена к его виду. */
+.rail__bell ::ng-deep .nav-button {
+    min-width: 2.5rem;
+    padding-inline: var(--lh-space-1_5);
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-ink-2);
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.rail__bell ::ng-deep .nav-button:hover {
+    background-color: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-ink);
+    transform: none;
+}
+
+.rail__bell ::ng-deep .nav-button:active {
+    transform: none;
+    scale: 0.98;
+}
+
+.rail__bell ::ng-deep .nav-button--active,
+.rail__bell ::ng-deep .nav-button--active:hover {
+    background-color: color-mix(in srgb, var(--lh-ink) 12%, transparent);
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-ink);
+}
+
+/* Карточка игрока: аватар, имя, баланс. Целиком ссылка на профиль. */
+.rail__player {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-2);
+    min-height: 2.75rem;
+    padding: var(--lh-space-1) var(--lh-space-2) var(--lh-space-1) var(--lh-space-1);
+    border-radius: var(--lh-radius-sm);
+    background-color: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+    box-shadow: inset 0 0 0 1px var(--rail-rule);
+    color: var(--lh-ink);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.rail__player:hover {
+    background-color: color-mix(in srgb, var(--lh-ink) 9%, transparent);
+    color: var(--lh-ink);
+}
+
+.rail__player:active {
+    scale: 0.98;
+}
+
+/* Бокс аватара. Хост `app-player-avatar` своего размера не имеет: ширину и
+   высоту обязан задать вызывающий, иначе рамка с `height: 100%` схлопывается. */
+.rail__avatar {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+}
+
+.rail__avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.rail__avatar-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: var(--lh-ink-2);
+    font-size: 2rem;
+}
+
+.rail__player-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.rail__player-name {
+    overflow: hidden;
+    max-width: 7rem;
+    color: var(--lh-ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Баланс — единственное цветное число пластины. */
+.rail__coins {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-1);
+    color: var(--lh-brand-ink);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.25;
+}
+
+/* Осколок — вытянутый по вертикали спрайт, поэтому высоту держим свою,
+   а ширину отдаём пропорции. */
+.rail__spark {
+    flex: none;
+    width: auto;
+    height: 0.875rem;
+    object-fit: contain;
+}
+
+.rail__signin {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lh-space-2);
+    min-height: 2.75rem;
+    padding-inline: var(--lh-space-4);
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: var(--lh-ink);
+    color: var(--lh-surface-2);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.rail__signin:hover {
+    background-color: color-mix(in srgb, var(--lh-ink) 88%, var(--lh-surface-2));
+    color: var(--lh-surface-2);
+}
+
+.rail__signin:active {
+    scale: 0.98;
+}
+
+/* Точка «есть новое». Кружок декоративный, подпись — для скринридера. */
+.rail__dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--rail-ember);
+}
+
+.rail__dot--corner {
+    position: absolute;
+    top: var(--lh-space-1_5);
+    right: var(--lh-space-1_5);
+}
+
+/* ---------- Угольный рельс ---------- */
+
+/* Дорожка: 4px угля вдоль нижнего края пластины, с отступом от боковых кромок,
+   поэтому читается как положенный рельс, а не как рамка. */
+.rail__track {
+    position: absolute;
+    right: var(--lh-space-4);
+    bottom: var(--lh-space-1_5);
+    left: var(--lh-space-4);
+    height: 4px;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--rail-track);
+}
+
+/* Заполнение равно доле занятых мест. Растёт через `transform`, а не `width`:
+   опрос сервера не должен пересчитывать раскладку пластины. */
+.rail__load {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--rail-load);
+    transform: scaleX(var(--rail-fill, 0));
+    transform-origin: left center;
+    transition: transform var(--lh-dur-mid) var(--lh-ease-out-quart);
+}
+
+/* Отметка на живом конце рельса: единственный постоянный эффект, цикл 3.2s.
+   Стоит там же, где кончается заполнение, поэтому двигается вместе с ним. */
+.rail__tip {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--rail-fill, 0) * 100%);
+    width: 2px;
+    height: 0.75rem;
+    margin-top: -0.375rem;
+    margin-left: -1px;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--rail-ember);
+    animation: rail-tip 3.2s ease-in-out infinite alternate;
+    transition: left var(--lh-dur-mid) var(--lh-ease-out-quart);
+}
+
+/* Сервер не ответил: заполнению нечего отмечать, отметка гаснет и не дышит. */
+.rail__tip--off {
+    opacity: 0.3;
+    animation: none;
+}
+
+@keyframes rail-tip {
+    from {
+        opacity: 0.35;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ---------- Шторки ---------- */
+
+/* Раскрытие строкой грида: высота содержимого заранее неизвестна, а `0fr → 1fr`
+   даёт плавный рост без измерения в скрипте. */
+.rail__sheet {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 160ms var(--lh-ease-smooth);
+}
+
+.rail__sheet--open {
+    grid-template-rows: 1fr;
+    transition-duration: 260ms;
+}
+
+/* Шторка меню живёт только там, где ряд разделов спрятан за кнопку. */
+.rail__sheet--menu {
+    display: none;
+}
+
+.rail__clip {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.rail__sheet-body {
+    margin-top: var(--lh-space-2);
+    padding: var(--lh-space-4);
+    border-radius: var(--lh-radius-md);
+    background-color: var(--lh-surface-2);
+    box-shadow:
+        inset 0 0 0 1px var(--rail-rule),
+        var(--lh-shadow-soft);
+}
+
+.rail__group {
+    display: block;
+    margin-bottom: var(--lh-space-1);
+    color: var(--lh-ink-3);
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.rail__group--next {
+    margin-top: var(--lh-space-5);
+}
+
+/* Индекс разделов: номер рисует CSS-счётчик, линейка под строкой — его же
+   правило грида, поэтому разделителей не нужно расставлять руками. */
+.rail__index {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--lh-space-6);
+    counter-reset: rail-entry;
+}
+
+.rail__index--single {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.rail__entry {
+    display: flex;
+    align-items: center;
+    gap: var(--lh-space-3);
+    min-height: 3rem;
+    padding-inline: var(--lh-space-2);
+    border-radius: var(--lh-radius-sm);
+    box-shadow: inset 0 -1px 0 var(--rail-rule);
+    color: var(--lh-ink);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.rail__entry::before {
+    flex: none;
+    counter-increment: rail-entry;
+    content: counter(rail-entry, decimal-leading-zero);
+    color: var(--lh-ink-3);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+}
+
+.rail__entry:hover {
+    background-color: color-mix(in srgb, var(--lh-ink) 6%, transparent);
+    color: var(--lh-ink);
+}
+
+.rail__entry:hover::before {
+    color: var(--rail-ember);
+}
+
+.rail__entry:active {
+    scale: 0.98;
+}
+
+.rail__entry--on {
+    color: var(--lh-brand-ink);
+}
+
+.rail__entry--on::before {
+    color: var(--rail-ember);
+}
+
+.rail__entry-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ---------- Ширины ---------- */
+
+/* Ряд разделов не влезает в колонку уже 1320px: восемь текстовых пунктов —
+   ~470px, а знак, показания и управление занимают ~680px. Ниже порога вся
+   навигация уходит за одну кнопку, пластина остаётся в один ряд. */
+@media (max-width: 1319px) {
+    .rail__nav {
+        flex: none;
+        justify-content: flex-start;
+        order: -1;
+    }
+
+    .rail__row {
+        display: none;
+    }
+
+    .rail__menu {
+        display: inline-flex;
+    }
+
+    .rail__live {
+        margin-inline-start: auto;
+    }
+
+    .rail__sheet {
+        display: none;
+    }
+
+    .rail__sheet--menu {
+        display: grid;
+    }
+
+    .rail__player-name {
+        display: none;
+    }
+}
+
+/* Планшет и телефон: показания не помещаются в один ряд с управлением,
+   поэтому управление уходит на вторую строку пластины. */
+@media (max-width: 819px) {
+    .rail__bar {
+        flex-wrap: wrap;
+        row-gap: var(--lh-space-2);
+        padding-inline: var(--lh-space-3);
+    }
+
+    .rail__brand {
+        flex: 1 1 auto;
+    }
+
+    .rail__controls {
+        flex: 1 0 100%;
+        justify-content: space-between;
+        padding-inline-start: 0;
+        padding-block-start: var(--lh-space-2);
+        border-inline-start: 0;
+        border-top: 1px solid var(--rail-rule);
+    }
+
+    .rail__player,
+    .rail__signin {
+        margin-inline-start: auto;
+    }
+
+    .rail__track {
+        right: var(--lh-space-3);
+        left: var(--lh-space-3);
+    }
+
+    .rail__index {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 479px) {
+    .rail__name {
+        font-size: 0.9375rem;
+    }
+
+    /* Подпись «Игроков» уходит: число и рельс остаются, доступное имя
+       нагрузки живёт в `aria-label` дорожки. */
+    .rail__live-label {
+        display: none;
+    }
+
+    .rail__live {
+        min-width: 0;
+    }
+
+    .rail__sheet-body {
+        padding: var(--lh-space-3);
+    }
+}
+
+/* ---------- Сниженное движение ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .rail__tip {
+        opacity: 1;
+        animation: none;
+    }
+
+    /* Без ответа сервера отметка остаётся притушенной и в покое: состояние
+       видно, просто не дышит. */
+    .rail__tip--off {
+        opacity: 0.3;
+    }
+
+    .rail__load,
+    .rail__tip,
+    .rail__sheet,
+    .rail__brand,
+    .rail__link,
+    .rail__menu,
+    .rail__icon,
+    .rail__player,
+    .rail__signin,
+    .rail__entry,
+    .rail__chev {
+        transition: none;
+    }
+
+    .rail__bell ::ng-deep .nav-button {
+        transition: none;
+    }
+
+    .rail__brand:active,
+    .rail__link:active,
+    .rail__menu:active,
+    .rail__icon:active,
+    .rail__player:active,
+    .rail__signin:active,
+    .rail__entry:active {
+        scale: 1;
+    }
+}
