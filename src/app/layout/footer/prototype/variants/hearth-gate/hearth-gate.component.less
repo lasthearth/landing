@@ -1,8 +1,9 @@
 /**
- * Вариант «Врата очага»: подвал — тёмный зал портала. Верхняя кромка — прямая
- * линия жара в 2px; над ней в щель страницы поднимаются угли и расходится
- * неровный ореол тепла, внутри зала лежит широкое пятно света, по линии
- * скользит импульс жара. Движение — циклы CSS ореола, линии и углей; при
+ * Вариант «Врата очага»: подвал — тёмный зал портала. Верхняя кромка — растровый
+ * обугленный рваный край burnt-edge.png с янтарным свечением; над ней в щель
+ * страницы поднимаются угли и расходится неровный ореол тепла, внутри зала
+ * лежит широкое пятно света, по кромке скользит импульс жара. Движение — циклы
+ * CSS ореола, импульса и углей; при
  * `prefers-reduced-motion` циклы стоят в видимом состоянии.
  * Зал сам держит свои цвета: одинаков в обеих темах страницы.
  */
@@ -96,52 +97,49 @@
     animation: gate-hall 3.4s ease-in-out infinite alternate;
 }
 
-/** Линия жара: кромка в 2px, ярче над пятнами тепла и слабее между ними. */
-.gate__line {
+/**
+ * Обугленная кромка: растровый слой burnt-edge.png из public/footer-assets.
+ * Рваный рез с янтарным свечением заменяет рисованную линию; уголь ниже реза
+ * уходит в темноту зала. Слой лежит поверх импульса жара и скрывает его низ.
+ */
+.gate__burn {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
-    height: 2px;
-    background: linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--gate-ember) 40%, transparent) 0,
-        var(--gate-ember-hot) 13%,
-        color-mix(in srgb, var(--gate-ember) 70%, transparent) 22%,
-        var(--gate-ember-hot) 32%,
-        color-mix(in srgb, var(--gate-ember) 62%, transparent) 44%,
-        #fff3d6 57%,
-        color-mix(in srgb, var(--gate-ember) 66%, transparent) 68%,
-        var(--gate-ember-hot) 78%,
-        color-mix(in srgb, var(--gate-ember) 50%, transparent) 90%,
-        color-mix(in srgb, var(--gate-ember) 30%, transparent) 100%
-    );
-    box-shadow:
-        0 0 0.75rem 1px color-mix(in srgb, var(--gate-ember) 55%, transparent),
-        0 0.125rem 0.5rem color-mix(in srgb, var(--gate-ember) 35%, transparent);
-    animation: gate-line 2.8s ease-in-out infinite alternate;
+    width: 100%;
+    aspect-ratio: 2400 / 443;
+    background: url('/footer-assets/burnt-edge.png') 0 0 / 100% 100% no-repeat;
+    transform: translateY(-32%);
+    pointer-events: none;
 }
 
-/** Импульс жара: светлое ядро скользит по линии и возвращается. */
-.gate__line::after {
-    content: '';
+/** Импульс жара: тёплая волна идёт по кромке поверх среза и возвращается. */
+.gate__edge-glow {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    top: calc(-1 * var(--gate-sky));
+    height: var(--gate-sky);
     background: linear-gradient(
         90deg,
         transparent 0,
-        color-mix(in srgb, var(--gate-ember-hot) 70%, transparent) 42%,
-        #fff3d6 50%,
-        color-mix(in srgb, var(--gate-ember-hot) 70%, transparent) 58%,
+        color-mix(in srgb, var(--gate-ember-hot) 40%, transparent) 40%,
+        color-mix(in srgb, var(--gate-ember-hot) 62%, transparent) 50%,
+        color-mix(in srgb, var(--gate-ember-hot) 40%, transparent) 60%,
         transparent 100%
     );
     background-size: 46% 100%;
     background-repeat: no-repeat;
     background-position: 33% 0;
+    mask-image: linear-gradient(0deg, #000 0, transparent 88%);
+    filter: blur(10px);
+    opacity: 0.6;
+    mix-blend-mode: screen;
     animation: gate-line-run 4.6s ease-in-out infinite alternate;
 }
 
-/** Угли: встают с линии в щель страницы и гаснут внутри ореола тепла. */
+/** Угли: встают с кромки в щель страницы и гаснут внутри ореола тепла. */
 .gate__embers {
     position: absolute;
     left: 0;
@@ -152,16 +150,28 @@
     mask-image: linear-gradient(0deg, #000 0, color-mix(in srgb, #000 72%, transparent) 42%, transparent 90%);
 }
 
+/** Уголь — спрайт ember.png: ядро и мягкий ореол уже в файле. */
 .gate__ember {
     position: absolute;
-    bottom: -1px;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background-color: var(--gate-ember-hot);
-    box-shadow: 0 0 7px 1px color-mix(in srgb, var(--gate-ember) 65%, transparent);
+    bottom: -0.25rem;
+    width: 0.9rem;
+    height: 1rem;
+    background: url('/footer-assets/ember.png') center / 100% 100% no-repeat;
     opacity: 0;
     animation: gate-ember 3.6s linear infinite;
+}
+
+/** Угли разного размера: три заметно меньше, один крупнее соседей. */
+.gate__ember:nth-child(3),
+.gate__ember:nth-child(7),
+.gate__ember:nth-child(11) {
+    width: 0.625rem;
+    height: 0.7rem;
+}
+
+.gate__ember:nth-child(5) {
+    width: 1.15rem;
+    height: 1.25rem;
 }
 
 /** Угли стоят группами над пятнами тепла, а не ровным рядом. */
@@ -406,8 +416,8 @@
 
 /** Знак Discord с полями внутри viewBox: коробка крупнее. */
 .gate__social-link img[src$='discord.svg'] {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.625rem;
+    height: 1.625rem;
 }
 
 /** Широкий знак YouTube: коробка шире, высота знака как у остальных. */
@@ -437,17 +447,7 @@
     }
 }
 
-@keyframes gate-line {
-    from {
-        opacity: 0.82;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-/** Импульс жара: ядро идёт от левого края линии к правому и обратно. */
+/** Импульс жара: ядро идёт от левого края кромки к правому и обратно. */
 @keyframes gate-line-run {
     from {
         background-position: 0% 0;
@@ -474,7 +474,7 @@
     }
 
     100% {
-        transform: translate3d(var(--ember-drift, 4px), -2.4rem, 0);
+        transform: translate3d(var(--ember-drift, 4px), var(--ember-rise, -2.4rem), 0);
         opacity: 0;
     }
 }
@@ -492,6 +492,14 @@
 }
 
 @media (max-width: 767px) {
+    :host {
+        --gate-sky: 2.25rem;
+    }
+
+    .gate__ember {
+        --ember-rise: -1.5rem;
+    }
+
     .gate__body {
         gap: var(--lh-space-6);
         padding-top: 2.75rem;
@@ -517,8 +525,7 @@
 @media (prefers-reduced-motion: reduce) {
     .gate__haze,
     .gate__hall,
-    .gate__line,
-    .gate__line::after,
+    .gate__edge-glow,
     .gate__ember {
         animation: none;
     }
@@ -531,11 +538,7 @@
         opacity: 0.85;
     }
 
-    .gate__line {
-        opacity: 1;
-    }
-
-    .gate__line::after {
+    .gate__edge-glow {
         background-position: 50% 0;
     }
 

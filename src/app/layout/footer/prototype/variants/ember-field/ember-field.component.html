@@ -1,55 +1,60 @@
-<div class="ember" aria-label="Подвал lasthearth.ru, прототип «Угольки»">
-    <!-- Угольки над верхней кромкой подвала: декорация, скрыта от читалок. -->
-    <canvas #emberCanvas class="ember__canvas" aria-hidden="true"></canvas>
-
-    <div class="ember__ascii" aria-hidden="true">
-        @for (char of asciiChars(); track $index) {
-            <span class="ember__ascii-char">{{ char }}</span>
-        }
+<div class="burn" aria-label="Подвал lasthearth.ru, прототип «Обгоревший лист»">
+    <!-- Растровые слои горения: декорация, скрыта от читалок. -->
+    <div class="burn__scene" aria-hidden="true">
+        <div class="burn__char"></div>
+        <div class="burn__sheet"></div>
+        <div class="burn__front"></div>
+        <div class="burn__veil"></div>
+        <div class="burn__edge"></div>
+        <div class="burn__embers">
+            @for (ember of embers; track ember) {
+                <img class="burn__ember" src="/footer-assets/ember.png" alt="" />
+            }
+        </div>
     </div>
 
-    <div class="ember__body">
-        <div class="ember__brand">
-            <app-image-loader [src]="state.logoSrc()" [alt]="'footer.logoAlt' | translate" class="ember__logo" />
+    <div class="burn__body">
+        <div class="burn__brand">
+            <app-image-loader [src]="state.logoSrc()" [alt]="'footer.logoAlt' | translate" class="burn__logo" />
 
-            <div class="ember__brand-text">
-                <p class="ember__copyright">{{ state.copyright() }}</p>
-                <p class="ember__rights">{{ "footer.rights" | translate }}</p>
+            <div class="burn__brand-text">
+                <p class="burn__copyright">{{ state.copyright() }}</p>
+                <p class="burn__rights">{{ "footer.rights" | translate }}</p>
             </div>
         </div>
 
-        <nav class="ember__nav" [attr.aria-label]="'footer.nav.title' | translate">
+        <nav class="burn__nav" [attr.aria-label]="'footer.nav.title' | translate">
             @for (link of state.navLinks(); track link.route) {
-                <a class="ember__link" [routerLink]="link.route">{{ link.key | translate }}</a>
+                <a class="burn__link" [routerLink]="link.route">{{ link.key | translate }}</a>
             }
         </nav>
 
-        <div class="ember__aside">
-            <div class="ember__social">
+        <div class="burn__aside">
+            <div class="burn__social">
                 @for (social of state.socialLinks(); track social.url) {
                     <a
-                        class="ember__social-link"
+                        class="burn__social-link"
                         [href]="social.url"
                         target="_blank"
                         rel="noopener noreferrer"
                         [attr.aria-label]="social.labelKey | translate"
                         [title]="social.labelKey | translate"
                     >
-                        <img [src]="social.icon" alt="" [class.ember__icon--padded]="social.isPaddedGlyph === true" />
+                        <img [src]="social.icon" alt="" [class.burn__icon--padded]="social.isPaddedGlyph === true" />
                     </a>
                 }
             </div>
 
-            <div class="ember__legal">
-                <a class="ember__link ember__link--legal" [routerLink]="['/faq']">{{ "footer.faq" | translate }}</a>
-                <a class="ember__link ember__link--legal" [routerLink]="['/privacy-policy']">
+            <div class="burn__legal">
+                <a class="burn__link burn__link--legal" [routerLink]="['/faq']">{{ "footer.faq" | translate }}</a>
+                <a class="burn__link burn__link--legal" [routerLink]="['/privacy-policy']">
                     {{ "footer.privacyPolicy" | translate }}
                 </a>
-                <a class="ember__link ember__link--legal" [routerLink]="['/public-offer']">
+                <a class="burn__link burn__link--legal" [routerLink]="['/public-offer']">
                     {{ "footer.publicOffer" | translate }}
                 </a>
                 <a
-                    class="ember__link ember__link--legal"
+                    class="burn__link burn__link--legal"
                     [href]="state.docsUrl()"
                     target="_blank"
                     rel="noopener noreferrer"
