@@ -1,0 +1,14 @@
+/* Спецификации, которым нужен настоящий холст браузера: `createImageBitmap` и
+   2D-контекст. jsdom их не даёт, поэтому эти два файла собраны под Jasmine и
+   выполняются целью `test-browser` в ChromeHeadless. */
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./out-tsc/spec-browser",
+        "types": ["jasmine", "youtube"]
+    },
+    "files": [
+        "src/app/shared/lib/compress-image.function.spec.ts",
+        "src/app/shared/ui/image-file-input/image-file-input.component.spec.ts"
+    ]
+}

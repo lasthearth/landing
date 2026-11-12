@@ -7,7 +7,7 @@
  *
  * Запуск:
  *   node scripts/verify.mjs          — быстрый минимум (работает и в песочнице)
- *   node scripts/verify.mjs --full   — плюс ng build и ng test (нужен браузер)
+ *   node scripts/verify.mjs --full   — плюс ng build, Vitest и тесты холста в Chrome (если он найден)
  */
 import { spawnSync } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
@@ -34,6 +34,9 @@ function findChrome() {
         join(process.env.PROGRAMFILES ?? '', 'Google/Chrome/Application/chrome.exe'),
         join(process.env['PROGRAMFILES(X86)'] ?? '', 'Google/Chrome/Application/chrome.exe'),
         join(process.env.LOCALAPPDATA ?? '', 'Google/Chrome/Application/chrome.exe'),
+        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium',
     ];
 
     return candidates.find((candidate) => candidate && existsSync(candidate)) ?? null;
@@ -80,15 +83,22 @@ if (FULL) {
     const chrome = findChrome();
 
     steps.push({ name: 'Сборка (ng build)', args: ['node_modules/@angular/cli/bin/ng', 'build'] });
+    steps.push({ name: 'Тесты (Vitest + jsdom)', args: ['node_modules/@angular/cli/bin/ng', 'test', '--watch=false'] });
 
     if (chrome) {
         process.env.CHROME_BIN = chrome;
         steps.push({
-            name: 'Тесты (Karma + ChromeHeadless)',
-            args: ['node_modules/@angular/cli/bin/ng', 'test', '--watch=false', '--browsers=ChromeHeadless'],
+            name: 'Тесты холста (Karma + ChromeHeadless)',
+            args: [
+                'node_modules/@angular/cli/bin/ng',
+                'run',
+                'last-hearth-landing:test-browser',
+                '--watch=false',
+                '--browsers=ChromeHeadless',
+            ],
         });
     } else {
-        console.log('Пропуск тестов: Chrome не найден (задайте CHROME_BIN) — Karma без браузера не стартует.');
+        console.log('Пропуск тестов холста: Chrome не найден (задайте CHROME_BIN) — Karma без браузера не стартует.');
     }
 }
 

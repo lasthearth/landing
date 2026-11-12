@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthenticatedResult, LoginResponse, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
-import { BehaviorSubject, of, Subject, take, toArray } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of, Subject, take, toArray } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
 
@@ -92,20 +92,18 @@ describe('UserService', () => {
         });
     });
 
-    it('заполняет данные пользователя до публикации authState$ = true', (done: DoneFn) => {
+    it('заполняет данные пользователя до публикации authState$ = true', async () => {
         const service = TestBed.inject(UserService);
-
-        service.authState$.pipe(take(2), toArray()).subscribe((states) => {
-            expect(states).toEqual([false, true]);
-            expect(service.userId).toBe('user-1');
-            expect(service.userName).toBe('lisov');
-            expect(service.userImage).toBe('https://cdn/avatar.png');
-            expect(service.roles).toEqual(['admin']);
-            expect(service.accessToken).toBe('access-token');
-            done();
-        });
+        const states = firstValueFrom(service.authState$.pipe(take(2), toArray()));
 
         authenticated$.next({ isAuthenticated: true, allConfigsAuthenticated: [] });
+
+        expect(await states).toEqual([false, true]);
+        expect(service.userId).toBe('user-1');
+        expect(service.userName).toBe('lisov');
+        expect(service.userImage).toBe('https://cdn/avatar.png');
+        expect(service.roles).toEqual(['admin']);
+        expect(service.accessToken).toBe('access-token');
     });
 
     it('не выдаёт состояние авторизации, пока checkAuth не завершился', () => {

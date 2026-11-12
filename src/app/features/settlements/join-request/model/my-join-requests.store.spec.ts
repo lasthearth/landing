@@ -64,8 +64,8 @@ describe('MyJoinRequestsStore', () => {
     it('до загрузки членств кнопку не показывает', () => {
         store.load();
 
-        expect(store.canApplyTo('settlement')).toBeFalse();
-        expect(store.canApplyTo('guild')).toBeFalse();
+        expect(store.canApplyTo('settlement')).toBe(false);
+        expect(store.canApplyTo('guild')).toBe(false);
 
         flush({});
     });
@@ -75,10 +75,10 @@ describe('MyJoinRequestsStore', () => {
 
         store.load();
 
-        expect(store.canApplyTo('settlement')).toBeFalse();
-        expect(store.canApplyTo('guild')).toBeFalse();
-        expect(store.needsVerificationFor('settlement')).toBeFalse();
-        expect(store.needsVerificationFor('guild')).toBeFalse();
+        expect(store.canApplyTo('settlement')).toBe(false);
+        expect(store.canApplyTo('guild')).toBe(false);
+        expect(store.needsVerificationFor('settlement')).toBe(false);
+        expect(store.needsVerificationFor('guild')).toBe(false);
     });
 
     it('игрок в наделе не подаёт заявку в надел, но может — в гильдию', () => {
@@ -86,8 +86,8 @@ describe('MyJoinRequestsStore', () => {
 
         flush({ settlement: { id: 's1' } });
 
-        expect(store.canApplyTo('settlement')).toBeFalse();
-        expect(store.canApplyTo('guild')).toBeTrue();
+        expect(store.canApplyTo('settlement')).toBe(false);
+        expect(store.canApplyTo('guild')).toBe(true);
     });
 
     it('игрок в гильдии не подаёт заявку в гильдию, но может — в надел', () => {
@@ -95,8 +95,8 @@ describe('MyJoinRequestsStore', () => {
 
         flush({ guild: { id: 'g1' } });
 
-        expect(store.canApplyTo('settlement')).toBeTrue();
-        expect(store.canApplyTo('guild')).toBeFalse();
+        expect(store.canApplyTo('settlement')).toBe(true);
+        expect(store.canApplyTo('guild')).toBe(false);
     });
 
     it('игрок в обеих группах не подаёт заявки никуда', () => {
@@ -104,8 +104,8 @@ describe('MyJoinRequestsStore', () => {
 
         flush({ settlement: { id: 's1' }, guild: { id: 'g1' } });
 
-        expect(store.canApplyTo('settlement')).toBeFalse();
-        expect(store.canApplyTo('guild')).toBeFalse();
+        expect(store.canApplyTo('settlement')).toBe(false);
+        expect(store.canApplyTo('guild')).toBe(false);
     });
 
     it('игрок без групп подаёт заявки в оба рода', () => {
@@ -113,8 +113,8 @@ describe('MyJoinRequestsStore', () => {
 
         flush({});
 
-        expect(store.canApplyTo('settlement')).toBeTrue();
-        expect(store.canApplyTo('guild')).toBeTrue();
+        expect(store.canApplyTo('settlement')).toBe(true);
+        expect(store.canApplyTo('guild')).toBe(true);
     });
 
     it('неверифицированный игрок видит подсказку вместо кнопки', () => {
@@ -124,10 +124,10 @@ describe('MyJoinRequestsStore', () => {
 
         flush({});
 
-        expect(store.canApplyTo('settlement')).toBeFalse();
-        expect(store.canApplyTo('guild')).toBeFalse();
-        expect(store.needsVerificationFor('settlement')).toBeTrue();
-        expect(store.needsVerificationFor('guild')).toBeTrue();
+        expect(store.canApplyTo('settlement')).toBe(false);
+        expect(store.canApplyTo('guild')).toBe(false);
+        expect(store.needsVerificationFor('settlement')).toBe(true);
+        expect(store.needsVerificationFor('guild')).toBe(true);
     });
 
     it('неверифицированный игрок в наделе видит подсказку только на гильдиях', () => {
@@ -137,7 +137,7 @@ describe('MyJoinRequestsStore', () => {
 
         flush({ settlement: { id: 's1' } });
 
-        expect(store.needsVerificationFor('settlement')).toBeFalse();
-        expect(store.needsVerificationFor('guild')).toBeTrue();
+        expect(store.needsVerificationFor('settlement')).toBe(false);
+        expect(store.needsVerificationFor('guild')).toBe(true);
     });
 });
