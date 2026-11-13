@@ -66,6 +66,13 @@ class DeckStubComponent {}
 })
 class MorphStubComponent {}
 
+@Component({
+    standalone: true,
+    selector: 'app-header-hearth-crown',
+    template: '<div data-stub="hearth-crown"></div>',
+})
+class HearthCrownStubComponent {}
+
 /**
  * Заглушка содержимого маршрута: роутеру нужен компонент для адреса.
  */
@@ -110,6 +117,7 @@ describe('HeaderPrototypeComponent', () => {
                     CrownStubComponent,
                     DeckStubComponent,
                     MorphStubComponent,
+                    HearthCrownStubComponent,
                 ],
             },
         });

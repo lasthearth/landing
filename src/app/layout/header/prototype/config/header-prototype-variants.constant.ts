@@ -13,4 +13,5 @@ export const HEADER_PROTOTYPE_VARIANTS: readonly HeaderVariantOption[] = [
     { id: 'crown', title: 'Корона' },
     { id: 'deck', title: 'Две палубы' },
     { id: 'morph', title: 'Живая капсула' },
+    { id: 'hearth-crown', title: 'Очаг и корона' },
 ];

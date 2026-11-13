@@ -24,6 +24,7 @@ import { HudComponent } from './variants/hud/hud.component';
 import { CrownComponent } from './variants/crown/crown.component';
 import { DeckComponent } from './variants/deck/deck.component';
 import { MorphComponent } from './variants/morph/morph.component';
+import { HearthCrownComponent } from './variants/hearth-crown/hearth-crown.component';
 
 /** Имя параметра адреса, включающего вариант прототипа. */
 const VARIANT_QUERY_PARAM = 'hvariant';
@@ -53,6 +54,7 @@ const VARIANT_QUERY_PARAM = 'hvariant';
         CrownComponent,
         DeckComponent,
         MorphComponent,
+        HearthCrownComponent,
     ],
     templateUrl: './header-prototype.component.html',
     styleUrl: './header-prototype.component.less',

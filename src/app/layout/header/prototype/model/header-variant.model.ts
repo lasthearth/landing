@@ -3,7 +3,7 @@
  *
  * Совпадает со значением параметра адреса `?hvariant=`.
  */
-export type HeaderVariantId = 'hearth-gate' | 'rail' | 'hud' | 'crown' | 'deck' | 'morph';
+export type HeaderVariantId = 'hearth-gate' | 'rail' | 'hud' | 'crown' | 'deck' | 'morph' | 'hearth-crown';
 
 /**
  * Опция переключателя вариантов прототипа.
