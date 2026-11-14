@@ -1,103 +1,75 @@
-<div class="flex w-full p-6 pb-20 xl:pb-3 justify-between">
-    <div class="flex gap-10 items-center">
-        <div class="md:flex font-semibold items-center shrink-0 hidden">
-            <app-image-loader src="/images/logo.webp" [alt]="'footer.logoAlt' | translate" class="size-16" />
-        </div>
-        <div class="flex flex-col justify-between">
-            <div>
-                <p class="font-semibold">© lasthearth.ru 2025-2026</p>
-                <p>{{ "footer.rights" | translate }}</p>
-            </div>
-            <!-- Разделы: подвал — единственное место, где робот видит ссылки
-                 на всё, что в шапке спрятано в выпадающее меню «Сообщество». -->
-            <nav class="footer-nav" [attr.aria-label]="'footer.nav.title' | translate">
-                @for (link of navLinks; track link.route) {
-                    <a [routerLink]="link.route" class="footer-nav__link">{{ link.key | translate }}</a>
-                }
-            </nav>
-
-            <div class="flex sm:gap-4 gap-2 flex-col sm:flex-row">
-                <a [routerLink]="['/faq']" class="self-start">{{ "footer.faq" | translate }}</a>
-
-                <span class="text-lh-primary hidden sm:block">•</span>
-
-                <a [routerLink]="['/privacy-policy']" class="self-start">{{ "footer.privacyPolicy" | translate }}</a>
-
-                <span class="text-lh-primary hidden sm:block">•</span>
-
-                <a [routerLink]="['/public-offer']" class="self-start">{{ "footer.publicOffer" | translate }}</a>
-
-                <span class="text-lh-primary hidden sm:block">•</span>
-
-                <a href="https://docs.lasthearth.ru/" target="_blank" rel="noopener noreferrer" class="self-start">
-                    {{ "footer.version" | translate: { version: environment.siteVersion, date: environment.siteVersionDate } }}
-                </a>
-            </div>
+<div class="gate" aria-label="Подвал lasthearth.ru">
+    <!-- Щель над порталом: линия жара, ореол над ней и угли внутри зала. -->
+    <div class="gate__hearth" aria-hidden="true">
+        <div class="gate__haze"></div>
+        <div class="gate__hall"></div>
+        <div class="gate__line"></div>
+        <div class="gate__embers">
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
+            <span class="gate__ember"></span>
         </div>
     </div>
 
-    <div class="flex gap-4 ml-4">
-        <div class="size-full flex gap-2 justify-center items-center">
-            <div class="flex gap-2 flex-col sm:flex-row">
-                <div
-                    class="flex cursor-pointer justify-center items-center size-10 relative before:absolute before:inset-0 before:bg-linear-to-br before:from-gray-500/20 before:to-gray-800/10 before:backdrop-blur-md before:content-[''] before:opacity-60 before:z-0 before:rounded-xl before:border before:border-white/5"
-                >
-                    <a
-                        class="z-10 nav-button"
-                        href="https://boosty.to/lisov"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        [attr.aria-label]="'footer.social.boosty' | translate"
-                        [title]="'footer.social.boosty' | translate"
-                    >
-                        <img src="/images/Boosty.svg" alt="" />
-                    </a>
-                </div>
+    <div class="gate__body">
+        <div class="gate__head">
+            <p class="gate__word lh-display" appReveal>Last Hearth</p>
 
-                <div
-                    class="flex cursor-pointer justify-center items-center size-10 relative before:absolute before:inset-0 before:bg-linear-to-br before:from-gray-500/20 before:to-gray-800/10 before:backdrop-blur-md before:content-[''] before:opacity-60 before:z-0 before:rounded-xl before:border before:border-white/5"
-                >
+            <div class="gate__social" appReveal [appRevealDelay]="80">
+                @for (social of socialLinks; track social.url) {
                     <a
-                        class="z-10 nav-button"
-                        href="https://www.donationalerts.com/r/lisovn"
+                        class="gate__social-link"
+                        [href]="social.url"
                         target="_blank"
                         rel="noopener noreferrer"
-                        [attr.aria-label]="'footer.social.donationAlerts' | translate"
-                        [title]="'footer.social.donationAlerts' | translate"
+                        [attr.aria-label]="social.labelKey | translate"
+                        [title]="social.labelKey | translate"
                     >
-                        <img src="/images/DA.svg" alt="" />
+                        <img [src]="social.icon" alt="" />
                     </a>
+                }
+            </div>
+        </div>
+
+        <nav class="gate__nav" [attr.aria-label]="'footer.nav.title' | translate" appReveal [appRevealDelay]="160">
+            @for (link of navLinks; track link.route) {
+                <a class="gate__link" [routerLink]="link.route">{{ link.key | translate }}</a>
+            }
+        </nav>
+
+        <div class="gate__bar" appReveal [appRevealDelay]="240">
+            <div class="gate__brand">
+                <app-image-loader [src]="logoSrc" [alt]="'footer.logoAlt' | translate" class="gate__logo" />
+
+                <div>
+                    <p class="gate__copyright">{{ copyright }}</p>
+                    <p class="gate__rights">{{ "footer.rights" | translate }}</p>
                 </div>
             </div>
-            <div class="flex gap-2 flex-col sm:flex-row">
-                <div
-                    class="flex cursor-pointer justify-center items-center size-10 relative before:absolute before:inset-0 before:bg-linear-to-br before:from-gray-500/20 before:to-gray-800/10 before:backdrop-blur-md before:content-[''] before:opacity-60 before:z-0 before:rounded-xl before:border before:border-white/5"
-                >
-                    <a
-                        class="z-10 nav-button"
-                        [href]="environment.discordInviteUrl"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        [attr.aria-label]="'footer.social.discord' | translate"
-                        [title]="'footer.social.discord' | translate"
-                    >
-                        <img src="/images/discord.svg" alt="" class="size-6" />
-                    </a>
-                </div>
-                <div
-                    class="flex justify-center cursor-pointer items-center size-10 relative before:absolute before:inset-0 before:bg-linear-to-br before:from-gray-500/20 before:to-gray-800/10 before:backdrop-blur-md before:content-[''] before:opacity-60 before:z-0 before:rounded-xl before:border before:border-white/5"
-                >
-                    <a
-                        class="z-10 nav-button"
-                        href="https://www.youtube.com/@LISOVCORP"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        [attr.aria-label]="'footer.social.youtube' | translate"
-                        [title]="'footer.social.youtube' | translate"
-                    >
-                        <img src="/images/youtube.svg" alt="" class="size-6" />
-                    </a>
-                </div>
+
+            <div class="gate__legal">
+                <a class="gate__link gate__link--legal" [routerLink]="['/faq']">{{ "footer.faq" | translate }}</a>
+                <a class="gate__link gate__link--legal" [routerLink]="['/privacy-policy']">
+                    {{ "footer.privacyPolicy" | translate }}
+                </a>
+                <a class="gate__link gate__link--legal" [routerLink]="['/public-offer']">
+                    {{ "footer.publicOffer" | translate }}
+                </a>
+                <a class="gate__link gate__link--legal" [href]="docsUrl" target="_blank" rel="noopener noreferrer">
+                    {{
+                        "footer.version"
+                            | translate: { version: environment.siteVersion, date: environment.siteVersionDate }
+                    }}
+                </a>
             </div>
         </div>
     </div>

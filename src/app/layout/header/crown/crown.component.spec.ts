@@ -1,25 +1,21 @@
 /**
- * Спеки варианта шапки «Угольный рельс».
+ * Спеки варианта шапки «Корона».
  *
  * `HeaderState` подменяется лёгкой подделкой на сигналах: настоящий сервис
  * тянет десяток инфраструктурных зависимостей, а вариант проверяется на
  * разметке, шторках и телеметрии. Тяжёлые визуальные компоненты
  * (колокольчик, аватар, загрузчик картинок, иконки) исключаются подменой
- * импортов и настоящими заглушками с теми же селекторами.
- *
- * Сниженное движение в Karma не включается из теста, поэтому проверяется его
- * договорённость о разметке: закрытые шторки держат узлы в документе (inert,
- * а не вырезаны), отметка рельса существует в обоих состояниях сервера.
+ * импортов настоящими заглушками с теми же селекторами и входами.
  */
 import { Component, input, Pipe, PipeTransform, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Language } from '@core/i18n';
-import { HEADER_MAIN_LINKS } from '../../../config/header-main-links.constant';
-import { HEADER_COMMUNITY_LINKS } from '../../../config/header-community-links.constant';
-import { OnlineCount } from '../../../lib/occupancy-share.function';
-import { HeaderState } from '../../../header-state.service';
-import { RailComponent } from './rail.component';
+import { HEADER_MAIN_LINKS } from '../config/header-main-links.constant';
+import { HEADER_COMMUNITY_LINKS } from '../config/header-community-links.constant';
+import { OnlineCount } from '../lib/occupancy-share.function';
+import { HeaderState } from '../header-state.service';
+import { CrownComponent } from './crown.component';
 
 /**
  * Заглушка перевода: возвращает ключ — по нему видно, из какого места
@@ -82,6 +78,7 @@ function createFakeState() {
     const language = signal<Language>('ru');
 
     return {
+        languageCalls: [] as Language[],
         online: signal<OnlineCount | null>(null),
         time: signal<string | null>(null),
         occupancy: signal(0),
@@ -110,8 +107,8 @@ function createFakeState() {
 /** Подделка состояния, приведённая к типу сервиса. */
 type FakeState = ReturnType<typeof createFakeState>;
 
-describe('RailComponent', () => {
-    let fixture: ComponentFixture<RailComponent>;
+describe('CrownComponent', () => {
+    let fixture: ComponentFixture<CrownComponent>;
     let router: Router;
     let root: HTMLElement;
     let state: FakeState;
@@ -144,7 +141,7 @@ describe('RailComponent', () => {
     beforeEach(async () => {
         state = createFakeState();
 
-        TestBed.overrideComponent(RailComponent, {
+        TestBed.overrideComponent(CrownComponent, {
             set: {
                 imports: [
                     RouterLink,
@@ -167,50 +164,48 @@ describe('RailComponent', () => {
 
         router = TestBed.inject(Router);
         await router.navigateByUrl('/');
-        fixture = TestBed.createComponent(RailComponent);
+        fixture = TestBed.createComponent(CrownComponent);
     });
 
     afterEach(() => {
         fixture.destroy();
     });
 
-    it('рисует знак, ряд разделов и угольный рельс из данных состояния', () => {
+    it('рисует знак, строку телеметрии и весь ряд ссылок из данных состояния', () => {
         render();
 
-        expect(root.querySelector('a.rail__brand[href="/"]')).not.toBeNull();
-        // Семь основных разделов гостя (включая гостевой пункт) + «Сообщество».
-        expect(root.querySelectorAll('.rail__row .rail__link').length).toBe(HEADER_MAIN_LINKS.length + 1);
-        expect(root.querySelector('.rail__track')).not.toBeNull();
+        expect(root.querySelector('a.crown__brand[href="/"]')).not.toBeNull();
+        expect(root.querySelector('.crown__strip')).not.toBeNull();
+        expect(root.querySelector('.crown__crest .crown__name')).not.toBeNull();
+        // Главная + семь основных разделов (гость видит гостевой пункт) + «Сообщество».
+        expect(root.querySelectorAll('.crown__row a, .crown__row button').length).toBe(9);
     });
 
     it('без ответа сервера телеметрия показывает прочерк при нулевой доле', () => {
         render();
 
-        expect(mustFind('.rail__count-now').textContent?.trim()).toBe('—');
-        expect(mustFind('.rail__count-max').textContent?.trim()).toBe('/ —');
-        expect(mustFind('.rail__clock').textContent?.trim()).toBe('—');
-        expect(mustFind('.rail__track').style.getPropertyValue('--rail-fill')).toBe('0');
-        expect(root.querySelector('.rail__tip--off')).not.toBeNull();
+        expect(mustFind('.crown__count-now').textContent?.trim()).toBe('—');
+        expect(mustFind('.crown__count-max').textContent?.trim()).toBe('/ —');
+        expect(mustFind('.crown__gauge').style.getPropertyValue('--crown-fill')).toBe('0');
+        expect(root.querySelector('.crown__live--off')).not.toBeNull();
     });
 
-    it('с ответом сервера показывает числа, долю и живую отметку', () => {
+    it('с ответом сервера показывает числа, долю и живую точку', () => {
         state.online.set({ online: 42, max_online: 100 });
         state.occupancy.set(0.42);
-        state.time.set('15 ноября, 3 год, 14:20');
         render();
 
-        expect(mustFind('.rail__count-now').textContent?.trim()).toBe('42');
-        expect(mustFind('.rail__count-max').textContent?.trim()).toBe('/ 100');
-        expect(mustFind('.rail__clock').textContent?.trim()).toBe('15 ноября, 3 год, 14:20');
-        expect(mustFind('.rail__track').style.getPropertyValue('--rail-fill')).toBe('0.42');
-        expect(root.querySelector('.rail__tip--off')).toBeNull();
+        expect(mustFind('.crown__count-now').textContent?.trim()).toBe('42');
+        expect(mustFind('.crown__count-max').textContent?.trim()).toBe('/ 100');
+        expect(mustFind('.crown__gauge').style.getPropertyValue('--crown-fill')).toBe('0.42');
+        expect(root.querySelector('.crown__live--off')).toBeNull();
     });
 
     it('гостю показывает вход и прячет карточку игрока', () => {
         render();
 
-        expect(root.querySelector('.rail__signin')).not.toBeNull();
-        expect(root.querySelector('.rail__player')).toBeNull();
+        expect(root.querySelector('.crown__signin')).not.toBeNull();
+        expect(root.querySelector('.crown__player')).toBeNull();
     });
 
     it('игроку показывает имя, баланс, точку внимания и выход', () => {
@@ -220,83 +215,83 @@ describe('RailComponent', () => {
         state.attention.set(true);
         render();
 
-        expect(root.querySelector('.rail__signin')).toBeNull();
-        expect(mustFind('.rail__player-name').textContent?.trim()).toBe('Огнеяр');
-        expect(mustFind('.rail__coins').textContent).toContain('1240');
-        expect(root.querySelector('.rail__avatar .rail__dot')).not.toBeNull();
+        expect(root.querySelector('.crown__signin')).toBeNull();
+        expect(mustFind('.crown__player-name').textContent?.trim()).toBe('Огнеяр');
+        expect(mustFind('.crown__coins').textContent).toContain('1240');
+        expect(root.querySelector('.crown__avatar .crown__dot')).not.toBeNull();
         expect(root.querySelector('button[title="header.nav.signOut"]')).not.toBeNull();
     });
 
-    it('«Сообщество» открывает индекс, Escape закрывает и возвращает фокус', () => {
+    it('«Сообщество» открывает мега-панель, Escape закрывает и возвращает фокус', () => {
         render();
 
-        const trigger = root.querySelector<HTMLButtonElement>('.rail__link--trigger');
+        const trigger = root.querySelector<HTMLButtonElement>('.crown__link--trigger');
 
         trigger?.click();
         fixture.detectChanges();
 
-        const sheet = mustFind('.rail__sheet:not(.rail__sheet--menu)');
-
         expect(trigger?.getAttribute('aria-expanded')).toBe('true');
-        expect(sheet.classList.contains('rail__sheet--open')).toBe(true);
-        expect(sheet.getAttribute('inert')).toBeNull();
-        expect(sheet.querySelectorAll('.rail__entry').length).toBe(HEADER_COMMUNITY_LINKS.length);
+        expect(mustFind('.crown__sheet').classList.contains('crown__sheet--open')).toBe(true);
+        expect(mustFind('.crown__sheet').getAttribute('inert')).toBeNull();
+        expect(root.querySelectorAll('.crown__sheet:not(.crown__sheet--menu) .crown__tile').length).toBe(
+            HEADER_COMMUNITY_LINKS.length
+        );
 
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         fixture.detectChanges();
 
         expect(trigger?.getAttribute('aria-expanded')).toBe('false');
-        expect(sheet.classList.contains('rail__sheet--open')).toBe(false);
+        expect(mustFind('.crown__sheet').classList.contains('crown__sheet--open')).toBe(false);
         expect(document.activeElement).toBe(trigger);
     });
 
-    it('клик мимо шапки закрывает шторку меню', () => {
+    it('клик мимо шапки закрывает шторку мобильного меню', () => {
         render();
 
-        const menu = root.querySelector<HTMLButtonElement>('.rail__menu');
+        const menu = root.querySelector<HTMLButtonElement>('.crown__menu');
 
         menu?.click();
         fixture.detectChanges();
 
-        const sheet = mustFind('.rail__sheet--menu');
+        const sheet = mustFind('.crown__sheet--menu');
 
-        expect(sheet.classList.contains('rail__sheet--open')).toBe(true);
+        expect(sheet.classList.contains('crown__sheet--open')).toBe(true);
 
         document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         fixture.detectChanges();
 
-        expect(sheet.classList.contains('rail__sheet--open')).toBe(false);
+        expect(sheet.classList.contains('crown__sheet--open')).toBe(false);
         expect(menu?.getAttribute('aria-expanded')).toBe('false');
     });
 
-    it('клик по разделу индекса закрывает шторку', () => {
+    it('клик по плитке мобильного меню закрывает шторку', () => {
         render();
 
-        root.querySelector<HTMLButtonElement>('.rail__menu')?.click();
+        root.querySelector<HTMLButtonElement>('.crown__menu')?.click();
         fixture.detectChanges();
 
-        const sheet = mustFind('.rail__sheet--menu');
+        const sheet = mustFind('.crown__sheet--menu');
 
-        expect(sheet.classList.contains('rail__sheet--open')).toBe(true);
+        expect(sheet.classList.contains('crown__sheet--open')).toBe(true);
 
-        sheet.querySelector<HTMLElement>('.rail__entry')?.click();
+        sheet.querySelector<HTMLElement>('.crown__tile')?.click();
         fixture.detectChanges();
 
-        expect(sheet.classList.contains('rail__sheet--open')).toBe(false);
+        expect(sheet.classList.contains('crown__sheet--open')).toBe(false);
     });
 
     it('переход на другой адрес закрывает открытую шторку', async () => {
         render();
 
-        root.querySelector<HTMLButtonElement>('.rail__link--trigger')?.click();
+        root.querySelector<HTMLButtonElement>('.crown__link--trigger')?.click();
         fixture.detectChanges();
 
-        expect(mustFind('.rail__sheet:not(.rail__sheet--menu)').classList.contains('rail__sheet--open')).toBe(true);
+        expect(mustFind('.crown__sheet').classList.contains('crown__sheet--open')).toBe(true);
 
         await router.navigateByUrl('/rules');
         fixture.detectChanges();
 
-        expect(mustFind('.rail__sheet:not(.rail__sheet--menu)').classList.contains('rail__sheet--open')).toBe(false);
+        expect(mustFind('.crown__sheet').classList.contains('crown__sheet--open')).toBe(false);
     });
 
     it('кнопка языка переключает локаль на противоположную', () => {
@@ -311,20 +306,78 @@ describe('RailComponent', () => {
         expect(state.language()).toBe('ru');
     });
 
-    it('закрытые шторки и отметка рельса держат узлы в разметке для покоя', () => {
+    it('закрытая шторка прячется обрезанием, а не удалением узлов', () => {
         render();
 
-        // Сниженное движение не вырезает содержимое: шторки закрыты через
-        // `inert` и нулевую строку грида, узлы разделов остаются в документе.
-        const sheet = mustFind('.rail__sheet:not(.rail__sheet--menu)');
-        const menuSheet = mustFind('.rail__sheet--menu');
+        const sheet = mustFind('.crown__sheet');
+        const clip = mustFind('.crown__sheet-clip');
 
+        // Узлы плиток на месте: скрытие даёт нулевая строка грида и `inert`,
+        // а не `display: none` и не удаление узлов.
+        expect(sheet.querySelectorAll('.crown__tile').length).toBe(HEADER_COMMUNITY_LINKS.length);
         expect(sheet.getAttribute('inert')).not.toBeNull();
-        expect(menuSheet.getAttribute('inert')).not.toBeNull();
-        expect(sheet.querySelectorAll('.rail__entry').length).toBe(HEADER_COMMUNITY_LINKS.length);
-        expect(menuSheet.querySelectorAll('.rail__entry').length).toBe(
-            HEADER_MAIN_LINKS.length + HEADER_COMMUNITY_LINKS.length + 1
+        expect(getComputedStyle(clip).overflow).toBe('hidden');
+        expect(getComputedStyle(sheet).display).not.toBe('none');
+    });
+
+    it('при prefers-reduced-motion держит содержимое видимым и снимает дыхание', () => {
+        const canMatch = typeof window.matchMedia === 'function';
+        const reduced = canMatch && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        state.online.set({ online: 42, max_online: 100 });
+        render();
+
+        root.querySelector<HTMLButtonElement>('.crown__link--trigger')?.click();
+        fixture.detectChanges();
+
+        const tile = mustFind('.crown__sheet--open .crown__tile');
+
+        // Ни один узел не спрятан: плитки в дереве и не `display: none`.
+        expect(getComputedStyle(tile).display).not.toBe('none');
+
+        if (reduced) {
+            // Живая ветка reduce: дыхание снято, сияние стоит видимым, плитки непрозрачны.
+            expect(getComputedStyle(mustFind('.crown__aura')).animationName).toBe('none');
+            expect(getComputedStyle(tile).opacity).toBe('1');
+
+            return;
+        }
+
+        // Среда без reduce: контракт ветки читается из стилей компонента —
+        // дыхание снято, сияние и плитки остаются видимыми.
+        const reducedRules: CSSStyleRule[] = [];
+
+        for (const sheet of Array.from(document.styleSheets)) {
+            let rules: CSSRule[] = [];
+
+            try {
+                rules = Array.from(sheet.cssRules);
+            } catch {
+                rules = [];
+            }
+
+            for (const rule of rules) {
+                const media = rule as CSSMediaRule;
+                const condition = media.conditionText ?? media.media?.mediaText ?? '';
+
+                if (condition.includes('prefers-reduced-motion')) {
+                    reducedRules.push(...(Array.from(media.cssRules) as CSSStyleRule[]));
+                }
+            }
+        }
+
+        // Селекторы приходят с атрибутом инкапсуляции, поэтому ищем по подстроке.
+        const auraRule = reducedRules.find((rule) => rule.selectorText.includes('.crown__aura'));
+        const auraMotion =
+            auraRule?.style.getPropertyValue('animation-name') || auraRule?.style.getPropertyValue('animation');
+        const tileVisible = reducedRules.some(
+            (rule) =>
+                rule.selectorText.includes('.crown__tile') &&
+                rule.style.opacity === '1' &&
+                rule.style.transform === 'none'
         );
-        expect(root.querySelector('.rail__tip')).not.toBeNull();
+
+        expect(auraMotion ?? '').toContain('none');
+        expect(tileVisible).toBe(true);
     });
 });

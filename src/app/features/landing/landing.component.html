@@ -1,8 +1,9 @@
 <div class="xl:overflow-x-clip">
-
     <div class="flex justify-center items-start xl:w-full">
         <div class="main-panel xl:w-[max(64%,min(76rem,88%))] mb-10 size-full !rounded-2xl relative">
-            <router-outlet />
+            <div class="landing__page">
+                <router-outlet />
+            </div>
 
             @if (isProfilePageActive()) {
                 <div

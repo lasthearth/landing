@@ -246,12 +246,8 @@
      * drop-shadow: soft — покой, lift — приподнятое состояние.
      * Цвет берётся из чернил пергамента, не из чистого чёрного.
      */
-    --lh-shadow-soft:
-        0 1px 2px rgba(26, 17, 13, 0.06),
-        0 8px 24px -8px rgba(26, 17, 13, 0.16);
-    --lh-shadow-lift:
-        0 2px 4px rgba(26, 17, 13, 0.07),
-        0 20px 48px -16px rgba(26, 17, 13, 0.28);
+    --lh-shadow-soft: 0 1px 2px rgba(26, 17, 13, 0.06), 0 8px 24px -8px rgba(26, 17, 13, 0.16);
+    --lh-shadow-lift: 0 2px 4px rgba(26, 17, 13, 0.07), 0 20px 48px -16px rgba(26, 17, 13, 0.28);
 }
 
 @theme {
@@ -404,7 +400,8 @@
  */
 @font-face {
     font-family: 'LH Dash';
-    src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Roboto'), local('Segoe UI'),
+    src:
+        local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Roboto'), local('Segoe UI'),
         local('DejaVu Sans');
     unicode-range: U+2013-2014;
 }
@@ -501,6 +498,26 @@ tui-dialog {
     -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 16px 16px;
+}
+
+/**
+ * Верх страницы под шапкой: скругление держит обёртка контента маршрута, а не
+ * панель, чтобы первый полноширинный блок (герой с картинкой) не перекрывал
+ * углы своим квадратным краем. `overflow: clip` не создаёт scroll-контейнер,
+ * поэтому sticky внутри страниц продолжает работать.
+ */
+.landing__page {
+    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
+    overflow: clip;
+}
+
+/**
+ * Открытая панель «Сообщества» встаёт верхом колонки: скругление верха
+ * уходит с контента на панель, стык панели и контента прямой. Панель
+ * получает свои верхние углы в less шапки.
+ */
+.content-wrapper:has(.crown__sheet--open) .landing__page {
+    border-radius: 0;
 }
 
 tui-pulse {
@@ -1379,16 +1396,36 @@ html.lh-has-session .lh-guest-only {
     animation: lh-stagger-fade-in var(--lh-dur-mid) var(--lh-ease-out-quart) forwards;
 }
 
-.lh-stagger-list > *:nth-child(1) { animation-delay: 0ms; }
-.lh-stagger-list > *:nth-child(2) { animation-delay: 60ms; }
-.lh-stagger-list > *:nth-child(3) { animation-delay: 120ms; }
-.lh-stagger-list > *:nth-child(4) { animation-delay: 180ms; }
-.lh-stagger-list > *:nth-child(5) { animation-delay: 240ms; }
-.lh-stagger-list > *:nth-child(6) { animation-delay: 300ms; }
-.lh-stagger-list > *:nth-child(7) { animation-delay: 360ms; }
-.lh-stagger-list > *:nth-child(8) { animation-delay: 420ms; }
-.lh-stagger-list > *:nth-child(9) { animation-delay: 480ms; }
-.lh-stagger-list > *:nth-child(10) { animation-delay: 540ms; }
+.lh-stagger-list > *:nth-child(1) {
+    animation-delay: 0ms;
+}
+.lh-stagger-list > *:nth-child(2) {
+    animation-delay: 60ms;
+}
+.lh-stagger-list > *:nth-child(3) {
+    animation-delay: 120ms;
+}
+.lh-stagger-list > *:nth-child(4) {
+    animation-delay: 180ms;
+}
+.lh-stagger-list > *:nth-child(5) {
+    animation-delay: 240ms;
+}
+.lh-stagger-list > *:nth-child(6) {
+    animation-delay: 300ms;
+}
+.lh-stagger-list > *:nth-child(7) {
+    animation-delay: 360ms;
+}
+.lh-stagger-list > *:nth-child(8) {
+    animation-delay: 420ms;
+}
+.lh-stagger-list > *:nth-child(9) {
+    animation-delay: 480ms;
+}
+.lh-stagger-list > *:nth-child(10) {
+    animation-delay: 540ms;
+}
 
 @keyframes lh-stagger-fade-in {
     0% {
@@ -1562,12 +1599,8 @@ html[data-theme='dark'] {
      * Тени на тёмном фоне. Чернильный оттенок здесь не читается,
      * поэтому оба слоя уходят в чистый чёрный и набирают плотность.
      */
-    --lh-shadow-soft:
-        0 1px 2px rgba(0, 0, 0, 0.3),
-        0 8px 24px -8px rgba(0, 0, 0, 0.4);
-    --lh-shadow-lift:
-        0 2px 4px rgba(0, 0, 0, 0.35),
-        0 20px 48px -16px rgba(0, 0, 0, 0.55);
+    --lh-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -8px rgba(0, 0, 0, 0.4);
+    --lh-shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.35), 0 20px 48px -16px rgba(0, 0, 0, 0.55);
 
     --lh-brand-ink: #ff9445;
     --lh-danger-ink: #e88a7c;

@@ -1,14 +1,14 @@
 /**
- * Тесты композиции «Очаг и корона».
+ * Тесты боевой шапки «Очаг и корона».
  *
- * Настоящая «Корона» заменена заглушкой: этот вариант отвечает только за её
- * подключение и декоративный слой очага, а не за поведение меню и телеметрии.
+ * «Корона» заменена заглушкой со своими тестами в `crown/`: этот компонент
+ * отвечает только за её подключение и декоративный слой очага.
  */
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HearthCrownComponent } from './hearth-crown.component';
+import { HeaderComponent } from './header.component';
 
-/** Заглушка композиции «Короны»: её собственные тесты живут отдельно. */
+/** Заглушка «Короны»: её собственные тесты живут в `crown/`. */
 @Component({
     standalone: true,
     selector: 'app-header-crown',
@@ -16,15 +16,15 @@ import { HearthCrownComponent } from './hearth-crown.component';
 })
 class CrownStubComponent {}
 
-describe('HearthCrownComponent', () => {
-    let fixture: ComponentFixture<HearthCrownComponent>;
+describe('HeaderComponent', () => {
+    let fixture: ComponentFixture<HeaderComponent>;
     let root: HTMLElement;
 
     beforeEach(() => {
-        TestBed.overrideComponent(HearthCrownComponent, {
+        TestBed.overrideComponent(HeaderComponent, {
             set: { imports: [CrownStubComponent] },
         });
-        fixture = TestBed.createComponent(HearthCrownComponent);
+        fixture = TestBed.createComponent(HeaderComponent);
         fixture.detectChanges();
         root = fixture.nativeElement as HTMLElement;
     });
@@ -33,7 +33,7 @@ describe('HearthCrownComponent', () => {
         fixture.destroy();
     });
 
-    it('рисует настоящую композицию «Короны» внутри объединённого варианта', () => {
+    it('рисует композицию «Короны» внутри шапки', () => {
         expect(root.querySelector('app-header-crown [data-stub="crown-content"]')).not.toBeNull();
     });
 
