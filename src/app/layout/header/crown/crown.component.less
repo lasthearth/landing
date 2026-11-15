@@ -528,22 +528,31 @@
 
 /* ---- Ярусы 4 и 5: шторки ---- */
 
-/* Шторка растёт от верхнего края строкой грида: открытие 260ms, закрытие
-   короче — 160ms, без задержки. Отрицательные боковые поля выводят панель
-   из поля колонки на всю ширину шапки: ровно на ширину `--crown-fire-gutter`,
-   поэтому на xl (поле 0) панель совпадает с колонкой контента, ниже —
-   с окном, как `.landing__page`. Вынос стоит на шторке: `.crown__sheet-clip`
-   внутри обрезает содержимое и срезал бы вынос пластины. */
+/* Шторка растёт от верхнего края строкой грида. Открывается 270ms на
+   сильном ease-out (проектный --lh-ease-out-quart), закрывается короче —
+   180ms на --lh-ease-smooth. Пластина (фон, кольцо, радиус) живёт на самой
+   шторке, а не на теле: у грида высота контейнера обгоняет высоту трека в
+   середине анимации, и если фон несёт тело, между ним и контентом остаётся
+   тёмный пропуск. Фон на шторке тянется за её полной высотой — нижняя кромка
+   панели всегда совпадает с верхом контента. Отрицательные боковые поля
+   выводят панель из поля колонки на всю ширину шапки: ровно на ширину
+   `--crown-fire-gutter`, поэтому на xl (поле 0) панель совпадает с колонкой
+   контента, ниже — с окном, как `.landing__page`. Вынос стоит на шторке:
+   `.crown__sheet-clip` внутри обрезает содержимое и срезал бы вынос. */
 .crown__sheet {
     display: grid;
     grid-template-rows: 0fr;
     margin-inline: calc(-1 * var(--crown-fire-gutter));
-    transition: grid-template-rows 160ms var(--lh-ease-smooth);
+    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
+    background-color: var(--lh-surface);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent);
+    transition: grid-template-rows 180ms var(--lh-ease-smooth);
 }
 
 .crown__sheet--open {
     grid-template-rows: 1fr;
-    transition-duration: 260ms;
+    transition-duration: 270ms;
+    transition-timing-function: var(--lh-ease-out-quart);
 }
 
 /* Мобильная шторка живёт только ниже 768px: выше неё ряд ссылок виден
@@ -557,18 +566,12 @@
     overflow: hidden;
 }
 
-/* Пластина шторки непрозрачная: полупрозрачная смесь `.lh-panel` поверх
-   ночного фона роняет контраст чернил ниже AA. Ширина равна ширине шапки
-   минус ноль: вынос на gutter делает сама шторка. */
+/* Тело несёт только раскладку: `.lh-panel` даёт внутренний отступ колонок,
+   его собственные фон, кольцо и радиус сняты — пластина теперь на шторке. */
 .crown__sheet-body {
-    margin-top: 0.25rem;
-    /* Верх панели повторяет радиус контента, низ прямой: открытая панель
-       продолжает колонку в контент без двойного скругления на стыке. */
-    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
-    background-color: var(--lh-surface);
-    box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent),
-        var(--lh-shadow-lift);
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 .crown__group {

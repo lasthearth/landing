@@ -517,27 +517,33 @@ tui-dialog {
 .landing__page {
     border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
     overflow: clip;
-    /* Радиус едет вместе со шторкой «Сообщества»: открытие 260ms,
-       закрытие 160ms — те же время и кривая, что у самой шторки. */
-    transition: border-radius 160ms var(--lh-ease-smooth);
+    /* Радиус не морфится: медленный переход 16px→0 рисовал чёрные клинья
+       по краям колонки в середине открытия шторки. Угол снимается
+       мгновенно с классом `--open` и возвращается одним кадром после
+       закрытия — задержка 180ms равна длительности закрытия шторки. */
+    transition: border-radius 0ms 180ms;
 }
 
 /* Видимую пластину контента рисует внешний `.main-panel` (пергаментный
-   фон и `!rounded-2xl` из шаблона), поэтому передача углов касается обоих
-   слоёв, иначе у шторки на стыке оставался бы закруглённый кусок пластины. */
+   фон и `!rounded-2xl` из шаблона), поэтому её углы меняются вместе
+   с `.landing__page`: тот же мгновенный снят/задержанный возврат. */
 app-landing .main-panel {
-    transition: border-radius 160ms var(--lh-ease-smooth);
+    transition: border-radius 0ms 180ms;
 }
 
 /**
  * Открытая панель «Сообщества» встаёт верхом колонки: скругление верха
- * уходит с контента на панель, стык панели и контента прямой. Панель
- * получает свои верхние углы в less шапки. `!important` обязателен:
- * верхние углы пластины заданы утилитой `!rounded-2xl` с !important.
+ * уходит с контента на панель, стык панели и контента прямой. Переход
+ * радиуса в открытом состоянии снят — угол исчезает в том же кадре,
+ * что и появление шторки, без промежуточных чёрных клиньев.
  */
+.content-wrapper:has(.crown__sheet--open) .landing__page,
+.content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
+    transition: none;
+}
+
 .content-wrapper:has(.crown__sheet--open) .landing__page {
     border-radius: 0;
-    transition-duration: 260ms;
 }
 
 /* Верхние углы пластины заданы утилитой `!rounded-2xl` с !important в слое
@@ -545,7 +551,6 @@ app-landing .main-panel {
 @layer lh-overrides {
     .content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
         border-radius: 0 0 var(--lh-radius-lg) var(--lh-radius-lg) !important;
-        transition-duration: 260ms;
     }
 }
 
