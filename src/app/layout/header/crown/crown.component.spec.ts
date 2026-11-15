@@ -187,10 +187,9 @@ describe('CrownComponent', () => {
         expect(mustFind('.crown__count-now').textContent?.trim()).toBe('—');
         expect(mustFind('.crown__count-max').textContent?.trim()).toBe('/ —');
         expect(mustFind('.crown__gauge').style.getPropertyValue('--crown-fill')).toBe('0');
-        expect(root.querySelector('.crown__live--off')).not.toBeNull();
     });
 
-    it('с ответом сервера показывает числа, долю и живую точку', () => {
+    it('с ответом сервера показывает числа и долю', () => {
         state.online.set({ online: 42, max_online: 100 });
         state.occupancy.set(0.42);
         render();
@@ -198,7 +197,6 @@ describe('CrownComponent', () => {
         expect(mustFind('.crown__count-now').textContent?.trim()).toBe('42');
         expect(mustFind('.crown__count-max').textContent?.trim()).toBe('/ 100');
         expect(mustFind('.crown__gauge').style.getPropertyValue('--crown-fill')).toBe('0.42');
-        expect(root.querySelector('.crown__live--off')).toBeNull();
     });
 
     it('гостю показывает вход и прячет карточку игрока', () => {

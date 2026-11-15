@@ -37,11 +37,10 @@ describe('HeaderComponent', () => {
         expect(root.querySelector('app-header-crown [data-stub="crown-content"]')).not.toBeNull();
     });
 
-    it('добавляет линию, ореол и двенадцать углей декорацией без чтения скринридером', () => {
+    it('добавляет ореол и двенадцать углей декорацией без чтения скринридером', () => {
         const hearth = root.querySelector('.crown-fire__hearth');
 
         expect(hearth?.getAttribute('aria-hidden')).toBe('true');
-        expect(root.querySelector('.crown-fire__line')).not.toBeNull();
         expect(root.querySelector('.crown-fire__haze')).not.toBeNull();
         expect(root.querySelectorAll('.crown-fire__ember').length).toBe(12);
     });

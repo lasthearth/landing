@@ -3,16 +3,13 @@
 
 <div class="crown">
     <!--
-        Ярус 1. Тонкая строка телеметрии и управления на ночном фоне: точка
-        жизни сервера, счётчик онлайна с линией занятости и игровым временем
-        слева; тема, язык, колокольчик и карточка игрока либо вход справа.
-        Без ответа сервера числа становятся прочерком, а зона не меняет
-        размер.
+        Ярус 1. Тонкая строка телеметрии и управления: счётчик онлайна
+        с линией занятости и игровым временем слева; тема, язык, колокольчик
+        и карточка игрока либо вход справа. Без ответа сервера числа
+        становятся прочерком, а зона не меняет размер.
     -->
     <div class="crown__strip">
         <div class="crown__telemetry">
-            <span class="crown__live" [class.crown__live--off]="!online" aria-hidden="true"></span>
-
             <p class="crown__count">
                 <span class="crown__count-now">{{ online?.online ?? "—" }}</span>
                 <span class="crown__count-max">/ {{ online?.max_online ?? "—" }}</span>
@@ -202,13 +199,12 @@
     <!--
         Ярус 4. Мега-панель «Сообщества» на всю ширину колонки: шторка
         раскрывается строкой грида от верхнего края, плитки входят каскадом
-        по 30ms.
+        по 30ms. Подписи-группы нет: кнопку «Сообщество» в ряду ссылок
+        пользователь только что нажал.
     -->
     <div class="crown__sheet" [class.crown__sheet--open]="sheetOpen()" [attr.inert]="sheetOpen() ? null : ''">
         <div class="crown__sheet-clip">
             <div class="crown__sheet-body lh-panel">
-                <span class="crown__group">{{ "header.nav.community" | translate }}</span>
-
                 <div class="crown__grid">
                     @for (link of state.communityLinks; track link.route; let i = $index) {
                         <a

@@ -29,11 +29,12 @@
     --crown-aura: 44%;
 }
 
-/* Боковые поля держат текст и линейки вдали от края окна: колонка шапки
-   становится уже окна только с xl. */
+/* Боковые поля шапки задаёт единственная переменная `--crown-fire-gutter`
+   из внешнего «Очага»: она же гасится отрицательными полями шторки, поэтому
+   панель «Сообщества» и колонка контента всегда совпадают по краям. */
 .crown {
     position: relative;
-    padding: 0.5rem 1rem 0;
+    padding: 0.5rem var(--crown-fire-gutter) 0;
 }
 
 /* ---- Ярус 1: строка телеметрии и управления ---- */
@@ -53,21 +54,6 @@
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
-}
-
-/* Точка жизни сервера: гаснет вместе с прочерками, когда сервер молчит. */
-.crown__live {
-    flex: none;
-    width: 0.375rem;
-    height: 0.375rem;
-    border-radius: var(--lh-radius-full);
-    background-color: var(--lh-online);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-online) 22%, transparent);
-}
-
-.crown__live--off {
-    background-color: var(--lh-offline);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lh-offline) 30%, transparent);
 }
 
 /* Минимальная ширина держит размер зоны: прочерк без ответа сервера не
@@ -543,10 +529,15 @@
 /* ---- Ярусы 4 и 5: шторки ---- */
 
 /* Шторка растёт от верхнего края строкой грида: открытие 260ms, закрытие
-   короче — 160ms, без задержки. */
+   короче — 160ms, без задержки. Отрицательные боковые поля выводят панель
+   из поля колонки на всю ширину шапки: ровно на ширину `--crown-fire-gutter`,
+   поэтому на xl (поле 0) панель совпадает с колонкой контента, ниже —
+   с окном, как `.landing__page`. Вынос стоит на шторке: `.crown__sheet-clip`
+   внутри обрезает содержимое и срезал бы вынос пластины. */
 .crown__sheet {
     display: grid;
     grid-template-rows: 0fr;
+    margin-inline: calc(-1 * var(--crown-fire-gutter));
     transition: grid-template-rows 160ms var(--lh-ease-smooth);
 }
 
@@ -567,7 +558,8 @@
 }
 
 /* Пластина шторки непрозрачная: полупрозрачная смесь `.lh-panel` поверх
-   ночного фона роняет контраст чернил ниже AA. */
+   ночного фона роняет контраст чернил ниже AA. Ширина равна ширине шапки
+   минус ноль: вынос на gutter делает сама шторка. */
 .crown__sheet-body {
     margin-top: 0.25rem;
     /* Верх панели повторяет радиус контента, низ прямой: открытая панель
@@ -711,12 +703,6 @@
 
     .crown__sheet--menu {
         display: grid;
-    }
-}
-
-@media (min-width: 1280px) {
-    .crown {
-        padding: 0.5rem 0 0;
     }
 }
 
