@@ -1,3 +1,11 @@
+/**
+ * Слой для точечных переопределений утилит Tailwind с !important. Имя слоя
+ * объявлено до @import, поэтому `lh-overrides` раньше `utilities` в порядке
+ * каскада: для !important ранний слой сильнее позднего, и наши правки
+ * перебивают утилиты вида `!rounded-2xl` (см. стык шторки «Сообщества»).
+ */
+@layer lh-overrides;
+
 @import 'tailwindcss';
 
 /**
@@ -514,18 +522,36 @@ tui-dialog {
     transition: border-radius 160ms var(--lh-ease-smooth);
 }
 
+/* Видимую пластину контента рисует внешний `.main-panel` (пергаментный
+   фон и `!rounded-2xl` из шаблона), поэтому передача углов касается обоих
+   слоёв, иначе у шторки на стыке оставался бы закруглённый кусок пластины. */
+app-landing .main-panel {
+    transition: border-radius 160ms var(--lh-ease-smooth);
+}
+
 /**
  * Открытая панель «Сообщества» встаёт верхом колонки: скругление верха
  * уходит с контента на панель, стык панели и контента прямой. Панель
- * получает свои верхние углы в less шапки.
+ * получает свои верхние углы в less шапки. `!important` обязателен:
+ * верхние углы пластины заданы утилитой `!rounded-2xl` с !important.
  */
 .content-wrapper:has(.crown__sheet--open) .landing__page {
     border-radius: 0;
     transition-duration: 260ms;
 }
 
+/* Верхние углы пластины заданы утилитой `!rounded-2xl` с !important в слое
+   utilities — перебить её может только !important из раннего слоя. */
+@layer lh-overrides {
+    .content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
+        border-radius: 0 0 var(--lh-radius-lg) var(--lh-radius-lg) !important;
+        transition-duration: 260ms;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .landing__page {
+    .landing__page,
+    app-landing .main-panel {
         transition: none;
     }
 }
