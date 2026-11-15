@@ -509,6 +509,9 @@ tui-dialog {
 .landing__page {
     border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
     overflow: clip;
+    /* Радиус едет вместе со шторкой «Сообщества»: открытие 260ms,
+       закрытие 160ms — те же время и кривая, что у самой шторки. */
+    transition: border-radius 160ms var(--lh-ease-smooth);
 }
 
 /**
@@ -518,6 +521,13 @@ tui-dialog {
  */
 .content-wrapper:has(.crown__sheet--open) .landing__page {
     border-radius: 0;
+    transition-duration: 260ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .landing__page {
+        transition: none;
+    }
 }
 
 tui-pulse {

@@ -62,7 +62,6 @@
 /* У световой кромки тоже нет вертикальных срезов по бокам. */
 .crown-fire__hall,
 .crown-fire__haze,
-.crown-fire__line,
 .crown-fire__embers {
     mask-image: var(--crown-fire-edge-mask);
 }
@@ -126,6 +125,10 @@
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: 2;
+    /* Линия живёт выше содержимого и выше шторки «Сообщества»: при
+       раскрытии она едет вместе со швом панель/контент и остаётся яркой. */
+    mask-image: var(--crown-fire-edge-mask);
     height: 2px;
     background: linear-gradient(
         90deg,
