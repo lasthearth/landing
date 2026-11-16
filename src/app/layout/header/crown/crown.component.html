@@ -107,32 +107,40 @@
     </div>
 
     <!--
-        Ярус 2. Вензель: эмблема и крупное название сервера по центру колонки,
-        по бокам — волосяные линейки до краёв, за знаком — янтарное сияние.
-        Дыхание сияния — единственный циклический эффект варианта.
+        Ярус 2. Вензель: эмблема и крупное название сервера одной колонкой
+        по центру колонки, за знаком — янтарное сияние. Дыхание сияния —
+        единственный циклический эффект варианта.
     -->
     <div class="crown__crest">
         <span class="crown__aura" aria-hidden="true"></span>
 
-        <div class="crown__crest-line">
-            <span class="crown__rule" aria-hidden="true"></span>
-
-            <a class="crown__brand" [routerLink]="['/']">
-                <app-image-loader src="/images/logo.webp" alt="" class="crown__mark" />
-                <span class="crown__name lh-display">Last Hearth</span>
-            </a>
-
-            <span class="crown__rule crown__rule--flip" aria-hidden="true"></span>
-        </div>
+        <a class="crown__brand" [routerLink]="['/']">
+            <app-image-loader src="/images/logo.webp" alt="" class="crown__mark" />
+            <span class="crown__name lh-display">Last Hearth</span>
+        </a>
     </div>
 
     <!--
         Ярус 3. Один центрированный ряд ссылок: главная знаком, разделы
-        капителью с янтарным подчёркиванием, «Сообщество» открывает
-        мега-панель. Ниже 768px ряд заменяется одной кнопкой-меню.
+        капителью со скользящим янтарным подчёркиванием, «Сообщество»
+        открывает мега-панель. Ниже 768px ряд заменяется одной кнопкой-меню.
     -->
     <nav class="crown__nav" [attr.aria-label]="'header.mainMenu' | translate">
-        <div class="crown__row">
+        <div
+            #row
+            class="crown__row"
+            (mouseover)="slideTo($event)"
+            (focusin)="slideTo($event)"
+            (mouseleave)="slideHome()"
+        >
+            <span
+                class="crown__slide"
+                aria-hidden="true"
+                [class.crown__slide--on]="slide() !== null"
+                [style.left.px]="slide()?.left ?? 0"
+                [style.top.px]="slide()?.top ?? 0"
+                [style.width.px]="slide()?.width ?? 0"
+            ></span>
             <a
                 class="crown__link crown__link--home"
                 [routerLink]="['/']"

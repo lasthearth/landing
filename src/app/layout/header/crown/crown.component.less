@@ -8,7 +8,7 @@
  * Единственный циклический эффект — дыхание сияния вензеля: 3.2s на оборот
  * (предел 2.5–4s), `ease-in-out` как разрешённое исключение для бесконечной
  * пульсации. Остальное движение — переходы состояний: шторка 260/160ms,
- * каскад плиток по 30ms, подчёркивание 160ms, отклик нажатия 120ms.
+ * каскад плиток по 30ms, скользящее подчёркивание 220ms, отклик нажатия 120ms.
  * При `prefers-reduced-motion` дыхание стоит в видимом состоянии, переходы
  * сняты, содержимое шторок не спрятано.
  *
@@ -40,12 +40,28 @@
 /* ---- Ярус 1: строка телеметрии и управления ---- */
 
 .crown__strip {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.5rem 1rem;
     min-height: 2.75rem;
     padding-bottom: 0.375rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--lh-parchment-dim) 16%, transparent);
+}
+
+/* Кромка строки читается светом, а не полосой: линия гаснет к краям колонки. */
+.crown__strip::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--lh-parchment-dim) 22%, transparent) 18% 82%,
+        transparent
+    );
 }
 
 .crown__telemetry {
@@ -337,6 +353,8 @@
 
 .crown__crest {
     position: relative;
+    display: flex;
+    justify-content: center;
     padding: 1.5rem 0 0.25rem;
 }
 
@@ -360,31 +378,14 @@
     animation: crown-breathe 3.2s ease-in-out infinite;
 }
 
-.crown__crest-line {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-/* Волосяные линейки до краёв колонки: гаснут к центру, чтобы не пересекать
-   сияние, и задают равные левый и правый край яруса. */
-.crown__rule {
-    flex: 1 1 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--lh-parchment-dim) 45%, transparent));
-}
-
-.crown__rule--flip {
-    background: linear-gradient(270deg, transparent, color-mix(in srgb, var(--lh-parchment-dim) 45%, transparent));
-}
-
+/* Знак и название — один замок: эмблема крупнее и вплотную к слову, оба
+   светятся янтарём, поэтому колонка читается единым вензелем. */
 .crown__brand {
     display: flex;
     flex: none;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
     padding: 0.25rem 0.5rem;
     border-radius: var(--lh-radius-md);
     color: var(--lh-parchment-3);
@@ -398,17 +399,19 @@
 
 .crown__mark {
     display: block;
-    width: 3rem;
-    height: 3rem;
+    width: 4rem;
+    height: 4rem;
+    filter: drop-shadow(0 0.5rem 1.5rem color-mix(in srgb, var(--lh-brand) 45%, transparent));
 }
 
-/* Вензель: дисплейная антиква капителью с разрядкой. */
+/* Вензель: дисплейная антиква капителью с разрядкой и янтарным свечением. */
 .crown__name {
     color: var(--lh-parchment-3);
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: 0.16em;
     line-height: 1.1;
+    text-shadow: 0 0 1.75rem color-mix(in srgb, var(--lh-brand) 35%, transparent);
     text-transform: uppercase;
     white-space: nowrap;
 }
@@ -422,6 +425,7 @@
 }
 
 .crown__row {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -445,42 +449,49 @@
     letter-spacing: 0.08em;
     text-decoration: none;
     text-transform: uppercase;
-    transition: scale 120ms var(--lh-ease-spring);
-}
-
-/* Янтарное подчёркивание рисуется слева направо от своего края. */
-.crown__link::after {
-    content: '';
-    position: absolute;
-    right: 0.625rem;
-    bottom: 0.5rem;
-    left: 0.625rem;
-    height: 2px;
-    border-radius: 1px;
-    background-color: var(--lh-accent-soft);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 160ms var(--lh-ease-out-quart);
+    transition:
+        scale 120ms var(--lh-ease-spring),
+        translate 140ms var(--lh-ease-spring);
 }
 
 .crown__link:hover {
     color: var(--lh-parchment-3);
-}
-
-.crown__link:hover::after {
-    transform: scaleX(1);
+    translate: 0 -1px;
 }
 
 .crown__link:active {
+    translate: 0 0;
     scale: 0.98;
 }
 
 .crown__link--active {
     color: var(--lh-accent-soft);
+    text-shadow: 0 0 0.875rem color-mix(in srgb, var(--lh-brand) 45%, transparent);
 }
 
-.crown__link--active::after {
-    transform: scaleX(1);
+/* Скользящее подчёркивание: одна полоса на весь ряд, координаты задаёт
+   компонент по ссылке под курсором, а без курсора — по активному разделу.
+   Края полосы гаснут градиентом, ядро светится как уголёк. */
+.crown__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    border-radius: 1px;
+    background: linear-gradient(90deg, transparent, var(--lh-accent-soft) 14% 86%, transparent);
+    box-shadow: 0 0 0.625rem color-mix(in srgb, var(--lh-brand) 55%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        left 220ms var(--lh-ease-out-quart),
+        top 220ms var(--lh-ease-out-quart),
+        width 220ms var(--lh-ease-out-quart),
+        opacity 140ms var(--lh-ease-smooth);
+}
+
+.crown__slide--on {
+    opacity: 1;
 }
 
 .crown__link--home {
@@ -766,13 +777,9 @@
         padding-top: 1rem;
     }
 
-    .crown__crest-line {
-        gap: 1rem;
-    }
-
     .crown__mark {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 3rem;
+        height: 3rem;
     }
 
     .crown__name {
@@ -804,6 +811,7 @@
     .crown__menu,
     .crown__player,
     .crown__sheet,
+    .crown__slide,
     .crown__sheet-body,
     .crown__sheet-clip,
     .crown__signin,
