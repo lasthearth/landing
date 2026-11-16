@@ -597,8 +597,10 @@
 /* Точная синхронизация высоты: окно анимируется от нуля до содержимого,
    контейнер тянется за ним кадр в кадр. */
 @supports (interpolate-size: allow-keywords) {
+    /* Дисплей остаётся гридом: ряды гасятся, высоту ведёт окно. Замена
+       display на block ломала фолбэк 0fr там, где медиаправило перебивает
+       дисплей, и закрытая шторка занимала высоту содержимого. */
     .crown__sheet {
-        display: block;
         grid-template-rows: none;
         transition: none;
     }
@@ -742,12 +744,31 @@
         display: inline-flex;
     }
 
-    .crown__sheet {
+    .crown__sheet:not(.crown__sheet--menu) {
         display: none;
     }
 
+    /* Мобильная шторка — оверлей: панель висит над контентом от нижней
+       кромки шапки и не раздвигает страницу. Дисплей остаётся гридом,
+       чтобы фолбэк 0fr держал закрытую шторку нулевой высоты. */
     .crown__sheet--menu {
-        display: block;
+        position: absolute;
+        top: 100%;
+        right: 0.75rem;
+        left: 0.75rem;
+        z-index: 40;
+        display: grid;
+        margin-inline: 0;
+    }
+
+    /* Плавающая панель круглая со всех сторон и с тенью: стыка с контентом
+       у оверлея нет. */
+    .crown__sheet--menu .crown__sheet-body.lh-panel,
+    .crown__sheet--menu.crown__sheet--open .crown__sheet-body.lh-panel {
+        border-radius: var(--lh-radius-lg);
+        box-shadow:
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent),
+            var(--lh-shadow-lift);
     }
 }
 
@@ -768,7 +789,24 @@
         justify-content: flex-end;
     }
 
-    .crown__player-text {
+    /* Ник виден и в узкой строке: прячем только баланс, он есть в профиле.
+       Перенос спасает от переполнения при длинном имени. */
+    .crown__controls {
+        flex-wrap: wrap;
+        row-gap: 0.25rem;
+    }
+
+    .crown__coins {
+        display: none;
+    }
+
+    .crown__player-name {
+        max-width: 6rem;
+    }
+
+    /* В двух колонках стрелка прилипает к длинной подписи: на касании
+       она ничего не добавляет, поэтому на узких экранах снята. */
+    .crown__tile-arrow {
         display: none;
     }
 

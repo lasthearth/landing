@@ -536,20 +536,24 @@ app-landing .main-panel {
  * снятие — первые 60ms: стык шторки в это время летит быстро, и след
  * угла короткий; долгий морф рисовал чёрные клинья посередине анимации.
  */
-.content-wrapper:has(.crown__sheet--open) .landing__page,
-.content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
-    transition: border-radius 60ms var(--lh-ease-smooth);
-}
-
-.content-wrapper:has(.crown__sheet--open) .landing__page {
-    border-radius: 0;
-}
-
-/* Верхние углы пластины заданы утилитой `!rounded-2xl` с !important в слое
-   utilities — перебить её может только !important из раннего слоя. */
-@layer lh-overrides {
+/* Стык работает только там, где панель «Сообщества» встаёт в колонку.
+   Ниже 768px шторки висят над контентом, и верх контента остаётся круглым. */
+@media (min-width: 768px) {
+    .content-wrapper:has(.crown__sheet--open) .landing__page,
     .content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
-        border-radius: 0 0 var(--lh-radius-lg) var(--lh-radius-lg) !important;
+        transition: border-radius 60ms var(--lh-ease-smooth);
+    }
+
+    .content-wrapper:has(.crown__sheet--open) .landing__page {
+        border-radius: 0;
+    }
+
+    /* Верхние углы пластины заданы утилитой `!rounded-2xl` с !important в слое
+       utilities — перебить её может только !important из раннего слоя. */
+    @layer lh-overrides {
+        .content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
+            border-radius: 0 0 var(--lh-radius-lg) var(--lh-radius-lg) !important;
+        }
     }
 }
 
