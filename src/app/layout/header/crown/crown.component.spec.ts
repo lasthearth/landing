@@ -13,7 +13,7 @@ import { provideRouter, Router, RouterLink, RouterLinkActive } from '@angular/ro
 import { Language } from '@core/i18n';
 import { HEADER_MAIN_LINKS } from '../config/header-main-links.constant';
 import { HEADER_COMMUNITY_LINKS } from '../config/header-community-links.constant';
-import { OnlineCount } from '../lib/occupancy-share.function';
+import { OnlineCount } from '../model/online-count.interface';
 import { HeaderState } from '../header-state.service';
 import { CrownComponent } from './crown.component';
 
@@ -81,7 +81,6 @@ function createFakeState() {
         languageCalls: [] as Language[],
         online: signal<OnlineCount | null>(null),
         time: signal<string | null>(null),
-        occupancy: signal(0),
         isAuth: signal(false),
         userName: signal(''),
         userImage: signal(''),
@@ -181,22 +180,22 @@ describe('CrownComponent', () => {
         expect(root.querySelectorAll('.crown__row a, .crown__row button').length).toBe(9);
     });
 
-    it('без ответа сервера телеметрия показывает прочерк при нулевой доле', () => {
+    it('без ответа сервера телеметрия показывает прочерки', () => {
         render();
 
         expect(mustFind('.crown__count-now').textContent?.trim()).toBe('—');
         expect(mustFind('.crown__count-max').textContent?.trim()).toBe('/ —');
-        expect(mustFind('.crown__gauge').style.getPropertyValue('--crown-fill')).toBe('0');
+        expect(mustFind('.crown__clock').textContent?.trim()).toBe('—');
     });
 
-    it('с ответом сервера показывает числа и долю', () => {
+    it('с ответом сервера показывает числа онлайна и игровое время', () => {
         state.online.set({ online: 42, max_online: 100 });
-        state.occupancy.set(0.42);
+        state.time.set('12 сентября, 3 год, 06:59');
         render();
 
         expect(mustFind('.crown__count-now').textContent?.trim()).toBe('42');
         expect(mustFind('.crown__count-max').textContent?.trim()).toBe('/ 100');
-        expect(mustFind('.crown__gauge').style.getPropertyValue('--crown-fill')).toBe('0.42');
+        expect(mustFind('.crown__clock').textContent?.trim()).toBe('12 сентября, 3 год, 06:59');
     });
 
     it('гостю показывает вход и прячет карточку игрока', () => {

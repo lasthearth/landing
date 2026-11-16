@@ -2,8 +2,8 @@
  * Шапка «Корона»: композиция боевой шапки «Очаг и корона».
  *
  * Центростремительная композиция на ночном фоне страницы: ярус 1 — тонкая
- * строка телеметрии и управления (счётчик онлайна с
- * линией занятости и игровым временем слева; тема, язык, колокольчик и
+ * строка телеметрии и управления (счётчик онлайна с подписью и игровое
+ * время сервера со своей подписью слева; тема, язык, колокольчик и
  * карточка игрока либо вход справа), ярус 2 — крупный вензель сервера
  * в `.lh-display`: эмблема и название одним замком в строку, за замком —
  * янтарное сияние, ярус 3 — один центрированный ряд ссылок капителью со скользящим
@@ -20,6 +20,7 @@
  * прочерк, зоны размера не меняют. Шапка не липкая: `position: relative`,
  * как у боевой шапки.
  */
+import { isPlatformBrowser } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -28,6 +29,7 @@ import {
     HostListener,
     OnDestroy,
     inject,
+    PLATFORM_ID,
     signal,
     viewChild,
 } from '@angular/core';
@@ -112,6 +114,12 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
     private readonly router = inject(Router);
 
     /**
+     * Идентификатор платформы: замер ссылок и `requestAnimationFrame`
+     * возможны только в браузере, на сервере подчёркивание скрыто.
+     */
+    private readonly platformId = inject(PLATFORM_ID);
+
+    /**
      * Подписывается на завершение навигации, чтобы шторки не оставались
      * открытыми на новой странице.
      */
@@ -123,15 +131,23 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
             )
             .subscribe(() => {
                 this.closeAll();
-                requestAnimationFrame(() => this.placeCurrent());
+
+                if (isPlatformBrowser(this.platformId)) {
+                    requestAnimationFrame(() => this.placeCurrent());
+                }
             });
     }
 
     /**
      * Ставит подчёркивание на активную ссылку и включает слежение за размером
-     * ряда и за готовностью шрифтов.
+     * ряда и за готовностью шрифтов. На сервере не делает ничего: замеров
+     * там нет, полоса появляется после гидратации.
      */
     public ngAfterViewInit(): void {
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
         this.placeCurrent();
 
         const row = this.row()?.nativeElement;

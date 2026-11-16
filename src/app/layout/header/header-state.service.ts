@@ -25,8 +25,8 @@ import { SignOutConfirmComponent } from '@features/auth';
 import { HEADER_MAIN_LINKS } from './config/header-main-links.constant';
 import { HEADER_COMMUNITY_LINKS } from './config/header-community-links.constant';
 import { HeaderNavLink } from './model/header-nav-link.interface';
+import { OnlineCount } from './model/online-count.interface';
 import { formatServerTime } from './lib/format-server-time.function';
-import { occupancyShare, OnlineCount } from './lib/occupancy-share.function';
 
 @Injectable()
 export class HeaderState {
@@ -149,11 +149,6 @@ export class HeaderState {
         ),
         { initialValue: null }
     );
-
-    /**
-     * Доля занятых мест от 0 до 1 — длина линии занятости.
-     */
-    public readonly occupancy = computed(() => occupancyShare(this.online()));
 
     /**
      * Признак, что пользователь авторизован.

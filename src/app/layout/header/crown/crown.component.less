@@ -101,26 +101,12 @@
     text-transform: uppercase;
 }
 
-/* Линия занятости: дорожка видна и при нуле, длина равна настоящей доле. */
-.crown__gauge {
-    flex: none;
-    width: 3.5rem;
-    height: 2px;
-    border-radius: 1px;
-    background-color: color-mix(in srgb, var(--lh-parchment-dim) 24%, transparent);
+/* Вторая пара «подпись + значение» отбита расстоянием, а не знаком-разделителем. */
+.crown__telemetry-label--next {
+    margin-left: 0.5rem;
 }
 
-.crown__gauge-fill {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    background-color: var(--lh-brand-lit);
-    transform: scaleX(var(--crown-fill, 0));
-    transform-origin: left center;
-    transition: transform 240ms var(--lh-ease-out-quart);
-}
-
+/* Игровое время сервера: дата и часы одной строкой, без переноса. */
 .crown__clock {
     min-width: 0;
     overflow: hidden;
@@ -130,13 +116,6 @@
     line-height: 1.2;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-/* Разделитель рисует стиль: без игрового времени висячей точки не остаётся. */
-.crown__clock::before {
-    content: '·';
-    margin-right: 0.5rem;
-    color: color-mix(in srgb, var(--lh-parchment-dim) 60%, transparent);
 }
 
 .crown__controls {
@@ -826,7 +805,6 @@
 
     .crown__brand,
     .crown__chev,
-    .crown__gauge-fill,
     .crown__icon,
     .crown__link,
     .crown__link::after,

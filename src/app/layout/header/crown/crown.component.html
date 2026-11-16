@@ -4,9 +4,11 @@
 <div class="crown">
     <!--
         Ярус 1. Тонкая строка телеметрии и управления: счётчик онлайна
-        с линией занятости и игровым временем слева; тема, язык, колокольчик
-        и карточка игрока либо вход справа. Без ответа сервера числа
-        становятся прочерком, а зона не меняет размер.
+        с подписью и игровое время сервера со своей подписью слева;
+        тема, язык, колокольчик и карточка игрока либо вход справа.
+        Без ответа сервера числа становятся прочерком, а зона не меняет
+        размер. Долю занятых мест строка не рисует: её уже показывает
+        само отношение чисел.
     -->
     <div class="crown__strip">
         <div class="crown__telemetry">
@@ -17,17 +19,8 @@
 
             <span class="crown__telemetry-label">{{ "header.players" | translate }}</span>
 
-            <span
-                class="crown__gauge"
-                role="img"
-                [attr.aria-label]="
-                    online
-                        ? ('header.players' | translate) + ': ' + online.online + ' / ' + online.max_online
-                        : ('header.players' | translate)
-                "
-                [style.--crown-fill]="state.occupancy()"
-            >
-                <span class="crown__gauge-fill"></span>
+            <span class="crown__telemetry-label crown__telemetry-label--next">
+                {{ "header.serverTime" | translate }}
             </span>
 
             <span class="crown__clock">{{ state.time() ?? "—" }}</span>
