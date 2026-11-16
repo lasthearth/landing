@@ -517,17 +517,18 @@ tui-dialog {
 .landing__page {
     border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
     overflow: clip;
-    /* Морф радиуса короткий и попадает в тихую фазу: при закрытии шторки
-       играет последние 60ms, когда стык уже замедлился у верхнего края, —
-       угол «присаживается» на место без чёрных клиньев и без скачка. */
-    transition: border-radius 60ms 110ms var(--lh-ease-smooth);
+    /* Угол возвращается строго после того, как шторка свернулась: задержка
+       равна её закрытию (180ms). Пока шторка видна хоть на пиксель, верх
+       пластины прямой — иначе её скруглённые углы выглядывают из-под
+       квадратного низа шторки и на последних кадрах мигает полоска. */
+    transition: border-radius 60ms 180ms var(--lh-ease-smooth);
 }
 
 /* Видимую пластину контента рисует внешний `.main-panel` (пергаментный
    фон и `!rounded-2xl` из шаблона), поэтому её углы меняются вместе
    с `.landing__page`: тот же короткий морф и в той же фазе. */
 app-landing .main-panel {
-    transition: border-radius 60ms 110ms var(--lh-ease-smooth);
+    transition: border-radius 60ms 180ms var(--lh-ease-smooth);
 }
 
 /**
