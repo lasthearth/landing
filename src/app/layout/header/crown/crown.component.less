@@ -528,45 +528,28 @@
 
 /* ---- Ярусы 4 и 5: шторки ---- */
 
-/* Шторка раскрывается сверху. Пластина (фон, кольцо, радиус) живёт на самой
-   шторке: её высота — то, что видит глаз у стыка с контентом.
+/* Высоту занимает окно `.crown__sheet-clip`, а не сама пластина. Пластина
+   остаётся полной высоты и движется transform: при открытии вниз из-под
+   шапки, при закрытии вверх. Поэтому её нижняя кромка всегда совпадает с
+   низом окна и верхом контента. Главное: радиусы пластины считаются от её
+   полной высоты и не сжимаются браузером, когда окну остаётся меньше 32px.
+   Нижние углы пластины и верхние углы контента меняются одним переходом,
+   поэтому чёрного пространства между ними нет даже на последних кадрах.
 
-   Базовая механика — строка грида 0fr→1fr: работает везде. У неё есть
-   беда: высота контейнера обгоняет высоту трека до 46px, поэтому на
-   закрытии под контентом остаётся пустая полоса, а на открытии контейнер
-   выносит вперёд пустую подложку. Браузеры с `interpolate-size` (ниже)
-   анимируют саму высоту клипа — контейнер равен ей кадр в кадр, полосы
-   нет ни в одну сторону.
-
-   Открытие 270ms на сильном ease-out (--lh-ease-out-quart), закрытие
-   короче — 180ms на --lh-ease-smooth. Отрицательные боковые поля выводят
-   панель из поля колонки на всю ширину шапки: ровно на ширину
-   `--crown-fire-gutter`, поэтому на xl (поле 0) панель совпадает с колонкой
-   контента, ниже — с окном, как `.landing__page`. Вынос стоит на шторке:
-   `.crown__sheet-clip` внутри обрезает содержимое и срезал бы вынос. */
+   Открытие 270ms на --lh-ease-out-quart, закрытие 180ms на --lh-ease-smooth.
+   Боковой вынос ровно на `--crown-fire-gutter` совпадает панель с колонкой
+   контента на любой ширине. */
 .crown__sheet {
     display: grid;
     grid-template-rows: 0fr;
     margin-inline: calc(-1 * var(--crown-fire-gutter));
-    /* В закрытом состоянии все четыре угла скруглены. При открытии нижние
-       углы выпрямляются вместе с верхними углами контента; при закрытии
-       обе пары возвращаются тем же переходом. На стыке всегда одинаковый
-       радиус, поэтому между панелью и контентом не возникает ни клина,
-       ни квадратного уступа. */
-    border-radius: var(--lh-radius-lg);
-    background-color: var(--lh-surface);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent);
-    transition:
-        grid-template-rows 180ms var(--lh-ease-smooth),
-        border-radius 60ms var(--lh-ease-smooth);
+    transition: grid-template-rows 180ms var(--lh-ease-smooth);
 }
 
 .crown__sheet--open {
     grid-template-rows: 1fr;
-    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
-    transition:
-        grid-template-rows 270ms var(--lh-ease-out-quart),
-        border-radius 60ms var(--lh-ease-smooth);
+    transition-duration: 270ms;
+    transition-timing-function: var(--lh-ease-out-quart);
 }
 
 /* Мобильная шторка живёт только ниже 768px: выше неё ряд ссылок виден
@@ -580,16 +563,34 @@
     overflow: hidden;
 }
 
-/* Точная синхронизация: высоту ведёт клип, контейнер тянется за ним, поэтому
-   кромка панели всегда совпадает с низом содержимого — ни пустой полосы на
-   закрытии, ни выступающей подложки на открытии. */
+/* Пластина движется целиком: в закрытом состоянии сдвинута вверх на свою
+   полную высоту. Во время движения её низ остаётся на нижней кромке окна.
+   Класс `.lh-panel` в селекторе усиливает глобальное правило тёмной темы. */
+.crown__sheet-body.lh-panel {
+    border-radius: var(--lh-radius-lg);
+    background: var(--lh-surface);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent);
+    transform: translateY(-100%);
+    transition:
+        transform 180ms var(--lh-ease-smooth),
+        border-radius 60ms var(--lh-ease-smooth);
+}
+
+.crown__sheet--open .crown__sheet-body.lh-panel {
+    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
+    transform: translateY(0);
+    transition:
+        transform 270ms var(--lh-ease-out-quart),
+        border-radius 60ms var(--lh-ease-smooth);
+}
+
+/* Точная синхронизация высоты: окно анимируется от нуля до содержимого,
+   контейнер тянется за ним кадр в кадр. */
 @supports (interpolate-size: allow-keywords) {
     .crown__sheet {
         display: block;
         grid-template-rows: none;
-        /* Высоту ведёт клип; здесь остаётся только общий с контентом
-           переход радиуса. `transition: none` отключал и его, и фейд. */
-        transition: border-radius 60ms var(--lh-ease-smooth);
+        transition: none;
     }
 
     .crown__sheet-clip {
@@ -603,17 +604,6 @@
         transition-duration: 270ms;
         transition-timing-function: var(--lh-ease-out-quart);
     }
-}
-
-/* Тело несёт только раскладку: `.lh-panel` даёт внутренний отступ колонок,
-   его собственные фон, кольцо и радиус сняты — пластина теперь на шторке.
-   Класс `.lh-panel` в селекторе обязателен: тёмная тема красит его глобально
-   (`html[data-theme='dark'] .lh-panel`), и слабый селектор проигрывает —
-   полупрозрачный квадрат торчал острыми углами за скруглённой пластиной. */
-.crown__sheet-body.lh-panel {
-    background: none;
-    box-shadow: none;
-    border-radius: 0;
 }
 
 .crown__group {
@@ -814,6 +804,7 @@
     .crown__menu,
     .crown__player,
     .crown__sheet,
+    .crown__sheet-body,
     .crown__sheet-clip,
     .crown__signin,
     .crown__tile,
