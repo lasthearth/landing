@@ -517,18 +517,17 @@ tui-dialog {
 .landing__page {
     border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
     overflow: clip;
-    /* Угол возвращается на последних 30ms сворачивания и за 60ms после него.
-       Задержка 150ms против 180ms закрытия: раньше (110ms) скруглённый угол
-       выглядывал из-под квадратного низа шторки полоской, позже (180ms)
-       между сворачиванием и возвратом мелькал квадратный угол. */
-    transition: border-radius 60ms 150ms var(--lh-ease-smooth);
+    /* Верхний радиус контента и нижний радиус шторки меняются одним
+       переходом 60ms без задержки. Их кромки совпадают, поэтому одинаковый
+       радиус сохраняет непрерывный контур на каждом кадре. */
+    transition: border-radius 60ms var(--lh-ease-smooth);
 }
 
 /* Видимую пластину контента рисует внешний `.main-panel` (пергаментный
    фон и `!rounded-2xl` из шаблона), поэтому её углы меняются вместе
    с `.landing__page`: тот же короткий морф и в той же фазе. */
 app-landing .main-panel {
-    transition: border-radius 60ms 150ms var(--lh-ease-smooth);
+    transition: border-radius 60ms var(--lh-ease-smooth);
 }
 
 /**
@@ -539,7 +538,7 @@ app-landing .main-panel {
  */
 .content-wrapper:has(.crown__sheet--open) .landing__page,
 .content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
-    transition: border-radius 60ms 0ms var(--lh-ease-smooth);
+    transition: border-radius 60ms var(--lh-ease-smooth);
 }
 
 .content-wrapper:has(.crown__sheet--open) .landing__page {

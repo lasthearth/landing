@@ -548,16 +548,25 @@
     display: grid;
     grid-template-rows: 0fr;
     margin-inline: calc(-1 * var(--crown-fire-gutter));
-    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
+    /* В закрытом состоянии все четыре угла скруглены. При открытии нижние
+       углы выпрямляются вместе с верхними углами контента; при закрытии
+       обе пары возвращаются тем же переходом. На стыке всегда одинаковый
+       радиус, поэтому между панелью и контентом не возникает ни клина,
+       ни квадратного уступа. */
+    border-radius: var(--lh-radius-lg);
     background-color: var(--lh-surface);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent);
-    transition: grid-template-rows 180ms var(--lh-ease-smooth);
+    transition:
+        grid-template-rows 180ms var(--lh-ease-smooth),
+        border-radius 60ms var(--lh-ease-smooth);
 }
 
 .crown__sheet--open {
     grid-template-rows: 1fr;
-    transition-duration: 270ms;
-    transition-timing-function: var(--lh-ease-out-quart);
+    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
+    transition:
+        grid-template-rows 270ms var(--lh-ease-out-quart),
+        border-radius 60ms var(--lh-ease-smooth);
 }
 
 /* Мобильная шторка живёт только ниже 768px: выше неё ряд ссылок виден
@@ -578,7 +587,9 @@
     .crown__sheet {
         display: block;
         grid-template-rows: none;
-        transition: none;
+        /* Высоту ведёт клип; здесь остаётся только общий с контентом
+           переход радиуса. `transition: none` отключал и его, и фейд. */
+        transition: border-radius 60ms var(--lh-ease-smooth);
     }
 
     .crown__sheet-clip {
