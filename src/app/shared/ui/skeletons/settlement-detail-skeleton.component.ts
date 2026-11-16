@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 import { SkeletonComponent } from './skeleton.component';
 
 /**
  * Скелетон страницы деталей надела.
+ *
+ * Пульс видео-бокса ставится на паузу вне экрана.
  */
 @Component({
     selector: 'app-settlement-detail-skeleton',
     standalone: true,
-    imports: [SkeletonComponent],
+    imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div class="flex flex-col gap-6 w-full">
             <app-skeleton width="64" height="10" rounded="xl" />
@@ -35,6 +38,7 @@ import { SkeletonComponent } from './skeleton.component';
                         <app-skeleton width="5/6" height="5" rounded="lg" />
                     </div>
                     <div
+                        appPauseOffscreen
                         class="hidden xl:block w-full xl:max-w-[40%] aspect-video rounded-xl bg-lh-primary-2/30 animate-pulse"
                     ></div>
                 </div>

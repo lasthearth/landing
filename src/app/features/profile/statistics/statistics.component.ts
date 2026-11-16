@@ -17,6 +17,7 @@ import { DonateService, IPurchase } from '@entities/donate';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { RouterLink } from '@angular/router';
 import { PlayerAvatarComponent } from '@entities/player-style';
+import { RevealDirective } from '@shared/lib/directives';
 
 export type TypeLabel = string;
 
@@ -37,6 +38,7 @@ export type TypeLabel = string;
         NgTemplateOutlet,
         TuiIcon,
         RelativeTimeComponent,
+        RevealDirective,
     ],
     styleUrl: './statistics.component.less',
     templateUrl: './statistics.component.html',

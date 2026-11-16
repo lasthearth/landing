@@ -1,5 +1,5 @@
 <section class="players-page">
-    <app-page-header [title]="'players.title' | translate" [subtitle]="'players.subtitle' | translate" />
+    <app-page-header appReveal [title]="'players.title' | translate" [subtitle]="'players.subtitle' | translate" />
 
     <div class="players-page__filters lh-panel">
         <label class="players-page__search">
@@ -88,6 +88,9 @@
                         <div class="players-page__grid">
                             @for (player of list.players; track player.userId) {
                                 <app-player-card
+                                    appReveal
+                                    class="lh-reveal--scale"
+                                    [appRevealDelay]="$index * 45"
                                     [player]="player"
                                     [look]="lookOf(player)"
                                     [settlement]="membershipOf(player)?.settlement ?? null"

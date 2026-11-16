@@ -2,7 +2,7 @@
     <!-- Маркер для определения прокрутки -->
     <div id="rules-scroll-sentinel" class="absolute top-0 left-0 w-px h-px pointer-events-none"></div>
 
-    <app-page-header [title]="'rules.title' | translate">
+    <app-page-header appReveal [title]="'rules.title' | translate">
         <button type="button" (click)="toggleAll()" class="lh-chip lh-chip--lg">
             {{
                 globalExpandService.globalExpandState()

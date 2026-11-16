@@ -13,6 +13,7 @@ import {
     gameBranch,
     modCompatibility,
 } from '@entities/server-mod';
+import { RevealDirective } from '@shared/lib/directives';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
@@ -72,7 +73,7 @@ const MOD_FOLDERS: readonly { os: string; path: string }[] = [
 @Component({
     standalone: true,
     selector: 'app-mods-page',
-    imports: [PageHeaderComponent, EmptyStateComponent, ErrorStateComponent, SkeletonComponent, TuiIcon, TranslatePipe],
+    imports: [PageHeaderComponent, EmptyStateComponent, ErrorStateComponent, SkeletonComponent, TuiIcon, TranslatePipe, RevealDirective],
     templateUrl: './mods-page.component.html',
     styleUrl: './mods-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

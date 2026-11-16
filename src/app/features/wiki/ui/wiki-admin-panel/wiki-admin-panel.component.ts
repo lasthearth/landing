@@ -14,6 +14,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog/confirm-dialog.service';
 import { SkeletonComponent } from '@shared/ui/skeletons';
+import { RevealDirective } from '@shared/lib/directives';
 import { WikiStoreService } from '../../api/wiki-store.service';
 import { WikiArticle, WikiAuthorNameService, WikiSectionId, WikiStatus } from '@entities/wiki';
 import { WIKI_SECTIONS } from '../../lib/wiki-sections.constant';
@@ -25,7 +26,15 @@ import { WikiSuggestionsComponent } from '../wiki-suggestions/wiki-suggestions.c
 @Component({
     standalone: true,
     selector: 'app-wiki-admin-panel',
-    imports: [TuiIcon, TranslatePipe, FormsModule, RouterLink, WikiSuggestionsComponent, SkeletonComponent],
+    imports: [
+        TuiIcon,
+        TranslatePipe,
+        FormsModule,
+        RouterLink,
+        WikiSuggestionsComponent,
+        SkeletonComponent,
+        RevealDirective,
+    ],
     templateUrl: './wiki-admin-panel.component.html',
     styleUrl: './wiki-admin-panel.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

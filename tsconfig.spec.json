@@ -9,6 +9,7 @@
     "include": ["src/**/*.spec.ts", "src/**/*.d.ts"],
     "exclude": [
         "src/app/shared/lib/compress-image.function.spec.ts",
+        "src/app/shared/lib/directives/tabs-pill.directive.spec.ts",
         "src/app/shared/ui/image-file-input/image-file-input.component.spec.ts"
     ]
 }

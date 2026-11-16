@@ -16,6 +16,7 @@ import { WikiAuthorNameService } from '@entities/wiki';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { SkeletonComponent } from '@shared/ui/skeletons';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
 import { WikiStoreService } from '../../../api/wiki-store.service';
 import { WIKI_SECTIONS } from '../../../lib/wiki-sections.constant';
 import { WikiArticle, WikiSectionId } from '@entities/wiki';
@@ -101,7 +102,15 @@ const TAG_MIN_COUNT = 2;
  */
 @Component({
     selector: 'app-wiki-list-page',
-    imports: [PageHeaderComponent, EmptyStateComponent, TuiIcon, TranslatePipe, RouterLink, SkeletonComponent],
+    imports: [
+        PageHeaderComponent,
+        EmptyStateComponent,
+        TuiIcon,
+        TranslatePipe,
+        RouterLink,
+        SkeletonComponent,
+        RevealDirective,
+    ],
     templateUrl: './wiki-list-page.component.html',
     styleUrl: './wiki-list-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

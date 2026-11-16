@@ -15,6 +15,7 @@ import {
 } from '@entities/ticket';
 import { UserService } from '@entities/user';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
+import { RevealDirective } from '@shared/lib/directives';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { SkeletonComponent } from '@shared/ui/skeletons';
 import { TuiIcon } from '@taiga-ui/core';
@@ -43,6 +44,7 @@ const REFRESH_MS = 20_000;
         SkeletonComponent,
         TicketStatusComponent,
         TicketThreadComponent,
+        RevealDirective,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

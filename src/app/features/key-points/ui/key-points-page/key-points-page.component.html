@@ -64,17 +64,17 @@
 
         <div class="kp-panel__intro">
             @if (activeVariant(); as variant) {
-                <h2 class="kp-panel__title lh-display">
+                <h2 class="kp-panel__title lh-display" appReveal>
                     {{ point + ".variants." + variant + ".name" | translate }}
                 </h2>
-                <p class="kp-panel__text">{{ point + ".description" | translate }}</p>
+                <p class="kp-panel__text lh-reveal--soft" appReveal>{{ point + ".description" | translate }}</p>
             } @else {
-                <h2 class="kp-panel__title lh-display">{{ point + ".name" | translate }}</h2>
-                <p class="kp-panel__text">{{ point + ".description" | translate }}</p>
+                <h2 class="kp-panel__title lh-display" appReveal>{{ point + ".name" | translate }}</h2>
+                <p class="kp-panel__text lh-reveal--soft" appReveal>{{ point + ".description" | translate }}</p>
             }
 
             <!-- Пояснение к схеме: она не строит и не прокачивает — только план и смета. -->
-            <p class="kp-note">
+            <p class="kp-note lh-reveal--soft" appReveal>
                 <tui-icon icon="@tui.book-open-text" />
                 {{ "keyPoints.infoNote" | translate }}
             </p>

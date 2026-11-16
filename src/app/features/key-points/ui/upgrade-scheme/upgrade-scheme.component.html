@@ -4,8 +4,14 @@
     <div class="scheme__board lh-panel">
         <!-- Широкую схему (5 колонок) на телефоне листают вбок, а не сжимают до нечитаемого. -->
         <div class="scheme__scroll">
+            <!--
+                [appPauseOffscreen] ставит дыхание доступных узлов на паузу,
+                когда холст ушёл из вьюпорта: анимация у каждого доступного
+                узла бесконечная, а вне экрана её никто не видит.
+            -->
             <div
                 class="scheme__canvas"
+                appPauseOffscreen
                 role="group"
                 [class.scheme__canvas--focused]="hasFocus()"
                 [style.--kp-tiers]="scheme().tiers"

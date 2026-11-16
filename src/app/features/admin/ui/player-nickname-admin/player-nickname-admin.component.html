@@ -49,7 +49,7 @@
                         type="button"
                         [disabled]="nicknameControl.invalid"
                         (click)="openChangeDialog()"
-                        class="flex-1 min-w-48 py-3 px-4 rounded-xl bg-lh-accent-3 hover:bg-brand text-white font-bold uppercase transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="flex-1 min-w-48 py-3 px-4 rounded-xl bg-lh-accent-3 hover:bg-brand text-white font-bold uppercase disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {{ 'admin.nickname.change' | translate }}
                     </button>
@@ -59,7 +59,7 @@
                         type="button"
                         [disabled]="isGranting()"
                         (click)="grantEarlyChange()"
-                        class="flex-1 min-w-48 py-3 px-4 rounded-xl bg-lh-primary-2 hover:bg-lh-primary-2/70 text-lh-primary font-bold uppercase transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        class="flex-1 min-w-48 py-3 px-4 rounded-xl bg-lh-primary-2 hover:bg-lh-primary-2/70 text-lh-primary font-bold uppercase disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         @if (isGranting()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />

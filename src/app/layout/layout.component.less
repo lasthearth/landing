@@ -68,7 +68,10 @@
 
    Плотность выше прежней (9% → 26%): раньше под слоем лежала пёстрая
    картинка и свечение только грязнило её, теперь фон ровный, и тёплый
-   отсвет — единственное, что отделяет низ страницы от верха. */
+   отсвет — единственное, что отделяет низ страницы от верха.
+
+   `will-change` убран: слоя без анимации он не ускоряет, а держал
+   дополнительный композитный слой на весь экран. */
 :host::before {
     content: '';
     position: fixed;
@@ -82,14 +85,6 @@
         color-mix(in srgb, var(--lh-brand-deep) 12%, transparent) 40%,
         transparent 74%
     );
-    will-change: opacity;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    :host::before {
-        animation: none;
-        opacity: 0.92;
-    }
 }
 
 .content-wrapper {
@@ -115,12 +110,19 @@
     display: none;
 }
 
+/**
+ * Уход приветственного экрана: экран уезжает вверх на 115% за mid.
+ * Прежние 1.1s с самодельной кривой пережимали жест пользователя
+ * (запущенное пользователем движение — не дольше 400ms для полной
+ * панели); кривая и длительность теперь из проектных токенов.
+ * Кнопка прокрутки остаётся в DOM с классом `.scroll`, чтобы доиграть уход.
+ */
 .welcome {
     -webkit-box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
     -moz-box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
     box-shadow: 0px 12px 65px 23px rgba(0, 0, 0, 0.31);
     will-change: transform;
-    transition: transform 1.1s cubic-bezier(0.87, -0.35, 0.19, 1.44);
+    transition: transform var(--lh-dur-mid) var(--lh-ease-smooth);
     transform: translate3d(0, 0, 0);
 }
 

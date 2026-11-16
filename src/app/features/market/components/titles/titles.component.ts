@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { DonateService } from '@entities/donate';
 import { MarketGridSkeletonComponent } from '@shared/ui/skeletons';
+import { SwapFadeDirective } from '@shared/lib/directives';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
 import { PrivilegeCard } from '../../interfaces/privilege-card.interface';
 import { AbilityTagComponent } from '@shared/ui/ability-tag/ability-tag.component';
@@ -29,6 +30,7 @@ import { SHOP_CATEGORY_LABEL_KEY } from '../../lib/shop-category-label.constant'
     selector: 'app-titles',
     imports: [
         AmountPipe,
+        SwapFadeDirective,
         AbilityTagComponent,
         KitItemComponent,
         TuiIcon,
@@ -130,7 +132,18 @@ export class TitlesComponent implements OnDestroy {
      *
      * @param privilege Выбранная привилегия.
      */
+    /**
+     * Директива кроссфейда карточки товара: вход и призрак выхода.
+     */
+    protected readonly swapFade = viewChild(SwapFadeDirective);
+
     protected selectPrivilege(privilege: PrivilegeCard): void {
+        if (privilege === this.selectedPrivilege) {
+            return;
+        }
+
+        // Клон старой привилегии дорастворяется поверх новой: кроссфейд.
+        this.swapFade()?.swap();
         this.selectedPrivilege = privilege;
     }
 

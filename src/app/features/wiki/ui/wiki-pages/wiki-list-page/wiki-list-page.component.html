@@ -1,5 +1,6 @@
 <div class="lh-page-container flex flex-col gap-4 lg:gap-6">
     <app-page-header
+        appReveal
         [level]="1"
         [title]="'wiki.public.title' | translate"
         [subtitle]="'wiki.public.subtitle' | translate"
@@ -41,7 +42,11 @@
         </section>
     } @else if (hasAny()) {
         <!-- Разделы плитками: ссылки на страницы разделов, робот видит их как разделы вики. -->
-        <nav class="wiki-sections" [attr.aria-label]="'wiki.public.sections' | translate">
+        <nav
+            appReveal
+            class="wiki-sections lh-reveal--scale"
+            [attr.aria-label]="'wiki.public.sections' | translate"
+        >
             @for (tile of sectionTiles(); track tile.id) {
                 <a
                     class="wiki-sections__tile"
@@ -57,7 +62,7 @@
         </nav>
 
         <!-- Поиск и порядок одной строкой; состояние хранится в адресе, ссылкой можно поделиться -->
-        <div class="wiki-list__toolbar">
+        <div appReveal class="wiki-list__toolbar lh-reveal--soft">
             <label class="wiki-list__search">
                 <tui-icon icon="@tui.search" />
                 <input
@@ -115,7 +120,11 @@
         }
 
         @if (cards().length) {
-            <section class="wiki-list__grid" [attr.aria-label]="'wiki.public.articles' | translate">
+            <section
+                appReveal
+                class="wiki-list__grid lh-reveal--scale"
+                [attr.aria-label]="'wiki.public.articles' | translate"
+            >
                 @for (card of cards(); track card.article.id) {
                     <!-- Первый лист порядка — разворотный: занимает ряд целиком. -->
                     <a

@@ -30,7 +30,7 @@
                         type="button"
                         [disabled]="isSeasonActionLoading()"
                         (click)="createSeason()"
-                        class="py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        class="py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                         @if (isSeasonActionLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -42,7 +42,7 @@
                         type="button"
                         [disabled]="isSeasonActionLoading() || !season.isActive"
                         (click)="resetSeason()"
-                        class="py-2 px-4 rounded-xl border-2 border-lh-danger text-lh-danger bg-transparent hover:bg-lh-danger/15 font-bold uppercase transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2 shadow-sm"
+                        class="py-2 px-4 rounded-xl border-2 border-lh-danger text-lh-danger bg-transparent hover:bg-lh-danger/15 font-bold uppercase disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2 shadow-sm"
                     >
                         @if (isSeasonActionLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -93,7 +93,7 @@
                                     <button
                                         type="button"
                                         (click)="removeReward(idx)"
-                                        class="p-2 rounded-lg hover:bg-lh-danger/15 text-lh-danger transition-colors"
+                                        class="p-2 rounded-lg hover:bg-lh-danger/15 text-lh-danger"
                                         [title]="'admin.hungerGames.removeTitle' | translate"
                                     >
                                         <tui-icon icon="@tui.trash-2" class="!text-base" />
@@ -110,7 +110,7 @@
                     <button
                         type="button"
                         (click)="addReward()"
-                        class="self-start py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer flex items-center gap-2 text-lg"
+                        class="self-start py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase hover:bg-surface-4 shadow-sm cursor-pointer flex items-center gap-2 text-lg"
                     >
                         <tui-icon icon="@tui.plus" class="!text-base" />
                         {{ 'admin.hungerGames.addReward' | translate }}
@@ -126,7 +126,7 @@
                     type="button"
                     [disabled]="isSeasonActionLoading()"
                     (click)="createSeason()"
-                    class="py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    class="py-2 px-4 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                     @if (isSeasonActionLoading()) {
                         <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -160,7 +160,7 @@
                         >
                             @for (user of users; track user.user_id) {
                                 <div
-                                    class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-surface-3 transition-colors"
+                                    class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-surface-3"
                                     (click)="addPlayer(user)"
                                 >
                                     <app-image-loader
@@ -212,7 +212,7 @@
                                 <button
                                     type="button"
                                     (click)="removePlayer(idx)"
-                                    class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger transition-colors"
+                                    class="p-2 rounded-lg hover:bg-lh-danger/20 text-lh-danger"
                                     [title]="'admin.hungerGames.removeTitle' | translate"
                                 >
                                     <tui-icon icon="@tui.trash-2" class="!text-lg" />
@@ -231,7 +231,7 @@
                 type="button"
                 [disabled]="matchPlayers().length < 2 || isMatchLoading()"
                 (click)="recordMatch()"
-                class="self-start py-3 px-6 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase transition-colors hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                class="self-start py-3 px-6 rounded-xl bg-surface-3 border border-line text-ink font-bold uppercase hover:bg-surface-4 shadow-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
                 @if (isMatchLoading()) {
                     <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />

@@ -1,5 +1,5 @@
 <section class="diplomacy-page lh-page-container">
-    <app-page-header [title]="'diplomacy.title' | translate" [subtitle]="'diplomacy.subtitle' | translate" />
+    <app-page-header appReveal [title]="'diplomacy.title' | translate" [subtitle]="'diplomacy.subtitle' | translate" />
 
     @if (isLoading() && !hasStatements()) {
         <div class="diplomacy-page__loading">
@@ -45,6 +45,8 @@
         <div class="diplomacy-page__feed">
             @if (featured(); as statement) {
                 <app-diplomacy-card
+                    appReveal
+                    class="lh-reveal--soft"
                     [statement]="statement"
                     [featured]="true"
                     [initiallyExpanded]="statement.id === targetId()"
@@ -56,6 +58,9 @@
                 <div class="diplomacy-page__grid">
                     @for (statement of rest(); track statement.id || statement.timestamp) {
                         <app-diplomacy-card
+                            appReveal
+                            class="lh-reveal--soft"
+                            [appRevealDelay]="$index * 40"
                             [statement]="statement"
                             [initiallyExpanded]="statement.id === targetId()"
                             [highlighted]="statement.id === targetId()"

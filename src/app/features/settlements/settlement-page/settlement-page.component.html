@@ -24,7 +24,7 @@
         <section class="settlement-hero" aria-labelledby="settlement-title">
             <div class="settlement-hero__identity">
                 <div class="settlement-hero__namerow">
-                    <h1 id="settlement-title" class="settlement-page__title lh-display font-bold text-ink uppercase">
+                    <h1 appReveal id="settlement-title" class="settlement-page__title lh-display font-bold text-ink uppercase">
                         {{ item | settlementDisplayName }}
                     </h1>
                     <app-share-button
@@ -115,10 +115,10 @@
 
                 @if (item.description) {
                     <section class="settlement-page__about" aria-labelledby="settlement-about">
-                        <h2 id="settlement-about" class="settlement-page__h2 lh-display uppercase text-ink">
+                        <h2 appReveal id="settlement-about" class="settlement-page__h2 lh-display uppercase text-ink">
                             {{ "settlements.settlement.about" | translate }}
                         </h2>
-                        <div class="settlement-page__text lh-rich-text text-ink" [innerHTML]="item.description | markup"></div>
+                        <div appReveal class="settlement-page__text lh-rich-text text-ink lh-reveal--soft" [innerHTML]="item.description | markup"></div>
                     </section>
                 }
 
@@ -134,7 +134,8 @@
             <div class="settlement-hero__side">
                 <button
                     type="button"
-                    class="settlement-hero__photo"
+                    appReveal
+                    class="settlement-hero__photo lh-reveal--scale"
                     [attr.aria-label]="'settlements.page.openPhoto' | translate"
                     [disabled]="gallery().length === 0"
                     (click)="viewerIndex.set(0)"
@@ -148,7 +149,7 @@
                 </button>
 
                 <section class="settlement-page__population lh-panel" aria-labelledby="settlement-population">
-                    <h2 id="settlement-population" class="settlement-page__h2 lh-display uppercase text-ink">
+                    <h2 appReveal id="settlement-population" class="settlement-page__h2 lh-display uppercase text-ink">
                         {{ "settlements.detailed.population" | translate }}
                         <span class="settlement-page__count">{{ item.members.length }}</span>
                     </h2>
@@ -166,14 +167,15 @@
 
         @if (gallery().length > 1) {
             <section class="settlement-page__gallery" aria-labelledby="settlement-photos">
-                <h2 id="settlement-photos" class="settlement-page__h2 lh-display uppercase text-ink">
+                <h2 appReveal id="settlement-photos" class="settlement-page__h2 lh-display uppercase text-ink">
                     {{ "settlements.page.photos" | translate }}
                 </h2>
                 <div class="settlement-page__photos">
                     @for (photo of galleryRest(); track $index) {
                         <button
                             type="button"
-                            class="settlement-page__photo"
+                            appReveal
+                            class="settlement-page__photo lh-reveal--scale"
                             [attr.aria-label]="photo.alt"
                             (click)="viewerIndex.set($index + 1)"
                         >
@@ -187,7 +189,7 @@
 
         @if (others().length > 0) {
             <section class="settlement-page__others-section" aria-labelledby="settlement-others">
-                <h2 id="settlement-others" class="settlement-page__h2 lh-display uppercase text-ink">
+                <h2 appReveal id="settlement-others" class="settlement-page__h2 lh-display uppercase text-ink">
                     {{ "settlements.page.others" | translate }}
                 </h2>
                 <div class="settlement-page__others">

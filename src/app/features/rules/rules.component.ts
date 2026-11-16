@@ -16,6 +16,7 @@ import { GlobalExpandService } from './services/global-expand.service';
 import { ScrollAnchorDirective } from './directives/scroll-anchor.directive';
 import { RulesSearchComponent } from './ui/rules-search/rules-search.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
 import { RulesTocComponent } from './ui/rules-toc/rules-toc.component';
 import { RULES_TOC_SECTIONS } from './config/rules-toc-sections.constant';
 import { SectionStateService } from './services/section-state.service';
@@ -47,6 +48,7 @@ const SECTION_EXPAND_DELAY = 400;
         ScrollAnchorDirective,
         RulesSearchComponent,
         RulesTocComponent,
+        RevealDirective,
     ],
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.less', './styles/rules.less'],

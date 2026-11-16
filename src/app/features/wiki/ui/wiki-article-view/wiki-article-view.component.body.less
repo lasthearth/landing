@@ -57,7 +57,7 @@
         color: var(--lh-ink-3);
         text-decoration: none;
         opacity: 0;
-        transition: opacity 0.15s ease;
+        transition: opacity 0.15s var(--lh-ease-out-quart);
     }
 
     .wiki-h:hover .wiki-h__anchor {
@@ -266,7 +266,7 @@
                 border-right: 2px solid currentColor;
                 border-bottom: 2px solid currentColor;
                 transform: rotate(-45deg);
-                transition: transform 0.2s ease;
+                transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
             }
         }
 
@@ -617,7 +617,7 @@
         border-radius: 0.875rem;
         color: #fff;
         background: rgba(200, 30, 30, 0.9);
-        transition: transform 0.15s ease;
+        transition: transform 0.15s var(--lh-ease-spring);
 
         svg {
             width: 1.4rem;
@@ -627,7 +627,7 @@
     }
 
     .wiki-video:hover .wiki-video__play {
-        transform: scale(1.08);
+        transform: scale(1.05);
     }
 
     .wiki-box {

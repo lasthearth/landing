@@ -16,7 +16,7 @@
                 >
                     @for (user of result.users; track user.user_id) {
                         <div
-                            class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-lh-primary-2/30 transition-colors"
+                            class="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-lh-primary-2/30"
                             (click)="selectPlayer(user)"
                         >
                             <app-image-loader
@@ -67,7 +67,7 @@
                     <button
                         type="button"
                         (click)="clearPlayer()"
-                        class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary transition-colors"
+                        class="p-2 rounded-lg hover:bg-lh-primary-2/30 text-lh-primary"
                     >
                         <tui-icon icon="@tui.x" />
                     </button>
@@ -83,7 +83,7 @@
                         type="button"
                         [disabled]="amountControl.invalid || isLoading()"
                         (click)="addCoins()"
-                        class="flex-1 py-3 px-4 rounded-xl bg-lh-accent-3 hover:bg-brand text-white font-bold uppercase transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                        class="flex-1 py-3 px-4 rounded-xl bg-lh-accent-3 hover:bg-brand text-white font-bold uppercase disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
                     >
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -94,7 +94,7 @@
                         type="button"
                         [disabled]="amountControl.invalid || isLoading()"
                         (click)="deductCoins()"
-                        class="flex-1 py-3 px-4 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold uppercase transition disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                        class="flex-1 py-3 px-4 rounded-xl bg-red-800 hover:bg-red-700 text-white font-bold uppercase disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
                     >
                         @if (isLoading()) {
                             <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
@@ -121,7 +121,7 @@
                                 <tbody>
                                     @for (tx of txs; track tx.id) {
                                         <tr
-                                            class="border-t border-lh-primary-2/10 hover:bg-lh-primary-2/5 transition-colors"
+                                            class="border-t border-lh-primary-2/10 hover:bg-lh-primary-2/5"
                                         >
                                             <td class="p-4 text-lh-primary whitespace-nowrap text-base">
                                                 <time [appRelativeTime]="tx.createdAt" [fallback]="tx.formattedDate"></time>

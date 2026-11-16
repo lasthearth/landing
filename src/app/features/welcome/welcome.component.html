@@ -7,7 +7,7 @@
         playsinline
         disablePictureInPicture
         controlslist="nodownload nofullscreen noremoteplayback"
-        class="size-full object-cover blur-xs brightness-80"
+        class="size-full object-cover"
         poster="/landing-carousel/1.webp"
         (click)="togglePlayback(videoPlayer)"
     >
@@ -15,6 +15,11 @@
         {{ 'welcome.videoFallback' | translate }}
         <code>video</code>
     </video>
+
+    <!-- Затемнение вместо filter: brightness-80 на видео — покадровый
+         полноэкранный фильтр, самый дорогой стоячий эффект на слабых GPU.
+         Полупрозрачный слой даёт ту же глубину одним композитным слоем. -->
+    <div class="absolute inset-0 bg-night/25 pointer-events-none" aria-hidden="true"></div>
 
     <!-- Свет очага: мягкое свечение от нижней части экрана -->
     <div class="hearth-glow pointer-events-none" aria-hidden="true"></div>

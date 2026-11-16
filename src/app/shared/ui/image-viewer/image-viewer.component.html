@@ -5,8 +5,10 @@
         role="dialog"
         aria-modal="true"
         [attr.aria-label]="image.alt || ('shared.imageViewer.title' | translate)"
+        [class.image-viewer--leave]="leaving()"
         (click)="onBackdropClick($event)"
         (keydown)="onTrapKeydown($event)"
+        (animationend)="onAnimationEnd($event)"
     >
         <div class="image-viewer__top">
             @if (hasMany()) {
@@ -58,14 +60,21 @@
             </button>
         }
 
-        <img
-            class="image-viewer__image"
-            [src]="image.src"
-            [alt]="image.alt"
-            draggable="false"
-            (pointerdown)="onPointerDown($event)"
-            (pointerup)="onPointerUp($event)"
-        />
+        <!--
+            Носитель вылета картинки: прозрачен и несёт только transform,
+            картинка с тенью — слой-потомок (правила appMotionBlur). Шлейф
+            рисуется на уходе, когда кадр летит вниз на 12vh.
+        -->
+        <div class="image-viewer__fly" appMotionBlur [class.image-viewer__fly--leave]="leaving()">
+            <img
+                class="image-viewer__image"
+                [src]="image.src"
+                [alt]="image.alt"
+                draggable="false"
+                (pointerdown)="onPointerDown($event)"
+                (pointerup)="onPointerUp($event)"
+            />
+        </div>
 
         @if (image.caption || image.date || image.note) {
             <div class="image-viewer__caption">

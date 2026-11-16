@@ -107,10 +107,13 @@
                         "runner": "vitest",
                         "tsConfig": "tsconfig.spec.json",
                         "include": ["src/**/*.spec.ts"],
-                        // Два файла про сжатие картинок требуют настоящего холста:
-                        // createImageBitmap и 2D-контекст. Их выполняет test-browser.
+                        // Файлы про сжатие картинок требуют настоящего холста:
+                        // createImageBitmap и 2D-контекст. Спек плашки вкладок
+                        // меряет настоящие DOM-rect и пишет Jasmine withContext.
+                        // Их выполняет test-browser.
                         "exclude": [
                             "src/app/shared/lib/compress-image.function.spec.ts",
+                            "src/app/shared/lib/directives/tabs-pill.directive.spec.ts",
                             "src/app/shared/ui/image-file-input/image-file-input.component.spec.ts"
                         ],
                         "codeCoverage": false,
@@ -125,6 +128,7 @@
                         "tsConfig": "tsconfig.spec.browser.json",
                         "include": [
                             "src/app/shared/lib/compress-image.function.spec.ts",
+                            "src/app/shared/lib/directives/tabs-pill.directive.spec.ts",
                             "src/app/shared/ui/image-file-input/image-file-input.component.spec.ts"
                         ],
                         "inlineStyleLanguage": "less",

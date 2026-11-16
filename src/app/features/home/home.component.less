@@ -130,20 +130,35 @@
  * Карточка метрики «Пульса сервера».
  * Геометрия и поверхность приходят из .lh-panel--bezel, здесь только
  * реакция на курсор и медальон иконки.
+ * Ховер: подъём на transform (пружина), свечение рамки — на псевдоэлементе
+ * с прозрачностью, чтобы не перерисовывать тень каждый кадр.
  */
 .pulse-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    transition:
-        transform var(--lh-dur-mid) var(--lh-ease-spring),
-        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 
-    &:hover {
-        transform: translateY(-4px);
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
         box-shadow:
             inset 0 1px 1px rgba(255, 255, 255, 0.14),
             inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
             var(--lh-shadow-lift);
+        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+    }
+
+    &:hover::after {
+        opacity: 1;
     }
 
     /**
@@ -157,27 +172,41 @@
 
 /**
  * Медальон иконки метрики.
+ * Цвет фона на ховере меняется мгновенно (цвет, не движение), свечение —
+ * на псевдоэлементе с прозрачностью.
  */
 .pulse-card__icon {
+    position: relative;
     background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
     color: var(--lh-brand-ink);
     box-shadow:
         inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 22%, transparent),
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
 
-    .pulse-card:hover & {
-        background-color: color-mix(in srgb, var(--lh-brand) 22%, transparent);
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
         box-shadow:
             inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 30%, transparent),
             0 0 16px color-mix(in srgb, var(--lh-accent) 30%, transparent);
+        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
+
+    .pulse-card:hover & {
+        background-color: color-mix(in srgb, var(--lh-brand) 22%, transparent);
+    }
+
+    .pulse-card:hover &::before {
+        opacity: 1;
     }
 }
 
 :host-context(html[data-theme='dark']) {
-    .pulse-card:hover {
+    .pulse-card::after {
         box-shadow:
             inset 0 1px 1px rgba(255, 255, 255, 0.06),
             inset 0 0 0 1px rgba(233, 223, 201, 0.09),
@@ -190,12 +219,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .pulse-card {
+    .pulse-card,
+    .pulse-card::after,
+    .pulse-card__icon::before {
         transition: none;
+    }
 
-        &:hover {
-            transform: none;
-        }
+    .pulse-card:hover {
+        transform: none;
     }
 }
 

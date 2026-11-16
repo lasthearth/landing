@@ -43,7 +43,7 @@
         </div>
 
         <!-- Карточка выбранного набора -->
-        <div class="lh-panel flex-1 flex flex-col gap-4 lg:gap-5 p-4 lg:p-6">
+        <div appSwapFade class="lh-panel flex-1 flex flex-col gap-4 lg:gap-5 p-4 lg:p-6">
             <!-- Название выбранного набора и его категория -->
             <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                 <h2 class="lh-display text-2xl lg:text-3xl text-lh-primary">{{ selectedPrivilege!.title }}</h2>
@@ -173,7 +173,7 @@
             <button
                 type="button"
                 (click)="openPurchaseDialog()"
-                class="self-stretch text-parchment-3 transition-colors duration-300 font-bold cursor-pointer bg-brand hover:bg-brand-hover rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-xl lg:text-2xl flex items-center justify-center gap-3 mt-2"
+                class="self-stretch text-parchment-3 font-bold cursor-pointer bg-brand hover:bg-brand-hover rounded-xl py-3 lg:py-4 px-6 lg:px-8 text-xl lg:text-2xl flex items-center justify-center gap-3 mt-2"
             >
                 <tui-icon icon="@tui.shopping-cart" class="size-6!" />
                 <span>{{ 'market.common.buyFor' | translate }}</span>

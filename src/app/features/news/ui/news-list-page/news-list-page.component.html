@@ -2,6 +2,7 @@
     <app-breadcrumbs [items]="crumbs()" />
 
     <app-page-header
+        appReveal
         [level]="1"
         [title]="'news.list.title' | translate"
         [subtitle]="'news.list.subtitle' | translate"
@@ -15,6 +16,9 @@
             <div class="news-list__grid">
                 @for (item of news(); track item.id) {
                     <app-news-card
+                        appReveal
+                        class="lh-reveal--scale"
+                        [appRevealDelay]="$index * 45"
                         variant="compact"
                         [id]="item.id"
                         [title]="item.title"

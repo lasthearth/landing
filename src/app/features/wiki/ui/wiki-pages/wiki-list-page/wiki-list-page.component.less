@@ -15,6 +15,20 @@
     flex: none;
 }
 
+/**
+ * Сортировка — эксклюзивный переключатель без `role="tablist"`: одна из трёх
+ * кнопок активна (`aria-current`), поэтому неактивная подаётся на 3px к курсору
+ * тем же движением, что и вкладки. Только transform, 150ms пружиной; активную
+ * исключаем, чтобы она стояла на месте.
+ */
+.wiki-list__sort .lh-chip {
+    transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
+}
+
+.wiki-list__sort .lh-chip:hover:not([aria-current='true']) {
+    transform: translateX(3px);
+}
+
 .wiki-list__search {
     display: flex;
     align-items: center;
@@ -106,9 +120,7 @@
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    transition:
-        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
-        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 
     &:hover {
         transform: translateY(-2px);
@@ -198,7 +210,7 @@
     inset: 0;
     background-size: cover;
     background-repeat: no-repeat;
-    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 // Своей обложки нет — скриншот раздела, приглушённый и тёплый: видно, что это
@@ -442,9 +454,7 @@
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-parchment-3) 12%, transparent);
     color: var(--lh-parchment-3);
     text-decoration: none;
-    transition:
-        transform var(--lh-dur-mid) var(--lh-ease-out-quart),
-        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 
     // Вуаль снизу: имя и счётчик читаются на любом кадре.
     &::after {
@@ -483,7 +493,7 @@
     background-size: cover;
     background-position: center;
     filter: saturate(0.8);
-    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 // Пустой раздел не прячем — в него можно предложить статью, — но гасим.

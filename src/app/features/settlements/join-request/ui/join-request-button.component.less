@@ -51,7 +51,6 @@
     text-decoration: underline;
     text-decoration-style: dashed;
     text-underline-offset: 3px;
-    transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .join-request__cancel:hover:not(:disabled) {
@@ -65,10 +64,4 @@
 .join-request__hint {
     font-size: 1rem;
     color: var(--lh-ink-3);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .join-request__cancel {
-        transition: none;
-    }
 }

@@ -1,19 +1,25 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 import { SkeletonComponent } from './skeleton.component';
 
 /**
  * Скелетон карточки наделы из списка.
+ *
+ * Пульс боковой картинки ставится на паузу вне экрана.
  */
 @Component({
     selector: 'app-settlement-card-skeleton',
     standalone: true,
-    imports: [SkeletonComponent],
+    imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div class="p-[0.3125rem] rounded-[0.875rem] bg-surface-3/60">
             <div
                 class="flex xl:flex-row flex-col bg-lh-primary-2/10 relative rounded-[0.5625rem] h-full xl:max-h-[400px] overflow-hidden"
             >
-                <div class="hidden xl:block xl:w-2/5 w-full shrink-0 h-full bg-lh-primary-2/30 animate-pulse"></div>
+                <div
+                    appPauseOffscreen
+                    class="hidden xl:block xl:w-2/5 w-full shrink-0 h-full bg-lh-primary-2/30 animate-pulse"
+                ></div>
 
                 <div class="xl:w-3/5 w-full p-5 flex flex-col gap-3 justify-between overflow-hidden">
                     <div class="flex flex-col gap-2.5">

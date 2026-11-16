@@ -30,9 +30,6 @@
     border-radius: 0.625rem;
     font-size: 1rem;
     font-weight: 600;
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .join-requests__action:disabled {
@@ -55,10 +52,4 @@
 
 .join-requests__action--reject:hover:not(:disabled) {
     background-color: color-mix(in srgb, var(--lh-danger-ink) 22%, transparent);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .join-requests__action {
-        transition: none;
-    }
 }

@@ -1,5 +1,6 @@
 <div class="lh-page-container flex flex-col gap-4 lg:gap-6">
     <app-page-header
+        appReveal
         [level]="1"
         [title]="'tickets.player.title' | translate"
         [subtitle]="'tickets.player.subtitle' | translate"
@@ -55,7 +56,9 @@
         <section class="support__list">
             @for (ticket of tickets(); track ticket.id) {
                 <a
-                    class="support__card lh-panel lh-card-glow"
+                    appReveal
+                    class="support__card lh-panel lh-card-glow lh-reveal--soft"
+                    [appRevealDelay]="$index * 40"
                     [class.support__card--unread]="ticket.unread"
                     [routerLink]="['/profile/support', ticket.id]"
                 >

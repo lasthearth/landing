@@ -27,6 +27,7 @@ import { PlayerAboutComponent } from '../player-about/player-about.component';
 import { PlayerBadgesComponent } from '../player-badges/player-badges.component';
 import { bannerById, PlayerFrameComponent, ProfileBannerComponent } from '@entities/player-style';
 import { ProfileStyleService } from '../../api/profile-style.service';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Адрес сайта для канонических ссылок.
@@ -73,6 +74,7 @@ type PlayerPageState =
         PlayerFrameComponent,
         ProfileBannerComponent,
         TuiPreview,
+        RevealDirective,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

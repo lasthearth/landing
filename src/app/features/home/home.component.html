@@ -174,7 +174,7 @@
     </section>
 } @else if (featuredNews(); as featured) {
     <section id="news" class="home-news lh-page-container pt-8 pb-0 flex flex-col gap-5" aria-labelledby="home-news-title">
-        <h2 id="home-news-title" class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
+        <h2 id="home-news-title" class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink" appReveal>
             {{ "home.news.title" | translate }}
         </h2>
 
@@ -193,11 +193,12 @@
             [trackViews]="true"
             (delete)="deleteNews(featured.id)"
             class="!h-full w-full"
+            appReveal
         />
 
         <!-- Остальные: сетка в две колонки, на телефоне — одна под другой -->
         @if (restNews().length > 0) {
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" appReveal>
                 @for (item of restNews(); track item.id) {
                     <app-news-card
                         variant="compact"
@@ -261,11 +262,12 @@
 <section class="lh-page-container pt-8 pb-0">
     <div
         class="recruit-panel flex flex-col lg:flex-row gap-0 rounded-2xl shadow-[inset_0_0_48px_rgba(255,255,255,0.04),inset_0_1px_0_rgba(255,255,255,0.08)] overflow-hidden"
+        appReveal
     >
         <!-- Текст и роли -->
         <div class="flex flex-col gap-5 p-6 lg:p-8 lg:w-3/5">
             <div class="flex flex-col gap-2 pl-4 border-l-4 border-danger-strong/60">
-                <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
+                <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink" appReveal>
                     {{ "home.recruit.title" | translate }}
                 </h2>
                 <p class="text-xl font-medium text-ink max-w-2xl">
@@ -343,33 +345,33 @@
 @if (galleryStrip().length > 0) {
     <section class="lh-page-container pt-8 pb-0 flex flex-col gap-4">
         <div class="flex items-center justify-between gap-4">
-            <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
+            <h2 class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink" appReveal>
                 {{ "home.galleryStrip.title" | translate }}
             </h2>
             <a
                 [routerLink]="['/gallery']"
-                class="shrink-0 inline-flex items-center gap-2 text-lg font-bold !text-brand-ink hover:!text-brand-hover transition-colors no-underline!"
+                class="shrink-0 inline-flex items-center gap-2 text-lg font-bold !text-brand-ink hover:!text-brand-hover no-underline!"
             >
                 {{ "home.galleryStrip.more" | translate }}
                 <tui-icon icon="@tui.chevron-right" class="size-5!" />
             </a>
         </div>
 
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lh-stagger-list">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lh-stagger-list" appReveal>
             @for (item of galleryStrip(); track item.id) {
                 <a
                     [routerLink]="['/gallery']"
-                    class="group relative block rounded-2xl overflow-hidden border-2 border-parchment/20 bg-night hover:border-brand transition duration-300 cursor-pointer aspect-square"
+                    class="group relative block rounded-2xl overflow-hidden border-2 border-parchment/20 bg-night hover:border-brand cursor-pointer aspect-square"
                     [attr.aria-label]="item.label"
                 >
                     <app-image-loader
                         [src]="item.thumb"
                         [alt]="item.label"
                         class="block h-full w-full"
-                        imageClass="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        imageClass="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
                     />
                     <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3"
+                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end p-3"
                     >
                         <bdi class="text-white text-sm font-semibold truncate">{{ item.author }}</bdi>
                     </div>

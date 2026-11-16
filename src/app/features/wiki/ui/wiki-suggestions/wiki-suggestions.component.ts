@@ -12,6 +12,7 @@ import { firstValueFrom } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { RevealDirective } from '@shared/lib/directives';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog/confirm-dialog.service';
 import { grpcStatusCode } from '@shared/lib/grpc-status-code.function';
 import { GrpcCode } from '@shared/lib/grpc-code.constant';
@@ -44,7 +45,7 @@ interface ReviewDiffLine extends DiffLine {
  */
 @Component({
     selector: 'app-wiki-suggestions',
-    imports: [EmptyStateComponent, TranslatePipe, TuiIcon, WikiArticleViewComponent],
+    imports: [EmptyStateComponent, TranslatePipe, TuiIcon, WikiArticleViewComponent, RevealDirective],
     templateUrl: './wiki-suggestions.component.html',
     styleUrl: './wiki-suggestions.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

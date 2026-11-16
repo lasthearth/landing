@@ -273,9 +273,10 @@
     font-size: 1rem;
     font-weight: 800;
     text-decoration: none;
+    /* Рамка-кольцо на ховере меняется мгновенно: анимация box-shadow
+       перекрашивает слой каждый кадр. Цвет фона — токенами. */
     transition:
         background-color var(--lh-dur-fast) var(--lh-ease-smooth),
-        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth),
         color var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 

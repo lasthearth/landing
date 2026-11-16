@@ -1,3 +1,14 @@
+<!-- ПРОТОТИП РЕДИЗАЙНА, НЕ ПРОДАКШН: варианты страницы по ?variant=. -->
+@if (marketProto() === 'prais') {
+    <app-proto-prais />
+    <app-prototype-switcher [variants]="protoVariants" [current]="'prais'" [names]="protoNames" />
+} @else if (marketProto() === 'vitrina') {
+    <app-proto-vitrina />
+    <app-prototype-switcher [variants]="protoVariants" [current]="'vitrina'" [names]="protoNames" />
+} @else if (marketProto() === 'split') {
+    <app-proto-split />
+    <app-prototype-switcher [variants]="protoVariants" [current]="'split'" [names]="protoNames" />
+} @else {
 <div class="lh-page-container flex flex-col gap-6 lg:gap-8">
     <!-- Шапка: заголовок, баланс и быстрый доступ к пополнению -->
     <app-page-header [title]="'market.marketPage.title' | translate" [subtitle]="'market.marketPage.subtitle' | translate">
@@ -26,8 +37,9 @@
         </div>
     </app-page-header>
 
-    <!-- Вкладки: ключи сохраняются в адресе (?tab=), ссылка ведёт сразу на группу -->
-    <div class="lh-chips" role="tablist" [attr.aria-label]="'market.marketPage.title' | translate">
+    <!-- Вкладки: ключи сохраняются в адресе (?tab=), ссылка ведёт сразу на группу.
+        appTabsPill — летающая плашка активной вкладки со шлейфом движения. -->
+    <div class="lh-chips" role="tablist" appTabsPill [attr.aria-label]="'market.marketPage.title' | translate">
         @for (tab of tabs; track tab; let index = $index) {
             <button
                 type="button"
@@ -41,23 +53,47 @@
         }
     </div>
 
-    @switch (activeItemIndex()) {
-        @case (0) {
-            <div class="market-tab-content">
-                <app-titles />
-            </div>
-        }
-        @case (1) {
-            <div class="market-tab-content">
-                <app-kits />
-            </div>
-        }
-        @case (2) {
-            <div class="market-tab-content">
-                <app-special />
-            </div>
-        }
-    }
+    <!--
+        Сцена смены вкладок: уходящая панель лежит поверх входящей absolute
+        и снимается по animationend, входящая пересоздаётся @switch, чтобы
+        входная анимация играла на каждую смену.
+    -->
+    <!--
+        Панели живут постоянно, переключение прячет/показывает (display):
+        ремоунт на каждый клик перезапускал скелетоны всех картинок,
+        stagger сетки и подписки загрузчиков (профайл: 1581 маркер
+        анимации скелетонов и 604 lh-stagger-fade-in за 23 с замера).
+        CSS-анимация входа перезапускается сама — смена display:none
+        на block заново проигрывает keyframes. Уход — кроссфейд живой панели:
+         она растворяется 150ms поверх входящей и скрывается по animationend.
+    -->
+    <div class="market-tab-stage" [attr.data-direction]="tabDirection()">
+        <div
+            class="market-tab-content"
+            [class.market-tab-content--hidden]="activeItemIndex() !== 0 && leavingIndex() !== 0"
+            [class.market-tab-content--exit]="leavingIndex() === 0"
+            (animationend)="onTabLeaveEnd($event, 0)"
+        >
+            <app-titles />
+        </div>
+        <div
+            class="market-tab-content"
+            [class.market-tab-content--hidden]="activeItemIndex() !== 1 && leavingIndex() !== 1"
+            [class.market-tab-content--exit]="leavingIndex() === 1"
+            (animationend)="onTabLeaveEnd($event, 1)"
+        >
+            <app-kits />
+        </div>
+        <div
+            class="market-tab-content"
+            [class.market-tab-content--hidden]="activeItemIndex() !== 2 && leavingIndex() !== 2"
+            [class.market-tab-content--exit]="leavingIndex() === 2"
+            (animationend)="onTabLeaveEnd($event, 2)"
+        >
+            <app-special />
+        </div>
+    </div>
+
 
     <!--
         Раздел «На что идут деньги»: компактное тёмное поле, три полосы —
@@ -82,16 +118,17 @@
 
         <div class="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-3">
             @for (shot of worldShots; track shot.image) {
-                <img
-                    [src]="shot.image"
-                    [alt]="shot.altKey | translate"
-                    class="aspect-video w-full min-w-0 rounded-xl object-cover"
-                    decoding="async"
-                    width="1152"
-                    height="648"
-                    appReveal
-                    [appRevealDelay]="120 + $index * 45"
-                />
+                <!-- Появление на обёртке, а не на <img>: reveal пишет transform. -->
+                <div class="min-w-0 lh-reveal--scale" appReveal [appRevealDelay]="120 + $index * 45">
+                    <img
+                        [src]="shot.image"
+                        [alt]="shot.altKey | translate"
+                        class="aspect-video w-full rounded-xl object-cover"
+                        decoding="async"
+                        width="1152"
+                        height="648"
+                    />
+                </div>
             }
         </div>
 
@@ -109,3 +146,4 @@
         </dl>
     </section>
 </div>
+}

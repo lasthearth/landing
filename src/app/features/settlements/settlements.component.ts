@@ -21,6 +21,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { SettlementFinderService } from './settlement-finder/settlement-finder.service';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Поле сортировки списка селений.
@@ -68,6 +69,7 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
         ErrorStateComponent,
         TranslatePipe,
         TuiIcon,
+        RevealDirective,
     ],
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.less',

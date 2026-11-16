@@ -1,5 +1,5 @@
 <div class="videos-page lh-page-container">
-    <app-page-header class="videos-page__header" [title]="'videos.title' | translate" [subtitle]="'videos.subtitle' | translate" />
+    <app-page-header appReveal class="videos-page__header" [title]="'videos.title' | translate" [subtitle]="'videos.subtitle' | translate" />
 
     <div class="videos-tabs lh-chips" role="tablist" [attr.aria-label]="'videos.tabsLabel' | translate">
         @for (item of kinds; track item) {
@@ -58,7 +58,14 @@
             @if (visible().length > 0) {
                 <div class="videos-page__grid" [class.videos-page__grid--shorts]="isShorts()">
                     @for (video of visible(); track video.id) {
-                        <app-video-card [video]="video" [vertical]="isShorts()" (clickVideo)="openVideo(video)" />
+                        <app-video-card
+                            appReveal
+                            class="lh-reveal--scale"
+                            [appRevealDelay]="$index * 45"
+                            [video]="video"
+                            [vertical]="isShorts()"
+                            (clickVideo)="openVideo(video)"
+                        />
                     }
                 </div>
             }

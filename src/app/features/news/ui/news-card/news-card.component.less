@@ -16,9 +16,7 @@
 .news-card {
     position: relative;
     block-size: 100%;
-    transition:
-        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 /* Отклик карточки: подъём и тёплая фаска вместо свечения и второй тени. */
@@ -43,7 +41,7 @@
 }
 
 .news-card__image {
-    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .news-card:hover .news-card__image {
@@ -73,7 +71,6 @@
     color: var(--lh-ink);
     text-wrap: balance;
     overflow-wrap: anywhere;
-    transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .news-card:hover .news-card__title {
@@ -186,9 +183,6 @@
     border-radius: var(--lh-radius-md);
     color: var(--lh-ink-3);
     background-color: color-mix(in srgb, var(--lh-surface-3) 70%, transparent);
-    transition:
-        color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .news-card__delete:hover {

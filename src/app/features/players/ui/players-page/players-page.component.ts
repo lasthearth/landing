@@ -48,6 +48,7 @@ import {
     switchMap,
 } from 'rxjs';
 import { PlayerCardComponent } from '../player-card/player-card.component';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Пауза после последнего нажатия клавиши, прежде чем искать.
@@ -94,6 +95,7 @@ type PlayersState =
         PaginationComponent,
         SkeletonComponent,
         PlayerCardComponent,
+        RevealDirective,
     ],
     templateUrl: './players-page.component.html',
     styleUrl: './players-page.component.less',

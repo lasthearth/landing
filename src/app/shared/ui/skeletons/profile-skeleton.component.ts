@@ -1,19 +1,23 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PauseOffscreenDirective } from '@shared/lib/directives';
 import { SkeletonComponent } from './skeleton.component';
 
 /**
  * Скелетон шапки профиля.
+ *
+ * Пульс баннера ставится на паузу вне экрана.
  */
 @Component({
     selector: 'app-profile-skeleton',
     standalone: true,
-    imports: [SkeletonComponent],
+    imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div class="text-lh-primary flex flex-col gap-2 p-6">
             <div class="grid gap-4 grid-cols-[1fr_auto_auto] max-[1710px]:grid-cols-1">
                 <div class="flex gap-4 max-[640px]:flex-col">
                     <div class="flex flex-col shrink-0 overflow-hidden rounded-2xl max-[640px]:hidden">
                         <div
+                            appPauseOffscreen
                             class="w-full max-h-44 max-w-40 aspect-[10/12] bg-lh-primary-2/30 animate-pulse rounded-t-2xl"
                         ></div>
                         <app-skeleton width="40" height="10" rounded="none" />

@@ -7,7 +7,7 @@
     одинаковые отступы, пустые состояния и высота.
 -->
 @if (isVerifiedUser) {
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-stretch mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-stretch mb-8 lh-reveal--soft" appReveal>
         <section class="lh-panel rounded-2xl p-4 sm:p-5 flex flex-col gap-3 h-full">
             <header class="flex items-center justify-between gap-3 min-h-9">
                 <h2 class="m-0 flex items-center gap-2 text-lg sm:text-xl font-bold text-ink">
@@ -164,6 +164,9 @@
                 [count]="getCount(leaderBoard[1])"
                 [userImage]="getUserAvatar(leaderBoard[1]?.user_id)"
                 [userId]="leaderBoard[1]?.user_id"
+                class="lh-reveal--scale"
+                appReveal
+                [appRevealDelay]="0"
             />
             <app-leader-card
                 [playerName]="leaderBoard[0]?.name ?? ''"
@@ -172,6 +175,9 @@
                 [type]="getTypeLabel()"
                 [userImage]="getUserAvatar(leaderBoard[0]?.user_id)"
                 [userId]="leaderBoard[0]?.user_id"
+                class="lh-reveal--scale"
+                appReveal
+                [appRevealDelay]="45"
             />
             <app-leader-card
                 [playerName]="leaderBoard[2]?.name ?? ''"
@@ -180,6 +186,9 @@
                 [type]="getTypeLabel()"
                 [userImage]="getUserAvatar(leaderBoard[2]?.user_id)"
                 [userId]="leaderBoard[2]?.user_id"
+                class="lh-reveal--scale"
+                appReveal
+                [appRevealDelay]="90"
             />
         </div>
     }

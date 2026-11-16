@@ -204,9 +204,9 @@
     aspect-ratio: 16 / 7;
     border-radius: 0.75rem;
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--lh-ink) 12%, transparent);
-    transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
+    /* Подъём на ховере — движение (пружина); рамка выделения меняется мгновенно:
+       анимация box-shadow перекрашивает большие слои каждый кадр. */
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .style-banner--locked {
@@ -247,7 +247,7 @@
     font: inherit;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: background-color var(--lh-dur-fast) var(--lh-ease-smooth);
 
     &:hover:not(:disabled) {
         background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
