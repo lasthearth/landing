@@ -28,17 +28,17 @@ function makeSettlement(overrides: Partial<ISettlement>): ISettlement {
 
 describe('isGuildSettlement', () => {
     it('признаёт гильдией надел с типом GUILD из API', () => {
-        expect(isGuildSettlement(makeSettlement({ type: 'GUILD', name: 'Купцы' }))).toBeTrue();
-        expect(isGuildSettlement(makeSettlement({ type: SETTLEMENT_TYPE.guild, name: 'Купцы' }))).toBeTrue();
+        expect(isGuildSettlement(makeSettlement({ type: 'GUILD', name: 'Купцы' }))).toBe(true);
+        expect(isGuildSettlement(makeSettlement({ type: SETTLEMENT_TYPE.guild, name: 'Купцы' }))).toBe(true);
     });
 
     it('признаёт гильдией старый надел с маркером в названии', () => {
-        expect(isGuildSettlement(makeSettlement({ type: 'CAMP', name: `${GUILD_MARKER} Купцы` }))).toBeTrue();
+        expect(isGuildSettlement(makeSettlement({ type: 'CAMP', name: `${GUILD_MARKER} Купцы` }))).toBe(true);
     });
 
     it('не считает гильдией надел других ступеней', () => {
-        expect(isGuildSettlement(makeSettlement({ type: 'CAMP' }))).toBeFalse();
-        expect(isGuildSettlement(makeSettlement({ type: 'PROVINCE' }))).toBeFalse();
-        expect(isGuildSettlement(makeSettlement({ type: SETTLEMENT_TYPE.camp }))).toBeFalse();
+        expect(isGuildSettlement(makeSettlement({ type: 'CAMP' }))).toBe(false);
+        expect(isGuildSettlement(makeSettlement({ type: 'PROVINCE' }))).toBe(false);
+        expect(isGuildSettlement(makeSettlement({ type: SETTLEMENT_TYPE.camp }))).toBe(false);
     });
 });

@@ -4,6 +4,7 @@ export const HEADER_I18N = {
             mainMenu: 'Главное меню',
             logoAlt: 'Логотип сервера',
             players: 'Игроков',
+            serverTime: 'Время сервера',
             nav: {
                 home: 'Главная',
                 startGame: 'НАЧАТЬ ИГРУ',
@@ -42,6 +43,7 @@ export const HEADER_I18N = {
             mainMenu: 'Main menu',
             logoAlt: 'Server logo',
             players: 'Players',
+            serverTime: 'Server time',
             nav: {
                 home: 'Home',
                 startGame: 'START GAME',

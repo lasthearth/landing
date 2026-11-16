@@ -1,0 +1,881 @@
+/**
+ * Шапка «Корона»: центростремительная композиция на ночном фоне
+ * страницы, одинаковом в обеих темах. Текст ярусов 1–3 — пергаментные токены
+ * (`--lh-parchment*`), мега-панель и мобильная шторка — пластины на парных
+ * токенах `--lh-surface*` с чернилами, поэтому тёмная тема меняет только
+ * плотность сияния через `:host-context(html[data-theme='dark'])`.
+ *
+ * Единственный циклический эффект — дыхание сияния вензеля: 3.2s на оборот
+ * (предел 2.5–4s), `ease-in-out` как разрешённое исключение для бесконечной
+ * пульсации. Остальное движение — переходы состояний: шторка 260/160ms,
+ * каскад плиток по 30ms, скользящее подчёркивание 360ms, отклик нажатия 120ms.
+ * При `prefers-reduced-motion` дыхание стоит в видимом состоянии, переходы
+ * сняты, содержимое шторок не спрятано.
+ *
+ * Ховер цвета мгновенный: color и background-color в переходы не входят.
+ * Шапка не липкая: `position: relative`, как у боевой.
+ */
+
+:host {
+    display: block;
+    position: relative;
+
+    /* Плотность янтарного сияния вензеля: ночной фон тёмной темы глубже,
+       поэтому сила подменяется токеном, а не селектором. */
+    --crown-aura: 30%;
+}
+
+:host-context(html[data-theme='dark']) {
+    --crown-aura: 44%;
+}
+
+/* Боковые поля шапки задаёт единственная переменная `--crown-fire-gutter`
+   из внешнего «Очага»: она же гасится отрицательными полями шторки, поэтому
+   панель «Сообщества» и колонка контента всегда совпадают по краям. */
+.crown {
+    position: relative;
+    padding: 0.5rem var(--crown-fire-gutter) 0;
+}
+
+/* ---- Ярус 1: строка телеметрии и управления ---- */
+
+.crown__strip {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    min-height: 2.75rem;
+    padding-bottom: 0.375rem;
+}
+
+/* Кромка строки читается светом, а не полосой: линия гаснет к краям колонки. */
+.crown__strip::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--lh-parchment-dim) 22%, transparent) 18% 82%,
+        transparent
+    );
+}
+
+.crown__telemetry {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+/* Минимальная ширина держит размер зоны: прочерк без ответа сервера
+   (48px) и двухзначные числа (47px) почти равны, поэтому предел 50px
+   не сдвигает строку и не добавляет воздуха между числами и подписью.
+   Трёхзначные числа расширяют зону сами. */
+.crown__count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    margin: 0;
+    min-width: 3.125rem;
+    color: var(--lh-parchment-2);
+    font-size: 1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.crown__count-max {
+    color: var(--lh-parchment-dim);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.crown__telemetry-label {
+    color: var(--lh-parchment-dim);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Вторая пара «подпись + значение» отбита расстоянием, а не знаком-разделителем. */
+.crown__telemetry-label--next {
+    margin-left: 0.5rem;
+}
+
+/* Игровое время сервера: дата и часы одной строкой, без переноса. */
+.crown__clock {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--lh-parchment-dim);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.crown__controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+}
+
+/* Прозрачные кнопки управления: отклик нажатия через `scale`, ховер цвета
+   мгновенный (color и background-color в переход не входят). */
+.crown__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--lh-parchment-dim);
+    font-size: 1rem;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.crown__icon:hover {
+    background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+    color: var(--lh-parchment-3);
+}
+
+.crown__icon:active {
+    scale: 0.98;
+}
+
+.crown__lang {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+/* Колокольчик рисует глобальную залитую пилюлю `.nav-button`; в этом варианте
+   строка управления прозрачная, поэтому пилюля локально приведена к её виду. */
+.crown__bell ::ng-deep .nav-button {
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-parchment-dim);
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.crown__bell ::ng-deep .nav-button:hover {
+    background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-parchment-3);
+    transform: none;
+}
+
+.crown__bell ::ng-deep .nav-button:active {
+    transform: none;
+    scale: 0.98;
+}
+
+.crown__bell ::ng-deep .nav-button--active,
+.crown__bell ::ng-deep .nav-button--active:hover {
+    background-color: color-mix(in srgb, var(--lh-parchment) 14%, transparent);
+    background-image: none;
+    box-shadow: none;
+    color: var(--lh-accent-soft);
+}
+
+/* Карточка игрока: аватар, имя и баланс янтарём на ночном фоне.
+   Радиусы концентричны: 12px у карточки, 12−4=8px у рамки аватара,
+   а у изображения — 8px минус фактическая толщина рамки. */
+.crown__player {
+    --crown-player-pad: 0.25rem;
+    --crown-avatar-radius: calc(var(--lh-radius-md) - var(--crown-player-pad));
+
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: var(--crown-player-pad) 0.75rem var(--crown-player-pad) var(--crown-player-pad);
+    border-radius: var(--lh-radius-md);
+    background-color: color-mix(in srgb, var(--lh-parchment) 8%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-parchment-dim) 26%, transparent);
+    color: var(--lh-parchment-2);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.crown__player:hover {
+    background-color: color-mix(in srgb, var(--lh-parchment) 14%, transparent);
+    color: var(--lh-parchment-2);
+}
+
+.crown__player:active {
+    scale: 0.98;
+}
+
+.crown__avatar {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--crown-avatar-radius);
+}
+
+/* У общей рамки по умолчанию 28%: в шапке это ломало концентричность.
+   Здесь оба слоя получают точные радиусы карточки, без процентов. */
+.crown__avatar ::ng-deep .pframe {
+    --radius: var(--crown-avatar-radius);
+}
+
+.crown__avatar ::ng-deep .pframe__inner {
+    border-radius: max(0px, calc(var(--crown-avatar-radius) - var(--pad, max(2px, 3.4%))));
+}
+
+/* Точка внимания на аватаре обводится ночным кольцом, чтобы не сливаться
+   с картинкой. */
+.crown__avatar {
+    .crown__dot {
+        box-shadow: 0 0 0 2px var(--lh-night);
+    }
+}
+
+.crown__avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.crown__avatar-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    color: var(--lh-parchment-dim);
+    font-size: 2.25rem;
+}
+
+.crown__player-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.crown__player-name {
+    max-width: 9rem;
+    overflow: hidden;
+    color: var(--lh-parchment-2);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.crown__coins {
+    display: flex;
+    align-items: center;
+    gap: 0.3125rem;
+    color: var(--lh-accent-soft);
+    font-size: 0.9375rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+}
+
+/* Осколок — вытянутый спрайт, высоту держим свою. */
+.crown__spark {
+    flex: none;
+    width: auto;
+    height: 1.125rem;
+    object-fit: contain;
+}
+
+/* Вход гостя — единственное цветное действие в строке управления. */
+.crown__signin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-accent-soft) 45%, transparent);
+    color: var(--lh-accent-soft);
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.crown__signin:hover {
+    background-color: color-mix(in srgb, var(--lh-accent-soft) 12%, transparent);
+    color: var(--lh-accent-soft);
+}
+
+.crown__signin:active {
+    scale: 0.98;
+}
+
+/* Точка «есть новое»: абсолютная на знаках и плитках, строчная в ссылках. */
+.crown__dot {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-brand);
+    pointer-events: none;
+}
+
+.crown__dot--inline {
+    position: static;
+    flex: none;
+    width: 0.4375rem;
+    height: 0.4375rem;
+}
+
+/* ---- Ярус 2: вензель с сиянием ---- */
+
+.crown__crest {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0 0.25rem;
+}
+
+/* Сияние — радиальный градиент без blur(): размытие поверх текста даёт муар.
+   Единственный циклический эффект варианта: дыхание 3.2s, амплитуда держится
+   сдержанной, чтобы венец не пульсировал как индикация. */
+.crown__aura {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(34rem, 100%);
+    height: 7.5rem;
+    translate: -50% -50%;
+    background: radial-gradient(
+        closest-side,
+        color-mix(in srgb, var(--lh-brand) var(--crown-aura), transparent),
+        color-mix(in srgb, var(--lh-brand-deep) calc(var(--crown-aura) * 0.5), transparent) 55%,
+        transparent 80%
+    );
+    pointer-events: none;
+    animation: crown-breathe 3.2s ease-in-out infinite;
+}
+
+/* Знак и название — один замок в строку: эмблема слева от слова, оба
+   светятся янтарём. Строка вдвое ниже столбца, поэтому шапка не съедает
+   первый экран, а замок читается единым вензелем на любой ширине. */
+.crown__brand {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--lh-radius-md);
+    color: var(--lh-parchment-3);
+    text-decoration: none;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.crown__brand:active {
+    scale: 0.98;
+}
+
+.crown__mark {
+    display: block;
+    flex: none;
+    width: 3.25rem;
+    height: 3.25rem;
+    filter: drop-shadow(0 0.5rem 1.5rem color-mix(in srgb, var(--lh-brand) 45%, transparent));
+}
+
+/* Вензель: дисплейная антиква капителью с разрядкой и янтарным свечением. */
+.crown__name {
+    color: var(--lh-parchment-3);
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.1;
+    text-shadow: 0 0 1.75rem color-mix(in srgb, var(--lh-brand) 35%, transparent);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* ---- Ярус 3: центрированный ряд ссылок ---- */
+
+.crown__nav {
+    display: flex;
+    justify-content: center;
+    padding: 0.25rem 0 1rem;
+}
+
+.crown__row {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0 0.25rem;
+}
+
+.crown__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    padding: 0 0.625rem;
+    border: 0;
+    background-color: transparent;
+    color: var(--lh-parchment-dim);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+        scale 120ms var(--lh-ease-spring),
+        translate 140ms var(--lh-ease-spring);
+}
+
+.crown__link:hover {
+    color: var(--lh-parchment-3);
+    translate: 0 -1px;
+}
+
+.crown__link:active {
+    translate: 0 0;
+    scale: 0.98;
+}
+
+.crown__link--active {
+    color: var(--lh-accent-soft);
+    text-shadow: 0 0 0.875rem color-mix(in srgb, var(--lh-brand) 45%, transparent);
+}
+
+/* Скользящее подчёркивание: одна полоса на весь ряд, координаты задаёт
+   компонент по ссылке под курсором, а без курсора — по активному разделу.
+   Края полосы гаснут градиентом, ядро светится как уголёк. */
+.crown__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    border-radius: 1px;
+    background: linear-gradient(90deg, transparent, var(--lh-accent-soft) 14% 86%, transparent);
+    box-shadow: 0 0 0.625rem color-mix(in srgb, var(--lh-brand) 55%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        left 360ms var(--lh-ease-smooth),
+        top 360ms var(--lh-ease-smooth),
+        width 360ms var(--lh-ease-smooth),
+        opacity 160ms var(--lh-ease-smooth);
+}
+
+.crown__slide--on {
+    opacity: 1;
+}
+
+.crown__link--home {
+    padding: 0 0.5rem;
+    font-size: 1rem;
+}
+
+.crown__chev {
+    font-size: 0.875rem;
+    transition: rotate 200ms var(--lh-ease-smooth);
+}
+
+.crown__chev--up {
+    rotate: 180deg;
+}
+
+/* Кнопка-меню узких экранов: вся навигация за одной целью. */
+.crown__menu {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-parchment-dim) 30%, transparent);
+    color: var(--lh-parchment-2);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.crown__menu:hover {
+    background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+    color: var(--lh-parchment-3);
+}
+
+.crown__menu:active {
+    scale: 0.98;
+}
+
+/* ---- Ярусы 4 и 5: шторки ---- */
+
+/* Высоту занимает окно `.crown__sheet-clip`, а не сама пластина. Пластина
+   остаётся полной высоты и движется transform: при открытии вниз из-под
+   шапки, при закрытии вверх. Поэтому её нижняя кромка всегда совпадает с
+   низом окна и верхом контента. Главное: радиусы пластины считаются от её
+   полной высоты и не сжимаются браузером, когда окну остаётся меньше 32px.
+   Нижние углы пластины и верхние углы контента меняются одним переходом,
+   поэтому чёрного пространства между ними нет даже на последних кадрах.
+
+   Открытие 270ms на --lh-ease-out-quart, закрытие 180ms на --lh-ease-smooth.
+   Боковой вынос ровно на `--crown-fire-gutter` совпадает панель с колонкой
+   контента на любой ширине. */
+.crown__sheet {
+    display: grid;
+    grid-template-rows: 0fr;
+    margin-inline: calc(-1 * var(--crown-fire-gutter));
+    transition: grid-template-rows 180ms var(--lh-ease-smooth);
+}
+
+.crown__sheet--open {
+    grid-template-rows: 1fr;
+    transition-duration: 270ms;
+    transition-timing-function: var(--lh-ease-out-quart);
+}
+
+/* Мобильная шторка живёт только ниже 768px: выше неё ряд ссылок виден
+   целиком. */
+.crown__sheet--menu {
+    display: none;
+}
+
+.crown__sheet-clip {
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Пластина движется целиком: в закрытом состоянии сдвинута вверх на свою
+   полную высоту. Во время движения её низ остаётся на нижней кромке окна.
+   Класс `.lh-panel` в селекторе усиливает глобальное правило тёмной темы. */
+.crown__sheet-body.lh-panel {
+    border-radius: var(--lh-radius-lg);
+    background: var(--lh-surface);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent);
+    transform: translateY(-100%);
+    transition:
+        transform 180ms var(--lh-ease-smooth),
+        border-radius 60ms var(--lh-ease-smooth);
+}
+
+.crown__sheet--open .crown__sheet-body.lh-panel {
+    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
+    transform: translateY(0);
+    transition:
+        transform 270ms var(--lh-ease-out-quart),
+        border-radius 60ms var(--lh-ease-smooth);
+}
+
+/* Точная синхронизация высоты: окно анимируется от нуля до содержимого,
+   контейнер тянется за ним кадр в кадр. */
+@supports (interpolate-size: allow-keywords) {
+    /* Дисплей остаётся гридом: ряды гасятся, высоту ведёт окно. Замена
+       display на block ломала фолбэк 0fr там, где медиаправило перебивает
+       дисплей, и закрытая шторка занимала высоту содержимого. */
+    .crown__sheet {
+        grid-template-rows: none;
+        transition: none;
+    }
+
+    .crown__sheet-clip {
+        height: 0;
+        interpolate-size: allow-keywords;
+        transition: height 180ms var(--lh-ease-smooth);
+    }
+
+    .crown__sheet--open .crown__sheet-clip {
+        height: auto;
+        transition-duration: 270ms;
+        transition-timing-function: var(--lh-ease-out-quart);
+    }
+}
+
+.crown__group {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: var(--lh-ink-3);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.crown__group--next {
+    margin-top: 1.25rem;
+}
+
+.crown__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.crown__grid--menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.crown__tile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 4rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--lh-radius-md);
+    background-color: var(--lh-surface-2);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent);
+    color: var(--lh-ink);
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(0.375rem) scale(0.98);
+    transition:
+        opacity 200ms var(--lh-ease-out-quart),
+        transform 200ms var(--lh-ease-out-quart),
+        translate 140ms var(--lh-ease-spring),
+        box-shadow 140ms var(--lh-ease-spring);
+}
+
+.crown__tile--active {
+    background-color: color-mix(in srgb, var(--lh-brand) 10%, var(--lh-surface-2));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 55%, transparent);
+}
+
+/* Каскад плиток: 30ms на плитку, но не дольше шести шагов — иначе хвост
+   каскада жил бы дольше самого раскрытия шторки. Задержки стоят только у
+   opacity и transform, поэтому ховер плитки не ждёт своей очереди. */
+.crown__sheet--open .crown__tile {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(min(var(--crown-i, 0), 6) * 30ms), calc(min(var(--crown-i, 0), 6) * 30ms), 0ms, 0ms;
+}
+
+.crown__tile:hover {
+    translate: 0 -2px;
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+        var(--lh-shadow-lift);
+}
+
+.crown__tile:active {
+    translate: 0 0;
+    scale: 0.98;
+}
+
+.crown__tile-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--lh-radius-sm);
+    background-color: color-mix(in srgb, var(--lh-brand) 14%, transparent);
+    color: var(--lh-brand-ink);
+    font-size: 1.125rem;
+}
+
+.crown__tile-label {
+    min-width: 0;
+    color: var(--lh-ink);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.crown__tile-arrow {
+    margin-left: auto;
+    color: var(--lh-ink-3);
+    font-size: 1rem;
+    transition: translate 140ms var(--lh-ease-spring);
+}
+
+.crown__tile:hover .crown__tile-arrow {
+    translate: 2px 0;
+    color: var(--lh-brand-ink);
+}
+
+/* ---- Раскладка по ширинам ---- */
+
+@media (max-width: 1023px) {
+    .crown__link {
+        padding: 0 0.5rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+    }
+
+    .crown__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .crown__row {
+        display: none;
+    }
+
+    .crown__menu {
+        display: inline-flex;
+    }
+
+    .crown__sheet:not(.crown__sheet--menu) {
+        display: none;
+    }
+
+    /* Мобильная шторка — оверлей: панель висит над контентом от нижней
+       кромки шапки и не раздвигает страницу. Дисплей остаётся гридом,
+       чтобы фолбэк 0fr держал закрытую шторку нулевой высоты. */
+    .crown__sheet--menu {
+        position: absolute;
+        top: 100%;
+        right: 0.75rem;
+        left: 0.75rem;
+        z-index: 40;
+        display: grid;
+        margin-inline: 0;
+    }
+
+    /* Плавающая панель круглая со всех сторон и с тенью: стыка с контентом
+       у оверлея нет. */
+    .crown__sheet--menu .crown__sheet-body.lh-panel,
+    .crown__sheet--menu.crown__sheet--open .crown__sheet-body.lh-panel {
+        border-radius: var(--lh-radius-lg);
+        box-shadow:
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent),
+            var(--lh-shadow-lift);
+    }
+}
+
+@media (max-width: 639px) {
+    .crown__strip {
+        flex-wrap: wrap;
+        row-gap: 0.125rem;
+    }
+
+    .crown__telemetry {
+        order: 1;
+        flex-basis: 100%;
+    }
+
+    .crown__controls {
+        order: 2;
+        flex-basis: 100%;
+        justify-content: flex-end;
+    }
+
+    /* Ник виден и в узкой строке: прячем только баланс, он есть в профиле.
+       Перенос спасает от переполнения при длинном имени. */
+    .crown__controls {
+        flex-wrap: wrap;
+        row-gap: 0.25rem;
+    }
+
+    .crown__coins {
+        display: none;
+    }
+
+    .crown__player-name {
+        max-width: 6rem;
+    }
+
+    /* В двух колонках стрелка прилипает к длинной подписи: на касании
+       она ничего не добавляет, поэтому на узких экранах снята. */
+    .crown__tile-arrow {
+        display: none;
+    }
+
+    .crown__crest {
+        padding-top: 0.75rem;
+    }
+
+    .crown__brand {
+        gap: 0.625rem;
+    }
+
+    .crown__mark {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .crown__name {
+        font-size: 1.375rem;
+        letter-spacing: 0.12em;
+    }
+
+    .crown__sheet-body {
+        padding: 1rem;
+    }
+}
+
+/* ---- Движение снимается, содержимое остаётся видимым ---- */
+
+@media (prefers-reduced-motion: reduce) {
+    /* Дыхание стоит в видимом состоянии: сияние не гаснет и не пульсирует. */
+    .crown__aura {
+        animation: none;
+        opacity: 0.7;
+        scale: 1;
+    }
+
+    .crown__brand,
+    .crown__chev,
+    .crown__icon,
+    .crown__link,
+    .crown__link::after,
+    .crown__menu,
+    .crown__player,
+    .crown__sheet,
+    .crown__slide,
+    .crown__sheet-body,
+    .crown__sheet-clip,
+    .crown__signin,
+    .crown__tile,
+    .crown__tile-arrow {
+        transition: none;
+    }
+
+    .crown__tile {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Дыхание сияния: единственный цикл варианта, 3.2s на оборот. */
+@keyframes crown-breathe {
+    0%,
+    100% {
+        opacity: 0.55;
+        scale: 1;
+    }
+
+    50% {
+        opacity: 0.85;
+        scale: 1.02;
+    }
+}

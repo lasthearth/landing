@@ -45,7 +45,8 @@
 - [ ] Подключить ESLint (`npm i -D eslint angular-eslint typescript-eslint` + `--cache ./.npm-cache`, если npm-кэш вне воркспейса закрыт):
       правила `no-restricted-imports` (границы FSD), `no-console`, запрет `any` и hex-цветов в шаблонах.
       Сейчас эти правила живут только в прозе и в `scripts/check-architecture.mjs`.
-- [ ] Перевести тесты на Vitest (`npm i -D vitest jsdom`, билдер `@angular/build:unit-test`): сегодня `npm test` требует Chrome, которого нет на агентских машинах, — тесты не запускаются вовсе (их 4 на 749 файлов).
+- [x] Перевести тесты на Vitest (`vitest` + `jsdom`, билдер `@angular/build:unit-test`): `npm test` больше не требует Chrome.
+      Два спека про сжатие картинок остались на Karma в ChromeHeadless — jsdom не даёт `createImageBitmap` и 2D-контекст (`npm run test:browser`, `docs/TOOLING.md`).
 
 ## Продукт
 

@@ -16,7 +16,7 @@
             <tui-icon icon="@tui.chevron-right" class="text-white" />
         </button>
 
-        <tui-carousel [(index)]="carouselIndex" [duration]="carouselDuration()" class="h-auto! !rounded-t-xl">
+        <tui-carousel [(index)]="carouselIndex" [duration]="carouselDuration()" class="h-auto! !rounded-t-none">
             @for (item of images; track $index) {
                 <div *tuiItem class="size-full relative overflow-hidden">
                     <!-- Высота зарезервирована (16:9 / 600px), чтобы контент ниже не прыгал при загрузке -->

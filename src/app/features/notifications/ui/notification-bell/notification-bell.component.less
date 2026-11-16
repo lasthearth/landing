@@ -378,3 +378,18 @@
         transition: none;
     }
 }
+
+/* На узком экране якорь у колокольчика выносит панель за рамку: список
+   встаёт окном по центру экрана и всегда остаётся в кадре. */
+@media (max-width: 767px) {
+    .bell__panel {
+        position: fixed;
+        top: 50%;
+        right: auto;
+        left: 50%;
+        width: min(22rem, calc(100vw - 2rem));
+        max-height: min(28rem, 80vh);
+        translate: -50% -50%;
+        transform-origin: center;
+    }
+}
