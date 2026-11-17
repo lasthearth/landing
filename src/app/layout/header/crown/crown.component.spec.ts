@@ -7,7 +7,7 @@
  * (колокольчик, аватар, загрузчик картинок, иконки) исключаются подменой
  * импортов настоящими заглушками с теми же селекторами и входами.
  */
-import { Component, input, Pipe, PipeTransform, signal } from '@angular/core';
+import { Component, input, Pipe, PipeTransform, PLATFORM_ID, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Language } from '@core/i18n';
@@ -376,5 +376,105 @@ describe('CrownComponent', () => {
 
         expect(auraMotion ?? '').toContain('none');
         expect(tileVisible).toBe(true);
+    });
+});
+
+/**
+ * Серверный рендер: без браузерных API шапка обязана рисоваться молча.
+ * Красный сигнал — не только throw: если замер ссылок снова пойдёт на
+ * сервере, полоса получит координаты и класс открытого состояния.
+ */
+describe('CrownComponent на сервере', () => {
+    let fixture: ComponentFixture<CrownComponent>;
+    let router: Router;
+    let root: HTMLElement;
+
+    /**
+     * Счётчики обращений к браузерным API: на сервере гейт платформы обязан
+     * не дойти до них вовсе, поэтому сам факт обращения — красный сигнал.
+     */
+    const browserTouches = { fonts: 0, observers: 0 };
+
+    beforeEach(async () => {
+        browserTouches.fonts = 0;
+        browserTouches.observers = 0;
+
+        Object.defineProperty(document, 'fonts', {
+            configurable: true,
+            get() {
+                browserTouches.fonts += 1;
+
+                return { ready: Promise.resolve() };
+            },
+        });
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                public constructor() {
+                    browserTouches.observers += 1;
+                }
+
+                public observe(): void {}
+                public disconnect(): void {}
+            }
+        );
+
+        TestBed.overrideComponent(CrownComponent, {
+            set: {
+                imports: [
+                    RouterLink,
+                    RouterLinkActive,
+                    TranslatePipeStub,
+                    AmountPipeStub,
+                    TuiIconStubComponent,
+                    ImageLoaderStubComponent,
+                    PlayerAvatarStubComponent,
+                    NotificationBellStubComponent,
+                ],
+            },
+        });
+        TestBed.configureTestingModule({
+            providers: [
+                provideRouter([{ path: '**', component: RouteStubComponent }]),
+                { provide: HeaderState, useValue: createFakeState() as unknown as HeaderState },
+                { provide: PLATFORM_ID, useValue: 'server' },
+            ],
+        });
+
+        router = TestBed.inject(Router);
+        /* Адрес с активным разделом до создания компонента: без гейта
+           платформы замер случился бы уже в ngAfterViewInit. */
+        await router.navigateByUrl('/rules');
+        fixture = TestBed.createComponent(CrownComponent);
+    });
+
+    afterEach(() => {
+        fixture.destroy();
+        vi.unstubAllGlobals();
+        Reflect.deleteProperty(document as unknown as Record<string, unknown>, 'fonts');
+    });
+
+    it('рендерится без замеров: полоса скрыта до гидратации и после перехода', async () => {
+        fixture.detectChanges();
+        TestBed.flushEffects();
+        root = fixture.nativeElement as HTMLElement;
+
+        const slide = root.querySelector<HTMLElement>('.crown__slide');
+
+        expect(slide).not.toBeNull();
+        expect(slide?.classList.contains('crown__slide--on')).toBe(false);
+
+        await router.navigateByUrl('/');
+        fixture.detectChanges();
+
+        /* Кадр на переходе: без гейта в подписке роутера замер случился
+           бы здесь, и полоса получила бы класс открытого состояния. */
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        fixture.detectChanges();
+
+        expect(slide?.classList.contains('crown__slide--on')).toBe(false);
+        expect(root.querySelector('.crown__sheet')?.classList.contains('crown__sheet--open')).toBe(false);
+        expect(browserTouches.fonts).toBe(0);
+        expect(browserTouches.observers).toBe(0);
     });
 });
