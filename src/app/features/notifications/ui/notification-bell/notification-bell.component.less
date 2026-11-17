@@ -5,16 +5,65 @@
     align-self: flex-start;
 }
 
+/*
+ * Кнопка-колокольчик в строке управления шапки. Повторяет соседние иконки
+ * (тема, язык): без подложки и тени, пергаментный цвет, мягкий ховер.
+ * Раньше здесь была глобальная пилюля `.nav-button`, и в тёмной теме её
+ * заливка перебивала локальные переопределения шапки.
+ */
+.bell__trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--lh-parchment-dim);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+        color: var(--lh-parchment-3);
+    }
+
+    &:active {
+        scale: 0.98;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 2px;
+    }
+}
+
+.bell__trigger--open,
+.bell__trigger--open:hover {
+    background-color: color-mix(in srgb, var(--lh-parchment) 14%, transparent);
+    color: var(--lh-accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bell__trigger {
+        transition: none;
+    }
+}
+
 .bell__badge {
     position: absolute;
-    top: 2px;
-    right: 1px;
+    top: 4px;
+    right: 2px;
     min-width: 1.125rem;
     height: 1.125rem;
     padding: 0 0.25rem;
     border-radius: 999px;
     background: var(--lh-brand);
-    box-shadow: 0 0 0 2px var(--color-lh-primary-2, #2b2d31);
+    box-shadow: 0 0 0 2px var(--lh-night);
     color: #fff;
     font-size: 0.8125rem;
     font-weight: 800;

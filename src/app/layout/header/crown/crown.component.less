@@ -161,37 +161,6 @@
     letter-spacing: 0.08em;
 }
 
-/* Колокольчик рисует глобальную залитую пилюлю `.nav-button`; в этом варианте
-   строка управления прозрачная, поэтому пилюля локально приведена к её виду. */
-.crown__bell ::ng-deep .nav-button {
-    background-color: transparent;
-    background-image: none;
-    box-shadow: none;
-    color: var(--lh-parchment-dim);
-    transition: scale 120ms var(--lh-ease-spring);
-}
-
-.crown__bell ::ng-deep .nav-button:hover {
-    background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
-    background-image: none;
-    box-shadow: none;
-    color: var(--lh-parchment-3);
-    transform: none;
-}
-
-.crown__bell ::ng-deep .nav-button:active {
-    transform: none;
-    scale: 0.98;
-}
-
-.crown__bell ::ng-deep .nav-button--active,
-.crown__bell ::ng-deep .nav-button--active:hover {
-    background-color: color-mix(in srgb, var(--lh-parchment) 14%, transparent);
-    background-image: none;
-    box-shadow: none;
-    color: var(--lh-accent-soft);
-}
-
 /* Карточка игрока: аватар, имя и баланс янтарём на ночном фоне.
    Радиусы концентричны: 12px у карточки, 12−4=8px у рамки аватара,
    а у изображения — 8px минус фактическая толщина рамки. */
