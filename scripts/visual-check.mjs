@@ -58,6 +58,7 @@ if (flags.auth) {
         component.state = new Proxy(original, {
             get(target, key) {
                 if (key === 'isAuth') return () => true;
+                if (key === 'authKnown') return () => true;
                 if (key === 'userName') return () => 'ripls';
                 if (key === 'userImage') return () => '/images/logo.webp';
                 if (key === 'userId') return () => null;
