@@ -46,8 +46,9 @@ Taiga UI 4 · `@angular/build:application` (Vite) · SSR + пререндер и
 ## Проверка
 
 ```bash
-npm run verify        # обязательный минимум: формат доков, бюджет, указатели, FSD, локали, контраст и объявление токенов, типы
-npm run verify:full   # плюс ng build и тесты (нужен Chrome)
+npm run verify        # обязательный минимум: формат доков, бюджет, указатели, FSD, локали, контраст и объявление токенов, типы, ESLint
+npm run lint          # только ESLint: any, console.log, селекторы, правила шаблонов
+npm run verify:full   # плюс ng build и тесты (браузерным спекам нужен Chromium от Playwright)
 npm run map           # перегенерировать карту навигации
 ```
 

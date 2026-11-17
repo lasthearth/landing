@@ -6,7 +6,6 @@ import { MarketCardSkeletonComponent } from './market-card-skeleton.component';
  */
 @Component({
     selector: 'app-market-grid-skeleton',
-    standalone: true,
     imports: [MarketCardSkeletonComponent],
     template: `
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">

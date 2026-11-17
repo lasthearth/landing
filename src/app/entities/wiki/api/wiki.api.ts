@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { WikiArticle, WikiDraft, WikiStatus } from '../model/wiki-article.model';
 import {

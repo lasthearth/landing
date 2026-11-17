@@ -39,7 +39,6 @@ const HEIGHT_VAR = '--lh-consent-h';
  * не обрастает деталями аналитики.
  */
 @Component({
-    standalone: true,
     selector: 'app-consent-banner',
     imports: [RouterLink, TranslatePipe, TuiIcon, MotionBlurDirective],
     templateUrl: './consent-banner.component.html',

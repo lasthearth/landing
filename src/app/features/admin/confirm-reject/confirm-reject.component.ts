@@ -17,7 +17,6 @@ import { I18nService, TranslatePipe } from '@core/i18n';
  * Компонент подтверждения отклонения.
  */
 @Component({
-    standalone: true,
     selector: 'app-confirm-reject',
     imports: [TuiError, ReactiveFormsModule, FormsModule, TuiFieldErrorPipe, AsyncPipe, TuiIcon, LHInputComponent, TranslatePipe],
     templateUrl: './confirm-reject.component.html',

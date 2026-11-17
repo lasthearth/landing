@@ -33,7 +33,6 @@ import { EmptyStateComponent } from '@shared/ui/empty-state';
  */
 @Component({
     selector: 'app-roles-matrix',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe, EmptyStateComponent],
     templateUrl: './roles-matrix.component.html',
     styleUrl: './roles-matrix.component.less',

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { TuiExpand, TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
@@ -11,8 +11,7 @@ import { PageHeaderComponent } from '@shared/ui/page-header';
  */
 @Component({
     selector: 'app-public-offer',
-    standalone: true,
-    imports: [PageHeaderComponent, TuiIcon, CommonModule, TuiExpand, TranslatePipe],
+    imports: [PageHeaderComponent, TuiIcon, NgClass, TuiExpand, TranslatePipe],
     templateUrl: './public-offer.component.html',
     styleUrl: './public-offer.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

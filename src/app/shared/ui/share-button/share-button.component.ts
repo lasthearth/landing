@@ -11,7 +11,6 @@ import { TranslatePipe } from '@core/i18n';
  * Относительный путь (`/news/123`) дополняется адресом сайта.
  */
 @Component({
-    standalone: true,
     selector: 'app-share-button',
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './share-button.component.html',

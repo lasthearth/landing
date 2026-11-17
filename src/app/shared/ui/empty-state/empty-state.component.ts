@@ -10,7 +10,6 @@ import { TranslatePipe } from '@core/i18n';
  */
 @Component({
     selector: 'app-empty-state',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './empty-state.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

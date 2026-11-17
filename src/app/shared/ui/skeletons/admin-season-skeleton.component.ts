@@ -6,7 +6,6 @@ import { SkeletonComponent } from './skeleton.component';
  */
 @Component({
     selector: 'app-admin-season-skeleton',
-    standalone: true,
     imports: [SkeletonComponent],
     template: `
         <div

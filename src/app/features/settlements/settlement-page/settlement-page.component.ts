@@ -10,7 +10,6 @@ import {
     getOwnerIds,
     getSettlementDisplayName,
     getSettlementTier,
-    getSettlementTypeByKey,
     getSettlementTypeName,
     getSettlementTypeIcon,
     getSettlementTypeTone,
@@ -59,7 +58,6 @@ const OTHERS_COUNT = 3;
  * Координаты надела намеренно не выводятся.
  */
 @Component({
-    standalone: true,
     selector: 'app-settlement-page',
     imports: [MarkupPipe, 
         RouterLink,

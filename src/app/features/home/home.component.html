@@ -8,7 +8,7 @@
         (focusin)="carouselHovered.set(true)"
         (focusout)="carouselHovered.set(false)"
     >
-        <button
+        <button type="button" 
             (click)="navigate(1)"
             class="absolute nav-button hidden md:block size-12 z-40 right-8 top-1/2 -translate-y-1/2 justify-center backdrop-blur-md"
             [attr.aria-label]="'home.carousel.nextAria' | translate"
@@ -96,7 +96,7 @@
             </a>
         </div>
 
-        <button
+        <button type="button" 
             (click)="navigate(-1)"
             class="absolute nav-button hidden md:block size-12 z-40 left-8 top-1/2 -translate-y-1/2 justify-center backdrop-blur-md"
             [attr.aria-label]="'home.carousel.prevAria' | translate"

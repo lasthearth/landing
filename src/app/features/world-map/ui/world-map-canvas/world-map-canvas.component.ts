@@ -153,7 +153,6 @@ const LETTER_WIDTH: Record<LabelStyle, number> = { major: 10.2, middle: 7.8, min
  * одним пальцем и щипком. С клавиатуры: стрелки, «+», «−» и «0».
  */
 @Component({
-    standalone: true,
     selector: 'app-world-map-canvas',
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './world-map-canvas.component.html',

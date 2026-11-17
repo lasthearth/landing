@@ -9,7 +9,6 @@ import { SkeletonComponent } from './skeleton.component';
  */
 @Component({
     selector: 'app-settlement-card-skeleton',
-    standalone: true,
     imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div class="p-[0.3125rem] rounded-[0.875rem] bg-surface-3/60">

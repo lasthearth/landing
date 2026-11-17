@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, InputSignal, output } from '@angular/core';
 import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 
@@ -9,7 +9,6 @@ import { TranslatePipe } from '@core/i18n';
  */
 @Component({
     selector: 'app-error-state',
-    standalone: true,
     imports: [TuiIcon, TuiButton, TranslatePipe],
     templateUrl: './error-state.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -18,7 +18,6 @@ import { IVerificationQuestion } from '@entities/rule-question';
 import { AnalyticsService } from '@core/services/analytics.service';
 
 @Component({
-    standalone: true,
     selector: 'app-player-verification-form',
     imports: [
         TuiError,

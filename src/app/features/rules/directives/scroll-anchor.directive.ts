@@ -7,7 +7,6 @@ import { SECTION_ID } from '../tokens/section-id.token';
  */
 @Directive({
     selector: '[appScrollAnchor]',
-    standalone: true,
 })
 export class ScrollAnchorDirective implements OnInit, OnDestroy {
     /**

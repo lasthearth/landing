@@ -23,7 +23,6 @@ import { PauseOffscreenDirective } from '@shared/lib/directives';
  * курсором, «освещая» сцену — единственная интерактивная часть.
  */
 @Component({
-    standalone: true,
     selector: 'app-not-found',
     imports: [RouterLink, TranslatePipe, TuiIcon, PauseOffscreenDirective],
     templateUrl: './not-found.component.html',

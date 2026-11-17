@@ -11,7 +11,7 @@ import { FileKeyTownship } from './township-form.types';
 import { Subject, switchMap, Observable, map, finalize, timeout } from 'rxjs';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiFieldErrorPipe, TuiFiles } from '@taiga-ui/kit';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { LHHintComponent } from '@shared/ui/lh-hint/lh-hint.component/lh-hint.component';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LocalStorageService } from '@core/services/local-storage.service';
@@ -34,9 +34,7 @@ import { ImageFileInputComponent } from '@shared/ui/image-file-input';
         LHInputComponent,
         FormsModule,
         ReactiveFormsModule,
-        NgFor,
         AsyncPipe,
-        NgIf,
         TuiFiles,
         LHHintComponent,
         TuiLoader,

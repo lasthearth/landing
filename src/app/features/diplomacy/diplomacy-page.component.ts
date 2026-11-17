@@ -65,7 +65,6 @@ function sortMessagesByTimeDesc(messages: GameChatMessage[]): GameChatMessage[] 
  */
 @Component({
     selector: 'app-diplomacy-page',
-    standalone: true,
     imports: [PageHeaderComponent, TuiIcon, TranslatePipe, DiplomacyCardComponent, EmptyStateComponent, ErrorStateComponent, RevealDirective],
     templateUrl: './diplomacy-page.component.html',
     styleUrl: './diplomacy-page.component.less',

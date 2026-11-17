@@ -34,7 +34,6 @@ import { PlayerAvatarComponent, PlayerLookService } from '@entities/player-style
  */
 @Component({
     selector: 'app-player-chip',
-    standalone: true,
     templateUrl: './player-chip.component.html',
     styleUrl: './player-chip.component.less',
     imports: [AmountPipe, RouterLink, TuiHint, TuiIcon, PlayerAvatarComponent, TranslatePipe, RelativeTimeComponent],

@@ -43,18 +43,6 @@ function formatDate(date: Date): string {
 }
 
 /**
- * Форматирует дату с fallback на "—".
- *
- * @param rawDate Исходная строка даты.
- * @returns Строка в формате "DD.MM.YY - HH:mm" или "—".
- */
-function formatDateOrFallback(rawDate: string | undefined): string {
-    const date = parseDate(rawDate);
-
-    return date ? formatDate(date) : '—';
-}
-
-/**
  * Преобразует DTO информации о сезоне в UI-модель.
  *
  * @param dto DTO сезона от API.

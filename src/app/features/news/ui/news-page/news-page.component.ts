@@ -37,7 +37,6 @@ const OTHER_NEWS_COUNT = 2;
  * Запрос по id используется только как запасной, если новости нет в списке.
  */
 @Component({
-    standalone: true,
     selector: 'app-news-page',
     imports: [
         RouterLink,

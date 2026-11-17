@@ -18,7 +18,6 @@ import { Observable, catchError, forkJoin, map, of } from 'rxjs';
  * на сервере запёк бы в неё объявления на момент выкладки.
  */
 @Component({
-    standalone: true,
     selector: 'app-lfg-ticker',
     imports: [RouterLink, TuiIcon, TranslatePipe],
     templateUrl: './lfg-ticker.component.html',

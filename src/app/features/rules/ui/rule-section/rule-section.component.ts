@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output, computed, inject, Provider, Signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
 import { TranslatePipe } from '@core/i18n';
@@ -20,8 +20,7 @@ export const SECTION_ID_PROVIDER: Provider = {
  */
 @Component({
     selector: 'app-rule-section',
-    standalone: true,
-    imports: [CommonModule, TuiIcon, TuiExpand, TranslatePipe, RevealDirective],
+    imports: [NgClass, TuiIcon, TuiExpand, TranslatePipe, RevealDirective],
     templateUrl: './rule-section.component.html',
     styleUrls: ['../../styles/rules.less'],
     providers: [SECTION_ID_PROVIDER],

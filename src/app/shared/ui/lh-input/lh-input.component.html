@@ -47,7 +47,7 @@
             <span [class.text-ink-3]="!displayedValue" class="select-display">
                 {{ displayedValue || placeholder() }}
             </span>
-            <img
+            <img decoding="async" height="24" width="24"
                 src="/chevron-down.svg"
                 alt=""
                 [class.rotate-180]="dropdownOpen()"
@@ -71,7 +71,7 @@
                     (click)="selectItem(item)"
                     (keydown.escape)="dropdownOpen.set(false)"
                 >
-                    {{ displayWith(item) }}
+                    {{ displayWith()(item) }}
                 </button>
             }
         </div>

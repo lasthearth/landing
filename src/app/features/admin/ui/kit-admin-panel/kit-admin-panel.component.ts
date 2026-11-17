@@ -47,7 +47,6 @@ const ITEM_TYPE_LABEL_KEYS: Record<string, string> = {
  */
 @Component({
     selector: 'app-kit-admin-panel',
-    standalone: true,
     imports: [
         AdminListSkeletonComponent,
         EmptyStateComponent,

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs';
 
 /**
  * Признак того, что идёт переход между страницами.

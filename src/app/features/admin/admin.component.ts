@@ -39,7 +39,6 @@ const TICKETS_TAB = 14;
  * Компонент страницы администратора.
  */
 @Component({
-    standalone: true,
     selector: 'app-admin',
     imports: [
         PageHeaderComponent,

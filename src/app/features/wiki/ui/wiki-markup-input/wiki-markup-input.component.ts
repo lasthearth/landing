@@ -108,7 +108,6 @@ interface SuggestState {
  * Все правки идут через `execCommand('insertText')`, поэтому отменяются Ctrl+Z.
  */
 @Component({
-    standalone: true,
     selector: 'app-wiki-markup-input',
     imports: [TuiIcon, TranslatePipe, FormsModule],
     templateUrl: './wiki-markup-input.component.html',

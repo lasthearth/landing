@@ -91,7 +91,7 @@
         class="lh-cta details__action"
         [class.lh-cta--ghost]="state() === 'built'"
         [disabled]="node().automatic || state() === 'locked' || state() === 'excluded'"
-        (click)="toggle.emit()"
+        (click)="buildToggled.emit()"
     >
         <tui-icon [icon]="state() === 'built' ? '@tui.undo-2' : '@tui.list-plus'" />
         {{ actionKey() | translate }}

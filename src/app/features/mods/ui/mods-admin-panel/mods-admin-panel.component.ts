@@ -52,7 +52,6 @@ const NOTE_MAX = 160;
  * Список виден игрокам на `/mods` сразу после изменения.
  */
 @Component({
-    standalone: true,
     selector: 'app-mods-admin-panel',
     imports: [
         FormsModule,

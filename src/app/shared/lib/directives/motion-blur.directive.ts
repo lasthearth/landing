@@ -25,7 +25,6 @@ import { motionBlur, type MotionBlur } from '@web-kits/motion-blur';
  */
 @Directive({
     selector: '[appMotionBlur]',
-    standalone: true,
 })
 export class MotionBlurDirective implements AfterViewInit, OnDestroy {
     /**

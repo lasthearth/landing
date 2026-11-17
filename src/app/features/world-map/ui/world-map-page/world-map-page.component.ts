@@ -47,7 +47,6 @@ const LEGEND_COURSES: readonly Exclude<WorldMapCourse, 'none'>[] = ['peace', 'ne
  * ставят, поэтому у них нет страницы, курса и числа жителей.
  */
 @Component({
-    standalone: true,
     selector: 'app-world-map-page',
     imports: [PageHeaderComponent, EmptyStateComponent, WorldMapCanvasComponent, RouterLink, TuiIcon, TranslatePipe],
     templateUrl: './world-map-page.component.html',

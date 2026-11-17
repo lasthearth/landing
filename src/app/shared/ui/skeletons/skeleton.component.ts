@@ -10,7 +10,6 @@ import { PauseOffscreenDirective } from '@shared/lib/directives';
  */
 @Component({
     selector: 'app-skeleton',
-    standalone: true,
     hostDirectives: [PauseOffscreenDirective],
     template: `<div [class]="classes()"></div>`,
     changeDetection: ChangeDetectionStrategy.OnPush,

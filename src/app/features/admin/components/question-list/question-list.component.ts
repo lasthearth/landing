@@ -13,7 +13,6 @@ import { I18nService, TranslatePipe } from '@core/i18n';
  * и позволяет удалять вопросы.
  */
 @Component({
-    standalone: true,
     selector: 'app-question-list',
     imports: [TranslatePipe],
     templateUrl: './question-list.component.html',

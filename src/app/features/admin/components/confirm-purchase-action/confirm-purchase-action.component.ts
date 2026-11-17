@@ -25,7 +25,6 @@ export interface IConfirmPurchaseActionData {
  * Компонент подтверждения действия с ожидающей выдачей покупкой.
  */
 @Component({
-    standalone: true,
     selector: 'app-confirm-purchase-action',
     templateUrl: './confirm-purchase-action.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],

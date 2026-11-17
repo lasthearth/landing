@@ -20,7 +20,6 @@ import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
  */
 @Component({
     selector: 'app-pending-purchases-panel',
-    standalone: true,
     imports: [AmountPipe, TuiIcon, ImageLoaderComponent, EmptyStateComponent, ErrorStateComponent, TranslatePipe, WaitingBadgeComponent],
     templateUrl: './pending-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -10,7 +10,6 @@ import { HeaderComponent } from './header.component';
 
 /** Заглушка «Короны»: её собственные тесты живут в `crown/`. */
 @Component({
-    standalone: true,
     selector: 'app-header-crown',
     template: '<div data-stub="crown-content"></div>',
 })

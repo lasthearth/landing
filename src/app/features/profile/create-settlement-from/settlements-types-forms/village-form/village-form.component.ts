@@ -1,4 +1,4 @@
-import { NgFor, AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, OutputEmitterRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -34,9 +34,7 @@ import { ImageFileInputComponent } from '@shared/ui/image-file-input';
         LHInputComponent,
         FormsModule,
         ReactiveFormsModule,
-        NgFor,
         AsyncPipe,
-        NgIf,
         TuiFiles,
         LHHintComponent,
         TuiLoader,

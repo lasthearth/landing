@@ -12,7 +12,6 @@ import { TownshipFormComponent } from './settlements-types-forms/township-form/t
 import { GuildFormComponent } from './settlements-types-forms/guild-form/guild-form.component';
 
 @Component({
-    standalone: true,
     selector: 'app-create-settlement',
     imports: [
         FormsModule,

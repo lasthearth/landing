@@ -122,24 +122,20 @@
                     }
                 },
                 "test-browser": {
-                    "builder": "@angular/build:karma",
+                    "builder": "@angular/build:unit-test",
                     "options": {
-                        "polyfills": ["zone.js", "zone.js/testing"],
+                        // Тот же прогонщик, что у `test`, но в настоящем Chrome:
+                        // холст и живая геометрия DOM в jsdom не работают.
+                        "buildTarget": "last-hearth-landing:build:development",
+                        "runner": "vitest",
                         "tsConfig": "tsconfig.spec.browser.json",
                         "include": [
                             "src/app/shared/lib/compress-image.function.spec.ts",
                             "src/app/shared/lib/directives/tabs-pill.directive.spec.ts",
                             "src/app/shared/ui/image-file-input/image-file-input.component.spec.ts"
                         ],
-                        "inlineStyleLanguage": "less",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "public"
-                            }
-                        ],
-                        "styles": ["src/styles.css"],
-                        "scripts": []
+                        "browsers": ["chromiumHeadless"],
+                        "watch": false
                     }
                 }
             }

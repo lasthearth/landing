@@ -6,7 +6,6 @@ import {
     DestroyRef,
     effect,
     ElementRef,
-    HostListener,
     inject,
     input,
     model,
@@ -45,12 +44,14 @@ const FOCUSABLE =
  * подгружаются заранее, чтобы листание было мгновенным.
  */
 @Component({
-    standalone: true,
     selector: 'app-image-viewer',
     imports: [TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, MotionBlurDirective],
     templateUrl: './image-viewer.component.html',
     styleUrl: './image-viewer.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(document:keydown)': 'onKeydown($event)',
+    },
 })
 export class ImageViewerComponent {
     /**
@@ -227,7 +228,6 @@ export class ImageViewerComponent {
      *
      * @param event Событие клавиатуры.
      */
-    @HostListener('document:keydown', ['$event'])
     protected onKeydown(event: KeyboardEvent): void {
         if (event.key === 'Escape') {
             event.preventDefault();

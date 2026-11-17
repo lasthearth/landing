@@ -18,7 +18,6 @@ const HOUR = 3_600_000;
  */
 @Component({
     selector: 'app-waiting-badge',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe, RelativeTimeComponent],
     templateUrl: './waiting-badge.component.html',
     styleUrl: './waiting-badge.component.less',

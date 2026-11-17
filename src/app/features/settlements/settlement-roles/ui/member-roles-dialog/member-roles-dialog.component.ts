@@ -14,7 +14,6 @@ import { MemberRolesDialogData } from '../../model/member-roles-dialog-data';
  */
 @Component({
     selector: 'app-member-roles-dialog',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './member-roles-dialog.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],

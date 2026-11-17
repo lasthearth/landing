@@ -83,7 +83,6 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
  * всё равно даст 403.
  */
 @Component({
-    standalone: true,
     selector: 'app-settlement',
     imports: [MarkupPipe,
         RouterLink,

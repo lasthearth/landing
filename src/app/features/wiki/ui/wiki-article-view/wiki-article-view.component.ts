@@ -37,7 +37,6 @@ const LICENSE_URL = 'https://creativecommons.org/licenses/by-sa/4.0/deed.ru';
  * копирование блоков кода, загрузку ролика по нажатию и переходы по якорям.
  */
 @Component({
-    standalone: true,
     selector: 'app-wiki-article-view',
     imports: [TuiIcon, TranslatePipe, MotionBlurDirective],
     templateUrl: './wiki-article-view.component.html',

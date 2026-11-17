@@ -53,7 +53,7 @@ export class UpgradeNodeDetailsComponent {
     /**
      * Просьба отметить узел построенным или снять отметку.
      */
-    public readonly toggle = output<void>();
+    public readonly buildToggled = output<void>();
 
     /**
      * Префикс ключей словаря точки.

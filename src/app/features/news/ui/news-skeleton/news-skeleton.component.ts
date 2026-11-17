@@ -8,7 +8,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
  */
 @Component({
     selector: 'app-news-skeleton',
-    standalone: true,
     templateUrl: './news-skeleton.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

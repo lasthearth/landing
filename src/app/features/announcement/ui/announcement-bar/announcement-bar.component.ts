@@ -13,7 +13,6 @@ import { Announcement } from '../../model/announcement';
  */
 @Component({
     selector: 'app-announcement-bar',
-    standalone: true,
     imports: [RouterLink, TuiIcon, TranslatePipe],
     templateUrl: './announcement-bar.component.html',
     styleUrl: './announcement-bar.component.less',

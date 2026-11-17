@@ -10,13 +10,13 @@ import {
     untracked,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { I18nService } from '@core/i18n';
 import { ServerResponseService } from '@core/services/server-response.service';
 import { SeoService } from '@core/services/seo.service';
 import { plainWikiText } from '../../../lib/wiki-plain-text.function';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { Role, UserService } from '@entities/user';

@@ -42,7 +42,6 @@ import { ConfirmNicknameChangeComponent } from '../confirm-nickname-change/confi
  *   кулдаун, ник не меняет; кнопка видна только при активном кулдауне.
  */
 @Component({
-    standalone: true,
     selector: 'app-player-nickname-admin',
     imports: [ReactiveFormsModule, TuiLoader, TranslatePipe, LHInputComponent],
     templateUrl: './player-nickname-admin.component.html',

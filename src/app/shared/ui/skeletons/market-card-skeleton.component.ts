@@ -10,7 +10,6 @@ import { SkeletonComponent } from './skeleton.component';
  */
 @Component({
     selector: 'app-market-card-skeleton',
-    standalone: true,
     imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div

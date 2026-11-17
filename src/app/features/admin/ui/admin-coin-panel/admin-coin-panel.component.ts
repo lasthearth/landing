@@ -1,6 +1,5 @@
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { TuiDialogService } from '@taiga-ui/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
@@ -10,13 +9,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { SettlementService } from '@entities/settlement';
 import { DonateService, ITransaction } from '@entities/donate';
-import { UserService } from '@entities/user';
+import { ISearchedUser, UserService } from '@entities/user';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { resolveAvatarUrl } from '@shared/lib/resolve-avatar-url';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
-import { HowToBuyComponent } from '@features/market/components/how-to-buy/how-to-buy.component';
 import { I18nService, TranslatePipe, AmountPipe } from '@core/i18n';
 import { ISelectedPlayer } from '../../model/selected-player.model';
 
@@ -28,7 +26,6 @@ import { ISelectedPlayer } from '../../model/selected-player.model';
  */
 @Component({
     selector: 'app-admin-coin-panel',
-    standalone: true,
     imports: [AmountPipe, ReactiveFormsModule, AsyncPipe, TuiIcon, TuiLoader, LHInputComponent, ImageLoaderComponent, EmptyStateComponent, TranslatePipe, RelativeTimeComponent],
     templateUrl: './admin-coin-panel.component.html',
     styleUrl: './admin-coin-panel.component.less',
@@ -131,7 +128,7 @@ export class AdminCoinPanelComponent {
      *
      * @param user Объект пользователя из API.
      */
-    protected selectPlayer(user: any): void {
+    protected selectPlayer(user: ISearchedUser): void {
         this.selectedPlayer.set({
             playerId: user.user_id,
             playerName: user.user_game_name,

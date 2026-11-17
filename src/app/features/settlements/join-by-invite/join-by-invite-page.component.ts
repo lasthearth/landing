@@ -15,7 +15,7 @@ import {
     SettlementBadgeComponent,
     SettlementService,
 } from '@entities/settlement';
-import { getSettlementTypeByKey, getSettlementTypeName } from '@entities/settlement';
+import { getSettlementTypeName } from '@entities/settlement';
 import { IPlayer, PlayerChipComponent, UserService } from '@entities/user';
 import { MarkupPipe } from '@shared/lib/news-markdown';
 import { TuiIcon } from '@taiga-ui/core';

@@ -168,8 +168,9 @@ export class PlayerAboutComponent {
 
     public constructor() {
         // Другой игрок — правка и «Сохранено» прежнего к нему не относятся.
+        // Чтение идентификатора нужно только как зависимость эффекта.
         effect(() => {
-            this.profile().userId;
+            void this.profile().userId;
             untracked(() => this.reset());
         });
     }

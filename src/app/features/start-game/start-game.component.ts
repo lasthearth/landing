@@ -24,7 +24,6 @@ const DISCORD_INVITE = environment.discordInviteUrl;
  * справа — онлайн и версия сервера, быстрые ссылки на помощь.
  */
 @Component({
-    standalone: true,
     selector: 'app-start-game',
     imports: [
         PageHeaderComponent,

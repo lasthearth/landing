@@ -25,7 +25,6 @@ export interface ConfirmDialogData {
  * Возвращает `true` при подтверждении и `false` при отмене.
  */
 @Component({
-    standalone: true,
     selector: 'app-confirm-dialog',
     imports: [TranslatePipe],
     templateUrl: './confirm-dialog.component.html',

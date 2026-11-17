@@ -50,7 +50,6 @@ function normalize(value: string): string {
  */
 @Component({
     selector: 'app-rules-search',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe, RevealDirective],
     templateUrl: './rules-search.component.html',
     styleUrl: './rules-search.component.less',

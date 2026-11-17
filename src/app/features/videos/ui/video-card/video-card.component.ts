@@ -8,7 +8,6 @@ import { YoutubeVideo } from '../../model/youtube-video';
  */
 @Component({
     selector: 'app-video-card',
-    standalone: true,
     imports: [TuiIcon, RelativeTimeComponent],
     templateUrl: './video-card.component.html',
     styleUrl: './video-card.component.less',

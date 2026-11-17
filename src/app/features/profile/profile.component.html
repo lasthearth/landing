@@ -42,10 +42,10 @@
                     <app-player-avatar
                         class="profile-avatar__img"
                         [userId]="userService.userId"
-                        [src]="userData.image || '/default-avatar.webp'"
+                        [src]="userData().image || '/default-avatar.webp'"
                         [alt]="
-                            userData.image
-                                ? ('profile.avatar.alt' | translate: { name: userName || userData.name })
+                            userData().image
+                                ? ('profile.avatar.alt' | translate: { name: userName || userData().name })
                                 : ('profile.avatar.defaultAlt' | translate)
                         "
                     />
@@ -68,7 +68,7 @@
                         <!-- Шапка без верификации: имя аккаунта и статус анкеты -->
                         <div class="profile-hero lh-panel rounded-xl px-4 py-3">
                             <p class="text-base leading-6 text-ink-3">{{ "profile.hero.account" | translate }}</p>
-                            <p class="profile-hero__name">{{ userData.name }}</p>
+                            <p class="profile-hero__name">{{ userData().name }}</p>
                             <span class="profile-status" [class]="'profile-status--' + appState">
                                 <span class="profile-status__dot" aria-hidden="true"></span>
                                 {{ "profile.hero.status." + appState | translate }}
@@ -81,7 +81,7 @@
                         -->
                         <div class="profile-cover__top">
                             <div class="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
-                                <h1 class="profile-name">{{ userName || userData.name }}</h1>
+                                <h1 class="profile-name">{{ userName || userData().name }}</h1>
                                 @if (userName) {
                                     <button
                                         type="button"
@@ -195,7 +195,7 @@
             @if (verified && !compactHeader()) {
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     <div class="profile-metric profile-metric--balance lh-reveal--scale" appReveal [appRevealDelay]="0">
-                        <img
+                        <img decoding="async" height="201" width="128"
                             src="/splinter-of-spark.webp"
                             [alt]="'profile.currency.shardAlt' | translate"
                             class="size-5 object-contain spark-glow"

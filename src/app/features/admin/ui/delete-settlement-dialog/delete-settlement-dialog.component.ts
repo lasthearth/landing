@@ -13,7 +13,6 @@ import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
  */
 @Component({
     selector: 'app-delete-settlement-dialog',
-    standalone: true,
     imports: [ReactiveFormsModule, TranslatePipe, LHInputComponent],
     templateUrl: './delete-settlement-dialog.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],

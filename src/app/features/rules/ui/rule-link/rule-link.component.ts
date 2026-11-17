@@ -9,7 +9,6 @@ import { ScrollService } from '../../services/scroll.service';
  */
 @Component({
     selector: 'app-rule-link',
-    standalone: true,
     templateUrl: './rule-link.component.html',
     styleUrls: ['../../styles/rules.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,

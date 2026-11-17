@@ -8,7 +8,7 @@
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --- |
 | `npm start` / `npm run dev`        | dev-сервер на `127.0.0.1:4200` (через dotenv)                                                                                            |
 | `npm run build`                    | прод-сборка SSR: пререндер заранее собранных разделов (список — `src/app/app.routes.server.ts`)                                          |
-| `npm run verify`                   | **обязательный минимум**: формат доков, бюджет контекста, указатели, границы FSD, локали, контраст, типы                                 |
+| `npm run verify`                   | **обязательный минимум**: формат доков, бюджет контекста, указатели, границы FSD, локали, контраст, типы, ESLint                         |
 | `npm run verify:full`              | то же + `ng build` + Vitest + тесты холста в Chrome (если он найден)                                                                     |     |
 | `npm run arch`                     | границы FSD; `--update-baseline` фиксирует легаси-нарушения                                                                              |
 | `npm run map`                      | перегенерировать `docs/project-map.md`                                                                                                   |
@@ -21,19 +21,20 @@
 | `node scripts/visual-check.mjs`    | скриншот dev-сервера в настоящем Chrome: `--url`, `--width`, `--clip`, `--out`, `--auth` (подставной вход игрока в шапке)                |
 | `npm test` / `npm run test:watch`  | Vitest + jsdom через `@angular/build:unit-test`; браузер не нужен                                                                        |
 | `npm run test:coverage`            | то же с отчётом покрытия в `coverage/`                                                                                                   |
-| `npm run test:browser`             | Karma + ChromeHeadless для двух спеков с настоящим холстом: `compress-image` и `image-file-input`                                        |
+| `npm run test:browser`             | Vitest в Chromium для трёх спеков, которым нужен настоящий браузер (холст и живая геометрия)                                             |
 | `npm run test:ci`                  | оба прогона подряд                                                                                                                       |
+| `npm run lint`                     | ESLint по `src`: `any`, `console.log`, селекторы, шаблонные правила (`eslint.config.mjs`)                                                |
 
 ## Ограничения агентских песочниц (важно)
 
-| Что                                       | Как обойти                                                                                                           |
-| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `node_modules` недоступен для записи      | установка пакетов требует подтверждения администратора сессии                                                        |
-| `ng build` падает на `esbuild` со `EPERM` | сборке нужен обычный терминал; в песочнице её заменяет `tsc --noEmit` внутри `npm run verify`                        |
-| Chrome не установлен                      | `npm test` работает и без браузера; без Chrome пропускается только `npm run test:browser` (или задайте `CHROME_BIN`) |
-| `git` не пишет `.git/index.lock`          | коммиты и `git mv` — в своём терминале                                                                               |
-| npm-кэш вне воркспейса закрыт             | `npm i --cache ./.npm-cache ...`                                                                                     |
-| Worktree без `node_modules`               | симлинк из основного чекаута: `ln -s <корень-репо>/node_modules node_modules`                                        |
+| Что                                       | Как обойти                                                                                                                     |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `node_modules` недоступен для записи      | установка пакетов требует подтверждения администратора сессии                                                                  |
+| `ng build` падает на `esbuild` со `EPERM` | сборке нужен обычный терминал; в песочнице её заменяет `tsc --noEmit` внутри `npm run verify`                                  |
+| Браузер Playwright не установлен          | `npm test` работает и без браузера; без Chromium пропускается только `npm run test:browser`: `npx playwright install chromium` |
+| `git` не пишет `.git/index.lock`          | коммиты и `git mv` — в своём терминале                                                                                         |
+| npm-кэш вне воркспейса закрыт             | `npm i --cache ./.npm-cache ...`                                                                                               |
+| Worktree без `node_modules`               | симлинк из основного чекаута: `ln -s <корень-репо>/node_modules node_modules`                                                  |
 
 Скрипты, которые пишут файлы, умеют печатать результат вместо записи:
 
@@ -49,11 +50,13 @@ node scripts/i18n-tool.mjs set rules rules.title "Новый заголовок"
 
 - `npm test` — Vitest + jsdom, билдер `@angular/build:unit-test`, цель `test` в `angular.json`.
   Спецификации собраны по `tsconfig.spec.json` (типы `vitest/globals`) и лежат рядом с кодом.
-- `npm run test:browser` — Karma + Jasmine в ChromeHeadless, цель `test-browser`, `tsconfig.spec.browser.json`.
-  Три файла, которым нужен настоящий браузер: два про холст (`createImageBitmap`
-  и 2D-контекст) и `src/app/shared/lib/directives/tabs-pill.directive.spec.ts` —
-  живая геометрия DOM-rect и Jasmine `withContext`, которых нет ни в jsdom, ни в Vitest.
-  Список продублирован в `exclude` цели `test` — новый браузерный спек добавляйте в оба места.
+- `npm run test:browser` — тот же Vitest, но в Chromium через Playwright, цель
+  `test-browser`, `tsconfig.spec.browser.json`. Три файла, которым нужен настоящий
+  браузер: два про холст (`createImageBitmap` и 2D-контекст) и
+  `src/app/shared/lib/directives/tabs-pill.directive.spec.ts` — живая геометрия
+  DOM-rect, которой jsdom не даёт. Список продублирован в `exclude` цели `test` —
+  новый браузерный спек добавляйте в оба места. Браузер ставится один раз:
+  `npx playwright install chromium`.
 
 Холст в jsdom не починить: пакет `canvas` тянет install-скрипт `prebuild-install`,
 который агентская песочница блокирует, а `@napi-rs/canvas` под именем `canvas`

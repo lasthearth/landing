@@ -23,7 +23,6 @@ import { RevealDirective } from '@shared/lib/directives';
  * раньше это была отдельная карточка «Ваш путь на сервер», дублировавшая шаги.
  */
 @Component({
-    standalone: true,
     selector: 'app-how-play',
     templateUrl: './how-play.component.html',
     styleUrl: './how-play.component.less',

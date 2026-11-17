@@ -124,8 +124,9 @@ export class EventCardComponent {
 
     public constructor() {
         // Записались или отписались — раскрытый список устарел, сворачиваем его.
+        // Чтение счётчика нужно только как зависимость эффекта.
         effect(() => {
-            this.event().attendeeCount;
+            void this.event().attendeeCount;
             untracked(() => this.everyone.set(null));
         });
     }

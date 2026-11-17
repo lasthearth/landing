@@ -3,7 +3,6 @@ import { RouterLink } from '@angular/router';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import {
     getSettlementDisplayName,
-    getSettlementTypeByKey,
     getSettlementTypeName,
     isGuildSettlement,
     ISettlement,

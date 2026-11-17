@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef,
+    ChangeDetectionStrategy,
     Component,
     computed,
     ElementRef,
@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { UserService } from '@entities/user';
 import { IUser } from '@entities/user';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { HttpContext } from '@angular/common/http';
 import { TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
@@ -44,7 +44,6 @@ import { ServerInformationService } from '@core/services/server-information.serv
 import {
     SettlementService,
     isGuildSettlement,
-    getSettlementTypeByKey,
     getSettlementTypeName,
     getSettlementTypeTone,
     getDiplomacyTone,
@@ -64,7 +63,6 @@ import { ProfileWaitingComponent } from './ui/profile-waiting/profile-waiting.co
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComponent } from '@entities/player-style';
 @Component({
-    standalone: true,
     imports: [AmountPipe,
         TuiIcon,
         RouterOutlet,
@@ -90,6 +88,7 @@ import { bannerById, PlayerAvatarComponent, PlayerLookService, ProfileBannerComp
     selector: 'app-profile',
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.less',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent {
     protected readonly userService = inject(UserService);
@@ -107,7 +106,13 @@ export class ProfileComponent {
 
     protected readonly settlementService = inject(SettlementService);
 
-    protected readonly userData: IUser = this.userService.getUserData();
+    /**
+     * Данные шапки профиля: имя аккаунта и адрес аватара.
+     *
+     * Сигнал, а не простой снимок: аватар обновляется из колбэка `FileReader`
+     * вне событий шаблона, и запись в сигнал сама помечает вид к проверке.
+     */
+    protected readonly userData = signal<IUser>(this.userService.getUserData());
 
     private readonly dialogs = inject(TuiDialogService);
 
@@ -315,11 +320,6 @@ export class ProfileComponent {
      */
     private readonly previewService = inject(TuiPreviewDialogService);
 
-    /**
-     * ChangeDetectorRef для принудительного обновления представления.
-     */
-    private readonly cdr = inject(ChangeDetectorRef);
-
     @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
     /**
@@ -461,9 +461,7 @@ export class ProfileComponent {
                         this.requestStatusService.handleError(this.i18n.translate('profile.errors.imageDimensions')),
                         tap(() => {
                             this.userService.userImage = dataUrl;
-                            this.userData.image = dataUrl;
-
-                            this.cdr.detectChanges();
+                            this.userData.update((data) => ({ ...data, image: dataUrl }));
                         }),
                         this.requestStatusService.handleSuccess(this.i18n.translate('profile.success.imageUpdated'))
                     )

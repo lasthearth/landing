@@ -11,7 +11,6 @@ import { FeedNotification, NOTIFICATION_CATEGORIES } from '../../model/feed-noti
  */
 @Component({
     selector: 'app-notification-bell',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe, RelativeTimeComponent],
     templateUrl: './notification-bell.component.html',
     styleUrl: './notification-bell.component.less',

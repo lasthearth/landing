@@ -61,6 +61,7 @@ export function renderInlineMarkdown(source: string): string {
 
     // 5. Возвращаем защищённые фрагменты (с учётом вложенности).
     while (html.includes('\u0000')) {
+        // eslint-disable-next-line no-control-regex -- \u0000 — служебный маркер защищённых фрагментов: в тексте автора такого символа нет
         html = html.replace(/\u0000(\d+)\u0000/g, (_, index: string) => tokens[Number(index)]);
     }
 

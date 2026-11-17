@@ -11,7 +11,6 @@ import { RevealDirective } from '@shared/lib/directives';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { SkeletonComponent } from '@shared/ui/skeletons';
 import { WikiStoreService } from '../../api/wiki-store.service';
-import { renderWikiMarkdown } from '../../lib/render-wiki-markdown.function';
 
 /**
  * Что показывает фильтр.

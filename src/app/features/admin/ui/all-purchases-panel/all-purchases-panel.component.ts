@@ -27,7 +27,6 @@ const PRIVILEGE_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
  */
 @Component({
     selector: 'app-all-purchases-panel',
-    standalone: true,
     imports: [AmountPipe, TuiIcon, EmptyStateComponent, ErrorStateComponent, TranslatePipe, RelativeTimeComponent],
     templateUrl: './all-purchases-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

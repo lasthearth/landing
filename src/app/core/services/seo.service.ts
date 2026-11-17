@@ -43,7 +43,7 @@ export class SeoService {
     /**
      * Объект {@link Renderer2} для безопасной работы с DOM.
      */
-    private readonly renderer: Renderer2;
+    private readonly renderer: Renderer2 = inject(RendererFactory2).createRenderer(null, null);
 
     /**
      * Канонический link-тег, если он был создан.
@@ -54,15 +54,6 @@ export class SeoService {
      * Блоки структурированных данных по идентификатору.
      */
     private readonly jsonLd = new Map<string, HTMLScriptElement>();
-
-    /**
-     * Инициализирует экземпляр класса {@link SeoService}.
-     *
-     * @param rendererFactory2 Создает и инициализирует Renderer2.
-     */
-    constructor(rendererFactory2: RendererFactory2) {
-        this.renderer = rendererFactory2.createRenderer(null, null);
-    }
 
     /**
      * Устанавливает SEO-метатеги для текущей страницы.

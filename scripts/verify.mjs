@@ -11,6 +11,7 @@
  */
 import { spawnSync } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,25 +22,29 @@ const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const FULL = process.argv.includes('--full');
 
 /**
- * Ищет установленный Chrome: Karma без браузера не стартует.
+ * Ищет браузер, которым Playwright запускает браузерные спеки.
  *
- * @returns {string | null} Путь к браузеру или null.
+ * Браузер из `npx playwright install chromium` лежит в кэше Playwright. Если его
+ * нет, браузерный прогон не стартует, поэтому шаг пропускается с подсказкой.
+ *
+ * @returns {boolean} true, если браузер установлен.
  */
-function findChrome() {
-    if (process.env.CHROME_BIN) {
-        return process.env.CHROME_BIN;
+function hasPlaywrightBrowser() {
+    const roots = [process.env.PLAYWRIGHT_BROWSERS_PATH, join(homedir(), '.cache', 'ms-playwright')].filter(Boolean);
+    const macCache = join(homedir(), 'Library', 'Caches', 'ms-playwright');
+    roots.push(macCache);
+
+    for (const root of roots) {
+        if (!existsSync(root)) {
+            continue;
+        }
+
+        if (readdirSync(root).some((entry) => entry.startsWith('chromium'))) {
+            return true;
+        }
     }
 
-    const candidates = [
-        join(process.env.PROGRAMFILES ?? '', 'Google/Chrome/Application/chrome.exe'),
-        join(process.env['PROGRAMFILES(X86)'] ?? '', 'Google/Chrome/Application/chrome.exe'),
-        join(process.env.LOCALAPPDATA ?? '', 'Google/Chrome/Application/chrome.exe'),
-        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-        '/usr/bin/google-chrome',
-        '/usr/bin/chromium',
-    ];
-
-    return candidates.find((candidate) => candidate && existsSync(candidate)) ?? null;
+    return false;
 }
 
 /**
@@ -77,28 +82,21 @@ const steps = [
     { name: 'Контраст токенов', args: ['scripts/check-contrast.mjs'] },
     { name: 'Объявление токенов', args: ['scripts/check-design-tokens.mjs'] },
     { name: 'Типы', args: ['node_modules/typescript/bin/tsc', '-p', 'tsconfig.app.json', '--noEmit'] },
+    // Держит жёсткое правило 11: `any` и `console.log` не проходят проверку.
+    { name: 'ESLint', args: ['node_modules/eslint/bin/eslint.js', 'src', 'eslint.config.mjs'] },
 ];
 
 if (FULL) {
-    const chrome = findChrome();
-
     steps.push({ name: 'Сборка (ng build)', args: ['node_modules/@angular/cli/bin/ng', 'build'] });
     steps.push({ name: 'Тесты (Vitest + jsdom)', args: ['node_modules/@angular/cli/bin/ng', 'test', '--watch=false'] });
 
-    if (chrome) {
-        process.env.CHROME_BIN = chrome;
+    if (hasPlaywrightBrowser()) {
         steps.push({
-            name: 'Тесты холста (Karma + ChromeHeadless)',
-            args: [
-                'node_modules/@angular/cli/bin/ng',
-                'run',
-                'last-hearth-landing:test-browser',
-                '--watch=false',
-                '--browsers=ChromeHeadless',
-            ],
+            name: 'Тесты холста (Vitest в Chromium)',
+            args: ['node_modules/@angular/cli/bin/ng', 'run', 'last-hearth-landing:test-browser'],
         });
     } else {
-        console.log('Пропуск тестов холста: Chrome не найден (задайте CHROME_BIN) — Karma без браузера не стартует.');
+        console.log('Пропуск тестов холста: нет браузера Playwright. Установите его командой npx playwright install chromium.');
     }
 }
 

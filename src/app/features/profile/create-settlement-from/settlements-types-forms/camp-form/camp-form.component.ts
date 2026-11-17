@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, outpu
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { fileFieldsCamp, FileKeyCamp } from './camp-form.types';
 import { Subject, switchMap, map, finalize, timeout } from 'rxjs';
-import { NgFor, AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { TuiFiles } from '@taiga-ui/kit';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -32,9 +32,7 @@ import { ImageFileInputComponent } from '@shared/ui/image-file-input';
         LHInputComponent,
         FormsModule,
         ReactiveFormsModule,
-        NgFor,
         AsyncPipe,
-        NgIf,
         TuiFiles,
         LHHintComponent,
         TuiLoader,

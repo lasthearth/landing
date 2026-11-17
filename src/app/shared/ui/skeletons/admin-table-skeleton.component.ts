@@ -6,7 +6,6 @@ import { SkeletonComponent } from './skeleton.component';
  */
 @Component({
     selector: 'app-admin-table-skeleton',
-    standalone: true,
     imports: [SkeletonComponent],
     template: `
         <div class="overflow-x-auto rounded-2xl border border-line shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
