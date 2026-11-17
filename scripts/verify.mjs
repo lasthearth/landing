@@ -1,9 +1,12 @@
 /**
  * Единая проверка проекта перед коммитом.
  *
- * Собирает всё, что нужно прогонять после правки: формат агентских документов, бюджет
- * контекста, живость указателей, границы FSD, паритет локалей, контраст токенов и типы.
- * Полный прогон добавляет сборку и тесты.
+ * Собирает всё, что нужно прогонять после правки: состояние `node_modules`, формат
+ * агентских документов, бюджет контекста, живость указателей, границы FSD, паритет
+ * локалей, контраст токенов, типы и ESLint. Полный прогон добавляет сборку и тесты.
+ *
+ * Весь прогон держит замок сборки (`.build.lock`): параллельный `verify` или `npm run
+ * build` падает сразу, а не ломает чужой `dist`.
  *
  * Запуск:
  *   node scripts/verify.mjs          — быстрый минимум (работает и в песочнице)
@@ -14,12 +17,16 @@ import { existsSync, readdirSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { acquireBuildLock } from './lib/build-lock.mjs';
 
 /** Корень репозитория. */
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 
 /** Полный прогон со сборкой и тестами. */
 const FULL = process.argv.includes('--full');
+
+/** Исполняемый файл npm: на Windows это `npm.cmd`. */
+const NPM_BIN = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
 /**
  * Ищет браузер, которым Playwright запускает браузерные спеки.
@@ -74,6 +81,9 @@ function formatTargets() {
 
 /** Шаги проверки. */
 const steps = [
+    // Окружение: пакет из package.json, которого нет в node_modules, иначе всплывает
+    // через два шага невнятной ошибкой `TS2307 Cannot find module`.
+    { name: 'Окружение (node_modules против package.json)', cmd: 'npm', args: ['ls', '--depth=0'], quiet: true },
     { name: 'Формат агентских документов', args: ['node_modules/prettier/bin/prettier.cjs', '--check', ...formatTargets()] },
     { name: 'Бюджет контекста', args: ['scripts/check-context-budget.mjs'] },
     { name: 'Живость указателей', args: ['scripts/check-doc-pointers.mjs'] },
@@ -102,10 +112,17 @@ if (FULL) {
 
 const results = [];
 const started = Date.now();
+// Замок на весь прогон: шаги `--full` пишут в `dist/`, а второй такой прогон рядом
+// не должен этого делать. Дочерние шаги видят `LH_BUILD_LOCK_HELD` и не берут замок.
+const releaseBuildLock = acquireBuildLock(FULL ? 'verify:full' : 'verify');
 
 for (const step of steps) {
     const at = Date.now();
-    const run = spawnSync(process.execPath, step.args, { cwd: ROOT, stdio: 'inherit' });
+    const run = spawnSync(
+        step.cmd === 'npm' ? NPM_BIN : process.execPath,
+        step.args,
+        { cwd: ROOT, stdio: step.quiet ? 'pipe' : 'inherit', encoding: 'utf8' }
+    );
     const seconds = ((Date.now() - at) / 1000).toFixed(1);
     const ok = run.status === 0;
 
@@ -113,6 +130,19 @@ for (const step of steps) {
 
     if (!ok && run.error) {
         console.log('  не удалось запустить шаг: ' + run.error.message);
+    }
+
+    if (!ok && step.quiet) {
+        const lines = String(run.stdout ?? '')
+            .split('\n')
+            .filter((line) => /UNMET|invalid|missing|extraneous|ERR/.test(line))
+            .slice(0, 10);
+
+        for (const line of lines) {
+            console.log('  ' + line.trim());
+        }
+
+        console.log('  лечится командой npm ci (или npm run bootstrap в worktree)');
     }
 }
 
@@ -130,8 +160,10 @@ if (failed.length) {
     console.log('');
     console.log('Провалилось шагов: ' + failed.length + ' -> ' + failed.map((item) => item.name).join(', '));
     console.log('Полное время: ' + ((Date.now() - started) / 1000).toFixed(1) + ' с.');
+    releaseBuildLock();
     process.exit(1);
 }
 
 console.log('');
 console.log('Всё зелёное за ' + ((Date.now() - started) / 1000).toFixed(1) + ' с.');
+releaseBuildLock();

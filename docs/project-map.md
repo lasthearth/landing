@@ -10,7 +10,7 @@
 | `npm run ng` | `ng` |
 | `npm run start` | `node -r dotenv/config node_modules/@angular/cli/bin/ng serve --host 127.0.0.1` |
 | `npm run dev` | `node -r dotenv/config node_modules/@angular/cli/bin/ng serve` |
-| `npm run build` | `ng build` |
+| `npm run build` | `node scripts/build.mjs` |
 | `npm run watch` | `ng build --watch --configuration development` |
 | `npm run test` | `ng test --watch=false` |
 | `npm run test:watch` | `ng test --watch` |
@@ -18,6 +18,8 @@
 | `npm run test:browser` | `ng run last-hearth-landing:test-browser` |
 | `npm run test:ci` | `npm run test && npm run test:browser` |
 | `npm run lint` | `eslint src eslint.config.mjs` |
+| `npm run bootstrap` | `npm ci` |
+| `npm run history` | `node scripts/history-tool.mjs` |
 | `npm run verify` | `node scripts/verify.mjs` |
 | `npm run verify:full` | `node scripts/verify.mjs --full` |
 | `npm run arch` | `node scripts/check-architecture.mjs` |

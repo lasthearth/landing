@@ -5,7 +5,7 @@
         "ng": "ng",
         "start": "node -r dotenv/config node_modules/@angular/cli/bin/ng serve --host 127.0.0.1",
         "dev": "node -r dotenv/config node_modules/@angular/cli/bin/ng serve",
-        "build": "ng build",
+        "build": "node scripts/build.mjs",
         "watch": "ng build --watch --configuration development",
         "test": "ng test --watch=false",
         "test:watch": "ng test --watch",
@@ -13,6 +13,8 @@
         "test:browser": "ng run last-hearth-landing:test-browser",
         "test:ci": "npm run test && npm run test:browser",
         "lint": "eslint src eslint.config.mjs",
+        "bootstrap": "npm ci",
+        "history": "node scripts/history-tool.mjs",
         "verify": "node scripts/verify.mjs",
         "verify:full": "node scripts/verify.mjs --full",
         "arch": "node scripts/check-architecture.mjs",
@@ -97,5 +99,14 @@
         "typescript-eslint": "^8.73.0",
         "vite": "^6.1.0",
         "vitest": "^3.2.4"
+    },
+    "allowScripts": {
+        "esbuild@0.25.12": true,
+        "esbuild@0.25.9": true,
+        "sharp@0.34.5": true,
+        "@tailwindcss/oxide@4.1.14": true,
+        "lmdb@3.4.2": true,
+        "msgpackr-extract@3.0.3": true,
+        "@parcel/watcher@2.5.1": true
     }
 }
