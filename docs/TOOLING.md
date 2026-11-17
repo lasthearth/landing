@@ -4,23 +4,25 @@
 
 ## Команды
 
-| Команда                           | Что делает                                                                                                                               |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| `npm start` / `npm run dev`       | dev-сервер на `127.0.0.1:4200` (через dotenv)                                                                                            |
-| `npm run build`                   | прод-сборка SSR: пререндер заранее собранных разделов (список — `src/app/app.routes.server.ts`)                                          |
-| `npm run verify`                  | **обязательный минимум**: формат доков, бюджет контекста, указатели, границы FSD, локали, контраст, типы                                 |
-| `npm run verify:full`             | то же + `ng build` + Vitest + тесты холста в Chrome (если он найден)                                                                     |     |
-| `npm run arch`                    | границы FSD; `--update-baseline` фиксирует легаси-нарушения                                                                              |
-| `npm run map`                     | перегенерировать `docs/project-map.md`                                                                                                   |
-| `npm run i18n`                    | `stats \| check \| find \| get \| set` — правка словарей без чтения файла (`docs/I18N.md`)                                               |
-| `npm run sitemap`                 | `public/sitemap.xml`: разделы, статьи, новости, поселения, игроки. Выполняется сам перед `npm run build`; без API оставляет прежний файл |
-| `npm run icons`                   | иконки из `public/`: `favicon.ico` (16/32/48), `icon-192/512.png`, `icon-maskable-512.png`; результат коммитится, в сборке не нужен      |
-| `npm run context:cost`            | стоимость агентских документов в токенах + бюджеты                                                                                       |
-| `npm run format` / `format:check` | prettier по агентским документам и `scripts/`                                                                                            |
-| `npm test` / `npm run test:watch` | Vitest + jsdom через `@angular/build:unit-test`; браузер не нужен                                                                        |
-| `npm run test:coverage`           | то же с отчётом покрытия в `coverage/`                                                                                                   |
-| `npm run test:browser`            | Karma + ChromeHeadless для двух спеков с настоящим холстом: `compress-image` и `image-file-input`                                        |
-| `npm run test:ci`                 | оба прогона подряд                                                                                                                       |
+| Команда                            | Что делает                                                                                                                               |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| `npm start` / `npm run dev`        | dev-сервер на `127.0.0.1:4200` (через dotenv)                                                                                            |
+| `npm run build`                    | прод-сборка SSR: пререндер заранее собранных разделов (список — `src/app/app.routes.server.ts`)                                          |
+| `npm run verify`                   | **обязательный минимум**: формат доков, бюджет контекста, указатели, границы FSD, локали, контраст, типы                                 |
+| `npm run verify:full`              | то же + `ng build` + Vitest + тесты холста в Chrome (если он найден)                                                                     |     |
+| `npm run arch`                     | границы FSD; `--update-baseline` фиксирует легаси-нарушения                                                                              |
+| `npm run map`                      | перегенерировать `docs/project-map.md`                                                                                                   |
+| `npm run i18n`                     | `stats \| check \| find \| get \| set` — правка словарей без чтения файла (`docs/I18N.md`)                                               |
+| `npm run sitemap`                  | `public/sitemap.xml`: разделы, статьи, новости, поселения, игроки. Выполняется сам перед `npm run build`; без API оставляет прежний файл |
+| `npm run icons`                    | иконки из `public/`: `favicon.ico` (16/32/48), `icon-192/512.png`, `icon-maskable-512.png`; результат коммитится, в сборке не нужен      |
+| `npm run context:cost`             | стоимость агентских документов в токенах + бюджеты                                                                                       |
+| `npm run format` / `format:check`  | prettier по агентским документам и `scripts/`                                                                                            |
+| `node scripts/archive-history.mjs` | переносит старейшие записи `### 3.-*` из `docs/history.md` в архив, пока летопись держит бюджет 120 kB                                   |
+| `node scripts/visual-check.mjs`    | скриншот dev-сервера в настоящем Chrome: `--url`, `--width`, `--clip`, `--out`, `--auth` (подставной вход игрока в шапке)                |
+| `npm test` / `npm run test:watch`  | Vitest + jsdom через `@angular/build:unit-test`; браузер не нужен                                                                        |
+| `npm run test:coverage`            | то же с отчётом покрытия в `coverage/`                                                                                                   |
+| `npm run test:browser`             | Karma + ChromeHeadless для двух спеков с настоящим холстом: `compress-image` и `image-file-input`                                        |
+| `npm run test:ci`                  | оба прогона подряд                                                                                                                       |
 
 ## Ограничения агентских песочниц (важно)
 
@@ -48,10 +50,10 @@ node scripts/i18n-tool.mjs set rules rules.title "Новый заголовок"
 - `npm test` — Vitest + jsdom, билдер `@angular/build:unit-test`, цель `test` в `angular.json`.
   Спецификации собраны по `tsconfig.spec.json` (типы `vitest/globals`) и лежат рядом с кодом.
 - `npm run test:browser` — Karma + Jasmine в ChromeHeadless, цель `test-browser`, `tsconfig.spec.browser.json`.
-  Только два файла, которым нужны `createImageBitmap` и 2D-контекст:
-  `src/app/shared/lib/compress-image.function.spec.ts` и
-  `src/app/shared/ui/image-file-input/image-file-input.component.spec.ts`.
-  Список продублирован в `exclude` цели `test` — новый спек про холст добавляйте в оба места.
+  Три файла, которым нужен настоящий браузер: два про холст (`createImageBitmap`
+  и 2D-контекст) и `src/app/shared/lib/directives/tabs-pill.directive.spec.ts` —
+  живая геометрия DOM-rect и Jasmine `withContext`, которых нет ни в jsdom, ни в Vitest.
+  Список продублирован в `exclude` цели `test` — новый браузерный спек добавляйте в оба места.
 
 Холст в jsdom не починить: пакет `canvas` тянет install-скрипт `prebuild-install`,
 который агентская песочница блокирует, а `@napi-rs/canvas` под именем `canvas`
@@ -73,3 +75,10 @@ node scripts/i18n-tool.mjs set rules rules.title "Новый заголовок"
 - **CI**: `.github/workflows/verify.yml` прогоняет `npm ci` + `npm run verify` на push в `main` и на PR.
   Сборка и тесты там не запускаются: на раннере GitHub браузер есть, но шаг намеренно оставлен быстрым —
   замените команду на `npm run verify:full`, если хотите проверять в CI бандл и тесты.
+
+## GitHub CLI
+
+`gh` стоит в `/opt/homebrew/bin/gh`, которого нет в PATH шеллов харнеса:
+перед командами делайте `export PATH="/opt/homebrew/bin:$PATH"`.
+Вход выполнен под аккаунтом ripls56 (keyring), git-протокол — ssh, поэтому
+`gh pr create|merge` работают без дополнительных токенов.
