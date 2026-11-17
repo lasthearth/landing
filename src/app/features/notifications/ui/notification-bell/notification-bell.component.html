@@ -1,7 +1,7 @@
 <button
     type="button"
-    class="nav-button relative !px-2.5"
-    [class.nav-button--active]="open()"
+    class="bell__trigger"
+    [class.bell__trigger--open]="open()"
     [attr.aria-expanded]="open()"
     aria-haspopup="true"
     [attr.aria-label]="
@@ -11,7 +11,7 @@
     "
     (click)="toggle()"
 >
-    <tui-icon icon="@tui.bell" class="size-4!" />
+    <tui-icon icon="@tui.bell" />
     @if (feed.unreadCount() > 0) {
         <span class="bell__badge" aria-hidden="true">{{ feed.unreadCount() > 9 ? "9+" : feed.unreadCount() }}</span>
     }
@@ -107,7 +107,9 @@
                                     <span class="bell__item-title">
                                         {{ item.title }}
                                         @if (!item.read) {
-                                            <span class="sr-only">— {{ "shared.notifications.unread" | translate }}</span>
+                                            <span class="sr-only">
+                                                — {{ "shared.notifications.unread" | translate }}
+                                            </span>
                                         }
                                     </span>
                                     <span class="bell__message">{{ item.message }}</span>

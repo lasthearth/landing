@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, inject, signal } from '
 import { Router } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
+import { isKeyframeEnd } from '@shared/lib/is-keyframe-end.function';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { NotificationsFeedService } from '../../api/notifications-feed.service';
 import { FeedNotification, NOTIFICATION_CATEGORIES } from '../../model/feed-notification';
@@ -105,7 +106,10 @@ export class NotificationBellComponent {
      * @param event Событие конца анимации на контейнере панели.
      */
     protected onPanelAnimationEnd(event: AnimationEvent): void {
-        if (event.animationName === 'bell-panel-exit') {
+        // Имя кадра приходит с префиксом области видимости компонента —
+        // см. `isKeyframeEnd`. Без этого панель оставалась в DOM невидимой
+        // и ловила клики по шапке.
+        if (isKeyframeEnd(event, 'bell-panel-exit')) {
             this.closing.set(false);
         }
     }

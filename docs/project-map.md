@@ -33,13 +33,13 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1097 | core, entities, features, layout, routes, shared |
+| src/app | 1100 | core, entities, features, layout, routes, shared |
 | core/ | 60 | config, guards, i18n, interceptors, services, types |
 | entities/ | 203 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki |
-| features/ | 653 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
+| features/ | 654 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
 | layout/ | 27 | background-scene, footer, header |
 | routes/ | 5 | enums |
-| shared/ | 144 | lib, styles, ui |
+| shared/ | 146 | lib, styles, ui |
 
 ## 3. Слайсы features / entities
 
@@ -65,7 +65,7 @@
 | features/new-content | 4 | model, api, lib | да | 2 |
 | features/news | 20 | ui, model | да | 5 |
 | features/not-found | 3 | — | **нет** | — |
-| features/notifications | 6 | ui, model, api | да | 2 |
+| features/notifications | 7 | ui, model, api | да | 2 |
 | features/onboarding | 8 | ui, model, api | да | 2 |
 | features/player | 23 | ui, model, api, lib, config | да | 6 |
 | features/players | 7 | ui | да | 1 |
@@ -163,7 +163,7 @@
 | gallery | 2.6 | /gallery |
 | header | 2.6 | — |
 | home | 10.8 | / |
-| key-points | 79.3 | /key-points |
+| key-points | 83.4 | /key-points |
 | legal | 68.7 | /privacy-policy, /public-offer |
 | lfg | 15.4 | /lfg |
 | market | 15.6 | /profile, /market |

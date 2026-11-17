@@ -19,6 +19,7 @@ import { TranslatePipe } from '@core/i18n';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ShareButtonComponent } from '@shared/ui/share-button';
 import { MotionBlurDirective } from '@shared/lib/directives';
+import { isKeyframeEnd } from '@shared/lib/is-keyframe-end.function';
 import { ImageViewerItem } from './image-viewer-item';
 
 /**
@@ -174,7 +175,9 @@ export class ImageViewerComponent {
      * @param event Событие конца анимации на корне диалога.
      */
     protected onAnimationEnd(event: AnimationEvent): void {
-        if (event.animationName !== 'image-viewer-leave' || event.target !== event.currentTarget) {
+        // Имя кадра приходит с префиксом области видимости компонента —
+        // см. `isKeyframeEnd`.
+        if (!isKeyframeEnd(event, 'image-viewer-leave') || event.target !== event.currentTarget) {
             return;
         }
 

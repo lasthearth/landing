@@ -1,4 +1,4 @@
-# Ранние записи летописи (3.0—3.-10)
+# Ранние записи летописи (3.0—3.-9)
 
 > Перенесено из `docs/history.md` без правок: летопись упёрлась в бюджет 120 kB.
 > Живые решения и причины — по-прежнему в `docs/history.md`, здесь только старые записи.
@@ -515,6 +515,7 @@ POST/PUT/DELETE (фидбек через `RequestStatusService`).
 `value` — русские литералы, с которыми сопоставляется `getDiplomacyTone`,
 `labelKey` — ключ **словаря админки**, потому что на роуте `/profile/admin`
 словарь поселений не подгружается.
+
 ### 3.-8 Выгрузка правил в Markdown для редактирования
 
 > Рабочий процесс «правки правил вне кода»: весь контент страницы `/rules`
@@ -571,3 +572,40 @@ POST/PUT/DELETE (фидбек через `RequestStatusService`).
   правила (молчаливый перекрой по порядку кода, поймал только скриншотом).
 - TOOLING: worktree без `node_modules` — симлинк из основного чекаута.
 
+### 3.-9 Дизайн-оптимизация (ветка `optimizations`, план `DESIGN_FIX_PLAN`)
+
+- Навигация шапки и профиля — `<a routerLink routerLinkActive>`; ручные поля
+  `select` удалены. Подсветка «Медиа» — computed от URL (`header.component.ts`).
+- Ключи подписей навигации профиля: `profile.nav.*`.
+- `.lh-chips__label` (`styles.css`) — видимая подпись группы чипов-фильтров.
+- `lh-input`: входы `label` (видимая подпись) и `ariaLabel`; `markup-editor`: `ariaLabel`.
+- Карусель главной: 7 с, пауза кнопкой и при наведении/фокусе.
+- `DEFAULT_SETTLEMENT_COVER` (`entities/settlement/config/`) — фолбэк обложки.
+- **Удалено:** радио-виджет (`features/radio-widget/`), фото и блок команды
+  (`public/team/`, `environment.teamPhotos`, `home.team.*`), неиспользуемые
+  `settlement-detailed`, `edit-settlement-form`, `market/ui/privilege-card`,
+  `market/templates/privilege-carousel-template`, `public/images/logo.png`,
+  `rules.i18n.ts.old`. Упоминания ниже — история.
+- Меню шапки собирается из `layout/header/config/header-{main,community}-links.constant.ts`
+  (модель `layout/header/model/header-nav-link.interface.ts`): 5 разделов + «Сообщество ▾».
+  FAQ — в футере. Колонка контента `xl:w-[min(72rem,85%)]`.
+- Токены в `styles.css`: `--lh-space-*`, `--lh-section-gap`, `--lh-radius-*`, `--lh-z-*`.
+  Отступы в LESS — на сетке 2px; font-size — на ступенях.
+- Вкладки (`.lh-chips[role=tablist]`) — сегментированный переключатель; вкладка
+  маркета в `?tab=`. Подписи фильтров — `.lh-chips__label`.
+- Анимации: бесконечные убраны (фон, скидки, статусы, leader-card); косметика игрока
+  ставится на паузу вне экрана — `PauseOffscreenDirective` (`@shared/lib/directives`).
+  Компонент частиц `layout/background-particles/` удалён.
+- Состояния ошибки/пустоты в дипломатии, событиях, LFG — `app-error-state` / `app-empty-state`.
+- Карточка поселения: тип, дипломатия, «В сети: N · жителей: M», глава + до 3 онлайн.
+- `environment`: `discordInviteUrl`, `siteVersionDate`. Главная — канон `/home`.
+- Все компонентные стили — `.less` (бывшие `.component.css` переименованы).
+- Производительность: гидратация пререндера (`provideClientHydration(withEventReplay())`),
+  `withInMemoryScrolling` (сброс прокрутки), карусель рендерит картинку только у текущего
+  и соседних слайдов (`HomeComponent.isSlideNear`), путь новичка грузится динамически
+  из layout, стили `@taiga-ui/addon-mobile` убраны, `NewsApiService.getList` кэширует
+  ответ на 60 с, чат Discord опрашивается раз в минуту, пока его никто не читает
+  (`GameChatService.requestActivePolling`).
+- UX: меню шапки закрываются по Escape и клику мимо; заголовок раздела правил — кнопка;
+  тема по `prefers-color-scheme`, если пользователь не выбирал; `.lh-cta--on-dark` —
+  вторичная кнопка на тёмном фото.
