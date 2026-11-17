@@ -86,14 +86,18 @@ export class HeaderState {
     private readonly analytics = inject(AnalyticsService);
 
     /**
-     * {@link Observable} Состояния входа.
+     * {@link Observable} Состояния входа после завершения проверки.
+     * `authState$` начинает с библиотечного `false` до первого ответа Logto,
+     * а `authSettled$` молчит до итога проверки: поэтому по `null` можно
+     * отличить неизвестность от настоящего гостя и не рисовать гостевые
+     * разделы авторизованному пользователю.
      */
-    private readonly auth$: Observable<boolean> = this.userService.authState$.pipe(catchError(() => of(false)));
+    private readonly auth$: Observable<boolean> = this.userService.authSettled$.pipe(catchError(() => of(false)));
 
     /**
      * {@link Observable} Баланса донат-валюты авторизованного пользователя.
      */
-    private readonly balance$: Observable<string | null> = this.userService.authState$.pipe(
+    private readonly balance$: Observable<string | null> = this.userService.authSettled$.pipe(
         filter((isAuth): isAuth is true => isAuth === true),
         switchMap(() =>
             this.donateService.watchMyBalance$().pipe(
@@ -154,6 +158,14 @@ export class HeaderState {
      * Признак, что пользователь авторизован.
      */
     public readonly isAuth = computed(() => this.auth() === true);
+
+    /**
+     * Состояние входа уже определено сервисом пользователя. До первого
+     * ответа `isAuth` ложен и у гостя, и на сервере: гостевые пункты меню
+     * нельзя рисовать по одному только `isAuth`, иначе авторизованный
+     * видит их до гидратации и до ответа Logto.
+     */
+    public readonly authKnown = computed(() => this.auth() !== null);
 
     /**
      * Имя игрока.

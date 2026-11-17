@@ -82,6 +82,7 @@ function createFakeState() {
         online: signal<OnlineCount | null>(null),
         time: signal<string | null>(null),
         isAuth: signal(false),
+        authKnown: signal(true),
         userName: signal(''),
         userImage: signal(''),
         userId: signal<string | null>(null),
@@ -203,6 +204,14 @@ describe('CrownComponent', () => {
 
         expect(root.querySelector('.crown__signin')).not.toBeNull();
         expect(root.querySelector('.crown__player')).toBeNull();
+    });
+
+    it('пока вход не определился, не рисует гостевые разделы', () => {
+        state.authKnown.set(false);
+        render();
+
+        // Главная, шесть основных разделов и «Сообщество»: без «Начать игру».
+        expect(root.querySelectorAll('.crown__row a, .crown__row button').length).toBe(8);
     });
 
     it('игроку показывает имя, баланс, точку внимания и выход', () => {

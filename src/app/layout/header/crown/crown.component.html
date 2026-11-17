@@ -1,5 +1,6 @@
 @let online = state.online();
 @let isAuth = state.isAuth();
+@let authKnown = state.authKnown();
 
 <div class="crown">
     <!--
@@ -151,7 +152,7 @@
             </a>
 
             @for (link of state.mainLinks; track link.route) {
-                @if (!link.guestOnly || !isAuth) {
+                @if (!link.guestOnly || (authKnown && !isAuth)) {
                     <a class="crown__link" [routerLink]="link.route" routerLinkActive="crown__link--active">
                         <span>{{ link.labelKey | translate }}</span>
                         @if (link.freshSection && state.isFresh(link.freshSection)) {
@@ -260,7 +261,7 @@
                     </a>
 
                     @for (link of state.mainLinks; track link.route; let i = $index) {
-                        @if (!link.guestOnly || !isAuth) {
+                        @if (!link.guestOnly || (authKnown && !isAuth)) {
                             <a
                                 class="crown__tile"
                                 [routerLink]="link.route"
