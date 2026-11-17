@@ -103,7 +103,6 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 60 },
                     { resource: 'metal', amount: 80 },
                     { resource: 'bronze', amount: 24 },
-                    { resource: 'iron', amount: 24 },
                     { resource: 'charcoal', amount: 80 },
                     { resource: 'rustyGear', amount: 8 },
                 ],
@@ -122,8 +121,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 96 },
                     { resource: 'metal', amount: 128 },
                     { resource: 'bronze', amount: 40 },
-                    { resource: 'iron', amount: 40 },
-                    { resource: 'ironPlate', amount: 20 },
+                    { resource: 'blackBronze', amount: 28 },
                     { resource: 'charcoal', amount: 128 },
                     { resource: 'rustyGear', amount: 13 },
                 ],
@@ -142,8 +140,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 272 },
                     { resource: 'metal', amount: 360 },
                     { resource: 'bronze', amount: 120 },
-                    { resource: 'iron', amount: 120 },
-                    { resource: 'ironPlate', amount: 60 },
+                    { resource: 'blackBronze', amount: 80 },
                     { resource: 'charcoal', amount: 376 },
                     { resource: 'rustyGear', amount: 40 },
                 ],
@@ -162,9 +159,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 208 },
                     { resource: 'metal', amount: 288 },
                     { resource: 'bronze', amount: 96 },
-                    { resource: 'iron', amount: 96 },
-                    { resource: 'ironPlate', amount: 48 },
-                    { resource: 'steel', amount: 24 },
+                    { resource: 'blackBronze', amount: 60 },
                     { resource: 'charcoal', amount: 304 },
                     { resource: 'rustyGear', amount: 32 },
                 ],
@@ -183,9 +178,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 264 },
                     { resource: 'metal', amount: 360 },
                     { resource: 'bronze', amount: 112 },
-                    { resource: 'iron', amount: 112 },
-                    { resource: 'ironPlate', amount: 56 },
-                    { resource: 'steel', amount: 32 },
+                    { resource: 'blackBronze', amount: 80 },
                     { resource: 'charcoal', amount: 376 },
                     { resource: 'rustyGear', amount: 40 },
                     { resource: 'temporalGear', amount: 1 },
@@ -205,9 +198,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 424 },
                     { resource: 'metal', amount: 560 },
                     { resource: 'bronze', amount: 176 },
-                    { resource: 'iron', amount: 176 },
-                    { resource: 'ironPlate', amount: 88 },
-                    { resource: 'steel', amount: 48 },
+                    { resource: 'blackBronze', amount: 120 },
                     { resource: 'charcoal', amount: 592 },
                     { resource: 'rustyGear', amount: 60 },
                     { resource: 'temporalGear', amount: 1 },
@@ -318,7 +309,6 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 56 },
                     { resource: 'metal', amount: 72 },
                     { resource: 'bronze', amount: 24 },
-                    { resource: 'iron', amount: 24 },
                     { resource: 'charcoal', amount: 80 },
                     { resource: 'rustyGear', amount: 8 },
                 ],
@@ -337,7 +327,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 88 },
                     { resource: 'metal', amount: 120 },
                     { resource: 'bronze', amount: 36 },
-                    { resource: 'iron', amount: 36 },
+                    { resource: 'blackBronze', amount: 24 },
                     { resource: 'charcoal', amount: 120 },
                     { resource: 'rustyGear', amount: 12 },
                 ],
@@ -356,7 +346,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 256 },
                     { resource: 'metal', amount: 344 },
                     { resource: 'bronze', amount: 112 },
-                    { resource: 'iron', amount: 112 },
+                    { resource: 'blackBronze', amount: 72 },
                     { resource: 'charcoal', amount: 360 },
                     { resource: 'rustyGear', amount: 36 },
                 ],
@@ -375,8 +365,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 112 },
                     { resource: 'metal', amount: 144 },
                     { resource: 'bronze', amount: 44 },
-                    { resource: 'iron', amount: 44 },
-                    { resource: 'ironPlate', amount: 24 },
+                    { resource: 'blackBronze', amount: 32 },
                     { resource: 'charcoal', amount: 144 },
                     { resource: 'rustyGear', amount: 15 },
                 ],
@@ -395,9 +384,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 248 },
                     { resource: 'metal', amount: 344 },
                     { resource: 'bronze', amount: 112 },
-                    { resource: 'iron', amount: 112 },
-                    { resource: 'ironPlate', amount: 56 },
-                    { resource: 'steel', amount: 32 },
+                    { resource: 'blackBronze', amount: 72 },
                     { resource: 'charcoal', amount: 352 },
                     { resource: 'rustyGear', amount: 36 },
                 ],
@@ -416,9 +403,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 152 },
                     { resource: 'metal', amount: 216 },
                     { resource: 'bronze', amount: 72 },
-                    { resource: 'iron', amount: 72 },
-                    { resource: 'ironPlate', amount: 36 },
-                    { resource: 'steel', amount: 20 },
+                    { resource: 'blackBronze', amount: 44 },
                     { resource: 'charcoal', amount: 216 },
                     { resource: 'rustyGear', amount: 24 },
                 ],
@@ -437,9 +422,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 400 },
                     { resource: 'metal', amount: 536 },
                     { resource: 'bronze', amount: 168 },
-                    { resource: 'iron', amount: 168 },
-                    { resource: 'ironPlate', amount: 88 },
-                    { resource: 'steel', amount: 48 },
+                    { resource: 'blackBronze', amount: 112 },
                     { resource: 'charcoal', amount: 560 },
                     { resource: 'rustyGear', amount: 56 },
                 ],
@@ -458,9 +441,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 184 },
                     { resource: 'metal', amount: 240 },
                     { resource: 'bronze', amount: 80 },
-                    { resource: 'iron', amount: 80 },
-                    { resource: 'ironPlate', amount: 40 },
-                    { resource: 'steel', amount: 24 },
+                    { resource: 'blackBronze', amount: 52 },
                     { resource: 'charcoal', amount: 256 },
                     { resource: 'rustyGear', amount: 28 },
                     { resource: 'temporalGear', amount: 1 },
@@ -480,9 +461,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'rope', amount: 304 },
                     { resource: 'metal', amount: 400 },
                     { resource: 'bronze', amount: 128 },
-                    { resource: 'iron', amount: 128 },
-                    { resource: 'ironPlate', amount: 64 },
-                    { resource: 'steel', amount: 36 },
+                    { resource: 'blackBronze', amount: 88 },
                     { resource: 'charcoal', amount: 424 },
                     { resource: 'rustyGear', amount: 44 },
                     { resource: 'temporalGear', amount: 1 },
@@ -602,8 +581,6 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
 
                     { resource: 'bronze', amount: 1 },
 
-                    { resource: 'iron', amount: 1 },
-
                     { resource: 'charcoal', amount: 1 },
 
                     { resource: 'rustyGear', amount: 1 },
@@ -620,8 +597,6 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'money', amount: 840 },
 
                     { resource: 'bronze', amount: 1 },
-
-                    { resource: 'iron', amount: 1 },
 
                     { resource: 'charcoal', amount: 1 },
 
@@ -640,7 +615,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
 
                     { resource: 'bronze', amount: 1 },
 
-                    { resource: 'iron', amount: 1 },
+                    { resource: 'blackBronze', amount: 1 },
 
                     { resource: 'charcoal', amount: 1 },
 
@@ -659,9 +634,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
 
                     { resource: 'bronze', amount: 1 },
 
-                    { resource: 'iron', amount: 1 },
-
-                    { resource: 'ironPlate', amount: 1 },
+                    { resource: 'blackBronze', amount: 1 },
 
                     { resource: 'charcoal', amount: 1 },
 
@@ -680,9 +653,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
 
                     { resource: 'bronze', amount: 1 },
 
-                    { resource: 'iron', amount: 1 },
-
-                    { resource: 'ironPlate', amount: 1 },
+                    { resource: 'blackBronze', amount: 1 },
 
                     { resource: 'charcoal', amount: 1 },
 
@@ -701,9 +672,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
 
                     { resource: 'bronze', amount: 1 },
 
-                    { resource: 'iron', amount: 1 },
-
-                    { resource: 'ironPlate', amount: 1 },
+                    { resource: 'blackBronze', amount: 1 },
 
                     { resource: 'charcoal', amount: 1 },
 
@@ -722,11 +691,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
 
                     { resource: 'bronze', amount: 1 },
 
-                    { resource: 'iron', amount: 1 },
-
-                    { resource: 'ironPlate', amount: 1 },
-
-                    { resource: 'steel', amount: 1 },
+                    { resource: 'blackBronze', amount: 1 },
 
                     { resource: 'charcoal', amount: 1 },
 
@@ -745,11 +710,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
 
                     { resource: 'bronze', amount: 1 },
 
-                    { resource: 'iron', amount: 1 },
-
-                    { resource: 'ironPlate', amount: 1 },
-
-                    { resource: 'steel', amount: 1 },
+                    { resource: 'blackBronze', amount: 1 },
 
                     { resource: 'charcoal', amount: 1 },
 
@@ -768,11 +729,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
 
                     { resource: 'bronze', amount: 1 },
 
-                    { resource: 'iron', amount: 1 },
-
-                    { resource: 'ironPlate', amount: 1 },
-
-                    { resource: 'steel', amount: 1 },
+                    { resource: 'blackBronze', amount: 1 },
 
                     { resource: 'charcoal', amount: 1 },
 
