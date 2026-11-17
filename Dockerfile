@@ -14,15 +14,20 @@ WORKDIR /app
 # npm ci ставит ровно версии из package-lock.json (в том числе devDependencies:
 # без них не работает @angular/cli).
 COPY package.json package-lock.json ./
-RUN npm ci
+# Кэш BuildKit переживает пересборку слоя: при смене lockfile пакеты
+# не скачиваются заново. На хосте Dokploy кэш хранится между деплоями.
+RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
 
 COPY . .
 
 # dist/last-hearth-landing/browser — статика и предрендер,
 # dist/last-hearth-landing/server — Node-сервер.
-RUN npm run build
+# .angular/cache лежит в кэше BuildKit, а не в слое: повторный деплой после
+# правки исходников пересобирает только изменившееся, а не весь проект.
+RUN --mount=type=cache,target=/app/.angular/cache npm run build
 
-# Сжатые копии текстовой статики (*.gz): сервер отдаёт их сам, без nginx.
+# Сжатые копии текстовой статики и предрендера (*.gz, *.br): сервер отдаёт
+# их сам, без nginx и без сжатия на каждый запрос.
 RUN node scripts/precompress.mjs dist/last-hearth-landing/browser
 
 # --- nginx перед Node (не по умолчанию) ---------------------------------------
