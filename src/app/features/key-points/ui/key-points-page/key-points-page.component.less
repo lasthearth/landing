@@ -67,12 +67,16 @@
         transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
     }
 
-    &:hover {
-        border-color: var(--kp-accent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            border-color: var(--kp-accent);
+        }
     }
 
-    &:hover::before {
-        opacity: 1;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover::before {
+            opacity: 1;
+        }
     }
 
     &:active {
@@ -169,8 +173,10 @@
 
     /* Сдвиг вкладки на 3px объявлен правилом ряда, поэтому его гасит
      * только селектор не ниже по специфичности. */
-    .kp-tabs .kp-tab:hover {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .kp-tabs .kp-tab:hover {
+            transform: none;
+        }
     }
 
     .kp-tab:active {

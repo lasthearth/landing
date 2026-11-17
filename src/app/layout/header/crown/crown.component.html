@@ -250,11 +250,13 @@
     -->
     <div
         class="crown__sheet crown__sheet--menu"
+        data-sheet-scrim
         [class.crown__sheet--open]="menuOpen()"
         [attr.inert]="menuOpen() ? null : ''"
     >
         <div class="crown__sheet-clip">
-            <div class="crown__sheet-body lh-panel">
+            <div class="crown__sheet-body lh-panel" appSheetDrag (dismiss)="closeAll()">
+                <span class="crown__sheet-grip" data-sheet-handle aria-hidden="true"></span>
                 <div class="crown__grid crown__grid--menu">
                     <a
                         class="crown__tile"

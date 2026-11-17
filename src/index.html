@@ -6,6 +6,14 @@
         <base href="/" />
 
         <!--
+            Цвет полосы браузера (Safari, Chrome на Android) повторяет верх страницы —
+            токен --lh-backdrop из layout.component.less. Значение стоит до скрипта темы:
+            тема переключается классом, а не системной настройкой, поэтому скрипт ниже
+            переписывает content сразу, ещё до первого кадра.
+        -->
+        <meta name="theme-color" content="#191310" />
+
+        <!--
             Предотвращает промаргивание темы при перезагрузке.
             Выставляет data-theme до загрузки Angular: сохранённый выбор, иначе системная тема.
         -->
@@ -22,6 +30,11 @@
                     }
                     if (theme === 'dark') {
                         document.documentElement.setAttribute('data-theme', 'dark');
+                    }
+                    // Полоса браузера: #191310 — светлый фон, #121316 — тёмный (--lh-backdrop).
+                    var themeColor = document.querySelector('meta[name="theme-color"]');
+                    if (themeColor) {
+                        themeColor.setAttribute('content', theme === 'dark' ? '#121316' : '#191310');
                     }
                 } catch (e) {
                     // localStorage недоступен или значение повреждено — оставляем светлую тему
@@ -70,12 +83,21 @@
             })();
         </script>
 
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!--
+            viewport-fit=cover — страница уходит под вырез и домашний индикатор,
+            а env(safe-area-inset-*) получает ненулевые значения: без него отступы
+            нижних панелей, шторок и плашки согласия считались как 0.
+            interactive-widget=resizes-content — клавиатура Android сжимает вьюпорт,
+            и 100dvh у шторки с полем ввода не уезжает за экран.
+        -->
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+        />
         <meta
             name="description"
             content="Last Hearth — уникальный ролевой политико-экономический сервер Vintage Story. Развивайте поселения, ведите войны, заключайте союзы и участвуйте в жизни Империи."
         />
-        <meta name="theme-color" content="#332c26" />
         <!--
             Подтверждение прав владельца: значения выдаёт Яндекс.Вебмастер и Google Search
             Console, их проставляет владелец (задача 010). Пока строки закомментированы,
@@ -87,6 +109,15 @@
         <link rel="icon" href="/favicon.ico" sizes="48x48" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <!--
+            Запуск с домашнего экрана iOS: полоса состояния непрозрачная и чёрная.
+            Прозрачный вариант (`black-translucent`) пускает страницу под часы,
+            а верхняя строка шапки и плашка объявления об этом не знают.
+        -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-mobile-web-app-title" content="Last Hearth" />
         <link rel="manifest" href="/site.webmanifest" />
         <link
             rel="alternate"

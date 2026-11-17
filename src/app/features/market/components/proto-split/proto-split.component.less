@@ -85,12 +85,16 @@
     transition: opacity var(--lh-dur-exit) var(--lh-ease-out-quart);
 }
 
-.split__card:hover {
-    transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+    .split__card:hover {
+        transform: translateY(-2px);
+    }
 }
 
-.split__card:hover::after {
-    opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+    .split__card:hover::after {
+        opacity: 1;
+    }
 }
 
 /* Недоступный товар приглушён и не поднимается: покупать его нельзя. */
@@ -98,12 +102,16 @@
     opacity: 0.55;
 }
 
-.split__card--off:hover {
-    transform: none;
+@media (hover: hover) and (pointer: fine) {
+    .split__card--off:hover {
+        transform: none;
+    }
 }
 
-.split__card--off:hover::after {
-    opacity: 0;
+@media (hover: hover) and (pointer: fine) {
+    .split__card--off:hover::after {
+        opacity: 0;
+    }
 }
 
 .split__media {
@@ -190,8 +198,10 @@
 }
 
 /* Цвет наведения меняется мгновенно, без перехода. */
-.split__buy:hover:not(:disabled) {
-    background-color: var(--lh-brand);
+@media (hover: hover) and (pointer: fine) {
+    .split__buy:hover:not(:disabled) {
+        background-color: var(--lh-brand);
+    }
 }
 
 .split__buy:disabled {
@@ -330,10 +340,12 @@
 }
 
 /* Заливка наведения мгновенная. */
-.split__pick-buy:hover:not(:disabled) {
-    border-color: transparent;
-    background-color: var(--lh-brand);
-    color: #ffffff;
+@media (hover: hover) and (pointer: fine) {
+    .split__pick-buy:hover:not(:disabled) {
+        border-color: transparent;
+        background-color: var(--lh-brand);
+        color: #ffffff;
+    }
 }
 
 .split__pick-buy:disabled {
@@ -367,9 +379,11 @@
     cursor: pointer;
 }
 
-.split__section:hover {
-    color: var(--lh-brand-ink);
-    background-color: color-mix(in srgb, var(--lh-brand) 7%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .split__section:hover {
+        color: var(--lh-brand-ink);
+        background-color: color-mix(in srgb, var(--lh-brand) 7%, transparent);
+    }
 }
 
 .split__section[aria-pressed='true'] {

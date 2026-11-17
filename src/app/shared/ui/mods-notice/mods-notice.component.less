@@ -70,9 +70,11 @@
     text-decoration: none;
     /* Ховер заливки — мгновенный (motion-instant-hover-color). */
 
-    &:hover {
-        background-color: var(--lh-brand-hover);
-        color: #fff;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--lh-brand-hover);
+            color: #fff;
+        }
     }
 
     &:focus-visible {
@@ -116,9 +118,11 @@
         font-size: 1rem;
     }
 
-    &:hover {
-        background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent);
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+            color: var(--lh-ink);
+        }
     }
 
     &:focus-visible {

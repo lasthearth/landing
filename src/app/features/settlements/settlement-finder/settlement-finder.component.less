@@ -73,10 +73,12 @@
     cursor: pointer;
     transition: transform 0.15s var(--lh-ease-spring);
 
-    &:hover {
-        border-color: var(--lh-brand);
-        transform: translateY(-1px);
-        box-shadow: 0 8px 20px -14px color-mix(in srgb, var(--lh-brand) 70%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            border-color: var(--lh-brand);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -14px color-mix(in srgb, var(--lh-brand) 70%, transparent);
+        }
     }
 
     &:focus-visible {
@@ -124,8 +126,10 @@
     font-weight: 700;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-brand-ink);
+        }
     }
 }
 

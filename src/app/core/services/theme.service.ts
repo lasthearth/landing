@@ -73,8 +73,17 @@ export class ThemeService {
 
     /**
      * Применяет текущую тему к корневому элементу.
+     *
+     * Заодно переписывает `theme-color`: полоса браузера на телефоне берёт цвет
+     * отсюда, а не из системной настройки, поэтому при переключении темы мета
+     * должна следовать за ней. Значения — токен `--lh-backdrop` в двух темах.
      */
     private apply(): void {
         this.document.documentElement.setAttribute('data-theme', this.theme());
+
+        const themeColor = this.document.querySelector('meta[name="theme-color"]');
+        if (themeColor) {
+            themeColor.setAttribute('content', this.theme() === 'dark' ? '#121316' : '#191310');
+        }
     }
 }

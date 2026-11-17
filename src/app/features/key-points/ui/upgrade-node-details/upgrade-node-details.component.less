@@ -158,9 +158,11 @@
     text-align: left;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-link-hover);
-        text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-link-hover);
+            text-decoration: underline;
+        }
     }
 
     tui-icon {

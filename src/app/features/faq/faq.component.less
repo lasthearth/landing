@@ -26,12 +26,16 @@
     transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
-.faq-scroll:hover {
-    transform: translateY(-1px);
+@media (hover: hover) and (pointer: fine) {
+    .faq-scroll:hover {
+        transform: translateY(-1px);
+    }
 }
 
-.faq-scroll:hover::after {
-    opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+    .faq-scroll:hover::after {
+        opacity: 1;
+    }
 }
 
 /**
@@ -48,7 +52,9 @@
         transition: none;
     }
 
-    .faq-scroll:hover {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .faq-scroll:hover {
+            transform: none;
+        }
     }
 }

@@ -178,6 +178,8 @@
        прежний transition стоял на запрещённой ease-кривой. */
 }
 
-.flexible-input .dropdown-option:hover {
-    background-color: color-mix(in srgb, var(--lh-surface-4) 60%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .flexible-input .dropdown-option:hover {
+        background-color: color-mix(in srgb, var(--lh-surface-4) 60%, transparent);
+    }
 }

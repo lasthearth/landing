@@ -192,8 +192,10 @@
             0 8px 20px -10px rgba(0, 0, 0, 0.5);
     }
 
-    &:hover:not(:disabled) .style-banner__image {
-        transform: translateY(-2px);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) .style-banner__image {
+            transform: translateY(-2px);
+        }
     }
 }
 
@@ -249,8 +251,10 @@
     cursor: pointer;
     transition: background-color var(--lh-dur-fast) var(--lh-ease-smooth);
 
-    &:hover:not(:disabled) {
-        background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+        }
     }
 
     &[aria-pressed='true'] {

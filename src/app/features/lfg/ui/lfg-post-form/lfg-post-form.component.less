@@ -115,8 +115,10 @@
     color: var(--lh-ink);
     cursor: pointer;
 
-    &:hover:not(:disabled) {
-        border-color: var(--lh-brand);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            border-color: var(--lh-brand);
+        }
     }
 
     &:disabled {

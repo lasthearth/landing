@@ -127,8 +127,10 @@
     overflow-wrap: anywhere;
 }
 
-a.map__mod-name:hover {
-    color: var(--lh-link-hover);
+@media (hover: hover) and (pointer: fine) {
+    a.map__mod-name:hover {
+        color: var(--lh-link-hover);
+    }
 }
 
 .map__mod-meta {
@@ -236,9 +238,11 @@ a.map__mod-name:hover {
         height: 1.5rem;
     }
 
-    &:hover:not(:disabled) {
-        background-color: var(--lh-surface-3);
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            background-color: var(--lh-surface-3);
+            color: var(--lh-ink);
+        }
     }
 
     &:disabled {
@@ -272,8 +276,10 @@ a.map__mod-name:hover {
     text-align: left;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-ink);
+        }
     }
 }
 

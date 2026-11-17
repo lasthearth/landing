@@ -42,9 +42,11 @@
             font-size: 1.125rem;
         }
 
-        &:hover {
-            color: var(--lh-ink);
-            background: color-mix(in srgb, var(--lh-ink) 6%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: var(--lh-ink);
+                background: color-mix(in srgb, var(--lh-ink) 6%, transparent);
+            }
         }
 
         &[aria-selected='true'] {
@@ -260,9 +262,11 @@
     color: var(--lh-ink-3);
     cursor: pointer;
 
-    &:hover:not(:disabled) {
-        color: var(--lh-ink);
-        background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            color: var(--lh-ink);
+            background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+        }
     }
 
     &:disabled {
@@ -294,8 +298,10 @@
         font-size: 1rem;
     }
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-ink) 9%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-ink) 9%, transparent);
+        }
     }
 
     &[aria-pressed='true'] {
@@ -385,8 +391,10 @@
             font-size: 0.8125rem;
         }
 
-        &:hover {
-            background: color-mix(in srgb, var(--lh-brand) 25%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: color-mix(in srgb, var(--lh-brand) 25%, transparent);
+            }
         }
     }
 }
@@ -454,9 +462,11 @@
         color: var(--lh-ink-3);
         cursor: pointer;
 
-        &:hover:not(:disabled) {
-            color: var(--lh-ink);
-            background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled) {
+                color: var(--lh-ink);
+                background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+            }
         }
 
         &:disabled {
@@ -502,8 +512,10 @@
     background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
     cursor: pointer;
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-brand) 15%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-brand) 15%, transparent);
+        }
     }
 }
 
@@ -534,8 +546,10 @@
         text-align: left;
         cursor: pointer;
 
-        &:hover {
-            background: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+            }
         }
 
         small {

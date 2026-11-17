@@ -63,8 +63,10 @@
     text-align: left;
     cursor: pointer;
 
-    &:hover {
-        border-color: color-mix(in srgb, var(--lh-brand) 45%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            border-color: color-mix(in srgb, var(--lh-brand) 45%, transparent);
+        }
     }
 
     &:focus-visible {

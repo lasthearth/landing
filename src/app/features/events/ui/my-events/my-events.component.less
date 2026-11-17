@@ -35,8 +35,10 @@
     color: var(--lh-brand-ink);
     text-decoration: none;
 
-    &:hover {
-        text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 
@@ -61,8 +63,10 @@
     background: color-mix(in srgb, var(--lh-ink) 4%, transparent);
     border: 1px solid color-mix(in srgb, var(--lh-ink) 10%, transparent);
 
-    &:hover {
-        border-color: color-mix(in srgb, var(--lh-brand) 50%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            border-color: color-mix(in srgb, var(--lh-brand) 50%, transparent);
+        }
     }
 
     &:focus-visible {

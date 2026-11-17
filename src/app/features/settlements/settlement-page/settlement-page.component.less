@@ -65,11 +65,13 @@
         }
     }
 
-    &__back:hover {
-        color: var(--lh-brand-hover);
+    @media (hover: hover) and (pointer: fine) {
+        &__back:hover {
+            color: var(--lh-brand-hover);
 
-        tui-icon {
-            transform: translateX(-2px);
+            tui-icon {
+                transform: translateX(-2px);
+            }
         }
     }
 
@@ -210,8 +212,10 @@
         }
     }
 
-    &__photo:hover img {
-        transform: scale(1.03);
+    @media (hover: hover) and (pointer: fine) {
+        &__photo:hover img {
+            transform: scale(1.03);
+        }
     }
 
     &__photo-zoom {
@@ -229,9 +233,11 @@
             transform var(--lh-dur-fast) var(--lh-ease-smooth);
     }
 
-    &__photo:hover &__photo-zoom {
-        opacity: 1;
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        &__photo:hover &__photo-zoom {
+            opacity: 1;
+            transform: none;
+        }
     }
 
     &__others {
@@ -265,10 +271,12 @@
             border-color var(--lh-dur-fast) var(--lh-ease-smooth);
     }
 
-    &__other:hover {
-        transform: translateY(-2px);
-        border-color: var(--lh-border-strong);
-        box-shadow: var(--lh-shadow-lift);
+    @media (hover: hover) and (pointer: fine) {
+        &__other:hover {
+            transform: translateY(-2px);
+            border-color: var(--lh-border-strong);
+            box-shadow: var(--lh-shadow-lift);
+        }
     }
 
     &__other:active {
@@ -292,8 +300,10 @@
         }
     }
 
-    &__other:hover &__other-image img {
-        transform: scale(1.03);
+    @media (hover: hover) and (pointer: fine) {
+        &__other:hover &__other-image img {
+            transform: scale(1.03);
+        }
     }
 
     &__other-body {
@@ -485,12 +495,16 @@
         transition: transform var(--lh-dur-fast) var(--lh-ease-smooth);
     }
 
-    &__photo:hover {
-        box-shadow: var(--lh-shadow-lift);
+    @media (hover: hover) and (pointer: fine) {
+        &__photo:hover {
+            box-shadow: var(--lh-shadow-lift);
+        }
     }
 
-    &__photo:hover ::ng-deep img {
-        transform: scale(1.03);
+    @media (hover: hover) and (pointer: fine) {
+        &__photo:hover ::ng-deep img {
+            transform: scale(1.03);
+        }
     }
 
     &__photo:active {
@@ -556,10 +570,12 @@
         transition: none;
     }
 
-    .settlement-page__photo:hover img,
-    .settlement-page__other:hover,
-    .settlement-page__other:hover .settlement-page__other-image img,
-    .settlement-hero__photo:hover ::ng-deep img {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .settlement-page__photo:hover img,
+        .settlement-page__other:hover,
+        .settlement-page__other:hover .settlement-page__other-image img,
+        .settlement-hero__photo:hover ::ng-deep img {
+            transform: none;
+        }
     }
 }

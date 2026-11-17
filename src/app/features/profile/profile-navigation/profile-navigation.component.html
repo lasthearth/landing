@@ -1,107 +1,75 @@
-@let invitations = invitations$ | async;
-@let userVerifications = userVerifications$ | async;
-@let settlementVerifications = settlementVerifications$ | async;
-@let isAuth = userService.authState$ | async;
-@let supportUnread = supportUnread$ | async;
+<!--
+    До 1280px на экране одна цель: пилюля у нижней кромки с текущим разделом.
+    Весь список — в модалке снизу, сеткой в две колонки с подписями.
+-->
+<div class="pn-dock">
+    <button
+        type="button"
+        class="pn-pill"
+        (click)="toggleSheet()"
+        [attr.aria-expanded]="sheetOpen()"
+        aria-controls="profile-nav-sheet"
+    >
+        <tui-icon [icon]="active().icon" />
+        <span class="pn-pill__label">{{ active().labelKey | translate }}</span>
+        <tui-icon
+            icon="@tui.chevron-up"
+            class="pn-pill__chev"
+            [class.pn-pill__chev--open]="sheetOpen()"
+        />
+    </button>
+</div>
 
 <!--
-    Мобильный ряд — горизонтальный скролл со снапом и подписями: восемь
-    разделов не встают в одну строку без обрезки, а знаки без подписей
-    не читаются. Длинные подписи словаря заменены короткими ключами
-    `profile.nav.short.*`. На xl ряд становится колонкой без подписей.
+    Модалка снизу. Клика по scrim здесь нет намеренно: элемент с `inert`
+    в момент гидратации не получает делегированный слушатель, поэтому
+    закрытие живёт в обработчике документа (см. docs/TRAPS.md).
 -->
-<div class="profile-nav flex xl:flex-col gap-2 z-300!">
-    <a
-        [routerLink]="['/profile/how-play']"
-        routerLinkActive="nav-button--active"
-        class="nav-button profile-nav__item"
-        [title]="'profile.nav.howPlay' | translate"
-        [attr.aria-label]="'profile.nav.howPlay' | translate"
-    >
-        <tui-icon icon="@tui.gamepad" />
-        <span class="profile-nav__label">{{ "profile.nav.howPlay" | translate }}</span>
-    </a>
-    <a
-        [routerLink]="['/profile/stats']"
-        routerLinkActive="nav-button--active"
-        class="nav-button profile-nav__item"
-        [title]="'profile.nav.stats' | translate"
-        [attr.aria-label]="'profile.nav.stats' | translate"
-    >
-        <tui-icon icon="@tui.chart-no-axes-combined" />
-        <span class="profile-nav__label">{{ "profile.nav.stats" | translate }}</span>
-    </a>
-    @if (isAuth) {
-        <a
-            [routerLink]="['/profile/settlement']"
-            routerLinkActive="nav-button--active"
-            class="relative nav-button profile-nav__item"
-            [title]="'profile.nav.settlement' | translate"
-            [attr.aria-label]="'profile.nav.settlement' | translate"
-        >
-            <tui-icon icon="@tui.castle" />
-            <span class="profile-nav__label">{{ "profile.nav.short.settlement" | translate }}</span>
-            @if (invitations?.length) {
-                <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
+<div
+    id="profile-nav-sheet"
+    class="pn-scrim"
+    data-sheet-scrim
+    [class.pn-scrim--open]="sheetOpen()"
+    [attr.inert]="sheetOpen() ? null : ''"
+>
+    <div class="pn-sheet lh-panel" appSheetDrag (dismiss)="closeSheet()">
+        <span class="pn-sheet__grip" data-sheet-handle aria-hidden="true"></span>
+        <nav class="pn-grid">
+            @for (item of items(); track item.route) {
+                <a
+                    class="nav-button pn-tile"
+                    [routerLink]="item.route"
+                    routerLinkActive="nav-button--active"
+                    (click)="closeSheet()"
+                >
+                    <tui-icon [icon]="item.icon" />
+                    <span class="pn-tile__label">{{ item.labelKey | translate }}</span>
+                    @if (item.badge) {
+                        <tui-pulse
+                            tuiHintAppearance="floating"
+                            class="!absolute !top-0.5 !right-0.5 !scale-110"
+                        />
+                    }
+                </a>
             }
-        </a>
-        <a
-            [routerLink]="['/profile/style']"
-            routerLinkActive="nav-button--active"
-            class="nav-button profile-nav__item"
-            [title]="'profile.nav.style' | translate"
-            [attr.aria-label]="'profile.nav.style' | translate"
-        >
-            <tui-icon icon="@tui.palette" />
-            <span class="profile-nav__label">{{ "profile.nav.short.style" | translate }}</span>
-        </a>
-        <a
-            [routerLink]="['/profile/wiki']"
-            routerLinkActive="nav-button--active"
-            class="nav-button profile-nav__item"
-            [title]="'profile.nav.wiki' | translate"
-            [attr.aria-label]="'profile.nav.wiki' | translate"
-        >
-            <tui-icon icon="@tui.book-open" />
-            <span class="profile-nav__label">{{ "profile.nav.wiki" | translate }}</span>
-        </a>
-        <a
-            [routerLink]="['/profile/support']"
-            routerLinkActive="nav-button--active"
-            class="relative nav-button profile-nav__item"
-            [title]="'profile.nav.support' | translate"
-            [attr.aria-label]="'profile.nav.support' | translate"
-        >
-            <tui-icon icon="@tui.life-buoy" />
-            <span class="profile-nav__label">{{ "profile.nav.support" | translate }}</span>
-            @if (supportUnread) {
-                <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
-            }
-        </a>
-        <a
-            [routerLink]="['/profile/referral']"
-            routerLinkActive="nav-button--active"
-            class="nav-button profile-nav__item"
-            [title]="'profile.nav.referral' | translate"
-            [attr.aria-label]="'profile.nav.referral' | translate"
-        >
-            <tui-icon icon="@tui.user-plus" />
-            <span class="profile-nav__label">{{ "profile.nav.short.referral" | translate }}</span>
-        </a>
-    }
-    @if (isAuth && isAdmin()) {
-        <a
-            [routerLink]="['/profile/admin']"
-            routerLinkActive="nav-button--active"
-            class="relative nav-button profile-nav__item"
-            [title]="'profile.nav.admin' | translate"
-            [attr.aria-label]="'profile.nav.admin' | translate"
-        >
-            <tui-icon icon="@tui.shield" />
-            <span class="profile-nav__label">{{ "profile.nav.short.admin" | translate }}</span>
-            @if (userVerifications?.length || settlementVerifications?.length) {
-                <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
-            }
-        </a>
-    }
+        </nav>
+    </div>
 </div>
+
+<!-- От 1280px — прежняя вертикальная колонка знаков сбоку от колонки контента. -->
+<nav class="pn-column">
+    @for (item of items(); track item.route) {
+        <a
+            class="relative nav-button pn-column__item"
+            [routerLink]="item.route"
+            routerLinkActive="nav-button--active"
+            [title]="item.labelKey | translate"
+            [attr.aria-label]="item.labelKey | translate"
+        >
+            <tui-icon [icon]="item.icon" />
+            @if (item.badge) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
+            }
+        </a>
+    }
+</nav>

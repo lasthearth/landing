@@ -38,9 +38,11 @@
     opacity: 0;
     transition: opacity 0.15s var(--lh-ease-out-quart);
 
-    &:hover {
-        background: color-mix(in srgb, currentColor 12%, transparent);
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, currentColor 12%, transparent);
+            color: var(--lh-ink);
+        }
     }
 
     &:focus-visible {
@@ -99,8 +101,10 @@
     cursor: pointer;
 }
 
-.rule-link:hover {
-    color: var(--lh-ink);
+@media (hover: hover) and (pointer: fine) {
+    .rule-link:hover {
+        color: var(--lh-ink);
+    }
 }
 
 /**

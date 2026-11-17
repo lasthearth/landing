@@ -225,9 +225,11 @@
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.gallery-wall__tile:hover {
-    transform: translateY(-2px);
-    outline-color: color-mix(in srgb, var(--lh-accent) 60%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .gallery-wall__tile:hover {
+        transform: translateY(-2px);
+        outline-color: color-mix(in srgb, var(--lh-accent) 60%, transparent);
+    }
 }
 
 .gallery-wall__tile:focus-visible {
@@ -377,7 +379,9 @@
         transition: none;
     }
 
-    .gallery-wall__tile:hover {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .gallery-wall__tile:hover {
+            transform: none;
+        }
     }
 }

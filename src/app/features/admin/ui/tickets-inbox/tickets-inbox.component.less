@@ -82,8 +82,10 @@
     cursor: pointer;
     transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+        }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -235,8 +237,10 @@ li + li .inbox__item::before {
     color: var(--lh-brand-ink);
     text-decoration: none;
 
-    &:hover {
-        text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 
@@ -281,9 +285,11 @@ li + li .inbox__item::before {
     background: transparent;
     cursor: pointer;
 
-    &:hover:not(:disabled) {
-        color: var(--lh-ink);
-        background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            color: var(--lh-ink);
+            background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+        }
     }
 
     &:disabled {
@@ -299,7 +305,7 @@ li + li .inbox__item::before {
 }
 
 .inbox__thread {
-    max-height: 58vh;
+    max-height: 58dvh;
     padding: 1.25rem;
     overflow-y: auto;
 }
@@ -406,8 +412,10 @@ li + li .inbox__item::before {
     background: transparent;
     cursor: pointer;
 
-    &:hover {
-        background: var(--lh-surface-2);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: var(--lh-surface-2);
+        }
     }
 
     span {
@@ -494,9 +502,11 @@ li + li .inbox__item::before {
     background: transparent;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-ink);
-        background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-ink);
+            background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+        }
     }
 }
 

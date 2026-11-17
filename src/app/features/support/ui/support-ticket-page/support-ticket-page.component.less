@@ -13,8 +13,10 @@
     color: var(--lh-ink-2);
     text-decoration: none;
 
-    &:hover {
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-brand-ink);
+        }
     }
 }
 
@@ -69,9 +71,11 @@
     background: transparent;
     cursor: pointer;
 
-    &:hover:not(:disabled) {
-        color: var(--lh-ink);
-        background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            color: var(--lh-ink);
+            background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+        }
     }
 }
 

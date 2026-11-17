@@ -85,12 +85,16 @@
     transition: opacity var(--lh-dur-exit) var(--lh-ease-out-quart);
 }
 
-.vitrina__card:hover {
-    transform: translateY(-3px);
+@media (hover: hover) and (pointer: fine) {
+    .vitrina__card:hover {
+        transform: translateY(-3px);
+    }
 }
 
-.vitrina__card:hover::after {
-    opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+    .vitrina__card:hover::after {
+        opacity: 1;
+    }
 }
 
 .vitrina__media {
@@ -107,8 +111,10 @@
     transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
 }
 
-.vitrina__card:hover .vitrina__zoom {
-    transform: scale(1.04);
+@media (hover: hover) and (pointer: fine) {
+    .vitrina__card:hover .vitrina__zoom {
+        transform: scale(1.04);
+    }
 }
 
 /* Недоступный товар приглушён и не отзывается на наведение картинкой. */
@@ -117,8 +123,10 @@
     opacity: 0.45;
 }
 
-.vitrina__card--off:hover .vitrina__zoom {
-    transform: none;
+@media (hover: hover) and (pointer: fine) {
+    .vitrina__card--off:hover .vitrina__zoom {
+        transform: none;
+    }
 }
 
 /* Цена лежит на изображении: плотная поверхность держит контраст на любом фоне. */
@@ -168,8 +176,10 @@
     cursor: not-allowed;
 }
 
-.vitrina__buy:disabled:hover {
-    transform: none;
+@media (hover: hover) and (pointer: fine) {
+    .vitrina__buy:disabled:hover {
+        transform: none;
+    }
 }
 
 .vitrina__empty {

@@ -1,12 +1,13 @@
 /**
- * Навигация профиля: на мобильных — горизонтальный скролл-ряд нижней
- * панели со снапом и подписями, на xl — прежняя вертикальная колонка
- * знаков сбоку от колонки контента. Скролл-контейнер держит сам ряд,
- * а не панель лендинга, поэтому панель не получает своих полос.
+ * Навигация профиля двумя состояниями.
  *
- * Полоса прокрутки скрыта; подсказкой работает обрезанная у края плашка —
- * следующий раздел виден наполовину. Активную плашку центрирует
- * компонент при каждом переходе.
+ * До 1280px — пилюля у нижней кромки с текущим разделом и модалка снизу
+ * со списком разделов. От 1280px — вертикальная колонка знаков сбоку
+ * от колонки контента, как в боевой раскладке.
+ *
+ * Цвета пилюли повторяют `.nav-button--active`: заливка брендовой шкалой
+ * и белая подпись. Пергаментная пластина на ночной полосе читалась как
+ * чужая кнопка, а в тёмной теме сливалась с подложкой.
  */
 :host {
     display: block;
@@ -14,42 +15,178 @@
     min-width: 0;
 }
 
-.profile-nav {
+/* ---- Пилюля: текущий раздел, одна цель на экране ---- */
+
+.pn-dock {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.pn-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3rem;
     max-width: 100%;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
+    padding: 0 1.25rem;
+    border: 0;
+    border-radius: var(--lh-radius-full);
+    background-color: var(--lh-brand-deep);
+    background-image: linear-gradient(150deg, var(--lh-brand-deep) 0%, var(--lh-brand-deep-2) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.24),
+        inset 0 -1px 0 rgba(45, 32, 26, 0.28),
+        0 8px 22px -8px color-mix(in srgb, var(--lh-brand) 60%, transparent);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: scale 120ms var(--lh-ease-spring);
 }
 
-.profile-nav::-webkit-scrollbar {
-    display: none;
+.pn-pill:active {
+    scale: 0.97;
 }
 
-/* Плашки не сжимаются: скролл честнее растянутой сетки. */
-.profile-nav__item {
-    flex: none;
-    scroll-snap-align: center;
+.pn-pill__label {
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.profile-nav__label {
-    font-size: 0.8125rem;
+.pn-pill__chev {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1rem;
+    transition: rotate 200ms var(--lh-ease-smooth);
+}
+
+.pn-pill__chev--open {
+    rotate: 180deg;
+}
+
+/* ---- Модалка снизу: scrim и пластина ---- */
+
+.pn-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: var(--lh-z-modal);
+    display: flex;
+    align-items: flex-end;
+    background-color: transparent;
+    visibility: hidden;
+    transition: background-color 180ms var(--lh-ease-smooth);
+}
+
+.pn-scrim--open {
+    background-color: color-mix(in srgb, var(--lh-overlay) 55%, transparent);
+    visibility: visible;
+    transition-duration: 270ms;
+    transition-timing-function: var(--lh-ease-out-quart);
+}
+
+.pn-sheet {
+    width: 100%;
+    max-height: 88dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: var(--lh-radius-xl) var(--lh-radius-xl) 0 0;
+    padding: 0 0.75rem calc(1rem + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    /* Длительность выхода короче входа: закрытие не должно задерживать палец. */
+    transition: transform 240ms var(--lh-ease-smooth);
+}
+
+.pn-scrim--open .pn-sheet {
+    transform: translateY(0);
+    transition-duration: 320ms;
+}
+
+/*
+ * Ручка пластины — единственная зона захвата жеста. Видимая полоска 5px,
+ * зона касания вокруг неё — 44px по высоте: палец попадает не целясь,
+ * а `touch-action: none` не даёт браузеру отобрать жест для прокрутки.
+ */
+.pn-sheet__grip {
+    position: relative;
+    display: block;
+    width: 2.75rem;
+    height: 0.3125rem;
+    margin: 0.75rem auto 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: color-mix(in srgb, var(--lh-ink) 26%, transparent);
+    touch-action: none;
+    cursor: grab;
+}
+
+.pn-sheet__grip::before {
+    content: '';
+    position: absolute;
+    inset: -0.875rem -2rem;
+}
+
+.pn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding-block: 0.25rem;
+}
+
+.pn-tile {
+    width: 100%;
+    min-height: 3.25rem;
+    padding-inline: 0.75rem;
+    justify-content: flex-start;
+    min-width: 0;
+}
+
+.pn-tile__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.875rem;
     letter-spacing: 0.02em;
 }
 
+/* ---- Колонка знаков на широком экране ---- */
+
+.pn-column {
+    display: none;
+}
+
 @media (min-width: 1280px) {
-    .profile-nav {
-        overflow-x: visible;
-        scroll-snap-type: none;
+    .pn-dock,
+    .pn-scrim {
+        display: none;
     }
 
-    /* Колонка знаков: плашка снова квадратная, подпись не нужна. */
-    .profile-nav__item {
+    .pn-column {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    /* Колонка знаков: плашка квадратная, подпись не нужна. */
+    .pn-column__item {
         justify-content: center;
         width: 2.75rem;
         padding-inline: 0;
     }
+}
 
-    .profile-nav__label {
-        display: none;
+/* ---- Движение снимается, содержимое остаётся видимым ---- */
+
+@media (prefers-reduced-motion: reduce) {
+    .pn-pill,
+    .pn-pill__chev,
+    .pn-scrim,
+    .pn-sheet {
+        transition: none;
+    }
+
+    .pn-scrim--open .pn-sheet {
+        transform: none;
     }
 }

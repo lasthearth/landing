@@ -155,12 +155,16 @@
     transition: opacity var(--lh-dur-exit) var(--lh-ease-out-quart);
 }
 
-.prais__row:hover {
-    transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+    .prais__row:hover {
+        transform: translateY(-2px);
+    }
 }
 
-.prais__row:hover::after {
-    opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+    .prais__row:hover::after {
+        opacity: 1;
+    }
 }
 
 /* Недоступный товар приглушён и не поднимается на ховере. */
@@ -168,12 +172,16 @@
     opacity: 0.55;
 }
 
-.prais__row--off:hover {
-    transform: none;
+@media (hover: hover) and (pointer: fine) {
+    .prais__row--off:hover {
+        transform: none;
+    }
 }
 
-.prais__row--off:hover::after {
-    opacity: 0;
+@media (hover: hover) and (pointer: fine) {
+    .prais__row--off:hover::after {
+        opacity: 0;
+    }
 }
 
 .prais__thumb {

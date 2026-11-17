@@ -29,12 +29,14 @@
         0 14px 36px -16px rgba(0, 0, 0, 0.6);
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.1),
-            0 0 0 1px var(--lh-brand),
-            0 18px 40px -16px rgba(0, 0, 0, 0.65);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 0 1px var(--lh-brand),
+                0 18px 40px -16px rgba(0, 0, 0, 0.65);
+        }
     }
 
     &:focus-visible {
@@ -176,8 +178,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .upcoming-event__card:hover {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .upcoming-event__card:hover {
+            transform: none;
+        }
     }
 
     .upcoming-event__pulse {

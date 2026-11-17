@@ -18,11 +18,13 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.45),
         0 8px 28px rgba(45, 32, 26, 0.1);
 
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 14px 40px color-mix(in srgb, var(--lh-brand) 25%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 14px 40px color-mix(in srgb, var(--lh-brand) 25%, transparent);
+        }
     }
 }
 
@@ -49,12 +51,16 @@
         opacity: 0.6;
     }
 
-    .video-card:hover & img {
-        transform: scale(1.06);
+    @media (hover: hover) and (pointer: fine) {
+        .video-card:hover & img {
+            transform: scale(1.06);
+        }
     }
 
-    .video-card:hover &::after {
-        opacity: 0.85;
+    @media (hover: hover) and (pointer: fine) {
+        .video-card:hover &::after {
+            opacity: 0.85;
+        }
     }
 }
 
@@ -86,14 +92,18 @@
         margin-left: 0.25rem;
     }
 
-    .video-card:hover & {
-        opacity: 1;
-        transform: scale(1.05);
+    @media (hover: hover) and (pointer: fine) {
+        .video-card:hover & {
+            opacity: 1;
+            transform: scale(1.05);
+        }
     }
 
-    .video-card:hover &::before {
-        transform: scale(1.1);
-        background: var(--lh-brand);
+    @media (hover: hover) and (pointer: fine) {
+        .video-card:hover &::before {
+            transform: scale(1.1);
+            background: var(--lh-brand);
+        }
     }
 }
 

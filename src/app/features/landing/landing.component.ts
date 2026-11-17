@@ -73,6 +73,12 @@ export class LandingComponent {
     });
 
     /**
+     * Навигация профиля: на телефоне — плавающая пилюля внизу, от xl —
+     * колонка знаков сбоку от контента. Показывается на всех разделах профиля.
+     */
+    protected readonly showProfileBar = computed(() => this.isProfilePageActive());
+
+    /**
      * Документ — для класса-флага на body.
      */
     private readonly document = inject(DOCUMENT);
@@ -84,7 +90,7 @@ export class LandingComponent {
      */
     public constructor() {
         effect(() => {
-            this.document.body.classList.toggle('lh-has-bottom-bar', this.isProfilePageActive());
+            this.document.body.classList.toggle('lh-has-bottom-bar', this.showProfileBar());
         });
     }
 }

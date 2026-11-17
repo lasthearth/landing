@@ -25,9 +25,11 @@
     transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
-.breadcrumbs__link:hover {
-    color: var(--lh-brand-ink);
-    text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+    .breadcrumbs__link:hover {
+        color: var(--lh-brand-ink);
+        text-decoration: underline;
+    }
 }
 
 .breadcrumbs__sep {

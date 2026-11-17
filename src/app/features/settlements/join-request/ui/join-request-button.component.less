@@ -53,8 +53,10 @@
     text-underline-offset: 3px;
 }
 
-.join-request__cancel:hover:not(:disabled) {
-    color: var(--lh-danger-ink);
+@media (hover: hover) and (pointer: fine) {
+    .join-request__cancel:hover:not(:disabled) {
+        color: var(--lh-danger-ink);
+    }
 }
 
 .join-request__cancel:disabled {

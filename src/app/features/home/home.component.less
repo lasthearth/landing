@@ -153,12 +153,16 @@
         transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
     }
 
-    &:hover {
-        transform: translateY(-4px);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            transform: translateY(-4px);
+        }
     }
 
-    &:hover::after {
-        opacity: 1;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover::after {
+            opacity: 1;
+        }
     }
 
     /**
@@ -196,12 +200,16 @@
         transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
     }
 
-    .pulse-card:hover & {
-        background-color: color-mix(in srgb, var(--lh-brand) 22%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        .pulse-card:hover & {
+            background-color: color-mix(in srgb, var(--lh-brand) 22%, transparent);
+        }
     }
 
-    .pulse-card:hover &::before {
-        opacity: 1;
+    @media (hover: hover) and (pointer: fine) {
+        .pulse-card:hover &::before {
+            opacity: 1;
+        }
     }
 }
 
@@ -225,8 +233,10 @@
         transition: none;
     }
 
-    .pulse-card:hover {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .pulse-card:hover {
+            transform: none;
+        }
     }
 }
 

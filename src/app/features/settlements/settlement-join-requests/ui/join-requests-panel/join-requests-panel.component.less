@@ -41,8 +41,10 @@
     background-color: color-mix(in srgb, var(--lh-peace) 12%, transparent);
 }
 
-.join-requests__action--approve:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--lh-peace) 22%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .join-requests__action--approve:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--lh-peace) 22%, transparent);
+    }
 }
 
 .join-requests__action--reject {
@@ -50,6 +52,8 @@
     background-color: color-mix(in srgb, var(--lh-danger-ink) 12%, transparent);
 }
 
-.join-requests__action--reject:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--lh-danger-ink) 22%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .join-requests__action--reject:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--lh-danger-ink) 22%, transparent);
+    }
 }

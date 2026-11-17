@@ -485,8 +485,10 @@ html body {
            запрещены motion-скиллом (motion-instant-hover-color). */
     }
 
-    a:hover {
-        color: var(--lh-link-hover);
+    @media (hover: hover) and (pointer: fine) {
+        a:hover {
+            color: var(--lh-link-hover);
+        }
     }
 }
 
@@ -621,8 +623,10 @@ tui-hint {
         background-color: var(--lh-success-disabled);
         pointer-events: none;
     }
-    &:hover {
-        background-color: var(--color-lh-success-hover);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--color-lh-success-hover);
+        }
     }
 }
 
@@ -638,8 +642,10 @@ tui-hint {
     padding-inline: calc(var(--spacing) * 2.5);
     margin-top: calc(var(--spacing) * 2);
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
-    &:hover {
-        background-color: var(--color-lh-danger-hover);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--color-lh-danger-hover);
+        }
     }
 }
 
@@ -663,10 +669,12 @@ tui-hint {
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.lh-secondary-button:hover:not(:disabled) {
-    border-color: var(--lh-accent);
-    color: var(--lh-accent);
-    background-color: rgba(255, 121, 32, 0.08);
+@media (hover: hover) and (pointer: fine) {
+    .lh-secondary-button:hover:not(:disabled) {
+        border-color: var(--lh-accent);
+        color: var(--lh-accent);
+        background-color: rgba(255, 121, 32, 0.08);
+    }
 }
 
 .lh-secondary-button:disabled,
@@ -803,14 +811,18 @@ tui-pulse.offline {
         transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
     }
 
-    .nav-button:not(.nav-button--active):hover::after {
-        opacity: 1;
+    @media (hover: hover) and (pointer: fine) {
+        .nav-button:not(.nav-button--active):hover::after {
+            opacity: 1;
+        }
     }
 
-    .nav-button:hover {
-        background-color: var(--color-lh-primary);
-        background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
-        transform: translateY(-1px);
+    @media (hover: hover) and (pointer: fine) {
+        .nav-button:hover {
+            background-color: var(--color-lh-primary);
+            background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
+            transform: translateY(-1px);
+        }
     }
 
     .nav-button:active {
@@ -843,12 +855,14 @@ tui-pulse.offline {
      * Ховер активной кнопки: заливка не светлеет (это уронило бы контраст),
      * усиливается только свечение.
      */
-    .nav-button--active:hover {
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.24),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.28),
-            0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
-            0 8px 22px -6px color-mix(in srgb, var(--lh-brand) 65%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        .nav-button--active:hover {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.24),
+                inset 0 -1px 0 rgba(45, 32, 26, 0.28),
+                0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+                0 8px 22px -6px color-mix(in srgb, var(--lh-brand) 65%, transparent);
+        }
     }
 
     /**
@@ -889,13 +903,15 @@ tui-pulse.offline {
         transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
-    .lh-cta:hover {
-        transform: translateY(-2px);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.18),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
-            0 0 0 1px color-mix(in srgb, var(--lh-accent) 55%, transparent),
-            0 14px 32px -10px color-mix(in srgb, var(--lh-brand) 50%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.18),
+                inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+                0 0 0 1px color-mix(in srgb, var(--lh-accent) 55%, transparent),
+                0 14px 32px -10px color-mix(in srgb, var(--lh-brand) 50%, transparent);
+        }
     }
 
     .lh-cta:active {
@@ -915,8 +931,10 @@ tui-pulse.offline {
         transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
-    .lh-cta:hover .lh-cta__icon {
-        transform: translateX(3px);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta:hover .lh-cta__icon {
+            transform: translateX(3px);
+        }
     }
 
     /**
@@ -932,12 +950,14 @@ tui-pulse.offline {
             0 8px 24px -8px color-mix(in srgb, var(--lh-leader) 35%, transparent);
     }
 
-    .lh-cta--telegram:hover {
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.18),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
-            0 0 0 1px color-mix(in srgb, var(--lh-leader) 55%, transparent),
-            0 14px 32px -10px color-mix(in srgb, var(--lh-leader) 50%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta--telegram:hover {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.18),
+                inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+                0 0 0 1px color-mix(in srgb, var(--lh-leader) 55%, transparent),
+                0 14px 32px -10px color-mix(in srgb, var(--lh-leader) 50%, transparent);
+        }
     }
 
     /**
@@ -951,9 +971,11 @@ tui-pulse.offline {
         box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--lh-wood) 40%, transparent);
     }
 
-    .lh-cta--ghost:hover {
-        color: var(--lh-brand-ink);
-        box-shadow: inset 0 0 0 2px var(--lh-brand);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta--ghost:hover {
+            color: var(--lh-brand-ink);
+            box-shadow: inset 0 0 0 2px var(--lh-brand);
+        }
     }
 
     /**
@@ -967,11 +989,13 @@ tui-pulse.offline {
         box-shadow: inset 0 0 0 2px rgba(240, 230, 210, 0.4);
     }
 
-    .lh-cta--on-dark:hover {
-        color: #fff;
-        box-shadow:
-            inset 0 0 0 2px rgba(255, 170, 92, 0.75),
-            0 14px 32px -12px rgba(255, 121, 32, 0.35);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta--on-dark:hover {
+            color: #fff;
+            box-shadow:
+                inset 0 0 0 2px rgba(255, 170, 92, 0.75),
+                0 14px 32px -12px rgba(255, 121, 32, 0.35);
+        }
     }
 
     /**
@@ -1031,9 +1055,11 @@ tui-pulse.offline {
         font-size: 1rem;
     }
 
-    .lh-chip:hover:not(:disabled) {
-        border-color: var(--lh-brand);
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-chip:hover:not(:disabled) {
+            border-color: var(--lh-brand);
+            color: var(--lh-brand-ink);
+        }
     }
 
     .lh-chip:focus-visible {
@@ -1104,8 +1130,10 @@ tui-pulse.offline {
         transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
     }
 
-    [role='tablist'] > :hover:not([aria-selected='true']) {
-        transform: translateX(3px);
+    @media (hover: hover) and (pointer: fine) {
+        [role='tablist'] > :hover:not([aria-selected='true']) {
+            transform: translateX(3px);
+        }
     }
 
     /**
@@ -1217,8 +1245,10 @@ tui-pulse.offline {
         /* Ховер цвета — мгновенный (motion-instant-hover-color). */
     }
 
-    .lh-scroll-top:hover {
-        background-color: var(--color-surface-4);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-scroll-top:hover {
+            background-color: var(--color-surface-4);
+        }
     }
 
     @media (max-width: 640px) {
@@ -1297,6 +1327,67 @@ button:disabled,
 }
 
 /**
+ * Платформенный слой телефона. Три правила отделяют «сайт в браузере»
+ * от установленного приложения:
+ *
+ * 1. Подсветка тапа. iOS и Android кладут серую плёнку на любой элемент
+ *    с обработчиком клика. Она перекрывает собственный отклик на :active,
+ *    поэтому выключена глобально.
+ * 2. Задержка клика. Браузер ждёт второго тапа, чтобы не спутать его
+ *    с двойным зумом. `manipulation` снимает ожидание на управляющих элементах.
+ * 3. Выделение подписи. Долгое нажатие на кнопку выделяло текст и звало
+ *    «Скопировать». Подпись кнопки — не контент, копировать её нельзя.
+ *
+ * `user-select` здесь только у кнопок: у текста страницы выделение остаётся.
+ */
+html {
+    -webkit-tap-highlight-color: transparent;
+
+    /* Ландшафт на телефоне: Safari без этого раздувает кегль абзацев. */
+    -webkit-text-size-adjust: 100%;
+}
+
+button,
+[role='button'],
+a,
+summary,
+label,
+select,
+input[type='checkbox'],
+input[type='radio'] {
+    touch-action: manipulation;
+}
+
+button,
+[role='button'],
+summary {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/**
+ * iOS Safari приближает страницу к полю ввода, если кегль в нём меньше 16px,
+ * и не отдаляет назад: пользователь остаётся с обрезанным, сдвинутым экраном.
+ * `max()` поднимает только мелкие поля — крупные заголовки в формах не меняются.
+ * Запрет масштабирования через `maximum-scale` не годится: он ломает зум страницы.
+ */
+/* Ландшафт с вырезом: контент не уходит под чёлку по бокам.
+   Полоса снизу и шапка держат собственные отступы env(). */
+body {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+}
+
+@media (pointer: coarse) {
+    input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']),
+    textarea,
+    select {
+        font-size: max(16px, 1em);
+    }
+}
+
+/**
  * Единая раскладка содержимого диалогового окна.
  * Поверхность (фон, радиус, тень, отступы) уже рисует `tui-dialog .t-content`,
  * поэтому здесь только раскладка — иначе получается карточка в карточке.
@@ -1361,8 +1452,10 @@ button:disabled,
     color: #ffffff;
 }
 
-.lh-dialog-button-primary:hover {
-    filter: brightness(1.1);
+@media (hover: hover) and (pointer: fine) {
+    .lh-dialog-button-primary:hover {
+        filter: brightness(1.1);
+    }
 }
 
 .lh-dialog-button-primary:disabled {
@@ -1379,8 +1472,10 @@ button:disabled,
     color: #6b6256;
 }
 
-.lh-dialog-button-secondary:hover {
-    background-color: rgba(107, 98, 86, 0.1);
+@media (hover: hover) and (pointer: fine) {
+    .lh-dialog-button-secondary:hover {
+        background-color: rgba(107, 98, 86, 0.1);
+    }
 }
 
 /**
@@ -1391,8 +1486,10 @@ button:disabled,
     color: #ffffff;
 }
 
-.lh-dialog-button-danger:hover {
-    filter: brightness(1.1);
+@media (hover: hover) and (pointer: fine) {
+    .lh-dialog-button-danger:hover {
+        filter: brightness(1.1);
+    }
 }
 
 .lh-dialog-button-danger:disabled {
@@ -1610,10 +1707,12 @@ button:disabled,
         border-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
-.lh-card-glow:hover {
-    box-shadow:
-        0 0 0 1px rgba(255, 121, 32, 0.35),
-        0 8px 24px rgba(255, 121, 32, 0.12);
+@media (hover: hover) and (pointer: fine) {
+    .lh-card-glow:hover {
+        box-shadow:
+            0 0 0 1px rgba(255, 121, 32, 0.35),
+            0 8px 24px rgba(255, 121, 32, 0.12);
+    }
 }
 
 /**
@@ -1807,8 +1906,10 @@ html {
     border: 2px solid #e2d7bb;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #c35a17;
+@media (hover: hover) and (pointer: fine) {
+    ::-webkit-scrollbar-thumb:hover {
+        background: #c35a17;
+    }
 }
 
 /**
@@ -1994,8 +2095,10 @@ html[data-theme='dark'] {
         color: #e9dfc9;
     }
 
-    .nav-button:not(.nav-button--active):hover {
-        background-color: #383a40;
+    @media (hover: hover) and (pointer: fine) {
+        .nav-button:not(.nav-button--active):hover {
+            background-color: #383a40;
+        }
     }
 
     /* Поля ввода: цвета берутся из токенов, снимается только текстура пергамента */
@@ -2036,8 +2139,10 @@ html[data-theme='dark'] {
         border-color: rgba(233, 223, 201, 0.4);
         color: #e9dfc9;
 
-        &:hover {
-            background-color: rgba(233, 223, 201, 0.1);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background-color: rgba(233, 223, 201, 0.1);
+            }
         }
     }
 
@@ -2046,10 +2151,12 @@ html[data-theme='dark'] {
         border-color: rgba(233, 223, 201, 0.35);
         color: #e9dfc9;
 
-        &:hover:not(:disabled) {
-            border-color: #ff7920;
-            color: #ff7920;
-            background-color: rgba(255, 121, 32, 0.12);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled) {
+                border-color: #ff7920;
+                color: #ff7920;
+                background-color: rgba(255, 121, 32, 0.12);
+            }
         }
     }
 
@@ -2167,8 +2274,10 @@ html[data-theme='dark'] {
     text-underline-offset: 0.18em;
 }
 
-.lh-rich-text a:hover {
-    text-decoration-thickness: 2px;
+@media (hover: hover) and (pointer: fine) {
+    .lh-rich-text a:hover {
+        text-decoration-thickness: 2px;
+    }
 }
 
 .lh-rich-text code {
@@ -2260,6 +2369,44 @@ body.lh-has-consent .lh-scroll-top {
     body.lh-has-consent.lh-has-bottom-bar .lh-scroll-top {
         bottom: calc(5.5rem + var(--lh-consent-h, 0px));
     }
+}
+
+/**
+ * Открытая модалка (меню шапки, список разделов профиля): страница под
+ * затемнением не прокручивается. Класс ставит и снимает сама модалка.
+ */
+body.lh-lock-scroll {
+    overflow: hidden;
+}
+
+/**
+ * Панель профиля держит `z-20`, а scrim модалки лежит в её контексте наложения:
+ * со своим `--lh-z-modal` он всё равно оставался под чатом и колокольчиком,
+ * у которых сотые слои вне этой панели. Пока модалка открыта, панель
+ * поднимается целиком — тогда затемнение накрывает и плавающие виджеты.
+ */
+body.lh-profile-nav-open .lh-profile-bar {
+    z-index: var(--lh-z-modal);
+}
+
+/**
+ * Шапка держит `z-index: 1` над светом зала, и её шторка-модалка оказывалась
+ * под чатом и плашкой согласия, у которых сотые слои вне шапки. Пока модалка
+ * открыта, шапка поднимается целиком: затемнение накрывает плавающие виджеты.
+ */
+/* `!important` нужен против компонентного правила шапки: Angular дописывает
+   к его селектору два атрибута изоляции стилей, и они перебивают любую
+   глобальную специфичность без важности. */
+body.lh-lock-scroll .crown-fire app-header-crown {
+    z-index: var(--lh-z-modal) !important;
+}
+
+/**
+ * Плашка согласия смонтирована вне layout и своим z-190 перекрывала модалки.
+ * Пока модалка открыта, плашка уходит под затемнение.
+ */
+body.lh-lock-scroll app-consent-banner {
+    z-index: calc(var(--lh-z-modal) - 1);
 }
 
 /*

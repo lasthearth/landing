@@ -74,9 +74,11 @@
     text-decoration: none;
 }
 
-.podium__name:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
+@media (hover: hover) and (pointer: fine) {
+    .podium__name:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
 }
 
 .podium__result {

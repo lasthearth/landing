@@ -119,8 +119,10 @@
         background-color var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
-.how-option:hover {
-    border-color: color-mix(in srgb, var(--lh-brand) 55%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .how-option:hover {
+        border-color: color-mix(in srgb, var(--lh-brand) 55%, transparent);
+    }
 }
 
 .how-option:focus-visible {
@@ -228,8 +230,10 @@
     cursor: pointer;
 }
 
-.how-field__copy:hover {
-    filter: brightness(1.08);
+@media (hover: hover) and (pointer: fine) {
+    .how-field__copy:hover {
+        filter: brightness(1.08);
+    }
 }
 
 .how-field__copy:focus-visible {

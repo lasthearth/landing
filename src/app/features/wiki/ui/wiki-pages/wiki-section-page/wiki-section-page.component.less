@@ -18,9 +18,11 @@
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.wiki-section__card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--lh-shadow-lift);
+@media (hover: hover) and (pointer: fine) {
+    .wiki-section__card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--lh-shadow-lift);
+    }
 }
 
 .wiki-section__card-title {
@@ -36,7 +38,9 @@
         transition: none;
     }
 
-    .wiki-section__card:hover {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .wiki-section__card:hover {
+            transform: none;
+        }
     }
 }

@@ -159,9 +159,11 @@
     transition: scale 120ms var(--lh-ease-spring);
 }
 
-.crown__icon:hover {
-    background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
-    color: var(--lh-parchment-3);
+@media (hover: hover) and (pointer: fine) {
+    .crown__icon:hover {
+        background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+        color: var(--lh-parchment-3);
+    }
 }
 
 .crown__icon:active {
@@ -194,9 +196,11 @@
     transition: scale 120ms var(--lh-ease-spring);
 }
 
-.crown__player:hover {
-    background-color: color-mix(in srgb, var(--lh-parchment) 14%, transparent);
-    color: var(--lh-parchment-2);
+@media (hover: hover) and (pointer: fine) {
+    .crown__player:hover {
+        background-color: color-mix(in srgb, var(--lh-parchment) 14%, transparent);
+        color: var(--lh-parchment-2);
+    }
 }
 
 .crown__player:active {
@@ -301,9 +305,11 @@
     transition: scale 120ms var(--lh-ease-spring);
 }
 
-.crown__signin:hover {
-    background-color: color-mix(in srgb, var(--lh-accent-soft) 12%, transparent);
-    color: var(--lh-accent-soft);
+@media (hover: hover) and (pointer: fine) {
+    .crown__signin:hover {
+        background-color: color-mix(in srgb, var(--lh-accent-soft) 12%, transparent);
+        color: var(--lh-accent-soft);
+    }
 }
 
 .crown__signin:active {
@@ -435,9 +441,11 @@
         translate 140ms var(--lh-ease-spring);
 }
 
-.crown__link:hover {
-    color: var(--lh-parchment-3);
-    translate: 0 -1px;
+@media (hover: hover) and (pointer: fine) {
+    .crown__link:hover {
+        color: var(--lh-parchment-3);
+        translate: 0 -1px;
+    }
 }
 
 .crown__link:active {
@@ -509,9 +517,11 @@
     transition: scale 120ms var(--lh-ease-spring);
 }
 
-.crown__menu:hover {
-    background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
-    color: var(--lh-parchment-3);
+@media (hover: hover) and (pointer: fine) {
+    .crown__menu:hover {
+        background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+        color: var(--lh-parchment-3);
+    }
 }
 
 .crown__menu:active {
@@ -600,6 +610,28 @@
     }
 }
 
+/* Ручка нижней модалки: подсказывает, что пластина выезжает снизу и
+   закрывается жестом вниз. Декоративная, кликов не ловит. */
+/* Ручка — зона захвата жеста: полоска 5px, касание 44px, прокрутку
+   браузер здесь не забирает (`touch-action: none`). */
+.crown__sheet-grip {
+    position: relative;
+    display: block;
+    width: 2.75rem;
+    height: 0.3125rem;
+    margin: 0.75rem auto 0.5rem;
+    border-radius: var(--lh-radius-full);
+    background-color: color-mix(in srgb, var(--lh-ink) 26%, transparent);
+    touch-action: none;
+    cursor: grab;
+}
+
+.crown__sheet-grip::before {
+    content: '';
+    position: absolute;
+    inset: -0.875rem -2rem;
+}
+
 .crown__group {
     display: block;
     margin-bottom: 0.75rem;
@@ -659,11 +691,13 @@
     transition-delay: calc(min(var(--crown-i, 0), 6) * 30ms), calc(min(var(--crown-i, 0), 6) * 30ms), 0ms, 0ms;
 }
 
-.crown__tile:hover {
-    translate: 0 -2px;
-    box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
-        var(--lh-shadow-lift);
+@media (hover: hover) and (pointer: fine) {
+    .crown__tile:hover {
+        translate: 0 -2px;
+        box-shadow:
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+            var(--lh-shadow-lift);
+    }
 }
 
 .crown__tile:active {
@@ -698,9 +732,11 @@
     transition: translate 140ms var(--lh-ease-spring);
 }
 
-.crown__tile:hover .crown__tile-arrow {
-    translate: 2px 0;
-    color: var(--lh-brand-ink);
+@media (hover: hover) and (pointer: fine) {
+    .crown__tile:hover .crown__tile-arrow {
+        translate: 2px 0;
+        color: var(--lh-brand-ink);
+    }
 }
 
 /* ---- Ряд управления мобильной шторки ---- */
@@ -733,10 +769,12 @@
     transition: scale 120ms var(--lh-ease-spring);
 }
 
-.crown__action:hover {
-    box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
-        var(--lh-shadow-lift);
+@media (hover: hover) and (pointer: fine) {
+    .crown__action:hover {
+        box-shadow:
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+            var(--lh-shadow-lift);
+    }
 }
 
 .crown__action:active {
@@ -834,27 +872,53 @@
         display: none;
     }
 
-    /* Мобильная шторка — оверлей: панель висит над контентом от нижней
-       кромки шапки и не раздвигает страницу. Дисплей остаётся гридом,
-       чтобы фолбэк 0fr держал закрытую шторку нулевой высоты. */
+    /* Мобильная шторка — модалка снизу экрана: окно растянуто на весь
+       вьюпорт и держит scrim, пластина прижата к нижней кромке и выезжает
+       из-за неё. Клик по scrim закрывает, прокрутку фона держит класс
+       `lh-lock-scroll` на body. Дисплей базового грида снят: высоту окна
+       задаёт вьюпорт, а не содержимое. */
     .crown__sheet--menu {
-        position: absolute;
-        top: 100%;
-        right: 0.75rem;
-        left: 0.75rem;
-        z-index: 40;
-        display: grid;
+        position: fixed;
+        inset: 0;
+        z-index: var(--lh-z-modal);
+        display: block;
         margin-inline: 0;
+        background-color: transparent;
+        transition: background-color 180ms var(--lh-ease-smooth);
     }
 
-    /* Плавающая панель круглая со всех сторон и с тенью: стыка с контентом
-       у оверлея нет. */
-    .crown__sheet--menu .crown__sheet-body.lh-panel,
+    .crown__sheet--menu.crown__sheet--open {
+        background-color: color-mix(in srgb, var(--lh-overlay) 55%, transparent);
+        transition-duration: 270ms;
+        transition-timing-function: var(--lh-ease-out-quart);
+    }
+
+    /* Окно scrim: пластина стоит на нижней кромке, всё что выше неё — scrim. */
+    .crown__sheet--menu .crown__sheet-clip {
+        display: flex;
+        align-items: flex-end;
+        height: 100%;
+    }
+
+    .crown__sheet--menu .crown__sheet-body.lh-panel {
+        width: 100%;
+        max-height: 88dvh;
+        overflow-y: auto;
+        /* Прокрутка пластины не передаётся странице под ней. */
+        overscroll-behavior: contain;
+        border-radius: var(--lh-radius-xl) var(--lh-radius-xl) 0 0;
+        padding: 0 1rem calc(1rem + env(safe-area-inset-bottom));
+        transform: translateY(100%);
+        transition: transform 240ms var(--lh-ease-smooth);
+    }
+
     .crown__sheet--menu.crown__sheet--open .crown__sheet-body.lh-panel {
-        border-radius: var(--lh-radius-lg);
+        border-radius: var(--lh-radius-xl) var(--lh-radius-xl) 0 0;
         box-shadow:
             inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent),
             var(--lh-shadow-lift);
+        transform: translateY(0);
+        transition-duration: 320ms;
     }
 
     /* Вензель компактнее: шапка из двух ярусов не съедает первый экран. */

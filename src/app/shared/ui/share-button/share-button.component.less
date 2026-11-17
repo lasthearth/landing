@@ -22,8 +22,10 @@
        состояния «скопировано» приходит за 200ms по токенам. */
     transition: border-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 
-    &:hover {
-        background: color-mix(in srgb, currentColor 10%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, currentColor 10%, transparent);
+        }
     }
 
     &:focus-visible {
@@ -44,8 +46,10 @@
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.1);
 
-        &:hover {
-            background: rgba(255, 255, 255, 0.2);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
         }
     }
 

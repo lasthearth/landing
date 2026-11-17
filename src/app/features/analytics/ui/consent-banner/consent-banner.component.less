@@ -51,12 +51,20 @@
     gap: 1rem;
     max-width: 76rem;
     margin: 0 auto;
-    padding: 0.875rem 1.5rem calc(0.875rem + env(safe-area-inset-bottom));
+    padding:
+        0.875rem
+        calc(1.5rem + env(safe-area-inset-right))
+        calc(0.875rem + env(safe-area-inset-bottom))
+        calc(1.5rem + env(safe-area-inset-left));
 
     @media (max-width: 720px) {
         flex-wrap: wrap;
         gap: 0.75rem;
-        padding: 0.875rem 1rem calc(0.875rem + env(safe-area-inset-bottom));
+        padding:
+            0.875rem
+            calc(1rem + env(safe-area-inset-right))
+            calc(0.875rem + env(safe-area-inset-bottom))
+            calc(1rem + env(safe-area-inset-left));
     }
 }
 
@@ -106,9 +114,11 @@
     text-underline-offset: 0.18em;
     white-space: nowrap;
 
-    &:hover {
-        color: #fff;
-        text-decoration-thickness: 2px;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: #fff;
+            text-decoration-thickness: 2px;
+        }
     }
 }
 

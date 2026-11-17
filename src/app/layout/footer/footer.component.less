@@ -301,8 +301,10 @@
 }
 
 /** Ховер цвета — мгновенный: переход не объявлен намеренно. */
-.gate__link:hover {
-    color: var(--gate-ember-hot);
+@media (hover: hover) and (pointer: fine) {
+    .gate__link:hover {
+        color: var(--gate-ember-hot);
+    }
 }
 
 .gate__link:focus-visible {
@@ -359,8 +361,10 @@
     color: var(--gate-ink-3);
 }
 
-.gate__link--legal:hover {
-    color: var(--gate-ink);
+@media (hover: hover) and (pointer: fine) {
+    .gate__link--legal:hover {
+        color: var(--gate-ink);
+    }
 }
 
 /** Каналы: плитки 44px, знак каждого канала в своей оптической коробке. */
@@ -380,9 +384,11 @@
     border-radius: var(--lh-radius-md);
 }
 
-.gate__social-link:hover {
-    background-color: color-mix(in srgb, #efe4cf 10%, transparent);
-    border-color: color-mix(in srgb, var(--gate-ember) 60%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .gate__social-link:hover {
+        background-color: color-mix(in srgb, #efe4cf 10%, transparent);
+        border-color: color-mix(in srgb, var(--gate-ember) 60%, transparent);
+    }
 }
 
 .gate__social-link:focus-visible {

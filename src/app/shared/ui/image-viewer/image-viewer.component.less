@@ -58,8 +58,10 @@
         cursor: pointer;
         /* Ховер подложки — мгновенный (motion-instant-hover-color). */
 
-        &:hover {
-            background: color-mix(in srgb, var(--lh-parchment) 22%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: color-mix(in srgb, var(--lh-parchment) 22%, transparent);
+            }
         }
 
         &:focus-visible {

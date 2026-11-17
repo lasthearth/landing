@@ -54,12 +54,14 @@
     --card-accent: var(--lh-leader);
 }
 
-.settlement-card:hover {
-    transform: translateY(-2px);
-    box-shadow:
-        inset 0 1px 1px rgba(255, 255, 255, 0.18),
-        inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 80%, transparent),
-        var(--lh-shadow-lift);
+@media (hover: hover) and (pointer: fine) {
+    .settlement-card:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            inset 0 1px 1px rgba(255, 255, 255, 0.18),
+            inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 80%, transparent),
+            var(--lh-shadow-lift);
+    }
 }
 
 /**
@@ -90,8 +92,10 @@
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.settlement-card:hover .settlement-card__media app-image-loader {
-    transform: scale(1.04);
+@media (hover: hover) and (pointer: fine) {
+    .settlement-card:hover .settlement-card__media app-image-loader {
+        transform: scale(1.04);
+    }
 }
 
 /**
@@ -165,9 +169,11 @@
         transition: none;
     }
 
-    .settlement-card:hover,
-    .settlement-card:hover .settlement-card__media app-image-loader {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .settlement-card:hover,
+        .settlement-card:hover .settlement-card__media app-image-loader {
+            transform: none;
+        }
     }
 }
 
@@ -176,9 +182,11 @@
     color: inherit;
     text-decoration: none;
 
-    &:hover {
-        text-decoration: underline;
-        text-decoration-color: var(--lh-brand);
-        text-underline-offset: 0.18em;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: underline;
+            text-decoration-color: var(--lh-brand);
+            text-underline-offset: 0.18em;
+        }
     }
 }

@@ -123,8 +123,10 @@
         color: var(--lh-link);
         background: color-mix(in srgb, var(--lh-brand) 11%, transparent);
 
-        &:hover {
-            background: color-mix(in srgb, var(--lh-brand) 20%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: color-mix(in srgb, var(--lh-brand) 20%, transparent);
+            }
         }
     }
 
@@ -583,9 +585,11 @@
         opacity: 0.6;
         cursor: pointer;
 
-        &:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                opacity: 1;
+                background: rgba(255, 255, 255, 0.1);
+            }
         }
 
         &.is-copied {
@@ -626,8 +630,10 @@
         }
     }
 
-    .wiki-video:hover .wiki-video__play {
-        transform: scale(1.05);
+    @media (hover: hover) and (pointer: fine) {
+        .wiki-video:hover .wiki-video__play {
+            transform: scale(1.05);
+        }
     }
 
     .wiki-box {

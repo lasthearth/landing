@@ -1,7 +1,7 @@
 .game-chat-widget {
     position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    right: calc(1.5rem + env(safe-area-inset-right, 0px));
     z-index: 100;
     display: flex;
     flex-direction: column;
@@ -71,9 +71,11 @@
         visibility 0.18s;
     visibility: visible;
 
-    &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 12px 32px color-mix(in srgb, var(--lh-brand) 55%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px color-mix(in srgb, var(--lh-brand) 55%, transparent);
+        }
     }
 }
 
@@ -118,8 +120,10 @@
     border: none;
     cursor: pointer;
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+        }
     }
 }
 

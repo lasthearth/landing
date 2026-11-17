@@ -121,7 +121,9 @@
     /* Ховер — только цвет текста и фон: мгновенно, без перехода. */
 }
 
-.start-game__links a:hover {
-    color: var(--lh-brand-ink);
-    background: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .start-game__links a:hover {
+        color: var(--lh-brand-ink);
+        background: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+    }
 }

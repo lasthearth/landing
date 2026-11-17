@@ -57,12 +57,16 @@
     );
 }
 
-.diplomacy-card:hover {
-    transform: translateY(-3px);
+@media (hover: hover) and (pointer: fine) {
+    .diplomacy-card:hover {
+        transform: translateY(-3px);
+    }
 }
 
-.diplomacy-card:hover::after {
-    opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+    .diplomacy-card:hover::after {
+        opacity: 1;
+    }
 }
 
 .diplomacy-card__seal {
@@ -207,8 +211,10 @@
     /* Ховер — только цвет фона: мгновенно, без перехода. */
 }
 
-.diplomacy-card__toggle:hover {
-    background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .diplomacy-card__toggle:hover {
+        background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+    }
 }
 
 .diplomacy-card__toggle:focus-visible {

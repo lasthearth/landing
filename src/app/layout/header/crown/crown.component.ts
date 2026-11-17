@@ -25,13 +25,14 @@
  * вензель. Тема, язык и выход переезжают в мобильную шторку в ряд
  * `.crown__actions`, ярус ссылок скрыт целиком.
  */
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
     OnDestroy,
+    effect,
     inject,
     PLATFORM_ID,
     signal,
@@ -46,6 +47,7 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { PlayerAvatarComponent } from '@entities/player-style';
 import { NotificationBellComponent } from '@features/notifications';
 import { HeaderState } from '../header-state.service';
+import { SheetDragDirective } from '@shared/lib/directives';
 
 @Component({
     selector: 'app-header-crown',
@@ -58,6 +60,7 @@ import { HeaderState } from '../header-state.service';
         ImageLoaderComponent,
         NotificationBellComponent,
         PlayerAvatarComponent,
+        SheetDragDirective,
     ],
     templateUrl: './crown.component.html',
     styleUrl: './crown.component.less',
@@ -109,6 +112,12 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
     protected readonly menuOpen = signal(false);
 
     /**
+     * Жест шторки мобильного меню: перед открытием сбрасывает инлайновые стили,
+     * оставшиеся после закрытия перетаскиванием.
+     */
+    private readonly menuSheetDrag = viewChild(SheetDragDirective);
+
+    /**
      * Хост-элемент шапки — чтобы отличать клик внутри шапки от клика мимо.
      * Тип задан аннотацией: `inject(ElementRef<…>)` инстанцирующим выражением
      * компилятор Angular в dev-сборке разворачивает в `ElementRef<any>`.
@@ -127,10 +136,20 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
     private readonly platformId = inject(PLATFORM_ID);
 
     /**
+     * Документ: открытая нижняя модалка держит класс `lh-lock-scroll` на body,
+     * чтобы фон не прокручивался под scrim.
+     */
+    private readonly document: Document = inject(DOCUMENT);
+
+    /**
      * Подписывается на завершение навигации, чтобы шторки не оставались
      * открытыми на новой странице.
      */
     public constructor() {
+        effect(() => {
+            this.document.body.classList.toggle('lh-lock-scroll', this.menuOpen());
+        });
+
         this.router.events
             .pipe(
                 filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -179,6 +198,7 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
     public ngOnDestroy(): void {
         this.rowResize?.disconnect();
         this.rowResize = null;
+        this.document.body.classList.remove('lh-lock-scroll');
     }
 
     /**
@@ -194,6 +214,11 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
      */
     protected toggleMenu(): void {
         this.sheetOpen.set(false);
+
+        if (!this.menuOpen()) {
+            this.menuSheetDrag()?.reset();
+        }
+
         this.menuOpen.update((open) => !open);
     }
 
@@ -204,6 +229,8 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
         this.sheetOpen.set(false);
         this.menuOpen.set(false);
     }
+
+
 
     /**
      * Меняет язык интерфейса на противоположный текущему.
@@ -268,13 +295,33 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Клик мимо шапки закрывает открытые шторки.
+     * Клик мимо шапки закрывает открытые шторки. Для нижней модалки сюда же
+     * приходит клик по scrim: окно шторки вокруг пластины. `(click)` на самом
+     * окне не ставим: на гидратации окно несёт `inert`, и делегированный
+     * слушатель на нём не оживает, а документальный — живой всегда.
      *
      * @param event Событие клика по документу.
      */
     protected onDocumentClick(event: MouseEvent): void {
-        if ((this.sheetOpen() || this.menuOpen()) && !this.host.nativeElement.contains(event.target as Node)) {
+        if (!this.sheetOpen() && !this.menuOpen()) {
+            return;
+        }
+
+        const target = event.target as Node;
+
+        if (!this.host.nativeElement.contains(target)) {
             this.closeAll();
+
+            return;
+        }
+
+        if (this.menuOpen()) {
+            const sheet = this.host.nativeElement.querySelector('.crown__sheet--menu');
+            const plate = sheet?.querySelector('.crown__sheet-body');
+
+            if (sheet && sheet.contains(target) && !(plate && plate.contains(target))) {
+                this.closeAll();
+            }
         }
     }
 

@@ -125,8 +125,10 @@
     color: var(--lh-map-ink-soft);
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-map-vermilion);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-map-vermilion);
+        }
     }
 
     &:focus-visible {
@@ -216,8 +218,10 @@
     text-decoration: underline;
     text-underline-offset: 0.2em;
 
-    &:hover {
-        text-decoration-thickness: 2px;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration-thickness: 2px;
+        }
     }
 }
 
@@ -306,9 +310,11 @@
     text-align: left;
     cursor: pointer;
 
-    &:hover {
-        border-color: var(--lh-border-strong);
-        background-color: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            border-color: var(--lh-border-strong);
+            background-color: color-mix(in srgb, var(--lh-ink) 4%, transparent);
+        }
     }
 
     &:focus-visible {

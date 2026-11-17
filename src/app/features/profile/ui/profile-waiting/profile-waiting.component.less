@@ -103,8 +103,10 @@
     text-decoration: none;
     transition: background-color var(--lh-dur-fast) var(--lh-ease-smooth);
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+        }
     }
 }
 
@@ -155,8 +157,10 @@
     text-decoration: none;
     transition: background-color var(--lh-dur-fast) var(--lh-ease-smooth);
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+        }
     }
 }
 
@@ -193,8 +197,10 @@
         transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
-    &:hover tui-icon {
-        transform: translateX(3px);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover tui-icon {
+            transform: translateX(3px);
+        }
     }
 }
 
@@ -228,7 +234,9 @@
         color: var(--lh-brand-ink);
     }
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-brand) 10%, transparent);
+        }
     }
 }

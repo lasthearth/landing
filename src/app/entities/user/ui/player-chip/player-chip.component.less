@@ -28,8 +28,10 @@
     transition: background var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
-.player-chip:hover {
-    background: color-mix(in srgb, var(--lh-surface-3) 90%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .player-chip:hover {
+        background: color-mix(in srgb, var(--lh-surface-3) 90%, transparent);
+    }
 }
 
 /* Глава надела: тёплая обводка вместо отдельного фона */
@@ -104,8 +106,10 @@
     transition: background var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
-.player-chip__remove:hover {
-    background: color-mix(in srgb, var(--lh-danger) 18%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .player-chip__remove:hover {
+        background: color-mix(in srgb, var(--lh-danger) 18%, transparent);
+    }
 }
 
 /**
@@ -305,8 +309,10 @@ a.player-chip__name {
     color: inherit;
     text-decoration: none;
 
-    &:hover {
-        text-decoration: underline;
-        text-underline-offset: 3px;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
     }
 }

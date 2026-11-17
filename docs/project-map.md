@@ -35,13 +35,13 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1100 | core, entities, features, layout, routes, shared |
+| src/app | 1102 | core, entities, features, layout, routes, shared |
 | core/ | 60 | config, guards, i18n, interceptors, services, types |
 | entities/ | 203 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki |
-| features/ | 654 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
+| features/ | 655 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
 | layout/ | 27 | background-scene, footer, header |
 | routes/ | 5 | enums |
-| shared/ | 146 | lib, styles, ui |
+| shared/ | 147 | lib, styles, ui |
 
 ## 3. Слайсы features / entities
 
@@ -72,7 +72,7 @@
 | features/player | 23 | ui, model, api, lib, config | да | 6 |
 | features/players | 7 | ui | да | 1 |
 | features/privacy-policy | 3 | — | **нет** | — |
-| features/profile | 49 | ui | да | 5 |
+| features/profile | 50 | ui | да | 5 |
 | features/public-offer | 3 | — | **нет** | — |
 | features/reactions | 6 | ui, api | да | 2 |
 | features/referral | 5 | — | да | 2 |
@@ -174,7 +174,7 @@
 | pagination | 0.7 | — |
 | player | 21.9 | /profile, /player/:nick |
 | players | 3.3 | /players |
-| profile | 23.2 | /profile |
+| profile | 23.3 | /profile |
 | referral | 1.5 | /profile/referral |
 | rules | 253.8 | /rules |
 | settlements | 55.4 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |

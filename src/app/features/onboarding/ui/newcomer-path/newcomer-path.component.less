@@ -107,8 +107,10 @@
     text-align: left;
     cursor: pointer;
 
-    &:hover .newcomer-path__step-title {
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover .newcomer-path__step-title {
+            color: var(--lh-brand-ink);
+        }
     }
 
     &:focus-visible {
@@ -266,9 +268,11 @@
 
     /* Ховер — только цвет рамки и текста: применяется мгновенно, без
      * перехода. Фильтр яркости на primary тоже мгновенный. */
-    &:hover {
-        color: var(--lh-brand-ink);
-        box-shadow: inset 0 0 0 1px var(--lh-brand);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-brand-ink);
+            box-shadow: inset 0 0 0 1px var(--lh-brand);
+        }
     }
 
     &:focus-visible {
@@ -289,8 +293,10 @@
     box-shadow: none;
 }
 
-.newcomer-path__action--primary:hover {
-    filter: brightness(1.08);
+@media (hover: hover) and (pointer: fine) {
+    .newcomer-path__action--primary:hover {
+        filter: brightness(1.08);
+    }
 }
 
 .newcomer-path__link {
@@ -308,8 +314,10 @@
     text-underline-offset: 3px;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-brand-ink);
+        }
     }
 }
 
@@ -340,9 +348,11 @@
     cursor: pointer;
 
     /* Ховер меняет только цвет и стиль рамки — мгновенно. */
-    &:hover {
-        border-style: solid;
-        border-color: var(--lh-brand);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            border-style: solid;
+            border-color: var(--lh-brand);
+        }
     }
 
     &:focus-visible {

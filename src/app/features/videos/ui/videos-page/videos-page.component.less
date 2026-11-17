@@ -75,8 +75,10 @@
     object-fit: cover;
     transition: transform 0.15s var(--lh-ease-spring);
 
-    .videos-featured:hover & {
-        transform: scale(1.03);
+    @media (hover: hover) and (pointer: fine) {
+        .videos-featured:hover & {
+            transform: scale(1.03);
+        }
     }
 }
 
@@ -104,8 +106,10 @@
     transform: translate(-50%, -50%);
     transition: transform 0.15s var(--lh-ease-spring);
 
-    .videos-featured:hover & {
-        transform: translate(-50%, -50%) scale(1.08);
+    @media (hover: hover) and (pointer: fine) {
+        .videos-featured:hover & {
+            transform: translate(-50%, -50%) scale(1.08);
+        }
     }
 }
 
@@ -179,7 +183,7 @@
 
 .videos-page__modal--vertical {
     width: auto;
-    height: min(85vh, 48rem);
+    height: min(85dvh, 48rem);
     aspect-ratio: 9 / 16;
     max-width: 100%;
 
@@ -210,8 +214,10 @@
     border: none;
     cursor: pointer;
 
-    &:hover {
-        background: rgba(255, 255, 255, 0.2);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     }
 
     &:focus-visible {
