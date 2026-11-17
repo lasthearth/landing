@@ -18,6 +18,7 @@ import { TranslatePipe } from '@core/i18n';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { ConsentService } from '@core/services/consent.service';
 import { MotionBlurDirective } from '@shared/lib/directives';
+import { isKeyframeEnd } from '@shared/lib/is-keyframe-end.function';
 
 /**
  * Класс на body, пока полоса видна: по нему страница получает отступ снизу,
@@ -132,7 +133,9 @@ export class ConsentBannerComponent {
      * @param event Событие конца анимации на полосе.
      */
     protected onBarAnimationEnd(event: AnimationEvent): void {
-        if (event.animationName === 'consent-drop') {
+        // Имя кадра приходит с префиксом области видимости компонента —
+        // см. `isKeyframeEnd`.
+        if (isKeyframeEnd(event, 'consent-drop')) {
             this.leaving.set(false);
         }
     }

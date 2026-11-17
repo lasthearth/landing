@@ -87,9 +87,11 @@
     animation: bell-panel-enter var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
-/* Закрытие быстрее открытия (120мс против 200мс). */
+/* Закрытие быстрее открытия (120мс против 200мс). Гаснущая панель не ловит
+   клики: она ещё в кадре, и без этого клик по шапке уходил бы в пустоту. */
 .bell__fly--closing {
     animation: bell-panel-exit 120ms var(--lh-ease-out-quart) forwards;
+    pointer-events: none;
 }
 
 /* Как у остальных выпадающих меню шапки */
