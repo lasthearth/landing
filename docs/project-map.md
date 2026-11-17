@@ -11,13 +11,13 @@
 | `npm run start` | `node -r dotenv/config node_modules/@angular/cli/bin/ng serve --host 127.0.0.1` |
 | `npm run dev` | `node -r dotenv/config node_modules/@angular/cli/bin/ng serve` |
 | `npm run build` | `ng build` |
-| `npm run build-production` | `ng build --prod` |
 | `npm run watch` | `ng build --watch --configuration development` |
 | `npm run test` | `ng test --watch=false` |
 | `npm run test:watch` | `ng test --watch` |
 | `npm run test:coverage` | `ng test --watch=false --code-coverage` |
-| `npm run test:browser` | `ng run last-hearth-landing:test-browser --watch=false --browsers=ChromeHeadless` |
+| `npm run test:browser` | `ng run last-hearth-landing:test-browser` |
 | `npm run test:ci` | `npm run test && npm run test:browser` |
+| `npm run lint` | `eslint src eslint.config.mjs` |
 | `npm run verify` | `node scripts/verify.mjs` |
 | `npm run verify:full` | `node scripts/verify.mjs --full` |
 | `npm run arch` | `node scripts/check-architecture.mjs` |
@@ -163,7 +163,7 @@
 | gallery | 2.6 | /gallery |
 | header | 2.6 | — |
 | home | 10.8 | / |
-| key-points | 79.3 | /key-points |
+| key-points | 83.4 | /key-points |
 | legal | 68.7 | /privacy-policy, /public-offer |
 | lfg | 15.4 | /lfg |
 | market | 15.6 | /profile, /market |

@@ -9,7 +9,6 @@ import { SkeletonComponent } from './skeleton.component';
  */
 @Component({
     selector: 'app-settlement-detail-skeleton',
-    standalone: true,
     imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div class="flex flex-col gap-6 w-full">

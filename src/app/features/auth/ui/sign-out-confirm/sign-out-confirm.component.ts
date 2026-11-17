@@ -9,7 +9,6 @@ import { UserService } from '@entities/user';
  */
 @Component({
     selector: 'app-sign-out-confirm',
-    standalone: true,
     imports: [TranslatePipe],
     templateUrl: './sign-out-confirm.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],

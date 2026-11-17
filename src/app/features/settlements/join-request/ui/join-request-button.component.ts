@@ -14,7 +14,6 @@ import { JoinTargetKind, MyJoinRequestsStore } from '../model/my-join-requests.s
  */
 @Component({
     selector: 'app-join-request-button',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './join-request-button.component.html',
     styleUrl: './join-request-button.component.less',

@@ -2,8 +2,8 @@
 
 @if (showWelcome$ | async) {
     <app-welcome
-        [class.scroll]="isSetScrollClass"
-        (onScroll)="onWelcomeScroll()"
+        [class.scroll]="isSetScrollClass()"
+        (scrollToContent)="onWelcomeScroll()"
         class="fixed inset-0 size-full welcome z-[200]"
     />
 }

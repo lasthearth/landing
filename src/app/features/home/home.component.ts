@@ -18,7 +18,7 @@ import { buildThumbUrl } from '@shared/lib/discord-gallery/discord-thumb-url.fun
 import { readShotCaption } from '@shared/lib/discord-gallery/read-shot-caption.function';
 import { formatShortDate } from '@shared/lib/relative-time';
 import { formatServerTime } from '@app/layout/header/lib/format-server-time.function';
-import { catchError, finalize, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
+import { catchError, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RevealDirective } from '@shared/lib/directives';
@@ -70,7 +70,6 @@ interface GalleryStripItem {
  * Компонент главной страницы.
  */
 @Component({
-    standalone: true,
     selector: 'app-home',
     imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe, RevealDirective, UpcomingEventComponent, ModsNoticeComponent, LfgTickerComponent],
     styleUrl: './home.component.less',

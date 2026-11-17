@@ -21,7 +21,6 @@ import { environment } from '@core/config/environments/environment';
  */
 @Component({
     selector: 'app-how-to-buy',
-    standalone: true,
     imports: [AmountPipe, FormsModule, TuiSlider, TuiIcon, LHInputComponent, TranslatePipe],
     templateUrl: './how-to-buy.component.html',
     styleUrl: './how-to-buy.component.less',

@@ -802,10 +802,13 @@ function renderInline(ctx: Ctx, text: string, line: number): string {
     source = source.replace(/==([^=\n]+?)==/g, '\u0002$1\u0003');
 
     let html = renderInlineMarkdown(source)
+        // eslint-disable-next-line no-control-regex -- \u0002 — служебный маркер начала ==выделения==: в тексте автора такого символа нет
         .replace(/\u0002/g, '<mark>')
+        // eslint-disable-next-line no-control-regex -- \u0003 — служебный маркер конца ==выделения==: в тексте автора такого символа нет
         .replace(/\u0003/g, '</mark>');
 
     while (html.includes('\u0001')) {
+        // eslint-disable-next-line no-control-regex -- \u0001 — служебный маркер защищённых фрагментов: в тексте автора такого символа нет
         html = html.replace(/\u0001(\d+)\u0001/g, (_, index: string) => held[Number(index)]);
     }
 

@@ -11,7 +11,6 @@ import { SkeletonComponent } from './skeleton.component';
  */
 @Component({
     selector: 'app-admin-list-skeleton',
-    standalone: true,
     imports: [SkeletonComponent, PauseOffscreenDirective],
     template: `
         <div class="flex flex-col gap-4">

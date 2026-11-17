@@ -155,7 +155,6 @@ const HOTKEYS: readonly [string, string][] = [
  * от потери несохранённого текста.
  */
 @Component({
-    standalone: true,
     selector: 'app-wiki-editor-page',
     imports: [TuiIcon, TranslatePipe, FormsModule, RouterLink, WikiMarkupInputComponent, WikiArticleViewComponent],
     templateUrl: './wiki-editor-page.component.html',

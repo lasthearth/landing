@@ -59,7 +59,6 @@ const KIT_ITEM_TYPE: ShopItemType = 'ITEM_TYPE_KIT';
  */
 @Component({
     selector: 'app-donate-shop-panel',
-    standalone: true,
     imports: [
         AmountPipe,
         ReactiveFormsModule,
@@ -971,7 +970,7 @@ export class DonateShopPanelComponent implements OnInit {
 
                 this.submit(this.donateService.createShopItem$(request), 'admin.shop.createdSuccess');
             }
-        } catch (error) {
+        } catch {
             this.isLoading.set(false);
             this.requestStatus.showError(this.i18n.translate('admin.shop.uploadError'));
         }

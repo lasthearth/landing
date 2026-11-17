@@ -1,7 +1,7 @@
 import { TuiRoot } from '@taiga-ui/core';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LayoutComponent } from './layout/layout.component';
 import { RouteProgressComponent } from '@shared/ui/route-progress';
@@ -15,11 +15,11 @@ import { PendingInviteService } from '@features/settlements/join-by-invite';
  * Корневой компонент приложения.
  */
 @Component({
-    standalone: true,
     selector: 'app-root',
     imports: [LayoutComponent, TuiRoot, RouteProgressComponent, ConsentBannerComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
     /**

@@ -82,7 +82,6 @@ function isScrolledToBottom(container: HTMLElement): boolean {
  */
 @Component({
     selector: 'app-game-chat-widget',
-    standalone: true,
     imports: [NgClass, TuiIcon, TranslatePipe],
     templateUrl: './game-chat-widget.component.html',
     styleUrl: './game-chat-widget.component.less',

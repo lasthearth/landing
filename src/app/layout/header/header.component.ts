@@ -19,7 +19,6 @@ import { HeaderState } from './header-state.service';
 import { CrownComponent } from './crown/crown.component';
 
 @Component({
-    standalone: true,
     selector: 'app-header',
     imports: [CrownComponent],
     providers: [HeaderState],

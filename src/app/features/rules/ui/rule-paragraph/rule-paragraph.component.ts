@@ -34,7 +34,6 @@ const claimedAnchors = new Set<string>();
  */
 @Component({
     selector: 'app-rule-paragraph',
-    standalone: true,
     imports: [ScrollAnchorDirective, TuiIcon, TranslatePipe],
     templateUrl: './rule-paragraph.component.html',
     styleUrl: '../../styles/rules.less',

@@ -11,7 +11,6 @@ import { TranslationParams } from './i18n.types';
  */
 @Pipe({
     name: 'translate',
-    standalone: true,
     pure: false,
 })
 export class TranslatePipe implements PipeTransform {

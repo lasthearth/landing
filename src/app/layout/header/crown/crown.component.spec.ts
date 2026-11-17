@@ -21,7 +21,7 @@ import { CrownComponent } from './crown.component';
  * Заглушка перевода: возвращает ключ — по нему видно, из какого места
  * словаря пришла подпись.
  */
-@Pipe({ standalone: true, name: 'translate' })
+@Pipe({ name: 'translate' })
 class TranslatePipeStub implements PipeTransform {
     public transform(key: string): string {
         return key;
@@ -31,7 +31,7 @@ class TranslatePipeStub implements PipeTransform {
 /**
  * Заглушка форматирования суммы: отдаёт строку как есть.
  */
-@Pipe({ standalone: true, name: 'amount' })
+@Pipe({ name: 'amount' })
 class AmountPipeStub implements PipeTransform {
     public transform(value: string | null): string {
         return value ?? '';
@@ -41,7 +41,7 @@ class AmountPipeStub implements PipeTransform {
 /**
  * Заглушка содержимого маршрута: роутеру нужен компонент для адреса.
  */
-@Component({ standalone: true, template: '' })
+@Component({ template: '' })
 class RouteStubComponent {}
 
 /**
@@ -49,18 +49,18 @@ class RouteStubComponent {}
  * не работает для standalone-шаблона, поэтому тяжёлые компоненты подменяются
  * настоящими заглушками с теми же селекторами и входами.
  */
-@Component({ standalone: true, selector: 'tui-icon', template: '' })
+@Component({ selector: 'tui-icon', template: '' })
 class TuiIconStubComponent {
     public readonly icon = input('');
 }
 
-@Component({ standalone: true, selector: 'app-image-loader', template: '' })
+@Component({ selector: 'app-image-loader', template: '' })
 class ImageLoaderStubComponent {
     public readonly src = input('');
     public readonly alt = input('');
 }
 
-@Component({ standalone: true, selector: 'app-player-avatar', template: '' })
+@Component({ selector: 'app-player-avatar', template: '' })
 class PlayerAvatarStubComponent {
     public readonly userId = input<string | null>(null);
     public readonly src = input('');
@@ -68,7 +68,7 @@ class PlayerAvatarStubComponent {
     public readonly animated = input(true);
 }
 
-@Component({ standalone: true, selector: 'app-notification-bell', template: '' })
+@Component({ selector: 'app-notification-bell', template: '' })
 class NotificationBellStubComponent {}
 
 /**

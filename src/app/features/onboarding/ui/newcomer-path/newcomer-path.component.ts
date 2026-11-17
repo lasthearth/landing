@@ -70,7 +70,6 @@ interface ApplicationDetails {
  */
 @Component({
     selector: 'app-newcomer-path',
-    standalone: true,
     imports: [RouterLink, TuiIcon, TranslatePipe, ModsNoticeComponent],
     templateUrl: './newcomer-path.component.html',
     styleUrl: './newcomer-path.component.less',

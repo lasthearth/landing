@@ -3,7 +3,6 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
     SettlementService,
     ISettlement,
-    getSettlementTypeByKey,
     getSettlementTypeName,
     getSettlementDisplayName,
     isGuildSettlement,
@@ -16,7 +15,7 @@ import { SettlementCardSkeletonComponent } from '@shared/ui/skeletons';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { PageHeaderComponent } from '@shared/ui/page-header';

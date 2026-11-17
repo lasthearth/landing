@@ -24,7 +24,6 @@ import { WikiSuggestionsComponent } from '../wiki-suggestions/wiki-suggestions.c
  * Вкладка «Вики» в админке: список статей, поиск, фильтры и переход в редактор.
  */
 @Component({
-    standalone: true,
     selector: 'app-wiki-admin-panel',
     imports: [
         TuiIcon,

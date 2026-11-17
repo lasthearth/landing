@@ -33,7 +33,7 @@ export function typograph(source: string): string {
                 .replace(/https?:\/\/\S+/g, hold);
 
             text = text
-                .replace(/(^|[\s(\[«])"(?=\S)/g, '$1«')
+                .replace(/(^|[\s([«])"(?=\S)/g, '$1«')
                 .replace(/"/g, '»')
                 .replace(/(\S) +- +/g, '$1 — ')
                 .replace(/(\S) +-- +/g, '$1 — ')
@@ -41,6 +41,7 @@ export function typograph(source: string): string {
                 .replace(/\.\.\./g, '…')
                 .replace(/(^|\s)(в|во|и|к|ко|с|со|о|об|у|а|но|на|не|по|за|из|от|до)\s+(?=\S)/gi, '$1$2 ');
 
+            // eslint-disable-next-line no-control-regex -- \u0001 — служебный маркер защищённых фрагментов: в тексте автора такого символа нет
             return text.replace(/\u0001(\d+)\u0001/g, (_, index: string) => held[Number(index)]);
         })
         .join('\n');

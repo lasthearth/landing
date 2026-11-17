@@ -23,9 +23,9 @@ export class LocalStorageService {
      * Сохраняет значение в localStorage.
      *
      * @param key Ключ.
-     * @param value Значение для сохранения.
+     * @param value Значение для сохранения: любое сериализуемое в JSON.
      */
-    public setItem(key: string, value: any): void {
+    public setItem(key: string, value: unknown): void {
         if (!this.isAvailable()) {
             return;
         }

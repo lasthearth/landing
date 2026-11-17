@@ -50,7 +50,6 @@ const EMPTY_STATE: VideoKindState = {
  */
 @Component({
     selector: 'app-videos-page',
-    standalone: true,
     imports: [PageHeaderComponent, TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, VideoCardComponent, SafeUrlPipe, RevealDirective],
     templateUrl: './videos-page.component.html',
     styleUrl: './videos-page.component.less',

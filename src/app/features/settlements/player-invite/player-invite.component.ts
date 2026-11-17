@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
-import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import { POLYMORPHEUS_CONTEXT, PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { TuiDialogContext } from '@taiga-ui/core';
+import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { SettlementService } from '@entities/settlement';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
@@ -16,7 +16,6 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import { RequestStatusService } from '@core/services/request-status.service';
 
 @Component({
-    standalone: true,
     selector: 'app-player-invite',
     imports: [LHInputComponent, AsyncPipe, ReactiveFormsModule, PlayerAvatarComponent, EmptyStateComponent, TranslatePipe],
     templateUrl: './player-invite.component.html',

@@ -13,7 +13,7 @@
                     <div class="start-game__fact">
                         <dt>{{ "startGame.server.online" | translate }}</dt>
                         <dd>
-                            @if (online()?.online != null) {
+                            @if ((online()?.online ?? null) !== null) {
                                 <span class="start-game__online-dot" aria-hidden="true"></span>
                                 {{ online()!.online }}
                                 @if (online()!.max_online) {

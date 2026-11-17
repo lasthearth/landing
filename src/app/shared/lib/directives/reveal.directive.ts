@@ -22,7 +22,6 @@ const MAX_REVEAL_DELAY = 400;
 
 @Directive({
     selector: '[appReveal]',
-    standalone: true,
     host: {
         class: 'lh-reveal',
     },

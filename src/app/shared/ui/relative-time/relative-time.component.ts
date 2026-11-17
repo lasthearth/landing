@@ -15,7 +15,6 @@ import { formatFullDate, formatRelativeTime, parseDateInput } from '@shared/lib/
  * навсегда осталось бы на момент сборки.
  */
 @Component({
-    standalone: true,
     selector: 'time[appRelativeTime]',
     template: '<ng-content />{{ label() }}',
     changeDetection: ChangeDetectionStrategy.OnPush,

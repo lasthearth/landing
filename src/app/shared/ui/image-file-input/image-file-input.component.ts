@@ -41,7 +41,6 @@ const BYTES_IN_MB = 1024 * 1024;
  * наименьший полученный вариант, а непригодность показывает валидатор формы.
  */
 @Component({
-    standalone: true,
     selector: 'app-image-file-input',
     imports: [ReactiveFormsModule, TuiFiles, TuiLoader, TranslatePipe],
     templateUrl: './image-file-input.component.html',

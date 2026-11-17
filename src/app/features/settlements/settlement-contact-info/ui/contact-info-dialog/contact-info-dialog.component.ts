@@ -14,7 +14,6 @@ import { CONTACT_INFO_MAX_LENGTH } from '../../config/contact-info-max-length.co
  */
 @Component({
     selector: 'app-contact-info-dialog',
-    standalone: true,
     imports: [ReactiveFormsModule, TranslatePipe, LHInputComponent],
     templateUrl: './contact-info-dialog.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],

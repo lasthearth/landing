@@ -8,7 +8,6 @@ import { TranslatePipe, AmountPipe } from '@core/i18n';
  * Цвет кольца и ступени — по медали (золото, серебро, бронза).
  */
 @Component({
-    standalone: true,
     selector: 'app-leader-card',
     imports: [AmountPipe, RouterLink, PlayerAvatarComponent, TranslatePipe],
     templateUrl: './leader-card.component.html',

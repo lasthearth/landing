@@ -1,4 +1,4 @@
-import { Component, ElementRef, computed, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TabsPillDirective } from './tabs-pill.directive';
 
@@ -185,9 +185,9 @@ describe('TabsPillDirective', () => {
 
         const el = pill();
 
-        expect(el).withContext('плашка вставлена в ряд').not.toBeNull();
-        expect(getComputedStyle(el!).position).withContext('плашка выпала из потока').toBe('absolute');
-        expect(el!.firstElementChild?.className).withContext('слой-потомок на месте').toContain('lh-tabs-pill__face');
+        expect(el, 'плашка вставлена в ряд').not.toBeNull();
+        expect(getComputedStyle(el!).position, 'плашка выпала из потока').toBe('absolute');
+        expect(el!.firstElementChild?.className, 'слой-потомок на месте').toContain('lh-tabs-pill__face');
     });
 
     it('не сдвигает кнопки ряда: отступы как у ряда без директивы', () => {
@@ -195,16 +195,15 @@ describe('TabsPillDirective', () => {
         const rowRect = row.getBoundingClientRect();
 
         // Сравнение в одной системе координат: rect кнопки минус rect ряда.
-        expect(row.clientWidth)
-            .withContext('ширина ряда не изменилась')
-            .toBe(controlRowWidth);
+        expect(row.clientWidth, 'ширина ряда не изменилась').toBe(controlRowWidth);
 
         buttons().forEach((button, index) => {
             const relative = button.getBoundingClientRect().left - rowRect.left;
 
-            expect(Math.abs(relative - controlLefts[index]))
-                .withContext(`кнопка ${index} не уехала вправо: ${relative} против ${controlLefts[index]}`)
-                .toBeLessThanOrEqual(1);
+            expect(
+                Math.abs(relative - controlLefts[index]),
+                `кнопка ${index} не уехала вправо: ${relative} против ${controlLefts[index]}`
+            ).toBeLessThanOrEqual(1);
         });
     });
 
@@ -213,21 +212,15 @@ describe('TabsPillDirective', () => {
         const pillRect = pill()!.getBoundingClientRect();
         const buttonRect = active.getBoundingClientRect();
 
-        expect(Math.abs(pillRect.left - buttonRect.left))
-            .withContext('левый край плашки совпадает с кнопкой')
-            .toBeLessThanOrEqual(1);
-        expect(Math.abs(pillRect.width - buttonRect.width))
-            .withContext('ширина плашки совпадает с кнопкой')
-            .toBeLessThanOrEqual(1);
-        expect(Math.abs(pillRect.top - buttonRect.top))
-            .withContext('верх плашки совпадает с кнопкой')
-            .toBeLessThanOrEqual(1);
+        expect(Math.abs(pillRect.left - buttonRect.left), 'левый край плашки совпадает с кнопкой').toBeLessThanOrEqual(1);
+        expect(Math.abs(pillRect.width - buttonRect.width), 'ширина плашки совпадает с кнопкой').toBeLessThanOrEqual(1);
+        expect(Math.abs(pillRect.top - buttonRect.top), 'верх плашки совпадает с кнопкой').toBeLessThanOrEqual(1);
     });
 
     it('активная вкладка без своей заливки: подсветку держит плашка', () => {
         const active = buttons()[0];
 
-        expect(getComputedStyle(active).backgroundColor).withContext('заливка кнопки погашена').toBe('rgba(0, 0, 0, 0)');
+        expect(getComputedStyle(active).backgroundColor, 'заливка кнопки погашена').toBe('rgba(0, 0, 0, 0)');
     });
 
     it('перелетает на вторую вкладку по клику и остаётся на ней', async () => {
@@ -242,12 +235,8 @@ describe('TabsPillDirective', () => {
         const secondRect = second.getBoundingClientRect();
 
         expect(second.getAttribute('aria-selected')).toBe('true');
-        expect(Math.abs(pillRect.left - secondRect.left))
-            .withContext('плашка прилетела на вторую вкладку')
-            .toBeLessThanOrEqual(1);
-        expect(Math.abs(pillRect.width - secondRect.width))
-            .withContext('ширина плашки подстроилась под вторую вкладку')
-            .toBeLessThanOrEqual(1);
+        expect(Math.abs(pillRect.left - secondRect.left), 'плашка прилетела на вторую вкладку').toBeLessThanOrEqual(1);
+        expect(Math.abs(pillRect.width - secondRect.width), 'ширина плашки подстроилась под вторую вкладку').toBeLessThanOrEqual(1);
     });
 
     it('не дрейфует после серии переключений: посадка ровно на вкладку', async () => {
@@ -261,12 +250,8 @@ describe('TabsPillDirective', () => {
             const button = buttons()[index];
             const pillRect = pill()!.getBoundingClientRect();
             const buttonRect = button.getBoundingClientRect();
-            expect(Math.abs(pillRect.left - buttonRect.left))
-                .withContext(`шаг ${index}: плашка на кнопке (левый край)`)
-                .toBeLessThanOrEqual(1);
-            expect(Math.abs(pillRect.width - buttonRect.width))
-                .withContext(`шаг ${index}: ширина плашки`)
-                .toBeLessThanOrEqual(1);
+            expect(Math.abs(pillRect.left - buttonRect.left), `шаг ${index}: плашка на кнопке (левый край)`).toBeLessThanOrEqual(1);
+            expect(Math.abs(pillRect.width - buttonRect.width), `шаг ${index}: ширина плашки`).toBeLessThanOrEqual(1);
         }
     });
 
@@ -281,8 +266,6 @@ describe('TabsPillDirective', () => {
         const pillRect = pill()!.getBoundingClientRect();
         const secondRect = buttons()[1].getBoundingClientRect();
 
-        expect(Math.abs(pillRect.left - secondRect.left))
-            .withContext('после перехвата плашка на второй вкладке')
-            .toBeLessThanOrEqual(1);
+        expect(Math.abs(pillRect.left - secondRect.left), 'после перехвата плашка на второй вкладке').toBeLessThanOrEqual(1);
     });
 });

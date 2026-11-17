@@ -165,7 +165,6 @@ const SKELETON_COUNT = 10;
  */
 @Component({
     selector: 'app-gallery',
-    standalone: true,
     imports: [
         EmptyStateComponent,
         PageHeaderComponent,

@@ -26,7 +26,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    HostListener,
     OnDestroy,
     inject,
     PLATFORM_ID,
@@ -44,7 +43,6 @@ import { NotificationBellComponent } from '@features/notifications';
 import { HeaderState } from '../header-state.service';
 
 @Component({
-    standalone: true,
     selector: 'app-header-crown',
     imports: [
         AmountPipe,
@@ -59,6 +57,10 @@ import { HeaderState } from '../header-state.service';
     templateUrl: './crown.component.html',
     styleUrl: './crown.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(document:click)': 'onDocumentClick($event)',
+        '(document:keydown.escape)': 'onEscape($event)',
+    },
 })
 export class CrownComponent implements AfterViewInit, OnDestroy {
     /**
@@ -265,7 +267,6 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
      *
      * @param event Событие клика по документу.
      */
-    @HostListener('document:click', ['$event'])
     protected onDocumentClick(event: MouseEvent): void {
         if ((this.sheetOpen() || this.menuOpen()) && !this.host.nativeElement.contains(event.target as Node)) {
             this.closeAll();
@@ -280,7 +281,6 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
      *
      * @param event Событие клавиатуры.
      */
-    @HostListener('document:keydown.escape', ['$event'])
     protected onEscape(event: KeyboardEvent): void {
         if (!this.sheetOpen() && !this.menuOpen()) {
             return;

@@ -38,7 +38,6 @@ import { DeleteSettlementDialogComponent } from '../delete-settlement-dialog/del
  */
 @Component({
     selector: 'app-settlement-admin-panel',
-    standalone: true,
     imports: [
         ReactiveFormsModule,
         TuiIcon,

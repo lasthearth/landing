@@ -30,6 +30,9 @@
 @import './app/shared/styles/appearances/icon.appearance.css';
 @import './app/shared/styles/appearances/hint.appearance.css';
 :root {
+    /* Нативные элементы (скроллбар, инпуты, всплывающие списки) следуют теме. */
+    color-scheme: light;
+
     /**
      * Семантические поверхности (пергамент). Переопределяются в тёмной теме.
      * surface   — основная панель, surface-2 — приподнятая, surface-3/4 — вложенные.
@@ -1237,6 +1240,7 @@ tui-pulse.offline {
 }
 
 html[data-theme='dark'] {
+
     .lh-panel {
         background-color: rgba(233, 223, 201, 0.05);
         box-shadow:

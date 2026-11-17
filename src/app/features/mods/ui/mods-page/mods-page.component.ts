@@ -71,7 +71,6 @@ const MOD_FOLDERS: readonly { os: string; path: string }[] = [
  * Рендерится на сервере по запросу: список меняется без выкладки сайта.
  */
 @Component({
-    standalone: true,
     selector: 'app-mods-page',
     imports: [PageHeaderComponent, EmptyStateComponent, ErrorStateComponent, SkeletonComponent, TuiIcon, TranslatePipe, RevealDirective],
     templateUrl: './mods-page.component.html',

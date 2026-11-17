@@ -1,4 +1,4 @@
-import { Component, computed, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 import { colorToCss, ISettlementTag } from '@entities/settlement-tag';
 
@@ -9,6 +9,7 @@ import { colorToCss, ISettlementTag } from '@entities/settlement-tag';
     selector: 'app-active-tag',
     imports: [TuiIcon],
     templateUrl: './active-tag.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActiveTagComponent {
     /**

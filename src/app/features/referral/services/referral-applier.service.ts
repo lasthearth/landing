@@ -3,7 +3,7 @@ import { DestroyRef, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { filter, of, take } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs';
 import { ReferralService } from '@entities/referral';
 import { UserService } from '@entities/user';
 import { LocalStorageService } from '@core/services/local-storage.service';

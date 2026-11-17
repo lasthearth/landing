@@ -13,7 +13,6 @@ import { formatAmount } from './lib/format-amount.function';
  */
 @Pipe({
     name: 'amount',
-    standalone: true,
     pure: false,
 })
 export class AmountPipe implements PipeTransform {

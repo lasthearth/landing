@@ -50,7 +50,6 @@ interface PillBox {
  */
 @Directive({
     selector: '[appTabsPill]',
-    standalone: true,
 })
 export class TabsPillDirective implements OnDestroy {
     /**

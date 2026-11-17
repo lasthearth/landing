@@ -1,11 +1,11 @@
 /* Спецификации, которым нужен настоящий браузер: холст (`createImageBitmap`,
-   2D-контекст) и живая геометрия DOM-rect. jsdom их не даёт, поэтому файлы
-   собраны под Jasmine и выполняются целью `test-browser` в ChromeHeadless. */
+   2D-контекст) и живая геометрия DOM-rect. jsdom их не даёт, поэтому цель
+   `test-browser` гоняет их в Vitest с настоящим Chrome (ChromeHeadless). */
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "outDir": "./out-tsc/spec-browser",
-        "types": ["jasmine", "youtube"]
+        "types": ["vitest/globals", "youtube"]
     },
     "files": [
         "src/app/shared/lib/compress-image.function.spec.ts",

@@ -11,7 +11,6 @@ import { I18nService, TranslatePipe } from '@core/i18n';
  * Компонент подтверждения одобрения.
  */
 @Component({
-    standalone: true,
     selector: 'app-confirm-approve',
     templateUrl: './confirm-approve.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],

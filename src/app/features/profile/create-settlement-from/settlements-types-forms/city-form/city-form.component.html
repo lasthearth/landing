@@ -42,40 +42,47 @@
         <tui-error formControlName="description" [error]="[] | tuiFieldError | async" />
     </div>
 
-    <div *ngFor="let key of fileFields">
-        <p class="text-xl text-ink font-semibold">
-            {{ getLabelForKey(key) }}
-            <span class="text-lh-danger">*</span>
-        </p>
+    @for (key of fileFields; track $index) {
+        <div>
+            <p class="text-xl text-ink font-semibold">
+                {{ getLabelForKey(key) }}
+                <span class="text-lh-danger">*</span>
+            </p>
 
-        <app-image-file-input *ngIf="!form.controls[key].value" [formControl]="form.controls[key]" />
+            @if (!form.controls[key].value) {
+                <app-image-file-input [formControl]="form.controls[key]" />
+            }
 
-        <tui-files class="tui-space_top-1">
-            <tui-file
-                *ngIf="fileStatus.loading[key] | async as file"
-                state="loading"
-                [file]="file"
-                (remove)="removeFile(key)"
-            ></tui-file>
+            <tui-files class="tui-space_top-1">
+                @if (fileStatus.loading[key] | async; as file) {
+                    <tui-file
+                        state="loading"
+                        [file]="file"
+                        (remove)="removeFile(key)"
+                    ></tui-file>
+                }
 
-            <ng-container *ngIf="form.get(key)?.value as file">
-                <tui-file
-                    *ngIf="form.get(key)?.invalid || (file | tuiFileRejected: { accept: 'image/*' } | async)"
-                    state="error"
-                    [file]="file"
-                    (remove)="removeFile(key)"
-                ></tui-file>
+                @if (form.get(key)?.value; as file) {
+                    @if (form.get(key)?.invalid || (file | tuiFileRejected: { accept: 'image/*' } | async)) {
+                        <tui-file
+                            state="error"
+                            [file]="file"
+                            (remove)="removeFile(key)"
+                        ></tui-file>
+                    }
 
-                <tui-file
-                    *ngIf="form.get(key)?.valid && !(file | tuiFileRejected: { accept: 'image/*' } | async)"
-                    [file]="file"
-                    (remove)="removeFile(key)"
-                ></tui-file>
-            </ng-container>
+                    @if (form.get(key)?.valid && (file | tuiFileRejected: { accept: 'image/*' } | async) === null) {
+                        <tui-file
+                            [file]="file"
+                            (remove)="removeFile(key)"
+                        ></tui-file>
+                    }
+                }
 
-            <tui-error [formControl]="getControl(key)" [error]="[] | tuiFieldError | async"></tui-error>
-        </tui-files>
-    </div>
+                <tui-error [formControl]="getControl(key)" [error]="[] | tuiFieldError | async"></tui-error>
+            </tui-files>
+        </div>
+    }
 
     <button
         type="submit"

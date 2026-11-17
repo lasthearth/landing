@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '@core/config/environments/environment';
 
@@ -11,10 +11,12 @@ import { environment } from '@core/config/environments/environment';
  */
 @Component({
     selector: 'app-prototype-switcher',
-    standalone: true,
     templateUrl: './prototype-switcher.component.html',
     styleUrl: './prototype-switcher.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(window:keydown)': 'onKey($event)',
+    },
 })
 export class PrototypeSwitcherComponent {
     /**
@@ -46,7 +48,6 @@ export class PrototypeSwitcherComponent {
      *
      * @param event Событие клавиши.
      */
-    @HostListener('window:keydown', ['$event'])
     protected onKey(event: KeyboardEvent): void {
         if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
             return;

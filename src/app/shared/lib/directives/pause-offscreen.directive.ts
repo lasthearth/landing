@@ -11,7 +11,6 @@ import { Directive, ElementRef, OnDestroy, OnInit, inject } from '@angular/core'
  */
 @Directive({
     selector: '[appPauseOffscreen]',
-    standalone: true,
 })
 export class PauseOffscreenDirective implements OnInit, OnDestroy {
     /**

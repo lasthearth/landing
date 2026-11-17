@@ -1,5 +1,4 @@
 import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { RuleSectionComponent } from './ui/rule-section/rule-section.component';
@@ -30,10 +29,8 @@ const SECTION_EXPAND_DELAY = 400;
  * Компонент правил сервера.
  */
 @Component({
-    standalone: true,
     selector: 'app-rules',
-    imports: [PageHeaderComponent, 
-        CommonModule,
+    imports: [PageHeaderComponent,
         TuiIcon,
         TranslatePipe,
         TerminologyComponent,

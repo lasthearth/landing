@@ -9,7 +9,7 @@ import {
     OutputEmitterRef,
     Signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
@@ -38,12 +38,11 @@ import { SetTagsComponent } from './set-tags/set-tags.component';
 import { MarkupPipe } from '@shared/lib/news-markdown';
 
 @Component({
-    standalone: true,
     selector: 'app-settlement-card',
     templateUrl: './settlement-card.component.html',
     styleUrl: './settlement-card.component.less',
-    imports: [MarkupPipe, 
-        CommonModule,
+    imports: [MarkupPipe,
+        NgClass,
         TuiIcon,
         ImageLoaderComponent,
         TranslatePipe,

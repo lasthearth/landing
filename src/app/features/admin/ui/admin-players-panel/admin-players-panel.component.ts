@@ -34,7 +34,6 @@ import { PlayerNicknameAdminComponent } from '../player-nickname-admin/player-ni
  * операциями (принудительная смена ника и досрочное разрешение смены).
  */
 @Component({
-    standalone: true,
     selector: 'app-admin-players-panel',
     imports: [
         AsyncPipe,

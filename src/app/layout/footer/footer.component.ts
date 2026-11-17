@@ -17,7 +17,6 @@ import { FOOTER_SOCIAL_LINKS } from './config/footer-social-links.constant';
  * `prefers-reduced-motion` циклы стоят в видимом состоянии, ничего не спрятано.
  */
 @Component({
-    standalone: true,
     selector: 'app-footer',
     imports: [RouterLink, TranslatePipe, ImageLoaderComponent, RevealDirective],
     templateUrl: `./footer.component.html`,

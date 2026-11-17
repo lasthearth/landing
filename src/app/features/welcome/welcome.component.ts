@@ -3,7 +3,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    HostListener,
     inject,
     output,
 } from '@angular/core';
@@ -22,6 +21,11 @@ import { environment } from '@core/config/environments/environment';
     imports: [TuiIcon, TuiSwipe, TranslatePipe],
     styleUrl: './welcome.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(document:pointerdown)': 'onFirstGesture($event.target)',
+        '(document:keydown)': 'onFirstGesture($event.target)',
+        '(window:wheel)': 'onMouseWheel($event)',
+    },
 })
 export class WelcomeComponent implements AfterViewInit {
     /**
@@ -46,7 +50,7 @@ export class WelcomeComponent implements AfterViewInit {
     /**
      * Запрос на переход к основному содержимому сайта.
      */
-    public onScroll = output();
+    public readonly scrollToContent = output();
 
     /**
      * Путь к фоновому видео.
@@ -110,8 +114,6 @@ export class WelcomeComponent implements AfterViewInit {
      *
      * @param target Элемент, по которому пришёл жест.
      */
-    @HostListener('document:pointerdown', ['$event.target'])
-    @HostListener('document:keydown', ['$event.target'])
     public onFirstGesture(target: EventTarget | null): void {
         if (this.isPausedByUser) {
             return;
@@ -133,7 +135,7 @@ export class WelcomeComponent implements AfterViewInit {
      */
     public onSwipe(swipe: TuiSwipeEvent): void {
         if (swipe.direction === 'top') {
-            this.onScroll.emit();
+            this.scrollToContent.emit();
         }
     }
 
@@ -141,7 +143,7 @@ export class WelcomeComponent implements AfterViewInit {
      * Запрашивает переход к содержимому сайта.
      */
     public scroll(): void {
-        this.onScroll.emit();
+        this.scrollToContent.emit();
     }
 
     /**
@@ -149,14 +151,13 @@ export class WelcomeComponent implements AfterViewInit {
      * (с сохранением флага «уже видел») и открывает страницу «Как начать».
      */
     protected startPlaying(): void {
-        this.onScroll.emit();
+        this.scrollToContent.emit();
         void this.router.navigate(['/start-game']);
     }
 
-    @HostListener('window:wheel', ['$event'])
     protected onMouseWheel(event: WheelEvent): void {
         if (event.deltaY > 0) {
-            this.onScroll.emit();
+            this.scrollToContent.emit();
         }
     }
 

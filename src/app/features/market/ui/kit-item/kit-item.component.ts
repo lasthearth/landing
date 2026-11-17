@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
 import { TuiHint } from '@taiga-ui/core';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { KitItem } from '../../interfaces/kit-item.interface';
@@ -14,6 +14,7 @@ import { KitItem } from '../../interfaces/kit-item.interface';
     selector: 'app-kit-item',
     imports: [ImageLoaderComponent, TuiHint],
     templateUrl: './kit-item.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KitItemComponent {
     /**

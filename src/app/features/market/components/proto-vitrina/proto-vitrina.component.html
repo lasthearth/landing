@@ -12,7 +12,7 @@
         <div class="flex flex-wrap items-center gap-2">
             @if (balance$ | async; as balance) {
                 <div class="vitrina__balance" [attr.title]="'market.marketPage.balanceLabel' | translate">
-                    <img
+                    <img decoding="async"
                         src="/splinter-of-spark.webp"
                         [alt]="'market.common.shardAlt' | translate"
                         class="h-5 w-5 object-contain"
@@ -98,7 +98,7 @@
                             </div>
 
                             <span class="vitrina__price">
-                                <img
+                                <img decoding="async"
                                     src="/splinter-of-spark.webp"
                                     [alt]="'market.common.shardAlt' | translate"
                                     class="h-3.5 w-3.5 object-contain"

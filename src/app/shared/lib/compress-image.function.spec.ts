@@ -98,13 +98,13 @@ describe('compressImage', () => {
     it('оставляет файл как есть, если это не изображение', async () => {
         const text = new File(['текст'], 'note.txt', { type: 'text/plain' });
 
-        await expectAsync(compressImage(text)).toBeResolvedTo(text);
+        await expect(compressImage(text)).resolves.toBe(text);
     });
 
     it('возвращает исходный файл, если браузер не смог его декодировать', async () => {
         const broken = new File([new Uint8Array([1, 2, 3, 4])], 'photo.heic', { type: 'image/heic' });
 
-        await expectAsync(compressImage(broken)).toBeResolvedTo(broken);
+        await expect(compressImage(broken)).resolves.toBe(broken);
     });
 
     it('уменьшает кадр до 1920 по большей стороне и перекодирует в WebP', async () => {

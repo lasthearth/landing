@@ -7,7 +7,6 @@ import { AnnouncementBarComponent } from '../announcement-bar/announcement-bar.c
  */
 @Component({
     selector: 'app-site-announcement',
-    standalone: true,
     imports: [AnnouncementBarComponent],
     template: `
         @if (service.current(); as announcement) {

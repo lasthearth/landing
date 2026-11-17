@@ -10,7 +10,6 @@ import { ProfileNavigationComponent } from '@app/features/profile/profile-naviga
  * Компонент лендинга.
  */
 @Component({
-    standalone: true,
     selector: 'app-landing',
     imports: [RouterOutlet, ProfileNavigationComponent],
     templateUrl: './landing.component.html',

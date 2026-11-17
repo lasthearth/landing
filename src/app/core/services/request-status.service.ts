@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { TuiAlertService, TuiDialogContext } from '@taiga-ui/core';
+import { TuiAlertService } from '@taiga-ui/core';
 import { catchError, Observer, tap, throwError, TimeoutError } from 'rxjs';
 
 @Injectable({

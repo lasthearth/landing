@@ -25,7 +25,7 @@ function icsDate(date: Date): string {
  * @returns Экранированный текст.
  */
 function icsText(text: string): string {
-    return text.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+    return text.replace(/\\/g, '\\\\').replace(/;/g, ';').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
 }
 
 /**

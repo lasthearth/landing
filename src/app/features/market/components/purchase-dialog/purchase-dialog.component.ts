@@ -79,7 +79,6 @@ export interface PurchaseDialogData {
  */
 @Component({
     selector: 'app-purchase-dialog',
-    standalone: true,
     imports: [AmountPipe, TuiButton, TuiIcon, ImageLoaderComponent, AbilityTagComponent, KitItemComponent, TranslatePipe],
     templateUrl: './purchase-dialog.component.html',
     styleUrl: './purchase-dialog.component.less',

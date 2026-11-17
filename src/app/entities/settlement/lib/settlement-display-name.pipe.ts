@@ -7,7 +7,6 @@ import { getSettlementDisplayName } from './get-settlement-display-name.function
  */
 @Pipe({
     name: 'settlementDisplayName',
-    standalone: true,
     pure: true,
 })
 export class SettlementDisplayNamePipe implements PipeTransform {
