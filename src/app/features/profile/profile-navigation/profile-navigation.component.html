@@ -4,34 +4,43 @@
 @let isAuth = userService.authState$ | async;
 @let supportUnread = supportUnread$ | async;
 
-<div class="flex xl:flex-col gap-2 z-300!">
+<!--
+    Мобильный ряд — горизонтальный скролл со снапом и подписями: восемь
+    разделов не встают в одну строку без обрезки, а знаки без подписей
+    не читаются. Длинные подписи словаря заменены короткими ключами
+    `profile.nav.short.*`. На xl ряд становится колонкой без подписей.
+-->
+<div class="profile-nav flex xl:flex-col gap-2 z-300!">
     <a
         [routerLink]="['/profile/how-play']"
         routerLinkActive="nav-button--active"
-        class="nav-button size-11!"
+        class="nav-button profile-nav__item"
         [title]="'profile.nav.howPlay' | translate"
         [attr.aria-label]="'profile.nav.howPlay' | translate"
     >
         <tui-icon icon="@tui.gamepad" />
+        <span class="profile-nav__label">{{ "profile.nav.howPlay" | translate }}</span>
     </a>
     <a
         [routerLink]="['/profile/stats']"
         routerLinkActive="nav-button--active"
-        class="nav-button size-11!"
+        class="nav-button profile-nav__item"
         [title]="'profile.nav.stats' | translate"
         [attr.aria-label]="'profile.nav.stats' | translate"
     >
         <tui-icon icon="@tui.chart-no-axes-combined" />
+        <span class="profile-nav__label">{{ "profile.nav.stats" | translate }}</span>
     </a>
     @if (isAuth) {
         <a
             [routerLink]="['/profile/settlement']"
             routerLinkActive="nav-button--active"
-            class="relative nav-button size-11!"
+            class="relative nav-button profile-nav__item"
             [title]="'profile.nav.settlement' | translate"
             [attr.aria-label]="'profile.nav.settlement' | translate"
         >
             <tui-icon icon="@tui.castle" />
+            <span class="profile-nav__label">{{ "profile.nav.short.settlement" | translate }}</span>
             @if (invitations?.length) {
                 <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
             }
@@ -39,29 +48,32 @@
         <a
             [routerLink]="['/profile/style']"
             routerLinkActive="nav-button--active"
-            class="nav-button size-11!"
+            class="nav-button profile-nav__item"
             [title]="'profile.nav.style' | translate"
             [attr.aria-label]="'profile.nav.style' | translate"
         >
             <tui-icon icon="@tui.palette" />
+            <span class="profile-nav__label">{{ "profile.nav.short.style" | translate }}</span>
         </a>
         <a
             [routerLink]="['/profile/wiki']"
             routerLinkActive="nav-button--active"
-            class="nav-button size-11!"
+            class="nav-button profile-nav__item"
             [title]="'profile.nav.wiki' | translate"
             [attr.aria-label]="'profile.nav.wiki' | translate"
         >
             <tui-icon icon="@tui.book-open" />
+            <span class="profile-nav__label">{{ "profile.nav.wiki" | translate }}</span>
         </a>
         <a
             [routerLink]="['/profile/support']"
             routerLinkActive="nav-button--active"
-            class="relative nav-button size-11!"
+            class="relative nav-button profile-nav__item"
             [title]="'profile.nav.support' | translate"
             [attr.aria-label]="'profile.nav.support' | translate"
         >
             <tui-icon icon="@tui.life-buoy" />
+            <span class="profile-nav__label">{{ "profile.nav.support" | translate }}</span>
             @if (supportUnread) {
                 <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
             }
@@ -69,22 +81,24 @@
         <a
             [routerLink]="['/profile/referral']"
             routerLinkActive="nav-button--active"
-            class="nav-button size-11!"
+            class="nav-button profile-nav__item"
             [title]="'profile.nav.referral' | translate"
             [attr.aria-label]="'profile.nav.referral' | translate"
         >
             <tui-icon icon="@tui.user-plus" />
+            <span class="profile-nav__label">{{ "profile.nav.short.referral" | translate }}</span>
         </a>
     }
     @if (isAuth && isAdmin()) {
         <a
             [routerLink]="['/profile/admin']"
             routerLinkActive="nav-button--active"
-            class="relative nav-button size-11!"
+            class="relative nav-button profile-nav__item"
             [title]="'profile.nav.admin' | translate"
             [attr.aria-label]="'profile.nav.admin' | translate"
         >
             <tui-icon icon="@tui.shield" />
+            <span class="profile-nav__label">{{ "profile.nav.short.admin" | translate }}</span>
             @if (userVerifications?.length || settlementVerifications?.length) {
                 <tui-pulse tuiHintAppearance="floating" class="!absolute !top-0.5 !right-0.5 !scale-110" />
             }

@@ -12,13 +12,38 @@
         само отношение чисел.
     -->
     <div class="crown__strip">
+        <!--
+            Кнопка меню стоит первой в строке управления: ниже 768px вся
+            навигация — одна цель у края экрана, ярус ссылок под вензелем
+            скрыт целиком. Десктоп кнопку прячет: ряд ссылок живёт в своём
+            ярусе, меню там не нужно.
+        -->
+        <button
+            type="button"
+            class="crown__menu"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="menuOpen()"
+            [attr.aria-label]="'header.mainMenu' | translate"
+        >
+            <tui-icon [icon]="menuOpen() ? '@tui.x' : '@tui.align-justify'" />
+            <span class="crown__menu-text">{{ "header.mainMenu" | translate }}</span>
+            @if (state.communityFresh()) {
+                <span class="crown__dot crown__dot--inline">
+                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
+                </span>
+            }
+        </button>
+
         <div class="crown__telemetry">
+            <tui-icon icon="@tui.users" class="crown__tele-icon" aria-hidden="true" />
             <p class="crown__count">
                 <span class="crown__count-now">{{ online?.online ?? "—" }}</span>
                 <span class="crown__count-max">/ {{ online?.max_online ?? "—" }}</span>
             </p>
 
             <span class="crown__telemetry-label">{{ "header.players" | translate }}</span>
+
+            <tui-icon icon="@tui.clock" class="crown__tele-icon" aria-hidden="true" />
 
             <span class="crown__telemetry-label crown__telemetry-label--next">
                 {{ "header.serverTime" | translate }}
@@ -30,7 +55,7 @@
         <div class="crown__controls">
             <button
                 type="button"
-                class="crown__icon"
+                class="crown__icon crown__icon--theme"
                 (click)="state.toggleTheme()"
                 [attr.aria-label]="'header.theme.toggle' | translate"
                 [title]="'header.theme.toggle' | translate"
@@ -40,7 +65,7 @@
 
             <button
                 type="button"
-                class="crown__icon"
+                class="crown__icon crown__icon--lang"
                 (click)="toggleLanguage()"
                 [attr.aria-label]="'header.language.select' | translate"
                 [title]="'header.language.select' | translate"
@@ -84,7 +109,7 @@
 
                 <button
                     type="button"
-                    class="crown__icon"
+                    class="crown__icon crown__icon--exit"
                     (click)="state.signOut()"
                     [attr.aria-label]="'header.nav.signOut' | translate"
                     [title]="'header.nav.signOut' | translate"
@@ -117,7 +142,8 @@
     <!--
         Ярус 3. Один центрированный ряд ссылок: главная знаком, разделы
         капителью со скользящим янтарным подчёркиванием, «Сообщество»
-        открывает мега-панель. Ниже 768px ряд заменяется одной кнопкой-меню.
+        открывает мега-панель. Ниже 768px ярус скрыт: навигацию открывает
+        кнопка-меню в строке управления.
     -->
     <nav class="crown__nav" [attr.aria-label]="'header.mainMenu' | translate">
         <div
@@ -181,21 +207,6 @@
             </button>
         </div>
 
-        <button
-            type="button"
-            class="crown__menu"
-            (click)="toggleMenu()"
-            [attr.aria-expanded]="menuOpen()"
-            [attr.aria-label]="'header.mainMenu' | translate"
-        >
-            <tui-icon [icon]="menuOpen() ? '@tui.x' : '@tui.align-justify'" />
-            <span>{{ "header.mainMenu" | translate }}</span>
-            @if (state.communityFresh()) {
-                <span class="crown__dot crown__dot--inline">
-                    <span class="sr-only">{{ "header.nav.hasNew" | translate }}</span>
-                </span>
-            }
-        </button>
     </nav>
 
     <!--
@@ -301,6 +312,37 @@
                             }
                             <tui-icon icon="@tui.arrow-right" class="crown__tile-arrow" />
                         </a>
+                    }
+                </div>
+
+                <!--
+                    Управление мобильного яруса: тема, язык и выход живут
+                    в шторке, поэтому строка шапки держит только то, что
+                    нужно на каждом экране — меню, колокольчик и профиль.
+                -->
+                <div class="crown__actions">
+                    <button type="button" class="crown__action" (click)="state.toggleTheme()">
+                        <tui-icon [icon]="state.dark() ? '@tui.sun' : '@tui.moon'" />
+                        <span>{{ "header.theme.toggle" | translate }}</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="crown__action"
+                        (click)="toggleLanguage()"
+                        [attr.aria-label]="'header.language.select' | translate"
+                    >
+                        <tui-icon icon="@tui.globe" />
+                        <span class="crown__lang-pair" aria-hidden="true">
+                            <span [class.crown__lang-on]="state.language() === 'ru'">RU</span>
+                            <span class="crown__lang-sep">/</span>
+                            <span [class.crown__lang-on]="state.language() === 'en'">EN</span>
+                        </span>
+                    </button>
+                    @if (isAuth) {
+                        <button type="button" class="crown__action" (click)="state.signOut()">
+                            <tui-icon icon="@tui.log-out" />
+                            <span>{{ "header.nav.signOut" | translate }}</span>
+                        </button>
                     }
                 </div>
             </div>

@@ -10,6 +10,12 @@ export const PROFILE_I18N = {
                 support: 'Поддержка',
                 referral: 'Пригласить друга',
                 admin: 'Администрирование',
+                short: {
+                    settlement: 'Надел',
+                    style: 'Стиль',
+                    referral: 'Рефералы',
+                    admin: 'Админ',
+                },
             },
             avatar: {
                 alt: 'Аватар пользователя {{name}}',
@@ -257,6 +263,12 @@ export const PROFILE_I18N = {
                 support: 'Support',
                 referral: 'Invite a friend',
                 admin: 'Administration',
+                short: {
+                    settlement: 'Settlement',
+                    style: 'Style',
+                    referral: 'Referrals',
+                    admin: 'Admin',
+                },
             },
             avatar: {
                 alt: 'Avatar of {{name}}',

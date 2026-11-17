@@ -1,0 +1,55 @@
+/**
+ * Навигация профиля: на мобильных — горизонтальный скролл-ряд нижней
+ * панели со снапом и подписями, на xl — прежняя вертикальная колонка
+ * знаков сбоку от колонки контента. Скролл-контейнер держит сам ряд,
+ * а не панель лендинга, поэтому панель не получает своих полос.
+ *
+ * Полоса прокрутки скрыта; подсказкой работает обрезанная у края плашка —
+ * следующий раздел виден наполовину. Активную плашку центрирует
+ * компонент при каждом переходе.
+ */
+:host {
+    display: block;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.profile-nav {
+    max-width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+}
+
+.profile-nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* Плашки не сжимаются: скролл честнее растянутой сетки. */
+.profile-nav__item {
+    flex: none;
+    scroll-snap-align: center;
+}
+
+.profile-nav__label {
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+}
+
+@media (min-width: 1280px) {
+    .profile-nav {
+        overflow-x: visible;
+        scroll-snap-type: none;
+    }
+
+    /* Колонка знаков: плашка снова квадратная, подпись не нужна. */
+    .profile-nav__item {
+        justify-content: center;
+        width: 2.75rem;
+        padding-inline: 0;
+    }
+
+    .profile-nav__label {
+        display: none;
+    }
+}

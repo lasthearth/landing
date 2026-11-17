@@ -5,6 +5,10 @@
  * токенах `--lh-surface*` с чернилами, поэтому тёмная тема меняет только
  * плотность сияния через `:host-context(html[data-theme='dark'])`.
  *
+ * Ниже 768px шапка держит два яруса: строка управления (меню, телеметрия
+ * знаками, колокольчик, аватар) и компактный вензель. Тема, язык и выход
+ * уходят в мобильную шторку в ряд `.crown__actions`, ярус ссылок скрыт.
+ *
  * Единственный циклический эффект — дыхание сияния вензеля: 3.2s на оборот
  * (предел 2.5–4s), `ease-in-out` как разрешённое исключение для бесконечной
  * пульсации. Остальное движение — переходы состояний: шторка 260/160ms,
@@ -101,6 +105,15 @@
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+}
+
+/* Знаки телеметрии мобильной строки: ниже 768px они заменяют подписи,
+   а подписи уходят к экранному диктору. Десктоп знаков не рисует. */
+.crown__tele-icon {
+    display: none;
+    flex: none;
+    color: var(--lh-parchment-dim);
+    font-size: 1rem;
 }
 
 /* Вторая пара «подпись + значение» отбита расстоянием, а не знаком-разделителем. */
@@ -690,6 +703,63 @@
     color: var(--lh-brand-ink);
 }
 
+/* ---- Ряд управления мобильной шторки ---- */
+
+/* Тема, язык и выход ниже 768px вынесены из строки шапки сюда: строка
+   держит три цели вместо шести. Три равные кнопки одной полосой под
+   плитками разделов. */
+.crown__actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+}
+
+.crown__action {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.625rem;
+    border: 0;
+    border-radius: var(--lh-radius-md);
+    background-color: var(--lh-surface-2);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent);
+    color: var(--lh-ink);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    transition: scale 120ms var(--lh-ease-spring);
+}
+
+.crown__action:hover {
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+        var(--lh-shadow-lift);
+}
+
+.crown__action:active {
+    scale: 0.98;
+}
+
+/* Пара кодов языка: активный подсвечен брендом, неактивный приглушён. */
+.crown__lang-pair {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.crown__lang-sep {
+    color: var(--lh-ink-3);
+}
+
+.crown__lang-on {
+    color: var(--lh-brand-ink);
+}
+
 /* ---- Раскладка по ширинам ---- */
 
 @media (max-width: 1023px) {
@@ -705,12 +775,59 @@
 }
 
 @media (max-width: 767px) {
-    .crown__row {
+    /* Ярус ссылок скрыт целиком: навигацию открывает кнопка-меню, которая
+       на этой ширине стоит первой в строке управления. */
+    .crown__nav {
         display: none;
     }
 
+    /* Меню в строке управления — прозрачная иконка, как соседние цели:
+       рамка пилюли съедала бы треть узкой строки. */
     .crown__menu {
         display: inline-flex;
+        min-width: 2.75rem;
+        padding: 0 0.5rem;
+        box-shadow: none;
+    }
+
+    .crown__menu-text {
+        display: none;
+    }
+
+    /* Телеметрия одной строкой: знаки вместо подписей, подписи диктору. */
+    .crown__tele-icon {
+        display: inline-flex;
+    }
+
+    .crown__telemetry-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .crown__telemetry {
+        gap: 0.375rem;
+    }
+
+    /* В строке остаются колокольчик и профиль: тема, язык и выход живут
+       в шторке, в ряду `.crown__actions`. */
+    .crown__icon--theme,
+    .crown__icon--lang,
+    .crown__icon--exit {
+        display: none;
+    }
+
+    /* Карточка игрока сжимается до аватара: имя и баланс есть в профиле. */
+    .crown__player-text {
+        display: none;
+    }
+
+    .crown__player {
+        padding: var(--crown-player-pad);
     }
 
     .crown__sheet:not(.crown__sheet--menu) {
@@ -739,48 +856,10 @@
             inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 10%, transparent),
             var(--lh-shadow-lift);
     }
-}
 
-@media (max-width: 639px) {
-    .crown__strip {
-        flex-wrap: wrap;
-        row-gap: 0.125rem;
-    }
-
-    .crown__telemetry {
-        order: 1;
-        flex-basis: 100%;
-    }
-
-    .crown__controls {
-        order: 2;
-        flex-basis: 100%;
-        justify-content: flex-end;
-    }
-
-    /* Ник виден и в узкой строке: прячем только баланс, он есть в профиле.
-       Перенос спасает от переполнения при длинном имени. */
-    .crown__controls {
-        flex-wrap: wrap;
-        row-gap: 0.25rem;
-    }
-
-    .crown__coins {
-        display: none;
-    }
-
-    .crown__player-name {
-        max-width: 6rem;
-    }
-
-    /* В двух колонках стрелка прилипает к длинной подписи: на касании
-       она ничего не добавляет, поэтому на узких экранах снята. */
-    .crown__tile-arrow {
-        display: none;
-    }
-
+    /* Вензель компактнее: шапка из двух ярусов не съедает первый экран. */
     .crown__crest {
-        padding-top: 0.75rem;
+        padding: 0.75rem 0;
     }
 
     .crown__brand {
@@ -800,6 +879,12 @@
     .crown__sheet-body {
         padding: 1rem;
     }
+
+    /* В двух колонках стрелка прилипает к длинной подписи: на касании
+       она ничего не добавляет, поэтому на узких экранах снята. */
+    .crown__tile-arrow {
+        display: none;
+    }
 }
 
 /* ---- Движение снимается, содержимое остаётся видимым ---- */
@@ -812,6 +897,7 @@
         scale: 1;
     }
 
+    .crown__action,
     .crown__brand,
     .crown__chev,
     .crown__icon,
