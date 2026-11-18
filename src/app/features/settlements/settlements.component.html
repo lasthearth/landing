@@ -32,6 +32,7 @@
 
             <div class="settlements-menu__slot">
                 <button
+                    #sortTrigger
                     type="button"
                     class="settlements-menu__btn"
                     [attr.aria-expanded]="openMenu() === 'sort'"
@@ -67,7 +68,12 @@
                         aria-hidden="true"
                         (click)="closeMenu()"
                     ></button>
-                    <div class="settlements-menu__pop">
+                    <div
+                        #pop
+                        class="settlements-menu__pop"
+                        [class.settlements-menu__pop--up]="popFlipped()"
+                        [style]="popStyle()"
+                    >
                         @for (key of sortKeys; track key) {
                             <button
                                 type="button"
@@ -87,6 +93,7 @@
 
             <div class="settlements-menu__slot">
                 <button
+                    #filtersTrigger
                     type="button"
                     class="settlements-menu__btn"
                     [attr.aria-expanded]="openMenu() === 'filters'"
@@ -107,7 +114,12 @@
                         aria-hidden="true"
                         (click)="closeMenu()"
                     ></button>
-                    <div class="settlements-menu__pop settlements-menu__pop--wide">
+                    <div
+                        #pop
+                        class="settlements-menu__pop settlements-menu__pop--wide"
+                        [class.settlements-menu__pop--up]="popFlipped()"
+                        [style]="popStyle()"
+                    >
                         @if (typeOptions().length > 1) {
                             <div class="settlements-menu__group">
                                 <span class="settlements-menu__label">{{ 'settlements.list.filterType' | translate }}</span>

@@ -144,10 +144,10 @@
     cursor: default;
 }
 
+/* Fixed и координаты из компонента: страница режет контент overflow: clip,
+   и абсолютный поповер на коротком списке (ноль наделов) уходил за кромку. */
 .settlements-menu__pop {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    right: 0;
+    position: fixed;
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -174,6 +174,11 @@
 
 .settlements-menu__pop--wide {
     min-width: 18rem;
+}
+
+/* Поповер открылся вверх от кнопки: точка роста зеркально. */
+.settlements-menu__pop--up {
+    transform-origin: bottom right;
 }
 
 .settlements-menu__item {

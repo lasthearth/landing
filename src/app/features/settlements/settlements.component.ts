@@ -83,6 +83,10 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(window:scroll)': 'closeMenu()',
+        '(window:resize)': 'closeMenu()',
+    },
 })
 export class SettlementsComponent {
     /**
@@ -135,6 +139,27 @@ export class SettlementsComponent {
      * Ключ открытого списка панели: sort, filters или null — всё закрыто.
      */
     protected readonly openMenu = signal<'sort' | 'filters' | null>(null);
+
+    /**
+     * Координаты открытого поповера: fixed-позиционирование от кнопки.
+     */
+    protected readonly popStyle = signal<Record<string, string>>({});
+
+    /**
+     * Открыт ли поповер вверх от кнопки: мало места снизу.
+     */
+    protected readonly popFlipped = signal(false);
+
+    /**
+     * Элемент открытого поповера: замер высоты для переворота.
+     */
+    private readonly popEl = viewChild<ElementRef<HTMLElement>>('pop');
+
+    /**
+     * Кнопки-триггеры поповеров: позиция считается от их прямоугольника.
+     */
+    private readonly sortTrigger = viewChild<ElementRef<HTMLButtonElement>>('sortTrigger');
+    private readonly filtersTrigger = viewChild<ElementRef<HTMLButtonElement>>('filtersTrigger');
 
     /**
      * Подсказка кнопки направления сортировки.
@@ -555,14 +580,71 @@ export class SettlementsComponent {
      * @param menu Ключ списка.
      */
     protected toggleMenu(menu: 'sort' | 'filters'): void {
-        this.openMenu.set(this.openMenu() === menu ? null : menu);
+        if (this.openMenu() === menu) {
+            this.closeMenu();
+            return;
+        }
+
+        const trigger = (menu === 'sort' ? this.sortTrigger() : this.filtersTrigger())?.nativeElement;
+
+        if (!trigger) {
+            return;
+        }
+
+        this.openMenu.set(menu);
+        this.placePop(trigger);
     }
 
     /**
-     * Закрывает открытый список панели по клику на подложку.
+     * Закрывает открытый список панели по клику на подложку, прокрутке или ресайзу:
+     * поповер позиционирован от кнопки и при сдвиге страницы обязан уйти.
      */
     protected closeMenu(): void {
         this.openMenu.set(null);
+        this.popStyle.set({});
+        this.popFlipped.set(false);
+    }
+
+    /**
+     * Ставит поповер под кнопку-триггер, а при нехватке места снизу — над неё.
+     * Нижний предел учитывает полосу согласия, чтобы поповер не прятался под ней.
+     *
+     * @param trigger Кнопка, от которой открыт поповер.
+     */
+    private placePop(trigger: HTMLElement): void {
+        const gap = 8;
+        const rect = trigger.getBoundingClientRect();
+        const consent = document.body.classList.contains('lh-has-consent')
+            ? parseInt(getComputedStyle(document.body).getPropertyValue('--lh-consent-h'), 10) || 0
+            : 0;
+        const floor = window.innerHeight - gap - consent;
+        const right = `${window.innerWidth - rect.right}px`;
+        this.popFlipped.set(false);
+        this.popStyle.set({ top: `${rect.bottom + gap}px`, right, bottom: 'auto', left: 'auto' });
+
+        afterNextRender(() => {
+            const pop = this.popEl()?.nativeElement;
+
+            if (!pop || this.openMenu() === null) {
+                return;
+            }
+
+            /* offsetHeight, а не rect: входной scale(0.96) занижает замер. */
+            const height = pop.offsetHeight;
+
+            if (rect.bottom + gap + height <= floor) {
+                return;
+            }
+
+            if (rect.top - gap - height >= gap) {
+                this.popFlipped.set(true);
+                this.popStyle.set({ top: 'auto', right, bottom: `${window.innerHeight - rect.top + gap}px`, left: 'auto' });
+                return;
+            }
+
+            /* Не влезает ни снизу, ни сверху: прижать к нижнему пределу. */
+            this.popStyle.set({ top: `${floor - height}px`, right, bottom: 'auto', left: 'auto' });
+        }, { injector: this.injector });
     }
 
     /**
@@ -572,7 +654,7 @@ export class SettlementsComponent {
      */
     protected pickSort(field: SortField): void {
         this.setSort(field);
-        this.openMenu.set(null);
+        this.closeMenu();
     }
 
     /**
