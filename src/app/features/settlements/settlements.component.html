@@ -51,7 +51,11 @@
                         [attr.aria-label]="directionTitle()"
                         (click)="flipSort()"
                     >
-                        <tui-icon [icon]="sortState().direction === 'asc' ? '@tui.arrow-up' : '@tui.arrow-down'" />
+                        <tui-icon
+                            icon="@tui.arrow-up"
+                            class="settlements-menu__dir"
+                            [class.settlements-menu__dir--desc]="sortState().direction === 'desc'"
+                        />
                     </button>
                 }
 
@@ -179,7 +183,7 @@
             [description]="'settlements.list.notFound.description' | translate"
         />
     } @else {
-        <div class="settlements-grid">
+        <div #grid class="settlements-grid">
             @for (item of filteredSettlements(); track item.id) {
                 <app-settlement-card
                     appReveal

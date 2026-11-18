@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    ElementRef,
+    inject,
+    Injector,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
     SettlementService,
@@ -90,6 +100,11 @@ export class SettlementsComponent {
     private readonly userService = inject(UserService);
     private readonly tagStore = inject(SettlementTagStore);
     private readonly i18n = inject(I18nService);
+
+    /**
+     * Инжектор для afterNextRender вне контекста инжекции.
+     */
+    private readonly injector = inject(Injector);
 
     /**
      * Хранилище собственных заявок игрока на вступление.
@@ -300,8 +315,10 @@ export class SettlementsComponent {
      * @param value Подпись типа.
      */
     protected toggleType(value: string): void {
-        this.typeFilter.set(this.typeFilter() === value ? null : value);
-        this.syncQueryParams();
+        this.withReorder(() => {
+            this.typeFilter.set(this.typeFilter() === value ? null : value);
+            this.syncQueryParams();
+        });
     }
 
     /**
@@ -310,18 +327,22 @@ export class SettlementsComponent {
      * @param value Курс.
      */
     protected toggleCourse(value: string): void {
-        this.courseFilter.set(this.courseFilter() === value ? null : value);
-        this.syncQueryParams();
+        this.withReorder(() => {
+            this.courseFilter.set(this.courseFilter() === value ? null : value);
+            this.syncQueryParams();
+        });
     }
 
     /**
      * Сбрасывает поиск и фильтры.
      */
     protected resetFilters(): void {
-        this.query.set('');
-        this.typeFilter.set(null);
-        this.courseFilter.set(null);
-        this.syncQueryParams();
+        this.withReorder(() => {
+            this.query.set('');
+            this.typeFilter.set(null);
+            this.courseFilter.set(null);
+            this.syncQueryParams();
+        });
     }
 
     /**
@@ -385,15 +406,17 @@ export class SettlementsComponent {
      * @param field Поле сортировки.
      */
     protected setSort(field: SortField): void {
-        const current = this.sortState();
-        if (current.field === field) {
-            this.sortState.set({
-                field,
-                direction: current.direction === 'desc' ? 'asc' : 'desc',
-            });
-        } else {
-            this.sortState.set({ field, direction: 'desc' });
-        }
+        this.withReorder(() => {
+            const current = this.sortState();
+            if (current.field === field) {
+                this.sortState.set({
+                    field,
+                    direction: current.direction === 'desc' ? 'asc' : 'desc',
+                });
+            } else {
+                this.sortState.set({ field, direction: 'desc' });
+            }
+        });
     }
 
     /**
@@ -418,8 +441,102 @@ export class SettlementsComponent {
      * Меняет направление сортировки текущего поля.
      */
     protected flipSort(): void {
-        const current = this.sortState();
-        this.sortState.set({ field: current.field, direction: current.direction === 'desc' ? 'asc' : 'desc' });
+        this.withReorder(() => {
+            const current = this.sortState();
+            this.sortState.set({ field: current.field, direction: current.direction === 'desc' ? 'asc' : 'desc' });
+        });
+    }
+
+    /**
+     * Контейнер сетки карточек: позиции меряем по живому DOM в порядке списка.
+     */
+    private readonly gridEl = viewChild<ElementRef<HTMLElement>>('grid');
+
+    /**
+     * Прямоугольники карточек до перестановки; null — анимация не нужна.
+     */
+    private flipBefore: Map<string, DOMRect> | null = null;
+
+    /**
+     * Применяет изменение списка и проигрывает переезд карточек (FLIP).
+     * Замеры до мутации и проигрывание на следующем кадре, когда список уже перерисован.
+     *
+     * @param apply Мутация сортировки или фильтров.
+     */
+    private withReorder(apply: () => void): void {
+        this.captureRects();
+        apply();
+        afterNextRender(() => this.playReorderFlip(), { injector: this.injector });
+    }
+
+    /**
+     * Запоминает позиции карточек текущего списка по id надела.
+     */
+    private captureRects(): void {
+        const rects = new Map<string, DOMRect>();
+
+        this.cardNodes().forEach((el, index) => {
+            const item = this.filteredSettlements()[index];
+
+            if (item) {
+                rects.set(item.id, el.getBoundingClientRect());
+            }
+        });
+
+        this.flipBefore = rects;
+    }
+
+    /**
+     * Хосты карточек из DOM в порядке списка.
+     *
+     * @returns Массив элементов app-settlement-card.
+     */
+    private cardNodes(): HTMLElement[] {
+        const grid = this.gridEl()?.nativeElement;
+        return grid ? [...grid.querySelectorAll<HTMLElement>(':scope > app-settlement-card')] : [];
+    }
+
+    /**
+     * Переводит карточки со старых позиций на новые: инверсия сдвигом и проигрывание
+     * токенами движения страницы. При prefers-reduced-motion — мягкое проявление вместо полёта.
+     */
+    private playReorderFlip(): void {
+        const before = this.flipBefore;
+        this.flipBefore = null;
+
+        if (!before || before.size === 0) {
+            return;
+        }
+
+        const style = getComputedStyle(document.documentElement);
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        this.cardNodes().forEach((el, index) => {
+            const item = this.filteredSettlements()[index];
+            const old = item ? before.get(item.id) : undefined;
+
+            if (!old) {
+                return;
+            }
+
+            if (reduce) {
+                const fade = parseInt(style.getPropertyValue('--lh-dur-exit'), 10) || 150;
+                el.animate([{ opacity: 0.4 }, { opacity: 1 }], { duration: fade });
+                return;
+            }
+
+            const now = el.getBoundingClientRect();
+            const dx = old.left - now.left;
+            const dy = old.top - now.top;
+
+            if (Math.abs(dx) + Math.abs(dy) < 1) {
+                return;
+            }
+
+            const duration = parseInt(style.getPropertyValue('--lh-dur-fast'), 10) || 200;
+            const easing = style.getPropertyValue('--lh-ease-move').trim() || 'ease-in-out';
+            el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration, easing });
+        });
     }
 
     /**

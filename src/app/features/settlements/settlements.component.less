@@ -53,6 +53,22 @@
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
+    /* Пресс-отклик как у .lh-cta: масштаб на нажатие, мгновенный отпуск. */
+    transition: transform 80ms var(--lh-ease-out-quart);
+}
+
+.settlements-menu__btn:active,
+.settlements-menu__item:active {
+    transform: scale(0.97);
+}
+
+/* Стрелка направления: одна иконка, поворот на 180° при смене направления. */
+.settlements-menu__dir {
+    transition: transform var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.settlements-menu__dir--desc {
+    transform: rotate(180deg);
 }
 
 .settlements-menu__btn tui-icon {
@@ -81,6 +97,43 @@
     font-size: 0.8125rem;
     line-height: 1.25rem;
     text-align: center;
+    transition:
+        transform var(--lh-dur-exit) var(--lh-ease-spring),
+        opacity var(--lh-dur-exit) var(--lh-ease-spring);
+}
+
+/* Появление значка активного фильтра: лёгкий overshoot пружиной. */
+@starting-style {
+    .settlements-menu__badge {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+}
+
+/* Движение панели под prefers-reduced-motion: мягче, но не без отклика. */
+@media (prefers-reduced-motion: reduce) {
+    .settlements-menu__pop,
+    .settlements-menu__badge {
+        transition: opacity var(--lh-dur-exit) linear;
+    }
+
+    .settlements-menu__dir,
+    .settlements-menu__btn,
+    .settlements-menu__item {
+        transition: none;
+    }
+
+    .settlements-menu__btn:active,
+    .settlements-menu__item:active {
+        transform: scale(0.99);
+    }
+
+    @starting-style {
+        .settlements-menu__pop,
+        .settlements-menu__badge {
+            transform: none;
+        }
+    }
 }
 
 .settlements-menu__backdrop {
@@ -104,6 +157,19 @@
     border-radius: 1rem;
     background: var(--color-surface);
     box-shadow: 0 18px 40px -20px rgb(0 0 0 / 60%);
+    /* Вход из кнопки: точка роста — правый верхний угол, поповер прижат справа. */
+    transform-origin: top right;
+    transition:
+        transform var(--lh-dur-exit) var(--lh-ease-out-quart),
+        opacity var(--lh-dur-exit) var(--lh-ease-out-quart);
+}
+
+/* Первый кадр входа поповера; выход остаётся мгновенным, чтобы откат был быстрым. */
+@starting-style {
+    .settlements-menu__pop {
+        opacity: 0;
+        transform: scale(0.96);
+    }
 }
 
 .settlements-menu__pop--wide {
@@ -122,6 +188,7 @@
     font-weight: 600;
     text-align: left;
     cursor: pointer;
+    transition: transform 80ms var(--lh-ease-out-quart);
 }
 
 .settlements-menu__item tui-icon {
