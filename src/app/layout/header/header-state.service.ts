@@ -136,18 +136,22 @@ export class HeaderState {
     });
 
     /**
-     * Данные онлайна сервера (`null` — сервер не ответил).
+     * Данные онлайна сервера из общего SSE-потока (`null` — сервер не ответил).
      */
     public readonly online = toSignal<OnlineCount | null>(
-        this.serverInformation.getOnlinePlayersCount$().pipe(catchError(() => of(null))),
+        this.serverInformation.watchServerInfo$().pipe(
+            map((info): OnlineCount => ({ online: info.online, max_online: info.max_online })),
+            catchError(() => of(null))
+        ),
         { initialValue: null }
     );
 
     /**
-     * Игровое время сервера в локали интерфейса (`null` — сервер не ответил).
+     * Игровое время сервера в локали интерфейса из общего SSE-потока
+     * (`null` — сервер не ответил).
      */
     public readonly time = toSignal<string | null>(
-        this.serverInformation.getTime$().pipe(
+        this.serverInformation.watchServerInfo$().pipe(
             map((info) => formatServerTime(info.time, this.i18n.language())),
             catchError(() => of(null))
         ),
