@@ -76,35 +76,27 @@ export const HOME_I18N = {
             },
             recruit: {
                 title: 'Присоединиться к команде',
-                subtitle: 'Проект растёт, и нам нужны люди, готовые помогать его развивать. Выберите направление и напишите нам — ответим всем.',
                 roles: {
                     moderator: {
                         title: 'Модераторы',
-                        description: 'Следите за порядком на сервере и помогаете игрокам разбираться в правилах.',
-                    },
+                            },
                     content: {
                         title: 'Контентмейкеры',
-                        description: 'Видео, стримы, арты, посты о проекте. Опыт и охваты не важны — важно желание делать.',
-                    },
+                            },
                     events: {
                         title: 'Ивентмейкеры',
-                        description: 'Придумываете и проводите игровые события: турниры, квесты, испытания.',
-                    },
+                            },
                     promo: {
                         title: 'Продвижение',
-                        description: 'Ищете способы рассказать о проекте новым игрокам и помогаете ему расти.',
-                    },
+                            },
                 },
                 rolesLabel: 'Кого мы ищем',
                 contactTitle: 'Связаться с нами:',
                 discord: 'Discord',
                 telegram: 'Telegram',
             },
-            pulse: {
-                title: 'Пульс сервера',
-                online: 'Игроков онлайн',
-                worldTime: 'Время в мире',
-                settlements: 'Поселений основано',
+            teamProto: {
+                applyAll: 'Написать в Discord',
             },
             galleryStrip: {
                 title: 'Скриншоты игроков',
@@ -189,35 +181,27 @@ export const HOME_I18N = {
             },
             recruit: {
                 title: 'Join the team',
-                subtitle: 'The project is growing, and we need people willing to help it develop. Pick a direction and write to us — we answer everyone.',
                 roles: {
                     moderator: {
                         title: 'Moderators',
-                        description: 'Keep order on the server and help players understand the rules.',
-                    },
+                            },
                     content: {
                         title: 'Content creators',
-                        description: 'Videos, streams, art, posts about the project. Reach and experience do not matter — willingness does.',
-                    },
+                            },
                     events: {
                         title: 'Event makers',
-                        description: 'Invent and run in-game events: tournaments, quests, trials.',
-                    },
+                            },
                     promo: {
                         title: 'Promotion',
-                        description: 'Find ways to tell new players about the project and help it grow.',
-                    },
+                            },
                 },
                 rolesLabel: 'Who we are looking for',
                 contactTitle: 'Get in touch:',
                 discord: 'Discord',
                 telegram: 'Telegram',
             },
-            pulse: {
-                title: 'Server pulse',
-                online: 'Players online',
-                worldTime: 'World time',
-                settlements: 'Settlements founded',
+            teamProto: {
+                applyAll: 'Message on Discord',
             },
             galleryStrip: {
                 title: 'Player screenshots',
