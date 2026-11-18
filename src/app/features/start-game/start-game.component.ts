@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { ModsNoticeComponent } from '@shared/ui/mods-notice';
-import { catchError, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { environment } from '@core/config/environments/environment';
@@ -50,13 +50,17 @@ export class StartGameComponent {
     protected readonly discordInvite = DISCORD_INVITE;
 
     /**
-     * Онлайн сервера (`null` — не удалось узнать или ещё грузится; при пререндере не запрашивается).
+     * Онлайн сервера из общего SSE-потока (`null` — не удалось узнать или ещё грузится;
+     * при пререндере не запрашивается, иначе сборка зависела бы от сети).
      */
     protected readonly online = toSignal(
         isPlatformBrowser(inject(PLATFORM_ID))
             ? inject(ServerInformationService)
-                  .getOnlinePlayersCount$()
-                  .pipe(catchError(() => of(null)))
+                  .watchServerInfo$()
+                  .pipe(
+                      map((info) => ({ online: info.online, max_online: info.max_online })),
+                      catchError(() => of(null))
+                  )
             : of(null),
         { initialValue: null }
     );

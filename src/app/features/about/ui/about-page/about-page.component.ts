@@ -70,10 +70,13 @@ export class AboutPageComponent {
     protected readonly levels = LEVELS;
 
     /**
-     * Онлайн сервера.
+     * Онлайн сервера из общего SSE-потока.
      */
     protected readonly online = toSignal(
-        this.serverInfo.getOnlinePlayersCount$().pipe(catchError(() => of(null))),
+        this.serverInfo.watchServerInfo$().pipe(
+            map((info) => ({ online: info.online, max_online: info.max_online })),
+            catchError(() => of(null))
+        ),
         { initialValue: null }
     );
 

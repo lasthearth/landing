@@ -297,19 +297,22 @@ export class HomeComponent {
     ] as const;
 
     /**
-     * Текущий онлайн сервера.
+     * Текущий онлайн сервера из общего SSE-потока.
      */
     protected readonly online = toSignal(
-        this.serverInfo.getOnlinePlayersCount$().pipe(catchError(() => of(null))),
+        this.serverInfo.watchServerInfo$().pipe(
+            map((info) => ({ online: info.online, max_online: info.max_online })),
+            catchError(() => of(null))
+        ),
         { initialValue: null }
     );
 
     /**
-     * Текущее игровое время мира (локализованное).
+     * Текущее игровое время мира (локализованное) из общего SSE-потока.
      */
     protected readonly worldTime = toSignal(
-        this.serverInfo.getTime$().pipe(
-            map((data) => formatServerTime(data.time, this.i18n.language())),
+        this.serverInfo.watchServerInfo$().pipe(
+            map((info) => formatServerTime(info.time, this.i18n.language())),
             catchError(() => of(null))
         ),
         { initialValue: null }
