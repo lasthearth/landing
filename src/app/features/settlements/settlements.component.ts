@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    ElementRef,
+    inject,
+    Injector,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
     SettlementService,
@@ -73,6 +83,10 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(window:scroll)': 'closeMenu()',
+        '(window:resize)': 'closeMenu()',
+    },
 })
 export class SettlementsComponent {
     /**
@@ -90,6 +104,11 @@ export class SettlementsComponent {
     private readonly userService = inject(UserService);
     private readonly tagStore = inject(SettlementTagStore);
     private readonly i18n = inject(I18nService);
+
+    /**
+     * Инжектор для afterNextRender вне контекста инжекции.
+     */
+    private readonly injector = inject(Injector);
 
     /**
      * Хранилище собственных заявок игрока на вступление.
@@ -115,6 +134,44 @@ export class SettlementsComponent {
      * Текущий маршрут.
      */
     private readonly route = inject(ActivatedRoute);
+
+    /**
+     * Ключ открытого списка панели: sort, filters или null — всё закрыто.
+     */
+    protected readonly openMenu = signal<'sort' | 'filters' | null>(null);
+
+    /**
+     * Координаты открытого поповера: fixed-позиционирование от кнопки.
+     */
+    protected readonly popStyle = signal<Record<string, string>>({});
+
+    /**
+     * Открыт ли поповер вверх от кнопки: мало места снизу.
+     */
+    protected readonly popFlipped = signal(false);
+
+    /**
+     * Элемент открытого поповера: замер высоты для переворота.
+     */
+    private readonly popEl = viewChild<ElementRef<HTMLElement>>('pop');
+
+    /**
+     * Кнопки-триггеры поповеров: позиция считается от их прямоугольника.
+     */
+    private readonly sortTrigger = viewChild<ElementRef<HTMLButtonElement>>('sortTrigger');
+    private readonly filtersTrigger = viewChild<ElementRef<HTMLButtonElement>>('filtersTrigger');
+
+    /**
+     * Подсказка кнопки направления сортировки.
+     */
+    protected readonly directionTitle = computed(() =>
+        this.i18n.translate(this.sortState().direction === 'asc' ? 'settlements.list.sortAsc' : 'settlements.list.sortDesc'),
+    );
+
+    /**
+     * Число активных фильтров для значка на кнопке.
+     */
+    protected readonly activeFilters = computed(() => (this.typeFilter() ? 1 : 0) + (this.courseFilter() ? 1 : 0));
 
     /**
      * Поисковая строка: название надела или ник жителя.
@@ -274,8 +331,7 @@ export class SettlementsComponent {
      * @param event Событие ввода.
      */
     protected onQueryInput(event: Event): void {
-        this.query.set((event.target as HTMLInputElement).value);
-        this.syncQueryParams();
+        this.setQuery((event.target as HTMLInputElement).value);
     }
 
     /**
@@ -284,8 +340,10 @@ export class SettlementsComponent {
      * @param value Подпись типа.
      */
     protected toggleType(value: string): void {
-        this.typeFilter.set(this.typeFilter() === value ? null : value);
-        this.syncQueryParams();
+        this.withReorder(() => {
+            this.typeFilter.set(this.typeFilter() === value ? null : value);
+            this.syncQueryParams();
+        });
     }
 
     /**
@@ -294,18 +352,22 @@ export class SettlementsComponent {
      * @param value Курс.
      */
     protected toggleCourse(value: string): void {
-        this.courseFilter.set(this.courseFilter() === value ? null : value);
-        this.syncQueryParams();
+        this.withReorder(() => {
+            this.courseFilter.set(this.courseFilter() === value ? null : value);
+            this.syncQueryParams();
+        });
     }
 
     /**
      * Сбрасывает поиск и фильтры.
      */
     protected resetFilters(): void {
-        this.query.set('');
-        this.typeFilter.set(null);
-        this.courseFilter.set(null);
-        this.syncQueryParams();
+        this.withReorder(() => {
+            this.query.set('');
+            this.typeFilter.set(null);
+            this.courseFilter.set(null);
+            this.syncQueryParams();
+        });
     }
 
     /**
@@ -369,15 +431,17 @@ export class SettlementsComponent {
      * @param field Поле сортировки.
      */
     protected setSort(field: SortField): void {
-        const current = this.sortState();
-        if (current.field === field) {
-            this.sortState.set({
-                field,
-                direction: current.direction === 'desc' ? 'asc' : 'desc',
-            });
-        } else {
-            this.sortState.set({ field, direction: 'desc' });
-        }
+        this.withReorder(() => {
+            const current = this.sortState();
+            if (current.field === field) {
+                this.sortState.set({
+                    field,
+                    direction: current.direction === 'desc' ? 'asc' : 'desc',
+                });
+            } else {
+                this.sortState.set({ field, direction: 'desc' });
+            }
+        });
     }
 
     /**
@@ -396,6 +460,201 @@ export class SettlementsComponent {
      */
     protected getSortDirection(field: SortField): SortDirection | null {
         return this.sortState().field === field ? this.sortState().direction : null;
+    }
+
+    /**
+     * Меняет направление сортировки текущего поля.
+     */
+    protected flipSort(): void {
+        this.withReorder(() => {
+            const current = this.sortState();
+            this.sortState.set({ field: current.field, direction: current.direction === 'desc' ? 'asc' : 'desc' });
+        });
+    }
+
+    /**
+     * Контейнер сетки карточек: позиции меряем по живому DOM в порядке списка.
+     */
+    private readonly gridEl = viewChild<ElementRef<HTMLElement>>('grid');
+
+    /**
+     * Прямоугольники карточек до перестановки; null — анимация не нужна.
+     */
+    private flipBefore: Map<string, DOMRect> | null = null;
+
+    /**
+     * Применяет изменение списка и проигрывает переезд карточек (FLIP).
+     * Замеры до мутации и проигрывание на следующем кадре, когда список уже перерисован.
+     *
+     * @param apply Мутация сортировки или фильтров.
+     */
+    private withReorder(apply: () => void): void {
+        this.captureRects();
+        apply();
+        afterNextRender(() => this.playReorderFlip(), { injector: this.injector });
+    }
+
+    /**
+     * Запоминает позиции карточек текущего списка по id надела.
+     */
+    private captureRects(): void {
+        const rects = new Map<string, DOMRect>();
+
+        this.cardNodes().forEach((el, index) => {
+            const item = this.filteredSettlements()[index];
+
+            if (item) {
+                rects.set(item.id, el.getBoundingClientRect());
+            }
+        });
+
+        this.flipBefore = rects;
+    }
+
+    /**
+     * Хосты карточек из DOM в порядке списка.
+     *
+     * @returns Массив элементов app-settlement-card.
+     */
+    private cardNodes(): HTMLElement[] {
+        const grid = this.gridEl()?.nativeElement;
+        return grid ? [...grid.querySelectorAll<HTMLElement>(':scope > app-settlement-card')] : [];
+    }
+
+    /**
+     * Переводит карточки со старых позиций на новые: инверсия сдвигом и проигрывание
+     * токенами движения страницы. При prefers-reduced-motion — мягкое проявление вместо полёта.
+     */
+    private playReorderFlip(): void {
+        const before = this.flipBefore;
+        this.flipBefore = null;
+
+        if (!before || before.size === 0) {
+            return;
+        }
+
+        const style = getComputedStyle(document.documentElement);
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        this.cardNodes().forEach((el, index) => {
+            const item = this.filteredSettlements()[index];
+            const old = item ? before.get(item.id) : undefined;
+
+            if (!old) {
+                return;
+            }
+
+            if (reduce) {
+                const fade = parseInt(style.getPropertyValue('--lh-dur-exit'), 10) || 150;
+                el.animate([{ opacity: 0.4 }, { opacity: 1 }], { duration: fade });
+                return;
+            }
+
+            const now = el.getBoundingClientRect();
+            const dx = old.left - now.left;
+            const dy = old.top - now.top;
+
+            if (Math.abs(dx) + Math.abs(dy) < 1) {
+                return;
+            }
+
+            const duration = parseInt(style.getPropertyValue('--lh-dur-fast'), 10) || 200;
+            const easing = style.getPropertyValue('--lh-ease-move').trim() || 'ease-in-out';
+            el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration, easing });
+        });
+    }
+
+    /**
+     * Меняет поисковую строку и адрес страницы.
+     *
+     * @param value Строка поиска.
+     */
+    protected setQuery(value: string): void {
+        this.query.set(value);
+        this.syncQueryParams();
+    }
+
+    /**
+     * Открывает указанный список панели и закрывает соседний.
+     *
+     * @param menu Ключ списка.
+     */
+    protected toggleMenu(menu: 'sort' | 'filters'): void {
+        if (this.openMenu() === menu) {
+            this.closeMenu();
+            return;
+        }
+
+        const trigger = (menu === 'sort' ? this.sortTrigger() : this.filtersTrigger())?.nativeElement;
+
+        if (!trigger) {
+            return;
+        }
+
+        this.openMenu.set(menu);
+        this.placePop(trigger);
+    }
+
+    /**
+     * Закрывает открытый список панели по клику на подложку, прокрутке или ресайзу:
+     * поповер позиционирован от кнопки и при сдвиге страницы обязан уйти.
+     */
+    protected closeMenu(): void {
+        this.openMenu.set(null);
+        this.popStyle.set({});
+        this.popFlipped.set(false);
+    }
+
+    /**
+     * Ставит поповер под кнопку-триггер, а при нехватке места снизу — над неё.
+     * Нижний предел учитывает полосу согласия, чтобы поповер не прятался под ней.
+     *
+     * @param trigger Кнопка, от которой открыт поповер.
+     */
+    private placePop(trigger: HTMLElement): void {
+        const gap = 8;
+        const rect = trigger.getBoundingClientRect();
+        const consent = document.body.classList.contains('lh-has-consent')
+            ? parseInt(getComputedStyle(document.body).getPropertyValue('--lh-consent-h'), 10) || 0
+            : 0;
+        const floor = window.innerHeight - gap - consent;
+        const right = `${window.innerWidth - rect.right}px`;
+        this.popFlipped.set(false);
+        this.popStyle.set({ top: `${rect.bottom + gap}px`, right, bottom: 'auto', left: 'auto' });
+
+        afterNextRender(() => {
+            const pop = this.popEl()?.nativeElement;
+
+            if (!pop || this.openMenu() === null) {
+                return;
+            }
+
+            /* offsetHeight, а не rect: входной scale(0.96) занижает замер. */
+            const height = pop.offsetHeight;
+
+            if (rect.bottom + gap + height <= floor) {
+                return;
+            }
+
+            if (rect.top - gap - height >= gap) {
+                this.popFlipped.set(true);
+                this.popStyle.set({ top: 'auto', right, bottom: `${window.innerHeight - rect.top + gap}px`, left: 'auto' });
+                return;
+            }
+
+            /* Не влезает ни снизу, ни сверху: прижать к нижнему пределу. */
+            this.popStyle.set({ top: `${floor - height}px`, right, bottom: 'auto', left: 'auto' });
+        }, { injector: this.injector });
+    }
+
+    /**
+     * Выбирает поле сортировки из списка и закрывает список.
+     *
+     * @param field Поле сортировки.
+     */
+    protected pickSort(field: SortField): void {
+        this.setSort(field);
+        this.closeMenu();
     }
 
     /**

@@ -13,6 +13,7 @@
  *   --clip     высота области скриншота от верха, px (по умолчанию 560);
  *   --selector снять только элемент по CSS-селектору вместо области от верха;
  *   --auth     подставить вход игрока в состояние шапки (имя ripls, баланс, аватар);
+ *   --port     порт dev-сервера (по умолчанию 4200; занят — берите 4210+);
  *   --out      файл скриншота (обязательный).
  */
 import { chromium } from 'playwright';
@@ -47,7 +48,7 @@ const clip = Number(flags.clip ?? 560);
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const page = await browser.newPage({ viewport: { width, height: Math.max(clip, 700) } });
 
-await page.goto(`http://127.0.0.1:4200${flags.url ?? '/?nowelcome'}`, { waitUntil: 'networkidle' });
+await page.goto(`http://127.0.0.1:${flags.port ?? '4200'}${flags.url ?? '/?nowelcome'}`, { waitUntil: 'networkidle' });
 await page.waitForSelector('.crown__strip');
 
 if (flags.auth) {

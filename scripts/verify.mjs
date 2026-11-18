@@ -84,14 +84,23 @@ const steps = [
     // Окружение: пакет из package.json, которого нет в node_modules, иначе всплывает
     // через два шага невнятной ошибкой `TS2307 Cannot find module`.
     { name: 'Окружение (node_modules против package.json)', cmd: 'npm', args: ['ls', '--depth=0'], quiet: true },
-    { name: 'Формат агентских документов', args: ['node_modules/prettier/bin/prettier.cjs', '--check', ...formatTargets()] },
+    {
+        name: 'Формат агентских документов',
+        args: ['node_modules/prettier/bin/prettier.cjs', '--check', ...formatTargets()],
+    },
     { name: 'Бюджет контекста', args: ['scripts/check-context-budget.mjs'] },
     { name: 'Живость указателей', args: ['scripts/check-doc-pointers.mjs'] },
     { name: 'Границы FSD', args: ['scripts/check-architecture.mjs'] },
     { name: 'Паритет локалей', args: ['scripts/i18n-tool.mjs', 'check'] },
     { name: 'Контраст токенов', args: ['scripts/check-contrast.mjs'] },
     { name: 'Объявление токенов', args: ['scripts/check-design-tokens.mjs'] },
-    { name: 'Типы', args: ['node_modules/typescript/bin/tsc', '-p', 'tsconfig.app.json', '--noEmit'] },
+    // Компонентный стиль с селектором от body/html молча не матчится (инкапсуляция).
+    { name: 'Предки компонентных стилей', args: ['scripts/check-component-styles.mjs'] },
+    // ngc, а не голый tsc: ошибки типов в шаблонах (TS4104 на привязках) tsc не видит.
+    {
+        name: 'Типы (TS и шаблоны)',
+        args: ['node_modules/@angular/compiler-cli/bundles/src/bin/ngc.js', '-p', 'tsconfig.app.json', '--noEmit'],
+    },
     // Держит жёсткое правило 11: `any` и `console.log` не проходят проверку.
     { name: 'ESLint', args: ['node_modules/eslint/bin/eslint.js', 'src', 'eslint.config.mjs'] },
 ];
@@ -106,7 +115,9 @@ if (FULL) {
             args: ['node_modules/@angular/cli/bin/ng', 'run', 'last-hearth-landing:test-browser'],
         });
     } else {
-        console.log('Пропуск тестов холста: нет браузера Playwright. Установите его командой npx playwright install chromium.');
+        console.log(
+            'Пропуск тестов холста: нет браузера Playwright. Установите его командой npx playwright install chromium.'
+        );
     }
 }
 
@@ -118,11 +129,11 @@ const releaseBuildLock = acquireBuildLock(FULL ? 'verify:full' : 'verify');
 
 for (const step of steps) {
     const at = Date.now();
-    const run = spawnSync(
-        step.cmd === 'npm' ? NPM_BIN : process.execPath,
-        step.args,
-        { cwd: ROOT, stdio: step.quiet ? 'pipe' : 'inherit', encoding: 'utf8' }
-    );
+    const run = spawnSync(step.cmd === 'npm' ? NPM_BIN : process.execPath, step.args, {
+        cwd: ROOT,
+        stdio: step.quiet ? 'pipe' : 'inherit',
+        encoding: 'utf8',
+    });
     const seconds = ((Date.now() - at) / 1000).toFixed(1);
     const ok = run.status === 0;
 
