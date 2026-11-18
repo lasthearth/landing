@@ -91,8 +91,6 @@ export const HOME_I18N = {
                             },
                 },
                 rolesLabel: 'Кого мы ищем',
-                contactTitle: 'Связаться с нами:',
-                discord: 'Discord',
                 telegram: 'Telegram',
             },
             teamProto: {
@@ -196,8 +194,6 @@ export const HOME_I18N = {
                             },
                 },
                 rolesLabel: 'Who we are looking for',
-                contactTitle: 'Get in touch:',
-                discord: 'Discord',
                 telegram: 'Telegram',
             },
             teamProto: {

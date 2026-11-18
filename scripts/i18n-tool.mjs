@@ -6,6 +6,9 @@
  *
  * Команды:
  *   node scripts/i18n-tool.mjs stats [--check]            — размеры, ключи, паритет ru/en
+ *   check также валит процесс на НОВЫЕ осиротевшие ключи (ссылки в коде нет):
+ *   легаси-сироты лежат в scripts/i18n-orphans-baseline.json, обновить —
+ *   node scripts/i18n-tool.mjs check --update-baseline
  *   node scripts/i18n-tool.mjs find <подстрока>           — где встречается ключ или текст
  *   node scripts/i18n-tool.mjs get <файл> <путь>          — значения ключа
  *   node scripts/i18n-tool.mjs set <файл> <путь> <текст> [--lang ru|en|both] [--print]
@@ -21,8 +24,41 @@ import { fileURLToPath } from 'node:url';
 /** Корень репозитория. */
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 
+/**
+ * Собирает текст всех .ts/.html исходников каталога одним куском:
+ * по нему ищутся ссылки на ключи словаря.
+ *
+ * @param {string} dir Каталог обхода.
+ * @returns {string} Сцепленный текст файлов.
+ */
+function collectSource(dir) {
+    let out = '';
+
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        if (entry.name === 'node_modules' || entry.name === '.angular' || entry.name === 'dist') {
+            continue;
+        }
+
+        const full = join(dir, entry.name);
+
+        if (entry.isDirectory()) {
+            out += collectSource(full);
+        } else if (/\.(ts|html)$/.test(entry.name)) {
+            out += readFileSync(full, 'utf8') + '\n';
+        }
+    }
+
+    return out;
+}
+
 /** Каталог словарей. */
 const DICT_DIR = join(ROOT, 'src', 'app', 'core', 'i18n', 'translations', 'features');
+
+/**
+ * Легаси-осиротевшие ключи: валят проверку только НОВЫЕ сироты, как в
+ * scripts/architecture-baseline.json. Обновить: `i18n-tool.mjs check --update-baseline`.
+ */
+const ORPHANS_BASELINE = join(ROOT, 'scripts', 'i18n-orphans-baseline.json');
 
 /** Аргументы командной строки. */
 const argv = process.argv.slice(2);
@@ -347,6 +383,72 @@ if (command === 'stats' || command === 'check') {
             failed = true;
             console.log('  ' + name + ': без английского ' + (onlyRu.join(', ') || '—'));
             console.log('  ' + name + ': без русского ' + (onlyEn.join(', ') || '—'));
+        }
+    }
+
+    // Осиротевшие ключи: есть в словаре, но на них никто не ссылается.
+    // Полный ключ ищется литералом в коде; динамическая сборка
+    // ('префикс.' + key + '.суффикс') покрывается литералом префикса с точкой.
+    if (check) {
+        const codeText = collectSource(join(ROOT, 'src'));
+        const fullRefs = new Set();
+
+        for (const match of codeText.matchAll(/["'`]([a-z][\w-]*(?:\.[\w-]+)+)["'`]/g)) {
+            fullRefs.add(match[1]);
+        }
+
+        const prefixes = new Set();
+
+        for (const match of codeText.matchAll(/["'`]([\w][\w-]*(?:\.[\w-]+)*\.)["'`]\s*\+/g)) {
+            prefixes.add(match[1]);
+        }
+
+        for (const match of codeText.matchAll(/`([\w][\w-]*(?:\.[\w-]+)*\.)\$\{/g)) {
+            prefixes.add(match[1]);
+        }
+
+        const prefixList = [...prefixes];
+        const orphans = [];
+
+        for (const file of allDicts()) {
+            const { dict } = load(file);
+
+            for (const item of flatten(dict.ru)) {
+                if (!fullRefs.has(item.path) && !prefixList.some((prefix) => item.path.startsWith(prefix))) {
+                    orphans.push(item.path);
+                }
+            }
+        }
+
+        const baseline = new Set(
+            existsSync(ORPHANS_BASELINE) ? JSON.parse(readFileSync(ORPHANS_BASELINE, 'utf8')).orphans ?? [] : []
+        );
+
+        if (argv.includes('--update-baseline')) {
+            writeFileSync(ORPHANS_BASELINE, JSON.stringify({ orphans: orphans.sort() }, null, 4) + '\n');
+            console.log('');
+            console.log('Бейзлайн сирот обновлён: ' + orphans.length + ' ключей в ' + ORPHANS_BASELINE);
+            process.exit(0);
+        }
+
+        const fresh = orphans.filter((key) => !baseline.has(key));
+        const stale = [...baseline].filter((key) => !orphans.includes(key));
+
+        console.log('');
+
+        if (fresh.length) {
+            failed = true;
+            console.log('Новые осиротевшие ключи (удалите из словаря или верните ссылку):');
+
+            for (const key of fresh) {
+                console.log('  ' + key);
+            }
+        } else {
+            console.log('Новых осиротевших ключей нет (в бейзлайне легаси: ' + baseline.size + ').');
+        }
+
+        if (stale.length) {
+            console.log('Бейзлайн устарел — ключи снова используются, уберите их (--update-baseline): ' + stale.join(', '));
         }
     }
 
