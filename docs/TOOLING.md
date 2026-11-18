@@ -4,35 +4,35 @@
 
 ## Команды
 
-| Команда                            | Что делает                                                                                                                                           |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| `npm start` / `npm run dev`        | dev-сервер на `127.0.0.1:4200` (через dotenv)                                                                                                        |
-| `npm run build`                    | прод-сборка SSR под замком `.build.lock`: пререндер разделов (список — `src/app/app.routes.server.ts`)                                               |
-| `npm run verify`                   | **обязательный минимум**: окружение, формат доков, бюджет контекста, указатели, границы FSD, локали, контраст, типы, ESLint                          |
-| `npm run verify:full`              | то же + `ng build` + Vitest + тесты холста в Chrome (если он найден)                                                                                 |     |
-| `npm run arch`                     | границы FSD; `--update-baseline` фиксирует легаси-нарушения                                                                                          |
-| `npm run map`                      | перегенерировать `docs/project-map.md`                                                                                                               |
-| `npm run i18n`                     | `stats \| check \| find \| get \| set` — правка словарей без чтения файла (`docs/I18N.md`)                                                           |
-| `npm run sitemap`                  | `public/sitemap.xml`: разделы, статьи, новости, поселения, игроки. Выполняется сам перед `npm run build`; без API оставляет прежний файл             |
-| `npm run icons`                    | иконки из `public/`: `favicon.ico` (16/32/48), `icon-192/512.png`, `icon-maskable-512.png`; результат коммитится, в сборке не нужен                  |
-| `npm run context:cost`             | стоимость агентских документов в токенах + бюджеты                                                                                                   |
-| `npm run format` / `format:check`  | prettier по агентским документам и `scripts/`                                                                                                        |
-| `node scripts/archive-history.mjs` | переносит старейшие записи `### 3.-*` из `docs/history.md` в архив, пока летопись держит бюджет 120 kB                                               |
-| `node scripts/visual-check.mjs`    | скриншот dev-сервера в настоящем Chrome: `--url`, `--width`, `--clip`, `--out`, `--auth` (подставной вход игрока в шапке)                            |
-| `npm test` / `npm run test:watch`  | Vitest + jsdom через `@angular/build:unit-test`; браузер не нужен                                                                                    |
-| `npm run test:coverage`            | то же с отчётом покрытия в `coverage/`                                                                                                               |
-| `npm run test:browser`             | Vitest в Chromium для трёх спеков, которым нужен настоящий браузер (холст и живая геометрия)                                                         |
-| `npm run test:ci`                  | оба прогона подряд                                                                                                                                   |
-| `npm run lint`                     | ESLint по `src`: `any`, `console.log`, селекторы, шаблонные правила (`eslint.config.mjs`); единственный шаг быстрого прогона, который парсит шаблоны |
-| `npm run bootstrap`                | `npm ci` в текущем чекауте или worktree — ровные версии из `package-lock.json`                                                                       |
-| `npm run history`                  | `add "Заголовок" --body-file <путь>`: сам берёт следующий номер `3.-NN`, вставляет запись, гонит архив и бюджет 120 kB                               |
+| Команда                            | Что делает                                                                                                                                                                           |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --- |
+| `npm start` / `npm run dev`        | dev-сервер на `127.0.0.1:4200` (через dotenv)                                                                                                                                        |
+| `npm run build`                    | прод-сборка SSR под замком `.build.lock`: пререндер разделов (список — `src/app/app.routes.server.ts`)                                                                               |
+| `npm run verify`                   | **обязательный минимум**: окружение, формат доков, бюджет контекста, указатели, границы FSD, локали, контраст и токены, предки компонентных стилей, типы TS и шаблонов (ngc), ESLint |
+| `npm run verify:full`              | то же + `ng build` + Vitest + тесты холста в Chrome (если он найден)                                                                                                                 |     |
+| `npm run arch`                     | границы FSD; `--update-baseline` фиксирует легаси-нарушения                                                                                                                          |
+| `npm run map`                      | перегенерировать `docs/project-map.md`                                                                                                                                               |
+| `npm run i18n`                     | `stats \| check \| find \| get \| set` — правка словарей без чтения файла (`docs/I18N.md`)                                                                                           |
+| `npm run sitemap`                  | `public/sitemap.xml`: разделы, статьи, новости, поселения, игроки. Выполняется сам перед `npm run build`; без API оставляет прежний файл                                             |
+| `npm run icons`                    | иконки из `public/`: `favicon.ico` (16/32/48), `icon-192/512.png`, `icon-maskable-512.png`; результат коммитится, в сборке не нужен                                                  |
+| `npm run context:cost`             | стоимость агентских документов в токенах + бюджеты                                                                                                                                   |
+| `npm run format` / `format:check`  | prettier по агентским документам и `scripts/`                                                                                                                                        |
+| `node scripts/archive-history.mjs` | переносит старейшие записи `### 3.-*` из `docs/history.md` в архив, пока летопись держит бюджет 120 kB                                                                               |
+| `node scripts/visual-check.mjs`    | скриншот dev-сервера в настоящем Chrome: `--url`, `--width`, `--clip`, `--out`, `--auth` (подставной вход игрока в шапке), `--port` (по умолчанию 4200)                              |
+| `npm test` / `npm run test:watch`  | Vitest + jsdom через `@angular/build:unit-test`; браузер не нужен                                                                                                                    |
+| `npm run test:coverage`            | то же с отчётом покрытия в `coverage/`                                                                                                                                               |
+| `npm run test:browser`             | Vitest в Chromium для трёх спеков, которым нужен настоящий браузер (холст и живая геометрия)                                                                                         |
+| `npm run test:ci`                  | оба прогона подряд                                                                                                                                                                   |
+| `npm run lint`                     | ESLint по `src`: `any`, `console.log`, селекторы, шаблонные правила (`eslint.config.mjs`); единственный шаг быстрого прогона, который парсит шаблоны                                 |
+| `npm run bootstrap`                | `npm ci` в текущем чекауте или worktree — ровные версии из `package-lock.json`                                                                                                       |
+| `npm run history`                  | `add "Заголовок" --body-file <путь>`: сам берёт следующий номер `3.-NN`, вставляет запись, гонит архив и бюджет 120 kB                                                               |
 
 ## Ограничения агентских песочниц (важно)
 
 | Что                                       | Как обойти                                                                                                                                                                                         |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `node_modules` недоступен для записи      | установка пакетов требует подтверждения администратора сессии                                                                                                                                      |
-| `ng build` падает на `esbuild` со `EPERM` | сборке нужен обычный терминал; в песочнице её заменяет `tsc --noEmit` внутри `npm run verify`                                                                                                      |
+| `ng build` падает на `esbuild` со `EPERM` | сборке нужен обычный терминал; в песочнице её заменяет `ngc` внутри `npm run verify` (TS и типы шаблонов)                                                                                          |
 | Браузер Playwright не установлен          | `npm test` работает и без браузера; без Chromium пропускается только `npm run test:browser`: `npx playwright install chromium`                                                                     |
 | `git` не пишет `.git/index.lock`          | коммиты и `git mv` — в своём терминале                                                                                                                                                             |
 | npm-кэш вне воркспейса закрыт             | `npm i --cache ./.npm-cache ...`                                                                                                                                                                   |
@@ -46,6 +46,13 @@ node scripts/gen-project-map.mjs --stdout
 node scripts/history-tool.mjs add "Заголовок" --body-file entry.md --stdout
 node scripts/i18n-tool.mjs set rules rules.title "Новый заголовок" --print
 ```
+
+## Браузерные пробы dev-сервера
+
+- Скриншот без кликов — `node scripts/visual-check.mjs` (ключи оверлеев и `?nowelcome` уже учтены). Проба с кликами или анимациями — свой playwright-скрипт в корне worktree: `playwright` есть в dev-зависимостях, Chromium ставит `npx playwright install chromium`.
+- Оверлеи первого визита и тема: ключи localStorage и прецеденты — `docs/TRAPS.md` («Скриншоты на свежем профиле»); тема без сохранённого выбора берётся из `prefers-color-scheme`, в Playwright — `emulateMedia({ colorScheme: 'dark' })`.
+- Порт: 4200 обычно занят живым сервером пользователя. Свой dev-сервер поднимайте на 4210+ и передавайте порт в пробу (`--port` у visual-check).
+- Перед пробой дождитесь строки `Application bundle generation complete` в логе serve. После серии быстрых правок перезапускайте `ng serve`: HMR отдаёт смесь старого шаблона и нового кода (`docs/TRAPS.md`, «Dev-сервер без свежих правок»).
 
 ## Несколько агентов в одном worktree
 
