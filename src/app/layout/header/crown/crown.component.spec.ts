@@ -199,6 +199,27 @@ describe('CrownComponent', () => {
         expect(mustFind('.crown__clock').textContent?.trim()).toBe('12 сентября, 3 год, 06:59');
     });
 
+    it('пересоздаёт число онлайна при смене и оставляет узел при том же значении', () => {
+        state.online.set({ online: 42, max_online: 100 });
+        render();
+
+        const before = mustFind('.crown__count-now');
+        expect(before.classList.contains('lh-value-swap')).toBe(true);
+
+        // Поток принёс тот же онлайн: узел живёт дальше, анимация не играет.
+        state.online.set({ online: 42, max_online: 100 });
+        render();
+        expect(mustFind('.crown__count-now')).toBe(before);
+
+        // Онлайн изменился: новый узел, поэтому вход `.lh-value-swap` проиграется.
+        state.online.set({ online: 43, max_online: 100 });
+        render();
+
+        const after = mustFind('.crown__count-now');
+        expect(after).not.toBe(before);
+        expect(after.textContent?.trim()).toBe('43');
+    });
+
     it('гостю показывает вход и прячет карточку игрока', () => {
         render();
 

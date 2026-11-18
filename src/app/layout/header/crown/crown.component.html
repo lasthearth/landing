@@ -37,7 +37,15 @@
         <div class="crown__telemetry">
             <tui-icon icon="@tui.users" class="crown__tele-icon" aria-hidden="true" />
             <p class="crown__count">
-                <span class="crown__count-now">{{ online?.online ?? "—" }}</span>
+                <!--
+                    Число пересоздаётся при каждой смене значения: только так
+                    играет анимация входа `.lh-value-swap` (см. styles.css).
+                    Track по самому числу держит узел на месте, пока онлайн не
+                    изменился, поэтому поток раз в 5 секунд шапку не дёргает.
+                -->
+                @for (now of [online?.online ?? null]; track now) {
+                    <span class="crown__count-now lh-value-swap">{{ now ?? "—" }}</span>
+                }
                 <span class="crown__count-max">/ {{ online?.max_online ?? "—" }}</span>
             </p>
 

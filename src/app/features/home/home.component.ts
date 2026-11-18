@@ -335,7 +335,7 @@ export class HomeComponent {
      * в шаблоне: расходились подписи и разметка при каждой правке.
      */
     protected readonly pulseStats = computed<readonly PulseStat[]>(() => [
-        { icon: '@tui.users', labelKey: 'home.pulse.online', value: this.online()?.online ?? null },
+        { icon: '@tui.users', labelKey: 'home.pulse.online', value: this.online()?.online ?? null, swap: true },
         { icon: '@tui.clock', labelKey: 'home.pulse.worldTime', value: this.worldTime() },
         { icon: '@tui.castle', labelKey: 'home.pulse.settlements', value: this.settlementsCount() },
     ]);
