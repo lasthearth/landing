@@ -2020,7 +2020,10 @@ html.lh-has-session .lh-guest-only {
  * Лёгкий масштаб вместо сдвига: для карточек и медиаплиток в сетках.
  * 0.97, а не 0 — ничего не растёт из нуля.
  */
-.lh-reveal.lh-reveal--scale {
+/* Масштаб держится только до появления: без :not(.is-visible) правило шло
+   после `.lh-reveal.is-visible` с той же специфичностью и оставляло
+   элемент уменьшенным навсегда (карточки уже сетки на 1.5% с каждого края). */
+.lh-reveal.lh-reveal--scale:not(.is-visible) {
     transform: scale(0.97);
 }
 
@@ -2029,6 +2032,10 @@ html.lh-has-session .lh-guest-only {
         opacity: 1;
         transform: none;
         transition: none;
+    }
+
+    .lh-reveal.lh-reveal--scale:not(.is-visible) {
+        transform: none;
     }
 }
 

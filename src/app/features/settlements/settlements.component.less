@@ -238,11 +238,14 @@
     cursor: pointer;
 }
 
+/* Поиск растягивается на свободное место строки: фиксированный max-width
+   обрезал плейсхолдер и оставлял дыру справа от кнопок. */
 .settlements-search {
     display: flex;
     align-items: center;
     gap: 0.625rem;
-    max-width: 32rem;
+    flex: 1 1 20rem;
+    min-width: 15rem;
     padding: 0 1rem;
     height: 3rem;
     border: 1px solid var(--color-line);
