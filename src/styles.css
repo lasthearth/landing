@@ -515,6 +515,140 @@ tui-dialog {
     }
 }
 
+/**
+ * Алерты TuiAlertService — карточка-«материал» над контентом.
+ *
+ * Обёртка рисует полупрозрачную поверхность с blur (материал Apple: слой
+ * над контентом, а не вырванный кусок фона), волосковую кромку и тень.
+ * Геометрия notification: колонка иконки — прозрачная border-inline-start
+ * (--t-start), сама иконка — маска на ::before; текст начинается после неё.
+ * Цвета — только токены проекта, поэтому алерт следует теме автоматически;
+ * в тёмной теме ниже подправлены лишь плотности подложки и тонировки.
+ */
+tui-alert[role='alert'] {
+    inline-size: 21rem;
+}
+
+tui-alert {
+    .t-wrapper {
+        background: color-mix(in srgb, var(--lh-surface-2) 90%, transparent) !important;
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: var(--lh-radius-lg);
+        box-shadow:
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-border-strong) 35%, transparent),
+            var(--lh-shadow-lift);
+        overflow: hidden;
+    }
+
+    tui-notification[data-size='m'] {
+        padding: 0.875rem 2.75rem 0.875rem 0;
+
+        &[style*='--t-icon-start:'] {
+            --t-start: 2.75rem;
+        }
+
+        &::before {
+            inset-inline-start: -1.75rem;
+            top: 0.875rem;
+            font-size: 1.25rem;
+        }
+
+        [tuiTitle] {
+            font-size: 0.9375rem;
+            line-height: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--lh-ink);
+        }
+
+        [tuiSubtitle] {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: var(--lh-ink-2);
+        }
+
+        > [tuiIconButton] {
+            top: 0.5rem;
+            inset-inline-end: 0.5rem;
+            inline-size: 1.75rem;
+            block-size: 1.75rem;
+            border-radius: var(--lh-radius-full);
+            color: var(--lh-ink-3);
+            transition:
+                color 150ms ease,
+                background-color 150ms ease;
+
+            &:hover {
+                color: var(--lh-ink);
+                background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent) !important;
+            }
+        }
+    }
+
+    /* Статус несут иконка и лёгкая тонировка; текст остаётся читабельными чернилами */
+    tui-notification[data-appearance='negative'],
+    tui-notification[data-appearance='error'] {
+        background: color-mix(in srgb, var(--lh-danger-ink) 10%, transparent) !important;
+
+        &::before {
+            color: var(--lh-danger-ink) !important;
+        }
+    }
+
+    tui-notification[data-appearance='positive'],
+    tui-notification[data-appearance='success'] {
+        background: color-mix(in srgb, var(--lh-status-done) 10%, transparent) !important;
+
+        &::before {
+            color: var(--lh-status-done) !important;
+        }
+    }
+
+    tui-notification[data-appearance='warning'] {
+        background: color-mix(in srgb, var(--lh-warning-ink) 10%, transparent) !important;
+
+        &::before {
+            color: var(--lh-warning-ink) !important;
+        }
+    }
+
+    tui-notification[data-appearance='info'] {
+        background: color-mix(in srgb, var(--lh-link) 8%, transparent) !important;
+
+        &::before {
+            color: var(--lh-link) !important;
+        }
+    }
+
+    tui-notification[data-appearance='neutral'] {
+        background: transparent !important;
+
+        &::before {
+            color: var(--lh-ink-3) !important;
+        }
+    }
+}
+
+/* Без движения: алерт появляется и уходит без слайда и схлопывания */
+@media (prefers-reduced-motion: reduce) {
+    tui-alert.tui-enter,
+    tui-alert.tui-leave {
+        animation-duration: 1ms !important;
+    }
+
+    tui-alert .t-wrapper {
+        transition: none;
+    }
+}
+
+/* Без прозрачности: материал становится сплошной поверхностью */
+@media (prefers-reduced-transparency: reduce) {
+    tui-alert .t-wrapper {
+        background: var(--lh-surface-2) !important;
+        backdrop-filter: none;
+    }
+}
+
 .main-panel {
     background-color: #e2d7bb;
     background-image: url('/image_1.webp');
@@ -2048,6 +2182,10 @@ html[data-theme='dark'] {
     --tui-text-action: #e07830;
     --tui-text-action-hover: #ffaa5c;
 
+    /* Фоновые переменные Taiga UI (алерты, попапы) */
+    --tui-background-base: #212327;
+    --tui-background-base-alt: #2b2d31;
+
     /* Основные панели */
     .main-panel {
         background-color: #212327;
@@ -2057,6 +2195,34 @@ html[data-theme='dark'] {
     tui-dialog .t-content {
         background-color: #212327 !important;
         background-image: none !important;
+    }
+
+    /* Алерты в тёмной теме: плотнее подложка и тонировки, темнее кромка */
+    tui-alert {
+        .t-wrapper {
+            background: color-mix(in srgb, var(--lh-surface-2) 88%, transparent) !important;
+            box-shadow:
+                inset 0 0 0 1px color-mix(in srgb, var(--lh-border-strong) 45%, transparent),
+                var(--lh-shadow-lift);
+        }
+
+        tui-notification[data-appearance='negative'],
+        tui-notification[data-appearance='error'] {
+            background: color-mix(in srgb, var(--lh-danger-ink) 12%, transparent) !important;
+        }
+
+        tui-notification[data-appearance='positive'],
+        tui-notification[data-appearance='success'] {
+            background: color-mix(in srgb, var(--lh-status-done) 12%, transparent) !important;
+        }
+
+        tui-notification[data-appearance='warning'] {
+            background: color-mix(in srgb, var(--lh-warning-ink) 12%, transparent) !important;
+        }
+
+        tui-notification[data-appearance='info'] {
+            background: color-mix(in srgb, var(--lh-link) 10%, transparent) !important;
+        }
     }
 
     /* Тёмные полупрозрачные панели → светлая альфа */
