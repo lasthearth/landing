@@ -65,6 +65,10 @@ export const SETTLEMENTS_I18N = {
                 filterCourse: 'Курс',
                 found: 'Найдено: {{count}}',
                 reset: 'Сбросить фильтры',
+                filters: 'Фильтры',
+                sortAsc: 'По возрастанию',
+                sortDesc: 'По убыванию',
+                removeFilter: 'Убрать фильтр',
                 notFound: {
                     title: 'Ничего не найдено',
                     description: 'Попробуйте изменить запрос или сбросить фильтры.',
@@ -564,6 +568,10 @@ export const SETTLEMENTS_I18N = {
                 filterCourse: 'Course',
                 found: 'Found: {{count}}',
                 reset: 'Reset filters',
+                filters: 'Filters',
+                sortAsc: 'Ascending',
+                sortDesc: 'Descending',
+                removeFilter: 'Remove filter',
                 notFound: {
                     title: 'Nothing found',
                     description: 'Try a different query or reset the filters.',

@@ -1,0 +1,111 @@
+<!-- ПРОТОТИП, НЕ ПРОДАКШН: сортировка сегментами, фильтры за кнопкой и токенами. -->
+<div class="proto-inline">
+    <div class="proto-inline__top">
+        <label class="proto-inline__search">
+            <tui-icon icon="@tui.search" class="size-5! shrink-0" />
+            <input
+                type="search"
+                [value]="controls().query()"
+                [placeholder]="'settlements.list.search' | translate"
+                [attr.aria-label]="'settlements.list.search' | translate"
+                (input)="onSearch($event)"
+            />
+        </label>
+        @if (!controls().loading()) {
+            <span class="proto-inline__count">
+                {{ 'settlements.list.found' | translate: { count: controls().foundCount() } }}
+            </span>
+        }
+    </div>
+
+    <div class="proto-inline__bar">
+        <div class="proto-inline__seg" role="group" [attr.aria-label]="'settlements.list.sort.label' | translate">
+            @for (key of controls().sortKeys; track key) {
+                <button
+                    type="button"
+                    class="proto-inline__seg-btn"
+                    [attr.aria-current]="isActive(key) ? 'true' : null"
+                    (click)="controls().setSort(key)"
+                >
+                    {{ 'settlements.list.sort.' + key | translate }}
+                </button>
+            }
+            @if (controls().sortState().field !== 'default') {
+                <button
+                    type="button"
+                    class="proto-inline__seg-btn proto-inline__seg-btn--flip"
+                    [title]="directionTitle()"
+                    [attr.aria-label]="directionTitle()"
+                    (click)="controls().flipSort()"
+                >
+                    <tui-icon [icon]="controls().sortState().direction === 'asc' ? '@tui.arrow-up' : '@tui.arrow-down'" />
+                </button>
+            }
+        </div>
+
+        <button type="button" class="proto-inline__filters" [attr.aria-expanded]="open()" (click)="open.set(!open())">
+            <tui-icon icon="@tui.sliders-horizontal" />
+            {{ 'settlements.list.filters' | translate }}
+            @if (tokens().length) {
+                <span class="proto-inline__badge">{{ tokens().length }}</span>
+            }
+        </button>
+    </div>
+
+    @if (tokens().length) {
+        <div class="proto-inline__tokens">
+            @for (token of tokens(); track token.value) {
+                <button
+                    type="button"
+                    class="proto-inline__token"
+                    [attr.aria-label]="'settlements.list.removeFilter' | translate"
+                    (click)="removeToken(token)"
+                >
+                    {{ token.value }}
+                    <tui-icon icon="@tui.x" />
+                </button>
+            }
+        </div>
+    }
+
+    @if (open()) {
+        <div class="proto-inline__panel">
+            @if (controls().typeOptions().length > 1) {
+                <div class="lh-chips" role="group" aria-labelledby="proto-inline-type-label">
+                    <span id="proto-inline-type-label" class="lh-chips__label">
+                        {{ 'settlements.list.filterType' | translate }}
+                    </span>
+                    @for (option of controls().typeOptions(); track option.value) {
+                        <button
+                            type="button"
+                            class="lh-chip"
+                            [attr.aria-pressed]="controls().typeFilter() === option.value"
+                            (click)="controls().toggleType(option.value)"
+                        >
+                            {{ option.value }}
+                            <span class="lh-chip__count">{{ option.count }}</span>
+                        </button>
+                    }
+                </div>
+            }
+            @if (controls().courseOptions().length > 1) {
+                <div class="lh-chips" role="group" aria-labelledby="proto-inline-course-label">
+                    <span id="proto-inline-course-label" class="lh-chips__label">
+                        {{ 'settlements.list.filterCourse' | translate }}
+                    </span>
+                    @for (option of controls().courseOptions(); track option.value) {
+                        <button
+                            type="button"
+                            class="lh-chip"
+                            [attr.aria-pressed]="controls().courseFilter() === option.value"
+                            (click)="controls().toggleCourse(option.value)"
+                        >
+                            {{ option.value }}
+                            <span class="lh-chip__count">{{ option.count }}</span>
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

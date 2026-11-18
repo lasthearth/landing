@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
     SettlementService,
@@ -21,6 +23,12 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { SettlementFinderService } from './settlement-finder/settlement-finder.service';
 import { RevealDirective } from '@shared/lib/directives';
+import { environment } from '@core/config/environments/environment';
+import { PrototypeSwitcherComponent } from '@shared/ui/prototype-switcher';
+import { ProtoControls } from './sort-prototype/proto-controls.model';
+import { ProtoSortMenuComponent } from './sort-prototype/proto-sort-menu.component';
+import { ProtoSortRailComponent } from './sort-prototype/proto-sort-rail.component';
+import { ProtoSortInlineComponent } from './sort-prototype/proto-sort-inline.component';
 
 /**
  * Поле сортировки списка селений.
@@ -56,6 +64,12 @@ const PINNED_SETTLEMENT_NAME = 'Поместье Эренхольд';
 const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
 
 /**
+ * ПРОТОТИП, НЕ ПРОДАКШН: ключи вариантов панели сортировки в `?variant=`.
+ * Удалить вместе с папкой sort-prototype, когда вариант выбран.
+ */
+const PROTO_VARIANTS = ['base', 'menu', 'rail', 'inline'] as const;
+
+/**
  * Компонент страницы списка селений.
  */
 @Component({
@@ -69,6 +83,11 @@ const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
         TranslatePipe,
         TuiIcon,
         RevealDirective,
+        NgTemplateOutlet,
+        PrototypeSwitcherComponent,
+        ProtoSortMenuComponent,
+        ProtoSortRailComponent,
+        ProtoSortInlineComponent,
     ],
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.less',
@@ -115,6 +134,41 @@ export class SettlementsComponent {
      * Текущий маршрут.
      */
     private readonly route = inject(ActivatedRoute);
+
+    /**
+     * ПРОТОТИП, НЕ ПРОДАКШН: ключ варианта панели сортировки из `?variant=`.
+     * Действует только в dev-сборке; в проде адрес игнорируется.
+     * Удалить вместе с папкой sort-prototype, когда вариант выбран.
+     */
+    protected readonly protoVariant = toSignal(
+        this.route.queryParamMap.pipe(
+            map((params) => {
+                const variant = params.get('variant');
+
+                if (environment.production || !(PROTO_VARIANTS as readonly string[]).includes(variant ?? '')) {
+                    return null;
+                }
+
+                return variant;
+            }),
+        ),
+        { initialValue: null },
+    );
+
+    /**
+     * Ключи вариантов для панели переключения.
+     */
+    protected readonly protoVariants: string[] = [...PROTO_VARIANTS];
+
+    /**
+     * Человекочитаемые имена вариантов для панели переключения.
+     */
+    protected readonly protoNames: Record<string, string> = {
+        base: 'текущая: ряды чипов',
+        menu: 'одна строка, списки из кнопок',
+        rail: 'сортировка и фильтры боковой панелью',
+        inline: 'сортировка сегментами, фильтры за кнопкой',
+    };
 
     /**
      * Поисковая строка: название надела или ник жителя.
@@ -274,8 +328,7 @@ export class SettlementsComponent {
      * @param event Событие ввода.
      */
     protected onQueryInput(event: Event): void {
-        this.query.set((event.target as HTMLInputElement).value);
-        this.syncQueryParams();
+        this.setQuery((event.target as HTMLInputElement).value);
     }
 
     /**
@@ -397,6 +450,50 @@ export class SettlementsComponent {
     protected getSortDirection(field: SortField): SortDirection | null {
         return this.sortState().field === field ? this.sortState().direction : null;
     }
+
+    /**
+     * Меняет направление сортировки текущего поля.
+     */
+    protected flipSort(): void {
+        const current = this.sortState();
+        this.sortState.set({ field: current.field, direction: current.direction === 'desc' ? 'asc' : 'desc' });
+    }
+
+    /**
+     * Меняет поисковую строку и адрес страницы.
+     *
+     * @param value Строка поиска.
+     */
+    protected setQuery(value: string): void {
+        this.query.set(value);
+        this.syncQueryParams();
+    }
+
+    /**
+     * Количество наделов после применения фильтров.
+     */
+    protected readonly foundCount = computed(() => this.filteredSettlements().length);
+
+    /**
+     * Управление списком наделов для вариантов прототипа сортировки.
+     */
+    protected readonly protoControls: ProtoControls = {
+        sortState: this.sortState,
+        sortKeys: this.sortKeys,
+        query: this.query,
+        loading: this.loading,
+        typeOptions: this.typeOptions,
+        courseOptions: this.courseOptions,
+        typeFilter: this.typeFilter,
+        courseFilter: this.courseFilter,
+        foundCount: this.foundCount,
+        setSort: (field) => this.setSort(field),
+        flipSort: () => this.flipSort(),
+        setQuery: (value) => this.setQuery(value),
+        toggleType: (value) => this.toggleType(value),
+        toggleCourse: (value) => this.toggleCourse(value),
+        resetFilters: () => this.resetFilters(),
+    };
 
     /**
      * Проверяет, является ли надел закреплённым.

@@ -35,10 +35,10 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1102 | core, entities, features, layout, routes, shared |
+| src/app | 1112 | core, entities, features, layout, routes, shared |
 | core/ | 61 | config, guards, i18n, interceptors, services, types |
 | entities/ | 203 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki |
-| features/ | 654 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
+| features/ | 664 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
 | layout/ | 27 | background-scene, footer, header |
 | routes/ | 5 | enums |
 | shared/ | 147 | lib, styles, ui |
@@ -77,7 +77,7 @@
 | features/reactions | 6 | ui, api | да | 2 |
 | features/referral | 5 | — | да | 2 |
 | features/rules | 83 | ui, model, config | да | 1 |
-| features/settlements | 71 | — | **нет** | — |
+| features/settlements | 81 | — | **нет** | — |
 | features/start-game | 3 | — | **нет** | — |
 | features/support | 12 | ui, api, lib | да | 3 |
 | features/verification | 4 | model, api | да | 4 |
@@ -164,7 +164,7 @@
 | footer | 2.9 | — |
 | gallery | 2.6 | /gallery |
 | header | 2.6 | — |
-| home | 9.0 | / |
+| home | 8.8 | / |
 | key-points | 83.4 | /key-points |
 | legal | 68.7 | /privacy-policy, /public-offer |
 | lfg | 15.4 | /lfg |
@@ -177,7 +177,7 @@
 | profile | 23.3 | /profile |
 | referral | 1.5 | /profile/referral |
 | rules | 253.8 | /rules |
-| settlements | 55.4 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
+| settlements | 55.7 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared | 27.9 | — |
 | tickets | 13.6 | /profile/support, /profile/support/:id, /profile/admin |
 | videos | 2.0 | /videos |
