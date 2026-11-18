@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
     SettlementService,
@@ -23,12 +21,6 @@ import { I18nService, TranslatePipe } from '@core/i18n';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { SettlementFinderService } from './settlement-finder/settlement-finder.service';
 import { RevealDirective } from '@shared/lib/directives';
-import { environment } from '@core/config/environments/environment';
-import { PrototypeSwitcherComponent } from '@shared/ui/prototype-switcher';
-import { ProtoControls } from './sort-prototype/proto-controls.model';
-import { ProtoSortMenuComponent } from './sort-prototype/proto-sort-menu.component';
-import { ProtoSortRailComponent } from './sort-prototype/proto-sort-rail.component';
-import { ProtoSortInlineComponent } from './sort-prototype/proto-sort-inline.component';
 
 /**
  * Поле сортировки списка селений.
@@ -64,12 +56,6 @@ const PINNED_SETTLEMENT_NAME = 'Поместье Эренхольд';
 const PINNED_SETTLEMENT_TYPE_LABEL = 'Поместье наместника';
 
 /**
- * ПРОТОТИП, НЕ ПРОДАКШН: ключи вариантов панели сортировки в `?variant=`.
- * Удалить вместе с папкой sort-prototype, когда вариант выбран.
- */
-const PROTO_VARIANTS = ['base', 'menu', 'rail', 'inline'] as const;
-
-/**
  * Компонент страницы списка селений.
  */
 @Component({
@@ -83,11 +69,6 @@ const PROTO_VARIANTS = ['base', 'menu', 'rail', 'inline'] as const;
         TranslatePipe,
         TuiIcon,
         RevealDirective,
-        NgTemplateOutlet,
-        PrototypeSwitcherComponent,
-        ProtoSortMenuComponent,
-        ProtoSortRailComponent,
-        ProtoSortInlineComponent,
     ],
     templateUrl: './settlements.component.html',
     styleUrl: './settlements.component.less',
@@ -136,39 +117,21 @@ export class SettlementsComponent {
     private readonly route = inject(ActivatedRoute);
 
     /**
-     * ПРОТОТИП, НЕ ПРОДАКШН: ключ варианта панели сортировки из `?variant=`.
-     * Действует только в dev-сборке; в проде адрес игнорируется.
-     * Удалить вместе с папкой sort-prototype, когда вариант выбран.
+     * Ключ открытого списка панели: sort, filters или null — всё закрыто.
      */
-    protected readonly protoVariant = toSignal(
-        this.route.queryParamMap.pipe(
-            map((params) => {
-                const variant = params.get('variant');
+    protected readonly openMenu = signal<'sort' | 'filters' | null>(null);
 
-                if (environment.production || !(PROTO_VARIANTS as readonly string[]).includes(variant ?? '')) {
-                    return null;
-                }
-
-                return variant;
-            }),
-        ),
-        { initialValue: null },
+    /**
+     * Подсказка кнопки направления сортировки.
+     */
+    protected readonly directionTitle = computed(() =>
+        this.i18n.translate(this.sortState().direction === 'asc' ? 'settlements.list.sortAsc' : 'settlements.list.sortDesc'),
     );
 
     /**
-     * Ключи вариантов для панели переключения.
+     * Число активных фильтров для значка на кнопке.
      */
-    protected readonly protoVariants: string[] = [...PROTO_VARIANTS];
-
-    /**
-     * Человекочитаемые имена вариантов для панели переключения.
-     */
-    protected readonly protoNames: Record<string, string> = {
-        base: 'текущая: ряды чипов',
-        menu: 'одна строка, списки из кнопок',
-        rail: 'сортировка и фильтры боковой панелью',
-        inline: 'сортировка сегментами, фильтры за кнопкой',
-    };
+    protected readonly activeFilters = computed(() => (this.typeFilter() ? 1 : 0) + (this.courseFilter() ? 1 : 0));
 
     /**
      * Поисковая строка: название надела или ник жителя.
@@ -470,30 +433,30 @@ export class SettlementsComponent {
     }
 
     /**
-     * Количество наделов после применения фильтров.
+     * Открывает указанный список панели и закрывает соседний.
+     *
+     * @param menu Ключ списка.
      */
-    protected readonly foundCount = computed(() => this.filteredSettlements().length);
+    protected toggleMenu(menu: 'sort' | 'filters'): void {
+        this.openMenu.set(this.openMenu() === menu ? null : menu);
+    }
 
     /**
-     * Управление списком наделов для вариантов прототипа сортировки.
+     * Закрывает открытый список панели по клику на подложку.
      */
-    protected readonly protoControls: ProtoControls = {
-        sortState: this.sortState,
-        sortKeys: this.sortKeys,
-        query: this.query,
-        loading: this.loading,
-        typeOptions: this.typeOptions,
-        courseOptions: this.courseOptions,
-        typeFilter: this.typeFilter,
-        courseFilter: this.courseFilter,
-        foundCount: this.foundCount,
-        setSort: (field) => this.setSort(field),
-        flipSort: () => this.flipSort(),
-        setQuery: (value) => this.setQuery(value),
-        toggleType: (value) => this.toggleType(value),
-        toggleCourse: (value) => this.toggleCourse(value),
-        resetFilters: () => this.resetFilters(),
-    };
+    protected closeMenu(): void {
+        this.openMenu.set(null);
+    }
+
+    /**
+     * Выбирает поле сортировки из списка и закрывает список.
+     *
+     * @param field Поле сортировки.
+     */
+    protected pickSort(field: SortField): void {
+        this.setSort(field);
+        this.openMenu.set(null);
+    }
 
     /**
      * Проверяет, является ли надел закреплённым.
