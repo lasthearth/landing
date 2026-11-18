@@ -5,13 +5,15 @@
  * Запуск:
  *   node scripts/visual-check.mjs --url '/settlements?nowelcome' --out /tmp/shot.png
  *   node scripts/visual-check.mjs --width 390 --clip 500 --auth --out /tmp/m.png
+ *   node scripts/visual-check.mjs --selector '.recruit-poster' --out /tmp/block.png
  *
  * Флаги:
- *   --url    путь на dev-сервере (по умолчанию '/?nowelcome');
- *   --width  ширина вьюпорта, px (по умолчанию 1440);
- *   --clip   высота области скриншота от верха, px (по умолчанию 560);
- *   --auth   подставить вход игрока в состояние шапки (имя ripls, баланс, аватар);
- *   --out    файл скриншота (обязательный).
+ *   --url      путь на dev-сервере (по умолчанию '/?nowelcome');
+ *   --width    ширина вьюпорта, px (по умолчанию 1440);
+ *   --clip     высота области скриншота от верха, px (по умолчанию 560);
+ *   --selector снять только элемент по CSS-селектору вместо области от верха;
+ *   --auth     подставить вход игрока в состояние шапки (имя ripls, баланс, аватар);
+ *   --out      файл скриншота (обязательный).
  */
 import { chromium } from 'playwright';
 
@@ -75,7 +77,17 @@ if (flags.auth) {
 }
 
 await page.waitForTimeout(800);
-await page.screenshot({ path: flags.out, clip: { x: 0, y: 0, width, height: clip } });
-console.log(`Скриншот: ${flags.out} (${width}x${clip})`);
+
+if (flags.selector) {
+    const target = page.locator(flags.selector);
+
+    await target.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(400);
+    await target.screenshot({ path: flags.out });
+    console.log(`Скриншот элемента ${flags.selector}: ${flags.out}`);
+} else {
+    await page.screenshot({ path: flags.out, clip: { x: 0, y: 0, width, height: clip } });
+    console.log(`Скриншот: ${flags.out} (${width}x${clip})`);
+}
 
 await browser.close();

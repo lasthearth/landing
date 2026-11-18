@@ -11,18 +11,14 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { environment } from '@core/config/environments/environment';
 import { AnalyticsService } from '@core/services/analytics.service';
-import { ServerInformationService } from '@core/services/server-information.service';
-import { SettlementService } from '@entities/settlement';
 import { DiscordGalleryImage, DiscordGalleryService } from '@shared/lib/discord-gallery/discord-gallery.service';
 import { buildThumbUrl } from '@shared/lib/discord-gallery/discord-thumb-url.function';
 import { readShotCaption } from '@shared/lib/discord-gallery/read-shot-caption.function';
 import { formatShortDate } from '@shared/lib/relative-time';
-import { formatServerTime } from '@app/layout/header/lib/format-server-time.function';
 import { catchError, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RevealDirective } from '@shared/lib/directives';
-import { PulseStat } from './model/pulse-stat.interface';
 import { UpcomingEventComponent } from '@features/events';
 import { LfgTickerComponent } from '@features/lfg';
 import { ModsNoticeComponent } from '@shared/ui/mods-notice';
@@ -96,16 +92,6 @@ export class HomeComponent {
      * Subject для принудительного обновления списка.
      */
     private readonly refresh$ = new Subject<void>();
-
-    /**
-     * Сервис информации о сервере (онлайн, игровое время).
-     */
-    private readonly serverInfo = inject(ServerInformationService);
-
-    /**
-     * Сервис наделов (счётчик для пульса).
-     */
-    private readonly settlementService = inject(SettlementService);
 
     /**
      * Сервис галереи скриншотов.
@@ -295,50 +281,6 @@ export class HomeComponent {
         { icon: '@tui.flame', key: 'events' },
         { icon: '@tui.users', key: 'promo' },
     ] as const;
-
-    /**
-     * Текущий онлайн сервера из общего SSE-потока.
-     */
-    protected readonly online = toSignal(
-        this.serverInfo.watchServerInfo$().pipe(
-            map((info) => ({ online: info.online, max_online: info.max_online })),
-            catchError(() => of(null))
-        ),
-        { initialValue: null }
-    );
-
-    /**
-     * Текущее игровое время мира (локализованное) из общего SSE-потока.
-     */
-    protected readonly worldTime = toSignal(
-        this.serverInfo.watchServerInfo$().pipe(
-            map((info) => formatServerTime(info.time, this.i18n.language())),
-            catchError(() => of(null))
-        ),
-        { initialValue: null }
-    );
-
-    /**
-     * Количество одобренных наделов сервера.
-     */
-    protected readonly settlementsCount = toSignal(
-        this.settlementService.getSettlements().pipe(
-            map((list) => list.length),
-            catchError(() => of(null))
-        ),
-        { initialValue: null }
-    );
-
-    /**
-     * Метрики «Пульса сервера» для отрисовки одним циклом.
-     * Собраны в один список, чтобы три идентичные карточки не дублировались
-     * в шаблоне: расходились подписи и разметка при каждой правке.
-     */
-    protected readonly pulseStats = computed<readonly PulseStat[]>(() => [
-        { icon: '@tui.users', labelKey: 'home.pulse.online', value: this.online()?.online ?? null, swap: true },
-        { icon: '@tui.clock', labelKey: 'home.pulse.worldTime', value: this.worldTime() },
-        { icon: '@tui.castle', labelKey: 'home.pulse.settlements', value: this.settlementsCount() },
-    ]);
 
     /**
      * Последние скриншоты из галереи для ленты на главной.

@@ -35,10 +35,10 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1103 | core, entities, features, layout, routes, shared |
+| src/app | 1102 | core, entities, features, layout, routes, shared |
 | core/ | 61 | config, guards, i18n, interceptors, services, types |
 | entities/ | 203 | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki |
-| features/ | 655 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
+| features/ | 654 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
 | layout/ | 27 | background-scene, footer, header |
 | routes/ | 5 | enums |
 | shared/ | 147 | lib, styles, ui |
@@ -57,7 +57,7 @@
 | features/faq | 3 | — | **нет** | — |
 | features/gallery | 10 | lib | да | 1 |
 | features/game-chat | 11 | ui, model, lib | да | 3 |
-| features/home | 5 | model | да | 1 |
+| features/home | 4 | — | да | 1 |
 | features/hunger-games | 2 | api | да | 1 |
 | features/key-points | 42 | ui, model, lib, config | да | 1 |
 | features/landing | 2 | — | **нет** | — |
@@ -164,7 +164,7 @@
 | footer | 2.9 | — |
 | gallery | 2.6 | /gallery |
 | header | 2.6 | — |
-| home | 10.8 | / |
+| home | 9.0 | / |
 | key-points | 83.4 | /key-points |
 | legal | 68.7 | /privacy-policy, /public-offer |
 | lfg | 15.4 | /lfg |

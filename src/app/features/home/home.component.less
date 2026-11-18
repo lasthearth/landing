@@ -118,125 +118,169 @@
 }
 
 /**
- * Панель блока приглашения в команду.
+ * Афиша набора в команду: градиентное небо, слот картинки в правом нижнем
+ * углу и нумерованный список направлений на линейках. Панелей и карточек
+ * нет — контраст держат кегль и воздух (принято по варианту B прототипа).
  */
-.recruit-panel {
-    background-color: var(--lh-surface);
-    background-image: url('/image_1.webp');
-    background-repeat: repeat;
+.recruit-poster {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.75rem;
+    /* Органический градиент в духе pryzm.design: три мягких пятна углей
+       поверх тёмной рампы. Зерно ниже убирает полосатость переходов. */
+    background-color: var(--lh-night-deep);
+    background-image:
+        radial-gradient(56% 78% at 10% 0%, color-mix(in srgb, var(--lh-brand) 30%, transparent), transparent 68%),
+        radial-gradient(52% 64% at 92% 100%, color-mix(in srgb, var(--lh-brand-deep) 60%, transparent), transparent 70%),
+        radial-gradient(34% 46% at 72% 8%, color-mix(in srgb, var(--lh-gold) 16%, transparent), transparent 72%),
+        linear-gradient(
+            148deg,
+            color-mix(in srgb, var(--lh-night-deep) 72%, black) 0%,
+            var(--lh-night-deep) 46%,
+            color-mix(in srgb, var(--lh-night-deep) 42%, black) 100%
+        );
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+    isolation: isolate;
 }
 
-/**
- * Карточка метрики «Пульса сервера».
- * Геометрия и поверхность приходят из .lh-panel--bezel, здесь только
- * реакция на курсор и медальон иконки.
- * Ховер: подъём на transform (пружина), свечение рамки — на псевдоэлементе
- * с прозрачностью, чтобы не перерисовывать тень каждый кадр.
- */
-.pulse-card {
+/* Мелкое зерно поверх градиента: убирает бандинг, даёт фактуру как у Pryzm. */
+.recruit-poster::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.recruit-poster__content {
     position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
+    gap: 1rem;
+    padding: 1.75rem 1.25rem 2rem;
 
-    &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        pointer-events: none;
-        opacity: 0;
-        box-shadow:
-            inset 0 1px 1px rgba(255, 255, 255, 0.14),
-            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
-            var(--lh-shadow-lift);
-        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    @media (min-width: 768px) {
+        padding: 2.5rem 2.75rem 2.25rem;
     }
+}
+
+.recruit-poster__title {
+    max-width: 16ch;
+    margin: 0;
+    color: var(--lh-parchment);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 0.95;
+    text-transform: uppercase;
+
+    @media (min-width: 768px) {
+        font-size: 3.25rem;
+    }
+}
+
+.recruit-poster__cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.recruit-poster__card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: 1rem;
+    background-color: color-mix(in srgb, var(--lh-parchment) 5%, transparent);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 0 1px color-mix(in srgb, var(--lh-parchment) 12%, transparent);
+    transition:
+        transform var(--lh-dur-fast) var(--lh-ease-spring),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
 
     @media (hover: hover) and (pointer: fine) {
         &:hover {
-            transform: translateY(-4px);
-        }
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-        &:hover::after {
-            opacity: 1;
-        }
-    }
-
-    /**
-     * Ядро растягивается на всю оправу: в сетке карточки разной высоты,
-     * и без этого рамка снизу оказывалась толще, чем сверху.
-     */
-    .lh-panel__core {
-        flex: 1 1 auto;
-    }
-}
-
-/**
- * Медальон иконки метрики.
- * Цвет фона на ховере меняется мгновенно (цвет, не движение), свечение —
- * на псевдоэлементе с прозрачностью.
- */
-.pulse-card__icon {
-    position: relative;
-    background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
-    color: var(--lh-brand-ink);
-    box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 22%, transparent),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
-
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        pointer-events: none;
-        opacity: 0;
-        box-shadow:
-            inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 30%, transparent),
-            0 0 16px color-mix(in srgb, var(--lh-accent) 30%, transparent);
-        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-        .pulse-card:hover & {
-            background-color: color-mix(in srgb, var(--lh-brand) 22%, transparent);
-        }
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-        .pulse-card:hover &::before {
-            opacity: 1;
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 45%, transparent),
+                0 8px 20px -12px color-mix(in srgb, var(--lh-brand) 55%, transparent);
         }
     }
 }
 
-:host-context(html[data-theme='dark']) {
-    .pulse-card::after {
-        box-shadow:
-            inset 0 1px 1px rgba(255, 255, 255, 0.06),
-            inset 0 0 0 1px rgba(233, 223, 201, 0.09),
-            var(--lh-shadow-lift);
-    }
+.recruit-poster__medal {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    color: var(--lh-brand-lit);
+    background-color: color-mix(in srgb, var(--lh-brand) 16%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 26%, transparent);
+}
 
-    .pulse-card__icon {
-        color: var(--lh-accent-soft);
+.recruit-poster__name {
+    color: var(--lh-parchment);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.recruit-poster__act {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem 1.5rem;
+    margin-top: 0.75rem;
+}
+
+.recruit-poster__cta {
+    font-size: 1.125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+}
+
+.recruit-poster__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--lh-parchment-2);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
+
+    &:hover {
+        color: var(--lh-brand-lit);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .pulse-card,
-    .pulse-card::after,
-    .pulse-card__icon::before {
+    .recruit-poster__card,
+    .recruit-poster__link {
         transition: none;
     }
 
-    @media (hover: hover) and (pointer: fine) {
-        .pulse-card:hover {
-            transform: none;
-        }
+    .recruit-poster__card:hover {
+        transform: none;
     }
 }
 

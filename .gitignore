@@ -57,3 +57,8 @@ Thumbs.db
 RULES_EDIT.md
 shots/
 .build.lock
+
+# Прогоны агентов: ворк-три, скиллы и их лок не принадлежат репозиторию
+.agents/
+.claude/
+skills-lock.json

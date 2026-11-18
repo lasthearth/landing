@@ -85,6 +85,10 @@ node scripts/i18n-tool.mjs set rules rules.title "Новый заголовок"
 `jasmine.createSpy()` и `spyOn()`, тип `Mocked<T>` вместо `jasmine.SpyObj<T>`,
 `firstValueFrom()` вместо колбэка `done: DoneFn`.
 
+Запускайте тесты только этими командами. Прямой `npx vitest` не читает цель `test`
+в `angular.json`: он собирает спеки и из `.agents/worktrees/`, где резолвинг псевдонимов
+`@core/*` падает, и прогон заканчивается шестью ошибками импорта.
+
 ## Что есть, но не настроено
 
 - **codegraph**: в корне лежит индекс `.codegraph/` (~11 MB), но CLI не установлен и MCP-сервер не подключён,
