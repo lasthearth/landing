@@ -186,13 +186,18 @@
 
 .recruit-poster__cards {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 0.75rem;
     margin: 1rem 0 0;
     padding: 0;
     list-style: none;
 
-    @media (min-width: 768px) {
+    /* Две колонки режут длинные названия на телефоне: одна до 640 px. */
+    @media (min-width: 640px) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (min-width: 1024px) {
         grid-template-columns: repeat(4, 1fr);
     }
 }
@@ -226,12 +231,16 @@
     display: grid;
     flex-shrink: 0;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 1.75rem;
+    height: 1.75rem;
     border-radius: 50%;
     color: var(--lh-brand-lit);
     background-color: color-mix(in srgb, var(--lh-brand) 16%, transparent);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-brand) 26%, transparent);
+
+    tui-icon {
+        font-size: 0.875rem;
+    }
 }
 
 .recruit-poster__name {
