@@ -106,7 +106,9 @@ const steps = [
     // а голый eslint валится на них и не показывает нового.
     { name: 'ESLint', args: ['scripts/lint.mjs'] },
     // Правила проекта проверяются своими тестами: правило без теста — догадка.
-    { name: 'Тесты правил линтера', args: ['--test', 'tools/eslint-rules/'] },
+    // Файл назван явно: `node --test` с каталогом на Node 24 запускает каталог как
+    // модуль и падает с MODULE_NOT_FOUND (локально Node 26 вёл себя иначе).
+    { name: 'Тесты правил линтера', args: ['--test', 'tools/eslint-rules/index.test.mjs'] },
 ];
 
 if (FULL) {

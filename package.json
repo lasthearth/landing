@@ -25,7 +25,7 @@
         "context:cost": "node scripts/check-context-budget.mjs",
         "format": "prettier --write AGENTS.md AGENT_RULES_MAP.md README.md docs package.json",
         "format:check": "prettier --check AGENTS.md AGENT_RULES_MAP.md README.md docs package.json",
-        "lint:rules": "node --test tools/eslint-rules/"
+        "lint:rules": "node --test tools/eslint-rules/index.test.mjs"
     },
     "private": true,
     "dependencies": {
