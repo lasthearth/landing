@@ -111,7 +111,7 @@ export class PlayerPageComponent {
                 )
             )
         ),
-        { initialValue: { status: 'loading' } as PlayerPageState }
+        { initialValue: { status: 'loading' } }
     );
 
     /**

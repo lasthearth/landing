@@ -131,13 +131,13 @@
         <div class="flex flex-wrap items-center justify-between gap-3">
             <p class="text-xl md:text-2xl lg:text-3xl font-bold text-ink">{{ 'news.create.previewTitle' | translate }}</p>
             <div class="lh-chips" role="tablist" [attr.aria-label]="'news.create.previewTitle' | translate">
-                @for (mode of ['featured', 'compact', 'page']; track mode) {
+                @for (mode of previewModes; track mode) {
                     <button
                         type="button"
                         role="tab"
                         class="lh-chip"
                         [attr.aria-selected]="previewMode() === mode"
-                        (click)="previewMode.set($any(mode))"
+                        (click)="previewMode.set(mode)"
                     >
                         {{ 'news.create.previewModes.' + mode | translate }}
                     </button>

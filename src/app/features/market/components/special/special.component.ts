@@ -233,7 +233,7 @@ export class SpecialComponent implements OnDestroy {
         }
 
         const original = parseInt(item.price.replace(/\D/g, ''), 10);
-        const current = parseInt(item.effectivePrice!.replace(/\D/g, ''), 10);
+        const current = parseInt((item.effectivePrice ?? item.price).replace(/\D/g, ''), 10);
 
         if (!original || !current) {
             return 0;
@@ -254,7 +254,7 @@ export class SpecialComponent implements OnDestroy {
         }
 
         const original = parseInt(item.price.replace(/\D/g, ''), 10);
-        const current = parseInt(item.effectivePrice!.replace(/\D/g, ''), 10);
+        const current = parseInt((item.effectivePrice ?? item.price).replace(/\D/g, ''), 10);
 
         if (!original || !current || original <= current) {
             return '';

@@ -219,7 +219,7 @@
                                     class="wiki-review__input"
                                     [value]="reason()"
                                     [attr.placeholder]="'wiki.admin.review.rejectPlaceholder' | translate"
-                                    (input)="reason.set($any($event.target).value)"
+                                    (input)="reason.set(readInputValue($event))"
                                 />
                             </label>
                             <div class="wiki-review__actions">

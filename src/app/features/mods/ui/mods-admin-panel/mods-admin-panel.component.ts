@@ -18,6 +18,7 @@ import {
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
+import { readInputValue } from '@shared/lib/read-input-value.function';
 import { LHInputComponent } from '@shared/ui/lh-input/lh-input.component';
 import { AdminListSkeletonComponent } from '@shared/ui/skeletons';
 import { filter, finalize, switchMap } from 'rxjs';
@@ -67,6 +68,11 @@ const NOTE_MAX = 160;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModsAdminPanelComponent implements OnInit {
+
+    /**
+     * Достаёт текст из события ввода: проверка `instanceof` вместо `$any`.
+     */
+    protected readonly readInputValue = readInputValue;
     private readonly api = inject(ServerModApiService);
     private readonly i18n = inject(I18nService);
     private readonly alerts = inject(TuiAlertService);

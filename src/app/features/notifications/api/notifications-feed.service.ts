@@ -272,7 +272,8 @@ export class NotificationsFeedService {
         }
 
         this.userId = userId;
-        const stored = this.storage.getItem<ReadState>(this.storageKey()!);
+        const key = this.storageKey();
+        const stored = key ? this.storage.getItem<ReadState>(key) : null;
         this.readBroadcasts.set(new Set(Array.isArray(stored?.ids) ? stored.ids : []));
         this.readLocally.set(new Set());
         this.raw.set([]);

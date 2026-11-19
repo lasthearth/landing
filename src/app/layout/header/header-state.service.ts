@@ -98,7 +98,7 @@ export class HeaderState {
      * {@link Observable} Баланса донат-валюты авторизованного пользователя.
      */
     private readonly balance$: Observable<string | null> = this.userService.authSettled$.pipe(
-        filter((isAuth): isAuth is true => isAuth === true),
+        filter((isAuth): isAuth is true => isAuth),
         switchMap(() =>
             this.donateService.watchMyBalance$().pipe(
                 map((response) => response.coins),

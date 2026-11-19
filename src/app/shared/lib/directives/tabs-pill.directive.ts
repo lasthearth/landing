@@ -96,32 +96,34 @@ export class TabsPillDirective implements OnDestroy {
      * Создаёт плашку и наблюдателей после первой отрисовки ряда:
      * к этому моменту кнопки уже имеют реальные размеры.
      */
-    private readonly mount = afterNextRender(() =>
-        this.zone.runOutsideAngular(() => {
-            const host = this.elementRef.nativeElement;
+    public constructor() {
+        afterNextRender(() =>
+            this.zone.runOutsideAngular(() => {
+                const host = this.elementRef.nativeElement;
 
-            host.classList.add('lh-tabs-pill');
+                host.classList.add('lh-tabs-pill');
 
-            const pill = document.createElement('span');
-            pill.className = 'lh-tabs-pill__el';
-            pill.setAttribute('aria-hidden', 'true');
+                const pill = document.createElement('span');
+                pill.className = 'lh-tabs-pill__el';
+                pill.setAttribute('aria-hidden', 'true');
 
-            const face = document.createElement('span');
-            face.className = 'lh-tabs-pill__face';
-            pill.appendChild(face);
+                const face = document.createElement('span');
+                face.className = 'lh-tabs-pill__face';
+                pill.appendChild(face);
 
-            host.prepend(pill);
-            this.pill = pill;
+                host.prepend(pill);
+                this.pill = pill;
 
-            this.selection = new MutationObserver(() => this.syncSelection(true));
-            this.selection.observe(host, { attributeFilter: ['aria-selected'], subtree: true });
+                this.selection = new MutationObserver(() => this.syncSelection(true));
+                this.selection.observe(host, { attributeFilter: ['aria-selected'], subtree: true });
 
-            this.resize = new ResizeObserver(() => this.syncSelection(false));
-            this.resize.observe(host);
+                this.resize = new ResizeObserver(() => this.syncSelection(false));
+                this.resize.observe(host);
 
-            this.syncSelection(false);
-        }),
-    );
+                this.syncSelection(false);
+            }),
+        );
+    }
 
     /**
      * @inheritdoc

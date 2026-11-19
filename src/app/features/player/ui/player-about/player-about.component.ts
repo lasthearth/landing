@@ -14,6 +14,7 @@ import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { PlayersApiService } from '@entities/user';
 import { GrpcCode } from '@shared/lib/grpc-code.constant';
+import { readInputValue } from '@shared/lib/read-input-value.function';
 import { grpcStatusCode } from '@shared/lib/grpc-status-code.function';
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ABOUT_MAX_LINES, ABOUT_MAX_SYMBOLS, ABOUT_WARN_SYMBOLS } from '../../config/about-limits.constant';
@@ -40,6 +41,11 @@ const SAVED_NOTICE_MS = 3000;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerAboutComponent {
+
+    /**
+     * Достаёт текст из события ввода: проверка `instanceof` вместо `$any`.
+     */
+    protected readonly readInputValue = readInputValue;
     private readonly api = inject(PlayersApiService);
 
     /**

@@ -14,7 +14,7 @@ import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { scoreSettlement } from './score-settlement.function';
-import { FinderActivity, FinderAnswers, FinderMatch, FinderSize, FinderStyle } from './settlement-finder.model';
+import { FinderAnswers, FinderMatch } from './settlement-finder.model';
 
 /**
  * Сколько наделов показать в итоге.
@@ -55,26 +55,26 @@ export class SettlementFinderComponent {
         {
             key: 'style',
             options: [
-                { value: 'peace' as FinderStyle, icon: '@tui.wheat' },
-                { value: 'neutral' as FinderStyle, icon: '@tui.scale' },
-                { value: 'war' as FinderStyle, icon: '@tui.swords' },
-                { value: 'any' as FinderStyle, icon: '@tui.shuffle' },
+                { value: 'peace', icon: '@tui.wheat' },
+                { value: 'neutral', icon: '@tui.scale' },
+                { value: 'war', icon: '@tui.swords' },
+                { value: 'any', icon: '@tui.shuffle' },
             ],
         } satisfies FinderQuestion<'style'>,
         {
             key: 'size',
             options: [
-                { value: 'small' as FinderSize, icon: '@tui.user' },
-                { value: 'medium' as FinderSize, icon: '@tui.users' },
-                { value: 'large' as FinderSize, icon: '@tui.castle' },
-                { value: 'any' as FinderSize, icon: '@tui.shuffle' },
+                { value: 'small', icon: '@tui.user' },
+                { value: 'medium', icon: '@tui.users' },
+                { value: 'large', icon: '@tui.castle' },
+                { value: 'any', icon: '@tui.shuffle' },
             ],
         } satisfies FinderQuestion<'size'>,
         {
             key: 'activity',
             options: [
-                { value: 'online' as FinderActivity, icon: '@tui.radio' },
-                { value: 'any' as FinderActivity, icon: '@tui.moon' },
+                { value: 'online', icon: '@tui.radio' },
+                { value: 'any', icon: '@tui.moon' },
             ],
         } satisfies FinderQuestion<'activity'>,
     ];

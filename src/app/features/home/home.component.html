@@ -111,7 +111,7 @@
     — адрес сервера (с копированием), версия игры, инструкция и Discord.
     Раньше здесь были две отдельные плитки «Где IP?» и «Discord» с пустым местом справа.
 -->
-@if (isAuthed()) {
+@else {
     <section class="lh-page-container pb-0" [attr.aria-label]="'home.server.label' | translate">
         <div class="server-strip">
             <div class="server-strip__field">

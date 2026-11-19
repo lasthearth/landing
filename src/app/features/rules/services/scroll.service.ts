@@ -187,7 +187,6 @@ export class ScrollService {
 
         // Поднимаемся вверх по дереву и собираем все sectionId
         while (currentElement) {
-            // Ищем родительские rule-section
             const ruleSection = currentElement.closest('app-rule-section') as HTMLElement | null;
             if (ruleSection) {
                 const sectionId = ruleSection.getAttribute('sectionid');

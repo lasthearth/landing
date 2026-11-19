@@ -59,7 +59,7 @@
                         state="loading"
                         [file]="file"
                         (remove)="removeFile(key)"
-                    ></tui-file>
+                    />
                 }
 
                 @if (form.get(key)?.value; as file) {
@@ -68,18 +68,18 @@
                             state="error"
                             [file]="file"
                             (remove)="removeFile(key)"
-                        ></tui-file>
+                        />
                     }
 
                     @if (form.get(key)?.valid && (file | tuiFileRejected: { accept: 'image/*' } | async) === null) {
                         <tui-file
                             [file]="file"
                             (remove)="removeFile(key)"
-                        ></tui-file>
+                        />
                     }
                 }
 
-                <tui-error [formControl]="getControl(key)" [error]="[] | tuiFieldError | async"></tui-error>
+                <tui-error [formControl]="getControl(key)" [error]="[] | tuiFieldError | async" />
             </tui-files>
         </div>
     }

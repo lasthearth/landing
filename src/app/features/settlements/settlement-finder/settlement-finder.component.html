@@ -30,7 +30,7 @@
                 <button
                     type="button"
                     class="finder__option"
-                    [class.finder__option--chosen]="$any(answers())[q.key] === option.value"
+                    [class.finder__option--chosen]="answers()[q.key] === option.value"
                     (click)="choose(q.key, option.value)"
                 >
                     <tui-icon [icon]="option.icon" class="finder__option-icon" />

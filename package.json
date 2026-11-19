@@ -12,7 +12,7 @@
         "test:coverage": "ng test --watch=false --code-coverage",
         "test:browser": "ng run last-hearth-landing:test-browser",
         "test:ci": "npm run test && npm run test:browser",
-        "lint": "eslint src eslint.config.mjs",
+        "lint": "node scripts/lint.mjs",
         "bootstrap": "npm ci",
         "history": "node scripts/history-tool.mjs",
         "verify": "node scripts/verify.mjs",
@@ -24,7 +24,8 @@
         "i18n": "node scripts/i18n-tool.mjs",
         "context:cost": "node scripts/check-context-budget.mjs",
         "format": "prettier --write AGENTS.md AGENT_RULES_MAP.md README.md docs package.json",
-        "format:check": "prettier --check AGENTS.md AGENT_RULES_MAP.md README.md docs package.json"
+        "format:check": "prettier --check AGENTS.md AGENT_RULES_MAP.md README.md docs package.json",
+        "lint:rules": "node --test tools/eslint-rules/index.test.mjs"
     },
     "private": true,
     "dependencies": {

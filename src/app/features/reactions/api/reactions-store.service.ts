@@ -80,9 +80,9 @@ export class ReactionsStoreService {
     private pending = new Set<string>();
 
     /**
-     * Таймер ближайшей пачки.
+     * Запланирована ли отправка ближайшей пачки.
      */
-    private flushTimer: ReturnType<typeof setTimeout> | null = null;
+    private flushScheduled = false;
 
     /**
      * Вошёл ли игрок.
@@ -136,7 +136,10 @@ export class ReactionsStoreService {
         this.known.add(target);
         this.pending.add(target);
 
-        this.flushTimer ??= setTimeout(() => this.flush(), BATCH_DELAY);
+        if (!this.flushScheduled) {
+            this.flushScheduled = true;
+            setTimeout(() => this.flush(), BATCH_DELAY);
+        }
     }
 
     /**
@@ -188,7 +191,7 @@ export class ReactionsStoreService {
      * Отправляет накопленную пачку целей.
      */
     private flush(): void {
-        this.flushTimer = null;
+        this.flushScheduled = false;
 
         const targets = [...this.pending];
         this.pending = new Set();

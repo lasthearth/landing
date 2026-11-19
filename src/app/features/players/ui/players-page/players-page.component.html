@@ -11,7 +11,7 @@
                     class="players-page__input"
                     [value]="search()"
                     [attr.placeholder]="'players.search' | translate"
-                    (input)="onSearchInput($any($event.target).value)"
+                    (input)="onSearchInput(readInputValue($event))"
                 />
             </span>
         </label>

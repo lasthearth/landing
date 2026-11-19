@@ -38,6 +38,7 @@
             role="combobox"
             aria-haspopup="listbox"
             [attr.aria-expanded]="dropdownOpen()"
+            [attr.aria-controls]="inputId + '-listbox'"
             [id]="inputId"
             [attr.aria-label]="label() ? null : ariaLabel() || placeholder()"
             [disabled]="disabled"
@@ -61,7 +62,7 @@
     }
 
     @if (type() === "select") {
-        <div [class.dropdown--open]="dropdownOpen()" class="dropdown" role="listbox">
+        <div [class.dropdown--open]="dropdownOpen()" [id]="inputId + '-listbox'" class="dropdown" role="listbox">
             @for (item of items(); track $index) {
                 <button
                     type="button"

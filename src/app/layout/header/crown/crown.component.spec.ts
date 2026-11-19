@@ -481,7 +481,7 @@ describe('CrownComponent на сервере', () => {
     afterEach(() => {
         fixture.destroy();
         vi.unstubAllGlobals();
-        Reflect.deleteProperty(document as unknown as Record<string, unknown>, 'fonts');
+        Reflect.deleteProperty(document, 'fonts');
     });
 
     it('рендерится без замеров: полоса скрыта до гидратации и после перехода', async () => {

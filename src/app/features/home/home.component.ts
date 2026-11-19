@@ -379,18 +379,6 @@ export class HomeComponent {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     /**
-     * Прокручивает к блоку новостей, когда они загрузились и в адресе есть `#news`.
-     * Ждём загрузки, иначе скелетоны и карусель сдвинут блок после прокрутки.
-     */
-    private readonly scrollToNews = effect(() => {
-        if (!this.isBrowser || this.fragment() !== 'news' || this.loading()) {
-            return;
-        }
-
-        requestAnimationFrame(() => document.getElementById('news')?.scrollIntoView({ block: 'start' }));
-    });
-
-    /**
      * Новости от новых к старым; новости без даты — в конце.
      */
     protected readonly sortedNews = computed(() =>
@@ -425,6 +413,21 @@ export class HomeComponent {
      * Флаг, указывающий, авторизован ли текущий пользователь.
      */
     readonly isAuthenticated = toSignal(this.userService.authState$, { initialValue: false });
+
+    /**
+     * Регистрирует прокрутку к блоку новостей, когда они загрузились
+     * и в адресе есть `#news`. Ждём загрузки, иначе скелетоны и карусель
+     * сдвинут блок после прокрутки.
+     */
+    public constructor() {
+        effect(() => {
+            if (!this.isBrowser || this.fragment() !== 'news' || this.loading()) {
+                return;
+            }
+
+            requestAnimationFrame(() => document.getElementById('news')?.scrollIntoView({ block: 'start' }));
+        });
+    }
 
     /**
      * Производит переключение изображений в карусели.

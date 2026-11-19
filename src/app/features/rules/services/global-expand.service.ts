@@ -54,7 +54,7 @@ export class GlobalExpandService {
                 this.applyState(true);
                 return true;
             }
-            if (value === true) {
+            if (value) {
                 this.applyState(false);
                 return false;
             }

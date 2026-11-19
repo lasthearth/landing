@@ -224,7 +224,7 @@ export class KitsComponent implements OnDestroy {
      */
     protected openPurchaseDialog(): void {
         const p = this.selectedPrivilege;
-        if (!p || !p.id) {
+        if (!p?.id) {
             return;
         }
 
