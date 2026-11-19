@@ -56,8 +56,11 @@ export class LfgTickerComponent {
         const now = Date.now();
 
         const sessions = posts
-            .filter((post) => post.kind === 'POST_KIND_SESSION' && post.startsAt && post.startsAt.getTime() > now)
-            .sort((a, b) => a.startsAt!.getTime() - b.startsAt!.getTime());
+            .filter(
+                (post): post is LfgPost & { startsAt: Date } =>
+                    post.kind === 'POST_KIND_SESSION' && !!post.startsAt && post.startsAt.getTime() > now
+            )
+            .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime());
 
         if (sessions.length) {
             return sessions[0];

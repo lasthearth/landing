@@ -111,7 +111,7 @@ export class NewsPageComponent {
             switchMap((id) => this.load(id).pipe(startWith<NewsPageState>({ status: 'loading' }))),
             tap((state) => this.onStateChange(state))
         ),
-        { initialValue: { status: 'loading' } as NewsPageState }
+        { initialValue: { status: 'loading' } }
     );
 
     /**

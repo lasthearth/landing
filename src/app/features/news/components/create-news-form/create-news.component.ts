@@ -145,6 +145,11 @@ export class CreateNewsComponent {
     protected readonly previewMode = signal<NewsPreviewMode>('featured');
 
     /**
+     * Режимы предпросмотра по порядку.
+     */
+    protected readonly previewModes: readonly NewsPreviewMode[] = ['featured', 'compact', 'page'];
+
+    /**
      * Идёт публикация.
      */
     protected readonly submitting = signal(false);

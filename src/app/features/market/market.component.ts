@@ -146,28 +146,6 @@ export class MarketComponent {
     }
 
     /**
-     * Прогревает картинки скрытых панелей в простое браузера: ленивая
-     * загрузка не стартует внутри display:none, и первое раскрытие
-     * вкладки платило декодированием всех её картинок в клике.
-     */
-    private readonly warmHiddenImages = afterNextRender(() => {
-        if (typeof requestIdleCallback === 'undefined') {
-            return;
-        }
-
-        requestIdleCallback(
-            () => {
-                for (const image of Array.from(
-                    this.elementRef.nativeElement.querySelectorAll<HTMLImageElement>('img'),
-                )) {
-                    void image.decode().catch(() => undefined);
-                }
-            },
-            { timeout: 4000 },
-        );
-    });
-
-    /**
      * Скрывает уходящую панель, когда её выход доиграл.
      * Чужие `animationend` из глубины сетки и вход входящей панели
      * отбрасываются по имени keyframes и источнику события.
@@ -229,7 +207,7 @@ export class MarketComponent {
      * Запрашивается только после авторизации, при ошибке поток молчит.
      */
     protected readonly balance$: Observable<string> = this.userService.authState$.pipe(
-        filter((isAuth): isAuth is true => isAuth === true),
+        filter((isAuth): isAuth is true => isAuth),
         switchMap(() =>
             this.donateService.getMyBalance$().pipe(
                 map((response) => response.coins),
@@ -237,6 +215,30 @@ export class MarketComponent {
             )
         )
     );
+
+    /**
+     * Прогревает картинки скрытых панелей в простое браузера: ленивая
+     * загрузка не стартует внутри display:none, и первое раскрытие
+     * вкладки платило декодированием всех её картинок в клике.
+     */
+    public constructor() {
+        afterNextRender(() => {
+            if (typeof requestIdleCallback === 'undefined') {
+                return;
+            }
+
+            requestIdleCallback(
+                () => {
+                    for (const image of Array.from(
+                        this.elementRef.nativeElement.querySelectorAll<HTMLImageElement>('img'),
+                    )) {
+                        void image.decode().catch(() => undefined);
+                    }
+                },
+                { timeout: 4000 },
+            );
+        });
+    }
 
     /**
      * Открывает диалог пополнения осколков.

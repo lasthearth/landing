@@ -74,7 +74,7 @@ describe('ModsAdminPanelComponent', () => {
      *
      * @returns Идентификаторы по порядку.
      */
-    const ids = (): string[] => ((panel['mods']() as ServerMod[] | null) ?? []).map((item) => item.id);
+    const ids = (): string[] => ((panel['mods']()) ?? []).map((item) => item.id);
 
     beforeEach(() => {
         registerTranslations(MODS_I18N);

@@ -319,7 +319,7 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
             const sheet = this.host.nativeElement.querySelector('.crown__sheet--menu');
             const plate = sheet?.querySelector('.crown__sheet-body');
 
-            if (sheet && sheet.contains(target) && !(plate && plate.contains(target))) {
+            if (sheet && sheet.contains(target) && !(plate?.contains(target))) {
                 this.closeAll();
             }
         }

@@ -33,16 +33,6 @@ export class AppComponent {
     private readonly router: Router = inject(Router);
 
     /**
-     * Сервис автоматического применения реферального кода из URL (?ref=).
-     */
-    private readonly referralApplier: ReferralApplierService = inject(ReferralApplierService);
-
-    /**
-     * Возвращает игрока на страницу приглашения в надел после входа.
-     */
-    private readonly pendingInvite = inject(PendingInviteService);
-
-    /**
      * Fallback SEO-данные, если роут не содержит своих.
      */
     private readonly defaultSeo: ISeoData = {
@@ -62,6 +52,12 @@ export class AppComponent {
      * для обновления SEO-метатегов.
      */
     public constructor() {
+        // Оба сервиса работают из своего конструктора: применяют реферальный код
+        // из `?ref=` и возвращают игрока на страницу приглашения после входа.
+        // Ссылки на них не нужны — нужен сам факт создания при старте приложения.
+        inject(ReferralApplierService);
+        inject(PendingInviteService);
+
         this.seoService.setSeoTags(this.defaultSeo);
 
         this.router.events

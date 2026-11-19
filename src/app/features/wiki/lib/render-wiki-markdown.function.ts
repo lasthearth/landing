@@ -420,8 +420,14 @@ function renderBlocks(ctx: Ctx, from: number, to: number, top: boolean): string 
         if (RE.quote.test(line)) {
             const parts: string[] = [];
 
-            while (index < to && RE.quote.test(lines[index])) {
-                parts.push(renderInline(ctx, RE.quote.exec(lines[index])![1], index));
+            while (index < to) {
+                const quoteMatch = RE.quote.exec(lines[index]);
+
+                if (!quoteMatch) {
+                    break;
+                }
+
+                parts.push(renderInline(ctx, quoteMatch[1], index));
                 index++;
             }
 
@@ -909,9 +915,14 @@ function renderFootnotes(ctx: Ctx): string {
         return '';
     }
 
-    const items = ctx.footnoteOrder.map((name) => {
-        const def = ctx.footnoteDefs.get(name)!;
-        return `<li id="fn-${name}" data-line="${def.line}">${renderInline(ctx, def.text, def.line)} <a class="wiki-fn__back" href="#fnref-${name}" aria-label="↑">↩</a></li>`;
+    const items = ctx.footnoteOrder.flatMap((name) => {
+        const def = ctx.footnoteDefs.get(name);
+
+        return def
+            ? [
+                  `<li id="fn-${name}" data-line="${def.line}">${renderInline(ctx, def.text, def.line)} <a class="wiki-fn__back" href="#fnref-${name}" aria-label="↑">↩</a></li>`,
+              ]
+            : [];
     });
 
     return `<section class="wiki-footnotes"><div class="wiki-footnotes__title">${escapeHtml(ctx.labels.footnotes)}</div><ol>${items.join('')}</ol></section>`;

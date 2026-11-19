@@ -931,10 +931,11 @@ export class DonateShopPanelComponent implements OnInit {
             const imageUrl = await this.resolveImageUrl();
             const entries = await this.resolveEntries();
             const privileges = this.resolvePrivileges();
+            const editingItemId = this.editingItemId();
 
-            if (this.isEditMode() && this.editingItemId()) {
+            if (this.isEditMode() && editingItemId) {
                 const request: IUpdateShopItemRequest = {
-                    id: this.editingItemId()!,
+                    id: editingItemId,
                     name: values.name.trimEnd(),
                     description: values.description.trimEnd(),
                     price: values.price,
@@ -950,7 +951,7 @@ export class DonateShopPanelComponent implements OnInit {
                 };
 
                 this.submit(
-                    this.donateService.updateShopItem$(this.editingItemId()!, request),
+                    this.donateService.updateShopItem$(editingItemId, request),
                     'admin.shop.updatedSuccess'
                 );
             } else {

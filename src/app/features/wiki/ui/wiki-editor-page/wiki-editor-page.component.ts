@@ -846,10 +846,11 @@ export class WikiEditorPageComponent {
      */
     private async onSaveFailed(error: unknown, status: WikiStatus): Promise<void> {
         const code = grpcStatusCode(error);
+        const articleId = this.articleId();
 
-        if (code === GrpcCode.failedPrecondition && this.articleId()) {
+        if (code === GrpcCode.failedPrecondition && articleId) {
             // Статью изменил другой редактор: показываем свежую версию и даём выбрать.
-            const fresh = await this.store.refresh(this.articleId()!);
+            const fresh = await this.store.refresh(articleId);
 
             if (fresh) {
                 this.saveError.set(false);
@@ -1010,7 +1011,8 @@ export class WikiEditorPageComponent {
 
     protected unpublish(): void {
         this.moreOpen.set(false);
-        this.save('draft');
+        // Отказ разбирает `write` — здесь ждать нечего.
+        void this.save('draft');
     }
 
     // ———————————————— Поля ————————————————
@@ -1143,7 +1145,7 @@ export class WikiEditorPageComponent {
         const file = input.files?.[0];
         input.value = '';
 
-        if (!file || !file.type.startsWith('image/')) {
+        if (!file?.type.startsWith('image/')) {
             return;
         }
 
@@ -1516,7 +1518,9 @@ export class WikiEditorPageComponent {
             this.title.set(meta.get('title') ?? this.title());
             this.slugLocked.set(true);
             this.slug.set(meta.get('slug') || slugify(this.title()));
-            this.sectionId.set(WIKI_SECTIONS.some((item) => item.id === section) ? section! : this.sectionId());
+            this.sectionId.set(
+                section && WIKI_SECTIONS.some((item) => item.id === section) ? section : this.sectionId()
+            );
             this.lead.set(meta.get('lead') ?? '');
             this.tags.set(list('tags').slice(0, MAX_TAGS));
             this.gameVersion.set(meta.get('version') ?? '');
@@ -1639,7 +1643,7 @@ export class WikiEditorPageComponent {
             !event.altKey
         ) {
             event.preventDefault();
-            this.save();
+            void this.save();
         }
     }
 

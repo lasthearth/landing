@@ -47,6 +47,6 @@ describe('getSettlementTier', () => {
 
     it('считает неизвестный тип лагерем', () => {
         expect(getSettlementTier(makeSettlement({ type: 'FORTRESS' }))).toBe(1);
-        expect(getSettlementTier(makeSettlement({ type: undefined as unknown as string }))).toBe(1);
+        expect(getSettlementTier(makeSettlement({ type: undefined }))).toBe(1);
     });
 });

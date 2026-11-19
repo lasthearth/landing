@@ -101,8 +101,12 @@ const steps = [
         name: 'Типы (TS и шаблоны)',
         args: ['node_modules/@angular/compiler-cli/bundles/src/bin/ngc.js', '-p', 'tsconfig.app.json', '--noEmit'],
     },
-    // Держит жёсткое правило 11: `any` и `console.log` не проходят проверку.
-    { name: 'ESLint', args: ['node_modules/eslint/bin/eslint.js', 'src', 'eslint.config.mjs'] },
+    // Держит жёсткое правило 11 (`any`, `console.log`) и правила против слопа:
+    // через `scripts/lint.mjs`, потому что легаси-нарушения заморожены бейзлайном,
+    // а голый eslint валится на них и не показывает нового.
+    { name: 'ESLint', args: ['scripts/lint.mjs'] },
+    // Правила проекта проверяются своими тестами: правило без теста — догадка.
+    { name: 'Тесты правил линтера', args: ['--test', 'tools/eslint-rules/'] },
 ];
 
 if (FULL) {

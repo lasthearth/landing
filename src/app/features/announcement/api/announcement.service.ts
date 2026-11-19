@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { mapDtoToNews, NewsApiService } from '@entities/news';
+import { mapDtoToNews, News, NewsApiService, NewsBanner } from '@entities/news';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { ClockService } from '@shared/lib/clock';
 import { Announcement } from '../model/announcement';
@@ -87,14 +87,14 @@ export class AnnouncementService {
             next: (list) => {
                 const announcements = list
                     .map(mapDtoToNews)
-                    .filter((news) => news.banner)
+                    .filter((news): news is News & { banner: NewsBanner } => !!news.banner)
                     .sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0))
                     .map(
                         (news): Announcement => ({
                             id: news.id,
                             title: news.title,
-                            until: news.banner!.until,
-                            countdown: news.banner!.countdown,
+                            until: news.banner.until,
+                            countdown: news.banner.countdown,
                         })
                     );
 

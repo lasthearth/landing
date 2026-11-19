@@ -172,7 +172,8 @@ export class MyJoinRequestsStore {
      * @returns true, если запрос в процессе.
      */
     public isPending(settlementId: string): boolean {
-        return this.pending()[settlementId] === true;
+        // Ключа может не быть: тогда запроса нет. `Boolean` держит тип честным.
+        return Boolean(this.pending()[settlementId]);
     }
 
     /**

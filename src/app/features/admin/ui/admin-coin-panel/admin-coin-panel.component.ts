@@ -1,6 +1,5 @@
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { TuiDialogService } from '@taiga-ui/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { debounceTime, distinctUntilChanged, filter, switchMap, catchError, of, tap } from 'rxjs';
@@ -61,11 +60,6 @@ export class AdminCoinPanelComponent {
      * Сервис интернационализации.
      */
     private readonly i18n = inject(I18nService);
-
-    /**
-     * Сервис диалогов Taiga UI.
-     */
-    private readonly dialogs = inject(TuiDialogService);
 
     /**
      * Поле управления поиском игрока.

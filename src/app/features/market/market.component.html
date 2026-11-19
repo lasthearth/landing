@@ -1,13 +1,13 @@
 <!-- ПРОТОТИП РЕДИЗАЙНА, НЕ ПРОДАКШН: варианты страницы по ?variant=. -->
 @if (marketProto() === 'prais') {
     <app-proto-prais />
-    <app-prototype-switcher [variants]="protoVariants" [current]="'prais'" [names]="protoNames" />
+    <app-prototype-switcher [variants]="protoVariants" current="prais" [names]="protoNames" />
 } @else if (marketProto() === 'vitrina') {
     <app-proto-vitrina />
-    <app-prototype-switcher [variants]="protoVariants" [current]="'vitrina'" [names]="protoNames" />
+    <app-prototype-switcher [variants]="protoVariants" current="vitrina" [names]="protoNames" />
 } @else if (marketProto() === 'split') {
     <app-proto-split />
-    <app-prototype-switcher [variants]="protoVariants" [current]="'split'" [names]="protoNames" />
+    <app-prototype-switcher [variants]="protoVariants" current="split" [names]="protoNames" />
 } @else {
 <div class="lh-page-container flex flex-col gap-6 lg:gap-8">
     <!-- Шапка: заголовок, баланс и быстрый доступ к пополнению -->

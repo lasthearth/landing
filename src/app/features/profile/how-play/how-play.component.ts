@@ -109,7 +109,9 @@ export class HowPlayComponent {
      * @param value Строка для копирования.
      */
     protected copy(field: 'ip' | 'password', value: string): void {
-        navigator.clipboard.writeText(value).then(() => {
+        // Копирование без ожидания: отметка ставится после ответа буфера обмена,
+        // а недоступность буфера видна по отсутствию отметки.
+        void navigator.clipboard.writeText(value).then(() => {
             this.copied.set(field);
             setTimeout(() => this.copied.set(null), 2000);
         });

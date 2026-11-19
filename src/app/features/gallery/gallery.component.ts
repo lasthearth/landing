@@ -403,23 +403,21 @@ export class GalleryComponent {
         })
     );
 
-    /**
-     * Снимок фактов кладётся в localStorage, когда архив дочитан до конца,
-     * и читается при следующем визите: числа страницы верны сразу, а не после
-     * двадцати секунд чтения страниц.
-     */
-    private readonly saveFactsSnapshot = effect(() => {
-        if (!this.archiveComplete() || !this.isBrowser) {
-            return;
-        }
-
-        this.localStorage.setItem(FACTS_SNAPSHOT_KEY, {
-            savedAt: Date.now(),
-            snapshot: toFactsSnapshot(readArchiveFacts(this.sorted(), TOP_AUTHORS)),
-        });
-    });
-
     public constructor() {
+        // Снимок фактов кладётся в localStorage, когда архив дочитан до конца,
+        // и читается при следующем визите: числа страницы верны сразу, а не после
+        // двадцати секунд чтения страниц.
+        effect(() => {
+            if (!this.archiveComplete() || !this.isBrowser) {
+                return;
+            }
+
+            this.localStorage.setItem(FACTS_SNAPSHOT_KEY, {
+                savedAt: Date.now(),
+                snapshot: toFactsSnapshot(readArchiveFacts(this.sorted(), TOP_AUTHORS)),
+            });
+        });
+
         const fragment = this.route.snapshot.fragment;
 
         this.pendingFragmentId = fragment ? decodeURIComponent(fragment) : null;

@@ -119,7 +119,7 @@ export class SettlementPageComponent {
             switchMap((id) => this.load(id).pipe(startWith<SettlementPageState>({ status: 'loading' }))),
             tap((state) => this.applySeo(state))
         ),
-        { initialValue: { status: 'loading' } as SettlementPageState }
+        { initialValue: { status: 'loading' } }
     );
 
     /**

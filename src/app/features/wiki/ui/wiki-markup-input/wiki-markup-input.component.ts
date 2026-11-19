@@ -1101,7 +1101,7 @@ export class WikiMarkupInputComponent {
                 }
 
                 counter++;
-                const indent = /^\s*/.exec(line)![0];
+                const indent = /^\s*/.exec(line)?.[0] ?? '';
                 const prefix = { list: '- ', ordered: `${counter}. `, check: '- [ ] ', quote: '> ' }[kind];
                 return (kind === 'quote' ? '' : indent) + prefix + line.trimStart().replace(ANY_PREFIX, '');
             })
@@ -1500,7 +1500,7 @@ export class WikiMarkupInputComponent {
         this.playerTimer = setTimeout(() => {
             this.playerTimer = null;
             this.playerSearch = this.settlements.searchUser$(needle).subscribe({
-                next: (response) => this.playerResults.set(response.users as readonly PlayerResult[]),
+                next: (response) => this.playerResults.set(response.users),
                 error: () => this.playerResults.set([]),
             });
         }, 250);

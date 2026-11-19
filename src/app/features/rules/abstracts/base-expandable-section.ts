@@ -92,8 +92,10 @@ export abstract class BaseExpandableSection implements OnInit {
         this.globalExpandService.registerSection(this.sectionId(), this.parentId());
 
         // Восстанавливаем состояние просмотренных подсекций после перезагрузки
-        if (this.wasWatched() && this.parentId()) {
-            this.sectionStateService.markSubsectionWatched(this.parentId()!, this.sectionId());
+        const parentId = this.parentId();
+
+        if (this.wasWatched() && parentId) {
+            this.sectionStateService.markSubsectionWatched(parentId, this.sectionId());
         }
     }
 

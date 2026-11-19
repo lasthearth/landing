@@ -1,7 +1,7 @@
 @if (variant() === "compact") {
     <ul class="badges badges--compact">
         @for (badge of badges(); track badge.key) {
-            <li class="badge badge--{{ badge.tier }}" [title]="'player.badges.' + badge.key + '.text' | translate">
+            <li [class]="'badge badge--' + badge.tier" [title]="'player.badges.' + badge.key + '.text' | translate">
                 <tui-icon [icon]="badge.icon" class="badge__icon" />
                 <span>{{ "player.badges." + badge.key + ".title" | translate }}</span>
             </li>
@@ -10,7 +10,7 @@
 } @else {
     <ul class="badges badges--full">
         @for (badge of badges(); track badge.key) {
-            <li class="badge-card badge-card--{{ badge.tier }}">
+            <li [class]="'badge-card badge-card--' + badge.tier">
                 <span class="badge-card__icon" aria-hidden="true">
                     <tui-icon [icon]="badge.icon" />
                 </span>

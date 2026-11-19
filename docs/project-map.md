@@ -17,7 +17,7 @@
 | `npm run test:coverage` | `ng test --watch=false --code-coverage`                                         |
 | `npm run test:browser`  | `ng run last-hearth-landing:test-browser`                                       |
 | `npm run test:ci`       | `npm run test && npm run test:browser`                                          |
-| `npm run lint`          | `eslint src eslint.config.mjs`                                                  |
+| `npm run lint`          | `node scripts/lint.mjs`                                                         |
 | `npm run bootstrap`     | `npm ci`                                                                        |
 | `npm run history`       | `node scripts/history-tool.mjs`                                                 |
 | `npm run verify`        | `node scripts/verify.mjs`                                                       |
@@ -30,18 +30,19 @@
 | `npm run context:cost`  | `node scripts/check-context-budget.mjs`                                         |
 | `npm run format`        | `prettier --write AGENTS.md AGENT_RULES_MAP.md README.md docs package.json`     |
 | `npm run format:check`  | `prettier --check AGENTS.md AGENT_RULES_MAP.md README.md docs package.json`     |
+| `npm run lint:rules`    | `node --test tools/eslint-rules/`                                               |
 
 ## 2. Слои src/app
 
 | Слой      | Файлов | Внутри                                                                                                                                                                                                                                                                                                                                                                             |
 | --------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| src/app   | 1102   | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                                                   |
+| src/app   | 1103   | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                                                   |
 | core/     | 61     | config, guards, i18n, interceptors, services, types                                                                                                                                                                                                                                                                                                                                |
 | entities/ | 203    | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki                                                                                                                                                                                          |
 | features/ | 654    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
 | layout/   | 27     | background-scene, footer, header                                                                                                                                                                                                                                                                                                                                                   |
 | routes/   | 5      | enums                                                                                                                                                                                                                                                                                                                                                                              |
-| shared/   | 147    | lib, styles, ui                                                                                                                                                                                                                                                                                                                                                                    |
+| shared/   | 148    | lib, styles, ui                                                                                                                                                                                                                                                                                                                                                                    |
 
 ## 3. Слайсы features / entities
 

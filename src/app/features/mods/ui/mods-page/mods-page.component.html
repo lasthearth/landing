@@ -79,7 +79,7 @@
                                 autocomplete="off"
                                 [value]="query()"
                                 [attr.placeholder]="'mods.search' | translate"
-                                (input)="query.set($any($event.target).value)"
+                                (input)="query.set(readInputValue($event))"
                             />
                         </span>
                     </label>

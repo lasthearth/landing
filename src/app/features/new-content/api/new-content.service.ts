@@ -223,7 +223,7 @@ export class NewContentService {
             // Раздел, которого ещё нет в сохранённых (добавлен позже), тоже считаем просмотренным сейчас.
             return Object.fromEntries(
                 SECTIONS.map((section) => [section, Number(stored[section]) || now])
-            ) as SectionTimes;
+            );
         }
 
         const now = Date.now();
