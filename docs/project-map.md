@@ -36,8 +36,8 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1129 | core, entities, features, layout, routes, shared |
-| core/ | 62 | config, guards, i18n, interceptors, services, types |
+| src/app | 1131 | core, entities, features, layout, routes, shared |
+| core/ | 64 | config, guards, i18n, interceptors, services, types |
 | entities/ | 213 | discord, donate, event, hunger-games, kitdef, lfg, mail, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki |
 | features/ | 669 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
 | layout/ | 27 | background-scene, footer, header |

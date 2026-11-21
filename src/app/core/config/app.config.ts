@@ -14,6 +14,7 @@ import { of } from 'rxjs';
 import { routes } from '../../routes/app.routes';
 import { NavPreloadingStrategy } from '../../routes/nav-preloading.strategy';
 import { environment } from './environments/environment';
+import { LOGTO_SCOPES } from './logto-scopes.constant';
 import { TUI_COPY_TEXTS, TUI_FILE_TEXTS, TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 
 /**
@@ -33,45 +34,7 @@ function getConfig() {
         appId: 'u9k3c8kap0lyhhs0o5jn1',
         redirectUri: environment.redirectUri,
         postLogoutRedirectUri: environment.postLogoutRedirectUri,
-        scopes: [
-            'openid',
-            'profile',
-            'email',
-            'roles',
-            'question:create',
-            'question:list',
-            'question:delete',
-            'user:verify',
-            'settlements:manage',
-            'tags:create',
-            'tags:delete',
-            'tags:manage',
-            'donate:coins:add',
-            'donate:coins:deduct',
-            'donate:shop:create',
-            'donate:shop:update',
-            'donate:shop:delete',
-            'donate:purchase:refund',
-            'donate:transaction:list',
-            'donate:purchase:list',
-            'donate:purchase:issue',
-            'donate:wallet:read',
-            'kit:assign',
-            'kit:edit',
-            'kit:list',
-            'kit:read',
-            'hungergames:match:record',
-            'hungergames:season:reset',
-            'hungergames:season:create',
-            'players:nickname:write',
-            'players:nickname:grant',
-            'news:create',
-            'news:delete',
-            'offline_access',
-            'wiki:write',
-            'wiki:review',
-            'tickets:manage',
-        ],
+        scopes: [...LOGTO_SCOPES],
         resource: 'https://api.lasthearth.ru',
     });
 
