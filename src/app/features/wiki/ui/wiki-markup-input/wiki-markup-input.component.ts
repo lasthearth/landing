@@ -108,7 +108,6 @@ interface SuggestState {
  * Все правки идут через `execCommand('insertText')`, поэтому отменяются Ctrl+Z.
  */
 @Component({
-    standalone: true,
     selector: 'app-wiki-markup-input',
     imports: [TuiIcon, TranslatePipe, FormsModule],
     templateUrl: './wiki-markup-input.component.html',
@@ -1102,7 +1101,7 @@ export class WikiMarkupInputComponent {
                 }
 
                 counter++;
-                const indent = /^\s*/.exec(line)![0];
+                const indent = /^\s*/.exec(line)?.[0] ?? '';
                 const prefix = { list: '- ', ordered: `${counter}. `, check: '- [ ] ', quote: '> ' }[kind];
                 return (kind === 'quote' ? '' : indent) + prefix + line.trimStart().replace(ANY_PREFIX, '');
             })
@@ -1501,7 +1500,7 @@ export class WikiMarkupInputComponent {
         this.playerTimer = setTimeout(() => {
             this.playerTimer = null;
             this.playerSearch = this.settlements.searchUser$(needle).subscribe({
-                next: (response) => this.playerResults.set(response.users as readonly PlayerResult[]),
+                next: (response) => this.playerResults.set(response.users),
                 error: () => this.playerResults.set([]),
             });
         }, 250);

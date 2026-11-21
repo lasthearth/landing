@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { from, Observable, map } from 'rxjs';
+import { firstValueFrom, from, Observable, map } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { getUploadSizeRange } from '../lib/upload-size-range.function';
 import {
@@ -86,9 +86,9 @@ export class MediaService {
      * @returns Promise с публичным URL загруженного файла.
      */
     public async uploadFile(file: File, purpose: UploadPurpose): Promise<string> {
-        const targets = await this.createUploadUrls$(
-            this.buildRequest([file], purpose)
-        ).toPromise();
+        const targets = await firstValueFrom(
+            this.createUploadUrls$(this.buildRequest([file], purpose))
+        );
 
         if (!targets || targets.length === 0) {
             throw new Error('MediaService: сервер не вернул цели для загрузки');
@@ -116,9 +116,9 @@ export class MediaService {
 
         for (let i = 0; i < files.length; i += this.maxUploadCount) {
             const chunk = files.slice(i, i + this.maxUploadCount);
-            const targets = await this.createUploadUrls$(
-                this.buildRequest(chunk, purpose)
-            ).toPromise();
+            const targets = await firstValueFrom(
+                this.createUploadUrls$(this.buildRequest(chunk, purpose))
+            );
 
             if (!targets || targets.length !== chunk.length) {
                 throw new Error(

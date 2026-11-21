@@ -130,13 +130,17 @@
     color: var(--lh-ink-2);
     cursor: pointer;
 
-    &:hover {
-        border-color: var(--lh-brand);
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            border-color: var(--lh-brand);
+            color: var(--lh-ink);
+        }
     }
 }
 
-.invite-links__icon-btn--danger:hover {
-    border-color: var(--lh-danger);
-    color: var(--lh-danger-ink);
+@media (hover: hover) and (pointer: fine) {
+    .invite-links__icon-btn--danger:hover {
+        border-color: var(--lh-danger);
+        color: var(--lh-danger-ink);
+    }
 }

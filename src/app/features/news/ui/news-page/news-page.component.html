@@ -7,13 +7,13 @@
     @if (news(); as item) {
         <article class="news-page__article lh-panel">
             @if (item.preview) {
-                <div class="news-page__cover">
+                <div appReveal class="news-page__cover lh-reveal--scale">
                     <app-image-loader [src]="item.preview" [alt]="item.title" [eager]="true" class="block size-full" />
                 </div>
             }
 
             <header class="flex flex-col gap-4">
-                <h1 class="news-page__title lh-display font-bold text-ink uppercase">{{ item.title }}</h1>
+                <h1 appReveal class="news-page__title lh-display font-bold text-ink uppercase">{{ item.title }}</h1>
 
                 <div class="flex flex-wrap items-center gap-2">
                     @if (item.createdAt || item.formattedDate !== "—") {
@@ -40,7 +40,11 @@
                 </div>
             </header>
 
-            <div class="news-page__text lh-rich-text text-ink" [innerHTML]="item.content"></div>
+            <div
+                appReveal
+                class="news-page__text lh-rich-text text-ink lh-reveal--soft"
+                [innerHTML]="item.content"
+            ></div>
 
             <app-reactions class="news-page__reactions" kind="news" [contentId]="item.id" tone="surface" />
         </article>
@@ -53,6 +57,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     @for (other of others(); track other.id) {
                         <app-news-card
+                            appReveal
+                            class="lh-reveal--scale !h-auto w-full"
+                            [appRevealDelay]="$index * 45"
                             variant="compact"
                             [id]="other.id"
                             [title]="other.title"
@@ -61,7 +68,6 @@
                             [date]="other.formattedDate"
                             [createdAt]="other.createdAt"
                             [viewCount]="other.viewCount"
-                            class="!h-auto w-full"
                         />
                     }
                 </div>

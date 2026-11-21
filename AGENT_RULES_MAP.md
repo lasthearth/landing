@@ -6,22 +6,26 @@
 
 ## 1. Источники истины
 
-| Вопрос                                    | Истина                                       |
-| ----------------------------------------- | -------------------------------------------- |
-| Границы слоёв, структура                  | код + `npm run arch`                         |
-| Что где лежит, какие роуты, какие словари | `docs/project-map.md` (генерируется из кода) |
-| Почему так сделано                        | `docs/history.md`                            |
-| Дизайн, i18n, API, поселения              | `docs/*.md`                                  |
-| Контракт бэкенда                          | `API_CONTRACT.md` + живая спека              |
+| Вопрос                                    | Истина                                        |
+| ----------------------------------------- | --------------------------------------------- |
+| Границы слоёв, структура                  | код + `npm run arch`                          |
+| Что где лежит, какие роуты, какие словари | `docs/project-map.md` (генерируется из кода)  |
+| Почему так сделано                        | `docs/history.md`                             |
+| Дизайн, i18n, API, поселения              | `docs/*.md`                                   |
+| Контракт бэкенда                          | `API_CONTRACT.md` + живая спека               |
+| Что запрещено линтером и что заморожено   | `docs/SLOP.md` + `scripts/lint-baseline.json` |
 
 При противоречии документа и кода — верить коду, а документ поправить в том же коммите.
+
+`npm run lint` идёт через `scripts/lint.mjs`, а не через голый `eslint`: правила включены ошибками, а
+легаси-нарушения заморожены бейзлайном. Голый `npx eslint src` печатает весь долг и не отличает новое.
 
 ## 2. Форматирование и бюджеты
 
 - `.prettierrc`: 4 пробела, ширина 120, одинарные кавычки, `semi`, trailing comma es5, LF, финальный newline.
   HTML — двойные кавычки, `htmlWhitespaceSensitivity: ignore`; JSON — двойные кавычки, 4 пробела.
 - `.editorconfig` дублирует это для редакторов; конфликтов с prettier нет.
-- Бюджеты сборки (`angular.json`): initial warn 1.4 MB / error 1.8 MB; `anyComponentStyle` 12/18 kB.
+- Бюджеты сборки (`angular.json`): initial warn 1.4 MB / error 1.8 MB; `anyComponentStyle` 20/24 kB (подняты под CSS прототипов шапки и подвала).
 - Бюджеты агентских документов: `AGENTS.md` ≤ 8 kB, прочие ≤ 48 kB, `docs/history.md` ≤ 120 kB
   (проверка — `npm run context:cost`).
 
@@ -33,22 +37,23 @@
 
 ## 4. Расхождения документации и кода
 
-| Документ говорит                                | На самом деле                                                                                |
-| ----------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `src/app/pages/*`, `src/app/widgets/*`          | каталогов нет; страницы живут в `features/*`                                                 |
-| alias `@widgets/*` «добавить»                   | в `tsconfig.json` его нет; `@pages` есть, но каталога тоже нет                               |
-| `src/app/services/seo.service.ts`               | `src/app/core/services/seo.service.ts`                                                       |
-| `src/app/styles/variables.less`                 | `src/app/shared/styles/variables.less`                                                       |
-| секреты и Discord-прокси на фронте              | удалены: всё через бэкенд `vsservice`, `src/app/entities/discord/api/discord.api.ts`         |
-| `scripts/extract-rules.mjs` для выгрузки правил | скрипта в репозитории нет; выгрузка лежит в `docs/archive/rules-edit.md`                     |
-| «тесты пишем позже»                             | 4 спека существуют (гейтинг поселений, `user.service`, `ability-tag`) и должны быть зелёными |
+| Документ говорит                                | На самом деле                                                                                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/app/pages/*`, `src/app/widgets/*`          | каталогов нет; страницы живут в `features/*`                                                                                                     |
+| alias `@widgets/*` «добавить»                   | в `tsconfig.json` его нет; `@pages` есть, но каталога тоже нет                                                                                   |
+| `src/app/services/seo.service.ts`               | `src/app/core/services/seo.service.ts`                                                                                                           |
+| `src/app/styles/variables.less`                 | `src/app/shared/styles/variables.less`                                                                                                           |
+| секреты и Discord-прокси на фронте              | удалены: всё через бэкенд `vsservice`, `src/app/entities/discord/api/discord.api.ts`                                                             |
+| `scripts/extract-rules.mjs` для выгрузки правил | скрипта в репозитории нет; выгрузка лежит в `docs/archive/rules-edit.md`                                                                         |
+| «тесты пишем позже»                             | 34 спека (206 тестов) лежат рядом с кодом и должны быть зелёными: `npm test` (Vitest, без браузера) + `npm run test:browser` (3 файла про холст) |
 
 ## 5. Известные нестабильности
 
 - `ng build` в песочнице с перехватом вывода падает на `esbuild` (`EPERM`, spawn) — ограничение окружения,
   а не проекта: в обычном терминале сборка проходит. В песочнице типы проверяет `tsc --noEmit` из `npm run verify`.
 - Пререндер `/unauthorized` ранее падал с `TimeoutError`; роут-редирект убран из `routes.txt` (`docs/history.md` §8).
-- `npm test` требует Chrome; без него тесты не запускаются (`docs/TOOLING.md`).
+- `npm test` идёт на Vitest + jsdom и браузер не нужен; Chrome требуется только для `npm run test:browser`
+  (два спека про сжатие картинок — jsdom не даёт `createImageBitmap` и 2D-контекст) (`docs/TOOLING.md`).
 - Легаси-нарушения границ FSD зафиксированы в `scripts/architecture-baseline.json` — `npm run arch` валит только новые.
 
 ## 6. Порядок работы

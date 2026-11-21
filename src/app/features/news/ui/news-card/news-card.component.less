@@ -16,15 +16,15 @@
 .news-card {
     position: relative;
     block-size: 100%;
-    transition:
-        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 /* Отклик карточки: подъём и тёплая фаска вместо свечения и второй тени. */
-.news-card:hover {
-    transform: translateY(-2px);
-    background-color: color-mix(in srgb, var(--lh-brand) 26%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .news-card:hover {
+        transform: translateY(-2px);
+        background-color: color-mix(in srgb, var(--lh-brand) 26%, transparent);
+    }
 }
 
 .news-card__core {
@@ -43,11 +43,13 @@
 }
 
 .news-card__image {
-    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.news-card:hover .news-card__image {
-    transform: scale(1.04);
+@media (hover: hover) and (pointer: fine) {
+    .news-card:hover .news-card__image {
+        transform: scale(1.04);
+    }
 }
 
 .news-card__body {
@@ -73,11 +75,12 @@
     color: var(--lh-ink);
     text-wrap: balance;
     overflow-wrap: anywhere;
-    transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
-.news-card:hover .news-card__title {
-    color: var(--lh-brand-ink);
+@media (hover: hover) and (pointer: fine) {
+    .news-card:hover .news-card__title {
+        color: var(--lh-brand-ink);
+    }
 }
 
 .news-card--featured .news-card__title {
@@ -170,8 +173,10 @@
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.news-card:hover .news-card__more tui-icon {
-    transform: translateX(3px);
+@media (hover: hover) and (pointer: fine) {
+    .news-card:hover .news-card__more tui-icon {
+        transform: translateX(3px);
+    }
 }
 
 .news-card__delete {
@@ -186,14 +191,13 @@
     border-radius: var(--lh-radius-md);
     color: var(--lh-ink-3);
     background-color: color-mix(in srgb, var(--lh-surface-3) 70%, transparent);
-    transition:
-        color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
-.news-card__delete:hover {
-    color: var(--lh-danger-ink);
-    background-color: color-mix(in srgb, var(--lh-danger-soft) 55%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .news-card__delete:hover {
+        color: var(--lh-danger-ink);
+        background-color: color-mix(in srgb, var(--lh-danger-soft) 55%, transparent);
+    }
 }
 
 .news-card__delete tui-icon {

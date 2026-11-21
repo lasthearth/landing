@@ -55,8 +55,10 @@
     color: var(--lh-ink-3);
     cursor: pointer;
 
-    &:hover {
-        background: var(--lh-surface-3);
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: var(--lh-surface-3);
+            color: var(--lh-ink);
+        }
     }
 }

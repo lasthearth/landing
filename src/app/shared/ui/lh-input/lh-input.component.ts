@@ -1,22 +1,17 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import {
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
     ElementRef,
-    EventEmitter,
     forwardRef,
-    HostListener,
     inject,
     input,
-    Input,
     InputSignal,
-    Output,
+    output,
+    OutputEmitterRef,
     signal,
     WritableSignal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 /**
@@ -33,12 +28,14 @@ export type LHInputType = 'input' | 'select' | 'textarea' | 'inputNumber';
  * Компонент многофункционального поля ввода.
  */
 @Component({
-    standalone: true,
     selector: 'lh-input',
-    imports: [CommonModule, TuiIcon],
+    imports: [TuiIcon],
     templateUrl: './lh-input.component.html',
     styleUrl: './lh-input.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(document:click)': 'onDocumentClick($event)',
+    },
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -66,8 +63,9 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
     /**
      * Функция, преобразования сложных объектов в строки для отображения в интерфейсе.
      */
-    @Input()
-    displayWith: (value: T) => string = (v) => String(v);
+    public readonly displayWith: InputSignal<(value: T) => string> = input<(value: T) => string>(
+        (v) => String(v)
+    );
 
     /**
      * Плейсхолдер.
@@ -122,7 +120,7 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
     /**
      * Событие изменения значения.
      */
-    @Output() valueChange = new EventEmitter<T>();
+    public readonly valueChange: OutputEmitterRef<T> = output<T>();
 
     /**
      * Признак того, задизейблено ли поле.
@@ -130,7 +128,7 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
     protected disabled: boolean = false;
 
     /** @inheritdoc */
-    private onChange: (_: any) => void = () => {};
+    private onChange: (value: T | null) => void = () => {};
 
     /** @inheritdoc */
     private onTouched: () => void = () => {};
@@ -141,12 +139,12 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
     }
 
     /** @inheritdoc */
-    public registerOnChange(fn: any): void {
+    public registerOnChange(fn: (value: T | null) => void): void {
         this.onChange = fn;
     }
 
     /** @inheritdoc */
-    public registerOnTouched(fn: any): void {
+    public registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
     }
 
@@ -169,7 +167,6 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
      *
      * @param event Событие клика.
      */
-    @HostListener('document:click', ['$event'])
     protected onDocumentClick(event: MouseEvent): void {
         if (!this.dropdownOpen()) {
             return;
@@ -200,7 +197,7 @@ export class LHInputComponent<T = string> implements ControlValueAccessor {
             return this.value !== null && this.value !== undefined ? String(this.value) : '';
         }
 
-        return this.value !== null && this.value !== undefined ? this.displayWith(this.value) : '';
+        return this.value !== null && this.value !== undefined ? this.displayWith()(this.value) : '';
     }
 
     /**

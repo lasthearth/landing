@@ -12,10 +12,12 @@ import { firstValueFrom } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
+import { RevealDirective } from '@shared/lib/directives';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog/confirm-dialog.service';
 import { grpcStatusCode } from '@shared/lib/grpc-status-code.function';
 import { GrpcCode } from '@shared/lib/grpc-code.constant';
 import { WikiSuggestion, WikiSuggestionStatus, WikiAuthorNameService, WikiArticle, WikiDraft } from '@entities/wiki';
+import { readInputValue } from '@shared/lib/read-input-value.function';
 import { WikiStoreService } from '../../api/wiki-store.service';
 import { lineDiff, DiffLine } from '../../lib/line-diff.function';
 import { compareWikiArticles, WikiFieldChange } from '../../lib/compare-wiki-articles.function';
@@ -44,12 +46,17 @@ interface ReviewDiffLine extends DiffLine {
  */
 @Component({
     selector: 'app-wiki-suggestions',
-    imports: [EmptyStateComponent, TranslatePipe, TuiIcon, WikiArticleViewComponent],
+    imports: [EmptyStateComponent, TranslatePipe, TuiIcon, WikiArticleViewComponent, RevealDirective],
     templateUrl: './wiki-suggestions.component.html',
     styleUrl: './wiki-suggestions.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WikiSuggestionsComponent {
+
+    /**
+     * Достаёт текст из события ввода: проверка `instanceof` вместо `$any`.
+     */
+    protected readonly readInputValue = readInputValue;
     private readonly store = inject(WikiStoreService);
     private readonly i18n = inject(I18nService);
     private readonly authorNames = inject(WikiAuthorNameService);

@@ -273,9 +273,10 @@
     font-size: 1rem;
     font-weight: 800;
     text-decoration: none;
+    /* Рамка-кольцо на ховере меняется мгновенно: анимация box-shadow
+       перекрашивает слой каждый кадр. Цвет фона — токенами. */
     transition:
         background-color var(--lh-dur-fast) var(--lh-ease-smooth),
-        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth),
         color var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
@@ -283,9 +284,11 @@
     background-color: var(--lh-night-2);
     color: var(--lh-parchment-2);
 
-    &:hover {
-        background-color: var(--lh-brand);
-        color: #fff;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--lh-brand);
+            color: #fff;
+        }
     }
 }
 
@@ -293,9 +296,11 @@
     box-shadow: inset 0 0 0 1px var(--lh-border-strong);
     color: var(--lh-ink-2);
 
-    &:hover {
-        box-shadow: inset 0 0 0 2px var(--lh-brand);
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            box-shadow: inset 0 0 0 2px var(--lh-brand);
+            color: var(--lh-brand-ink);
+        }
     }
 }
 

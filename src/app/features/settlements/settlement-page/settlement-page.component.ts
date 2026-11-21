@@ -10,7 +10,6 @@ import {
     getOwnerIds,
     getSettlementDisplayName,
     getSettlementTier,
-    getSettlementTypeByKey,
     getSettlementTypeName,
     getSettlementTypeIcon,
     getSettlementTypeTone,
@@ -34,6 +33,7 @@ import { SettlementDetailSkeletonComponent } from '@shared/ui/skeletons';
 import { JoinRequestButtonComponent, MyJoinRequestsStore } from '../join-request';
 import { SettlementPageState } from './settlement-page-state';
 import { MarkupPipe, newsMarkdownToPlain } from '@shared/lib/news-markdown';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Адрес сайта для канонических ссылок.
@@ -58,7 +58,6 @@ const OTHERS_COUNT = 3;
  * Координаты надела намеренно не выводятся.
  */
 @Component({
-    standalone: true,
     selector: 'app-settlement-page',
     imports: [MarkupPipe, 
         RouterLink,
@@ -74,6 +73,7 @@ const OTHERS_COUNT = 3;
         ImageViewerComponent,
         SettlementDetailSkeletonComponent,
         JoinRequestButtonComponent,
+        RevealDirective,
     ],
     templateUrl: './settlement-page.component.html',
     styleUrl: './settlement-page.component.less',
@@ -119,7 +119,7 @@ export class SettlementPageComponent {
             switchMap((id) => this.load(id).pipe(startWith<SettlementPageState>({ status: 'loading' }))),
             tap((state) => this.applySeo(state))
         ),
-        { initialValue: { status: 'loading' } as SettlementPageState }
+        { initialValue: { status: 'loading' } }
     );
 
     /**
@@ -187,6 +187,12 @@ export class SettlementPageComponent {
                 caption: attachment.desc || getSettlementDisplayName(settlement),
             }));
     });
+
+    /**
+     * Скриншоты без обложки: обложка показана в герое, поэтому мозаика
+     * «Фотографии» не дублирует её и не повторяет один кадр дважды.
+     */
+    protected readonly galleryRest = computed<ImageViewerItem[]>(() => this.gallery().slice(1));
 
     /**
      * Уровень надела (0 — без шкалы).

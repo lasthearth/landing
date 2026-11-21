@@ -3,7 +3,7 @@
 
     <p class="text-base text-lh-danger">{{ 'profile.changeUsername.warning' | translate }}</p>
 
-    <lh-input [placeholder]="'profile.changeUsername.placeholder' | translate" formControlName="newUsername"></lh-input>
+    <lh-input [placeholder]="'profile.changeUsername.placeholder' | translate" formControlName="newUsername" />
     <tui-error formControlName="newUsername" [error]="[] | tuiFieldError | async" />
 
     <div class="lh-dialog-actions">

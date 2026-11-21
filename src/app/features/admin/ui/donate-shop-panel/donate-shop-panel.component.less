@@ -47,8 +47,24 @@
     font-weight: 700;
     cursor: pointer;
 
-    &:hover {
-        text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// Переключатель вида — единственный в панели сегмент с одним активным
+// вариантом: повторяет микровзаимодействие рядов вкладок, неактивный
+// сегмент подаётся к курсору на 3px. Ряд фильтров и сортировки сдвиг
+// не получает: там допускается несколько активных чипов сразу.
+.shop-toolbar__view .lh-chip {
+    transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .shop-toolbar__view .lh-chip:hover:not([aria-pressed='true']) {
+        transform: translateX(3px);
     }
 }
 
@@ -78,8 +94,10 @@
         border-top: 1px solid var(--lh-border);
     }
 
-    &:hover {
-        background: var(--lh-surface-2);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: var(--lh-surface-2);
+        }
     }
 
     &--hidden .shop-row__thumb,
@@ -136,8 +154,10 @@
     white-space: nowrap;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-brand-ink);
+        }
     }
 }
 
@@ -253,9 +273,11 @@
         background-color var(--lh-dur-fast) var(--lh-ease-smooth),
         color var(--lh-dur-fast) var(--lh-ease-smooth);
 
-    &:hover:not(:disabled) {
-        background: var(--lh-surface-3);
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            background: var(--lh-surface-3);
+            color: var(--lh-ink);
+        }
     }
 
     &:disabled {
@@ -263,9 +285,11 @@
         cursor: not-allowed;
     }
 
-    &--danger:hover:not(:disabled) {
-        background: var(--lh-danger-soft);
-        color: var(--lh-danger-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &--danger:hover:not(:disabled) {
+            background: var(--lh-danger-soft);
+            color: var(--lh-danger-ink);
+        }
     }
 }
 

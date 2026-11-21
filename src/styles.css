@@ -1,3 +1,11 @@
+/**
+ * Слой для точечных переопределений утилит Tailwind с !important. Имя слоя
+ * объявлено до @import, поэтому `lh-overrides` раньше `utilities` в порядке
+ * каскада: для !important ранний слой сильнее позднего, и наши правки
+ * перебивают утилиты вида `!rounded-2xl` (см. стык шторки «Сообщества»).
+ */
+@layer lh-overrides;
+
 @import 'tailwindcss';
 
 /**
@@ -22,6 +30,9 @@
 @import './app/shared/styles/appearances/icon.appearance.css';
 @import './app/shared/styles/appearances/hint.appearance.css';
 :root {
+    /* Нативные элементы (скроллбар, инпуты, всплывающие списки) следуют теме. */
+    color-scheme: light;
+
     /**
      * Семантические поверхности (пергамент). Переопределяются в тёмной теме.
      * surface   — основная панель, surface-2 — приподнятая, surface-3/4 — вложенные.
@@ -195,6 +206,12 @@
     --lh-ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
     --lh-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
     --lh-ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
+    /* Разгон-торможение для движения ПО ЭКРАНУ (полёт плашки через ряд):
+       ease-out здесь отдавал половину пути за первые кадры и на длинном
+       плече читался как прыжок с доплыванием. Лёгкий ease-in-out cubic
+       проверялся следом и оказался вялым на этом плече — оставлена
+       более собранная кривая. */
+    --lh-ease-move: cubic-bezier(0.77, 0, 0.175, 1);
 
     /**
      * Шкала отступов — совпадает со шкалой Tailwind (шаг 0.25rem = 4px),
@@ -236,8 +253,13 @@
     --lh-z-overlay: 200;
     --lh-z-modal: 1000;
 
-    /** Шкала длительностей: отклик / переход / появление. */
+    /**
+     * Шкала длительностей: отклик / переход / появление.
+     * `exit` — уход (закрытие) поверхностей: всегда короче `fast`,
+     * чтобы закрытие не догоняло открытие по скорости.
+     */
     --lh-dur-fast: 200ms;
+    --lh-dur-exit: 150ms;
     --lh-dur-mid: 450ms;
     --lh-dur-slow: 800ms;
 
@@ -246,12 +268,8 @@
      * drop-shadow: soft — покой, lift — приподнятое состояние.
      * Цвет берётся из чернил пергамента, не из чистого чёрного.
      */
-    --lh-shadow-soft:
-        0 1px 2px rgba(26, 17, 13, 0.06),
-        0 8px 24px -8px rgba(26, 17, 13, 0.16);
-    --lh-shadow-lift:
-        0 2px 4px rgba(26, 17, 13, 0.07),
-        0 20px 48px -16px rgba(26, 17, 13, 0.28);
+    --lh-shadow-soft: 0 1px 2px rgba(26, 17, 13, 0.06), 0 8px 24px -8px rgba(26, 17, 13, 0.16);
+    --lh-shadow-lift: 0 2px 4px rgba(26, 17, 13, 0.07), 0 20px 48px -16px rgba(26, 17, 13, 0.28);
 }
 
 @theme {
@@ -361,10 +379,6 @@
 
     --color-lh-leader: var(--lh-leader);
 
-    --color-lh-base-01: var(--lh-base-01);
-    --color-lh-base-02: var(--lh-base-02);
-    --color-lh-base-03: var(--lh-base-03);
-
     --color-surface-card: #332c261a;
     --color-surface-card-hover: #332c2626;
     --color-subtle: #332c2633;
@@ -408,7 +422,8 @@
  */
 @font-face {
     font-family: 'LH Dash';
-    src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Roboto'), local('Segoe UI'),
+    src:
+        local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Roboto'), local('Segoe UI'),
         local('DejaVu Sans');
     unicode-range: U+2013-2014;
 }
@@ -466,11 +481,14 @@ html body {
         color: var(--lh-link);
         --tw-font-weight: var(--font-weight-bold);
         font-weight: var(--font-weight-bold);
-        transition: color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер цвета ссылки — мгновенный: уходящие цвета на ховере
+           запрещены motion-скиллом (motion-instant-hover-color). */
     }
 
-    a:hover {
-        color: var(--lh-link-hover);
+    @media (hover: hover) and (pointer: fine) {
+        a:hover {
+            color: var(--lh-link-hover);
+        }
     }
 }
 
@@ -497,6 +515,140 @@ tui-dialog {
     }
 }
 
+/**
+ * Алерты TuiAlertService — карточка-«материал» над контентом.
+ *
+ * Обёртка рисует полупрозрачную поверхность с blur (материал Apple: слой
+ * над контентом, а не вырванный кусок фона), волосковую кромку и тень.
+ * Геометрия notification: колонка иконки — прозрачная border-inline-start
+ * (--t-start), сама иконка — маска на ::before; текст начинается после неё.
+ * Цвета — только токены проекта, поэтому алерт следует теме автоматически;
+ * в тёмной теме ниже подправлены лишь плотности подложки и тонировки.
+ */
+tui-alert[role='alert'] {
+    inline-size: 21rem;
+}
+
+tui-alert {
+    .t-wrapper {
+        background: color-mix(in srgb, var(--lh-surface-2) 90%, transparent) !important;
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: var(--lh-radius-lg);
+        box-shadow:
+            inset 0 0 0 1px color-mix(in srgb, var(--lh-border-strong) 35%, transparent),
+            var(--lh-shadow-lift);
+        overflow: hidden;
+    }
+
+    tui-notification[data-size='m'] {
+        padding: 0.875rem 2.75rem 0.875rem 0;
+
+        &[style*='--t-icon-start:'] {
+            --t-start: 2.75rem;
+        }
+
+        &::before {
+            inset-inline-start: -1.75rem;
+            top: 0.875rem;
+            font-size: 1.25rem;
+        }
+
+        [tuiTitle] {
+            font-size: 0.9375rem;
+            line-height: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--lh-ink);
+        }
+
+        [tuiSubtitle] {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: var(--lh-ink-2);
+        }
+
+        > [tuiIconButton] {
+            top: 0.5rem;
+            inset-inline-end: 0.5rem;
+            inline-size: 1.75rem;
+            block-size: 1.75rem;
+            border-radius: var(--lh-radius-full);
+            color: var(--lh-ink-3);
+            transition:
+                color 150ms ease,
+                background-color 150ms ease;
+
+            &:hover {
+                color: var(--lh-ink);
+                background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent) !important;
+            }
+        }
+    }
+
+    /* Статус несут иконка и лёгкая тонировка; текст остаётся читабельными чернилами */
+    tui-notification[data-appearance='negative'],
+    tui-notification[data-appearance='error'] {
+        background: color-mix(in srgb, var(--lh-danger-ink) 10%, transparent) !important;
+
+        &::before {
+            color: var(--lh-danger-ink) !important;
+        }
+    }
+
+    tui-notification[data-appearance='positive'],
+    tui-notification[data-appearance='success'] {
+        background: color-mix(in srgb, var(--lh-status-done) 10%, transparent) !important;
+
+        &::before {
+            color: var(--lh-status-done) !important;
+        }
+    }
+
+    tui-notification[data-appearance='warning'] {
+        background: color-mix(in srgb, var(--lh-warning-ink) 10%, transparent) !important;
+
+        &::before {
+            color: var(--lh-warning-ink) !important;
+        }
+    }
+
+    tui-notification[data-appearance='info'] {
+        background: color-mix(in srgb, var(--lh-link) 8%, transparent) !important;
+
+        &::before {
+            color: var(--lh-link) !important;
+        }
+    }
+
+    tui-notification[data-appearance='neutral'] {
+        background: transparent !important;
+
+        &::before {
+            color: var(--lh-ink-3) !important;
+        }
+    }
+}
+
+/* Без движения: алерт появляется и уходит без слайда и схлопывания */
+@media (prefers-reduced-motion: reduce) {
+    tui-alert.tui-enter,
+    tui-alert.tui-leave {
+        animation-duration: 1ms !important;
+    }
+
+    tui-alert .t-wrapper {
+        transition: none;
+    }
+}
+
+/* Без прозрачности: материал становится сплошной поверхностью */
+@media (prefers-reduced-transparency: reduce) {
+    tui-alert .t-wrapper {
+        background: var(--lh-surface-2) !important;
+        backdrop-filter: none;
+    }
+}
+
 .main-panel {
     background-color: #e2d7bb;
     background-image: url('/image_1.webp');
@@ -505,6 +657,62 @@ tui-dialog {
     -moz-box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     box-shadow: -12px 4px 8px 0px rgba(0, 0, 0, 0.2);
     border-radius: 0px 0px 16px 16px;
+}
+
+/**
+ * Верх страницы под шапкой: скругление держит обёртка контента маршрута, а не
+ * панель, чтобы первый полноширинный блок (герой с картинкой) не перекрывал
+ * углы своим квадратным краем. `overflow: clip` не создаёт scroll-контейнер,
+ * поэтому sticky внутри страниц продолжает работать.
+ */
+.landing__page {
+    border-radius: var(--lh-radius-lg) var(--lh-radius-lg) 0 0;
+    overflow: clip;
+    /* Верхний радиус контента и нижний радиус шторки меняются одним
+       переходом 60ms без задержки. Их кромки совпадают, поэтому одинаковый
+       радиус сохраняет непрерывный контур на каждом кадре. */
+    transition: border-radius 60ms var(--lh-ease-smooth);
+}
+
+/* Видимую пластину контента рисует внешний `.main-panel` (пергаментный
+   фон и `!rounded-2xl` из шаблона), поэтому её углы меняются вместе
+   с `.landing__page`: тот же короткий морф и в той же фазе. */
+app-landing .main-panel {
+    transition: border-radius 60ms var(--lh-ease-smooth);
+}
+
+/**
+ * Открытая панель «Сообщества» встаёт верхом колонки: скругление верха
+ * уходит с контента на панель, стык панели и контента прямой. Морф в
+ * снятие — первые 60ms: стык шторки в это время летит быстро, и след
+ * угла короткий; долгий морф рисовал чёрные клинья посередине анимации.
+ */
+/* Стык работает только там, где панель «Сообщества» встаёт в колонку.
+   Ниже 768px шторки висят над контентом, и верх контента остаётся круглым. */
+@media (min-width: 768px) {
+    .content-wrapper:has(.crown__sheet--open) .landing__page,
+    .content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
+        transition: border-radius 60ms var(--lh-ease-smooth);
+    }
+
+    .content-wrapper:has(.crown__sheet--open) .landing__page {
+        border-radius: 0;
+    }
+
+    /* Верхние углы пластины заданы утилитой `!rounded-2xl` с !important в слое
+       utilities — перебить её может только !important из раннего слоя. */
+    @layer lh-overrides {
+        .content-wrapper:has(.crown__sheet--open) app-landing .main-panel {
+            border-radius: 0 0 var(--lh-radius-lg) var(--lh-radius-lg) !important;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .landing__page,
+    app-landing .main-panel {
+        transition: none;
+    }
 }
 
 tui-pulse {
@@ -542,15 +750,17 @@ tui-hint {
     padding-block: calc(var(--spacing) * 1.5);
     padding-inline: calc(var(--spacing) * 2.5);
     margin-top: calc(var(--spacing) * 2);
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-spring);
+    /* Анимируется только трансформ нажатия: цвета на ховере меняются
+       мгновенно (motion-instant-hover-color). */
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     &:disabled {
         background-color: var(--lh-success-disabled);
         pointer-events: none;
     }
-    &:hover {
-        background-color: var(--color-lh-success-hover);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--color-lh-success-hover);
+        }
     }
 }
 
@@ -565,11 +775,11 @@ tui-hint {
     padding-block: calc(var(--spacing) * 1.5);
     padding-inline: calc(var(--spacing) * 2.5);
     margin-top: calc(var(--spacing) * 2);
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-spring);
-    &:hover {
-        background-color: var(--color-lh-danger-hover);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--color-lh-danger-hover);
+        }
     }
 }
 
@@ -588,17 +798,17 @@ tui-hint {
     border-radius: var(--radius-xl);
     font-weight: var(--font-weight-bold);
     cursor: pointer;
-    transition:
-        border-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-spring);
+    /* Анимируется только трансформ нажатия: цвета и рамка на ховере
+       меняются мгновенно (motion-instant-hover-color). */
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.lh-secondary-button:hover:not(:disabled) {
-    border-color: var(--lh-accent);
-    color: var(--lh-accent);
-    background-color: rgba(255, 121, 32, 0.08);
+@media (hover: hover) and (pointer: fine) {
+    .lh-secondary-button:hover:not(:disabled) {
+        border-color: var(--lh-accent);
+        color: var(--lh-accent);
+        background-color: rgba(255, 121, 32, 0.08);
+    }
 }
 
 .lh-secondary-button:disabled,
@@ -688,6 +898,7 @@ tui-pulse.offline {
      * с укороченной длительностью — отклик должен успевать за пальцем.
      */
     .nav-button {
+        position: relative;
         font-size: 0.875rem;
         display: flex;
         align-items: center;
@@ -706,11 +917,9 @@ tui-pulse.offline {
         box-shadow:
             inset 0 1px 0 rgba(255, 255, 255, 0.08),
             0 1px 2px rgba(26, 17, 13, 0.12);
-        transition:
-            background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-            color var(--lh-dur-fast) var(--lh-ease-out-quart),
-            transform var(--lh-dur-fast) var(--lh-ease-spring),
-            box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+        /* Анимируется только трансформ: цвета на ховере меняются мгновенно
+           (motion-instant-hover-color), тень ховера живёт на ::after. */
+        transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
     /**
@@ -720,13 +929,34 @@ tui-pulse.offline {
         font-size: 1rem;
     }
 
-    .nav-button:hover {
-        background-color: var(--color-lh-primary);
-        background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
-        transform: translateY(-1px);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.1),
-            0 6px 16px -6px rgba(26, 17, 13, 0.35);
+    /**
+     * Тень ховера на псевдоэлементе: анимация box-shadow перерисовывала
+     * кнопку каждый кадр, а переход opacity композитит слой. Блик внутри
+     * и контактная тень остаются на самой кнопке.
+     */
+    .nav-button::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: 0 6px 16px -6px rgba(26, 17, 13, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .nav-button:not(.nav-button--active):hover::after {
+            opacity: 1;
+        }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .nav-button:hover {
+            background-color: var(--color-lh-primary);
+            background-image: radial-gradient(ellipse at 50% 0%, rgba(184, 115, 51, 0.45) 0%, transparent 60%);
+            transform: translateY(-1px);
+        }
     }
 
     .nav-button:active {
@@ -759,12 +989,14 @@ tui-pulse.offline {
      * Ховер активной кнопки: заливка не светлеет (это уронило бы контраст),
      * усиливается только свечение.
      */
-    .nav-button--active:hover {
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.24),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.28),
-            0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
-            0 8px 22px -6px color-mix(in srgb, var(--lh-brand) 65%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        .nav-button--active:hover {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.24),
+                inset 0 -1px 0 rgba(45, 32, 26, 0.28),
+                0 0 0 1px color-mix(in srgb, var(--lh-accent) 45%, transparent),
+                0 8px 22px -6px color-mix(in srgb, var(--lh-brand) 65%, transparent);
+        }
     }
 
     /**
@@ -799,18 +1031,21 @@ tui-pulse.offline {
             inset 0 -1px 0 rgba(45, 32, 26, 0.3),
             0 0 0 1px color-mix(in srgb, var(--lh-brand) 35%, transparent),
             0 8px 24px -8px color-mix(in srgb, var(--lh-brand) 35%, transparent);
-        transition:
-            transform var(--lh-dur-fast) var(--lh-ease-spring),
-            box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+        /* Анимируется только подъём: усиление свечения на ховере
+           переключается мгновенно — анимация box-shadow перерисовывала
+           кнопку каждый кадр. */
+        transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
-    .lh-cta:hover {
-        transform: translateY(-2px);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.18),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
-            0 0 0 1px color-mix(in srgb, var(--lh-accent) 55%, transparent),
-            0 14px 32px -10px color-mix(in srgb, var(--lh-brand) 50%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.18),
+                inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+                0 0 0 1px color-mix(in srgb, var(--lh-accent) 55%, transparent),
+                0 14px 32px -10px color-mix(in srgb, var(--lh-brand) 50%, transparent);
+        }
     }
 
     .lh-cta:active {
@@ -830,8 +1065,10 @@ tui-pulse.offline {
         transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 
-    .lh-cta:hover .lh-cta__icon {
-        transform: translateX(3px);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta:hover .lh-cta__icon {
+            transform: translateX(3px);
+        }
     }
 
     /**
@@ -847,12 +1084,14 @@ tui-pulse.offline {
             0 8px 24px -8px color-mix(in srgb, var(--lh-leader) 35%, transparent);
     }
 
-    .lh-cta--telegram:hover {
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.18),
-            inset 0 -1px 0 rgba(45, 32, 26, 0.3),
-            0 0 0 1px color-mix(in srgb, var(--lh-leader) 55%, transparent),
-            0 14px 32px -10px color-mix(in srgb, var(--lh-leader) 50%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta--telegram:hover {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.18),
+                inset 0 -1px 0 rgba(45, 32, 26, 0.3),
+                0 0 0 1px color-mix(in srgb, var(--lh-leader) 55%, transparent),
+                0 14px 32px -10px color-mix(in srgb, var(--lh-leader) 50%, transparent);
+        }
     }
 
     /**
@@ -866,9 +1105,11 @@ tui-pulse.offline {
         box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--lh-wood) 40%, transparent);
     }
 
-    .lh-cta--ghost:hover {
-        color: var(--lh-brand-ink);
-        box-shadow: inset 0 0 0 2px var(--lh-brand);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta--ghost:hover {
+            color: var(--lh-brand-ink);
+            box-shadow: inset 0 0 0 2px var(--lh-brand);
+        }
     }
 
     /**
@@ -882,11 +1123,13 @@ tui-pulse.offline {
         box-shadow: inset 0 0 0 2px rgba(240, 230, 210, 0.4);
     }
 
-    .lh-cta--on-dark:hover {
-        color: #fff;
-        box-shadow:
-            inset 0 0 0 2px rgba(255, 170, 92, 0.75),
-            0 14px 32px -12px rgba(255, 121, 32, 0.35);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-cta--on-dark:hover {
+            color: #fff;
+            box-shadow:
+                inset 0 0 0 2px rgba(255, 170, 92, 0.75),
+                0 14px 32px -12px rgba(255, 121, 32, 0.35);
+        }
     }
 
     /**
@@ -934,11 +1177,9 @@ tui-pulse.offline {
         line-height: 1;
         white-space: nowrap;
         cursor: pointer;
-        transition:
-            color var(--lh-dur-fast) ease,
-            border-color var(--lh-dur-fast) ease,
-            background-color var(--lh-dur-fast) ease,
-            box-shadow var(--lh-dur-fast) ease;
+        /* Чипы — частые переключатели фильтров: состояние меняется
+           мгновенно, без анимации (motion-no-motion-on-repeat).
+           Прежний transition с ease-кривой анимировал box-shadow. */
     }
 
     .lh-chip tui-icon {
@@ -948,9 +1189,11 @@ tui-pulse.offline {
         font-size: 1rem;
     }
 
-    .lh-chip:hover:not(:disabled) {
-        border-color: var(--lh-brand);
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-chip:hover:not(:disabled) {
+            border-color: var(--lh-brand);
+            color: var(--lh-brand-ink);
+        }
     }
 
     .lh-chip:focus-visible {
@@ -1008,6 +1251,90 @@ tui-pulse.offline {
         box-shadow: var(--lh-shadow-soft);
     }
 
+    /**
+     * Микровзаимодействие рядов вкладок: неактивная вкладка подаётся на 3px
+     * в сторону курсора, активная стоит на месте. Движение — 150ms пружиной,
+     * только transform. Правила лежат в `@layer components`, а стили
+     * компонентов — вне слоёв, поэтому компонент всегда перебивает их собой:
+     * ряд со своим ховер-трансформом или транзишеном задаёт своё движение
+     * целиком, а не «чинит» эти правила. Вертикальные ряды переопределяют
+     * ось там же, в стилях компонента.
+     */
+    [role='tablist'] > * {
+        transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        [role='tablist'] > :hover:not([aria-selected='true']) {
+            transform: translateX(3px);
+        }
+    }
+
+    /**
+     * Летающая плашка активной вкладки (TabsPillDirective, [appTabsPill]).
+     * Носитель — прозрачный абсолют в паддинг-боксе ряда; transform и ширину
+     * директива пишет в inline-стиль, полёт делает CSS-переход ниже.
+     * Шлейф движения (Echo) здесь не ставится: за плашкой глаз следит
+     * напрямую, blur положен неотслеживаемому движению — а на пропущенных
+     * кадрах копии ещё и вылетали за края ряда с устаревшей шириной.
+     */
+    [role='tablist'].lh-tabs-pill {
+        position: relative;
+    }
+
+    [role='tablist'].lh-tabs-pill > .lh-chip {
+        position: relative;
+    }
+
+    .lh-tabs-pill .lh-tabs-pill__el {
+        position: absolute;
+        top: 0.25rem;
+        bottom: 0.25rem;
+        left: 0;
+        pointer-events: none;
+        /* Единственное намеренное will-change в проекте: элемент один на
+         * ряд и летает при каждом переключении — постоянный композитный
+         * слой дешевле, чем промоушен на каждый полёт. */
+        will-change: transform;
+    }
+
+    /* Полёт плашки: CSS-переход сам интерполирует движение и сам
+     * перехватывает цель посреди полёта; директива пишет только итог
+     * в inline-стиль. Кривая — smooth (вход панелей): быстрый старт
+     * без рывка и длинное торможение; пружина здесь не годилась —
+     * её стартовая скорость вчетверо выше средней, для перелёта на
+     * пару сотен пикселей это читается как дёрганье. Класс вешается
+     * после первой установки, чтобы стартовая позиция не прокатилась
+     * от края ряда. Глобальный kill-switch под prefers-reduced-motion
+     * сжимает переход до 0.01ms. */
+    .lh-tabs-pill .lh-tabs-pill__el.is-placed {
+        transition:
+            transform var(--lh-dur-fast) var(--lh-ease-move),
+            width var(--lh-dur-fast) var(--lh-ease-move);
+    }
+
+    /* Слой без box-shadow: Echo клонирует слой целиком, и 5–8 клонов
+     * с многослойной тенью и plus-lighter-блендингом роняли кадры
+     * на слабых GPU. Глубину ряду даёт его собственная подложка. */
+    .lh-tabs-pill .lh-tabs-pill__face {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 0.625rem;
+        background-color: var(--color-surface-2);
+    }
+
+    /**
+     * Плашка взяла подсветку активной вкладки на себя — заливка кнопки
+     * гаснет, чтобы не рисовать два слоя. До готовности плашки (SSR, нет
+     * JS) кнопка подсвечивается собой глобальным правилом ряда.
+     */
+    [role='tablist'].lh-tabs-pill.is-ready > .lh-chip[aria-selected='true'],
+    [role='tablist'].lh-tabs-pill.is-ready > .lh-chip[aria-selected='true']:hover:not(:disabled) {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
     .lh-chip__count {
         font-size: 0.875rem;
         font-variant-numeric: tabular-nums;
@@ -1049,11 +1376,13 @@ tui-pulse.offline {
         color: var(--color-ink);
         background-color: var(--color-surface-3);
         box-shadow: var(--lh-shadow-soft);
-        transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер цвета — мгновенный (motion-instant-hover-color). */
     }
 
-    .lh-scroll-top:hover {
-        background-color: var(--color-surface-4);
+    @media (hover: hover) and (pointer: fine) {
+        .lh-scroll-top:hover {
+            background-color: var(--color-surface-4);
+        }
     }
 
     @media (max-width: 640px) {
@@ -1072,9 +1401,21 @@ tui-pulse.offline {
             bottom: 5.5rem;
         }
     }
+
+    /**
+     * Фиксированная панель профиля закрывает низ вьюпорта: страница лендинга
+     * получает отступ снизу высотой с панель, чтобы последний блок уходил
+     * над ней при прокрутке. На xl панель стоит сбоку колонки — отступ не нужен.
+     */
+    @media (max-width: 1279px) {
+        body.lh-has-bottom-bar .landing__page {
+            padding-bottom: 5.5rem;
+        }
+    }
 }
 
 html[data-theme='dark'] {
+
     .lh-panel {
         background-color: rgba(233, 223, 201, 0.05);
         box-shadow:
@@ -1117,6 +1458,67 @@ summary {
 button:disabled,
 [aria-disabled='true'] {
     cursor: not-allowed;
+}
+
+/**
+ * Платформенный слой телефона. Три правила отделяют «сайт в браузере»
+ * от установленного приложения:
+ *
+ * 1. Подсветка тапа. iOS и Android кладут серую плёнку на любой элемент
+ *    с обработчиком клика. Она перекрывает собственный отклик на :active,
+ *    поэтому выключена глобально.
+ * 2. Задержка клика. Браузер ждёт второго тапа, чтобы не спутать его
+ *    с двойным зумом. `manipulation` снимает ожидание на управляющих элементах.
+ * 3. Выделение подписи. Долгое нажатие на кнопку выделяло текст и звало
+ *    «Скопировать». Подпись кнопки — не контент, копировать её нельзя.
+ *
+ * `user-select` здесь только у кнопок: у текста страницы выделение остаётся.
+ */
+html {
+    -webkit-tap-highlight-color: transparent;
+
+    /* Ландшафт на телефоне: Safari без этого раздувает кегль абзацев. */
+    -webkit-text-size-adjust: 100%;
+}
+
+button,
+[role='button'],
+a,
+summary,
+label,
+select,
+input[type='checkbox'],
+input[type='radio'] {
+    touch-action: manipulation;
+}
+
+button,
+[role='button'],
+summary {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/**
+ * iOS Safari приближает страницу к полю ввода, если кегль в нём меньше 16px,
+ * и не отдаляет назад: пользователь остаётся с обрезанным, сдвинутым экраном.
+ * `max()` поднимает только мелкие поля — крупные заголовки в формах не меняются.
+ * Запрет масштабирования через `maximum-scale` не годится: он ломает зум страницы.
+ */
+/* Ландшафт с вырезом: контент не уходит под чёлку по бокам.
+   Полоса снизу и шапка держат собственные отступы env(). */
+body {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+}
+
+@media (pointer: coarse) {
+    input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']),
+    textarea,
+    select {
+        font-size: max(16px, 1em);
+    }
 }
 
 /**
@@ -1171,10 +1573,9 @@ button:disabled,
     font-size: 1.125rem;
     font-weight: 700;
     cursor: pointer;
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        filter var(--lh-dur-fast) var(--lh-ease-out-quart),
-        transform var(--lh-dur-fast) var(--lh-ease-spring);
+    /* Без transition: hover меняет заливку и brightness мгновенно —
+       переход filter перерисовывал кнопку каждый кадр, а цвет на ховере
+       не анимируется (motion-instant-hover-color). */
 }
 
 /**
@@ -1185,8 +1586,10 @@ button:disabled,
     color: #ffffff;
 }
 
-.lh-dialog-button-primary:hover {
-    filter: brightness(1.1);
+@media (hover: hover) and (pointer: fine) {
+    .lh-dialog-button-primary:hover {
+        filter: brightness(1.1);
+    }
 }
 
 .lh-dialog-button-primary:disabled {
@@ -1203,8 +1606,10 @@ button:disabled,
     color: #6b6256;
 }
 
-.lh-dialog-button-secondary:hover {
-    background-color: rgba(107, 98, 86, 0.1);
+@media (hover: hover) and (pointer: fine) {
+    .lh-dialog-button-secondary:hover {
+        background-color: rgba(107, 98, 86, 0.1);
+    }
 }
 
 /**
@@ -1215,8 +1620,10 @@ button:disabled,
     color: #ffffff;
 }
 
-.lh-dialog-button-danger:hover {
-    filter: brightness(1.1);
+@media (hover: hover) and (pointer: fine) {
+    .lh-dialog-button-danger:hover {
+        filter: brightness(1.1);
+    }
 }
 
 .lh-dialog-button-danger:disabled {
@@ -1312,37 +1719,157 @@ button:disabled,
 }
 
 /**
- * Плавное появление контента при смене вкладок.
+ * Смена вкладок магазина: контент въезжает со стороны перехода, уходящая
+ * панель лежит поверх входящей и уезжает в противоположную сторону.
+ * Движение запущено пользователем, поэтому вход 200ms (`--lh-dur-fast`),
+ * уход короче — 150ms (`--lh-dur-exit`); панели живут одновременно,
+ * суммарно 200ms. Направление ставит компонент в `data-direction` сцены.
+ * Принято по варианту B прототипа `tabs-motion-prototype` (ветка
+ * dsh-a4de1614-f58b), сам прототип удалён после выбора.
  */
-.market-tab-content {
-    animation: market-tab-fade-in var(--lh-dur-mid) var(--lh-ease-out-quart) both;
+.market-tab-stage {
+    position: relative;
 }
 
-@keyframes market-tab-fade-in {
-    0% {
+.market-tab-content {
+    animation: market-tab-in-right var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+/* Панели вкладок живут постоянно: скрытая не рендерится и не анимируется,
+   а при показе заново проигрывает вход (смена display перезапускает
+   keyframes). Ремоунт на каждый клик перезапускал скелетоны картинок
+   и stagger сетки — см. docs/history.md 3.-35. */
+.market-tab-content--hidden {
+    display: none;
+}
+
+.market-tab-stage[data-direction='-1'] .market-tab-content {
+    animation-name: market-tab-in-left;
+}
+
+/* Уходящая панель растворяется поверх входящей: живой кроссфейд вместо
+   исчезновения за один кадр. Абсолют и z-index выводят её из потока,
+   не трогая раскладку входящей. */
+.market-tab-content--exit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    pointer-events: none;
+    animation: market-tab-out-left var(--lh-dur-exit) var(--lh-ease-out-quart) forwards;
+}
+
+.market-tab-stage[data-direction='-1'] .market-tab-content--exit {
+    animation-name: market-tab-out-right;
+}
+
+@keyframes market-tab-in-right {
+    from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateX(28px);
     }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
+}
+
+@keyframes market-tab-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-28px);
+    }
+}
+
+@keyframes market-tab-out-left {
+    to {
+        opacity: 0;
+        transform: translateX(-28px);
+    }
+}
+
+@keyframes market-tab-out-right {
+    to {
+        opacity: 0;
+        transform: translateX(28px);
+    }
+}
+
+/* Кроссфейд карточки товара ([appSwapFade]): клон старого состояния
+   растворяется поверх нового, живой узел входит масштабом 0.985→1.
+   Только opacity и transform — без раскладки на кадр. */
+.lh-swap-host {
+    position: relative;
+}
+
+.lh-swap-host.lh-swap-enter {
+    animation: lh-swap-in var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+.lh-swap-ghost {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+    animation: lh-swap-out var(--lh-dur-exit) var(--lh-ease-smooth) forwards;
+}
+
+@keyframes lh-swap-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes lh-swap-in {
+    from {
+        opacity: 0;
+        transform: scale(0.985);
+    }
+}
+
+/**
+ * Смена счётчика в телеметрии: новое число проявляется и поднимается на
+ * 0.15em за fast. Движение минимальное — число читают, а не разглядывают,
+ * и меняется оно редко: онлайн приходит из потока по факту изменения.
+ *
+ * Анимация играет на ПОЯВЛЕНИИ узла, а не на смене текста: браузер не
+ * начинает анимацию от нового содержимого. Поэтому носитель класса обязан
+ * пересоздаваться при смене значения — в шаблонах это `@for` с track по
+ * самому числу. Игровое время сюда не подставлять: часы тикают каждые
+ * 5 секунд, и постоянное движение в шапке читается как рябь.
+ */
+.lh-value-swap {
+    display: inline-block;
+    animation: lh-value-swap-in var(--lh-dur-fast) var(--lh-ease-out-quart) both;
+}
+
+@keyframes lh-value-swap-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.15em);
     }
 }
 
 /**
  * Свечение рамки карточки при наведении.
+ *
+ * Свойство translate покрывает лифт `hover:-translate-y-*` из Tailwind v4
+ * (утилиты пишут независимое свойство translate, а не transform), поэтому
+ * подъём карточки действительно анимируется. Длительность fast: ховер
+ * длиннее 300ms запрещён.
  */
 .lh-card-glow {
     transition:
-        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart),
-        transform var(--lh-dur-mid) var(--lh-ease-spring),
-        border-color var(--lh-dur-mid) var(--lh-ease-out-quart);
+        translate var(--lh-dur-fast) var(--lh-ease-spring),
+        transform var(--lh-dur-fast) var(--lh-ease-spring),
+        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart),
+        border-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
-.lh-card-glow:hover {
-    box-shadow:
-        0 0 0 1px rgba(255, 121, 32, 0.35),
-        0 8px 24px rgba(255, 121, 32, 0.12);
+@media (hover: hover) and (pointer: fine) {
+    .lh-card-glow:hover {
+        box-shadow:
+            0 0 0 1px rgba(255, 121, 32, 0.35),
+            0 8px 24px rgba(255, 121, 32, 0.12);
+    }
 }
 
 /**
@@ -1366,6 +1893,37 @@ html.lh-has-session .lh-guest-only {
 }
 
 /**
+ * Кросс-фейд иконки, меняющей состояние (копирование, смена режима, темы).
+ *
+ * Обе иконки всегда в DOM и сложены в одну ячейку grid; скрытая держит
+ * scale(0.25) + blur(4px) + opacity 0, видимая приходит в норму.
+ * Размытие мелкой иконки 16px дёшево — в отличие от больших блоков,
+ * где blur в появлениях запрещён.
+ */
+.lh-icon-swap {
+    position: relative;
+    display: grid;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    place-items: center;
+}
+
+.lh-icon-swap__icon {
+    grid-area: 1 / 1;
+    transition:
+        opacity var(--lh-dur-fast) var(--lh-ease-out-quart),
+        transform var(--lh-dur-fast) var(--lh-ease-spring),
+        filter var(--lh-dur-fast) var(--lh-ease-out-quart);
+}
+
+.lh-icon-swap__icon--hidden {
+    opacity: 0;
+    transform: scale(0.25);
+    filter: blur(4px);
+}
+
+/**
  * Статичное тёплое свечение иконки осколка (валюта).
  * Раньше мерцало бесконечной анимацией; свечение оставлено, движение убрано.
  */
@@ -1374,25 +1932,29 @@ html.lh-has-session .lh-guest-only {
 }
 
 /**
- * Плавное появление элементов списка с задержкой.
- * Применяется к родителю списка.
+ * Появление элементов списка с задержкой.
+ * Применяется к родителю списка. Шаг 40ms — меньше порога 50ms на элемент.
  */
 .lh-stagger-list > * {
     opacity: 0;
     transform: translateY(12px);
     animation: lh-stagger-fade-in var(--lh-dur-mid) var(--lh-ease-out-quart) forwards;
+    /* Строки за пределами десятой каскад не продолжают, но и не
+       обгоняют его: базовая задержка равна шагу 11-й строки,
+       nth-child(1..10) ниже перебивают её меньшими значениями. */
+    animation-delay: 400ms;
 }
 
 .lh-stagger-list > *:nth-child(1) { animation-delay: 0ms; }
-.lh-stagger-list > *:nth-child(2) { animation-delay: 60ms; }
-.lh-stagger-list > *:nth-child(3) { animation-delay: 120ms; }
-.lh-stagger-list > *:nth-child(4) { animation-delay: 180ms; }
-.lh-stagger-list > *:nth-child(5) { animation-delay: 240ms; }
-.lh-stagger-list > *:nth-child(6) { animation-delay: 300ms; }
-.lh-stagger-list > *:nth-child(7) { animation-delay: 360ms; }
-.lh-stagger-list > *:nth-child(8) { animation-delay: 420ms; }
-.lh-stagger-list > *:nth-child(9) { animation-delay: 480ms; }
-.lh-stagger-list > *:nth-child(10) { animation-delay: 540ms; }
+.lh-stagger-list > *:nth-child(2) { animation-delay: 40ms; }
+.lh-stagger-list > *:nth-child(3) { animation-delay: 80ms; }
+.lh-stagger-list > *:nth-child(4) { animation-delay: 120ms; }
+.lh-stagger-list > *:nth-child(5) { animation-delay: 160ms; }
+.lh-stagger-list > *:nth-child(6) { animation-delay: 200ms; }
+.lh-stagger-list > *:nth-child(7) { animation-delay: 240ms; }
+.lh-stagger-list > *:nth-child(8) { animation-delay: 280ms; }
+.lh-stagger-list > *:nth-child(9) { animation-delay: 320ms; }
+.lh-stagger-list > *:nth-child(10) { animation-delay: 360ms; }
 
 @keyframes lh-stagger-fade-in {
     0% {
@@ -1424,20 +1986,45 @@ html.lh-has-session .lh-guest-only {
  * поэтому не заменяют его, но и не должны с ним сочетаться на одном
  * элементе — сложатся две прозрачности.
  */
+/*
+ * Появление при входе во вьюпорт (RevealDirective — единственный механизм).
+ * `will-change` намеренно не задан: элементов с появлением на странице
+ * десятки, постоянный слой на каждый стоил бы памяти и композитинга на
+ * слабых машинах, а браузер и так продвигает элемент в слой на время
+ * перехода. Расстояние настраивается через `--lh-reveal-dy`.
+ */
 .lh-reveal {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(var(--lh-reveal-dy, 28px));
     transition:
         opacity var(--lh-dur-slow) var(--lh-ease-out-quart),
         transform var(--lh-dur-slow) var(--lh-ease-out-quart);
     transition-delay: var(--lh-reveal-delay, 0ms);
-    will-change: opacity, transform;
 }
 
 .lh-reveal.is-visible {
     opacity: 1;
-    transform: translateY(0);
-    will-change: auto;
+    transform: none;
+}
+
+/*
+ * Только прозрачность: для плотных списков, строк таблиц и длинного текста.
+ * Сдвиг десятка соседних строк читается как дрожание списка.
+ */
+.lh-reveal.lh-reveal--soft {
+    transform: none;
+    transition: opacity var(--lh-dur-slow) var(--lh-ease-out-quart);
+}
+
+/*
+ * Лёгкий масштаб вместо сдвига: для карточек и медиаплиток в сетках.
+ * 0.97, а не 0 — ничего не растёт из нуля.
+ */
+/* Масштаб держится только до появления: без :not(.is-visible) правило шло
+   после `.lh-reveal.is-visible` с той же специфичностью и оставляло
+   элемент уменьшенным навсегда (карточки уже сетки на 1.5% с каждого края). */
+.lh-reveal.lh-reveal--scale:not(.is-visible) {
+    transform: scale(0.97);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1445,6 +2032,10 @@ html.lh-has-session .lh-guest-only {
         opacity: 1;
         transform: none;
         transition: none;
+    }
+
+    .lh-reveal.lh-reveal--scale:not(.is-visible) {
+        transform: none;
     }
 }
 
@@ -1479,8 +2070,10 @@ html {
     border: 2px solid #e2d7bb;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #c35a17;
+@media (hover: hover) and (pointer: fine) {
+    ::-webkit-scrollbar-thumb:hover {
+        background: #c35a17;
+    }
 }
 
 /**
@@ -1566,12 +2159,8 @@ html[data-theme='dark'] {
      * Тени на тёмном фоне. Чернильный оттенок здесь не читается,
      * поэтому оба слоя уходят в чистый чёрный и набирают плотность.
      */
-    --lh-shadow-soft:
-        0 1px 2px rgba(0, 0, 0, 0.3),
-        0 8px 24px -8px rgba(0, 0, 0, 0.4);
-    --lh-shadow-lift:
-        0 2px 4px rgba(0, 0, 0, 0.35),
-        0 20px 48px -16px rgba(0, 0, 0, 0.55);
+    --lh-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -8px rgba(0, 0, 0, 0.4);
+    --lh-shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.35), 0 20px 48px -16px rgba(0, 0, 0, 0.55);
 
     --lh-brand-ink: #ff9445;
     --lh-danger-ink: #e88a7c;
@@ -1600,6 +2189,10 @@ html[data-theme='dark'] {
     --tui-text-action: #e07830;
     --tui-text-action-hover: #ffaa5c;
 
+    /* Фоновые переменные Taiga UI (алерты, попапы) */
+    --tui-background-base: #212327;
+    --tui-background-base-alt: #2b2d31;
+
     /* Основные панели */
     .main-panel {
         background-color: #212327;
@@ -1609,6 +2202,34 @@ html[data-theme='dark'] {
     tui-dialog .t-content {
         background-color: #212327 !important;
         background-image: none !important;
+    }
+
+    /* Алерты в тёмной теме: плотнее подложка и тонировки, темнее кромка */
+    tui-alert {
+        .t-wrapper {
+            background: color-mix(in srgb, var(--lh-surface-2) 88%, transparent) !important;
+            box-shadow:
+                inset 0 0 0 1px color-mix(in srgb, var(--lh-border-strong) 45%, transparent),
+                var(--lh-shadow-lift);
+        }
+
+        tui-notification[data-appearance='negative'],
+        tui-notification[data-appearance='error'] {
+            background: color-mix(in srgb, var(--lh-danger-ink) 12%, transparent) !important;
+        }
+
+        tui-notification[data-appearance='positive'],
+        tui-notification[data-appearance='success'] {
+            background: color-mix(in srgb, var(--lh-status-done) 12%, transparent) !important;
+        }
+
+        tui-notification[data-appearance='warning'] {
+            background: color-mix(in srgb, var(--lh-warning-ink) 12%, transparent) !important;
+        }
+
+        tui-notification[data-appearance='info'] {
+            background: color-mix(in srgb, var(--lh-link) 10%, transparent) !important;
+        }
     }
 
     /* Тёмные полупрозрачные панели → светлая альфа */
@@ -1670,8 +2291,10 @@ html[data-theme='dark'] {
         color: #e9dfc9;
     }
 
-    .nav-button:not(.nav-button--active):hover {
-        background-color: #383a40;
+    @media (hover: hover) and (pointer: fine) {
+        .nav-button:not(.nav-button--active):hover {
+            background-color: #383a40;
+        }
     }
 
     /* Поля ввода: цвета берутся из токенов, снимается только текстура пергамента */
@@ -1712,8 +2335,10 @@ html[data-theme='dark'] {
         border-color: rgba(233, 223, 201, 0.4);
         color: #e9dfc9;
 
-        &:hover {
-            background-color: rgba(233, 223, 201, 0.1);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background-color: rgba(233, 223, 201, 0.1);
+            }
         }
     }
 
@@ -1722,10 +2347,12 @@ html[data-theme='dark'] {
         border-color: rgba(233, 223, 201, 0.35);
         color: #e9dfc9;
 
-        &:hover:not(:disabled) {
-            border-color: #ff7920;
-            color: #ff7920;
-            background-color: rgba(255, 121, 32, 0.12);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled) {
+                border-color: #ff7920;
+                color: #ff7920;
+                background-color: rgba(255, 121, 32, 0.12);
+            }
         }
     }
 
@@ -1843,8 +2470,10 @@ html[data-theme='dark'] {
     text-underline-offset: 0.18em;
 }
 
-.lh-rich-text a:hover {
-    text-decoration-thickness: 2px;
+@media (hover: hover) and (pointer: fine) {
+    .lh-rich-text a:hover {
+        text-decoration-thickness: 2px;
+    }
 }
 
 .lh-rich-text code {
@@ -1855,7 +2484,9 @@ html[data-theme='dark'] {
     background: color-mix(in srgb, currentColor 14%, transparent);
 }
 
-/* Спойлер в стиле Discord: текст скрыт заливкой до наведения или фокуса (тап на телефоне) */
+/* Спойлер в стиле Discord: текст скрыт заливкой до наведения или фокуса (тап на телефоне).
+   Заливка уходит мгновенно: цвет на ховере не анимируется (motion-instant-hover-color),
+   прежний transition стоял на запрещённой ease-кривой. */
 .lh-rich-text .lh-spoiler {
     position: relative;
     z-index: 2;
@@ -1863,7 +2494,6 @@ html[data-theme='dark'] {
     border-radius: 0.25em;
     cursor: pointer;
     background: currentColor;
-    transition: background-color 0.2s ease;
 }
 
 .lh-rich-text .lh-spoiler:hover,
@@ -1935,6 +2565,44 @@ body.lh-has-consent .lh-scroll-top {
     body.lh-has-consent.lh-has-bottom-bar .lh-scroll-top {
         bottom: calc(5.5rem + var(--lh-consent-h, 0px));
     }
+}
+
+/**
+ * Открытая модалка (меню шапки, список разделов профиля): страница под
+ * затемнением не прокручивается. Класс ставит и снимает сама модалка.
+ */
+body.lh-lock-scroll {
+    overflow: hidden;
+}
+
+/**
+ * Панель профиля держит `z-20`, а scrim модалки лежит в её контексте наложения:
+ * со своим `--lh-z-modal` он всё равно оставался под чатом и колокольчиком,
+ * у которых сотые слои вне этой панели. Пока модалка открыта, панель
+ * поднимается целиком — тогда затемнение накрывает и плавающие виджеты.
+ */
+body.lh-profile-nav-open .lh-profile-bar {
+    z-index: var(--lh-z-modal);
+}
+
+/**
+ * Шапка держит `z-index: 1` над светом зала, и её шторка-модалка оказывалась
+ * под чатом и плашкой согласия, у которых сотые слои вне шапки. Пока модалка
+ * открыта, шапка поднимается целиком: затемнение накрывает плавающие виджеты.
+ */
+/* `!important` нужен против компонентного правила шапки: Angular дописывает
+   к его селектору два атрибута изоляции стилей, и они перебивают любую
+   глобальную специфичность без важности. */
+body.lh-lock-scroll .crown-fire app-header-crown {
+    z-index: var(--lh-z-modal) !important;
+}
+
+/**
+ * Плашка согласия смонтирована вне layout и своим z-190 перекрывала модалки.
+ * Пока модалка открыта, плашка уходит под затемнение.
+ */
+body.lh-lock-scroll app-consent-banner {
+    z-index: calc(var(--lh-z-modal) - 1);
 }
 
 /*

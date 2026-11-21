@@ -30,8 +30,10 @@
     transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
-.settlement-admin__row:hover {
-    background-color: var(--lh-surface-3);
+@media (hover: hover) and (pointer: fine) {
+    .settlement-admin__row:hover {
+        background-color: var(--lh-surface-3);
+    }
 }
 
 .settlement-admin__row--active {
@@ -73,8 +75,10 @@
     transition: background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
-.settlement-admin__delete:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--lh-danger-ink) 22%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .settlement-admin__delete:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--lh-danger-ink) 22%, transparent);
+    }
 }
 
 .settlement-admin__delete:disabled {

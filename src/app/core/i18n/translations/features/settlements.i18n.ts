@@ -65,6 +65,9 @@ export const SETTLEMENTS_I18N = {
                 filterCourse: 'Курс',
                 found: 'Найдено: {{count}}',
                 reset: 'Сбросить фильтры',
+                filters: 'Фильтры',
+                sortAsc: 'По возрастанию',
+                sortDesc: 'По убыванию',
                 notFound: {
                     title: 'Ничего не найдено',
                     description: 'Попробуйте изменить запрос или сбросить фильтры.',
@@ -79,6 +82,8 @@ export const SETTLEMENTS_I18N = {
                 others: 'Другие наделы',
                 notFoundTitle: 'Надел не найдено',
                 notFoundText: 'Возможно, его распустили или ссылка неверна.',
+                tier: 'Уровень надела',
+                tierOf: '{{tier}} из {{max}}',
             },
             card: {
                 pinned: 'Закреплённое надел',
@@ -562,6 +567,9 @@ export const SETTLEMENTS_I18N = {
                 filterCourse: 'Course',
                 found: 'Found: {{count}}',
                 reset: 'Reset filters',
+                filters: 'Filters',
+                sortAsc: 'Ascending',
+                sortDesc: 'Descending',
                 notFound: {
                     title: 'Nothing found',
                     description: 'Try a different query or reset the filters.',
@@ -576,6 +584,8 @@ export const SETTLEMENTS_I18N = {
                 others: 'Other settlements',
                 notFoundTitle: 'Settlement not found',
                 notFoundText: 'It may have been disbanded or the link is wrong.',
+                tier: 'Settlement tier',
+                tierOf: '{{tier}} of {{max}}',
             },
             card: {
                 pinned: 'Pinned settlement',

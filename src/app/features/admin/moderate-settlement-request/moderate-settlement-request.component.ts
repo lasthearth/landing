@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { SettlementService } from '@entities/settlement';
@@ -11,6 +11,7 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
     imports: [TranslatePipe],
     templateUrl: './moderate-settlement-request.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModerateSettlementRequestComponent {
     /**

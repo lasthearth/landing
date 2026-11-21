@@ -5,10 +5,12 @@ export const PROFILE_I18N = {
                 wiki: 'Вики',
                 howPlay: 'Как играть',
                 stats: 'Статистика',
-                settlement: 'Моё надел',
+                overview: 'Профиль',
+                settlement: 'Мой надел',
                 style: 'Оформление профиля',
+                support: 'Поддержка',
                 referral: 'Пригласить друга',
-                admin: 'Администрирование'
+                admin: 'Администрирование',
             },
             avatar: {
                 alt: 'Аватар пользователя {{name}}',
@@ -251,10 +253,12 @@ export const PROFILE_I18N = {
                 wiki: 'Wiki',
                 howPlay: 'How to play',
                 stats: 'Statistics',
+                overview: 'Profile',
                 settlement: 'My settlement',
                 style: 'Profile style',
+                support: 'Support',
                 referral: 'Invite a friend',
-                admin: 'Administration'
+                admin: 'Administration',
             },
             avatar: {
                 alt: 'Avatar of {{name}}',
@@ -451,7 +455,8 @@ export const PROFILE_I18N = {
                 copy: 'Copy',
                 copied: 'Copied',
                 step3Title: 'Join and settle in',
-                step3Text: 'You are on the server! Read the rules, find a teammate and a settlement — surviving together is easier.',
+                step3Text:
+                    'You are on the server! Read the rules, find a teammate and a settlement — surviving together is easier.',
                 linkRules: 'Rules',
                 linkLfg: 'Find a teammate',
                 linkSettlements: 'Choose a settlement',

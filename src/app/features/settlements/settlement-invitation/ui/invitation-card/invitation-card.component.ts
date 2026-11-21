@@ -16,7 +16,6 @@ import {
     DEFAULT_SETTLEMENT_COVER,
     getDiplomacyTone,
     getSettlementDisplayName,
-    getSettlementTypeByKey,
     getSettlementTypeName,
     getSettlementTypeIcon,
     getSettlementTypeTone,
@@ -39,7 +38,6 @@ import { RequestStatusService } from '@core/services/request-status.service';
  */
 @Component({
     selector: 'app-invitation-card',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe, ImageLoaderComponent, SettlementBadgeComponent],
     templateUrl: './invitation-card.component.html',
     styleUrl: './invitation-card.component.less',

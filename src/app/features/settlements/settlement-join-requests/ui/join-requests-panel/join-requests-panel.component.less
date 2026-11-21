@@ -30,9 +30,6 @@
     border-radius: 0.625rem;
     font-size: 1rem;
     font-weight: 600;
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-out-quart),
-        color var(--lh-dur-fast) var(--lh-ease-out-quart);
 }
 
 .join-requests__action:disabled {
@@ -44,8 +41,10 @@
     background-color: color-mix(in srgb, var(--lh-peace) 12%, transparent);
 }
 
-.join-requests__action--approve:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--lh-peace) 22%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .join-requests__action--approve:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--lh-peace) 22%, transparent);
+    }
 }
 
 .join-requests__action--reject {
@@ -53,12 +52,8 @@
     background-color: color-mix(in srgb, var(--lh-danger-ink) 12%, transparent);
 }
 
-.join-requests__action--reject:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--lh-danger-ink) 22%, transparent);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .join-requests__action {
-        transition: none;
+@media (hover: hover) and (pointer: fine) {
+    .join-requests__action--reject:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--lh-danger-ink) 22%, transparent);
     }
 }

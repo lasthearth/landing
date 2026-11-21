@@ -12,8 +12,7 @@ import { Component } from '@angular/core';
 import { TuiDialogContext, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { PolymorpheusComponent, PolymorpheusContent, PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { TuiPreview, TuiPreviewDialogService } from '@taiga-ui/kit';
-import { IRequestSettlement, isGuildName, getSettlementDisplayName, SettlementDisplayNamePipe } from '@entities/settlement';
-import { ConfirmApproveComponent } from '../confirm-approve/confirm-approve.component';
+import { IRequestSettlement, isGuildName, getSettlementDisplayName } from '@entities/settlement';
 import { ConfirmRejectComponent } from '../confirm-reject/confirm-reject.component';
 import { SettlementService } from '@entities/settlement';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
@@ -26,7 +25,6 @@ import { MarkupPipe } from '@shared/lib/news-markdown';
  * Компонент отображения запроса на верификацию надела.
  */
 @Component({
-    standalone: true,
     selector: 'app-settlement-verification-request',
     imports: [MarkupPipe, PolymorpheusOutlet, TuiPreview, TuiIcon, ImageLoaderComponent, TranslatePipe, WaitingBadgeComponent],
     templateUrl: './settlement-verification-request.component.html',

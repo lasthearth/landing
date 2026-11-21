@@ -16,6 +16,7 @@ import { NewsCardComponent } from '../news-card/news-card.component';
 import { NewsSkeletonComponent } from '../news-skeleton/news-skeleton.component';
 import { NewsPageState } from '../../model/news-page-state';
 import { ReactionsComponent } from '@features/reactions';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Адрес сайта для канонических ссылок.
@@ -36,7 +37,6 @@ const OTHER_NEWS_COUNT = 2;
  * Запрос по id используется только как запасной, если новости нет в списке.
  */
 @Component({
-    standalone: true,
     selector: 'app-news-page',
     imports: [
         RouterLink,
@@ -48,6 +48,7 @@ const OTHER_NEWS_COUNT = 2;
         RelativeTimeComponent,
         ShareButtonComponent,
         ReactionsComponent,
+        RevealDirective,
     ],
     templateUrl: './news-page.component.html',
     styleUrl: './news-page.component.less',
@@ -110,7 +111,7 @@ export class NewsPageComponent {
             switchMap((id) => this.load(id).pipe(startWith<NewsPageState>({ status: 'loading' }))),
             tap((state) => this.onStateChange(state))
         ),
-        { initialValue: { status: 'loading' } as NewsPageState }
+        { initialValue: { status: 'loading' } }
     );
 
     /**

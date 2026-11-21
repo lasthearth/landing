@@ -25,7 +25,6 @@ const TONE_CLASSES: Record<SettlementBadgeTone, string> = {
  * на всех поверхностях: список селений, страница надела, профиль.
  */
 @Component({
-    standalone: true,
     selector: 'app-settlement-badge',
     imports: [TuiIcon],
     template: `

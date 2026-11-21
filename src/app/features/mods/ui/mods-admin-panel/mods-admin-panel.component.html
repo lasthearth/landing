@@ -31,7 +31,7 @@
                     inputmode="url"
                     [value]="link()"
                     [attr.placeholder]="'mods.admin.lookupPlaceholder' | translate"
-                    (input)="link.set($any($event.target).value)"
+                    (input)="link.set(readInputValue($event))"
                 />
             </label>
             <button type="submit" class="lh-cta" [disabled]="looking() || !link().trim()">
@@ -93,7 +93,7 @@
                             [attr.maxlength]="noteMax"
                             [value]="draftNote()"
                             [attr.placeholder]="'mods.admin.notePlaceholder' | translate"
-                            (input)="draftNote.set($any($event.target).value)"
+                            (input)="draftNote.set(readInputValue($event))"
                         ></textarea>
                         <span class="map__hint">{{ "mods.admin.noteHint" | translate }}</span>
                     </label>
@@ -162,7 +162,7 @@
                                         [attr.maxlength]="noteMax"
                                         [attr.aria-label]="'mods.admin.note' | translate"
                                         [value]="editingNote()?.text ?? ''"
-                                        (input)="setNoteDraft($any($event.target).value)"
+                                        (input)="setNoteDraft(readInputValue($event))"
                                     ></textarea>
                                     <div class="map__note-actions">
                                         <button type="button" class="map__link-btn" (click)="editingNote.set(null)">

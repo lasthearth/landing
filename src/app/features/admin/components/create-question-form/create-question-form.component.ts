@@ -15,7 +15,6 @@ import { I18nService, TranslatePipe } from '@core/i18n';
  * Компонент создания вопроса для верификации.
  */
 @Component({
-    standalone: true,
     selector: 'app-create-question-form',
     imports: [
         TuiError,

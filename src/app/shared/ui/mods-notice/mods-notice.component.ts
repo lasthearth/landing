@@ -27,7 +27,6 @@ const HIDDEN_CLASS = 'lh-mods-notice-hidden';
  * плашка не мелькала до загрузки приложения. Пункт «Моды» в меню остаётся.
  */
 @Component({
-    standalone: true,
     selector: 'app-mods-notice',
     imports: [RouterLink, TuiIcon, TranslatePipe],
     templateUrl: './mods-notice.component.html',

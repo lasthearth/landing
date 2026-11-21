@@ -12,18 +12,18 @@
         justify-content: center;
         width: 44px;
         height: 44px;
-        border: 1px solid var(--lh-line);
+        border: 1px solid var(--lh-border);
         border-radius: 0.75rem;
         background-color: var(--lh-surface);
         color: var(--lh-ink);
         cursor: pointer;
-        transition:
-            color var(--lh-dur-fast) var(--lh-ease-out-quart),
-            border-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер цвета — мгновенный (motion-instant-hover-color). */
 
-        &:hover:not(:disabled) {
-            border-color: var(--lh-brand);
-            color: var(--lh-brand-ink);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled) {
+                border-color: var(--lh-brand);
+                color: var(--lh-brand-ink);
+            }
         }
 
         &:disabled {
@@ -52,13 +52,13 @@
         font: inherit;
         font-variant-numeric: tabular-nums;
         cursor: pointer;
-        transition:
-            color var(--lh-dur-fast) var(--lh-ease-out-quart),
-            background-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        /* Ховер и смена текущей страницы — мгновенно (частое действие). */
 
-        &:hover {
-            color: var(--lh-brand-ink);
-            background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: var(--lh-brand-ink);
+                background-color: color-mix(in srgb, var(--lh-brand) 12%, transparent);
+            }
         }
     }
 

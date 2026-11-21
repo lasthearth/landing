@@ -51,7 +51,6 @@ const ANY_LINE_PREFIX = /^(#{1,3}\s+|\s*[-*•]\s+|\s*\d+[.)]\s+|>\s?)/;
  * Значение контрола — исходный текст; в HTML его превращает `renderNewsMarkdown`.
  */
 @Component({
-    standalone: true,
     selector: 'app-markup-editor',
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './markup-editor.component.html',

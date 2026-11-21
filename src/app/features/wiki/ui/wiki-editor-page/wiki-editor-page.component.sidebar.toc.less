@@ -13,8 +13,10 @@
         align-items: center;
         border-radius: 0.625rem;
 
-        &:hover {
-            background: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: color-mix(in srgb, var(--lh-ink) 5%, transparent);
+            }
         }
     }
 }
@@ -57,7 +59,7 @@
 .we__outline-move {
     display: flex;
     opacity: 0;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.15s var(--lh-ease-out-quart);
 
     button {
         display: grid;
@@ -68,9 +70,11 @@
         color: var(--lh-ink-3);
         cursor: pointer;
 
-        &:hover:not(:disabled) {
-            color: var(--lh-ink);
-            background: color-mix(in srgb, var(--lh-ink) 9%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled) {
+                color: var(--lh-ink);
+                background: color-mix(in srgb, var(--lh-ink) 9%, transparent);
+            }
         }
 
         &:disabled {
@@ -166,8 +170,10 @@
         font-size: 1rem;
     }
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-ink) 6%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-ink) 6%, transparent);
+        }
     }
 
     &[data-level='error'] tui-icon {
@@ -272,8 +278,10 @@
         color: var(--lh-link);
         cursor: pointer;
 
-        &:hover {
-            text-decoration: underline;
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                text-decoration: underline;
+            }
         }
     }
 }
@@ -326,9 +334,11 @@
         color: var(--lh-ink-3);
         cursor: pointer;
 
-        &:hover {
-            color: var(--lh-brand-ink);
-            background: color-mix(in srgb, var(--lh-brand) 14%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: var(--lh-brand-ink);
+                background: color-mix(in srgb, var(--lh-brand) 14%, transparent);
+            }
         }
     }
 }

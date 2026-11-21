@@ -1,12 +1,12 @@
 import {
     afterNextRender,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     inject,
     Injector,
     PLATFORM_ID,
     Renderer2,
+    signal,
 } from '@angular/core';
 import { isPlatformBrowser, AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
@@ -29,7 +29,6 @@ import { TranslatePipe } from '@core/i18n';
  * Компонент разметки.
  */
 @Component({
-    standalone: true,
     selector: 'app-layout',
     imports: [
         RouterOutlet,
@@ -105,19 +104,17 @@ export class LayoutComponent {
     protected readonly environment = environment;
 
     /**
-     * Объект детекции изменений.
-     */
-    private readonly cdr = inject(ChangeDetectorRef);
-
-    /**
      * Рендерер для безопасной манипуляции DOM.
      */
     private readonly renderer = inject(Renderer2);
 
     /**
      * Признак того, установлен ли класс пролистывания.
+     *
+     * Сигнал, а не обычное поле: значение ставится из обработчика события
+     * дочернего компонента, и вид обновляется по сигналу.
      */
-    protected isSetScrollClass = false;
+    protected readonly isSetScrollClass = signal<boolean>(false);
 
     constructor() {
         // Путь новичка: отмечает «открыл правила» и «заходил в Discord» на любой странице.
@@ -135,7 +132,7 @@ export class LayoutComponent {
         afterNextRender(() => this.shopPrefetch.start());
 
         this.showWelcome$.pipe(takeUntilDestroyed()).subscribe((showWelcome) => {
-            this.updateScrollLock(showWelcome && !this.isSetScrollClass);
+            this.updateScrollLock(showWelcome && !this.isSetScrollClass());
         });
     }
 
@@ -164,14 +161,13 @@ export class LayoutComponent {
      * остаётся в DOM с классом `.scroll`, чтобы доиграть анимацию ухода.
      */
     public onWelcomeScroll() {
-        if (this.isSetScrollClass) {
+        if (this.isSetScrollClass()) {
             return;
         }
 
-        this.isSetScrollClass = true;
+        this.isSetScrollClass.set(true);
         this.localStorage.setItem(WELCOME_SEEN_STORAGE_KEY, true);
         this.updateScrollLock(false);
         window.scrollTo({ top: 0, behavior: 'instant' });
-        this.cdr.detectChanges();
     }
 }

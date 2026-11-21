@@ -30,7 +30,6 @@ const EXPAND_DURATION_MS = 320;
  * отдельной страницы у заявлений нет. У заявления есть ссылка `/diplomacy#<id>`.
  */
 @Component({
-    standalone: true,
     selector: 'app-diplomacy-card',
     imports: [TuiIcon, TranslatePipe, RelativeTimeComponent, ShareButtonComponent, ReactionsComponent],
     templateUrl: './diplomacy-card.component.html',

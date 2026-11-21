@@ -1,7 +1,7 @@
 import { TuiRoot } from '@taiga-ui/core';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LayoutComponent } from './layout/layout.component';
 import { RouteProgressComponent } from '@shared/ui/route-progress';
@@ -15,11 +15,11 @@ import { PendingInviteService } from '@features/settlements/join-by-invite';
  * Корневой компонент приложения.
  */
 @Component({
-    standalone: true,
     selector: 'app-root',
     imports: [LayoutComponent, TuiRoot, RouteProgressComponent, ConsentBannerComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
     /**
@@ -31,16 +31,6 @@ export class AppComponent {
      * Роутер приложения.
      */
     private readonly router: Router = inject(Router);
-
-    /**
-     * Сервис автоматического применения реферального кода из URL (?ref=).
-     */
-    private readonly referralApplier: ReferralApplierService = inject(ReferralApplierService);
-
-    /**
-     * Возвращает игрока на страницу приглашения в надел после входа.
-     */
-    private readonly pendingInvite = inject(PendingInviteService);
 
     /**
      * Fallback SEO-данные, если роут не содержит своих.
@@ -62,6 +52,12 @@ export class AppComponent {
      * для обновления SEO-метатегов.
      */
     public constructor() {
+        // Оба сервиса работают из своего конструктора: применяют реферальный код
+        // из `?ref=` и возвращают игрока на страницу приглашения после входа.
+        // Ссылки на них не нужны — нужен сам факт создания при старте приложения.
+        inject(ReferralApplierService);
+        inject(PendingInviteService);
+
         this.seoService.setSeoTags(this.defaultSeo);
 
         this.router.events

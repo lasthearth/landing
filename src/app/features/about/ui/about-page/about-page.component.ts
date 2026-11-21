@@ -9,6 +9,7 @@ import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { BreadcrumbsComponent } from '@shared/ui/breadcrumbs';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
 import { catchError, map, of } from 'rxjs';
 
 /**
@@ -38,7 +39,15 @@ const LEVELS = ['manor', 'camp', 'patrimony', 'barony', 'county', 'margraviate']
  */
 @Component({
     selector: 'app-about-page',
-    imports: [AmountPipe, RouterLink, TranslatePipe, TuiIcon, BreadcrumbsComponent, PageHeaderComponent],
+    imports: [
+        AmountPipe,
+        RouterLink,
+        TranslatePipe,
+        TuiIcon,
+        BreadcrumbsComponent,
+        PageHeaderComponent,
+        RevealDirective,
+    ],
     templateUrl: './about-page.component.html',
     styleUrl: './about-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,10 +70,13 @@ export class AboutPageComponent {
     protected readonly levels = LEVELS;
 
     /**
-     * Онлайн сервера.
+     * Онлайн сервера из общего SSE-потока.
      */
     protected readonly online = toSignal(
-        this.serverInfo.getOnlinePlayersCount$().pipe(catchError(() => of(null))),
+        this.serverInfo.watchServerInfo$().pipe(
+            map((info) => ({ online: info.online, max_online: info.max_online })),
+            catchError(() => of(null))
+        ),
         { initialValue: null }
     );
 

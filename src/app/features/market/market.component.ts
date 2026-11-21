@@ -1,10 +1,12 @@
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { afterNextRender, Component, ChangeDetectionStrategy, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { catchError, filter, map, Observable, of, switchMap } from 'rxjs';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
+import { environment } from '@core/config/environments/environment';
 import { DonateService } from '@entities/donate';
 import { UserService } from '@entities/user/api/user.service';
 import { TitlesComponent } from './components/titles/titles.component';
@@ -12,7 +14,11 @@ import { KitsComponent } from './components/kits/kits.component';
 import { SpecialComponent } from './components/special/special.component';
 import { HowToBuyComponent } from './components/how-to-buy/how-to-buy.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
-import { RevealDirective } from '@shared/lib/directives';
+import { PrototypeSwitcherComponent } from '@shared/ui/prototype-switcher';
+import { RevealDirective, TabsPillDirective } from '@shared/lib/directives';
+import { ProtoPraisComponent } from './components/proto-prais/proto-prais.component';
+import { ProtoSplitComponent } from './components/proto-split/proto-split.component';
+import { ProtoVitrinaComponent } from './components/proto-vitrina/proto-vitrina.component';
 import { FUNDING_TARGETS } from './lib/funding-targets.constant';
 import { WORLD_SHOTS } from './lib/world-shots.constant';
 
@@ -21,7 +27,7 @@ import { WORLD_SHOTS } from './lib/world-shots.constant';
  */
 @Component({
     selector: 'app-market',
-    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective],
+    imports: [AmountPipe, PageHeaderComponent, TitlesComponent, KitsComponent, SpecialComponent, TuiIcon, TranslatePipe, AsyncPipe, RevealDirective, TabsPillDirective, PrototypeSwitcherComponent, ProtoPraisComponent, ProtoSplitComponent, ProtoVitrinaComponent],
     templateUrl: './market.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -35,6 +41,40 @@ export class MarketComponent {
      * Сервис навигации — для записи вкладки в адрес.
      */
     private readonly router = inject(Router);
+
+    /**
+     * ПРОТОТИП РЕДИЗАЙНА, НЕ ПРОДАКШН: ключ варианта страницы из
+     * `?variant=`. Только dev-сборка; в проде адрес игнорируется.
+     * Удалить вместе с папками proto-* после выбора варианта.
+     */
+    protected readonly marketProto = toSignal(
+        this.route.queryParamMap.pipe(
+            map((params) => {
+                const variant = params.get('variant');
+
+                if (environment.production || !['prais', 'vitrina', 'split'].includes(variant ?? '')) {
+                    return null;
+                }
+
+                return variant;
+            }),
+        ),
+        { initialValue: null },
+    );
+
+    /**
+     * Ключи вариантов для панели переключения.
+     */
+    protected readonly protoVariants = ['prais', 'vitrina', 'split'];
+
+    /**
+     * Имена вариантов для панели переключения.
+     */
+    protected readonly protoNames: Record<string, string> = {
+        prais: 'прайс строками, без вкладок',
+        vitrina: 'витрина карточек, цена на картинке',
+        split: 'сетка + липкая боковая панель',
+    };
 
     /**
      * Ключи вкладок в адресе (`?tab=`), в порядке `tabs`.
@@ -54,14 +94,73 @@ export class MarketComponent {
      *
      * @param index Индекс вкладки.
      */
+    /**
+     * Сцена смены вкладок: в неё клонируется уходящая панель.
+     */
+    /**
+     * Направление перехода: 1 — вправо по списку вкладок, -1 — влево.
+     * Из него сцена берёт, с какой стороны въезжает контент.
+     */
+    protected readonly tabDirection = signal(1);
+
+    /**
+     * Индекс панели, которая дорастворяется поверх входящей (кроссфейд).
+     * `null`, когда выход доиграл и панель скрыта.
+     */
+    protected readonly leavingIndex = signal<number | null>(null);
+
+    /**
+     * Открывает вкладку: направление и уходящая панель для выхода,
+     * ключ вкладки в адрес для ссылки.
+     *
+     * @param index Индекс вкладки в `tabs`.
+     */
     protected selectTab(index: number): void {
-        this.activeItemIndex.set(index);
-        void this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { tab: index === 0 ? null : this.tabKeys[index] },
-            queryParamsHandling: 'merge',
-            replaceUrl: true,
+        if (index === this.activeItemIndex()) {
+            return;
+        }
+
+        this.tabDirection.set(index > this.activeItemIndex() ? 1 : -1);
+
+        // Отклик в тот же кадр: плашка стартует до тяжёлой смены панелей.
+        const button = this.elementRef.nativeElement.querySelectorAll<HTMLElement>('[role="tab"]')[index];
+
+        if (button) {
+            this.tabsPill()?.flyToButton(button);
+        }
+
+        // Смена панелей — следующим кадром: её раскладка и первая
+        // отрисовка не задерживают первый кадр полёта плашки.
+        requestAnimationFrame(() => {
+            // Уходящая панель остаётся в DOM абсолютом и растворяется
+            // 150ms поверх входящей: картинки морфят, а не мигают.
+            this.leavingIndex.set(this.activeItemIndex());
+            this.activeItemIndex.set(index);
+            void this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: { tab: index === 0 ? null : this.tabKeys[index] },
+                queryParamsHandling: 'merge',
+                replaceUrl: true,
+            });
         });
+    }
+
+    /**
+     * Скрывает уходящую панель, когда её выход доиграл.
+     * Чужие `animationend` из глубины сетки и вход входящей панели
+     * отбрасываются по имени keyframes и источнику события.
+     *
+     * @param event Событие конца анимации с панели.
+     * @param index Индекс панели в `tabs`.
+     */
+    protected onTabLeaveEnd(event: AnimationEvent, index: number): void {
+        if (
+            this.leavingIndex() === index &&
+            event.target === event.currentTarget &&
+            event.animationName.startsWith('market-tab-out-')
+        ) {
+            this.leavingIndex.set(null);
+        }
     }
 
     /**
@@ -72,6 +171,13 @@ export class MarketComponent {
         'market.marketPage.tabKits',
         'market.marketPage.tabSpecial',
     ] as const;
+
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /**
+     * Директива летающей плашки на ряде вкладок.
+     */
+    private readonly tabsPill = viewChild(TabsPillDirective);
 
     private readonly dialogs = inject(TuiDialogService);
 
@@ -101,7 +207,7 @@ export class MarketComponent {
      * Запрашивается только после авторизации, при ошибке поток молчит.
      */
     protected readonly balance$: Observable<string> = this.userService.authState$.pipe(
-        filter((isAuth): isAuth is true => isAuth === true),
+        filter((isAuth): isAuth is true => isAuth),
         switchMap(() =>
             this.donateService.getMyBalance$().pipe(
                 map((response) => response.coins),
@@ -109,6 +215,30 @@ export class MarketComponent {
             )
         )
     );
+
+    /**
+     * Прогревает картинки скрытых панелей в простое браузера: ленивая
+     * загрузка не стартует внутри display:none, и первое раскрытие
+     * вкладки платило декодированием всех её картинок в клике.
+     */
+    public constructor() {
+        afterNextRender(() => {
+            if (typeof requestIdleCallback === 'undefined') {
+                return;
+            }
+
+            requestIdleCallback(
+                () => {
+                    for (const image of Array.from(
+                        this.elementRef.nativeElement.querySelectorAll<HTMLImageElement>('img'),
+                    )) {
+                        void image.decode().catch(() => undefined);
+                    }
+                },
+                { timeout: 4000 },
+            );
+        });
+    }
 
     /**
      * Открывает диалог пополнения осколков.

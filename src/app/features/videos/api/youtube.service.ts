@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs';
 import { YOUTUBE_CONFIG } from '../config/youtube-config';
 import { VIDEO_KIND_PLAYLIST_PREFIX } from '../config/video-kinds.constant';
 import { VideoKind } from '../model/video-kind';

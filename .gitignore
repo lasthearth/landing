@@ -55,3 +55,10 @@ Thumbs.db
 
 # Генерируемые артефакты агентских прогонов
 RULES_EDIT.md
+shots/
+.build.lock
+
+# Прогоны агентов: ворк-три, скиллы и их лок не принадлежат репозиторию
+.agents/
+.claude/
+skills-lock.json

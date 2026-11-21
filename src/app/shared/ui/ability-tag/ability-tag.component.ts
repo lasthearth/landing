@@ -10,7 +10,6 @@ import { IAbilityItem } from '@entities/donate';
  */
 @Component({
     selector: 'app-ability-tag',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './ability-tag.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

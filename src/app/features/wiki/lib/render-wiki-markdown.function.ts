@@ -420,8 +420,14 @@ function renderBlocks(ctx: Ctx, from: number, to: number, top: boolean): string 
         if (RE.quote.test(line)) {
             const parts: string[] = [];
 
-            while (index < to && RE.quote.test(lines[index])) {
-                parts.push(renderInline(ctx, RE.quote.exec(lines[index])![1], index));
+            while (index < to) {
+                const quoteMatch = RE.quote.exec(lines[index]);
+
+                if (!quoteMatch) {
+                    break;
+                }
+
+                parts.push(renderInline(ctx, quoteMatch[1], index));
                 index++;
             }
 
@@ -802,10 +808,13 @@ function renderInline(ctx: Ctx, text: string, line: number): string {
     source = source.replace(/==([^=\n]+?)==/g, '\u0002$1\u0003');
 
     let html = renderInlineMarkdown(source)
+        // eslint-disable-next-line no-control-regex -- \u0002 — служебный маркер начала ==выделения==: в тексте автора такого символа нет
         .replace(/\u0002/g, '<mark>')
+        // eslint-disable-next-line no-control-regex -- \u0003 — служебный маркер конца ==выделения==: в тексте автора такого символа нет
         .replace(/\u0003/g, '</mark>');
 
     while (html.includes('\u0001')) {
+        // eslint-disable-next-line no-control-regex -- \u0001 — служебный маркер защищённых фрагментов: в тексте автора такого символа нет
         html = html.replace(/\u0001(\d+)\u0001/g, (_, index: string) => held[Number(index)]);
     }
 
@@ -906,9 +915,14 @@ function renderFootnotes(ctx: Ctx): string {
         return '';
     }
 
-    const items = ctx.footnoteOrder.map((name) => {
-        const def = ctx.footnoteDefs.get(name)!;
-        return `<li id="fn-${name}" data-line="${def.line}">${renderInline(ctx, def.text, def.line)} <a class="wiki-fn__back" href="#fnref-${name}" aria-label="↑">↩</a></li>`;
+    const items = ctx.footnoteOrder.flatMap((name) => {
+        const def = ctx.footnoteDefs.get(name);
+
+        return def
+            ? [
+                  `<li id="fn-${name}" data-line="${def.line}">${renderInline(ctx, def.text, def.line)} <a class="wiki-fn__back" href="#fnref-${name}" aria-label="↑">↩</a></li>`,
+              ]
+            : [];
     });
 
     return `<section class="wiki-footnotes"><div class="wiki-footnotes__title">${escapeHtml(ctx.labels.footnotes)}</div><ol>${items.join('')}</ol></section>`;

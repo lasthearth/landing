@@ -15,6 +15,22 @@
     flex: none;
 }
 
+/**
+ * Сортировка — эксклюзивный переключатель без `role="tablist"`: одна из трёх
+ * кнопок активна (`aria-current`), поэтому неактивная подаётся на 3px к курсору
+ * тем же движением, что и вкладки. Только transform, 150ms пружиной; активную
+ * исключаем, чтобы она стояла на месте.
+ */
+.wiki-list__sort .lh-chip {
+    transition: transform var(--lh-dur-exit) var(--lh-ease-spring);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .wiki-list__sort .lh-chip:hover:not([aria-current='true']) {
+        transform: translateX(3px);
+    }
+}
+
 .wiki-list__search {
     display: flex;
     align-items: center;
@@ -106,24 +122,28 @@
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    transition:
-        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
-        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.16),
-            inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
-            var(--lh-shadow-lift);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.16),
+                inset 0 0 0 1px color-mix(in srgb, var(--lh-ink) 8%, transparent),
+                var(--lh-shadow-lift);
+        }
     }
 
-    &:hover .wiki-card__cover {
-        transform: scale(1.04);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover .wiki-card__cover {
+            transform: scale(1.04);
+        }
     }
 
-    &:hover .wiki-card__glow {
-        opacity: 1;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover .wiki-card__glow {
+            opacity: 1;
+        }
     }
 }
 
@@ -198,7 +218,7 @@
     inset: 0;
     background-size: cover;
     background-repeat: no-repeat;
-    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 // Своей обложки нет — скриншот раздела, приглушённый и тёплый: видно, что это
@@ -375,12 +395,16 @@
     .wiki-card {
         transition: none;
 
-        &:hover {
-            transform: none;
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                transform: none;
+            }
         }
 
-        &:hover .wiki-card__cover {
-            transform: none;
+        @media (hover: hover) and (pointer: fine) {
+            &:hover .wiki-card__cover {
+                transform: none;
+            }
         }
     }
 
@@ -442,9 +466,7 @@
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lh-parchment-3) 12%, transparent);
     color: var(--lh-parchment-3);
     text-decoration: none;
-    transition:
-        transform var(--lh-dur-mid) var(--lh-ease-out-quart),
-        box-shadow var(--lh-dur-mid) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 
     // Вуаль снизу: имя и счётчик читаются на любом кадре.
     &::after {
@@ -459,15 +481,19 @@
         );
     }
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow:
-            inset 0 0 0 2px var(--lh-brand),
-            0 14px 28px -14px rgba(0, 0, 0, 0.55);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0 0 0 2px var(--lh-brand),
+                0 14px 28px -14px rgba(0, 0, 0, 0.55);
+        }
     }
 
-    &:hover .wiki-sections__bg {
-        transform: scale(1.06);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover .wiki-sections__bg {
+            transform: scale(1.06);
+        }
     }
 
     &:focus-visible {
@@ -483,7 +509,7 @@
     background-size: cover;
     background-position: center;
     filter: saturate(0.8);
-    transition: transform var(--lh-dur-slow) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 // Пустой раздел не прячем — в него можно предложить статью, — но гасим.
@@ -525,11 +551,15 @@
         transition: none;
     }
 
-    .wiki-sections__tile:hover {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .wiki-sections__tile:hover {
+            transform: none;
+        }
     }
 
-    .wiki-sections__tile:hover .wiki-sections__bg {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .wiki-sections__tile:hover .wiki-sections__bg {
+            transform: none;
+        }
     }
 }

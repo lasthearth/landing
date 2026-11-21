@@ -222,14 +222,14 @@
     outline: 2px solid transparent;
     outline-offset: 2px;
     cursor: pointer;
-    transition:
-        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
-        outline-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.gallery-wall__tile:hover {
-    transform: translateY(-2px);
-    outline-color: color-mix(in srgb, var(--lh-accent) 60%, transparent);
+@media (hover: hover) and (pointer: fine) {
+    .gallery-wall__tile:hover {
+        transform: translateY(-2px);
+        outline-color: color-mix(in srgb, var(--lh-accent) 60%, transparent);
+    }
 }
 
 .gallery-wall__tile:focus-visible {
@@ -305,7 +305,7 @@
     font-size: 0.875rem;
     text-align: left;
     transform: translateY(110%);
-    transition: transform var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .gallery-wall__tile:hover .gallery-wall__meta,
@@ -372,14 +372,16 @@
     }
 
     /**
-     * Отпечаток не поднимается: движение остаётся только в кольце наведения,
-     * которое цветом, а не смещением, показывает, что кадр открывается.
+     * Отпечаток не поднимается: кольцо наведения появляется мгновенно и
+     * цветом, а не смещением, показывает, что кадр открывается.
      */
     .gallery-wall__tile {
-        transition: outline-color var(--lh-dur-fast) var(--lh-ease-out-quart);
+        transition: none;
     }
 
-    .gallery-wall__tile:hover {
-        transform: none;
+    @media (hover: hover) and (pointer: fine) {
+        .gallery-wall__tile:hover {
+            transform: none;
+        }
     }
 }

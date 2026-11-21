@@ -31,7 +31,6 @@ import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
  */
 @Component({
     selector: 'app-join-requests-panel',
-    standalone: true,
     imports: [TuiIcon, TranslatePipe, EmptyStateComponent, WaitingBadgeComponent],
     templateUrl: './join-requests-panel.component.html',
     styleUrl: './join-requests-panel.component.less',

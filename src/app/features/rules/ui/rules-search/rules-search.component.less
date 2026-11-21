@@ -16,7 +16,6 @@
     border-radius: 0.75rem;
     background: var(--lh-surface-2);
     color: var(--lh-ink);
-    transition: border-color 0.15s ease;
 
     &:focus-within {
         border-color: var(--lh-brand);
@@ -61,8 +60,10 @@
     color: var(--lh-ink-2);
     cursor: pointer;
 
-    &:hover {
-        background: color-mix(in srgb, currentColor 12%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, currentColor 12%, transparent);
+        }
     }
 }
 
@@ -72,7 +73,7 @@
     left: 0;
     right: 0;
     z-index: 50;
-    max-height: min(26rem, 60vh);
+    max-height: min(26rem, 60dvh);
     overflow-y: auto;
     padding: 0.5rem;
     border: 1px solid var(--lh-border);

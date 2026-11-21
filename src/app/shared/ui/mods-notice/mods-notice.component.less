@@ -68,11 +68,13 @@
     color: #fff;
     font-weight: 800;
     text-decoration: none;
-    transition: background-color var(--lh-dur-fast) var(--lh-ease-smooth);
+    /* Ховер заливки — мгновенный (motion-instant-hover-color). */
 
-    &:hover {
-        background-color: var(--lh-brand-hover);
-        color: #fff;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--lh-brand-hover);
+            color: #fff;
+        }
     }
 
     &:focus-visible {
@@ -108,9 +110,7 @@
     background: none;
     color: var(--lh-ink-3);
     cursor: pointer;
-    transition:
-        background-color var(--lh-dur-fast) var(--lh-ease-smooth),
-        color var(--lh-dur-fast) var(--lh-ease-smooth);
+    /* Ховер цвета — мгновенный (motion-instant-hover-color). */
 
     tui-icon {
         width: 1rem;
@@ -118,9 +118,11 @@
         font-size: 1rem;
     }
 
-    &:hover {
-        background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent);
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+            color: var(--lh-ink);
+        }
     }
 
     &:focus-visible {

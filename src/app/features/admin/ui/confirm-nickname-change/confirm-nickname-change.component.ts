@@ -20,7 +20,6 @@ import { IConfirmNicknameChangeData } from '../../model/confirm-nickname-change-
  * на 403 — «Нет прав».
  */
 @Component({
-    standalone: true,
     selector: 'app-confirm-nickname-change',
     imports: [TuiIcon, TuiLoader, TranslatePipe],
     templateUrl: './confirm-nickname-change.component.html',

@@ -38,6 +38,7 @@
             role="combobox"
             aria-haspopup="listbox"
             [attr.aria-expanded]="dropdownOpen()"
+            [attr.aria-controls]="inputId + '-listbox'"
             [id]="inputId"
             [attr.aria-label]="label() ? null : ariaLabel() || placeholder()"
             [disabled]="disabled"
@@ -47,11 +48,11 @@
             <span [class.text-ink-3]="!displayedValue" class="select-display">
                 {{ displayedValue || placeholder() }}
             </span>
-            <img
+            <img decoding="async" height="24" width="24"
                 src="/chevron-down.svg"
                 alt=""
                 [class.rotate-180]="dropdownOpen()"
-                class="transition duration-300 opacity-50"
+                class="transition-transform opacity-50"
             />
         </button>
     }
@@ -61,7 +62,7 @@
     }
 
     @if (type() === "select") {
-        <div [class.dropdown--open]="dropdownOpen()" class="dropdown" role="listbox">
+        <div [class.dropdown--open]="dropdownOpen()" [id]="inputId + '-listbox'" class="dropdown" role="listbox">
             @for (item of items(); track $index) {
                 <button
                     type="button"
@@ -71,7 +72,7 @@
                     (click)="selectItem(item)"
                     (keydown.escape)="dropdownOpen.set(false)"
                 >
-                    {{ displayWith(item) }}
+                    {{ displayWith()(item) }}
                 </button>
             }
         </div>

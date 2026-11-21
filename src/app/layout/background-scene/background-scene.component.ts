@@ -77,7 +77,6 @@ const SCENE_HEIGHT = 1080;
  * картинку без генератора случайных чисел.
  */
 @Component({
-    standalone: true,
     selector: 'app-background-scene',
     templateUrl: './background-scene.component.html',
     styleUrl: './background-scene.component.less',

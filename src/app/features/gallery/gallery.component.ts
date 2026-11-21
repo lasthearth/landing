@@ -19,7 +19,7 @@ import { formatShortDate } from '@shared/lib/relative-time';
 import { ImageViewerComponent, ImageViewerItem } from '@shared/ui/image-viewer';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { PageHeaderComponent } from '@shared/ui/page-header';
-import { RevealDirective } from '@shared/lib/directives';
+import { PauseOffscreenDirective, RevealDirective } from '@shared/lib/directives';
 import {
     DiscordGalleryImage,
     DiscordGalleryService,
@@ -165,7 +165,6 @@ const SKELETON_COUNT = 10;
  */
 @Component({
     selector: 'app-gallery',
-    standalone: true,
     imports: [
         EmptyStateComponent,
         PageHeaderComponent,
@@ -174,6 +173,7 @@ const SKELETON_COUNT = 10;
         RelativeTimeComponent,
         ImageViewerComponent,
         RevealDirective,
+        PauseOffscreenDirective,
     ],
     templateUrl: './gallery.component.html',
     styleUrl: './gallery.component.less',
@@ -403,23 +403,21 @@ export class GalleryComponent {
         })
     );
 
-    /**
-     * Снимок фактов кладётся в localStorage, когда архив дочитан до конца,
-     * и читается при следующем визите: числа страницы верны сразу, а не после
-     * двадцати секунд чтения страниц.
-     */
-    private readonly saveFactsSnapshot = effect(() => {
-        if (!this.archiveComplete() || !this.isBrowser) {
-            return;
-        }
-
-        this.localStorage.setItem(FACTS_SNAPSHOT_KEY, {
-            savedAt: Date.now(),
-            snapshot: toFactsSnapshot(readArchiveFacts(this.sorted(), TOP_AUTHORS)),
-        });
-    });
-
     public constructor() {
+        // Снимок фактов кладётся в localStorage, когда архив дочитан до конца,
+        // и читается при следующем визите: числа страницы верны сразу, а не после
+        // двадцати секунд чтения страниц.
+        effect(() => {
+            if (!this.archiveComplete() || !this.isBrowser) {
+                return;
+            }
+
+            this.localStorage.setItem(FACTS_SNAPSHOT_KEY, {
+                savedAt: Date.now(),
+                snapshot: toFactsSnapshot(readArchiveFacts(this.sorted(), TOP_AUTHORS)),
+            });
+        });
+
         const fragment = this.route.snapshot.fragment;
 
         this.pendingFragmentId = fragment ? decodeURIComponent(fragment) : null;

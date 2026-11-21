@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { environment } from '@core/config/environments/environment';
 import { TuiAlertService } from '@taiga-ui/core';
 import { EMPTY, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs';
 
 /**
  * Базовый URL OIDC-эмиттента Logto.

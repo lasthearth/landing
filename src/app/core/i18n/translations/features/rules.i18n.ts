@@ -637,6 +637,7 @@ export const RULES_I18N = {
                         p2_2_6_2:
                             '<b>2.2.6.2</b> Монумент должен располагаться на открытом воздухе, но может быть огорожен фортом [оборонительная постройка с внутренним двором] и иными идентично-похожими строениями.',
                         p2_2_7: '<b>2.2.7</b> Запрещается использовать для хранения ресурсов кассы и торгоматы. Размещение торгоматов и касс должно соответствовать предусмотренным для этого местам, например: рыночные площади, торговые лавки.',
+                        p2_2_8: '<b>2.2.8</b> Оборонительные стены, включая укрепления в горе, обязаны быть построены из специальных оборонительных блоков. Такие блоки получают перекрафтом по специальному чертежу.',
                         levelsTitle: '<b>Уровни оборонительных сооружений</b>',
                         level0: '<b>Уровень 0</b> — стены не превышающие 3-х блоков высотой, не более 1 слоя, без башен, без рвов.',
                         level1: '<b>Уровень 1</b> — стены, не превышающие высоту 4-х блоков, с возможностью оборудования рвов.<br />Составное оборонительное строение: башня, либо форт, возможные как хранилище главных ресурсов и жилье правителя, высотой не более 23-х блоков не считая кровлю, площадью не более 15х15 блоков. С предусмотренной возможностью для будущего расширения.',
@@ -1175,9 +1176,9 @@ export const RULES_I18N = {
                         p6_1_25:
                             '<b>6.1.25</b> Атакующим запрещается установка любых блоков во время нападения, за исключением:',
                         p6_1_25_1:
-                            '<b>•</b> Деревянных лестниц, на строения, являющиеся рукотворными и не превышающие в высоту 6-ти блоков. При этом нельзя ставить деревянные лестницы находясь в воде, а также ставить лестницу «на весу», подставляя ее под себя и не прикрепляя к боковой поверхности.',
+                            '<b>•</b> Специальных осадных лестниц, поднимаемых багром. Любые другие лестницы [деревянные, веревочные и т.п.] использовать запрещено.',
                         p6_1_25_2:
-                            '<b>•</b> Специально высеченных осадных машин и сооружений, которые можно ставить только вне помещения. Например: осадный щит, за которым могут укрываться стрелки, требушет.',
+                            '<b>•</b> Специально высеченных осадных машин и сооружений, которые можно ставить только вне помещения. Например: осадный щит, за которым могут укрываться стрелки, онагр.',
                         p6_1_25_3:
                             '<b>•</b> Сыпучих материалов с целью засыпания рвов, создания насыпей в водоемах. Преодоление таких препятствий посредством установки блоков земли, или подъем наверх строго запрещено.',
                         p6_1_25_4:
@@ -1190,11 +1191,8 @@ export const RULES_I18N = {
                         p6_1_28_1: '<b>•</b> Дверей и любых их проявлений.',
                         p6_1_28_2:
                             '<b>•</b> Плетеного и деревянного забора; каменного забора не превышающего высоту 1 блока.',
-                        p6_1_28_3: '<b>•</b> Крепостные стены разрешается ломать только в местах пролома.',
-                        p6_1_28_4:
-                            '<b>•</b> Место пролома — это место, выбранное атакующими для разрушения и не превышающее своим размером площадь 3х3 блока. Такие места ограничены количеством наличия у атакующих осадных машин типа «требушет». Высеченные «требушеты» должны быть представлены администрации заранее для одобрения. При атаке «требушет» должен быть развернут не более чем в 30-ти блоках от места пролома. Если для развертывания требушета нет суши, допускается его наличие в сундуке на парусной лодке на таком же расстоянии до места пролома [парусную лодку двигать нельзя].',
-                        p6_1_28_5:
-                            '<b>•</b> При атаке требушетом горной фортификации, допускается совершать пролом во фронтальной рукотворной части горы размером 4х4 по площади и глубиной от 1-го до 40-ка блоков, при учете, что пробивается только первая стена горы.',
+                        p6_1_28_3:
+                            '<b>•</b> Оборонительных стен, включая укрепления в горе, — только снарядами онагра. Ломать их вручную или инструментами запрещено.',
                         p6_1_28_6: '<b>•</b> Установленных защитниками баррикад и насыпей в виде песка и гравия.',
                         p6_1_29: {
                             t0: '<b>6.1.29</b> Запрещается грабить лут, который представляет из себя элементы промышленности, например: генераторы, аккумуляторы, моторы, ветряки, наковальни и прочее, если они поставлены, а не находятся внутри сосудов/сундуков/ящиков и т.п. Такой лут можно получить только во время ведения ',
@@ -1928,6 +1926,7 @@ export const RULES_I18N = {
                         p2_2_6_2:
                             '<b>2.2.6.2</b> The monument must be located in the open air, but may be enclosed by a fort [a defensive structure with an inner courtyard] and other similar structures.',
                         p2_2_7: '<b>2.2.7</b> Using tills and vending machines to store resources is prohibited. Vending machines and tills must be placed in locations intended for them, for example: market squares, shops.',
+                        p2_2_8: '<b>2.2.8</b> Defensive walls, including mountain fortifications, must be built from special defensive blocks. Such blocks are obtained by re-crafting with a special blueprint.',
                         levelsTitle: '<b>Levels of defensive structures</b>',
                         level0: '<b>Level 0</b> — walls no higher than 3 blocks, no more than 1 layer thick, without towers, without moats.',
                         level1: "<b>Level 1</b> — walls no higher than 4 blocks, with the option of digging moats.<br />Composite defensive structure: a tower or a fort, which may serve as the storage of the main resources and the ruler's residence, no higher than 23 blocks not counting the roof, with an area of no more than 15х15 blocks. With room provided for future expansion.",
@@ -2463,9 +2462,9 @@ export const RULES_I18N = {
                         p6_1_25:
                             '<b>6.1.25</b> The attackers are prohibited from placing any blocks during the attack, except for:',
                         p6_1_25_1:
-                            '<b>•</b> Wooden ladders on structures that are man-made and no higher than 6 blocks. Wooden ladders may not be placed while standing in water, nor may a ladder be placed «in mid-air» by putting it under yourself without attaching it to a side surface.',
+                            '<b>•</b> Special siege ladders raised with a boathook. Any other ladders [wooden, rope, etc.] may not be used.',
                         p6_1_25_2:
-                            '<b>•</b> Specially carved siege engines and structures, which may only be placed outdoors. For example: a siege shield behind which archers can take cover, a trebuchet.',
+                            '<b>•</b> Specially carved siege engines and structures, which may only be placed outdoors. For example: a siege shield behind which archers can take cover, an onager.',
                         p6_1_25_3:
                             '<b>•</b> Loose materials for filling in moats and creating embankments in bodies of water. Overcoming such obstacles by placing dirt blocks, or climbing up, is strictly prohibited.',
                         p6_1_25_4:
@@ -2476,11 +2475,8 @@ export const RULES_I18N = {
                         p6_1_28: '<b>6.1.28</b> Breaking anything is prohibited, except for:',
                         p6_1_28_1: '<b>•</b> Doors and any of their variants.',
                         p6_1_28_2: '<b>•</b> Wicker and wooden fences; stone fences no higher than 1 block.',
-                        p6_1_28_3: '<b>•</b> Fortress walls may be broken only at breach points.',
-                        p6_1_28_4:
-                            '<b>•</b> A breach point is a place chosen by the attackers for destruction, no larger than 3х3 blocks in area. The number of such places is limited by the number of «trebuchet»-type siege engines the attackers have. Carved «trebuchets» must be presented to the administration in advance for approval. During the attack, the «trebuchet» must be deployed no more than 30 blocks from the breach point. If there is no land to deploy the trebuchet, it may be kept in a chest on a sailboat at the same distance from the breach point [the sailboat may not be moved].',
-                        p6_1_28_5:
-                            '<b>•</b> When attacking a mountain fortification with a trebuchet, a breach 4х4 in area and 1 to 40 blocks deep may be made in the man-made front part of the mountain, provided that only the first wall of the mountain is broken through.',
+                        p6_1_28_3:
+                            '<b>•</b> Defensive walls, including mountain fortifications, — only with onager shots. Breaking them by hand or with tools is prohibited.',
                         p6_1_28_6: '<b>•</b> Barricades placed by the defenders and embankments of sand and gravel.',
                         p6_1_29: {
                             t0: '<b>6.1.29</b> Looting items that are elements of industry, for example: generators, accumulators, motors, windmills, anvils, etc., is prohibited if they are placed rather than stored inside vessels/chests/crates, etc. Such loot can only be obtained during a ',

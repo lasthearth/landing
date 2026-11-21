@@ -26,7 +26,8 @@ export const userGuard: CanActivateFn = () => {
             if (isAuthenticated) {
                 return true;
             } else {
-                router.navigate(['/']);
+                // Переход на главную: результат навигации стражу не нужен.
+                void router.navigate(['/']);
                 return false;
             }
         })

@@ -51,7 +51,7 @@ export function mapSectionFromDto(value: string | undefined): WikiSectionId {
  * @returns Обложка или `null`.
  */
 function mapCoverFromDto(dto: WikiCoverDto | null | undefined): WikiCover | null {
-    return dto && dto.url ? { url: dto.url, focus: Number(dto.focus) || 0 } : null;
+    return dto?.url ? { url: dto.url, focus: Number(dto.focus) || 0 } : null;
 }
 
 /**

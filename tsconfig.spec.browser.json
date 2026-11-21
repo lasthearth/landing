@@ -1,0 +1,15 @@
+/* Спецификации, которым нужен настоящий браузер: холст (`createImageBitmap`,
+   2D-контекст) и живая геометрия DOM-rect. jsdom их не даёт, поэтому цель
+   `test-browser` гоняет их в Vitest с настоящим Chrome (ChromeHeadless). */
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./out-tsc/spec-browser",
+        "types": ["vitest/globals", "youtube"]
+    },
+    "files": [
+        "src/app/shared/lib/compress-image.function.spec.ts",
+        "src/app/shared/lib/directives/tabs-pill.directive.spec.ts",
+        "src/app/shared/ui/image-file-input/image-file-input.component.spec.ts"
+    ]
+}

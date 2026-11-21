@@ -1,3 +1,4 @@
+import type { MockInstance } from 'vitest';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
@@ -60,7 +61,7 @@ function makeFile(size: number, name: string): File {
 describe('MediaService: размер файла против политики хранилища', () => {
     let service: MediaService;
     let http: HttpTestingController;
-    let fetchSpy: jasmine.Spy<typeof globalThis.fetch>;
+    let fetchSpy: MockInstance<typeof globalThis.fetch>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -69,7 +70,7 @@ describe('MediaService: размер файла против политики х
 
         service = TestBed.inject(MediaService);
         http = TestBed.inject(HttpTestingController);
-        fetchSpy = spyOn(globalThis, 'fetch');
+        fetchSpy = vi.spyOn(globalThis, 'fetch');
     });
 
     afterEach(() => {
@@ -81,9 +82,10 @@ describe('MediaService: размер файла против политики х
 
         http.expectOne(UPLOAD_URLS).flush({ targets: [makeTarget([10, 20])] });
 
-        await expectAsync(upload).toBeRejectedWithError(
-            Error,
-            'MediaService: размер файла "big.webp" (30 байт) вне диапазона политики хранилища: 10..20 байт'
+        await expect(upload).rejects.toThrowError(
+            new Error(
+                'MediaService: размер файла "big.webp" (30 байт) вне диапазона политики хранилища: 10..20 байт'
+            )
         );
         expect(fetchSpy).not.toHaveBeenCalled();
     });
@@ -93,21 +95,22 @@ describe('MediaService: размер файла против политики х
 
         http.expectOne(UPLOAD_URLS).flush({ targets: [makeTarget([10, 20])] });
 
-        await expectAsync(upload).toBeRejectedWithError(
-            Error,
-            'MediaService: размер файла "small.webp" (5 байт) вне диапазона политики хранилища: 10..20 байт'
+        await expect(upload).rejects.toThrowError(
+            new Error(
+                'MediaService: размер файла "small.webp" (5 байт) вне диапазона политики хранилища: 10..20 байт'
+            )
         );
         expect(fetchSpy).not.toHaveBeenCalled();
     });
 
     it('отправляет файл в хранилище, если политика размер не ограничивает', async () => {
-        fetchSpy.and.resolveTo(new Response(null, { status: 204 }));
+        fetchSpy.mockResolvedValue(new Response(null, { status: 204 }));
 
         const upload = service.uploadFile(makeFile(30, 'image.webp'), 'UPLOAD_PURPOSE_SETTLEMENT');
 
         http.expectOne(UPLOAD_URLS).flush({ targets: [makeTarget(null)] });
 
-        await expectAsync(upload).toBeResolvedTo('https://cdn.lasthearth.test/image.webp');
+        await expect(upload).resolves.toBe('https://cdn.lasthearth.test/image.webp');
         expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
 });

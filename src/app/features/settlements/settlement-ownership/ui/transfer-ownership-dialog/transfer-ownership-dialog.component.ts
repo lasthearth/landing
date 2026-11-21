@@ -15,7 +15,6 @@ import { TransferOwnershipDialogData } from '../../model/transfer-ownership-dial
  */
 @Component({
     selector: 'app-transfer-ownership-dialog',
-    standalone: true,
     imports: [TranslatePipe],
     templateUrl: './transfer-ownership-dialog.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],

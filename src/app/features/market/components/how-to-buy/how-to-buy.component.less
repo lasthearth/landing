@@ -26,8 +26,10 @@
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.how-to-buy-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
+@media (hover: hover) and (pointer: fine) {
+    .how-to-buy-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+    }
 }
 
 .how-to-buy-slider::-moz-range-thumb {
@@ -40,8 +42,10 @@
     transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
-.how-to-buy-slider::-moz-range-thumb:hover {
-    transform: scale(1.1);
+@media (hover: hover) and (pointer: fine) {
+    .how-to-buy-slider::-moz-range-thumb:hover {
+        transform: scale(1.1);
+    }
 }
 
 .how-to-buy-slider::-moz-range-track {

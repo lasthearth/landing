@@ -1,4 +1,4 @@
-import { Injectable, signal, DestroyRef, inject } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { SectionStateService } from './section-state.service';
 
 /**
@@ -187,7 +187,6 @@ export class ScrollService {
 
         // Поднимаемся вверх по дереву и собираем все sectionId
         while (currentElement) {
-            // Ищем родительские rule-section
             const ruleSection = currentElement.closest('app-rule-section') as HTMLElement | null;
             if (ruleSection) {
                 const sectionId = ruleSection.getAttribute('sectionid');

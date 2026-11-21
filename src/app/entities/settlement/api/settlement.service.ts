@@ -13,6 +13,7 @@ import { ISettlement } from '../model/i-settlement';
 import { ISettlementInvitation } from '../model/i-settlement-invitation';
 import { IUpdateSettlementRequest } from '../model/i-update-settlement';
 import { IJoinRequest } from '../model/i-join-request';
+import { IMember } from '../model/i-member';
 import { IUserMemberships } from '../model/i-user-memberships';
 import { INotifierPlacement } from '../model/i-notifier-placement';
 import { ICreateInviteLink, IInviteLink, IInviteLinkPreview } from '../model/i-invite-link';
@@ -250,7 +251,7 @@ export class SettlementService {
      */
     public inviteAccept(invitationId: string) {
         return this.http.post<{
-            users: any[];
+            users: IMember[];
         }>(
             `${this.baseUrl}/settlements/invitations/${invitationId}:accept`,
             {},
@@ -266,7 +267,7 @@ export class SettlementService {
      */
     public rejectAccept(invitationId: string) {
         return this.http.post<{
-            users: any[];
+            users: IMember[];
         }>(
             `${this.baseUrl}/settlements/invitations/${invitationId}:reject`,
             {},

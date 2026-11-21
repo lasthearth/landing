@@ -65,7 +65,7 @@
             {{ "player.style.banner" | translate }}
             @if (balance() !== null) {
                 <span class="style-editor__balance">
-                    <img src="/splinter-of-spark.webp" alt="" class="style-banner__shard" />
+                    <img decoding="async" height="201" width="128" src="/splinter-of-spark.webp" alt="" class="style-banner__shard" />
                     {{ "player.style.buy.balance" | translate: { coins: balance() } }}
                 </span>
             }
@@ -86,7 +86,7 @@
                         <app-profile-banner class="size-full" [banner]="item" [compact]="true" />
                         @if (item.lock && item.price) {
                             <span class="style-banner__price">
-                                <img src="/splinter-of-spark.webp" alt="" class="style-banner__shard" />
+                                <img decoding="async" height="201" width="128" src="/splinter-of-spark.webp" alt="" class="style-banner__shard" />
                                 {{ item.price | amount }}
                             </span>
                         } @else if (item.lock) {

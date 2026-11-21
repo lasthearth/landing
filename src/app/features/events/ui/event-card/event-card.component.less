@@ -7,9 +7,6 @@
     flex-direction: column;
     gap: 1.25rem;
     scroll-margin-top: 6rem;
-    transition:
-        box-shadow 0.3s ease,
-        opacity 0.2s ease;
 }
 
 .event-card--ended {
@@ -211,14 +208,12 @@
     color: var(--lh-ink-2);
     cursor: pointer;
     box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--lh-ink) 18%, transparent);
-    transition:
-        color 0.15s ease,
-        box-shadow 0.15s ease,
-        background-color 0.15s ease;
 
-    &:hover {
-        color: var(--lh-brand-ink);
-        box-shadow: inset 0 0 0 1.5px var(--lh-brand);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-brand-ink);
+            box-shadow: inset 0 0 0 1.5px var(--lh-brand);
+        }
     }
 
     &:focus-visible {
@@ -235,9 +230,11 @@
     width: 2.25rem;
 }
 
-.event-card__icon-action--danger:hover {
-    color: var(--lh-danger-ink);
-    box-shadow: inset 0 0 0 1.5px var(--lh-danger-ink);
+@media (hover: hover) and (pointer: fine) {
+    .event-card__icon-action--danger:hover {
+        color: var(--lh-danger-ink);
+        box-shadow: inset 0 0 0 1.5px var(--lh-danger-ink);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -292,8 +289,10 @@
     background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
     cursor: pointer;
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-ink) 14%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-ink) 14%, transparent);
+        }
     }
 
     &:focus-visible {

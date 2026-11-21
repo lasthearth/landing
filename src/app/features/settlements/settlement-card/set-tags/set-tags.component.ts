@@ -58,7 +58,6 @@ interface SetTagsDialogResult {
  */
 @Component({
     selector: 'app-set-tags',
-    standalone: true,
     imports: [ActiveTagComponent, TranslatePipe, ReactiveFormsModule, TuiIcon, LHInputComponent],
     templateUrl: './set-tags.component.html',
     styles: [':host { display: block; }'],
@@ -248,7 +247,7 @@ export class SetTagsComponent {
                 description: description.trimEnd() || undefined,
             })
             .pipe(
-                catchError((error) => {
+                catchError(() => {
                     this.requestStatusService.showError(this.i18n.translate('settlements.tags.createError'));
                     return EMPTY;
                 }),

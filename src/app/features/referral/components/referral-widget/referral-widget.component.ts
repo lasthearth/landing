@@ -1,4 +1,4 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -37,17 +37,7 @@ interface IReferralWidgetViewModel {
  */
 @Component({
     selector: 'app-referral-widget',
-    standalone: true,
-    imports: [
-        AmountPipe,
-        CommonModule,
-        AsyncPipe,
-        TuiIcon,
-        TuiButton,
-        TranslatePipe,
-        EmptyStateComponent,
-        ReferralPayoutComponent,
-    ],
+    imports: [AmountPipe, AsyncPipe, TuiIcon, TuiButton, TranslatePipe, EmptyStateComponent, ReferralPayoutComponent],
     templateUrl: './referral-widget.component.html',
     styleUrl: './referral-widget.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

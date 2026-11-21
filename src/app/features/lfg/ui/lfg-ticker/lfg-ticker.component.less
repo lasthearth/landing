@@ -27,17 +27,18 @@
     color: var(--lh-ink-2);
     font-size: 0.9375rem;
     text-decoration: none;
-    transition:
-        box-shadow var(--lh-dur-fast) var(--lh-ease-smooth),
-        color var(--lh-dur-fast) var(--lh-ease-smooth);
 
-    &:hover {
-        box-shadow: inset 0 0 0 1px var(--lh-brand);
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            box-shadow: inset 0 0 0 1px var(--lh-brand);
+            color: var(--lh-ink);
+        }
     }
 
-    &:hover .lfg-ticker__end {
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover .lfg-ticker__end {
+            color: var(--lh-brand-ink);
+        }
     }
 
     &:focus-visible {
@@ -86,7 +87,6 @@
     margin-left: auto;
     font-weight: 700;
     color: var(--lh-ink-3);
-    transition: color var(--lh-dur-fast) var(--lh-ease-smooth);
 }
 
 // На телефоне — две строки: подпись и время сверху, название ниже, без «ещё N».

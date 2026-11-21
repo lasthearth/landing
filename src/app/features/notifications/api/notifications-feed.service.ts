@@ -135,7 +135,8 @@ export class NotificationsFeedService {
             const broadcast = dto.user_id === BROADCAST_USER_ID;
             const serverRead = dto.state === 'READ' || dto.state === 2;
 
-            const link = broadcast ? this.broadcastLink(dto.title) : this.personalLink(dto.title);
+            // Новые уведомления сами говорят, куда ведут; старые — угадываем по заголовку.
+            const link = dto.link || (broadcast ? this.broadcastLink(dto.title) : this.personalLink(dto.title));
 
             return {
                 id: dto.id,
@@ -271,7 +272,8 @@ export class NotificationsFeedService {
         }
 
         this.userId = userId;
-        const stored = this.storage.getItem<ReadState>(this.storageKey()!);
+        const key = this.storageKey();
+        const stored = key ? this.storage.getItem<ReadState>(key) : null;
         this.readBroadcasts.set(new Set(Array.isArray(stored?.ids) ? stored.ids : []));
         this.readLocally.set(new Set());
         this.raw.set([]);

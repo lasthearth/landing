@@ -61,16 +61,16 @@
     color: var(--lh-ink);
     background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
     cursor: pointer;
-    transition:
-        background-color 0.15s ease,
-        transform 0.15s ease;
+    transition: transform 0.15s var(--lh-ease-spring);
 
     tui-icon {
         font-size: 1rem;
     }
 
-    &:hover:not(:disabled) {
-        background: color-mix(in srgb, var(--lh-ink) 13%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            background: color-mix(in srgb, var(--lh-ink) 13%, transparent);
+        }
     }
 
     &:active:not(:disabled) {
@@ -92,8 +92,10 @@
         background: linear-gradient(160deg, var(--lh-brand-deep), var(--lh-brand-strong));
         box-shadow: 0 6px 16px -10px var(--lh-brand-strong);
 
-        &:hover:not(:disabled) {
-            background: linear-gradient(160deg, var(--lh-brand-lit), var(--lh-brand-deep));
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled) {
+                background: linear-gradient(160deg, var(--lh-brand-lit), var(--lh-brand-deep));
+            }
         }
     }
 
@@ -101,8 +103,10 @@
         color: #fff;
         background: var(--lh-danger-strong);
 
-        &:hover:not(:disabled) {
-            background: var(--lh-danger-ink);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled) {
+                background: var(--lh-danger-ink);
+            }
         }
     }
 
@@ -111,7 +115,7 @@
     }
 
     &--shake {
-        animation: we-shake 0.4s ease;
+        animation: we-shake 0.3s var(--lh-ease-out-quart);
     }
 
     &--sm {
@@ -147,15 +151,16 @@
     border-radius: 0.75rem;
     color: var(--lh-ink-2);
     cursor: pointer;
-    transition: background-color 0.15s ease;
 
     tui-icon {
         font-size: 1.125rem;
     }
 
-    &:hover:not(:disabled) {
-        color: var(--lh-ink);
-        background: color-mix(in srgb, var(--lh-ink) 9%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover:not(:disabled) {
+            color: var(--lh-ink);
+            background: color-mix(in srgb, var(--lh-ink) 9%, transparent);
+        }
     }
 
     &:disabled {
@@ -208,9 +213,11 @@
     color: var(--lh-ink-2);
     text-decoration: none;
 
-    &:hover {
-        color: var(--lh-ink);
-        background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-ink);
+            background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
+        }
     }
 
     @media (max-width: 700px) {
@@ -299,9 +306,6 @@
         font-size: 0.875rem;
         color: var(--lh-ink-2);
         cursor: pointer;
-        transition:
-            background-color 0.15s ease,
-            color 0.15s ease;
 
         tui-icon {
             font-size: 1rem;
@@ -357,7 +361,7 @@
     box-shadow:
         0 0 0 1px var(--we-line),
         0 18px 40px -16px rgba(26, 17, 13, 0.5);
-    animation: we-pop 0.14s ease-out;
+    animation: we-menu-pop 0.14s var(--lh-ease-out-quart);
 
     button {
         display: flex;
@@ -374,8 +378,10 @@
             color: var(--lh-ink-3);
         }
 
-        &:hover:not(:disabled) {
-            background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover:not(:disabled) {
+                background: color-mix(in srgb, var(--lh-ink) 7%, transparent);
+            }
         }
 
         &:disabled {
@@ -474,7 +480,7 @@
     font-variant-numeric: tabular-nums;
     color: var(--lh-ink-3);
     opacity: 0;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.15s var(--lh-ease-out-quart);
 }
 
 .we__title-wrap:focus-within .we__title-count {
@@ -540,7 +546,7 @@
     box-shadow:
         inset 0 0 0 1px var(--we-line),
         0 20px 50px -30px rgba(26, 17, 13, 0.55);
-    transition: max-width 0.25s ease;
+    transition: max-width var(--lh-dur-fast) var(--lh-ease-out-quart);
 
     &--mobile {
         max-width: 24.375rem;

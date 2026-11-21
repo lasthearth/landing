@@ -17,7 +17,7 @@ export async function loadPage<T>(
 ): Promise<T> {
     const [component, ...bundles] = await Promise.all([loadComponent(), ...loadBundles.map((load) => load())]);
 
-    for (const bundle of bundles as TranslationBundle[]) {
+    for (const bundle of bundles) {
         registerTranslations(bundle);
     }
 

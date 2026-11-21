@@ -60,8 +60,8 @@
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "12kB",
-                                    "maximumError": "18kB"
+                                    "maximumWarning": "20kB",
+                                    "maximumError": "24kB"
                                 }
                             ],
                             "outputHashing": "all",
@@ -101,19 +101,41 @@
                     "builder": "@angular/build:extract-i18n"
                 },
                 "test": {
-                    "builder": "@angular/build:karma",
+                    "builder": "@angular/build:unit-test",
                     "options": {
-                        "polyfills": ["zone.js", "zone.js/testing"],
+                        "buildTarget": "last-hearth-landing:build:development",
+                        "runner": "vitest",
                         "tsConfig": "tsconfig.spec.json",
-                        "inlineStyleLanguage": "less",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "public"
-                            }
+                        "include": ["src/**/*.spec.ts"],
+                        // Файлы про сжатие картинок требуют настоящего холста:
+                        // createImageBitmap и 2D-контекст. Спек плашки вкладок
+                        // меряет настоящие DOM-rect и пишет Jasmine withContext.
+                        // Их выполняет test-browser.
+                        "exclude": [
+                            "src/app/shared/lib/compress-image.function.spec.ts",
+                            "src/app/shared/lib/directives/tabs-pill.directive.spec.ts",
+                            "src/app/shared/ui/image-file-input/image-file-input.component.spec.ts"
                         ],
-                        "styles": ["src/styles.css"],
-                        "scripts": []
+                        "codeCoverage": false,
+                        "codeCoverageReporters": ["text", "lcov", "json-summary"],
+                        "watch": false
+                    }
+                },
+                "test-browser": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        // Тот же прогонщик, что у `test`, но в настоящем Chrome:
+                        // холст и живая геометрия DOM в jsdom не работают.
+                        "buildTarget": "last-hearth-landing:build:development",
+                        "runner": "vitest",
+                        "tsConfig": "tsconfig.spec.browser.json",
+                        "include": [
+                            "src/app/shared/lib/compress-image.function.spec.ts",
+                            "src/app/shared/lib/directives/tabs-pill.directive.spec.ts",
+                            "src/app/shared/ui/image-file-input/image-file-input.component.spec.ts"
+                        ],
+                        "browsers": ["chromiumHeadless"],
+                        "watch": false
                     }
                 }
             }

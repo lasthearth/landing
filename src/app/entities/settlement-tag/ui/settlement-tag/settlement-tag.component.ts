@@ -8,7 +8,6 @@ import { ISettlementTag } from '../../model/i-settlement-tag';
  * Повторяет геометрию `app-settlement-badge`, но красится динамическим цветом тега.
  */
 @Component({
-    standalone: true,
     selector: 'app-settlement-tag',
     templateUrl: './settlement-tag.component.html',
     styleUrl: './settlement-tag.component.less',

@@ -5,16 +5,67 @@
     align-self: flex-start;
 }
 
+/*
+ * Кнопка-колокольчик в строке управления шапки. Повторяет соседние иконки
+ * (тема, язык): без подложки и тени, пергаментный цвет, мягкий ховер.
+ * Раньше здесь была глобальная пилюля `.nav-button`, и в тёмной теме её
+ * заливка перебивала локальные переопределения шапки.
+ */
+.bell__trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: var(--lh-radius-sm);
+    background-color: transparent;
+    color: var(--lh-parchment-dim);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: scale 120ms var(--lh-ease-spring);
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: color-mix(in srgb, var(--lh-parchment) 10%, transparent);
+            color: var(--lh-parchment-3);
+        }
+    }
+
+    &:active {
+        scale: 0.98;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--lh-brand);
+        outline-offset: 2px;
+    }
+}
+
+.bell__trigger--open,
+.bell__trigger--open:hover {
+    background-color: color-mix(in srgb, var(--lh-parchment) 14%, transparent);
+    color: var(--lh-accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bell__trigger {
+        transition: none;
+    }
+}
+
 .bell__badge {
     position: absolute;
-    top: 2px;
-    right: 1px;
+    top: 4px;
+    right: 2px;
     min-width: 1.125rem;
     height: 1.125rem;
     padding: 0 0.25rem;
     border-radius: 999px;
     background: var(--lh-brand);
-    box-shadow: 0 0 0 2px var(--color-lh-primary-2, #2b2d31);
+    box-shadow: 0 0 0 2px var(--lh-night);
     color: #fff;
     font-size: 0.8125rem;
     font-weight: 800;
@@ -23,36 +74,71 @@
     pointer-events: none;
 }
 
-.bell__panel {
+/*
+ * Летящий контейнер панели: позиционирование и анимация входа/выхода.
+ * Прозрачный хост для [appMotionBlur]: фон, рамка и тень — на слое .bell__panel,
+ * шлейф движения рисуется по transform этого элемента. Панель «вылетает»
+ * из триггера: начало координат — верхний правый угол, у кнопки-колокольчика.
+ */
+.bell__fly {
     position: absolute;
     top: calc(100% + 0.375rem);
     right: 0;
     z-index: 60;
-    display: flex;
-    flex-direction: column;
-    width: min(22rem, calc(100vw - 2rem));
-    max-height: min(28rem, 70vh);
-    overflow: hidden;
-    border: 1px solid var(--lh-border);
-    border-radius: 0.875rem;
-    background: var(--lh-surface);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-    color: var(--lh-ink);
-    animation: bell-panel-enter var(--lh-dur-fast, 0.15s) var(--lh-ease-smooth, ease-out);
+    transform-origin: top right;
+    animation: bell-panel-enter var(--lh-dur-fast) var(--lh-ease-smooth);
+}
+
+/* Закрытие быстрее открытия (120мс против 200мс). Гаснущая панель не ловит
+   клики: она ещё в кадре, и без этого клик по шапке уходил бы в пустоту. */
+.bell__fly--closing {
+    animation: bell-panel-exit 120ms var(--lh-ease-out-quart) forwards;
+    pointer-events: none;
 }
 
 /* Как у остальных выпадающих меню шапки */
 @keyframes bell-panel-enter {
     from {
         opacity: 0;
-        transform: translateY(-4px);
+        transform: translateY(-8px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .bell__panel {
-        animation: none;
+@keyframes bell-panel-exit {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
+
+    to {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+    }
+}
+
+/*
+ * Ветка prefers-reduced-motion намеренно не задана: глобальный kill-switch
+ * в styles.css сжимает анимации до 0.01мс, и animationend по-прежнему
+ * стреляет — компонент успевает размонтировать панель после выхода.
+ * Явное `animation: none` зависало бы с открытой панелью.
+ */
+
+.bell__panel {
+    display: flex;
+    flex-direction: column;
+    width: min(22rem, calc(100vw - 2rem));
+    max-height: min(28rem, 70dvh);
+    overflow: hidden;
+    border: 1px solid var(--lh-border);
+    border-radius: 0.875rem;
+    background: var(--lh-surface);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    color: var(--lh-ink);
 }
 
 .bell__head {
@@ -81,8 +167,10 @@
     text-underline-offset: 3px;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-ink);
+        }
     }
 }
 
@@ -118,8 +206,10 @@
     text-align: left;
     cursor: default;
 
-    &:hover {
-        background: var(--lh-surface-2);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: var(--lh-surface-2);
+        }
     }
 
     &:focus-visible {
@@ -195,9 +285,11 @@
     font: inherit;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-ink);
-        background: var(--lh-surface-2);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-ink);
+            background: var(--lh-surface-2);
+        }
     }
 
     &:focus-visible {
@@ -266,8 +358,10 @@
     text-align: left;
     cursor: pointer;
 
-    &:hover {
-        background: var(--lh-surface-2);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: var(--lh-surface-2);
+        }
     }
 
     &:focus-visible {
@@ -314,7 +408,7 @@
     height: 1.25rem;
     border-radius: 999px;
     background: color-mix(in srgb, var(--lh-ink) 18%, transparent);
-    transition: background 0.2s ease;
+    transition: background-color var(--lh-dur-fast) var(--lh-ease-smooth);
 
     &::after {
         content: '';
@@ -326,7 +420,8 @@
         border-radius: 50%;
         background: #fff;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s ease;
+        /* Ползунок — движение: пружина, как у нажатия. */
+        transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
     }
 }
 
@@ -342,5 +437,20 @@
     .bell__switch,
     .bell__switch::after {
         transition: none;
+    }
+}
+
+/* На узком экране якорь у колокольчика выносит панель за рамку: список
+   встаёт окном по центру экрана и всегда остаётся в кадре. */
+@media (max-width: 767px) {
+    .bell__panel {
+        position: fixed;
+        top: 50%;
+        right: auto;
+        left: 50%;
+        width: min(22rem, calc(100vw - 2rem));
+        max-height: min(28rem, 80dvh);
+        translate: -50% -50%;
+        transform-origin: center;
     }
 }

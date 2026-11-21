@@ -1,0 +1,48 @@
+<ol class="thread" [attr.aria-label]="'tickets.thread.label' | translate">
+    @for (message of messages(); track message.id) {
+        @let who = person(message.authorId);
+        <li
+            class="thread__item"
+            [class.thread__item--staff]="message.staff"
+            [class.thread__item--note]="message.internal"
+        >
+            @if (message.staff && viewer() === "author") {
+                <span class="thread__avatar thread__avatar--crest" aria-hidden="true">
+                    <tui-icon icon="@tui.shield" />
+                </span>
+            } @else {
+                <img
+                    class="thread__avatar"
+                    [src]="who?.avatar || '/default-avatar.webp'"
+                    alt=""
+                    width="36"
+                    height="36"
+                    loading="lazy"
+                />
+            }
+
+            <div class="thread__bubble">
+                <header class="thread__meta">
+                    <b class="thread__name">
+                        @if (message.staff && viewer() === "author") {
+                            {{ "tickets.thread.staff" | translate }}
+                        } @else {
+                            {{ who?.name || ("tickets.thread.unknown" | translate) }}
+                        }
+                    </b>
+                    @if (message.internal) {
+                        <span class="thread__badge">
+                            <tui-icon icon="@tui.lock" class="size-3.5!" />
+                            {{ "tickets.thread.note" | translate }}
+                        </span>
+                    } @else if (message.staff && viewer() === "staff") {
+                        <span class="thread__badge thread__badge--staff">{{ "tickets.thread.staff" | translate }}</span>
+                    }
+                    <time class="thread__time" [appRelativeTime]="message.createdAt"></time>
+                </header>
+                <!-- Текст от игрока: только интерполяция, переносы строк сохраняет CSS -->
+                <p class="thread__text">{{ message.text }}</p>
+            </div>
+        </li>
+    }
+</ol>

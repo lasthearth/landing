@@ -10,7 +10,6 @@ import { ProfileNavigationComponent } from '@app/features/profile/profile-naviga
  * Компонент лендинга.
  */
 @Component({
-    standalone: true,
     selector: 'app-landing',
     imports: [RouterOutlet, ProfileNavigationComponent],
     templateUrl: './landing.component.html',
@@ -32,20 +31,19 @@ export class LandingComponent {
      */
     private readonly currentRouteKey = toSignal<RouteKeys | undefined>(
         this.router.events.pipe(
-        filter((event) => event instanceof NavigationEnd),
-        startWith(null),
-        map(() => {
-            let route = this.activatedRoute;
+            filter((event) => event instanceof NavigationEnd),
+            startWith(null),
+            map(() => {
+                let route = this.activatedRoute;
 
-            while (route.firstChild) {
-                route = route.firstChild;
-            }
+                while (route.firstChild) {
+                    route = route.firstChild;
+                }
 
-            return route.snapshot?.data?.['route_keys'];
-        })
+                return route.snapshot?.data?.['route_keys'];
+            })
         )
     );
-
 
     /**
      * Проверяет, является ли данный ключ маршрута страницей профиля.
@@ -60,7 +58,8 @@ export class LandingComponent {
             RouteKeys.settlement,
             RouteKeys.referral,
             RouteKeys.profileStyle,
-            RouteKeys.mySuggestions
+            RouteKeys.mySuggestions,
+            RouteKeys.support,
         ].includes(routeKey);
     }
 
@@ -74,6 +73,12 @@ export class LandingComponent {
     });
 
     /**
+     * Навигация профиля: на телефоне — плавающая пилюля внизу, от xl —
+     * колонка знаков сбоку от контента. Показывается на всех разделах профиля.
+     */
+    protected readonly showProfileBar = computed(() => this.isProfilePageActive());
+
+    /**
      * Документ — для класса-флага на body.
      */
     private readonly document = inject(DOCUMENT);
@@ -85,7 +90,7 @@ export class LandingComponent {
      */
     public constructor() {
         effect(() => {
-            this.document.body.classList.toggle('lh-has-bottom-bar', this.isProfilePageActive());
+            this.document.body.classList.toggle('lh-has-bottom-bar', this.showProfileBar());
         });
     }
 }

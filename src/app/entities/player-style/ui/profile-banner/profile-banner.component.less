@@ -23,7 +23,7 @@
 // пустой выбор читается как осознанный, а не как недогрузившаяся картинка.
 .pbanner--empty {
     background-color: var(--lh-surface-3);
-    outline: 2px dashed var(--lh-line);
+    outline: 2px dashed var(--lh-border);
     outline-offset: -6px;
 }
 
@@ -315,7 +315,7 @@
         0 0 6px hsl(var(--hue) 100% 55%),
         0 0 12px hsl(var(--hue) 100% 45% / 0.7);
     animation-name: pbanner-embers;
-    animation-timing-function: ease-out;
+    animation-timing-function: var(--lh-ease-out-quart);
 }
 
 @keyframes pbanner-embers {

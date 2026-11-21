@@ -53,14 +53,14 @@
         </div>
     }
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4 lh-stagger-list">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
         @for (item of visibleItems(); track item.id) {
             <div
                 class="flex flex-col gap-2 lg:gap-3 lh-panel p-3 lg:p-4 items-center lh-card-glow hover:-translate-y-1 group"
             >
                 <!-- Image -->
                 <div
-                    class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-2 group-hover:bg-surface-3 transition-colors"
+                    class="relative w-full aspect-square rounded-xl overflow-hidden bg-surface-2 group-hover:bg-surface-3"
                 >
                     @if (item.imageUrl) {
                         <div
@@ -116,7 +116,7 @@
                     @if (hasDiscount(item)) {
                         <div class="flex items-center gap-0.5 leading-none text-ink-3">
                             <span class="strong-strike font-medium text-sm lg:text-base leading-none">{{ item.price | amount }}</span>
-                            <img
+                            <img decoding="async" height="201" width="128"
                                 src="/splinter-of-spark.webp"
                                 [alt]="'market.common.shardAlt' | translate"
                                 class="h-4 w-4 object-contain opacity-70 leading-none -ml-0.5"
@@ -124,7 +124,7 @@
                         </div>
                     }
                     <div class="flex items-center gap-1.5">
-                        <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
+                        <img decoding="async" height="201" width="128" src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                         <span class="text-lg lg:text-xl font-bold text-lh-primary">{{ getDisplayPrice(item) | amount }}</span>
                     </div>
                     @if (getSavings(item); as savings) {
@@ -138,7 +138,7 @@
                 <button
                     type="button"
                     (click)="openPurchaseDialog(item)"
-                    class="w-full text-parchment-3 uppercase transition-colors duration-300 font-bold cursor-pointer bg-brand-strong hover:bg-brand rounded-xl py-2 lg:py-2.5 text-sm lg:text-base"
+                    class="w-full text-parchment-3 uppercase font-bold cursor-pointer bg-brand-strong hover:bg-brand rounded-xl py-2 lg:py-2.5 text-sm lg:text-base"
                 >
                     {{ 'market.common.buyButton' | translate }}
                 </button>

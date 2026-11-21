@@ -13,6 +13,8 @@ import {
     gameBranch,
     modCompatibility,
 } from '@entities/server-mod';
+import { readInputValue } from '@shared/lib/read-input-value.function';
+import { RevealDirective } from '@shared/lib/directives';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
 import { ErrorStateComponent } from '@shared/ui/error-state';
@@ -70,14 +72,18 @@ const MOD_FOLDERS: readonly { os: string; path: string }[] = [
  * Рендерится на сервере по запросу: список меняется без выкладки сайта.
  */
 @Component({
-    standalone: true,
     selector: 'app-mods-page',
-    imports: [PageHeaderComponent, EmptyStateComponent, ErrorStateComponent, SkeletonComponent, TuiIcon, TranslatePipe],
+    imports: [PageHeaderComponent, EmptyStateComponent, ErrorStateComponent, SkeletonComponent, TuiIcon, TranslatePipe, RevealDirective],
     templateUrl: './mods-page.component.html',
     styleUrl: './mods-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModsPageComponent {
+
+    /**
+     * Достаёт текст из события ввода: проверка `instanceof` вместо `$any`.
+     */
+    protected readonly readInputValue = readInputValue;
     private readonly api = inject(ServerModApiService);
     private readonly i18n = inject(I18nService);
 
@@ -125,7 +131,7 @@ export class ModsPageComponent {
                 )
             )
         ),
-        { initialValue: { status: 'loading' } as ModsState }
+        { initialValue: { status: 'loading' } }
     );
 
     /**

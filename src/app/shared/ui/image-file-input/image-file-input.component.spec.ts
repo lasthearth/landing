@@ -15,7 +15,6 @@ const LIMIT_BYTES = IMAGE_MAX_SIZE_MB * 1024 * 1024;
  * Хост-форма: файловое поле с теми же валидаторами, что у заявки на поселение.
  */
 @Component({
-    standalone: true,
     imports: [ReactiveFormsModule, ImageFileInputComponent],
     template: '<app-image-file-input [formControl]="control" />',
 })
@@ -174,7 +173,7 @@ describe('ImageFileInputComponent', () => {
         expect(value.type).toBe('image/webp');
         expect(value.size).toBeLessThan(source.size);
         expect(value.size).toBeLessThanOrEqual(LIMIT_BYTES);
-        expect(host.control.valid).toBeTrue();
+        expect(host.control.valid).toBe(true);
     }, 60000);
 
     it('размер кадра не превышает 1920 по большей стороне', async () => {
@@ -196,8 +195,8 @@ describe('ImageFileInputComponent', () => {
         const value = await emitted;
 
         expect(value).toBe(text);
-        expect(host.control.invalid).toBeTrue();
-        expect(host.control.errors).toEqual(jasmine.objectContaining({ fileFormat: true }));
+        expect(host.control.invalid).toBe(true);
+        expect(host.control.errors).toEqual(expect.objectContaining({ fileFormat: true }));
     }, 30000);
 
     it('сжатое значение не запускает новое сжатие по кругу', async () => {

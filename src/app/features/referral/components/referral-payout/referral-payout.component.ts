@@ -15,7 +15,6 @@ import { TranslatePipe } from '@core/i18n';
  * расходятся между ними.
  */
 @Component({
-    standalone: true,
     selector: 'app-referral-payout',
     imports: [TranslatePipe],
     templateUrl: './referral-payout.component.html',

@@ -1,5 +1,5 @@
 import { RelativeTimeComponent } from '@shared/ui/relative-time';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { HungerGamesCardComponent } from '../ui/hunger-games-card/hunger-games-card.component';
 import { BehaviorSubject, catchError, defaultIfEmpty, Observable, of, switchMap, tap } from 'rxjs';
 import { LeaderBoardType } from '@entities/user';
@@ -17,6 +17,7 @@ import { DonateService, IPurchase } from '@entities/donate';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { RouterLink } from '@angular/router';
 import { PlayerAvatarComponent } from '@entities/player-style';
+import { RevealDirective } from '@shared/lib/directives';
 
 export type TypeLabel = string;
 
@@ -24,7 +25,6 @@ export type TypeLabel = string;
  * Компонент страницы статистики игроков.
  */
 @Component({
-    standalone: true,
     selector: 'app-statistics',
     imports: [AmountPipe, HungerGamesCardComponent,
         RouterLink,
@@ -37,6 +37,7 @@ export type TypeLabel = string;
         NgTemplateOutlet,
         TuiIcon,
         RelativeTimeComponent,
+        RevealDirective,
     ],
     styleUrl: './statistics.component.less',
     templateUrl: './statistics.component.html',
@@ -52,11 +53,6 @@ export class StatisticsComponent {
      * Сервис данных о пользователе.
      */
     private readonly userService: UserService = inject(UserService);
-
-    /**
-     * ChangeDetectorRef для обновления вида.
-     */
-    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     /**
      * Сервис интернационализации.
@@ -102,8 +98,11 @@ export class StatisticsComponent {
 
     /**
      * Кэш аватарок пользователей по user_id.
+     *
+     * Сигнал: ответ batch-запроса приходит после отрисовки таблицы,
+     * и запись аватарки должна сама пометить вид к перерисовке.
      */
-    protected readonly avatarsCache: Map<string, string> = new Map<string, string>();
+    protected readonly avatarsCache = signal<ReadonlyMap<string, string>>(new Map<string, string>());
 
     /**
      * Индекс открытой вкладки.
@@ -278,8 +277,9 @@ export class StatisticsComponent {
             return;
         }
 
+        const cache = this.avatarsCache();
         const uniqueUserIds = [
-            ...new Set(entries.map((entry) => entry.user_id).filter((id) => id && !this.avatarsCache.has(id))),
+            ...new Set(entries.map((entry) => entry.user_id).filter((id) => id && !cache.has(id))),
         ];
 
         if (uniqueUserIds.length === 0) {
@@ -290,12 +290,15 @@ export class StatisticsComponent {
             .getPlayersBatch$(uniqueUserIds)
             .pipe(catchError(() => of([])))
             .subscribe((players) => {
+                const avatars = new Map(this.avatarsCache());
+
                 players.forEach((player) => {
                     if (player.avatar?.original) {
-                        this.avatarsCache.set(player.user_id, player.avatar.original);
+                        avatars.set(player.user_id, player.avatar.original);
                     }
                 });
-                this.cdr.detectChanges();
+
+                this.avatarsCache.set(avatars);
             });
     }
 
@@ -309,6 +312,6 @@ export class StatisticsComponent {
         if (!userId) {
             return '/default-avatar.webp';
         }
-        return this.avatarsCache.get(userId) ?? '/default-avatar.webp';
+        return this.avatarsCache().get(userId) ?? '/default-avatar.webp';
     }
 }

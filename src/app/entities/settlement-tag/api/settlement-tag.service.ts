@@ -2,7 +2,7 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { environment } from '@core/config/environments/environment';
 import { SKIP_ERROR_ALERT } from '@core/interceptors/error.interceptor';
 import { ISettlementTag } from '../model/i-settlement-tag';

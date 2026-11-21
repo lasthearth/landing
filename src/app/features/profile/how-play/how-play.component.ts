@@ -12,6 +12,7 @@ import { SettlementService } from '@entities/settlement';
 import { UserService } from '@entities/user';
 import { OnboardingService } from '@features/onboarding';
 import { AnalyticsService } from '@core/services/analytics.service';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * «Как начать играть»: три шага — купить игру нужной версии, добавить сервер
@@ -22,11 +23,10 @@ import { AnalyticsService } from '@core/services/analytics.service';
  * раньше это была отдельная карточка «Ваш путь на сервер», дублировавшая шаги.
  */
 @Component({
-    standalone: true,
     selector: 'app-how-play',
     templateUrl: './how-play.component.html',
     styleUrl: './how-play.component.less',
-    imports: [RouterLink, TuiIcon, TranslatePipe, ModsNoticeComponent],
+    imports: [RouterLink, TuiIcon, TranslatePipe, ModsNoticeComponent, RevealDirective],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HowPlayComponent {
@@ -109,7 +109,9 @@ export class HowPlayComponent {
      * @param value Строка для копирования.
      */
     protected copy(field: 'ip' | 'password', value: string): void {
-        navigator.clipboard.writeText(value).then(() => {
+        // Копирование без ожидания: отметка ставится после ответа буфера обмена,
+        // а недоступность буфера видна по отсутствию отметки.
+        void navigator.clipboard.writeText(value).then(() => {
             this.copied.set(field);
             setTimeout(() => this.copied.set(null), 2000);
         });

@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TuiIcon } from '@taiga-ui/core';
 import { TuiExpand } from '@taiga-ui/experimental';
 import { TranslatePipe } from '@core/i18n';
+import { RevealDirective } from '@shared/lib/directives';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { environment } from '@core/config/environments/environment';
 
@@ -12,7 +13,7 @@ import { environment } from '@core/config/environments/environment';
  */
 @Component({
     selector: 'app-faq',
-    imports: [PageHeaderComponent, RouterLink, TuiExpand, TuiIcon, CommonModule, TranslatePipe],
+    imports: [PageHeaderComponent, RouterLink, TuiExpand, TuiIcon, NgClass, TranslatePipe, RevealDirective],
     templateUrl: './faq.component.html',
     styleUrl: './faq.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -21,7 +21,8 @@
                 <header class="player-hero lh-panel">
                     @if (banner(); as b) {
                         <app-profile-banner
-                            class="player-hero__banner"
+                            appReveal
+                            class="player-hero__banner lh-reveal--scale"
                             [banner]="b"
                             [natural]="true"
                             [effect]="style()?.bannerEffect ?? 'none'"
@@ -37,7 +38,8 @@
 
                     <div class="player-hero__body">
                         <app-player-frame
-                            class="player-hero__avatar"
+                            appReveal
+                            class="player-hero__avatar lh-reveal--scale"
                             [src]="p.avatarUrl"
                             [alt]="p.nickname"
                             [frame]="style()?.frameId ?? 'none'"
@@ -45,7 +47,7 @@
                         />
 
                         <div class="player-hero__info">
-                            <h1 class="player-hero__name lh-display">{{ p.nickname }}</h1>
+                            <h1 appReveal class="player-hero__name lh-display">{{ p.nickname }}</h1>
                             @if (title(); as t) {
                                 <p
                                     class="player-hero__title"
@@ -98,6 +100,8 @@
 
                 @if (aboutProfile(); as shown) {
                     <app-player-about
+                        appReveal
+                        class="lh-reveal--soft"
                         [profile]="shown"
                         [isOwner]="isOwner()"
                         [canModerate]="canModerate()"
@@ -105,7 +109,11 @@
                     />
                 }
 
-                <section class="player-stats" [attr.aria-label]="'player.stats.title' | translate">
+                <section
+                    appReveal
+                    class="player-stats lh-reveal--soft"
+                    [attr.aria-label]="'player.stats.title' | translate"
+                >
                     <div class="player-stat">
                         <tui-icon icon="@tui.clock" class="player-stat__icon" />
                         <span class="player-stat__value">{{ p.hours | amount }}</span>
@@ -140,7 +148,7 @@
 
                 @if (p.hungerGames; as hg) {
                     <section class="player-hg lh-panel">
-                        <h2 class="player-section-title">
+                        <h2 appReveal class="player-section-title">
                             <tui-icon icon="@tui.flame" class="size-5!" />
                             {{ "player.hungerGames.title" | translate: { season: hg.season } }}
                             @if (hg.active) {
@@ -172,7 +180,7 @@
 
                 @if (p.badges.length) {
                     <section class="player-badges-section">
-                        <h2 class="player-section-title">
+                        <h2 appReveal class="player-section-title">
                             <tui-icon icon="@tui.award" class="size-5!" />
                             {{ "player.badgesTitle" | translate }}
                         </h2>

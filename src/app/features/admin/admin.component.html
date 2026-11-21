@@ -2,6 +2,7 @@
 @let requestExist = veriverificationRequests === null || veriverificationRequests?.length === 0;
 @let settlements = settlementsRequests$ | async;
 @let settlementsRequest = settlements === null || settlements?.length === 0;
+@let openTickets = openTickets$ | async;
 
 <div class="lh-page-container w-full flex flex-col gap-3 lg:gap-6">
     <app-page-header [level]="2" [title]="'admin.title' | translate" />
@@ -26,7 +27,7 @@
             (click)="activeItemIndex = 0"
         >
             <tui-icon icon="@tui.user-check" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.playerForms' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.playerForms" | translate }}</span>
             @if (!requestExist) {
                 <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
             }
@@ -41,8 +42,23 @@
             (click)="activeItemIndex = 1"
         >
             <tui-icon icon="@tui.castle" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.settlementForms' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.settlementForms" | translate }}</span>
             @if (!settlementsRequest) {
+                <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
+            }
+        </button>
+        <button
+            type="button"
+            [attr.aria-label]="'admin.tabs.tickets' | translate"
+            class="nav-button relative shrink-0"
+            aria-controls="admin-panel"
+            [attr.aria-current]="activeItemIndex === ticketsTab ? 'true' : null"
+            [class.nav-button--active]="activeItemIndex === ticketsTab"
+            (click)="activeItemIndex = ticketsTab"
+        >
+            <tui-icon icon="@tui.life-buoy" />
+            <span class="hidden sm:inline">{{ "admin.tabs.tickets" | translate }}</span>
+            @if (openTickets?.open) {
                 <tui-pulse tuiHintAppearance="floating" class="!absolute !-top-1 !-right-1 !scale-110" />
             }
         </button>
@@ -56,7 +72,7 @@
             (click)="activeItemIndex = 13"
         >
             <tui-icon icon="@tui.users" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.players' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.players" | translate }}</span>
         </button>
         <button
             type="button"
@@ -68,7 +84,7 @@
             (click)="activeItemIndex = 9"
         >
             <tui-icon icon="@tui.map-pin" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.settlements' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.settlements" | translate }}</span>
         </button>
 
         <!-- Экономика -->
@@ -82,7 +98,7 @@
             (click)="activeItemIndex = 4"
         >
             <tui-icon icon="@tui.wallet" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.coins' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.coins" | translate }}</span>
         </button>
         <button
             type="button"
@@ -94,7 +110,7 @@
             (click)="activeItemIndex = 6"
         >
             <tui-icon icon="@tui.shopping-cart" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.goods' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.goods" | translate }}</span>
         </button>
         <button
             type="button"
@@ -106,7 +122,7 @@
             (click)="activeItemIndex = 12"
         >
             <tui-icon icon="@tui.boxes" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.kits' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.kits" | translate }}</span>
         </button>
         <button
             type="button"
@@ -118,7 +134,7 @@
             (click)="activeItemIndex = 8"
         >
             <tui-icon icon="@tui.receipt" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.purchasesHistory' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.purchasesHistory" | translate }}</span>
         </button>
 
         <!-- Контент -->
@@ -132,7 +148,7 @@
             (click)="activeItemIndex = 2"
         >
             <tui-icon icon="@tui.circle-help" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.questions' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.questions" | translate }}</span>
         </button>
         <button
             type="button"
@@ -144,7 +160,7 @@
             (click)="activeItemIndex = 3"
         >
             <tui-icon icon="@tui.newspaper" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.createNews' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.createNews" | translate }}</span>
         </button>
 
         <!-- Вики -->
@@ -158,7 +174,7 @@
             (click)="activeItemIndex = 10"
         >
             <tui-icon icon="@tui.book-open" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.wiki' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.wiki" | translate }}</span>
         </button>
 
         <!-- Моды сервера -->
@@ -172,7 +188,7 @@
             (click)="activeItemIndex = 11"
         >
             <tui-icon icon="@tui.puzzle" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.mods' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.mods" | translate }}</span>
         </button>
 
         <!-- Игра -->
@@ -186,7 +202,7 @@
             (click)="activeItemIndex = 7"
         >
             <tui-icon icon="@tui.flame" />
-            <span class="hidden sm:inline">{{ 'admin.tabs.hungerGames' | translate }}</span>
+            <span class="hidden sm:inline">{{ "admin.tabs.hungerGames" | translate }}</span>
         </button>
     </nav>
 
@@ -257,6 +273,9 @@
             }
             @case (13) {
                 <app-admin-players-panel />
+            }
+            @case (14) {
+                <app-tickets-inbox [ticketId]="ticketParam()" />
             }
         }
     </div>

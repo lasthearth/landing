@@ -17,7 +17,6 @@ import { isValidRoleName } from '../../lib/is-valid-role-name.function';
  */
 @Component({
     selector: 'app-role-form-dialog',
-    standalone: true,
     imports: [ReactiveFormsModule, TranslatePipe, LHInputComponent],
     templateUrl: './role-form-dialog.component.html',
     styles: [':host { display: block; padding-top: 32px; }'],

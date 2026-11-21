@@ -1,0 +1,38 @@
+:host {
+    display: inline-flex;
+}
+
+.ticket-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.125rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--lh-ink-2);
+    background: color-mix(in srgb, var(--lh-ink-3) 12%, transparent);
+
+    &::before {
+        content: '';
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: 50%;
+        background: currentcolor;
+    }
+}
+
+.ticket-status[data-status='open'] {
+    color: var(--lh-warning-ink);
+    background: color-mix(in srgb, var(--lh-warning-ink) 12%, transparent);
+}
+
+.ticket-status[data-status='answered'] {
+    color: var(--lh-brand-ink);
+    background: color-mix(in srgb, var(--lh-brand) 14%, transparent);
+}
+
+.ticket-status[data-status='closed'] {
+    color: var(--lh-ink-3);
+}

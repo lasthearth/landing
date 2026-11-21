@@ -1,17 +1,37 @@
 // Карточка игрока: целиком ссылка на профиль.
 .player-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     color: var(--lh-ink);
     text-decoration: none;
-    transition:
-        transform var(--lh-dur-fast) var(--lh-ease-out-quart),
-        box-shadow var(--lh-dur-fast) var(--lh-ease-out-quart);
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 
-    &:hover {
-        transform: translateY(-2px);
+    /*
+     * Ховерная тень на псевдоэлементе: анимируется только прозрачность,
+     * а не сама тень, чтобы кадр не уходил на перерисовку карточки.
+     */
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
         box-shadow: var(--lh-shadow-lift);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--lh-dur-fast) var(--lh-ease-out-quart);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            transform: translateY(-2px);
+        }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover::after {
+            opacity: 1;
+        }
     }
 
     &__head {
@@ -84,7 +104,7 @@
         gap: 0.75rem;
         margin-top: auto;
         padding-top: 0.625rem;
-        border-top: 1px solid var(--lh-line);
+        border-top: 1px solid var(--lh-border);
         font-size: 0.875rem;
         color: var(--lh-ink-3);
     }
@@ -109,7 +129,13 @@
         transition: none;
     }
 
-    .player-card:hover {
-        transform: none;
+    .player-card::after {
+        transition: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .player-card:hover {
+            transform: none;
+        }
     }
 }

@@ -43,7 +43,6 @@ import { ReactionsComponent } from '@features/reactions';
  * цвета берутся из токенов темы, поэтому светлая и тёмная темы не требуют отдельных правил.
  */
 @Component({
-    standalone: true,
     selector: 'app-news-card',
     imports: [
         TuiIcon,

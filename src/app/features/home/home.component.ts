@@ -11,18 +11,14 @@ import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { I18nService, TranslatePipe } from '@core/i18n';
 import { environment } from '@core/config/environments/environment';
 import { AnalyticsService } from '@core/services/analytics.service';
-import { ServerInformationService } from '@core/services/server-information.service';
-import { SettlementService } from '@entities/settlement';
 import { DiscordGalleryImage, DiscordGalleryService } from '@shared/lib/discord-gallery/discord-gallery.service';
 import { buildThumbUrl } from '@shared/lib/discord-gallery/discord-thumb-url.function';
 import { readShotCaption } from '@shared/lib/discord-gallery/read-shot-caption.function';
 import { formatShortDate } from '@shared/lib/relative-time';
-import { formatServerTime } from '@app/layout/header/lib/format-server-time.function';
-import { catchError, finalize, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
+import { catchError, map, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RevealDirective } from '@shared/lib/directives';
-import { PulseStat } from './model/pulse-stat.interface';
 import { UpcomingEventComponent } from '@features/events';
 import { LfgTickerComponent } from '@features/lfg';
 import { ReferralPayoutComponent } from '@features/referral';
@@ -71,7 +67,6 @@ interface GalleryStripItem {
  * Компонент главной страницы.
  */
 @Component({
-    standalone: true,
     selector: 'app-home',
     imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe, RevealDirective, UpcomingEventComponent, ModsNoticeComponent, LfgTickerComponent, ReferralPayoutComponent],
     styleUrl: './home.component.less',
@@ -98,16 +93,6 @@ export class HomeComponent {
      * Subject для принудительного обновления списка.
      */
     private readonly refresh$ = new Subject<void>();
-
-    /**
-     * Сервис информации о сервере (онлайн, игровое время).
-     */
-    private readonly serverInfo = inject(ServerInformationService);
-
-    /**
-     * Сервис наделов (счётчик для пульса).
-     */
-    private readonly settlementService = inject(SettlementService);
 
     /**
      * Сервис галереи скриншотов.
@@ -299,47 +284,6 @@ export class HomeComponent {
     ] as const;
 
     /**
-     * Текущий онлайн сервера.
-     */
-    protected readonly online = toSignal(
-        this.serverInfo.getOnlinePlayersCount$().pipe(catchError(() => of(null))),
-        { initialValue: null }
-    );
-
-    /**
-     * Текущее игровое время мира (локализованное).
-     */
-    protected readonly worldTime = toSignal(
-        this.serverInfo.getTime$().pipe(
-            map((data) => formatServerTime(data.time, this.i18n.language())),
-            catchError(() => of(null))
-        ),
-        { initialValue: null }
-    );
-
-    /**
-     * Количество одобренных наделов сервера.
-     */
-    protected readonly settlementsCount = toSignal(
-        this.settlementService.getSettlements().pipe(
-            map((list) => list.length),
-            catchError(() => of(null))
-        ),
-        { initialValue: null }
-    );
-
-    /**
-     * Метрики «Пульса сервера» для отрисовки одним циклом.
-     * Собраны в один список, чтобы три идентичные карточки не дублировались
-     * в шаблоне: расходились подписи и разметка при каждой правке.
-     */
-    protected readonly pulseStats = computed<readonly PulseStat[]>(() => [
-        { icon: '@tui.users', labelKey: 'home.pulse.online', value: this.online()?.online ?? null },
-        { icon: '@tui.clock', labelKey: 'home.pulse.worldTime', value: this.worldTime() },
-        { icon: '@tui.castle', labelKey: 'home.pulse.settlements', value: this.settlementsCount() },
-    ]);
-
-    /**
      * Последние скриншоты из галереи для ленты на главной.
      *
      * Берёт только первую страницу архива: ленте нужны четыре свежих кадра,
@@ -436,18 +380,6 @@ export class HomeComponent {
     private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     /**
-     * Прокручивает к блоку новостей, когда они загрузились и в адресе есть `#news`.
-     * Ждём загрузки, иначе скелетоны и карусель сдвинут блок после прокрутки.
-     */
-    private readonly scrollToNews = effect(() => {
-        if (!this.isBrowser || this.fragment() !== 'news' || this.loading()) {
-            return;
-        }
-
-        requestAnimationFrame(() => document.getElementById('news')?.scrollIntoView({ block: 'start' }));
-    });
-
-    /**
      * Новости от новых к старым; новости без даты — в конце.
      */
     protected readonly sortedNews = computed(() =>
@@ -482,6 +414,21 @@ export class HomeComponent {
      * Флаг, указывающий, авторизован ли текущий пользователь.
      */
     readonly isAuthenticated = toSignal(this.userService.authState$, { initialValue: false });
+
+    /**
+     * Регистрирует прокрутку к блоку новостей, когда они загрузились
+     * и в адресе есть `#news`. Ждём загрузки, иначе скелетоны и карусель
+     * сдвинут блок после прокрутки.
+     */
+    public constructor() {
+        effect(() => {
+            if (!this.isBrowser || this.fragment() !== 'news' || this.loading()) {
+                return;
+            }
+
+            requestAnimationFrame(() => document.getElementById('news')?.scrollIntoView({ block: 'start' }));
+        });
+    }
 
     /**
      * Производит переключение изображений в карусели.

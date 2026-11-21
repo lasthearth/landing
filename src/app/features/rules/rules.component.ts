@@ -1,5 +1,4 @@
 import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { RuleSectionComponent } from './ui/rule-section/rule-section.component';
@@ -16,6 +15,7 @@ import { GlobalExpandService } from './services/global-expand.service';
 import { ScrollAnchorDirective } from './directives/scroll-anchor.directive';
 import { RulesSearchComponent } from './ui/rules-search/rules-search.component';
 import { PageHeaderComponent } from '@shared/ui/page-header';
+import { RevealDirective } from '@shared/lib/directives';
 import { RulesTocComponent } from './ui/rules-toc/rules-toc.component';
 import { RULES_TOC_SECTIONS } from './config/rules-toc-sections.constant';
 import { SectionStateService } from './services/section-state.service';
@@ -29,10 +29,8 @@ const SECTION_EXPAND_DELAY = 400;
  * Компонент правил сервера.
  */
 @Component({
-    standalone: true,
     selector: 'app-rules',
-    imports: [PageHeaderComponent, 
-        CommonModule,
+    imports: [PageHeaderComponent,
         TuiIcon,
         TranslatePipe,
         TerminologyComponent,
@@ -47,6 +45,7 @@ const SECTION_EXPAND_DELAY = 400;
         ScrollAnchorDirective,
         RulesSearchComponent,
         RulesTocComponent,
+        RevealDirective,
     ],
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.less', './styles/rules.less'],

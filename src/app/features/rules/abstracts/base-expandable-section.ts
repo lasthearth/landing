@@ -1,4 +1,4 @@
-import { Directive, inject, OnInit, OnDestroy, computed, Signal, WritableSignal, signal } from '@angular/core';
+import { Directive, inject, OnInit, computed, Signal, WritableSignal, signal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { SectionStateService } from '../services/section-state.service';
 import { GlobalExpandService } from '../services/global-expand.service';
@@ -8,7 +8,7 @@ import { GlobalExpandService } from '../services/global-expand.service';
  * Содержит общую бизнес-логику для управления состоянием.
  */
 @Directive()
-export abstract class BaseExpandableSection implements OnInit, OnDestroy {
+export abstract class BaseExpandableSection implements OnInit {
     /**
      * Сервис для работы с localStorage.
      */
@@ -92,16 +92,11 @@ export abstract class BaseExpandableSection implements OnInit, OnDestroy {
         this.globalExpandService.registerSection(this.sectionId(), this.parentId());
 
         // Восстанавливаем состояние просмотренных подсекций после перезагрузки
-        if (this.wasWatched() && this.parentId()) {
-            this.sectionStateService.markSubsectionWatched(this.parentId()!, this.sectionId());
-        }
-    }
+        const parentId = this.parentId();
 
-    /**
-     * @inheritdoc.
-     */
-    public ngOnDestroy(): void {
-        // Ничего не нужно делать - секции управляются через SectionStateService
+        if (this.wasWatched() && parentId) {
+            this.sectionStateService.markSubsectionWatched(parentId, this.sectionId());
+        }
     }
 
     /**

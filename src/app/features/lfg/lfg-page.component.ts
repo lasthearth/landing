@@ -16,6 +16,7 @@ import {
     LfgPost,
 } from '@entities/lfg';
 import { IPlayer, UserService } from '@entities/user';
+import { RevealDirective } from '@shared/lib/directives';
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { PageHeaderComponent } from '@shared/ui/page-header';
 import { EmptyStateComponent } from '@shared/ui/empty-state';
@@ -57,6 +58,7 @@ const TAB_PARAM = 'tab';
         LfgPostCardComponent,
         LfgTeammateCardComponent,
         LfgPostFormComponent,
+        RevealDirective,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -13,7 +13,7 @@
                     rows="7"
                     [value]="draft()"
                     [attr.placeholder]="'player.about.placeholder' | translate"
-                    (input)="onInput($any($event.target).value)"
+                    (input)="onInput(readInputValue($event))"
                     (keydown.control.enter)="save()"
                     (keydown.escape)="cancel()"
                 ></textarea>
@@ -99,7 +99,7 @@
                                 type="text"
                                 class="player-about__input"
                                 [value]="reason()"
-                                (input)="onReason($any($event.target).value)"
+                                (input)="onReason(readInputValue($event))"
                             />
                         </label>
 

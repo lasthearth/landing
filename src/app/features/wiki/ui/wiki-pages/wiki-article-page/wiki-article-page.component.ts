@@ -5,16 +5,18 @@ import {
     DestroyRef,
     effect,
     inject,
+    PLATFORM_ID,
     signal,
     untracked,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { I18nService } from '@core/i18n';
 import { ServerResponseService } from '@core/services/server-response.service';
 import { SeoService } from '@core/services/seo.service';
 import { plainWikiText } from '../../../lib/wiki-plain-text.function';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 import { TuiIcon } from '@taiga-ui/core';
 import { TranslatePipe } from '@core/i18n';
 import { Role, UserService } from '@entities/user';
@@ -24,6 +26,7 @@ import { renderWikiMarkdown } from '../../../lib/render-wiki-markdown.function';
 import { WIKI_SECTIONS } from '../../../lib/wiki-sections.constant';
 import { WikiArticle, WikiAuthorNameService, WikiDraft } from '@entities/wiki';
 import { SkeletonComponent } from '@shared/ui/skeletons';
+import { RevealDirective } from '@shared/lib/directives';
 import { WikiArticleViewComponent } from '../../wiki-article-view/wiki-article-view.component';
 
 /**
@@ -56,7 +59,15 @@ const TITLE_LIMIT = 65;
  */
 @Component({
     selector: 'app-wiki-article-page',
-    imports: [WikiArticleViewComponent, EmptyStateComponent, TuiIcon, TranslatePipe, SkeletonComponent, RouterLink],
+    imports: [
+        WikiArticleViewComponent,
+        EmptyStateComponent,
+        TuiIcon,
+        TranslatePipe,
+        SkeletonComponent,
+        RouterLink,
+        RevealDirective,
+    ],
     templateUrl: './wiki-article-page.component.html',
     // Стили ряда кнопок и его отступов: без этого файла страница брала только
     // базовые классы, и кнопка «Редактировать» оставалась большой.
@@ -72,6 +83,11 @@ export class WikiArticlePageComponent {
     private readonly serverResponse = inject(ServerResponseService);
     private readonly i18n = inject(I18nService);
     private readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Страница работает и на сервере: `window` там нет.
+     */
+    private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
     /**
      * Адрес статьи из маршрута. Меняется вместе с адресом, без пересоздания
@@ -271,7 +287,7 @@ export class WikiArticlePageComponent {
 
         this.state.set(article ? 'ready' : 'not-found');
 
-        if (article && !this.route.snapshot.fragment) {
+        if (article && !this.route.snapshot.fragment && this.isBrowser) {
             window.scrollTo({ top: 0 });
         }
     }
@@ -279,11 +295,14 @@ export class WikiArticlePageComponent {
     /**
      * Название статьи по адресу — для карточек «См. также».
      *
+     * Стрелочная функция, а не метод: страница передаёт её входом
+     * `[resolveTitle]` в `WikiArticleViewComponent`, а ссылка на метод
+     * теряет `this` — на сервере это роняло рендер блока «См. также».
+     *
      * @param slug Адрес статьи.
      */
-    protected resolveTitle(slug: string): string | null {
-        return this.store.bySlug(slug)?.title ?? null;
-    }
+    protected readonly resolveTitle = (slug: string): string | null =>
+        this.store.bySlug(slug)?.title ?? null;
 }
 
 /**

@@ -8,7 +8,19 @@
     [attr.title]="labelKey() | translate"
     (click)="share($event)"
 >
-    <tui-icon [icon]="copied() ? '@tui.check' : '@tui.share-2'" class="size-4!" />
+    <!-- Копирование/готово — кросс-фейд иконок (.lh-icon-swap из styles.css) -->
+    <span class="lh-icon-swap">
+        <tui-icon
+            icon="@tui.share-2"
+            class="lh-icon-swap__icon size-4!"
+            [class.lh-icon-swap__icon--hidden]="copied()"
+        />
+        <tui-icon
+            icon="@tui.check"
+            class="lh-icon-swap__icon size-4!"
+            [class.lh-icon-swap__icon--hidden]="!copied()"
+        />
+    </span>
     @if (!iconOnly()) {
         <span>{{ labelKey() | translate }}</span>
     }

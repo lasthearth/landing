@@ -4,6 +4,9 @@
     [class.diplomacy-card--highlighted]="highlighted()"
     [attr.id]="statement().id ? 'statement-' + statement().id : null"
 >
+    <!-- Кольцо-пульс подсветки при переходе по ссылке на заявление -->
+    <span class="diplomacy-card__pulse" aria-hidden="true"></span>
+
     <div class="diplomacy-card__seal" aria-hidden="true">
         <tui-icon icon="@tui.scroll-text" class="size-6!" />
     </div>
@@ -32,6 +35,7 @@
         #textEl
         class="diplomacy-card__text lh-rich-text"
         [class.diplomacy-card__text--clamped]="!expanded()"
+        [class.diplomacy-card__text--collapsing]="!expanded()"
         [class.diplomacy-card__text--fade]="!expanded() && canExpand()"
         [style.max-height.px]="expandedHeight()"
         [innerHTML]="statement().html"

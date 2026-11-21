@@ -6,14 +6,14 @@
             <app-mods-notice />
 
             <section class="start-game__card" aria-labelledby="start-game-server">
-                <h2 id="start-game-server" class="start-game__card-title">
+                <h2 id="start-game-server" class="start-game__card-title" appReveal>
                     {{ "startGame.server.title" | translate }}
                 </h2>
                 <dl class="start-game__facts">
                     <div class="start-game__fact">
                         <dt>{{ "startGame.server.online" | translate }}</dt>
                         <dd>
-                            @if (online()?.online != null) {
+                            @if ((online()?.online ?? null) !== null) {
                                 <span class="start-game__online-dot" aria-hidden="true"></span>
                                 {{ online()!.online }}
                                 @if (online()!.max_online) {
@@ -36,7 +36,9 @@
             </section>
 
             <section class="start-game__card" aria-labelledby="start-game-help">
-                <h2 id="start-game-help" class="start-game__card-title">{{ "startGame.help.title" | translate }}</h2>
+                <h2 id="start-game-help" class="start-game__card-title" appReveal>
+                    {{ "startGame.help.title" | translate }}
+                </h2>
                 <ul class="start-game__links">
                     <li>
                         <a [routerLink]="['/faq']">

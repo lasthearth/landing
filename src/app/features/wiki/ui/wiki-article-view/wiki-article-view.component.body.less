@@ -57,7 +57,7 @@
         color: var(--lh-ink-3);
         text-decoration: none;
         opacity: 0;
-        transition: opacity 0.15s ease;
+        transition: opacity 0.15s var(--lh-ease-out-quart);
     }
 
     .wiki-h:hover .wiki-h__anchor {
@@ -123,8 +123,10 @@
         color: var(--lh-link);
         background: color-mix(in srgb, var(--lh-brand) 11%, transparent);
 
-        &:hover {
-            background: color-mix(in srgb, var(--lh-brand) 20%, transparent);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: color-mix(in srgb, var(--lh-brand) 20%, transparent);
+            }
         }
     }
 
@@ -266,7 +268,7 @@
                 border-right: 2px solid currentColor;
                 border-bottom: 2px solid currentColor;
                 transform: rotate(-45deg);
-                transition: transform 0.2s ease;
+                transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
             }
         }
 
@@ -290,8 +292,12 @@
 
         img {
             display: block;
-            width: 100%;
+            // Картинка не растягивается сильнее своего размера: мелкие
+            // скриншоты остаются резкими, крупные ужимаются до 34rem и
+            // встают по центру. Полную ширину дают модификаторы wide/left/right.
+            max-width: min(100%, 34rem);
             height: auto;
+            margin-inline: auto;
             border-radius: 0.875rem;
             cursor: zoom-in;
             box-shadow: 0 10px 24px -16px rgba(26, 17, 13, 0.6);
@@ -317,6 +323,10 @@
         width: min(40%, 20rem);
         margin-top: 0.25em;
         margin-bottom: 0.75em;
+
+        img {
+            width: 100%;
+        }
     }
 
     .wiki-fig--left {
@@ -358,6 +368,7 @@
         margin-right: -1.5rem;
 
         img {
+            width: 100%;
             border-radius: 0;
         }
     }
@@ -372,6 +383,7 @@
         }
 
         img {
+            width: 100%;
             aspect-ratio: 4 / 3;
             object-fit: cover;
         }
@@ -573,9 +585,11 @@
         opacity: 0.6;
         cursor: pointer;
 
-        &:hover {
-            opacity: 1;
-            background: rgba(255, 255, 255, 0.1);
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                opacity: 1;
+                background: rgba(255, 255, 255, 0.1);
+            }
         }
 
         &.is-copied {
@@ -607,7 +621,7 @@
         border-radius: 0.875rem;
         color: #fff;
         background: rgba(200, 30, 30, 0.9);
-        transition: transform 0.15s ease;
+        transition: transform 0.15s var(--lh-ease-spring);
 
         svg {
             width: 1.4rem;
@@ -616,8 +630,10 @@
         }
     }
 
-    .wiki-video:hover .wiki-video__play {
-        transform: scale(1.08);
+    @media (hover: hover) and (pointer: fine) {
+        .wiki-video:hover .wiki-video__play {
+            transform: scale(1.05);
+        }
     }
 
     .wiki-box {

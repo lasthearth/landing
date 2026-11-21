@@ -20,7 +20,6 @@ import { WaitingBadgeComponent } from '@shared/ui/waiting-badge';
  * Компонент отображения запроса на верификацию от игрока.
  */
 @Component({
-    standalone: true,
     selector: 'app-player-verify-request',
     imports: [TuiIcon, ImageLoaderComponent, TranslatePipe, WaitingBadgeComponent],
     templateUrl: './player-verify-request.component.html',

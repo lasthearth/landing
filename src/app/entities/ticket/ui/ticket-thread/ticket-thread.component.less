@@ -1,0 +1,106 @@
+:host {
+    display: block;
+}
+
+.thread {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.thread__item {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.625rem;
+    align-items: start;
+    max-width: 44rem;
+}
+
+// Администрация отвечает справа: так поток читается как переписка, а не лента.
+.thread__item--staff {
+    grid-template-columns: minmax(0, 1fr) 2rem;
+    align-self: flex-end;
+
+    .thread__avatar {
+        order: 2;
+    }
+
+    .thread__meta {
+        justify-content: flex-end;
+    }
+}
+
+.thread__avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--lh-surface-3);
+}
+
+.thread__avatar--crest {
+    display: grid;
+    place-items: center;
+    color: var(--lh-parchment);
+    background: var(--lh-brand-deep);
+}
+
+.thread__bubble {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.thread__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--lh-ink-3);
+}
+
+.thread__name {
+    font-weight: 600;
+    color: var(--lh-ink-2);
+}
+
+.thread__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--lh-warning-ink);
+}
+
+// В ленте администрации и так видно, кто ответил: подпись «Администрация» лишняя.
+.thread__badge--staff {
+    display: none;
+}
+
+.thread__text {
+    margin: 0;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.25rem 0.875rem 0.875rem;
+    color: var(--lh-ink);
+    background: var(--lh-surface-2);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.45;
+}
+
+.thread__item--staff .thread__text {
+    border-radius: 0.875rem 0.25rem 0.875rem 0.875rem;
+    background: color-mix(in srgb, var(--lh-brand) 13%, var(--lh-surface-2));
+}
+
+// Заметку нельзя спутать с ответом: пунктирная рамка и жёлтый тон, видна только администрации.
+.thread__item--note .thread__text {
+    background: color-mix(in srgb, var(--lh-warning-ink) 8%, transparent);
+    outline: 1px dashed color-mix(in srgb, var(--lh-warning-ink) 55%, transparent);
+    outline-offset: -1px;
+}

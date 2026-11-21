@@ -36,8 +36,10 @@
     font-weight: 700;
     cursor: pointer;
 
-    &:hover {
-        text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 
@@ -76,8 +78,10 @@
     cursor: pointer;
     transition: background-color var(--lh-dur-fast) var(--lh-ease-smooth);
 
-    &:hover {
-        background: var(--lh-surface-2);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: var(--lh-surface-2);
+        }
     }
 
     @media (max-width: 760px) {

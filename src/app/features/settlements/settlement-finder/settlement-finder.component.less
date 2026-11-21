@@ -35,9 +35,7 @@
     height: 0.6rem;
     border-radius: 50%;
     background: color-mix(in srgb, var(--lh-ink) 15%, transparent);
-    transition:
-        background-color 0.2s ease,
-        transform 0.2s ease;
+    transition: transform var(--lh-dur-fast) var(--lh-ease-spring);
 }
 
 .finder__dot--done {
@@ -73,15 +71,14 @@
     font: inherit;
     text-align: left;
     cursor: pointer;
-    transition:
-        border-color 0.15s ease,
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
+    transition: transform 0.15s var(--lh-ease-spring);
 
-    &:hover {
-        border-color: var(--lh-brand);
-        transform: translateY(-1px);
-        box-shadow: 0 8px 20px -14px color-mix(in srgb, var(--lh-brand) 70%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            border-color: var(--lh-brand);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -14px color-mix(in srgb, var(--lh-brand) 70%, transparent);
+        }
     }
 
     &:focus-visible {
@@ -129,8 +126,10 @@
     font-weight: 700;
     cursor: pointer;
 
-    &:hover {
-        color: var(--lh-brand-ink);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            color: var(--lh-brand-ink);
+        }
     }
 }
 

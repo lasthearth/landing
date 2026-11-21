@@ -33,8 +33,8 @@ describe('memberHasPermission', () => {
             roles: [],
         });
 
-        expect(memberHasPermission(settlement, 'owner-1', Permission.InviteMember)).toBeTrue();
-        expect(memberHasPermission(settlement, 'owner-1', Permission.ReviewJoinRequest)).toBeTrue();
+        expect(memberHasPermission(settlement, 'owner-1', Permission.InviteMember)).toBe(true);
+        expect(memberHasPermission(settlement, 'owner-1', Permission.ReviewJoinRequest)).toBe(true);
     });
 
     it('при roles_enabled=false оставляет права только владельцу', () => {
@@ -47,8 +47,8 @@ describe('memberHasPermission', () => {
             roles: [{ id: 'r-1', name: 'Дозорный', permissions: [Permission.InviteMember] }],
         });
 
-        expect(memberHasPermission(settlement, 'owner-1', Permission.InviteMember)).toBeTrue();
-        expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBeFalse();
+        expect(memberHasPermission(settlement, 'owner-1', Permission.InviteMember)).toBe(true);
+        expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBe(false);
     });
 
     it('не выдаёт прав пользователю, который не состоит в наделе', () => {
@@ -57,7 +57,7 @@ describe('memberHasPermission', () => {
             roles: [{ id: 'r-1', name: 'Дозорный', permissions: [Permission.InviteMember] }],
         });
 
-        expect(memberHasPermission(settlement, 'stranger', Permission.InviteMember)).toBeFalse();
+        expect(memberHasPermission(settlement, 'stranger', Permission.InviteMember)).toBe(false);
     });
 
     it('игнорирует несуществующий role_id и не падает', () => {
@@ -66,8 +66,8 @@ describe('memberHasPermission', () => {
             roles: [{ id: 'r-1', name: 'Дозорный', permissions: [Permission.ReviewJoinRequest] }],
         });
 
-        expect(memberHasPermission(settlement, 'member-1', Permission.ReviewJoinRequest)).toBeTrue();
-        expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBeFalse();
+        expect(memberHasPermission(settlement, 'member-1', Permission.ReviewJoinRequest)).toBe(true);
+        expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBe(false);
     });
 
     it('выдаёт право, если его даёт хотя бы одна из ролей участника', () => {
@@ -79,7 +79,7 @@ describe('memberHasPermission', () => {
             ],
         });
 
-        expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBeTrue();
+        expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBe(true);
     });
 
     it('не выдаёт прав участнику без ролей', () => {
@@ -88,6 +88,6 @@ describe('memberHasPermission', () => {
             roles: [{ id: 'r-1', name: 'Дозорный', permissions: [Permission.InviteMember] }],
         });
 
-        expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBeFalse();
+        expect(memberHasPermission(settlement, 'member-1', Permission.InviteMember)).toBe(false);
     });
 });

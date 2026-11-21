@@ -9,7 +9,7 @@
         <div class="flex flex-col gap-2 justify-center h-24">
             <h3 class="text-center sm:text-left text-lg md:text-2xl font-bold text-ink leading-tight">{{ data.title }}</h3>
             <div class="flex items-center gap-2">
-                <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-7 w-7 object-contain" />
+                <img decoding="async" height="201" width="128" src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-7 w-7 object-contain" />
                 <span class="text-lg sm:text-xl font-bold text-ink">{{ activePrice | amount }}</span>
                 @if (data.currency === "rubles") {
                     <span class="text-lg text-ink-2">{{ 'market.purchaseDialog.currencyRub' | translate }}</span>
@@ -106,7 +106,7 @@
                 {{ 'market.purchaseDialog.totalLabel' | translate }}
             </span>
             <div class="flex items-center gap-2">
-                <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
+                <img decoding="async" height="201" width="128" src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-6 w-6 object-contain" />
                 <span class="text-lg sm:text-xl font-bold text-ink">{{ activePrice | amount }}</span>
             </div>
         </div>
@@ -115,7 +115,7 @@
             <div class="flex items-center justify-between text-base sm:text-lg">
                 <span class="text-ink-2">{{ 'market.purchaseDialog.yourBalance' | translate }}</span>
                 <div class="flex items-center gap-2">
-                    <img src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
+                    <img decoding="async" height="201" width="128" src="/splinter-of-spark.webp" [alt]="'market.common.shardAlt' | translate" class="h-5 w-5 object-contain" />
                     <span class="font-bold" [class.text-lh-danger]="missingAmount() > 0" [class.text-ink]="missingAmount() === 0">
                         {{ balance() | amount }}
                     </span>
@@ -137,15 +137,15 @@
 
     <!-- Actions -->
     <div class="flex gap-4 pt-2">
-        <button tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-lg">
+        <button type="button"  tuiButton appearance="secondary" (click)="onCancel()" class="flex-1 text-base sm:text-lg">
             {{ 'market.purchaseDialog.cancel' | translate }}
         </button>
         @if (missingAmount() > 0) {
-            <button tuiButton appearance="primary" (click)="onTopUp()" class="flex-1 text-base sm:text-lg">
+            <button type="button"  tuiButton appearance="primary" (click)="onTopUp()" class="flex-1 text-base sm:text-lg">
                 {{ 'market.purchaseDialog.topUp' | translate }}
             </button>
         } @else {
-            <button tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-lg">
+            <button type="button"  tuiButton appearance="primary" (click)="onBuy()" class="flex-1 text-base sm:text-lg">
                 {{ 'market.purchaseDialog.buy' | translate }}
             </button>
         }

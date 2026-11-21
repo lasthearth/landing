@@ -179,8 +179,10 @@
     color: var(--lh-brand-ink);
     text-decoration: none;
 
-    &:hover {
-        text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
     @media (max-width: 640px) {
@@ -191,8 +193,10 @@
 .player-hero__settlement--none {
     color: var(--lh-ink-3);
 
-    &:hover {
-        text-decoration: none;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            text-decoration: none;
+        }
     }
 }
 

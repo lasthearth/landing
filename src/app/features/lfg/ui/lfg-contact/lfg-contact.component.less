@@ -39,8 +39,10 @@
     background: color-mix(in srgb, var(--lh-ink) 8%, transparent);
     cursor: pointer;
 
-    &:hover {
-        background: color-mix(in srgb, var(--lh-ink) 16%, transparent);
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background: color-mix(in srgb, var(--lh-ink) 16%, transparent);
+        }
     }
 
     &:focus-visible {

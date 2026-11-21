@@ -153,7 +153,6 @@ const LETTER_WIDTH: Record<LabelStyle, number> = { major: 10.2, middle: 7.8, min
  * одним пальцем и щипком. С клавиатуры: стрелки, «+», «−» и «0».
  */
 @Component({
-    standalone: true,
     selector: 'app-world-map-canvas',
     imports: [TuiIcon, TranslatePipe],
     templateUrl: './world-map-canvas.component.html',
@@ -680,7 +679,14 @@ export class WorldMapCanvasComponent {
         const [first, second] = [...this.pointers.entries()];
         const before = { a: first[1], b: second[1] };
         this.pointers.set(pointerId, point);
-        const after = { a: this.pointers.get(first[0])!, b: this.pointers.get(second[0])! };
+        const firstPoint = this.pointers.get(first[0]);
+        const secondPoint = this.pointers.get(second[0]);
+
+        if (!firstPoint || !secondPoint) {
+            return;
+        }
+
+        const after = { a: firstPoint, b: secondPoint };
 
         const distanceBefore = Math.hypot(before.a.x - before.b.x, before.a.y - before.b.y);
         const distanceAfter = Math.hypot(after.a.x - after.b.x, after.a.y - after.b.y);

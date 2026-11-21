@@ -586,12 +586,31 @@ interface AdminQuestion {
 **Префикс:** `/v1/serverinfo`
 **Frontend:** `services/server-information.service.ts` (частично) / `core/services/server-information.service.ts`
 
-| #   | Метод | Путь                      | Описание                      | Auth | Реализовано                   |
-| --- | ----- | ------------------------- | ----------------------------- | ---- | ----------------------------- |
-| 1   | `GET` | `/serverinfo/totalonline` | Текущий и максимальный онлайн | —    | ✅ `getOnlinePlayersCount$()` |
-| 2   | `GET` | `/serverinfo/worldtime`   | Игровое время мира            | —    | ✅ `getTime$()`               |
+| #   | Метод | Путь                      | Описание                                   | Auth | Реализовано                   |
+| --- | ----- | ------------------------- | ------------------------------------------ | ---- | ----------------------------- |
+| 1   | `GET` | `/serverinfo/stream`      | Состояние сервера потоком (SSE)            | —    | ✅ `watchServerInfo$()`       |
+| 2   | `GET` | `/serverinfo/totalonline` | Текущий и максимальный онлайн (фолбэк)     | —    | ✅ `getOnlinePlayersCount$()` |
+| 3   | `GET` | `/serverinfo/worldtime`   | Игровое время мира (фолбэк)                | —    | ✅ `getTime$()`               |
+
+**Поток `/serverinfo/stream`.** Заголовок `Accept: text/event-stream` (его ставит сам
+`EventSource`), авторизации нет. Кадр: `event: serverinfo`, `data:` — `ServerInfoEvent`.
+Первый кадр приходит сразу после подписки, дальше — при каждом изменении.
+`: ping` — keepalive-комментарий, когда изменений нет; комментарий данные не несёт.
+Переподключение делает нативный `EventSource`. Поток — основной источник онлайна и
+времени; `totalonline` и `worldtime` остаются фолбэком при обрыве соединения и единственным
+источником на сервере, где `EventSource` нет (`core/services/server-information.service.ts`).
 
 #### DTO
+
+**`ServerInfoEvent`** — полезная нагрузка кадра `serverinfo`
+
+```ts
+interface ServerInfoEvent {
+    online: number;
+    max_online: number;
+    time: string;
+}
+```
 
 **`TotalOnlineResponse`**
 

@@ -1,6 +1,18 @@
 @if (date(); as value) {
     <span class="waiting-badge" [class.waiting-badge--stale]="stale()">
-        <tui-icon [icon]="stale() ? '@tui.alarm-clock' : '@tui.clock'" class="size-4!" />
+        <!-- Часы/будильник — кросс-фейд иконок (.lh-icon-swap из styles.css) -->
+        <span class="lh-icon-swap">
+            <tui-icon
+                icon="@tui.clock"
+                class="lh-icon-swap__icon size-4!"
+                [class.lh-icon-swap__icon--hidden]="stale()"
+            />
+            <tui-icon
+                icon="@tui.alarm-clock"
+                class="lh-icon-swap__icon size-4!"
+                [class.lh-icon-swap__icon--hidden]="!stale()"
+            />
+        </span>
         <time [appRelativeTime]="value"></time>
         @if (stale()) {
             <span class="waiting-badge__note">· {{ "shared.waiting.stale" | translate }}</span>

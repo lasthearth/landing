@@ -4,7 +4,7 @@ import { LastSeenFilter } from './players-query';
  * Игрок в списке `/players`.
  *
  * Модель экрана, а не DTO: аватар уже собран в один адрес, часы приведены
- * к числу, описание — к строке.
+ * к целому числу, описание — к строке.
  */
 export interface PlayerListItem {
     /**
@@ -33,7 +33,8 @@ export interface PlayerListItem {
     lastOnline: string | null;
 
     /**
-     * Часы в игре.
+     * Часы в игре, целое число: сервер отдаёт дробное `hours_played`,
+     * карточка показывает только целые часы.
      */
     hours: number;
 

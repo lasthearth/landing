@@ -9,6 +9,7 @@ import { debounceTime, distinctUntilChanged, filter, switchMap, catchError, fina
 import { ConfirmDialogService } from '@shared/ui/confirm-dialog';
 import { RequestStatusService } from '@core/services/request-status.service';
 import { SettlementService } from '@entities/settlement';
+import { ISearchedUser } from '@entities/user';
 import {
     HungerGamesService,
     IMatchPlayer,
@@ -29,7 +30,6 @@ import { ISeasonOption } from './model/season-option.model';
  */
 @Component({
     selector: 'app-hunger-games-panel',
-    standalone: true,
     imports: [AmountPipe, ReactiveFormsModule, FormsModule, TuiIcon, TuiLoader, LHInputComponent, AdminSeasonSkeletonComponent, AdminTableSkeletonComponent, ImageLoaderComponent, TranslatePipe],
     templateUrl: './hunger-games-panel.component.html',
     styleUrl: './hunger-games-panel.component.less',
@@ -155,7 +155,7 @@ export class HungerGamesPanelComponent implements OnInit {
     /**
      * Результаты поиска игрока для добавления в матч.
      */
-    protected readonly searchResults = signal<any[]>([]);
+    protected readonly searchResults = signal<ISearchedUser[]>([]);
 
     /**
      * Список наград для распределения при сбросе сезона.
@@ -442,8 +442,8 @@ export class HungerGamesPanelComponent implements OnInit {
      *
      * @param user Объект пользователя из API.
      */
-    protected addPlayer(user: any): void {
-        const userId = user.user_id as string;
+    protected addPlayer(user: ISearchedUser): void {
+        const userId = user.user_id;
         const exists = this.matchPlayers().some((p) => p.playerId === userId);
 
         if (exists) {
@@ -455,7 +455,7 @@ export class HungerGamesPanelComponent implements OnInit {
             ...players,
             {
                 playerId: userId,
-                playerName: user.user_game_name as string,
+                playerName: user.user_game_name,
                 place: players.length + 1,
                 kills: 0,
             },

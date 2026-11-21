@@ -43,13 +43,14 @@
             }
 
             <g class="background-scene__relief">
+                <!-- pathLength оставлен для будущей анимации прорисовки;
+                     задержка по $index убрана вместе с самой анимацией. -->
                 @for (contour of contours; track $index) {
                     <path
                         class="background-scene__contour"
                         [class.background-scene__contour--major]="contour.major"
                         [attr.d]="contour.d"
                         pathLength="1"
-                        [style.animation-delay]="$index * 45 + 'ms'"
                     />
                 }
             </g>

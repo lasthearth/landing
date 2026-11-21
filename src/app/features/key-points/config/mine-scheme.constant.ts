@@ -11,7 +11,8 @@ import { KeyPointVariant } from '../model/key-point-variant.interface';
  * перенесено из «Рудника Северной равнины» в конец «Чёрного кургана» — чтобы всё
  * железо не было в одной шахте.
  *
- * Цены — в серебряных (1 дукат = 100). Тексты — в словаре
+ * Цены — в серебряных (1 дукат = 100), подняты над числами владельца
+ * (см. «Удорожание ключевых точек» в docs/history.md). Тексты — в словаре
  * `keyPoints.points.mine.variants.<key>.nodes`.
  */
 const MINE_VARIANTS: readonly KeyPointVariant[] = [
@@ -29,11 +30,12 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.pickaxe',
                 requires: [],
                 cost: [
-                    { resource: 'money', amount: 100 },
-                    { resource: 'frames', amount: 160 },
-                    { resource: 'stone', amount: 120 },
-                    { resource: 'metal', amount: 32 },
-                    { resource: 'rope', amount: 24 },
+                    { resource: 'money', amount: 130 },
+                    { resource: 'frames', amount: 304 },
+                    { resource: 'stone', amount: 232 },
+                    { resource: 'rope', amount: 48 },
+                    { resource: 'metal', amount: 60 },
+                    { resource: 'charcoal', amount: 64 },
                 ],
             },
             {
@@ -44,11 +46,12 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.flame',
                 requires: ['open'],
                 cost: [
-                    { resource: 'money', amount: 50 },
-                    { resource: 'frames', amount: 88 },
-                    { resource: 'stone', amount: 64 },
-                    { resource: 'metal', amount: 16 },
-                    { resource: 'rope', amount: 12 },
+                    { resource: 'money', amount: 70 },
+                    { resource: 'frames', amount: 152 },
+                    { resource: 'stone', amount: 112 },
+                    { resource: 'rope', amount: 20 },
+                    { resource: 'metal', amount: 28 },
+                    { resource: 'charcoal', amount: 32 },
                 ],
             },
             {
@@ -59,11 +62,13 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.trending-up',
                 requires: ['coal'],
                 cost: [
-                    { resource: 'money', amount: 75 },
-                    { resource: 'frames', amount: 144 },
-                    { resource: 'stone', amount: 104 },
-                    { resource: 'metal', amount: 28 },
-                    { resource: 'rope', amount: 20 },
+                    { resource: 'money', amount: 110 },
+                    { resource: 'frames', amount: 264 },
+                    { resource: 'stone', amount: 192 },
+                    { resource: 'rope', amount: 36 },
+                    { resource: 'metal', amount: 52 },
+                    { resource: 'bronze', amount: 16 },
+                    { resource: 'charcoal', amount: 56 },
                 ],
             },
             {
@@ -74,11 +79,14 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['amount'],
                 cost: [
-                    { resource: 'money', amount: 75 },
-                    { resource: 'frames', amount: 176 },
-                    { resource: 'stone', amount: 136 },
-                    { resource: 'metal', amount: 36 },
-                    { resource: 'rope', amount: 28 },
+                    { resource: 'money', amount: 120 },
+                    { resource: 'frames', amount: 344 },
+                    { resource: 'stone', amount: 264 },
+                    { resource: 'rope', amount: 56 },
+                    { resource: 'metal', amount: 72 },
+                    { resource: 'bronze', amount: 24 },
+                    { resource: 'charcoal', amount: 80 },
+                    { resource: 'rustyGear', amount: 8 },
                 ],
             },
             {
@@ -89,11 +97,14 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.gem',
                 requires: ['sulfur'],
                 cost: [
-                    { resource: 'money', amount: 50 },
-                    { resource: 'frames', amount: 176 },
-                    { resource: 'stone', amount: 136 },
-                    { resource: 'metal', amount: 36 },
-                    { resource: 'rope', amount: 28 },
+                    { resource: 'money', amount: 85 },
+                    { resource: 'frames', amount: 368 },
+                    { resource: 'stone', amount: 288 },
+                    { resource: 'rope', amount: 60 },
+                    { resource: 'metal', amount: 80 },
+                    { resource: 'bronze', amount: 24 },
+                    { resource: 'charcoal', amount: 80 },
+                    { resource: 'rustyGear', amount: 8 },
                 ],
             },
             {
@@ -104,11 +115,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['olivine'],
                 cost: [
-                    { resource: 'money', amount: 75 },
-                    { resource: 'frames', amount: 256 },
-                    { resource: 'stone', amount: 192 },
-                    { resource: 'metal', amount: 56 },
-                    { resource: 'rope', amount: 40 },
+                    { resource: 'money', amount: 140 },
+                    { resource: 'frames', amount: 568 },
+                    { resource: 'stone', amount: 432 },
+                    { resource: 'rope', amount: 96 },
+                    { resource: 'metal', amount: 128 },
+                    { resource: 'bronze', amount: 40 },
+                    { resource: 'blackBronze', amount: 28 },
+                    { resource: 'charcoal', amount: 128 },
+                    { resource: 'rustyGear', amount: 13 },
                 ],
             },
             {
@@ -119,11 +134,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.timer',
                 requires: ['limonite'],
                 cost: [
-                    { resource: 'money', amount: 500 },
-                    { resource: 'frames', amount: 800 },
-                    { resource: 'stone', amount: 608 },
-                    { resource: 'metal', amount: 160 },
-                    { resource: 'rope', amount: 120 },
+                    { resource: 'money', amount: 900 },
+                    { resource: 'frames', amount: 1776 },
+                    { resource: 'stone', amount: 1352 },
+                    { resource: 'rope', amount: 272 },
+                    { resource: 'metal', amount: 360 },
+                    { resource: 'bronze', amount: 120 },
+                    { resource: 'blackBronze', amount: 80 },
+                    { resource: 'charcoal', amount: 376 },
+                    { resource: 'rustyGear', amount: 40 },
                 ],
             },
             {
@@ -134,11 +153,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.sparkles',
                 requires: ['limonite'],
                 cost: [
-                    { resource: 'money', amount: 200 },
-                    { resource: 'frames', amount: 608 },
-                    { resource: 'stone', amount: 448 },
-                    { resource: 'metal', amount: 120 },
-                    { resource: 'rope', amount: 88 },
+                    { resource: 'money', amount: 380 },
+                    { resource: 'frames', amount: 1440 },
+                    { resource: 'stone', amount: 1056 },
+                    { resource: 'rope', amount: 208 },
+                    { resource: 'metal', amount: 288 },
+                    { resource: 'bronze', amount: 96 },
+                    { resource: 'blackBronze', amount: 60 },
+                    { resource: 'charcoal', amount: 304 },
+                    { resource: 'rustyGear', amount: 32 },
                 ],
             },
             {
@@ -149,11 +172,16 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['quality'],
                 cost: [
-                    { resource: 'money', amount: 200 },
-                    { resource: 'frames', amount: 704 },
-                    { resource: 'stone', amount: 528 },
-                    { resource: 'metal', amount: 144 },
-                    { resource: 'rope', amount: 104 },
+                    { resource: 'money', amount: 400 },
+                    { resource: 'frames', amount: 1760 },
+                    { resource: 'stone', amount: 1320 },
+                    { resource: 'rope', amount: 264 },
+                    { resource: 'metal', amount: 360 },
+                    { resource: 'bronze', amount: 112 },
+                    { resource: 'blackBronze', amount: 80 },
+                    { resource: 'charcoal', amount: 376 },
+                    { resource: 'rustyGear', amount: 40 },
+                    { resource: 'temporalGear', amount: 1 },
                 ],
             },
             {
@@ -164,11 +192,16 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.timer',
                 requires: ['hematite'],
                 cost: [
-                    { resource: 'money', amount: 1000 },
-                    { resource: 'frames', amount: 1120 },
-                    { resource: 'stone', amount: 832 },
-                    { resource: 'metal', amount: 224 },
-                    { resource: 'rope', amount: 168 },
+                    { resource: 'money', amount: 2000 },
+                    { resource: 'frames', amount: 2800 },
+                    { resource: 'stone', amount: 2080 },
+                    { resource: 'rope', amount: 424 },
+                    { resource: 'metal', amount: 560 },
+                    { resource: 'bronze', amount: 176 },
+                    { resource: 'blackBronze', amount: 120 },
+                    { resource: 'charcoal', amount: 592 },
+                    { resource: 'rustyGear', amount: 60 },
+                    { resource: 'temporalGear', amount: 1 },
                 ],
             },
         ],
@@ -187,11 +220,12 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.pickaxe',
                 requires: [],
                 cost: [
-                    { resource: 'money', amount: 100 },
-                    { resource: 'frames', amount: 160 },
-                    { resource: 'stone', amount: 120 },
-                    { resource: 'metal', amount: 32 },
-                    { resource: 'rope', amount: 24 },
+                    { resource: 'money', amount: 130 },
+                    { resource: 'frames', amount: 304 },
+                    { resource: 'stone', amount: 232 },
+                    { resource: 'rope', amount: 48 },
+                    { resource: 'metal', amount: 60 },
+                    { resource: 'charcoal', amount: 64 },
                 ],
             },
             {
@@ -202,11 +236,12 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.gem',
                 requires: ['open'],
                 cost: [
-                    { resource: 'money', amount: 50 },
-                    { resource: 'frames', amount: 88 },
-                    { resource: 'stone', amount: 64 },
-                    { resource: 'metal', amount: 16 },
-                    { resource: 'rope', amount: 12 },
+                    { resource: 'money', amount: 70 },
+                    { resource: 'frames', amount: 144 },
+                    { resource: 'stone', amount: 104 },
+                    { resource: 'rope', amount: 20 },
+                    { resource: 'metal', amount: 28 },
+                    { resource: 'charcoal', amount: 32 },
                 ],
             },
             {
@@ -217,11 +252,13 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.trending-up',
                 requires: ['malachite'],
                 cost: [
-                    { resource: 'money', amount: 75 },
-                    { resource: 'frames', amount: 144 },
-                    { resource: 'stone', amount: 104 },
-                    { resource: 'metal', amount: 28 },
-                    { resource: 'rope', amount: 20 },
+                    { resource: 'money', amount: 110 },
+                    { resource: 'frames', amount: 256 },
+                    { resource: 'stone', amount: 184 },
+                    { resource: 'rope', amount: 36 },
+                    { resource: 'metal', amount: 52 },
+                    { resource: 'bronze', amount: 16 },
+                    { resource: 'charcoal', amount: 52 },
                 ],
             },
             {
@@ -232,11 +269,13 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['amount'],
                 cost: [
-                    { resource: 'money', amount: 50 },
-                    { resource: 'frames', amount: 144 },
-                    { resource: 'stone', amount: 112 },
-                    { resource: 'metal', amount: 28 },
-                    { resource: 'rope', amount: 20 },
+                    { resource: 'money', amount: 80 },
+                    { resource: 'frames', amount: 272 },
+                    { resource: 'stone', amount: 216 },
+                    { resource: 'rope', amount: 40 },
+                    { resource: 'metal', amount: 56 },
+                    { resource: 'bronze', amount: 20 },
+                    { resource: 'charcoal', amount: 60 },
                 ],
             },
             {
@@ -247,11 +286,13 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.sparkles',
                 requires: ['zinc'],
                 cost: [
-                    { resource: 'money', amount: 100 },
-                    { resource: 'frames', amount: 208 },
-                    { resource: 'stone', amount: 160 },
-                    { resource: 'metal', amount: 44 },
-                    { resource: 'rope', amount: 32 },
+                    { resource: 'money', amount: 160 },
+                    { resource: 'frames', amount: 392 },
+                    { resource: 'stone', amount: 304 },
+                    { resource: 'rope', amount: 60 },
+                    { resource: 'metal', amount: 88 },
+                    { resource: 'bronze', amount: 28 },
+                    { resource: 'charcoal', amount: 88 },
                 ],
             },
             {
@@ -262,11 +303,14 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['zinc'],
                 cost: [
-                    { resource: 'money', amount: 50 },
-                    { resource: 'frames', amount: 176 },
-                    { resource: 'stone', amount: 136 },
-                    { resource: 'metal', amount: 36 },
-                    { resource: 'rope', amount: 28 },
+                    { resource: 'money', amount: 85 },
+                    { resource: 'frames', amount: 352 },
+                    { resource: 'stone', amount: 272 },
+                    { resource: 'rope', amount: 56 },
+                    { resource: 'metal', amount: 72 },
+                    { resource: 'bronze', amount: 24 },
+                    { resource: 'charcoal', amount: 80 },
+                    { resource: 'rustyGear', amount: 8 },
                 ],
             },
             {
@@ -277,11 +321,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['bismuthinite'],
                 cost: [
-                    { resource: 'money', amount: 75 },
-                    { resource: 'frames', amount: 256 },
-                    { resource: 'stone', amount: 192 },
-                    { resource: 'metal', amount: 56 },
-                    { resource: 'rope', amount: 40 },
+                    { resource: 'money', amount: 130 },
+                    { resource: 'frames', amount: 544 },
+                    { resource: 'stone', amount: 408 },
+                    { resource: 'rope', amount: 88 },
+                    { resource: 'metal', amount: 120 },
+                    { resource: 'bronze', amount: 36 },
+                    { resource: 'blackBronze', amount: 24 },
+                    { resource: 'charcoal', amount: 120 },
+                    { resource: 'rustyGear', amount: 12 },
                 ],
             },
             {
@@ -292,11 +340,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.timer',
                 requires: ['cassiterite'],
                 cost: [
-                    { resource: 'money', amount: 500 },
-                    { resource: 'frames', amount: 800 },
-                    { resource: 'stone', amount: 608 },
-                    { resource: 'metal', amount: 160 },
-                    { resource: 'rope', amount: 120 },
+                    { resource: 'money', amount: 860 },
+                    { resource: 'frames', amount: 1704 },
+                    { resource: 'stone', amount: 1296 },
+                    { resource: 'rope', amount: 256 },
+                    { resource: 'metal', amount: 344 },
+                    { resource: 'bronze', amount: 112 },
+                    { resource: 'blackBronze', amount: 72 },
+                    { resource: 'charcoal', amount: 360 },
+                    { resource: 'rustyGear', amount: 36 },
                 ],
             },
             {
@@ -307,11 +359,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['cassiterite'],
                 cost: [
-                    { resource: 'money', amount: 75 },
-                    { resource: 'frames', amount: 304 },
-                    { resource: 'stone', amount: 224 },
-                    { resource: 'metal', amount: 64 },
-                    { resource: 'rope', amount: 48 },
+                    { resource: 'money', amount: 140 },
+                    { resource: 'frames', amount: 688 },
+                    { resource: 'stone', amount: 504 },
+                    { resource: 'rope', amount: 112 },
+                    { resource: 'metal', amount: 144 },
+                    { resource: 'bronze', amount: 44 },
+                    { resource: 'blackBronze', amount: 32 },
+                    { resource: 'charcoal', amount: 144 },
+                    { resource: 'rustyGear', amount: 15 },
                 ],
             },
             {
@@ -322,11 +378,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.gem',
                 requires: ['sulfur'],
                 cost: [
-                    { resource: 'money', amount: 200 },
-                    { resource: 'frames', amount: 704 },
-                    { resource: 'stone', amount: 528 },
-                    { resource: 'metal', amount: 144 },
-                    { resource: 'rope', amount: 104 },
+                    { resource: 'money', amount: 390 },
+                    { resource: 'frames', amount: 1672 },
+                    { resource: 'stone', amount: 1256 },
+                    { resource: 'rope', amount: 248 },
+                    { resource: 'metal', amount: 344 },
+                    { resource: 'bronze', amount: 112 },
+                    { resource: 'blackBronze', amount: 72 },
+                    { resource: 'charcoal', amount: 352 },
+                    { resource: 'rustyGear', amount: 36 },
                 ],
             },
             {
@@ -337,11 +397,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.gem',
                 requires: ['emeraldLow'],
                 cost: [
-                    { resource: 'money', amount: 100 },
-                    { resource: 'frames', amount: 432 },
-                    { resource: 'stone', amount: 320 },
-                    { resource: 'metal', amount: 88 },
-                    { resource: 'rope', amount: 64 },
+                    { resource: 'money', amount: 200 },
+                    { resource: 'frames', amount: 1032 },
+                    { resource: 'stone', amount: 760 },
+                    { resource: 'rope', amount: 152 },
+                    { resource: 'metal', amount: 216 },
+                    { resource: 'bronze', amount: 72 },
+                    { resource: 'blackBronze', amount: 44 },
+                    { resource: 'charcoal', amount: 216 },
+                    { resource: 'rustyGear', amount: 24 },
                 ],
             },
             {
@@ -352,11 +416,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.timer',
                 requires: ['emeraldLow'],
                 cost: [
-                    { resource: 'money', amount: 1000 },
-                    { resource: 'frames', amount: 1120 },
-                    { resource: 'stone', amount: 832 },
-                    { resource: 'metal', amount: 224 },
-                    { resource: 'rope', amount: 168 },
+                    { resource: 'money', amount: 1910 },
+                    { resource: 'frames', amount: 2664 },
+                    { resource: 'stone', amount: 1976 },
+                    { resource: 'rope', amount: 400 },
+                    { resource: 'metal', amount: 536 },
+                    { resource: 'bronze', amount: 168 },
+                    { resource: 'blackBronze', amount: 112 },
+                    { resource: 'charcoal', amount: 560 },
+                    { resource: 'rustyGear', amount: 56 },
                 ],
             },
             {
@@ -367,11 +435,16 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['emeraldLow'],
                 cost: [
-                    { resource: 'money', amount: 100 },
-                    { resource: 'frames', amount: 480 },
-                    { resource: 'stone', amount: 368 },
-                    { resource: 'metal', amount: 96 },
-                    { resource: 'rope', amount: 72 },
+                    { resource: 'money', amount: 200 },
+                    { resource: 'frames', amount: 1200 },
+                    { resource: 'stone', amount: 920 },
+                    { resource: 'rope', amount: 184 },
+                    { resource: 'metal', amount: 240 },
+                    { resource: 'bronze', amount: 80 },
+                    { resource: 'blackBronze', amount: 52 },
+                    { resource: 'charcoal', amount: 256 },
+                    { resource: 'rustyGear', amount: 28 },
+                    { resource: 'temporalGear', amount: 1 },
                 ],
             },
             {
@@ -382,11 +455,16 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.gem',
                 requires: ['emeraldMid'],
                 cost: [
-                    { resource: 'money', amount: 200 },
-                    { resource: 'frames', amount: 800 },
-                    { resource: 'stone', amount: 608 },
-                    { resource: 'metal', amount: 160 },
-                    { resource: 'rope', amount: 120 },
+                    { resource: 'money', amount: 400 },
+                    { resource: 'frames', amount: 2000 },
+                    { resource: 'stone', amount: 1520 },
+                    { resource: 'rope', amount: 304 },
+                    { resource: 'metal', amount: 400 },
+                    { resource: 'bronze', amount: 128 },
+                    { resource: 'blackBronze', amount: 88 },
+                    { resource: 'charcoal', amount: 424 },
+                    { resource: 'rustyGear', amount: 44 },
+                    { resource: 'temporalGear', amount: 1 },
                 ],
             },
         ],
@@ -405,11 +483,12 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.pickaxe',
                 requires: [],
                 cost: [
-                    { resource: 'money', amount: 100 },
-                    { resource: 'frames', amount: 160 },
-                    { resource: 'stone', amount: 120 },
-                    { resource: 'metal', amount: 32 },
-                    { resource: 'rope', amount: 24 },
+                    { resource: 'money', amount: 130 },
+                    { resource: 'frames', amount: 304 },
+                    { resource: 'stone', amount: 232 },
+                    { resource: 'rope', amount: 48 },
+                    { resource: 'metal', amount: 60 },
+                    { resource: 'charcoal', amount: 64 },
                 ],
             },
             {
@@ -420,11 +499,12 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['open'],
                 cost: [
-                    { resource: 'money', amount: 50 },
-                    { resource: 'frames', amount: 88 },
-                    { resource: 'stone', amount: 64 },
-                    { resource: 'metal', amount: 16 },
-                    { resource: 'rope', amount: 12 },
+                    { resource: 'money', amount: 70 },
+                    { resource: 'frames', amount: 144 },
+                    { resource: 'stone', amount: 104 },
+                    { resource: 'rope', amount: 20 },
+                    { resource: 'metal', amount: 28 },
+                    { resource: 'charcoal', amount: 32 },
                 ],
             },
             {
@@ -434,7 +514,13 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 1,
                 icon: '@tui.trending-up',
                 requires: ['cassiterite'],
-                cost: [{ resource: 'money', amount: 75 }],
+                cost: [
+                    { resource: 'money', amount: 110 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+                ],
             },
             {
                 id: 'nativeCopper',
@@ -443,7 +529,13 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 1,
                 icon: '@tui.mountain',
                 requires: ['amount'],
-                cost: [{ resource: 'money', amount: 50 }],
+                cost: [
+                    { resource: 'money', amount: 75 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+                ],
             },
             {
                 id: 'quality',
@@ -452,7 +544,13 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 0,
                 icon: '@tui.sparkles',
                 requires: ['nativeCopper'],
-                cost: [{ resource: 'money', amount: 100 }],
+                cost: [
+                    { resource: 'money', amount: 150 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+                ],
             },
             {
                 id: 'gold',
@@ -461,7 +559,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 1,
                 icon: '@tui.mountain',
                 requires: ['nativeCopper'],
-                cost: [{ resource: 'money', amount: 50 }],
+                cost: [
+                    { resource: 'money', amount: 80 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'lead',
@@ -470,7 +576,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 1,
                 icon: '@tui.mountain',
                 requires: ['gold'],
-                cost: [{ resource: 'money', amount: 75 }],
+                cost: [
+                    { resource: 'money', amount: 130 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'regen4',
@@ -479,7 +593,15 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 2,
                 icon: '@tui.timer',
                 requires: ['lead'],
-                cost: [{ resource: 'money', amount: 500 }],
+                cost: [
+                    { resource: 'money', amount: 840 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'silver',
@@ -488,7 +610,17 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 1,
                 icon: '@tui.mountain',
                 requires: ['lead'],
-                cost: [{ resource: 'money', amount: 75 }],
+                cost: [
+                    { resource: 'money', amount: 140 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'blackBronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'diamondLow',
@@ -497,7 +629,17 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 1,
                 icon: '@tui.gem',
                 requires: ['silver'],
-                cost: [{ resource: 'money', amount: 200 }],
+                cost: [
+                    { resource: 'money', amount: 370 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'blackBronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'diamondMid',
@@ -506,7 +648,17 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 0,
                 icon: '@tui.gem',
                 requires: ['diamondLow'],
-                cost: [{ resource: 'money', amount: 100 }],
+                cost: [
+                    { resource: 'money', amount: 190 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'blackBronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'regen6',
@@ -515,7 +667,17 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 2,
                 icon: '@tui.timer',
                 requires: ['diamondLow'],
-                cost: [{ resource: 'money', amount: 1000 }],
+                cost: [
+                    { resource: 'money', amount: 1840 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'blackBronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'titanium',
@@ -524,7 +686,17 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 1,
                 icon: '@tui.mountain',
                 requires: ['diamondLow'],
-                cost: [{ resource: 'money', amount: 100 }],
+                cost: [
+                    { resource: 'money', amount: 200 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'blackBronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'diamondHigh',
@@ -533,7 +705,17 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 0,
                 icon: '@tui.gem',
                 requires: ['diamondMid'],
-                cost: [{ resource: 'money', amount: 200 }],
+                cost: [
+                    { resource: 'money', amount: 390 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'blackBronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+                ],
             },
             {
                 id: 'meteoricIron',
@@ -542,7 +724,19 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 lane: 1,
                 icon: '@tui.sparkle',
                 requires: ['titanium'],
-                cost: [{ resource: 'money', amount: 300 }],
+                cost: [
+                    { resource: 'money', amount: 600 },
+
+                    { resource: 'bronze', amount: 1 },
+
+                    { resource: 'blackBronze', amount: 1 },
+
+                    { resource: 'charcoal', amount: 1 },
+
+                    { resource: 'rustyGear', amount: 1 },
+
+                    { resource: 'temporalGear', amount: 1 },
+                ],
             },
         ],
     },

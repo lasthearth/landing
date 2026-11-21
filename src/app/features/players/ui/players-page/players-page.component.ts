@@ -48,6 +48,8 @@ import {
     switchMap,
 } from 'rxjs';
 import { PlayerCardComponent } from '../player-card/player-card.component';
+import { readInputValue } from '@shared/lib/read-input-value.function';
+import { RevealDirective } from '@shared/lib/directives';
 
 /**
  * Пауза после последнего нажатия клавиши, прежде чем искать.
@@ -94,12 +96,18 @@ type PlayersState =
         PaginationComponent,
         SkeletonComponent,
         PlayerCardComponent,
+        RevealDirective,
     ],
     templateUrl: './players-page.component.html',
     styleUrl: './players-page.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayersPageComponent {
+
+    /**
+     * Достаёт текст из события ввода: проверка `instanceof` вместо `$any`.
+     */
+    protected readonly readInputValue = readInputValue;
     private readonly api = inject(PlayersApiService);
     private readonly settlements = inject(SettlementService);
     private readonly looks = inject(PlayerLookService);
@@ -164,7 +172,7 @@ export class PlayersPageComponent {
                       )
             )
         ),
-        { initialValue: { status: 'loading' } as PlayersState }
+        { initialValue: { status: 'loading' } }
     );
 
     /**

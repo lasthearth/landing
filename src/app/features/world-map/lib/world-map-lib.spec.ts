@@ -129,7 +129,7 @@ describe('world-map lib', () => {
 
             expect(chosen.get('city')?.x).toBe(50);
             expect(chosen.get('village')?.x).toBe(300);
-            expect(chosen.has('camp')).toBeFalse();
+            expect(chosen.has('camp')).toBe(false);
         });
 
         it('подпись не ложится на чужой знак, но стоит вплотную к своему', () => {
