@@ -1,0 +1,4 @@
+<div class="flex w-full flex-col gap-6">
+    <app-mail-compose-form (sent)="onSent()" />
+    <app-mail-sent-list [refreshTrigger]="sentRefresh$" />
+</div>
