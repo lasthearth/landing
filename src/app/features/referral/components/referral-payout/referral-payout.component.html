@@ -1,0 +1,24 @@
+<div class="flex flex-col gap-3">
+    <p class="text-base font-bold uppercase tracking-wide text-ink-2">
+        {{ "referral.stages.title" | translate }}
+    </p>
+
+    <p class="text-sm text-ink-3">{{ "referral.stages.referrer" | translate }}</p>
+
+    <!-- Порядок важен: сначала 25% за проверку, потом 75% за первый вход -->
+    <ol class="grid grid-cols-1 sm:grid-cols-2 gap-3 m-0 p-0 list-none">
+        @for (stage of stages; track stage.key) {
+            <li class="lh-panel p-4 flex flex-col gap-1">
+                <span class="text-2xl font-bold text-ink">{{ stage.shareKey | translate }}</span>
+                <span class="text-sm font-semibold text-ink">{{ stage.labelKey | translate }}</span>
+                <span class="text-sm text-ink-3">{{ stage.noteKey | translate }}</span>
+            </li>
+        }
+    </ol>
+
+    <!-- Награда приглашённому: своя, полная и только за первый вход -->
+    <div class="lh-panel p-4 flex flex-col gap-1">
+        <span class="text-sm font-semibold text-ink">{{ "referral.stages.friend.title" | translate }}</span>
+        <span class="text-sm text-ink-3">{{ "referral.stages.friend.note" | translate }}</span>
+    </div>
+</div>

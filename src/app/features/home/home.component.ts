@@ -25,6 +25,7 @@ import { RevealDirective } from '@shared/lib/directives';
 import { PulseStat } from './model/pulse-stat.interface';
 import { UpcomingEventComponent } from '@features/events';
 import { LfgTickerComponent } from '@features/lfg';
+import { ReferralPayoutComponent } from '@features/referral';
 import { ModsNoticeComponent } from '@shared/ui/mods-notice';
 
 /**
@@ -72,7 +73,7 @@ interface GalleryStripItem {
 @Component({
     standalone: true,
     selector: 'app-home',
-    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe, RevealDirective, UpcomingEventComponent, ModsNoticeComponent, LfgTickerComponent],
+    imports: [TuiCarousel, NewsCardComponent, NewsSkeletonComponent, TuiPagination, TuiIcon, RouterLink, ImageLoaderComponent, TranslatePipe, RevealDirective, UpcomingEventComponent, ModsNoticeComponent, LfgTickerComponent, ReferralPayoutComponent],
     styleUrl: './home.component.less',
     templateUrl: './home.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

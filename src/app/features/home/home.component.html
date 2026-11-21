@@ -257,6 +257,17 @@
     </div>
 </section>
 
+<!-- Реферальная программа: две ступени выплат, блок виден и гостю -->
+<section class="lh-page-container pt-8 pb-0 flex flex-col gap-3" aria-labelledby="home-referral-title">
+    <h2 id="home-referral-title" class="lh-display text-2xl md:text-3xl uppercase font-bold text-ink">
+        {{ "referral.title" | translate }}
+    </h2>
+    <p class="text-lg leading-[27px] text-ink-3 max-w-3xl">
+        {{ "referral.description" | translate }}
+    </p>
+    <app-referral-payout />
+</section>
+
 <!-- Присоединиться к команде -->
 <section class="lh-page-container pt-8 pb-0">
     <div

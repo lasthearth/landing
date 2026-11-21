@@ -30,10 +30,10 @@
 
 | Слой      | Файлов | Внутри                                                                                                                                                                                                                                                                                                                                                                    |
 | --------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| src/app   | 1044   | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                                          |
+| src/app   | 1047   | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                                          |
 | core/     | 59     | config, guards, i18n, interceptors, services, types                                                                                                                                                                                                                                                                                                                       |
 | entities/ | 191    | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, user, wiki                                                                                                                                                                                         |
-| features/ | 628    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
+| features/ | 631    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, verification, videos, welcome, wiki, world-map |
 | layout/   | 21     | background-scene, footer, header                                                                                                                                                                                                                                                                                                                                          |
 | routes/   | 5      | enums                                                                                                                                                                                                                                                                                                                                                                     |
 | shared/   | 135    | lib, styles, ui                                                                                                                                                                                                                                                                                                                                                           |
@@ -70,7 +70,7 @@
 | features/profile        | 49     | ui                          | да       | 5              |
 | features/public-offer   | 3      | —                           | **нет**  | —              |
 | features/reactions      | 6      | ui, api                     | да       | 2              |
-| features/referral       | 5      | —                           | да       | 2              |
+| features/referral       | 8      | —                           | да       | 3              |
 | features/rules          | 83     | ui, model, config           | да       | 1              |
 | features/settlements    | 70     | —                           | **нет**  | —              |
 | features/start-game     | 3      | —                           | **нет**  | —              |
@@ -103,7 +103,7 @@
 | Путь                    | Компонент                  | Гварды                          | Словари i18n                                 | Пререндер | SEO-ключ      |
 | ----------------------- | -------------------------- | ------------------------------- | -------------------------------------------- | --------- | ------------- |
 | `wiki/edit/:id`         | `—`                        | userGuard, wikiEditorLeaveGuard | wiki                                         | —         | wikiEditor    |
-| `/`                     | `HomeComponent`            | —                               | home                                         | да        | home          |
+| `/`                     | `HomeComponent`            | —                               | home, referral                               | да        | home          |
 | `/wiki`                 | `WikiListPageComponent`    | —                               | wiki                                         | да        | wiki          |
 | `/wiki/razdel/:section` | `WikiSectionPageComponent` | —                               | wiki                                         | —         | wiki          |
 | `/wiki/:slug`           | `WikiArticlePageComponent` | —                               | wiki                                         | —         | wiki          |
@@ -166,7 +166,7 @@
 | player      | 21.9  | /profile, /player/:nick                                                                     |
 | players     | 3.3   | /players                                                                                    |
 | profile     | 23.1  | /profile                                                                                    |
-| referral    | 1.5   | /profile/referral                                                                           |
+| referral    | 3.9   | /, /profile/referral                                                                        |
 | rules       | 253.8 | /rules                                                                                      |
 | settlements | 55.2  | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared      | 27.9  | —                                                                                           |
