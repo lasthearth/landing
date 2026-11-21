@@ -1,0 +1,264 @@
+@if (noRights()) {
+    <div class="lh-panel flex flex-col gap-3">
+        <p class="text-xl font-bold text-ink">{{ "mail.compose.noRights.title" | translate }}</p>
+        <p class="text-base text-ink-2">{{ "mail.compose.noRights.hint" | translate }}</p>
+    </div>
+} @else {
+    @if (sentMailId(); as mailId) {
+        <div class="lh-panel flex flex-col items-start gap-2">
+            <p class="text-xl font-bold text-peace">{{ "mail.compose.sentTitle" | translate }}</p>
+            <p class="text-base text-ink-2">{{ "mail.compose.sentId" | translate }}</p>
+            <code class="font-mono text-base text-ink break-all">{{ mailId }}</code>
+            <button
+                type="button"
+                (click)="startAnother()"
+                class="mt-2 rounded-xl px-5 py-2.5 text-base font-bold text-ink bg-surface-3 border border-line hover:bg-surface-4"
+            >
+                {{ "mail.compose.sentAgain" | translate }}
+            </button>
+        </div>
+    }
+
+    <form class="lh-panel flex flex-col gap-6" [formGroup]="form" (ngSubmit)="submit()">
+        <h3 class="text-xl font-bold text-ink">{{ "mail.compose.heading" | translate }}</h3>
+
+        <div class="flex flex-col gap-3">
+            <span class="text-base font-semibold text-ink-2">{{ "mail.compose.recipientLabel" | translate }}</span>
+
+            <label class="flex items-center gap-3 cursor-pointer">
+                <input
+                    type="checkbox"
+                    class="lh-checkbox"
+                    [checked]="broadcast()"
+                    (change)="toggleBroadcast($event)"
+                />
+                <span class="text-lg font-semibold text-ink">{{ "mail.compose.broadcastLabel" | translate }}</span>
+            </label>
+
+            @if (broadcast()) {
+                <p class="text-base text-warning-ink">{{ "mail.compose.broadcastHint" | translate }}</p>
+            } @else if (selectedPlayer(); as player) {
+                <div
+                    class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-surface-3 p-4"
+                >
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-lg font-bold text-ink truncate">{{ player.playerName }}</span>
+                        <span class="text-sm font-mono text-ink-3 truncate">{{ player.playerId }}</span>
+                    </div>
+                    <button
+                        type="button"
+                        (click)="clearPlayer()"
+                        class="rounded-xl px-4 py-2 text-base font-bold text-ink bg-surface-4 border border-line hover:bg-surface-3"
+                    >
+                        {{ "mail.compose.recipientChange" | translate }}
+                    </button>
+                </div>
+            } @else {
+                <lh-input
+                    type="input"
+                    icon="@tui.search"
+                    [formControl]="searchControl"
+                    [ariaLabel]="'mail.compose.recipientLabel' | translate"
+                    [placeholder]="'mail.compose.recipientSearchPlaceholder' | translate"
+                />
+
+                @if (searchResults().length > 0) {
+                    <div class="flex flex-col gap-1 rounded-xl border border-line bg-surface-3 p-2">
+                        @for (user of searchResults(); track user.user_id) {
+                            <button
+                                type="button"
+                                (click)="selectPlayer(user)"
+                                class="flex flex-wrap items-center justify-between gap-3 rounded-lg p-3 text-left hover:bg-surface-4"
+                            >
+                                <span class="text-lg font-semibold text-ink">{{ user.user_game_name }}</span>
+                                <span class="text-sm font-mono text-ink-3">{{ user.user_id }}</span>
+                            </button>
+                        }
+                    </div>
+                } @else if (searchControl.value.trim().length >= 2) {
+                    <p class="text-base text-ink-3">{{ "mail.compose.searchEmpty" | translate }}</p>
+                }
+
+                @if (recipientMissing()) {
+                    <p role="alert" class="text-base text-danger-strong">
+                        {{ "mail.compose.recipientMissing" | translate }}
+                    </p>
+                }
+            }
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <lh-input
+                type="input"
+                [label]="'mail.compose.titleLabel' | translate"
+                [placeholder]="'mail.compose.titlePlaceholder' | translate"
+                [formControl]="form.controls.title"
+            />
+            @if (form.controls.title.touched && form.controls.title.invalid) {
+                <p role="alert" class="text-base text-danger-strong">{{ "mail.compose.titleInvalid" | translate }}</p>
+            }
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <lh-input
+                type="textarea"
+                [label]="'mail.compose.bodyLabel' | translate"
+                [placeholder]="'mail.compose.bodyPlaceholder' | translate"
+                [rows]="4"
+                [formControl]="form.controls.body"
+            />
+            @if (form.controls.body.touched && form.controls.body.invalid) {
+                <p role="alert" class="text-base text-danger-strong">{{ "mail.compose.bodyInvalid" | translate }}</p>
+            }
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <h4 class="text-lg font-bold text-ink">{{ "mail.compose.attachmentsLabel" | translate }}</h4>
+                <div class="flex flex-wrap gap-2">
+                    <button
+                        type="button"
+                        (click)="addItem()"
+                        class="rounded-xl px-4 py-2 text-base font-bold text-ink bg-surface-3 border border-line hover:bg-surface-4"
+                    >
+                        {{ "mail.compose.addItem" | translate }}
+                    </button>
+                    <button
+                        type="button"
+                        (click)="addCoins()"
+                        class="rounded-xl px-4 py-2 text-base font-bold text-ink bg-surface-3 border border-line hover:bg-surface-4"
+                    >
+                        {{ "mail.compose.addCoins" | translate }}
+                    </button>
+                </div>
+            </div>
+
+            <p class="text-base text-ink-3">{{ "mail.compose.attachmentsHint" | translate }}</p>
+            <p class="text-base text-warning-ink">{{ "mail.compose.gameCodeWarning" | translate }}</p>
+
+            @for (row of itemRows.controls; track row; let i = $index) {
+                <div class="flex flex-col gap-3 rounded-xl border border-line bg-surface-3 p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <span class="text-base font-semibold text-ink-2">
+                            {{ "mail.compose.itemRowTitle" | translate: { number: i + 1 } }}
+                        </span>
+                        <button
+                            type="button"
+                            (click)="removeItem(i)"
+                            [attr.aria-label]="'mail.compose.remove' | translate"
+                            class="rounded-lg p-2 text-danger-strong hover:bg-danger-soft/30"
+                        >
+                            <tui-icon icon="@tui.trash-2" class="size-5!" />
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                        <lh-input
+                            type="input"
+                            [label]="'mail.compose.gameCodeLabel' | translate"
+                            [placeholder]="'mail.compose.gameCodePlaceholder' | translate"
+                            [formControl]="row.controls.gameCode"
+                        />
+                        <lh-input
+                            type="inputNumber"
+                            [label]="'mail.compose.quantityLabel' | translate"
+                            [formControl]="row.controls.quantity"
+                        />
+                        <lh-input
+                            type="select"
+                            [items]="itemTypes"
+                            [displayWith]="itemTypeLabel"
+                            [ariaLabel]="'mail.compose.typeLabel' | translate"
+                            [formControl]="row.controls.itemType"
+                        />
+                    </div>
+
+                    @if (row.controls.gameCode.touched && row.controls.gameCode.invalid) {
+                        <p role="alert" class="text-base text-danger-strong">
+                            {{ "mail.compose.gameCodeInvalid" | translate }}
+                        </p>
+                    }
+                    @if (row.controls.quantity.touched && row.controls.quantity.invalid) {
+                        <p role="alert" class="text-base text-danger-strong">
+                            {{ "mail.compose.quantityInvalid" | translate }}
+                        </p>
+                    }
+                </div>
+            }
+
+            @for (row of coinsRows.controls; track row; let i = $index) {
+                <div class="flex flex-col gap-3 rounded-xl border border-line bg-surface-3 p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <span class="text-base font-semibold text-ink-2">
+                            {{ "mail.compose.coinsRowTitle" | translate: { number: i + 1 } }}
+                        </span>
+                        <button
+                            type="button"
+                            (click)="removeCoins(i)"
+                            [attr.aria-label]="'mail.compose.remove' | translate"
+                            class="rounded-lg p-2 text-danger-strong hover:bg-danger-soft/30"
+                        >
+                            <tui-icon icon="@tui.trash-2" class="size-5!" />
+                        </button>
+                    </div>
+
+                    <lh-input
+                        type="inputNumber"
+                        [label]="'mail.compose.amountLabel' | translate"
+                        [placeholder]="'mail.compose.amountPlaceholder' | translate"
+                        [formControl]="row.controls.amount"
+                    />
+
+                    @if (row.controls.amount.touched && row.controls.amount.invalid) {
+                        <p role="alert" class="text-base text-danger-strong">
+                            {{ "mail.compose.amountInvalid" | translate }}
+                        </p>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <span class="text-base font-semibold text-ink-2">{{ "mail.compose.expiresAtLabel" | translate }}</span>
+            <p class="text-base text-ink-3">{{ "mail.compose.expiresAtHint" | translate }}</p>
+            <input
+                type="datetime-local"
+                class="w-full max-w-xs rounded-xl border border-line bg-surface-3 px-4 py-3 text-base text-ink"
+                [formControl]="form.controls.expiresAt"
+                [attr.aria-invalid]="form.controls.expiresAt.invalid"
+            />
+            @if (form.controls.expiresAt.touched && form.controls.expiresAt.invalid) {
+                <p role="alert" class="text-base text-danger-strong">
+                    {{ "mail.compose.expiresAtInvalid" | translate }}
+                </p>
+            }
+        </div>
+
+        @if (fieldError(); as error) {
+            <div class="flex flex-col items-start gap-3 rounded-xl border border-danger-strong bg-danger-soft/20 p-4">
+                <p role="alert" class="text-base text-danger-strong">{{ error }}</p>
+                <button
+                    type="button"
+                    (click)="retry()"
+                    [disabled]="submitting()"
+                    class="rounded-xl px-4 py-2 text-base font-bold text-ink bg-surface-3 border border-line hover:bg-surface-4 disabled:opacity-50"
+                >
+                    {{ "mail.compose.retry" | translate }}
+                </button>
+            </div>
+        }
+
+        <button
+            type="submit"
+            [disabled]="submitting()"
+            class="self-start flex items-center gap-2 rounded-xl px-6 py-3 font-bold uppercase text-white bg-lh-accent-3 hover:bg-brand disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            @if (submitting()) {
+                <tui-loader [showLoader]="true" [inheritColor]="true" size="s" />
+                {{ "mail.compose.submitting" | translate }}
+            } @else {
+                {{ "mail.compose.submit" | translate }}
+            }
+        </button>
+    </form>
+}

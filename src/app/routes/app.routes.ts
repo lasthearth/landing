@@ -220,6 +220,10 @@ export const routes: Routes = [
                                         import('@core/i18n/translations/features/tickets.i18n').then(
                                             (m) => m.TICKETS_I18N
                                         ),
+                                    () =>
+                                        import('@core/i18n/translations/features/mail.i18n').then(
+                                            (m) => m.MAIL_I18N
+                                        ),
                                 ]
                             ),
                         canActivate: [adminGuard],

@@ -18,6 +18,7 @@ export const ADMIN_I18N = {
                 wiki: 'Вики',
                 players: 'Игроки',
                 tickets: 'Обращения',
+                mail: 'Почта',
             },
             players: {
                 searchTitle: 'Поиск игрока',
@@ -472,6 +473,7 @@ export const ADMIN_I18N = {
                 wiki: 'Wiki',
                 players: 'Players',
                 tickets: 'Tickets',
+                mail: 'Mail',
             },
             players: {
                 searchTitle: 'Player search',

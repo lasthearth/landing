@@ -29,11 +29,17 @@ import { WikiAdminPanelComponent } from '@features/wiki';
 import { ModsAdminPanelComponent } from '@features/mods';
 import { TicketApiService } from '@entities/ticket';
 import { TicketsInboxComponent } from './ui/tickets-inbox/tickets-inbox.component';
+import { MailAdminPanelComponent } from './ui/mail-admin-panel/mail-admin-panel.component';
 
 /**
  * Номер вкладки «Обращения» в `@switch` шаблона.
  */
 const TICKETS_TAB = 14;
+
+/**
+ * Номер вкладки «Почта» в `@switch` шаблона.
+ */
+const MAIL_TAB = 15;
 
 /**
  * Компонент страницы администратора.
@@ -63,6 +69,7 @@ const TICKETS_TAB = 14;
         WikiAdminPanelComponent,
         ModsAdminPanelComponent,
         TicketsInboxComponent,
+        MailAdminPanelComponent,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.less',
@@ -119,6 +126,11 @@ export class AdminComponent {
     protected activeItemIndex: number = 0;
 
     protected readonly ticketsTab = TICKETS_TAB;
+
+    /**
+     * Индекс вкладки «Почта».
+     */
+    protected readonly mailTab = MAIL_TAB;
 
     /**
      * Обращение, которое открыть во входящих (из ссылки уведомления).

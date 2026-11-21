@@ -1,0 +1,48 @@
+<div class="lh-dialog-card">
+    <div class="flex items-center gap-4">
+        <div
+            class="flex items-center justify-center size-12 rounded-full bg-lh-accent/10 border border-lh-accent/20 shrink-0"
+        >
+            <tui-icon icon="@tui.send" class="size-6! text-lh-accent" />
+        </div>
+        <p class="lh-dialog-title">{{ "mail.compose.confirmTitle" | translate }}</p>
+    </div>
+
+    <dl class="mt-4 flex flex-col gap-3 text-base">
+        <div class="flex flex-col gap-1">
+            <dt class="text-ink-3">{{ "mail.compose.recipientLabel" | translate }}</dt>
+            <dd class="text-ink font-semibold break-words">{{ context.data.recipient }}</dd>
+        </div>
+        <div class="flex flex-col gap-1">
+            <dt class="text-ink-3">{{ "mail.compose.titleLabel" | translate }}</dt>
+            <dd class="text-ink font-semibold break-words">{{ context.data.title }}</dd>
+        </div>
+        <div class="flex flex-col gap-1">
+            <dt class="text-ink-3">{{ "mail.compose.bodyLabel" | translate }}</dt>
+            <dd class="text-ink whitespace-pre-line break-words">{{ context.data.body }}</dd>
+        </div>
+        <div class="flex flex-col gap-1">
+            <dt class="text-ink-3">{{ "mail.compose.attachmentsLabel" | translate }}</dt>
+            <dd class="text-ink font-mono break-words">
+                @for (attachment of context.data.attachments; track $index) {
+                    <span class="block">{{ attachment }}</span>
+                } @empty {
+                    <span class="text-ink-3 font-sans">{{ "mail.compose.confirmNoAttachments" | translate }}</span>
+                }
+            </dd>
+        </div>
+        <div class="flex flex-col gap-1">
+            <dt class="text-ink-3">{{ "mail.compose.expiresAtLabel" | translate }}</dt>
+            <dd class="text-ink">{{ context.data.expiresAt }}</dd>
+        </div>
+    </dl>
+
+    <div class="lh-dialog-actions">
+        <button type="button" (click)="cancel()" class="lh-dialog-button lh-dialog-button-secondary">
+            {{ "common.cancel" | translate }}
+        </button>
+        <button type="button" (click)="confirm()" class="lh-dialog-button lh-dialog-button-primary">
+            {{ "mail.compose.confirmSubmit" | translate }}
+        </button>
+    </div>
+</div>
