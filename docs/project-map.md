@@ -30,16 +30,16 @@
 | `npm run context:cost`  | `node scripts/check-context-budget.mjs`                                         |
 | `npm run format`        | `prettier --write AGENTS.md AGENT_RULES_MAP.md README.md docs package.json`     |
 | `npm run format:check`  | `prettier --check AGENTS.md AGENT_RULES_MAP.md README.md docs package.json`     |
-| `npm run lint:rules`    | `node --test tools/eslint-rules/`                                               |
+| `npm run lint:rules`    | `node --test tools/eslint-rules/index.test.mjs`                                 |
 
 ## 2. Слои src/app
 
 | Слой      | Файлов | Внутри                                                                                                                                                                                                                                                                                                                                                                             |
 | --------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| src/app   | 1103   | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                                                   |
+| src/app   | 1106   | core, entities, features, layout, routes, shared                                                                                                                                                                                                                                                                                                                                   |
 | core/     | 61     | config, guards, i18n, interceptors, services, types                                                                                                                                                                                                                                                                                                                                |
 | entities/ | 203    | discord, donate, event, hunger-games, kitdef, lfg, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki                                                                                                                                                                                          |
-| features/ | 654    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
+| features/ | 657    | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
 | layout/   | 27     | background-scene, footer, header                                                                                                                                                                                                                                                                                                                                                   |
 | routes/   | 5      | enums                                                                                                                                                                                                                                                                                                                                                                              |
 | shared/   | 148    | lib, styles, ui                                                                                                                                                                                                                                                                                                                                                                    |
@@ -76,7 +76,7 @@
 | features/profile        | 50     | ui                          | да       | 5              |
 | features/public-offer   | 3      | —                           | **нет**  | —              |
 | features/reactions      | 6      | ui, api                     | да       | 2              |
-| features/referral       | 5      | —                           | да       | 2              |
+| features/referral       | 8      | —                           | да       | 3              |
 | features/rules          | 83     | ui, model, config           | да       | 1              |
 | features/settlements    | 71     | —                           | **нет**  | —              |
 | features/start-game     | 3      | —                           | **нет**  | —              |
@@ -111,7 +111,7 @@
 | Путь                    | Компонент                    | Гварды                          | Словари i18n                                 | Пререндер | SEO-ключ      |
 | ----------------------- | ---------------------------- | ------------------------------- | -------------------------------------------- | --------- | ------------- |
 | `wiki/edit/:id`         | `—`                          | userGuard, wikiEditorLeaveGuard | wiki                                         | —         | wikiEditor    |
-| `/`                     | `HomeComponent`              | —                               | home                                         | да        | home          |
+| `/`                     | `HomeComponent`              | —                               | home, referral                               | да        | home          |
 | `/wiki`                 | `WikiListPageComponent`      | —                               | wiki                                         | да        | wiki          |
 | `/wiki/razdel/:section` | `WikiSectionPageComponent`   | —                               | wiki                                         | —         | wiki          |
 | `/wiki/:slug`           | `WikiArticlePageComponent`   | —                               | wiki                                         | —         | wiki          |
@@ -158,9 +158,9 @@
 | about       | 11.8  | /about                                                                                      |
 | admin       | 51.5  | /profile/admin                                                                              |
 | analytics   | 0.9   | —                                                                                           |
-| common      | 1.0   | —                                                                                           |
+| common      | 1.1   | —                                                                                           |
 | diplomacy   | 1.7   | /diplomacy                                                                                  |
-| events      | 7.8   | /profile, /events                                                                           |
+| events      | 8.0   | /profile, /events                                                                           |
 | faq         | 2.3   | /faq                                                                                        |
 | footer      | 2.9   | —                                                                                           |
 | gallery     | 2.6   | /gallery                                                                                    |
@@ -168,7 +168,7 @@
 | home        | 8.8   | /                                                                                           |
 | key-points  | 83.4  | /key-points                                                                                 |
 | legal       | 68.7  | /privacy-policy, /public-offer                                                              |
-| lfg         | 15.4  | /lfg                                                                                        |
+| lfg         | 15.7  | /lfg                                                                                        |
 | market      | 15.6  | /profile, /market                                                                           |
 | mods        | 10.9  | /profile/admin, /mods                                                                       |
 | news        | 10.7  | /news                                                                                       |
@@ -176,12 +176,12 @@
 | player      | 21.9  | /profile, /player/:nick                                                                     |
 | players     | 3.3   | /players                                                                                    |
 | profile     | 23.3  | /profile                                                                                    |
-| referral    | 1.5   | /profile/referral                                                                           |
-| rules       | 253.8 | /rules                                                                                      |
+| referral    | 3.9   | /, /profile/referral                                                                        |
+| rules       | 251.8 | /rules                                                                                      |
 | settlements | 55.6  | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared      | 27.9  | —                                                                                           |
 | tickets     | 13.6  | /profile/support, /profile/support/:id, /profile/admin                                      |
-| videos      | 2.0   | /videos                                                                                     |
+| videos      | 2.1   | /videos                                                                                     |
 | wiki        | 63.7  | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin     |
 | world-map   | 6.6   | /map                                                                                        |
 

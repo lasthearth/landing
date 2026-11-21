@@ -46,7 +46,14 @@ export const routes: Routes = [
                 loadComponent: () =>
                     loadPage(
                         () => import('../features/home/home.component').then((m) => m.HomeComponent),
-                        [() => import('@core/i18n/translations/features/home.i18n').then((m) => m.HOME_I18N)]
+                        [
+                            () => import('@core/i18n/translations/features/home.i18n').then((m) => m.HOME_I18N),
+                            // Блок реферальной программы на главной читает словарь `referral`.
+                            () =>
+                                import('@core/i18n/translations/features/referral.i18n').then(
+                                    (m) => m.REFERRAL_I18N
+                                ),
+                        ]
                     ),
                 data: { route_keys: RouteKeys.home, seo: routeSeoData.home },
             },

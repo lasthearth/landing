@@ -7,6 +7,7 @@ import { catchError, combineLatest, map, Observable, of, shareReplay, startWith,
 import { ReferralService } from '@entities/referral';
 import { UserService } from '@entities/user';
 import { TranslatePipe, AmountPipe } from '@core/i18n';
+import { ReferralPayoutComponent } from '../referral-payout/referral-payout.component';
 
 /**
  * View-model виджета реферальной программы.
@@ -36,7 +37,7 @@ interface IReferralWidgetViewModel {
  */
 @Component({
     selector: 'app-referral-widget',
-    imports: [AmountPipe, AsyncPipe, TuiIcon, TuiButton, TranslatePipe, EmptyStateComponent],
+    imports: [AmountPipe, AsyncPipe, TuiIcon, TuiButton, TranslatePipe, EmptyStateComponent, ReferralPayoutComponent],
     templateUrl: './referral-widget.component.html',
     styleUrl: './referral-widget.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
