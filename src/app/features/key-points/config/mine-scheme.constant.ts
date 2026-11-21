@@ -16,7 +16,7 @@ import { KeyPointVariant } from '../model/key-point-variant.interface';
  * `keyPoints.points.mine.variants.<key>.nodes`.
  */
 const MINE_VARIANTS: readonly KeyPointVariant[] = [
-    // north: вся ветка — 2325 серебряных (23.25 дуката).
+    // north: вся ветка — 4735 серебряных (47.35 дуката).
     {
         key: 'north',
         lanes: 3,
@@ -157,7 +157,7 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                     { resource: 'frames', amount: 1440 },
                     { resource: 'stone', amount: 1056 },
                     { resource: 'rope', amount: 208 },
-                    { resource: 'metal', amount: 288 },
+                    { resource: 'metal', amount: 228 },
                     { resource: 'bronze', amount: 96 },
                     { resource: 'blackBronze', amount: 60 },
                     { resource: 'charcoal', amount: 304 },
@@ -172,11 +172,11 @@ const MINE_VARIANTS: readonly KeyPointVariant[] = [
                 icon: '@tui.mountain',
                 requires: ['quality'],
                 cost: [
-                    { resource: 'money', amount: 400 },
+                    { resource: 'money', amount: 800 },
                     { resource: 'frames', amount: 1760 },
-                    { resource: 'stone', amount: 1320 },
+                    { resource: 'stone', amount: 1560 },
                     { resource: 'rope', amount: 264 },
-                    { resource: 'metal', amount: 360 },
+                    { resource: 'metal', amount: 320 },
                     { resource: 'bronze', amount: 112 },
                     { resource: 'blackBronze', amount: 80 },
                     { resource: 'charcoal', amount: 376 },
