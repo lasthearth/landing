@@ -152,8 +152,15 @@ export class SheetDragDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Снимает слушатели и незавершённые кадры.
+     *
+     * На сервере ничего не навешивалось (`ngAfterViewInit` выходит сразу),
+     * а `window` и `cancelAnimationFrame` там нет — снимать нечего.
      */
     public ngOnDestroy(): void {
+        if (!this.isBrowser) {
+            return;
+        }
+
         this.handle?.removeEventListener('pointerdown', this.onPointerDown);
         this.stopTracking();
 
