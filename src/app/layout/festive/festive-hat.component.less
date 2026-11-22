@@ -1,0 +1,31 @@
+/**
+ * Цвет колпака — красный статусный токен, высветленный брендом:
+ * сам `--lh-danger-strong` на тёмной шапке сайта читается бурым.
+ */
+:host {
+    --festive-hat-red: color-mix(in srgb, var(--lh-danger-strong) 75%, var(--lh-brand-lit));
+    --festive-hat-fur: var(--lh-parchment-3);
+
+    display: block;
+    pointer-events: none;
+}
+
+.festive-hat {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    filter: drop-shadow(0 0.125rem 0.25rem color-mix(in srgb, var(--lh-night-deep) 60%, transparent));
+}
+
+.festive-hat__cap {
+    fill: var(--festive-hat-red);
+}
+
+.festive-hat__shade {
+    fill: color-mix(in srgb, var(--festive-hat-red) 70%, var(--lh-night-deep));
+}
+
+.festive-hat__fur {
+    fill: var(--festive-hat-fur);
+}

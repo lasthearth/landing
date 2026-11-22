@@ -46,7 +46,9 @@ import { AmountPipe, TranslatePipe } from '@core/i18n';
 import { ImageLoaderComponent } from '@shared/ui/image-loader';
 import { PlayerAvatarComponent } from '@entities/player-style';
 import { NotificationBellComponent } from '@features/notifications';
+import { environment } from '@core/config/environments/environment';
 import { HeaderState } from '../header-state.service';
+import { FestiveHatComponent } from '../../festive/festive-hat.component';
 import { SheetDragDirective } from '@shared/lib/directives';
 
 @Component({
@@ -61,6 +63,7 @@ import { SheetDragDirective } from '@shared/lib/directives';
         NotificationBellComponent,
         PlayerAvatarComponent,
         SheetDragDirective,
+        FestiveHatComponent,
     ],
     templateUrl: './crown.component.html',
     styleUrl: './crown.component.less',
@@ -76,6 +79,11 @@ export class CrownComponent implements AfterViewInit, OnDestroy {
      * в провайдерах хоста `app-header`, поэтому экземпляр один на шапку.
      */
     protected readonly state = inject(HeaderState);
+
+    /**
+     * Настройки новогоднего оформления: шапка на эмблеме вензеля.
+     */
+    protected readonly newYear = environment.newYear;
 
     /**
      * Скользящее подчёркивание ряда ссылок: left, top и width в пикселях от

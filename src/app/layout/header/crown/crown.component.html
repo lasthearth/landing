@@ -142,7 +142,13 @@
         <span class="crown__aura" aria-hidden="true"></span>
 
         <a class="crown__brand" [routerLink]="['/']">
-            <app-image-loader src="/images/logo.webp" alt="" class="crown__mark" />
+            <span class="crown__emblem">
+                <app-image-loader src="/images/logo.webp" alt="" class="crown__mark" />
+                <!-- Новогодняя шапка: флаг environment.newYear (enabled + hat). -->
+                @if (newYear.enabled && newYear.hat) {
+                    <app-festive-hat class="crown__hat" />
+                }
+            </span>
             <span class="crown__name lh-display">Last Hearth</span>
         </a>
     </div>

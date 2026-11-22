@@ -36,11 +36,11 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1131 | core, entities, features, layout, routes, shared |
+| src/app | 1139 | core, entities, features, layout, routes, shared |
 | core/ | 64 | config, guards, i18n, interceptors, services, types |
 | entities/ | 213 | discord, donate, event, hunger-games, kitdef, lfg, mail, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki |
 | features/ | 669 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
-| layout/ | 27 | background-scene, footer, header |
+| layout/ | 35 | background-scene, festive, footer, header |
 | routes/ | 5 | enums |
 | shared/ | 148 | lib, styles, ui |
 
@@ -159,9 +159,9 @@
 | about | 11.8 | /about |
 | admin | 51.5 | /profile/admin |
 | analytics | 0.9 | — |
-| common | 1.1 | — |
+| common | 1.0 | — |
 | diplomacy | 1.7 | /diplomacy |
-| events | 8.0 | /profile, /events |
+| events | 7.8 | /profile, /events |
 | faq | 2.3 | /faq |
 | footer | 2.9 | — |
 | gallery | 2.6 | /gallery |
@@ -169,7 +169,7 @@
 | home | 8.8 | / |
 | key-points | 83.4 | /key-points |
 | legal | 68.7 | /privacy-policy, /public-offer |
-| lfg | 15.7 | /lfg |
+| lfg | 15.4 | /lfg |
 | mail | 10.5 | /profile/admin |
 | market | 15.6 | /profile, /market |
 | mods | 10.9 | /profile/admin, /mods |
@@ -183,7 +183,7 @@
 | settlements | 55.6 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared | 27.9 | — |
 | tickets | 13.6 | /profile/support, /profile/support/:id, /profile/admin |
-| videos | 2.1 | /videos |
+| videos | 2.0 | /videos |
 | wiki | 63.7 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |
 | world-map | 6.6 | /map |
 

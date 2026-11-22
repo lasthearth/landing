@@ -1,5 +1,10 @@
 <app-background-scene />
 
+<!-- Новогоднее оформление: включается флагом environment.newYear.enabled. Шапка на эмблеме — в вензеле (crown). -->
+@if (environment.newYear.enabled) {
+    <app-festive-decor />
+}
+
 @if (showWelcome$ | async) {
     <app-welcome
         [class.scroll]="isSetScrollClass()"

@@ -18,6 +18,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { GameChatWidgetComponent } from '@features/game-chat/ui/game-chat-widget/game-chat-widget.component';
 import { BackgroundSceneComponent } from './background-scene/background-scene.component';
+import { FestiveDecorComponent } from './festive/festive-decor.component';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { ShopPrefetchService } from '@core/services/shop-prefetch.service';
@@ -38,6 +39,7 @@ import { TranslatePipe } from '@core/i18n';
         TranslatePipe,
         WelcomeComponent,
         BackgroundSceneComponent,
+        FestiveDecorComponent,
         GameChatWidgetComponent,
         SiteAnnouncementComponent,
     ],
@@ -99,7 +101,8 @@ export class LayoutComponent {
     );
 
     /**
-     * Окружение для доступа к идентификаторам Discord-каналов в шаблоне.
+     * Окружение для доступа к идентификаторам Discord-каналов
+     * и флагу новогоднего оформления в шаблоне.
      */
     protected readonly environment = environment;
 
