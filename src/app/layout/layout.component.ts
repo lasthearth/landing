@@ -18,7 +18,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { GameChatWidgetComponent } from '@features/game-chat/ui/game-chat-widget/game-chat-widget.component';
 import { BackgroundSceneComponent } from './background-scene/background-scene.component';
-import { FestiveDecorComponent } from './festive/festive-decor.component';
+import { WinterDecorComponent } from './winter/winter-decor.component';
 import { environment } from '@core/config/environments/environment';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { ShopPrefetchService } from '@core/services/shop-prefetch.service';
@@ -39,15 +39,24 @@ import { TranslatePipe } from '@core/i18n';
         TranslatePipe,
         WelcomeComponent,
         BackgroundSceneComponent,
-        FestiveDecorComponent,
+        WinterDecorComponent,
         GameChatWidgetComponent,
         SiteAnnouncementComponent,
     ],
     templateUrl: './layout.component.html',
     styleUrl: './layout.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[class.lh-winter-drifts]': 'newYear.enabled && newYear.drifts',
+    },
 })
 export class LayoutComponent {
+    /**
+     * Настройки зимнего оформления. Сугробы на кромках пластины контента
+     * и подвала рисует глобальный стиль (`src/styles.css`) по классу хоста.
+     */
+    protected readonly newYear = environment.newYear;
+
     /**
      * Сервис localStorage.
      */
@@ -101,8 +110,7 @@ export class LayoutComponent {
     );
 
     /**
-     * Окружение для доступа к идентификаторам Discord-каналов
-     * и флагу новогоднего оформления в шаблоне.
+     * Окружение для доступа к идентификаторам Discord-каналов в шаблоне.
      */
     protected readonly environment = environment;
 

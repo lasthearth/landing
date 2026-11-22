@@ -143,6 +143,14 @@
     --lh-warning-ink: #8a6e2f;
     --lh-gold: #d4af37;
 
+    /**
+     * Зима: снег, тень сугроба, иней. Холодные тона против тёплого янтаря очага;
+     * декор, а не интерфейс, поэтому одинаковы в обеих темах.
+     */
+    --lh-snow: #f2f5f9;
+    --lh-snow-shade: #b9c6d6;
+    --lh-frost: #d6e4f2;
+
     /** Медали рейтинга. Затемнены до порога AA для крупного текста. */
     --lh-medal-gold: #946c09;
     --lh-medal-silver: #767270;
@@ -245,9 +253,11 @@
      * Слои z-index. Новые значения брать отсюда, а не придумывать:
      * raised — поверх соседей, sticky — липкие шапки, floating — плавающие
      * виджеты, dropdown — меню, overlay — полноэкранные заставки, modal — диалоги.
+     * backdrop — сезонный декор под контентом (дальний снег, иней), выше фоновой сцены.
      * decor — сезонный декор поверх контента: равен слою шапки (app-header-crown),
      * но стоит в DOM раньше неё, поэтому шапка и её меню рисуются поверх декора.
      */
+    --lh-z-backdrop: -1;
     --lh-z-decor: 1;
     --lh-z-raised: 10;
     --lh-z-sticky: 20;
@@ -715,6 +725,52 @@ app-landing .main-panel {
     .landing__page,
     app-landing .main-panel {
         transition: none;
+    }
+}
+
+/**
+ * Зима: сугроб на верхней кромке пластины контента и подвала.
+ * Класс `lh-winter-drifts` ставит app-layout по флагу environment.newYear.drifts.
+ *
+ * Силуэт — маска из public/images/winter/drift.svg; к скруглённым углам пластины
+ * сугроб сходит эллиптическим скруглением, а не затуханием прозрачности.
+ * Ширина силуэта не меньше 900px: на телефоне видна его середина, иначе бугры
+ * сжимались втрое и сугроб превращался в пилу. Низ сугроба чуть холоднее — тень
+ * касания, без неё снег висел бы над кромкой наклейкой. Сугроб заходит
+ * на пластину на 3px, чтобы между снегом и пергаментом не было щели.
+ */
+.lh-winter-drifts .main-panel {
+    position: relative;
+}
+
+.lh-winter-drifts .main-panel::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    bottom: calc(100% - 3px);
+    height: 26px;
+    pointer-events: none;
+    /* Концы сугроба скругляет форма: прозрачное затухание оставляло серый мазок. */
+    border-radius: 140px 140px 0 0 / 100% 100% 0 0;
+    background: linear-gradient(
+        to bottom,
+        var(--lh-snow) 0%,
+        var(--lh-snow) 80%,
+        color-mix(in srgb, var(--lh-snow) 70%, var(--lh-snow-shade)) 100%
+    );
+    -webkit-mask: url('/images/winter/drift.svg') center bottom / max(100%, 900px) 100% no-repeat;
+    mask: url('/images/winter/drift.svg') center bottom / max(100%, 900px) 100% no-repeat;
+}
+
+/* Открытая панель «Сообщества» встаёт верхом колонки: снег под её стыком не нужен. */
+.content-wrapper:has(.crown__sheet--open) .main-panel::before {
+    opacity: 0;
+}
+
+@media (max-width: 767px) {
+    .lh-winter-drifts .main-panel::before {
+        height: 18px;
     }
 }
 

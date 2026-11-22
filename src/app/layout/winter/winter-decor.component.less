@@ -1,0 +1,52 @@
+:host {
+    display: contents;
+}
+
+/* ---- Морозная дымка ---- */
+
+/**
+ * Холодный воздух по углам экрана: на широком экране он ложится на пустые поля,
+ * на телефоне уходит под панели. Рисованный иней (дендриты на холсте) пробовали
+ * и сняли: вблизи он читался серым клубком царапин или паутиной.
+ * Слой под контентом, над фоновой сценой и виньеткой; против холода сверху
+ * остаётся тёплый отсвет очага у нижней кромки (layout ::before).
+ */
+.winter-frost {
+    --winter-frost-edge: color-mix(in srgb, var(--lh-frost) 14%, transparent);
+
+    position: fixed;
+    inset: 0;
+    z-index: var(--lh-z-backdrop);
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 38vmax 30vmax at 0 0, var(--winter-frost-edge), transparent 70%),
+        radial-gradient(ellipse 38vmax 30vmax at 100% 0, var(--winter-frost-edge), transparent 70%),
+        radial-gradient(
+            ellipse 120% 26vmax at 50% -8vmax,
+            color-mix(in srgb, var(--lh-frost) 6%, transparent),
+            transparent 75%
+        );
+}
+
+/* ---- Снег ---- */
+
+.winter-snow {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Дальний план идёт за панелями. */
+.winter-snow--far {
+    z-index: var(--lh-z-backdrop);
+}
+
+/**
+ * Ближний план — поверх контента, но ниже шапки с её меню, плавающего чата
+ * и диалогов (`--lh-z-decor`: слой шапки, но раньше в DOM).
+ */
+.winter-snow--near {
+    z-index: var(--lh-z-decor);
+}

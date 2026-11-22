@@ -18,15 +18,15 @@ export const environment = {
     discordInviteUrl: 'https://discord.com/invite/FZb7SGrSFy',
     gameServerIp: 'play.lasthearth.ru',
     /**
-     * Новогоднее оформление сайта: гирлянда над шапкой и снегопад.
-     * `enabled: false` выключает всё оформление целиком; `snow`, `garland`
-     * и `hat` (шапка на эмблеме) — отдельные части, если нужны не все.
+     * Зимнее (новогоднее) оформление сайта. `enabled: false` выключает его целиком;
+     * остальные флаги — отдельные части: `snow` — снегопад, `drifts` — сугробы
+     * на кромках пластины контента и подвала, `frost` — морозная дымка по углам экрана.
      */
     newYear: {
         enabled: true,
         snow: true,
-        garland: true,
-        hat: true,
+        drifts: true,
+        frost: true,
     },
     gameServerPassword: 'djA2n313IN728Olq99SlBr',
 };

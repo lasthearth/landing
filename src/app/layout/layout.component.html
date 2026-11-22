@@ -1,8 +1,8 @@
 <app-background-scene />
 
-<!-- Новогоднее оформление: включается флагом environment.newYear.enabled. Шапка на эмблеме — в вензеле (crown). -->
-@if (environment.newYear.enabled) {
-    <app-festive-decor />
+<!-- Зимнее оформление: флаг environment.newYear. Сугробы — глобальный стиль по классу хоста. -->
+@if (newYear.enabled) {
+    <app-winter-decor />
 }
 
 @if (showWelcome$ | async) {

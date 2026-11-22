@@ -1,0 +1,11 @@
+@if (config.frost) {
+    <div class="winter-frost" aria-hidden="true"></div>
+}
+
+<!-- Холсты не нужны первому экрану: цикл кадров снегопада ждёт простоя браузера. -->
+@if (config.snow) {
+    @defer (on idle) {
+        <canvas appSnowfall="far" class="winter-snow winter-snow--far" aria-hidden="true"></canvas>
+        <canvas appSnowfall="near" class="winter-snow winter-snow--near" aria-hidden="true"></canvas>
+    }
+}
