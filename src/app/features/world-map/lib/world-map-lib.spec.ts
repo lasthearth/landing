@@ -10,11 +10,35 @@ import {
     worldToScreen,
     zoomAt,
 } from './map-view';
+import { heraldType } from './herald-type';
 import { placeLabels } from './place-labels';
 import { settlementCourse } from './settlement-mark';
 
 describe('world-map lib', () => {
     const size = { width: 800, height: 600 };
+
+    describe('heraldType', () => {
+        it('узнаёт Гроссхольм на обеих локалях', () => {
+            expect(heraldType('Гроссхольм')).toBe('CAPITAL');
+            expect(heraldType('Столица Эксклава Гроссхольм')).toBe('CAPITAL');
+            expect(heraldType('Grossholm')).toBe('CAPITAL');
+        });
+
+        it('узнаёт ключевые точки по слову целиком', () => {
+            expect(heraldType('Рудник Северной равнины')).toBe('KEY_POINT');
+            expect(heraldType('Чёрный курган')).toBe('KEY_POINT');
+            expect(heraldType('Воздушная гавань')).toBe('KEY_POINT');
+            expect(heraldType('Northern Plain Mine')).toBe('KEY_POINT');
+            expect(heraldType('Форт')).toBe('KEY_POINT');
+        });
+
+        it('остальное считает усадьбой', () => {
+            expect(heraldType('Белый Ключ')).toBe('HAMLET');
+            expect(heraldType('Fortuna')).toBe('HAMLET');
+            expect(heraldType('Курганье')).toBe('HAMLET');
+            expect(heraldType('—')).toBe('HAMLET');
+        });
+    });
 
     describe('compass', () => {
         it('считает север отрицательной Z, восток — положительной X', () => {

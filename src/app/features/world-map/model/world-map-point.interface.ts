@@ -3,9 +3,19 @@
  *
  * CAMP…PROVINCE — те же значения, что отдаёт API наделов. HAMLET — хутор:
  * на сайте его не регистрируют, но глашатая в игре ставят, поэтому на карте он есть.
- * KEY_POINT — ключевая точка: глашатай без надела (`settlement_id` пустой).
+ * У глашатая без надела (`settlement_id` пустой) тип выводится из названия
+ * (`heraldType`): CAPITAL — Гроссхольм, столица Эксклава; KEY_POINT — ключевая
+ * точка; всё остальное — HAMLET.
  */
-export type WorldMapSettlementType = 'HAMLET' | 'CAMP' | 'VILLAGE' | 'TOWNSHIP' | 'CITY' | 'PROVINCE' | 'KEY_POINT';
+export type WorldMapSettlementType =
+    | 'HAMLET'
+    | 'CAMP'
+    | 'VILLAGE'
+    | 'TOWNSHIP'
+    | 'CITY'
+    | 'PROVINCE'
+    | 'CAPITAL'
+    | 'KEY_POINT';
 
 /**
  * Позиция блока-глашатая в мире.

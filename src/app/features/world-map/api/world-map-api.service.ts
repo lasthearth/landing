@@ -10,6 +10,7 @@ import {
     WorldMapPosition,
     WorldMapSettlementType,
 } from '../model/world-map-point.interface';
+import { heraldType } from '../lib/herald-type';
 
 /**
  * Типы наделов, которые знает карта.
@@ -25,7 +26,8 @@ const MAP_TYPES: readonly WorldMapSettlementType[] = ['CAMP', 'VILLAGE', 'TOWNSH
  *
  * - Глашатай с `settlement_id` — надел. Если надел не нашлось в списке
  *   (удалено, а блок в мире остался) или оказалось гильдией, на карту он не попадает.
- * - Глашатай без `settlement_id` — ключевая точка: на карте с названием с глашатая.
+ * - Глашатай без `settlement_id` — тип по названию с глашатая (`heraldType`):
+ *   Гроссхольм — столица, ключевая точка — ключевая точка, остальное — усадьба.
  *
  * Сервер присылает абсолютные координаты; карта показывает их от Очага (`WORLD_SPAWN`).
  * Если глашатаев нет (или API недоступен), возвращается пример с флагом `demo`.
@@ -37,7 +39,7 @@ export class WorldMapApiService {
     /**
      * Загружает точки карты.
      *
-     * @returns Наделы и ключевые точки с глашатаями и признак примера.
+     * @returns Наделы, усадьбы, ключевые точки и столица с глашатаями и признак примера.
      */
     public load(): Observable<WorldMapData> {
         return forkJoin({
@@ -65,11 +67,12 @@ export class WorldMapApiService {
             const herald = this.fromCenter(placement.position);
 
             if (!placement.settlement_id) {
+                const name = placement.name?.trim() || '—';
                 points.push({
-                    // У ключевой точки нет id: ключ — номер и позиция, они стабильны между запросами.
-                    id: `key-point-${index}-${herald.x}-${herald.z}`,
-                    name: placement.name?.trim() || '—',
-                    type: 'KEY_POINT',
+                    // У глашатая без надела нет id: ключ — номер и позиция, они стабильны между запросами.
+                    id: `herald-${index}-${herald.x}-${herald.z}`,
+                    name,
+                    type: heraldType(name),
                     herald,
                 });
                 return;

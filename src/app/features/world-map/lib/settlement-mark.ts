@@ -6,7 +6,7 @@ import { WorldMapSettlementType } from '../model/world-map-point.interface';
 export type WorldMapCourse = 'peace' | 'neutral' | 'free' | 'none';
 
 /**
- * Ранг типа: от хутора (0) до провинции (5).
+ * Ранг типа: от хутора (0) до провинции и столицы (5).
  *
  * @param type Тип надела.
  * @returns Ранг.
@@ -22,6 +22,7 @@ export function settlementTier(type: WorldMapSettlementType): number {
         case 'CITY':
             return 4;
         case 'PROVINCE':
+        case 'CAPITAL':
             return 5;
         case 'KEY_POINT':
             return 3;
@@ -70,7 +71,7 @@ export function settlementCourse(diplomacy: string | undefined): WorldMapCourse 
  * Условный знак типа надела — контур в квадрате 18×18 с центром в нуле,
  * в манере гравированных карт: хутор — кружок с точкой, лагерь — шатёр,
  * деревня — дом, посёлок — два дома, город — башня со стенами, провинция —
- * замок с флагом, ключевая точка — восьмиконечная звезда-веха с кольцом.
+ * замок с флагом (он же у столицы), ключевая точка — восьмиконечная звезда-веха с кольцом.
  * Рисуется с `fill-rule="evenodd"`: двери — вырезы.
  *
  * @param type Тип надела.
@@ -87,6 +88,7 @@ export function settlementGlyph(type: WorldMapSettlementType): string {
         case 'CITY':
             return 'M-7 6V0H-4.5V-6.5H-3V-5H-1.5V-6.5H1.5V-5H3V-6.5H4.5V0H7V6ZM-1.2 6V2.6H1.2V6Z';
         case 'PROVINCE':
+        case 'CAPITAL':
             return 'M-8 6V-4H-6.5V-2.8H-5V-4H-3.5V-1H3.5V-4H5V-2.8H6.5V-4H8V6ZM-1.6 6V1.8H1.6V6ZM-0.4-1V-9H0.4V-1ZM0.4-9L4.5-7.6L0.4-6.2Z';
         case 'KEY_POINT':
             return 'M0-8L2.1-2.1L8 0L2.1 2.1L0 8L-2.1 2.1L-8 0L-2.1-2.1ZM0-2.4a2.4 2.4 0 1 0 0 4.8a2.4 2.4 0 1 0 0-4.8Z';

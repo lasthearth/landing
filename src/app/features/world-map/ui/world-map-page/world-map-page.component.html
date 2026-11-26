@@ -102,6 +102,8 @@
                             <a class="world-map-page__card-link" routerLink="/key-points">
                                 {{ "worldMap.card.keyPoints" | translate }}
                             </a>
+                        } @else if (entry.point.type === "CAPITAL") {
+                            <p class="world-map-page__card-note">{{ "worldMap.card.capitalNote" | translate }}</p>
                         } @else if (!entry.point.settlementId) {
                             <p class="world-map-page__card-note">{{ "worldMap.card.hamletNote" | translate }}</p>
                         } @else if (demo()) {
