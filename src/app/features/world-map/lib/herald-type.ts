@@ -1,13 +1,32 @@
-import { KEY_POINT_HERALD_WORDS } from '../config/key-point-herald-words.constant';
+import { KEY_POINT_HERALD_NAMES } from '../config/key-point-herald-names.constant';
 import { WorldMapSettlementType } from '../model/world-map-point.interface';
 
 /** Гроссхольм на любой из локалей, с одной или двумя «с». */
 const CAPITAL_NAME = /гросс?хольм|gross?holm/i;
 
 /**
+ * Приводит название с глашатая к виду для сравнения: нижний регистр,
+ * «ё» как «е», любые кавычки убраны, пробелы схлопнуты.
+ *
+ * @param name Название с глашатая.
+ * @returns Нормализованное название.
+ */
+export function normalizeHeraldName(name: string): string {
+    return name
+        .toLowerCase()
+        .replaceAll('ё', 'е')
+        .replace(/["'«»„“”]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/** Нормализованные названия ключевых точек. */
+const KEY_POINT_NAMES: ReadonlySet<string> = new Set(KEY_POINT_HERALD_NAMES.map(normalizeHeraldName));
+
+/**
  * Тип глашатая без надела по названию на блоке.
  *
- * Гроссхольм — столица, название с типом ключевой точки — ключевая точка,
+ * Гроссхольм — столица, название из списка ключевых точек — ключевая точка,
  * остальные — усадьбы: их не регистрируют на сайте, но глашатая ставят.
  *
  * @param name Название с глашатая.
@@ -18,7 +37,5 @@ export function heraldType(name: string): Extract<WorldMapSettlementType, 'CAPIT
         return 'CAPITAL';
     }
 
-    const words = name.toLowerCase().replaceAll('ё', 'е').split(/[^\p{L}]+/u);
-
-    return words.some((word) => KEY_POINT_HERALD_WORDS.has(word)) ? 'KEY_POINT' : 'HAMLET';
+    return KEY_POINT_NAMES.has(normalizeHeraldName(name)) ? 'KEY_POINT' : 'HAMLET';
 }
