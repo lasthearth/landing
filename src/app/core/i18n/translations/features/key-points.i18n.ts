@@ -159,7 +159,7 @@ export const KEY_POINTS_I18N = {
                 rustyGear: 'рж. шест.',
                 temporalGear: 'темп. шест.',
             },
-            moneyNote: 'Цены — в монетах сервера: 1 дукат (золотая) = 100 серебряных, 1 серебряная = 10 медных.',
+            moneyNote: 'Цены — в монетах сервера: 1 дукат (золотая) = 100 серебряных, 1 серебряная = 100 медных.',
             points: {
                 mine: {
                     name: 'Шахта',
@@ -844,7 +844,7 @@ export const KEY_POINTS_I18N = {
                 rustyGear: 'rusty gears',
                 temporalGear: 'temporal gears',
             },
-            moneyNote: 'Prices are in server coins: 1 ducat (gold) = 100 silver, 1 silver = 10 copper.',
+            moneyNote: 'Prices are in server coins: 1 ducat (gold) = 100 silver, 1 silver = 100 copper.',
             points: {
                 mine: {
                     name: 'Mine',
