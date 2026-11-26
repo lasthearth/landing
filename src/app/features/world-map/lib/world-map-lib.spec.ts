@@ -10,11 +10,37 @@ import {
     worldToScreen,
     zoomAt,
 } from './map-view';
+import { heraldType } from './herald-type';
 import { placeLabels } from './place-labels';
 import { settlementCourse } from './settlement-mark';
 
 describe('world-map lib', () => {
     const size = { width: 800, height: 600 };
+
+    describe('heraldType', () => {
+        it('узнаёт Гроссхольм на обеих локалях', () => {
+            expect(heraldType('Гроссхольм')).toBe('CAPITAL');
+            expect(heraldType('Столица Эксклава Гроссхольм')).toBe('CAPITAL');
+            expect(heraldType('Grossholm')).toBe('CAPITAL');
+        });
+
+        it('узнаёт ключевые точки по точному названию', () => {
+            expect(heraldType('Рудник Северной равнины')).toBe('KEY_POINT');
+            expect(heraldType('Форт "Кальдера"')).toBe('KEY_POINT');
+            expect(heraldType('Шахта «Тёмный курган»')).toBe('KEY_POINT');
+            expect(heraldType('  гавань  небесных кораблей ')).toBe('KEY_POINT');
+            expect(heraldType('Южный порт')).toBe('KEY_POINT');
+        });
+
+        it('остальное считает усадьбой', () => {
+            expect(heraldType('Усадьба (2jzgte)')).toBe('HAMLET');
+            expect(heraldType('Кайзервинд(Dio4444)')).toBe('HAMLET');
+            expect(heraldType('Храм Белого Утёса TheAs110z')).toBe('HAMLET');
+            expect(heraldType('Villa Della Rosa (Wshetik)')).toBe('HAMLET');
+            expect(heraldType('Форт')).toBe('HAMLET');
+            expect(heraldType('—')).toBe('HAMLET');
+        });
+    });
 
     describe('compass', () => {
         it('считает север отрицательной Z, восток — положительной X', () => {

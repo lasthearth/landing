@@ -22,7 +22,10 @@ interface WorldMapEntry {
     directionKey: string | null;
 }
 
-/** Типы в порядке легенды: от хутора до провинции, в конце — ключевая точка. */
+/**
+ * Типы в порядке легенды: от хутора до провинции, в конце — ключевая точка.
+ * Столицы нет: она одна, подписана и рисуется знаком провинции.
+ */
 const LEGEND_TYPES: readonly WorldMapSettlementType[] = [
     'HAMLET',
     'CAMP',

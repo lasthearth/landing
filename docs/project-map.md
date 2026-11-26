@@ -36,10 +36,10 @@
 
 | Слой | Файлов | Внутри |
 |---|---|---|
-| src/app | 1131 | core, entities, features, layout, routes, shared |
+| src/app | 1133 | core, entities, features, layout, routes, shared |
 | core/ | 64 | config, guards, i18n, interceptors, services, types |
 | entities/ | 213 | discord, donate, event, hunger-games, kitdef, lfg, mail, media, news, notification, player-style, reaction, referral, rule-question, server-mod, settlement, settlement-tag, ticket, user, wiki |
-| features/ | 669 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
+| features/ | 671 | about, admin, analytics, announcement, auth, diplomacy, events, faq, gallery, game-chat, home, hunger-games, key-points, landing, lfg, market, mods, new-content, news, not-found, notifications, onboarding, player, players, privacy-policy, profile, public-offer, reactions, referral, rules, settlements, start-game, support, verification, videos, welcome, wiki, world-map |
 | layout/ | 27 | background-scene, footer, header |
 | routes/ | 5 | enums |
 | shared/ | 148 | lib, styles, ui |
@@ -85,7 +85,7 @@
 | features/videos | 15 | ui, model, api, lib, config | да | 1 |
 | features/welcome | 3 | — | **нет** | — |
 | features/wiki | 47 | ui, api, lib | да | 6 |
-| features/world-map | 17 | ui, model, api, lib, config | да | 1 |
+| features/world-map | 19 | ui, model, api, lib, config | да | 1 |
 | entities/discord | 3 | model, api | да | 2 |
 | entities/donate | 13 | model, api | да | 12 |
 | entities/event | 5 | model, api, lib | да | 4 |
@@ -159,9 +159,9 @@
 | about | 11.8 | /about |
 | admin | 51.5 | /profile/admin |
 | analytics | 0.9 | — |
-| common | 1.1 | — |
+| common | 1.0 | — |
 | diplomacy | 1.7 | /diplomacy |
-| events | 8.0 | /profile, /events |
+| events | 7.8 | /profile, /events |
 | faq | 2.3 | /faq |
 | footer | 2.9 | — |
 | gallery | 2.6 | /gallery |
@@ -169,7 +169,7 @@
 | home | 8.8 | / |
 | key-points | 83.4 | /key-points |
 | legal | 68.7 | /privacy-policy, /public-offer |
-| lfg | 15.7 | /lfg |
+| lfg | 15.4 | /lfg |
 | mail | 10.5 | /profile/admin |
 | market | 15.6 | /profile, /market |
 | mods | 10.9 | /profile/admin, /mods |
@@ -179,13 +179,13 @@
 | players | 3.3 | /players |
 | profile | 23.3 | /profile |
 | referral | 3.9 | /, /profile/referral |
-| rules | 251.8 | /rules |
+| rules | 262.5 | /rules |
 | settlements | 55.6 | /profile, /about, /settlements, /events, /lfg, /join/:code, /player/:nick, /settlements/:id |
 | shared | 27.9 | — |
 | tickets | 13.6 | /profile/support, /profile/support/:id, /profile/admin |
-| videos | 2.1 | /videos |
+| videos | 2.0 | /videos |
 | wiki | 63.7 | wiki/edit/:id, /wiki, /wiki/razdel/:section, /wiki/:slug, /profile/wiki, /profile/admin |
-| world-map | 6.6 | /map |
+| world-map | 7.0 | /map |
 
 Общие словари (common, header, footer, shared, news) подключены сразу в
 `src/app/core/i18n/translations/index.ts`. Остальные приезжают вместе с роутом через `loadPage()`.

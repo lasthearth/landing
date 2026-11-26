@@ -17,6 +17,7 @@ export const WORLD_MAP_I18N = {
                 TOWNSHIP: 'Баронство',
                 CITY: 'Графство',
                 PROVINCE: 'Маркграфство',
+                CAPITAL: 'Столица Эксклава',
                 KEY_POINT: 'Ключевая точка',
             },
             course: {
@@ -57,7 +58,8 @@ export const WORLD_MAP_I18N = {
                 demoNote: 'Это надел из примера, страницы у него нет.',
                 keyPointNote: 'Ключевая точка — ею владеет надел, которое её захватило и удерживает.',
                 keyPoints: 'Как прокачать ключевые точки',
-                hamletNote: 'Хутора не регистрируют на сайте: он на карте, потому что хозяин поставил глашатая.',
+                capitalNote: 'Гроссхольм — столица Эксклава, ею управляет наместник; на сайте это не надел.',
+                hamletNote: 'Усадьбы не регистрируют на сайте: она на карте, потому что хозяин поставил глашатая.',
             },
             legend: {
                 title: 'Условные знаки',
@@ -90,6 +92,7 @@ export const WORLD_MAP_I18N = {
                 TOWNSHIP: 'Barony',
                 CITY: 'County',
                 PROVINCE: 'Margraviate',
+                CAPITAL: 'Capital of the Exclave',
                 KEY_POINT: 'Key point',
             },
             course: {
@@ -130,6 +133,8 @@ export const WORLD_MAP_I18N = {
                 demoNote: 'This settlement is part of the example and has no page.',
                 keyPointNote: 'A key point — it belongs to the settlement that captured and holds it.',
                 keyPoints: 'How to upgrade key points',
+                capitalNote:
+                    'Grossholm is the capital of the Exclave, governed by the governor; it is not a settlement on the site.',
                 hamletNote:
                     'Homesteads are not registered on the site: this one is on the map because its owner placed a herald.',
             },
